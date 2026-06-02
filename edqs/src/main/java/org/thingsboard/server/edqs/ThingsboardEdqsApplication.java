@@ -1,0 +1,63 @@
+/**
+ * Copyright © 2016-2026 The Thingsboard Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.thingsboard.server.edqs;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+import java.util.Arrays;
+
+/**
+ * Spring Boot entry point for the Entity Data Query Service (EDQS) microservice.
+ *
+ * <p>Scans {@code org.thingsboard.server.edqs} plus queue/discovery packages, loads {@code edqs.yml}
+ * by default, and starts {@link org.thingsboard.server.edqs.processor.EdqsProcessor} Kafka consumers.
+ * Entity queries from tb-node use Kafka request-reply, not REST (except {@link EdqsController} readiness).
+ */
+@SpringBootConfiguration
+@EnableAsync
+@EnableScheduling
+@EnableAutoConfiguration
+@ComponentScan({"org.thingsboard.server.edqs", "org.thingsboard.server.queue.edqs", "org.thingsboard.server.queue.discovery", "org.thingsboard.server.queue.kafka",
+        "org.thingsboard.server.queue.settings", "org.thingsboard.server.queue.environment", "org.thingsboard.server.common.stats"})
+@Slf4j
+public class ThingsboardEdqsApplication {
+
+    private static final String SPRING_CONFIG_NAME_KEY = "--spring.config.name";
+    private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "edqs";
+
+    /** Starts EDQS; injects {@value #DEFAULT_SPRING_CONFIG_PARAM} when not passed on the command line. */
+    public static void main(String[] args) {
+        SpringApplication.run(ThingsboardEdqsApplication.class, updateArguments(args));
+    }
+
+    /** Appends default Spring config name {@code edqs} so {@code edqs.yml} is loaded. */
+    private static String[] updateArguments(String[] args) {
+        if (Arrays.stream(args).noneMatch(arg -> arg.startsWith(SPRING_CONFIG_NAME_KEY))) {
+            String[] modifiedArgs = new String[args.length + 1];
+            System.arraycopy(args, 0, modifiedArgs, 0, args.length);
+            modifiedArgs[args.length] = DEFAULT_SPRING_CONFIG_PARAM;
+            return modifiedArgs;
+        }
+        return args;
+    }
+
+}
