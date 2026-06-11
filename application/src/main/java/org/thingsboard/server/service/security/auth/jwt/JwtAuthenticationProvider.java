@@ -28,6 +28,11 @@ import org.thingsboard.server.service.security.exception.JwtExpiredTokenExceptio
 import org.thingsboard.server.service.security.model.SecurityUser;
 import org.thingsboard.server.service.security.model.token.JwtTokenFactory;
 import org.thingsboard.server.service.security.model.token.RawAccessJwtToken;
+/**
+ * Spring Security authentication provider for JWT bearer-token authentication.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Integrates with Spring Security filter chain.
+ */
 
 @Component
 @RequiredArgsConstructor
@@ -35,13 +40,27 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private final JwtTokenFactory tokenFactory;
     private final TokenOutdatingService tokenOutdatingService;
-
+    /**
+     * Authenticates credentials and returns a populated security principal.
+     *
+     * @param authentication authentication (Authentication)
+     * @return {@link Authentication} result
+     * @throws AuthenticationException if the operation fails
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         RawAccessJwtToken rawAccessToken = (RawAccessJwtToken) authentication.getCredentials();
         SecurityUser securityUser = authenticate(rawAccessToken.token());
         return new JwtAuthenticationToken(securityUser);
     }
+
+    /**
+     * Authenticates credentials and returns a populated security principal.
+     *
+     * @param accessToken access token (String)
+     * @return {@link SecurityUser} result
+     * @throws AuthenticationException if the operation fails
+     */
 
     public SecurityUser authenticate(String accessToken) throws AuthenticationException {
         if (StringUtils.isEmpty(accessToken)) {
@@ -53,7 +72,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         }
         return securityUser;
     }
-
+    /**
+     * Indicates whether this provider can authenticate the given authentication token type.
+     *
+     * @param authentication authentication (Class<?>)
+     * @return boolean
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return (JwtAuthenticationToken.class.isAssignableFrom(authentication));

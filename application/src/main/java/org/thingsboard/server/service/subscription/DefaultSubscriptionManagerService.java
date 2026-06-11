@@ -57,6 +57,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+/**
+ * Default {@link SubscriptionManagerService} using partition service and cluster push.
+ */
 
 @Slf4j
 @TbCoreComponent
@@ -81,6 +84,12 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
 
     private long initTs;
 
+    /**
+     * Initializes executor.
+     * @return @PostConstruct
+    public void
+     */
+
     @PostConstruct
     public void initExecutor() {
         serviceId = serviceInfoProvider.getServiceId();
@@ -88,6 +97,15 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         toCoreNotificationsProducer = producerProvider.getTbCoreNotificationsMsgProducer();
         scheduler.scheduleWithFixedDelay(this::cleanupEntityUpdates, 1, 1, TimeUnit.HOURS);
     }
+
+    /**
+     * Invoked when sub event occurs.
+     * @param serviceId service id
+     * @param event application or cluster event
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onSubEvent(String serviceId, TbEntitySubEvent event, TbCallback callback) {
@@ -117,6 +135,12 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
+    /**
+     * Invoked when application event occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param event application or cluster event
+     */
     @Override
     @EventListener(OtherServiceShutdownEvent.class)
     public void onApplicationEvent(OtherServiceShutdownEvent event) {
@@ -141,6 +165,13 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
+    /**
+     * Invoked when tb application event occurs.
+     * @param partitionChangeEvent partition change event
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent partitionChangeEvent) {
         if (ServiceType.TB_CORE.equals(partitionChangeEvent.getServiceType())) {
@@ -149,11 +180,31 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
+    /**
+     * Invoked when time series update occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param ts ts
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onTimeSeriesUpdate(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts, TbCallback callback) {
         onTimeSeriesUpdate(entityId, ts);
         callback.onSuccess();
     }
+
+    /**
+     * Invoked when time series delete occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param keys keys
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onTimeSeriesDelete(TenantId tenantId, EntityId entityId, List<String> keys, TbCallback callback) {
@@ -190,12 +241,34 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
+    /**
+     * Invoked when attributes update occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param scope scope
+     * @param attributes attributes
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onAttributesUpdate(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes, TbCallback callback) {
         getEntityUpdatesInfo(entityId).attributesUpdateTs = System.currentTimeMillis();
         processAttributesUpdate(entityId, scope, attributes);
         callback.onSuccess();
     }
+
+    /**
+     * Invoked when attributes delete occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param scope scope
+     * @param keys keys
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onAttributesDelete(TenantId tenantId, EntityId entityId, String scope, List<String> keys, TbCallback callback) {
@@ -239,10 +312,32 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         }
     }
 
+    /**
+     * Invoked when alarm update occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param alarm alarm
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onAlarmUpdate(TenantId tenantId, EntityId entityId, AlarmInfo alarm, TbCallback callback) {
         onAlarmSubUpdate(tenantId, entityId, alarm, false, callback);
     }
+
+    /**
+     * Invoked when alarm deleted occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param alarm alarm
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onAlarmDeleted(TenantId tenantId, EntityId entityId, AlarmInfo alarm, TbCallback callback) {
@@ -282,6 +377,16 @@ public class DefaultSubscriptionManagerService extends TbApplicationEventListene
         TbProtoQueueMsg<ToCoreNotificationMsg> queueMsg = new TbProtoQueueMsg<>(entityId.getId(), msg);
         toCoreNotificationsProducer.send(tpi, queueMsg, null);
     }
+
+    /**
+     * Invoked when notification update occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param notificationUpdate notification update
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onNotificationUpdate(TenantId tenantId, UserId entityId, NotificationUpdate notificationUpdate, TbCallback callback) {

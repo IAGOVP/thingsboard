@@ -31,6 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+/**
+ * Outbound WebSocket update payload for telemetry subscription.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @Getter
 @AllArgsConstructor
@@ -41,6 +45,12 @@ public class TelemetrySubscriptionUpdate {
     private int errorCode;
     private String errorMsg;
     private Map<String, List<Object>> data;
+
+    /**
+     * Constructs {@link TelemetrySubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param subscriptionId client command/subscription id
+     * @param data data
+     */
 
     public TelemetrySubscriptionUpdate(int subscriptionId, List<TsKvEntry> data) {
         super();
@@ -57,15 +67,34 @@ public class TelemetrySubscriptionUpdate {
         }
     }
 
+    /**
+     * Constructs {@link TelemetrySubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param subscriptionId client command/subscription id
+     * @param data data
+     */
+
     public TelemetrySubscriptionUpdate(int subscriptionId, Map<String, List<Object>> data) {
         super();
         this.subscriptionId = subscriptionId;
         this.data = data;
     }
 
+    /**
+     * Constructs {@link TelemetrySubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param subscriptionId client command/subscription id
+     * @param errorCode subscription error code
+     */
+
     public TelemetrySubscriptionUpdate(int subscriptionId, SubscriptionErrorCode errorCode) {
         this(subscriptionId, errorCode, null);
     }
+
+    /**
+     * Constructs {@link TelemetrySubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param subscriptionId client command/subscription id
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     */
 
     public TelemetrySubscriptionUpdate(int subscriptionId, SubscriptionErrorCode errorCode, String errorMsg) {
         super();
@@ -73,6 +102,11 @@ public class TelemetrySubscriptionUpdate {
         this.errorCode = errorCode.getCode();
         this.errorMsg = errorMsg != null ? errorMsg : errorCode.getDefaultMsg();
     }
+
+    /**
+     * Returns values.
+     * @return {@link Map}
+     */
 
     @JsonIgnore
     public Map<String, List<TsValue>> getValues() {
@@ -99,6 +133,11 @@ public class TelemetrySubscriptionUpdate {
         return data;
     }
 
+    /**
+     * Returns latest values.
+     * @return {@link Map}
+     */
+
     public Map<String, Long> getLatestValues() {
         if (data == null) {
             return Collections.emptyMap();
@@ -110,6 +149,11 @@ public class TelemetrySubscriptionUpdate {
             }));
         }
     }
+
+    /**
+     * To string.
+     * @return string value
+     */
 
     @Override
     public String toString() {

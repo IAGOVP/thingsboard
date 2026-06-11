@@ -29,10 +29,23 @@ import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+
+ * Tenant entity profile cache (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+
+ */
+
 public class TenantEntityProfileCache {
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Map<EntityId, Set<EntityId>> allEntities = new HashMap<>();
+    /**
+     * Removes profile id.
+     *
+     * @param profileId profile id ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void removeProfileId(EntityId profileId) {
         lock.writeLock().lock();
@@ -43,6 +56,13 @@ public class TenantEntityProfileCache {
             lock.writeLock().unlock();
         }
     }
+    /**
+     * Removes entity id.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void removeEntityId(EntityId entityId) {
         lock.writeLock().lock();
@@ -53,6 +73,14 @@ public class TenantEntityProfileCache {
             lock.writeLock().unlock();
         }
     }
+    /**
+     * Removes the requested data.
+     *
+     * @param profileId profile id ({@link EntityId})
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void remove(EntityId profileId, EntityId entityId) {
         lock.writeLock().lock();
@@ -63,6 +91,14 @@ public class TenantEntityProfileCache {
             lock.writeLock().unlock();
         }
     }
+    /**
+     * Add.
+     *
+     * @param profileId profile id ({@link EntityId})
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void add(EntityId profileId, EntityId entityId) {
         lock.writeLock().lock();
@@ -75,11 +111,27 @@ public class TenantEntityProfileCache {
             lock.writeLock().unlock();
         }
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param oldProfileId old profile id ({@link EntityId})
+     * @param newProfileId new profile id ({@link EntityId})
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void update(EntityId oldProfileId, EntityId newProfileId, EntityId entityId) {
         remove(oldProfileId, entityId);
         add(newProfileId, entityId);
     }
+    /**
+     * Returns entity ids by profile id.
+     *
+     * @param profileId profile id ({@link EntityId})
+     * @return {@link Collection}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Collection<EntityId> getEntityIdsByProfileId(EntityId profileId) {
         lock.readLock().lock();

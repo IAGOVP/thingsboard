@@ -23,9 +23,28 @@ import org.thingsboard.server.gen.transport.TransportProtos;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+/**
+
+ * Service contract for rule engine call operations (rule engine message injection from core).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface RuleEngineCallService {
 
     void processRestApiCallToRuleEngine(TenantId tenantId, UUID requestId, TbMsg request, boolean useQueueFromTbMsg, Consumer<TbMsg> responseConsumer);
+
+    /**
+     * Handles queue msg.
+     *
+     * @param restApiCallResponseMsg rest api call response msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void onQueueMsg(TransportProtos.RestApiCallResponseMsgProto restApiCallResponseMsg, TbCallback callback);
 }

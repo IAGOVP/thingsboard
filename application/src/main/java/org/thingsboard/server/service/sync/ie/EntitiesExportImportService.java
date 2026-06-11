@@ -26,13 +26,54 @@ import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 
 import java.util.Comparator;
 
+/**
+
+ * Exports entities export import service entities to portable JSON.
+
+ *
+
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+
+ */
+
 public interface EntitiesExportImportService {
+/**
+ * Exports entity.
+ *
+ * @param ctx calculated-field execution context
+ * @param entityId target entity identifier
+ * @return the operation result
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(EntitiesExportCtx<?> ctx, I entityId) throws ThingsboardException;
+/**
+ * Imports entity.
+ *
+ * @param ctx calculated-field execution context
+ * @param exportData export data ({@link EntityExportData})
+ * @return the operation result
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(EntitiesImportCtx ctx, EntityExportData<E> exportData) throws ThingsboardException;
+/**
+ * Saves or persists references and relations.
+ *
+ * @param ctx calculated-field execution context
+ * @return nothing
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     void saveReferencesAndRelations(EntitiesImportCtx ctx) throws ThingsboardException;
+/**
+ * Returns entity type comparator for import.
+ *
+ * @return {@link Comparator}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Comparator<EntityType> getEntityTypeComparatorForImport();
 

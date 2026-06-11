@@ -21,6 +21,10 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.gen.edge.v1.AssetUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.EdgeProcessor;
 
+/**
+ * Processes asset edge events for cloud↔edge synchronization.
+ */
+
 public interface AssetProcessor extends EdgeProcessor {
 
     ListenableFuture<Void> processAssetMsgFromEdge(TenantId tenantId, Edge edge, AssetUpdateMsg assetUpdateMsg);

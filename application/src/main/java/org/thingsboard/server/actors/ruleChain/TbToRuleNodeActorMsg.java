@@ -22,6 +22,9 @@ import org.thingsboard.server.common.msg.TbActorStopReason;
 import org.thingsboard.server.common.msg.TbMsg;
 import org.thingsboard.server.common.msg.TbRuleEngineActorMsg;
 import org.thingsboard.server.common.msg.queue.RuleNodeException;
+/**
+ * Base class for messages addressed to a {@link org.thingsboard.server.actors.ruleChain.RuleNodeActor}.
+ */
 
 @EqualsAndHashCode(callSuper = true)
 public abstract class TbToRuleNodeActorMsg extends TbRuleEngineActorMsg {
@@ -33,6 +36,13 @@ public abstract class TbToRuleNodeActorMsg extends TbRuleEngineActorMsg {
         super(tbMsg);
         this.ctx = ctx;
     }
+    /**
+     * Handles tb actor stopped.
+     *
+     * @param reason reason ({@link TbActorStopReason})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onTbActorStopped(TbActorStopReason reason) {

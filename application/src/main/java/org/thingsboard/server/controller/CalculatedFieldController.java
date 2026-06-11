@@ -78,11 +78,17 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CU
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
 /**
- * REST API for calculated fields (definitions, listing, test script, debug events).
+ * REST controller for calculated field definitions, queries, script testing, and debug events.
  *
- * <p>Base path: {@code /api}. See {@code application/CALCULATED_FIELD_API.md} for endpoint table.
+ * <p>Base path: {@code /api}.
  *
- * <p>Runtime evaluation runs in {@link org.thingsboard.server.actors.calculatedField} actors, not in this controller.
+ * <p>Required auth roles: {@code TENANT_ADMIN}.
+ *
+ * <p>Related services: {@link org.thingsboard.server.service.entitiy.cf.TbCalculatedFieldService},
+ * {@link org.thingsboard.server.dao.cf.CalculatedFieldService},
+ * {@link org.thingsboard.server.dao.event.EventService}.
+ *
+ * <p>Runtime evaluation runs in rule engine actors, not in this controller.
  */
 @RestController
 @TbCoreComponent
@@ -122,6 +128,14 @@ public class CalculatedFieldController extends BaseController {
             + MARKDOWN_CODE_BLOCK_END
             + "\n\n Expected result JSON contains \"output\" and \"error\".";
 
+    /**
+     * Create Or Update Calculated Field (saveCalculatedField).
+     *
+     * <p>HTTP POST {@code /api/calculatedField}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create Or Update Calculated Field (saveCalculatedField)",
             notes = "Creates or Updates the Calculated Field. When creating calculated field, platform generates Calculated Field Id as " + UUID_WIKI_LINK +
                     "The newly created Calculated Field Id will be present in the response. " +
@@ -139,6 +153,14 @@ public class CalculatedFieldController extends BaseController {
         return tbCalculatedFieldService.save(calculatedField, getCurrentUser());
     }
 
+    /**
+     * Get Calculated Field (getCalculatedFieldById).
+     *
+     * <p>HTTP GET {@code /api/calculatedField/{calculatedFieldId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Calculated Field (getCalculatedFieldById)",
             notes = "Fetch the Calculated Field object based on the provided Calculated Field Id."
     )
@@ -156,6 +178,14 @@ public class CalculatedFieldController extends BaseController {
     @Hidden
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/{entityType}/{entityId}/calculatedFields", params = {"pageSize", "page"})
+    /**
+     * getCalculatedFieldsByEntityIdV1 (internal/hidden endpoint).
+     *
+     * <p>HTTP GET {@code /api/{entityType}/{entityId}/calculatedFields}.
+     *
+     * <p>{@code @PreAuthorize}: hasAnyAuthority('TENANT_ADMIN').
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     public PageData<CalculatedField> getCalculatedFieldsByEntityIdV1(@PathVariable("entityType") String entityType,
                                                                      @PathVariable("entityId") String entityIdStr,
                                                                      @RequestParam int pageSize,
@@ -171,6 +201,14 @@ public class CalculatedFieldController extends BaseController {
         return checkNotNull(tbCalculatedFieldService.findByTenantIdAndEntityId(getTenantId(), entityId, type, pageLink));
     }
 
+    /**
+     * Get Calculated Fields by Entity Id (getCalculatedFieldsByEntityId).
+     *
+     * <p>HTTP GET {@code /api/calculatedField/{entityType}/{entityId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Calculated Fields by Entity Id (getCalculatedFieldsByEntityId)",
             notes = "Fetch the Calculated Fields based on the provided Entity Id."
     )
@@ -189,6 +227,14 @@ public class CalculatedFieldController extends BaseController {
         return getCalculatedFieldsByEntityIdV1(entityType, entityIdStr, pageSize, page, type, textSearch, sortProperty, sortOrder);
     }
 
+    /**
+     * Get calculated fields (getCalculatedFields).
+     *
+     * <p>HTTP GET {@code /api/calculatedFields}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get calculated fields (getCalculatedFields)",
             notes = "Fetch tenant calculated fields based on the filter.")
     @Parameters({
@@ -238,6 +284,14 @@ public class CalculatedFieldController extends BaseController {
         return calculatedFieldService.findCalculatedFieldsByTenantIdAndFilter(user.getTenantId(), filter, pageLink);
     }
 
+    /**
+     * Get calculated field names (getCalculatedFieldNames).
+     *
+     * <p>HTTP GET {@code /api/calculatedFields/names}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get calculated field names (getCalculatedFieldNames)",
             notes = "Fetch the list of calculated field names for specified type.")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
@@ -256,6 +310,14 @@ public class CalculatedFieldController extends BaseController {
         return calculatedFieldService.findCalculatedFieldNamesByTenantIdAndType(getTenantId(), type, pageLink);
     }
 
+    /**
+     * Delete Calculated Field (deleteCalculatedField).
+     *
+     * <p>HTTP DELETE {@code /api/calculatedField/{calculatedFieldId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete Calculated Field (deleteCalculatedField)",
             notes = "Deletes the calculated field. Referencing non-existing Calculated Field Id will cause an error." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -269,6 +331,14 @@ public class CalculatedFieldController extends BaseController {
         tbCalculatedFieldService.delete(calculatedField, getCurrentUser());
     }
 
+    /**
+     * Get latest calculated field debug event (getLatestCalculatedFieldDebugEvent).
+     *
+     * <p>HTTP GET {@code /api/calculatedField/{calculatedFieldId}/debug}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get latest calculated field debug event (getLatestCalculatedFieldDebugEvent)",
             notes = "Gets latest calculated field debug event for specified calculated field id. " +
                     "Referencing non-existing calculated field id will cause an error. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -285,6 +355,14 @@ public class CalculatedFieldController extends BaseController {
                 .orElse(null);
     }
 
+    /**
+     * Test Script expression.
+     *
+     * <p>HTTP POST {@code /api/calculatedField/testScript}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Test Script expression",
             notes = TEST_SCRIPT_EXPRESSION + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")

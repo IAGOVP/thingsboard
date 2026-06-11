@@ -17,6 +17,9 @@ package org.thingsboard.server.service.ws.telemetry.cmd.v2;
 
 import lombok.Data;
 import org.thingsboard.server.common.data.kv.Aggregation;
+/**
+ * Agg key component in the ThingsBoard WebSocket layer.
+ */
 
 @Data
 public class AggKey {

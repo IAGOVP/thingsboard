@@ -20,15 +20,44 @@ import org.springframework.web.socket.CloseStatus;
 import java.io.IOException;
 
 /**
- * Created by ashvayka on 27.03.18.
+ * Abstraction for sending text/binary WebSocket frames to a connected client session.
  */
+
 public interface WebSocketMsgEndpoint {
+
+    /**
+     * Sends send.
+     * @param sessionRef reference to the WebSocket session
+     * @param subscriptionId client command/subscription id
+     * @param msg queue or transport message
+     * @throws IOException if processing fails
+     */
 
     void send(WebSocketSessionRef sessionRef, int subscriptionId, String msg) throws IOException;
 
+    /**
+     * Sends ping.
+     * @param sessionRef reference to the WebSocket session
+     * @param currentTime current time
+     * @throws IOException if processing fails
+     */
+
     void sendPing(WebSocketSessionRef sessionRef, long currentTime) throws IOException;
 
+    /**
+     * Closes close.
+     * @param sessionRef reference to the WebSocket session
+     * @param withReason with reason
+     * @throws IOException if processing fails
+     */
+
     void close(WebSocketSessionRef sessionRef, CloseStatus withReason) throws IOException;
+
+    /**
+     * Is open.
+     * @param sessionId WebSocket session identifier
+     * @return {@code true} when the condition holds
+     */
 
     boolean isOpen(String sessionId);
 }

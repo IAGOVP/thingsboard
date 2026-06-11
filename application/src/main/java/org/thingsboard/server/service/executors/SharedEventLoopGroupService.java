@@ -24,16 +24,32 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Spring service component for shared event loop group service (shared thread-pool executors for async service work).
+     */
+
 @Component
 public class SharedEventLoopGroupService {
 
     @Getter
     private EventLoopGroup sharedEventLoopGroup;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
         this.sharedEventLoopGroup = new NioEventLoopGroup();
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void destroy() {

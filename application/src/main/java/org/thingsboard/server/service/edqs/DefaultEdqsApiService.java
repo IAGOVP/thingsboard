@@ -40,6 +40,12 @@ import org.thingsboard.server.queue.provider.EdqsClientQueueFactory;
 
 import java.util.UUID;
 
+    /**
+     * Default Spring implementation for edqs api service (Entity Data Query Service integration from tb-core).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -55,6 +61,15 @@ public class DefaultEdqsApiService implements EdqsApiService {
         requestTemplate = queueFactory.createEdqsRequestTemplate();
         requestTemplate.init();
     }
+    /**
+     * Processes request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param request request payload with operation parameters
+     * @return future completing with {@link EdqsResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<EdqsResponse> processRequest(TenantId tenantId, CustomerId customerId, EdqsRequest request) {
@@ -78,6 +93,12 @@ public class DefaultEdqsApiService implements EdqsApiService {
             return JacksonUtil.fromString(responseMsg.getValue(), EdqsResponse.class);
         }, MoreExecutors.directExecutor());
     }
+    /**
+     * Is supported.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isSupported() {

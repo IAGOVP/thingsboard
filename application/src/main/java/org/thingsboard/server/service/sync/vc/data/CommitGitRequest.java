@@ -22,6 +22,12 @@ import org.thingsboard.server.common.data.sync.vc.request.create.VersionCreateRe
 
 import java.util.UUID;
 
+/**
+
+ * Git repository integration for commit request.
+
+ */
+
 public class CommitGitRequest extends PendingGitRequest<VersionCreationResult> {
 
     @Getter

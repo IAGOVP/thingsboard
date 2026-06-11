@@ -21,6 +21,11 @@ import lombok.Getter;
 import org.thingsboard.server.common.data.query.EntityCountQuery;
 import org.thingsboard.server.service.ws.WsCmdType;
 
+/**
+ * WebSocket command DTO for entity count.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
+
 public class EntityCountCmd extends DataCmd {
 
     @Getter
@@ -32,6 +37,11 @@ public class EntityCountCmd extends DataCmd {
         super(cmdId);
         this.query = query;
     }
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

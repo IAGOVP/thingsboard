@@ -113,6 +113,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static org.thingsboard.server.common.util.ProtoUtils.toProto;
+/**
+ * Cluster messaging facade: pushes protobuf messages to peer services (core, rule-engine, transport, edqs) via the configured queue implementation.
+ */
 
 @Service
 @Slf4j
@@ -152,6 +155,16 @@ public class DefaultTbClusterService implements TbClusterService {
     private final EdgeService edgeService;
     private final TbTransactionalCache<EdgeId, String> edgeIdServiceIdCache;
 
+    /**
+     * Pushes msg to core.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushMsgToCore(TenantId tenantId, EntityId entityId, ToCoreMsg msg, TbQueueCallback callback) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, entityId);
@@ -159,11 +172,29 @@ public class DefaultTbClusterService implements TbClusterService {
         toCoreMsgs.incrementAndGet();
     }
 
+    /**
+     * Pushes msg to core.
+     * @param tpi tpi
+     * @param msgId msg id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushMsgToCore(TopicPartitionInfo tpi, UUID msgId, ToCoreMsg msg, TbQueueCallback callback) {
         producerProvider.getTbCoreMsgProducer().send(tpi, new TbProtoQueueMsg<>(msgId, msg), callback);
         toCoreMsgs.incrementAndGet();
     }
+
+    /**
+     * Pushes msg to core.
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void pushMsgToCore(ToDeviceActorNotificationMsg msg, TbQueueCallback callback) {
@@ -173,6 +204,13 @@ public class DefaultTbClusterService implements TbClusterService {
         producerProvider.getTbCoreMsgProducer().send(tpi, new TbProtoQueueMsg<>(msg.getDeviceId().getId(), toCoreMsg), callback);
         toCoreMsgs.incrementAndGet();
     }
+
+    /**
+     * Broadcast to core.
+     * @param toCoreMsg to core msg
+     * @return @Override
+    public void
+     */
 
     @Override
     public void broadcastToCore(ToCoreNotificationMsg toCoreMsg) {
@@ -185,6 +223,14 @@ public class DefaultTbClusterService implements TbClusterService {
             toCoreNfs.incrementAndGet();
         }
     }
+
+    /**
+     * Broadcast to calculated fields.
+     * @param toCfMsg to cf msg
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void broadcastToCalculatedFields(ToCalculatedFieldNotificationMsg toCfMsg, TbQueueCallback callback) {
@@ -199,6 +245,15 @@ public class DefaultTbClusterService implements TbClusterService {
         }
     }
 
+    /**
+     * Pushes msg to version control.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushMsgToVersionControl(TenantId tenantId, ToVersionControlServiceMsg msg, TbQueueCallback callback) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_VC_EXECUTOR, TenantId.SYS_TENANT_ID, tenantId);
@@ -207,6 +262,15 @@ public class DefaultTbClusterService implements TbClusterService {
         //TODO: ashvayka
         toCoreMsgs.incrementAndGet();
     }
+
+    /**
+     * Pushes notification to core.
+     * @param serviceId service id
+     * @param response response
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void pushNotificationToCore(String serviceId, FromDeviceRpcResponse response, TbQueueCallback callback) {
@@ -222,6 +286,15 @@ public class DefaultTbClusterService implements TbClusterService {
         toCoreNfs.incrementAndGet();
     }
 
+    /**
+     * Pushes notification to core.
+     * @param targetServiceId target service id
+     * @param responseMsgProto response msg proto
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushNotificationToCore(String targetServiceId, TransportProtos.RestApiCallResponseMsgProto responseMsgProto, TbQueueCallback callback) {
         TopicPartitionInfo tpi = topicService.getNotificationsTopic(ServiceType.TB_CORE, targetServiceId);
@@ -230,6 +303,16 @@ public class DefaultTbClusterService implements TbClusterService {
         toCoreNfs.incrementAndGet();
     }
 
+    /**
+     * Pushes msg to rule engine.
+     * @param tpi tpi
+     * @param msgId msg id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushMsgToRuleEngine(TopicPartitionInfo tpi, UUID msgId, ToRuleEngineMsg msg, TbQueueCallback callback) {
         log.trace("PUSHING msg: {} to:{}", msg, tpi);
@@ -237,10 +320,31 @@ public class DefaultTbClusterService implements TbClusterService {
         toRuleEngineMsgs.incrementAndGet();
     }
 
+    /**
+     * Pushes msg to rule engine.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param tbMsg tb msg
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushMsgToRuleEngine(TenantId tenantId, EntityId entityId, TbMsg tbMsg, TbQueueCallback callback) {
         pushMsgToRuleEngine(tenantId, entityId, tbMsg, false, callback);
     }
+
+    /**
+     * Pushes msg to rule engine.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param tbMsg tb msg
+     * @param useQueueFromTbMsg use queue from tb msg
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void pushMsgToRuleEngine(TenantId tenantId, EntityId entityId, TbMsg tbMsg, boolean useQueueFromTbMsg, TbQueueCallback callback) {
@@ -322,6 +426,15 @@ public class DefaultTbClusterService implements TbClusterService {
         return tbMsg;
     }
 
+    /**
+     * Pushes notification to rule engine.
+     * @param serviceId service id
+     * @param response response
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushNotificationToRuleEngine(String serviceId, FromDeviceRpcResponse response, TbQueueCallback callback) {
         TopicPartitionInfo tpi = topicService.getNotificationsTopic(ServiceType.TB_RULE_ENGINE, serviceId);
@@ -335,6 +448,15 @@ public class DefaultTbClusterService implements TbClusterService {
         producerProvider.getRuleEngineNotificationsMsgProducer().send(tpi, new TbProtoQueueMsg<>(response.getId(), msg), callback);
         toRuleEngineNfs.incrementAndGet();
     }
+
+    /**
+     * Pushes notification to transport.
+     * @param serviceId service id
+     * @param response response
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void pushNotificationToTransport(String serviceId, ToTransportMsg response, TbQueueCallback callback) {
@@ -351,11 +473,31 @@ public class DefaultTbClusterService implements TbClusterService {
         toTransportNfs.incrementAndGet();
     }
 
+    /**
+     * Pushes msg to calculated fields.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushMsgToCalculatedFields(TenantId tenantId, EntityId entityId, ToCalculatedFieldMsg msg, TbQueueCallback callback) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_RULE_ENGINE, DataConstants.CF_QUEUE_NAME, tenantId, entityId);
         pushMsgToCalculatedFields(tpi, UUID.randomUUID(), msg, callback);
     }
+
+    /**
+     * Pushes msg to calculated fields.
+     * @param tpi tpi
+     * @param msgId msg id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void pushMsgToCalculatedFields(TopicPartitionInfo tpi, UUID msgId, ToCalculatedFieldMsg msg, TbQueueCallback callback) {
@@ -364,11 +506,29 @@ public class DefaultTbClusterService implements TbClusterService {
         toRuleEngineMsgs.incrementAndGet(); // TODO: add separate counter when we will have new ServiceType.CALCULATED_FIELDS
     }
 
+    /**
+     * Broadcast entity state change event.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param state state
+     * @return @Override
+    public void
+     */
+
     @Override
     public void broadcastEntityStateChangeEvent(TenantId tenantId, EntityId entityId, ComponentLifecycleEvent state) {
         log.trace("[{}] Processing {} state change event: {}", tenantId, entityId.getEntityType(), state);
         broadcast(new ComponentLifecycleMsg(tenantId, entityId, state));
     }
+
+    /**
+     * Invoked when device profile change occurs.
+     * @param deviceProfile device profile
+     * @param oldDeviceProfile old device profile
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onDeviceProfileChange(DeviceProfile deviceProfile, DeviceProfile oldDeviceProfile, TbQueueCallback callback) {
@@ -384,15 +544,41 @@ public class DefaultTbClusterService implements TbClusterService {
         otaPackageStateService.update(deviceProfile, isFirmwareChanged, isSoftwareChanged);
     }
 
+    /**
+     * Invoked when tenant profile change occurs.
+     * @param tenantProfile tenant profile
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onTenantProfileChange(TenantProfile tenantProfile, TbQueueCallback callback) {
         broadcastEntityChangeToTransport(TenantId.SYS_TENANT_ID, tenantProfile.getId(), tenantProfile, callback);
     }
 
+    /**
+     * Invoked when tenant change occurs.
+     * @param tenant tenant
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onTenantChange(Tenant tenant, TbQueueCallback callback) {
         broadcastEntityChangeToTransport(TenantId.SYS_TENANT_ID, tenant.getId(), tenant, callback);
     }
+
+    /**
+     * Invoked when api state change occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param apiUsageState api usage state
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onApiStateChange(ApiUsageState apiUsageState, TbQueueCallback callback) {
@@ -400,20 +586,55 @@ public class DefaultTbClusterService implements TbClusterService {
         broadcast(new ComponentLifecycleMsg(apiUsageState.getTenantId(), apiUsageState.getId(), ComponentLifecycleEvent.UPDATED));
     }
 
+    /**
+     * Invoked when device profile delete occurs.
+     * @param entity entity
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onDeviceProfileDelete(DeviceProfile entity, TbQueueCallback callback) {
         broadcastEntityDeleteToTransport(entity.getTenantId(), entity.getId(), entity.getName(), callback);
     }
+
+    /**
+     * Invoked when tenant profile delete occurs.
+     * @param entity entity
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onTenantProfileDelete(TenantProfile entity, TbQueueCallback callback) {
         broadcastEntityDeleteToTransport(TenantId.SYS_TENANT_ID, entity.getId(), entity.getName(), callback);
     }
 
+    /**
+     * Invoked when tenant delete occurs.
+     * @param entity entity
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onTenantDelete(Tenant entity, TbQueueCallback callback) {
         broadcastEntityDeleteToTransport(TenantId.SYS_TENANT_ID, entity.getId(), entity.getName(), callback);
     }
+
+    /**
+     * Invoked when device deleted occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param device device
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onDeviceDeleted(TenantId tenantId, Device device, TbQueueCallback callback) {
@@ -424,17 +645,42 @@ public class DefaultTbClusterService implements TbClusterService {
         broadcastEntityStateChangeEvent(tenantId, deviceId, ComponentLifecycleEvent.DELETED);
     }
 
+    /**
+     * Invoked when asset deleted occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param asset asset
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onAssetDeleted(TenantId tenantId, Asset asset, TbQueueCallback callback) {
         AssetId assetId = asset.getId();
         broadcastEntityStateChangeEvent(tenantId, assetId, ComponentLifecycleEvent.DELETED);
     }
 
+    /**
+     * Invoked when device assigned to tenant occurs.
+     * @param oldTenantId tenant identifier
+     * @param device device
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onDeviceAssignedToTenant(TenantId oldTenantId, Device device) {
         onDeviceDeleted(oldTenantId, device, null);
         sendDeviceStateServiceEvent(device.getTenantId(), device.getId(), true, false, false);
     }
+
+    /**
+     * Invoked when resource change occurs.
+     * @param resource resource
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onResourceChange(TbResourceInfo resource, TbQueueCallback callback) {
@@ -454,6 +700,14 @@ public class DefaultTbClusterService implements TbClusterService {
         broadcastEntityStateChangeEvent(tenantId, resourceId, ComponentLifecycleEvent.UPDATED);
     }
 
+    /**
+     * Invoked when resource deleted occurs.
+     * @param resource resource
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onResourceDeleted(TbResourceInfo resource, TbQueueCallback callback) {
         if (resource.getResourceType() == ResourceType.LWM2M_MODEL) {
@@ -469,6 +723,14 @@ public class DefaultTbClusterService implements TbClusterService {
         }
         broadcastEntityStateChangeEvent(resource.getTenantId(), resource.getId(), ComponentLifecycleEvent.DELETED);
     }
+
+    /**
+     * Invoked when customer updated occurs.
+     * @param customer customer
+     * @param oldCustomer old customer
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onCustomerUpdated(Customer customer, Customer oldCustomer) {
@@ -521,6 +783,16 @@ public class DefaultTbClusterService implements TbClusterService {
         }
     }
 
+    /**
+     * Pushes msg to edge.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushMsgToEdge(TenantId tenantId, EntityId entityId, ToEdgeMsg msg, TbQueueCallback callback) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, DataConstants.EDGE_QUEUE_NAME, tenantId, entityId);
@@ -529,6 +801,13 @@ public class DefaultTbClusterService implements TbClusterService {
         toEdgeMsgs.incrementAndGet();
     }
 
+    /**
+     * Invoked when edge high priority msg occurs.
+     * @param msg queue or transport message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onEdgeHighPriorityMsg(EdgeHighPriorityMsg msg) {
         log.trace("[{}] Processing edge event for edgeId: {}", msg.getTenantId(), msg.getEdgeEvent().getEdgeId());
@@ -536,12 +815,26 @@ public class DefaultTbClusterService implements TbClusterService {
         processEdgeNotification(msg.getEdgeEvent().getEdgeId(), toEdgeNotificationMsg);
     }
 
+    /**
+     * Invoked when edge event update occurs.
+     * @param msg queue or transport message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onEdgeEventUpdate(EdgeEventUpdateMsg msg) {
         log.trace("[{}] Processing edge event update for edgeId: {}", msg.getTenantId(), msg.getEdgeId());
         ToEdgeNotificationMsg toEdgeNotificationMsg = ToEdgeNotificationMsg.newBuilder().setEdgeEventUpdate(toProto(msg)).build();
         processEdgeNotification(msg.getEdgeId(), toEdgeNotificationMsg);
     }
+
+    /**
+     * Invoked when edge state change event occurs.
+     * @param msg queue or transport message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onEdgeStateChangeEvent(ComponentLifecycleMsg msg) {
@@ -551,12 +844,27 @@ public class DefaultTbClusterService implements TbClusterService {
         processEdgeNotification((EdgeId) msg.getEntityId(), toEdgeNotificationMsg);
     }
 
+    /**
+     * Pushes edge sync request to edge.
+     * @param request request
+     * @return @Override
+    public void
+     */
+
     @Override
     public void pushEdgeSyncRequestToEdge(ToEdgeSyncRequest request) {
         log.trace("[{}] Processing edge sync request for edgeId: {}", request.getTenantId(), request.getEdgeId());
         ToEdgeNotificationMsg toEdgeNotificationMsg = ToEdgeNotificationMsg.newBuilder().setToEdgeSyncRequest(toProto(request)).build();
         processEdgeNotification(request.getEdgeId(), toEdgeNotificationMsg);
     }
+
+    /**
+     * Pushes edge sync response to core.
+     * @param response response
+     * @param requestServiceId request service id
+     * @return @Override
+    public void
+     */
 
     @Override
     public void pushEdgeSyncResponseToCore(FromEdgeSyncResponse response, String requestServiceId) {
@@ -593,6 +901,13 @@ public class DefaultTbClusterService implements TbClusterService {
             toEdgeNfs.incrementAndGet();
         }
     }
+
+    /**
+     * Broadcast.
+     * @param msg queue or transport message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void broadcast(ComponentLifecycleMsg msg) {
@@ -635,7 +950,11 @@ public class DefaultTbClusterService implements TbClusterService {
         }
     }
 
-    @Scheduled(fixedDelayString = "${cluster.stats.print_interval_ms}")
+    /**
+     * Print stats.
+     */
+
+@Scheduled(fixedDelayString = "${cluster.stats.print_interval_ms}")
     public void printStats() {
         if (statsEnabled) {
             int toCoreMsgCnt = toCoreMsgs.getAndSet(0);
@@ -664,6 +983,14 @@ public class DefaultTbClusterService implements TbClusterService {
         DeviceStateServiceMsgProto msg = builder.build();
         pushMsgToCore(tenantId, deviceId, ToCoreMsg.newBuilder().setDeviceStateServiceMsg(msg).build(), null);
     }
+
+    /**
+     * Invoked when device updated occurs.
+     * @param entity entity
+     * @param old old
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onDeviceUpdated(Device entity, Device old) {
@@ -696,6 +1023,14 @@ public class DefaultTbClusterService implements TbClusterService {
         otaPackageStateService.update(entity, old);
     }
 
+    /**
+     * Invoked when asset updated occurs.
+     * @param entity entity
+     * @param old old
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onAssetUpdated(Asset entity, Asset old) {
         var created = old == null;
@@ -715,15 +1050,41 @@ public class DefaultTbClusterService implements TbClusterService {
         broadcast(msg.build());
     }
 
+    /**
+     * Invoked when calculated field updated occurs.
+     * @param calculatedField calculated field
+     * @param oldCalculatedField old calculated field
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onCalculatedFieldUpdated(CalculatedField calculatedField, CalculatedField oldCalculatedField, TbQueueCallback callback) {
         broadcastEntityStateChangeEvent(calculatedField.getTenantId(), calculatedField.getId(), oldCalculatedField == null ? ComponentLifecycleEvent.CREATED : ComponentLifecycleEvent.UPDATED);
     }
 
+    /**
+     * Invoked when calculated field deleted occurs.
+     * @param calculatedField calculated field
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onCalculatedFieldDeleted(CalculatedField calculatedField, TbQueueCallback callback) {
         broadcastEntityStateChangeEvent(calculatedField.getTenantId(), calculatedField.getId(), ComponentLifecycleEvent.DELETED);
     }
+
+    /**
+     * Invoked when relation updated occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityRelation entity relation
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onRelationUpdated(TenantId tenantId, EntityRelation entityRelation, TbQueueCallback callback) {
@@ -736,6 +1097,15 @@ public class DefaultTbClusterService implements TbClusterService {
         broadcast(msg);
     }
 
+    /**
+     * Invoked when relation deleted occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityRelation entity relation
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onRelationDeleted(TenantId tenantId, EntityRelation entityRelation, TbQueueCallback callback) {
         ComponentLifecycleMsg msg = ComponentLifecycleMsg.builder()
@@ -746,6 +1116,19 @@ public class DefaultTbClusterService implements TbClusterService {
                 .build();
         broadcast(msg);
     }
+
+    /**
+     * Sends notification msg to edge.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param edgeId edge identifier
+     * @param entityId target entity id
+     * @param body body
+     * @param type type
+     * @param action action
+     * @param originatorEdgeId edge identifier
+     * @return @Override
+    public void
+     */
 
     @Override
     public void sendNotificationMsgToEdge(TenantId tenantId, EdgeId edgeId, EntityId entityId, String body, EdgeEventType type, EdgeEventActionType action, EdgeId originatorEdgeId) {
@@ -810,6 +1193,13 @@ public class DefaultTbClusterService implements TbClusterService {
         return Optional.ofNullable(pageData).filter(pd -> pd.getTotalElements() > 0).map(pd -> pd.getData().get(0)).orElse(null);
     }
 
+    /**
+     * Invoked when queues update occurs.
+     * @param queues queues
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onQueuesUpdate(List<Queue> queues) {
         List<QueueUpdateMsg> queueUpdateMsgs = queues.stream()
@@ -830,6 +1220,13 @@ public class DefaultTbClusterService implements TbClusterService {
         ToTransportMsg transportMsg = ToTransportMsg.newBuilder().addAllQueueUpdateMsgs(queueUpdateMsgs).build();
         doSendQueueNotifications(ruleEngineMsg, coreMsg, transportMsg);
     }
+
+    /**
+     * Invoked when queues delete occurs.
+     * @param queues queues
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onQueuesDelete(List<Queue> queues) {

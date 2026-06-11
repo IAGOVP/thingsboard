@@ -31,6 +31,9 @@ import org.thingsboard.server.dao.alarm.AlarmCommentService;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 
 import static org.thingsboard.server.common.data.alarm.AlarmCommentSubType.COMMENT_DELETED;
+/**
+ * Default implementation of {@link TbAlarmCommentService}.
+ */
 
 @Service
 @AllArgsConstructor
@@ -38,6 +41,15 @@ public class DefaultTbAlarmCommentService extends AbstractTbEntityService implem
 
     @Autowired
     private AlarmCommentService alarmCommentService;
+    /**
+     * Saves or persists alarm comment.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param alarmComment alarm comment ({@link AlarmComment})
+     * @param user authenticated user performing the action
+     * @return {@link AlarmComment}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public AlarmComment saveAlarmComment(Alarm alarm, AlarmComment alarmComment, User user) throws ThingsboardException {
@@ -55,6 +67,15 @@ public class DefaultTbAlarmCommentService extends AbstractTbEntityService implem
             throw e;
         }
     }
+    /**
+     * Deletes alarm comment.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param alarmComment alarm comment ({@link AlarmComment})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void deleteAlarmComment(Alarm alarm, AlarmComment alarmComment, User user) throws ThingsboardException {

@@ -29,6 +29,9 @@ import org.thingsboard.server.dao.asset.AssetProfileService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Default implementation of {@link TbAssetProfileService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -37,6 +40,14 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 public class DefaultTbAssetProfileService extends AbstractTbEntityService implements TbAssetProfileService {
 
     private final AssetProfileService assetProfileService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @param user authenticated user performing the action
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetProfile save(AssetProfile assetProfile, SecurityUser user) throws Exception {
@@ -53,6 +64,14 @@ public class DefaultTbAssetProfileService extends AbstractTbEntityService implem
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(AssetProfile assetProfile, User user) {
@@ -69,6 +88,15 @@ public class DefaultTbAssetProfileService extends AbstractTbEntityService implem
             throw e;
         }
     }
+    /**
+     * Set default asset profile.
+     *
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @param previousDefaultAssetProfile previous default asset profile ({@link AssetProfile})
+     * @param user authenticated user performing the action
+     * @return {@link AssetProfile}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public AssetProfile setDefaultAssetProfile(AssetProfile assetProfile, AssetProfile previousDefaultAssetProfile, User user) throws ThingsboardException {

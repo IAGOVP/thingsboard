@@ -21,6 +21,10 @@ import org.thingsboard.server.service.security.model.token.ApiKeyAuthRequest;
 
 import java.io.Serial;
 
+/**
+ * Spring Security authentication token carrying personal access token (API key) authentication credentials or principal.
+ */
+
 public class ApiKeyAuthenticationToken extends AbstractAuthenticationToken {
 
     @Serial
@@ -42,16 +46,28 @@ public class ApiKeyAuthenticationToken extends AbstractAuthenticationToken {
         super.setAuthenticated(true);
     }
 
+    /**
+     * Returns credentials.
+     *
+     */
     @Override
     public Object getCredentials() {
         return apiKeyAuthRequest;
     }
 
+    /**
+     * Returns principal.
+     *
+     */
     @Override
     public Object getPrincipal() {
         return this.securityUser;
     }
 
+    /**
+     * Erase credentials.
+     *
+     */
     @Override
     public void eraseCredentials() {
         super.eraseCredentials();

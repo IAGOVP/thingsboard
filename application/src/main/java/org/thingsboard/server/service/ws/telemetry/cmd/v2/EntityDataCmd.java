@@ -22,6 +22,11 @@ import lombok.Getter;
 import org.thingsboard.server.common.data.query.EntityDataQuery;
 import org.thingsboard.server.service.ws.WsCmdType;
 
+/**
+ * WebSocket command DTO for entity data.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
+
 public class EntityDataCmd extends DataCmd {
 
     @Getter
@@ -36,6 +41,15 @@ public class EntityDataCmd extends DataCmd {
     private final AggHistoryCmd aggHistoryCmd;
     @Getter
     private final AggTimeSeriesCmd aggTsCmd;
+
+    /**
+     * Constructs {@link EntityDataCmd} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param query entity or time-series query
+     * @param historyCmd history cmd
+     * @param latestCmd latest cmd
+     * @param tsCmd ts cmd
+     */
 
     public EntityDataCmd(int cmdId, EntityDataQuery query, EntityHistoryCmd historyCmd, LatestValueCmd latestCmd, TimeSeriesCmd tsCmd) {
         this(cmdId, query, historyCmd, latestCmd, tsCmd, null, null);
@@ -58,10 +72,20 @@ public class EntityDataCmd extends DataCmd {
         this.aggTsCmd = aggTsCmd;
     }
 
+    /**
+     * Has any cmd.
+     * @return {@code true} when the condition holds
+     */
+
     @JsonIgnore
     public boolean hasAnyCmd() {
         return historyCmd != null || latestCmd != null || tsCmd != null || aggHistoryCmd != null || aggTsCmd != null;
     }
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

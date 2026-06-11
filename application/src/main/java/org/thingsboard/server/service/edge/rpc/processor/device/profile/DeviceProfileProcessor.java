@@ -21,6 +21,10 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.gen.edge.v1.DeviceProfileUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.EdgeProcessor;
 
+/**
+ * Processes device profile edge events for cloud↔edge synchronization.
+ */
+
 public interface DeviceProfileProcessor extends EdgeProcessor {
 
     ListenableFuture<Void> processDeviceProfileMsgFromEdge(TenantId tenantId, Edge edge, DeviceProfileUpdateMsg deviceProfileUpdateMsg);

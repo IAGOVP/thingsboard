@@ -29,11 +29,23 @@ import org.thingsboard.server.common.data.notification.rule.trigger.config.Devic
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NotificationRuleTriggerType;
 import org.thingsboard.server.service.profile.TbDeviceProfileCache;
 
+    /**
+     * Spring service component for device activity trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 @RequiredArgsConstructor
 public class DeviceActivityTriggerProcessor implements NotificationRuleTriggerProcessor<DeviceActivityTrigger, DeviceActivityNotificationRuleTriggerConfig> {
 
     private final TbDeviceProfileCache deviceProfileCache;
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link DeviceActivityTrigger})
+     * @param triggerConfig trigger config ({@link DeviceActivityNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(DeviceActivityTrigger trigger, DeviceActivityNotificationRuleTriggerConfig triggerConfig) {
@@ -51,6 +63,13 @@ public class DeviceActivityTriggerProcessor implements NotificationRuleTriggerPr
             return true;
         }
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link DeviceActivityTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(DeviceActivityTrigger trigger) {
@@ -63,6 +82,12 @@ public class DeviceActivityTriggerProcessor implements NotificationRuleTriggerPr
                 .deviceCustomerId(trigger.getCustomerId())
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

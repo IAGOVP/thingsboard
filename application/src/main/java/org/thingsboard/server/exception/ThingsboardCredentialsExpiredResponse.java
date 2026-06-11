@@ -19,20 +19,45 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.thingsboard.server.common.data.exception.ThingsboardErrorCode;
 
+/**
+ * Error response returned when user credentials have expired and must be reset.
+ *
+ * <p>Extends {@link ThingsboardErrorResponse} with a password-reset token that the client
+ * can use to complete credential renewal. Uses {@link ThingsboardErrorCode#CREDENTIALS_EXPIRED}
+ * and HTTP 401 Unauthorized.
+ */
 @Schema
 public class ThingsboardCredentialsExpiredResponse extends ThingsboardErrorResponse {
 
     private final String resetToken;
 
+    /**
+     * Creates a credentials-expired response with an optional reset token.
+     *
+     * @param message    human-readable description of the expired credentials
+     * @param resetToken one-time token for initiating password reset
+     */
     protected ThingsboardCredentialsExpiredResponse(String message, String resetToken) {
         super(message, ThingsboardErrorCode.CREDENTIALS_EXPIRED, HttpStatus.UNAUTHORIZED);
         this.resetToken = resetToken;
     }
 
+    /**
+     * Factory method for constructing a credentials-expired response.
+     *
+     * @param message    human-readable description of the expired credentials
+     * @param resetToken one-time token for initiating password reset
+     * @return new {@link ThingsboardCredentialsExpiredResponse} instance
+     */
     public static ThingsboardCredentialsExpiredResponse of(final String message, final String resetToken) {
         return new ThingsboardCredentialsExpiredResponse(message, resetToken);
     }
 
+    /**
+     * Returns the password-reset token issued for credential renewal.
+     *
+     * @return reset token string, or {@code null} if not provided
+     */
     @Schema(description = "Password reset token", accessMode = Schema.AccessMode.READ_ONLY)
     public String getResetToken() {
         return resetToken;

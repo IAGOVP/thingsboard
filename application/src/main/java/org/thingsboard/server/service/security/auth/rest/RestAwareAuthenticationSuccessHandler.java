@@ -38,6 +38,11 @@ import org.thingsboard.server.service.security.model.token.JwtTokenFactory;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+/**
+ * Handles success responses for username/password REST login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Slf4j @Component(value = "defaultAuthenticationSuccessHandler")
 @RequiredArgsConstructor
@@ -45,6 +50,14 @@ public class RestAwareAuthenticationSuccessHandler implements AuthenticationSucc
     private final JwtTokenFactory tokenFactory;
     private final TwoFaConfigManager twoFaConfigManager;
 
+    /**
+     * On authentication success.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param authentication authentication (Authentication)
+     * @throws IOException if the operation fails
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
@@ -65,6 +78,14 @@ public class RestAwareAuthenticationSuccessHandler implements AuthenticationSucc
 
         clearAuthenticationAttributes(request);
     }
+
+    /**
+     * Creates or persists mfa token pair.
+     *
+     * @param securityUser security user (SecurityUser)
+     * @param scope scope (Authority)
+     * @return {@link JwtPair} result
+     */
 
     public JwtPair createMfaTokenPair(SecurityUser securityUser, Authority scope) {
         log.debug("[{}][{}] Creating {} token", securityUser.getTenantId(), securityUser.getId(), scope);

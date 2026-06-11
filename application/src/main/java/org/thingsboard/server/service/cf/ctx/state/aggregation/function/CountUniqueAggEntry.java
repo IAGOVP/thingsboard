@@ -21,9 +21,22 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+
+ * Argument or aggregation entry for calculated-field state (count unique agg entry).
+
+ */
+
 public class CountUniqueAggEntry implements AggEntry {
 
     private final Set<String> items = new HashSet<>();
+    /**
+     * Updates the requested data.
+     *
+     * @param value value ({@link Object})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void update(Object value) {
@@ -31,11 +44,24 @@ public class CountUniqueAggEntry implements AggEntry {
             items.add(String.valueOf(value));
         }
     }
+    /**
+     * Result.
+     *
+     * @param precision precision ({@link Integer})
+     * @return optional {@link Object}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<Object> result(Integer precision) {
         return Optional.of(items.size());
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link AggFunction}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AggFunction getType() {

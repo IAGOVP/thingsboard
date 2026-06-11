@@ -21,6 +21,10 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.gen.edge.v1.AlarmCommentUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.EdgeProcessor;
 
+/**
+ * Processes alarm comment edge events for cloud↔edge synchronization.
+ */
+
 public interface AlarmCommentProcessor extends EdgeProcessor {
 
     ListenableFuture<Void> processAlarmCommentMsgFromEdge(TenantId tenantId, EdgeId edgeId, AlarmCommentUpdateMsg alarmCommentUpdateMsg);

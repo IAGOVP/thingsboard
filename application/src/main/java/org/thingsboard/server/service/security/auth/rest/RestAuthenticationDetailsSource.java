@@ -18,8 +18,19 @@ package org.thingsboard.server.service.security.auth.rest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 
+/**
+ * Rest authentication details source for username/password REST login.
+ */
+
 public class RestAuthenticationDetailsSource implements
         AuthenticationDetailsSource<HttpServletRequest, RestAuthenticationDetails> {
+
+    /**
+     * Builds details.
+     *
+     * @param context context (HttpServletRequest)
+     * @return {@link RestAuthenticationDetails} result
+     */
 
     public RestAuthenticationDetails buildDetails(HttpServletRequest context) {
         return new RestAuthenticationDetails(context);

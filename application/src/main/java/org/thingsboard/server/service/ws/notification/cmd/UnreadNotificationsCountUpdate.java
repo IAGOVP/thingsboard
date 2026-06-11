@@ -22,6 +22,10 @@ import lombok.Getter;
 import lombok.ToString;
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.CmdUpdate;
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.CmdUpdateType;
+/**
+ * Outbound WebSocket update payload for unread notifications count.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @Getter
 @ToString
@@ -40,6 +44,11 @@ public class UnreadNotificationsCountUpdate extends CmdUpdate {
         this.totalUnreadCount = totalUnreadCount;
         this.sequenceNumber = sequenceNumber;
     }
+
+    /**
+     * Returns cmd update type.
+     * @return {@link CmdUpdateType}
+     */
 
     @Override
     public CmdUpdateType getCmdUpdateType() {

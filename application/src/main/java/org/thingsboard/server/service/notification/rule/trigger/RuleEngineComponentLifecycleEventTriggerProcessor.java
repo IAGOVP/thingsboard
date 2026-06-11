@@ -34,11 +34,23 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Set;
 
+    /**
+     * Spring service component for rule engine component lifecycle event trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 @RequiredArgsConstructor
 public class RuleEngineComponentLifecycleEventTriggerProcessor implements NotificationRuleTriggerProcessor<RuleEngineComponentLifecycleEventTrigger, RuleEngineComponentLifecycleEventNotificationRuleTriggerConfig> {
 
     private final PartitionService partitionService;
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link RuleEngineComponentLifecycleEventTrigger})
+     * @param triggerConfig trigger config ({@link RuleEngineComponentLifecycleEventNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(RuleEngineComponentLifecycleEventTrigger trigger, RuleEngineComponentLifecycleEventNotificationRuleTriggerConfig triggerConfig) {
@@ -75,6 +87,13 @@ public class RuleEngineComponentLifecycleEventTriggerProcessor implements Notifi
         }
         return true;
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link RuleEngineComponentLifecycleEventTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(RuleEngineComponentLifecycleEventTrigger trigger) {
@@ -98,6 +117,12 @@ public class RuleEngineComponentLifecycleEventTriggerProcessor implements Notifi
         error.printStackTrace(new PrintWriter(sw));
         return StringUtils.abbreviate(ExceptionUtils.getStackTrace(error), 200);
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

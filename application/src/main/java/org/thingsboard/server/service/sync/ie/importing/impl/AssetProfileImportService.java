@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 import org.thingsboard.server.dao.asset.AssetProfileService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports asset profile entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -34,11 +39,31 @@ import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 public class AssetProfileImportService extends BaseEntityImportService<AssetProfileId, AssetProfile, EntityExportData<AssetProfile>> {
 
     private final AssetProfileService assetProfileService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, AssetProfile assetProfile, IdProvider idProvider) {
         assetProfile.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @param old old ({@link AssetProfile})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected AssetProfile prepare(EntitiesImportCtx ctx, AssetProfile assetProfile, AssetProfile old, EntityExportData<AssetProfile> exportData, IdProvider idProvider) {
@@ -47,6 +72,17 @@ public class AssetProfileImportService extends BaseEntityImportService<AssetProf
         assetProfile.setDefaultEdgeRuleChainId(idProvider.getInternalId(assetProfile.getDefaultEdgeRuleChainId()));
         return assetProfile;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected AssetProfile saveOrUpdate(EntitiesImportCtx ctx, AssetProfile assetProfile, EntityExportData<AssetProfile> exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -56,22 +92,51 @@ public class AssetProfileImportService extends BaseEntityImportService<AssetProf
         }
         return saved;
     }
+    /**
+     * Handles entity saved.
+     *
+     * @param user authenticated user performing the action
+     * @param savedAssetProfile saved asset profile ({@link AssetProfile})
+     * @param oldAssetProfile old asset profile ({@link AssetProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onEntitySaved(User user, AssetProfile savedAssetProfile, AssetProfile oldAssetProfile) {
         logEntityActionService.logEntityAction(savedAssetProfile.getTenantId(), savedAssetProfile.getId(),
                 savedAssetProfile, null, oldAssetProfile == null ? ActionType.ADDED : ActionType.UPDATED, user);
     }
+    /**
+     * Deep copy.
+     *
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected AssetProfile deepCopy(AssetProfile assetProfile) {
         return new AssetProfile(assetProfile);
     }
+    /**
+     * Cleanup for comparison.
+     *
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupForComparison(AssetProfile assetProfile) {
         super.cleanupForComparison(assetProfile);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

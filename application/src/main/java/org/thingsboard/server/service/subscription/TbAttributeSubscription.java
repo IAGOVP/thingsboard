@@ -24,8 +24,29 @@ import org.thingsboard.server.service.ws.telemetry.sub.TelemetrySubscriptionUpda
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+/**
+ * Subscription state holder for tb attribute.
+ * <p>Links a WebSocket session to entity keys and update processors.
+ */
+
 public class TbAttributeSubscription extends TbSubscription<TelemetrySubscriptionUpdate> {
 
+
+    /**
+     * Constructs {@link TbAttributeSubscription} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionId client command/subscription id
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param updateProcessor update processor
+     * @param queryTs query ts
+     * @param allKeys all keys
+     * @param keyStates key states
+     * @param scope scope
+     * @return @Builder
+    public
+     */
     @Getter private final long queryTs;
     @Getter private final boolean allKeys;
     @Getter private final Map<String, Long> keyStates;
@@ -42,10 +63,23 @@ public class TbAttributeSubscription extends TbSubscription<TelemetrySubscriptio
         this.scope = scope;
     }
 
+    /**
+     * Compares this object to another for equality.
+     * @param o o
+     * @return boolean result
+     */
+
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
     }
+
+    /**
+     * Returns a hash code consistent with {@link #equals(Object)}.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@code true} when the condition holds
+     */
 
     @Override
     public int hashCode() {

@@ -46,12 +46,24 @@ import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Processes user edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class UserEdgeProcessor extends BaseUserProcessor implements UserProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param userUpdateMsg user update msg (UserUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processUserMsgFromEdge(TenantId tenantId, Edge edge, UserUpdateMsg userUpdateMsg) {
         log.trace("[{}] executing processUserMsgFromEdge [{}] from edge [{}]", tenantId, userUpdateMsg, edge.getId());
@@ -81,7 +93,14 @@ public class UserEdgeProcessor extends BaseUserProcessor implements UserProcesso
             edgeSynchronizationManager.getEdgeId().remove();
         }
     }
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param userCredentialsUpdateMsg user credentials update msg (UserCredentialsUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processUserCredentialsMsgFromEdge(TenantId tenantId, Edge edge, UserCredentialsUpdateMsg userCredentialsUpdateMsg) {
         log.debug("[{}] Executing processUserCredentialsMsgFromEdge, userCredentialsUpdateMsg [{}]", tenantId, userCredentialsUpdateMsg);
@@ -122,7 +141,13 @@ public class UserEdgeProcessor extends BaseUserProcessor implements UserProcesso
             log.warn("[{}][{}] Failed to push user action to rule engine: {}", tenantId, userId, TbMsgType.ENTITY_CREATED.name(), e);
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         UserId userId = new UserId(edgeEvent.getEntityId());
@@ -164,11 +189,23 @@ public class UserEdgeProcessor extends BaseUserProcessor implements UserProcesso
         return null;
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.USER;
     }
 
+    /**
+     * Set customer id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param user user (User)
+     * @param userUpdateMsg user update msg (UserUpdateMsg)
+     */
     @Override
     protected void setCustomerId(TenantId tenantId, CustomerId customerId, User user, UserUpdateMsg userUpdateMsg) {
         CustomerId customerUUID = user.getCustomerId() != null ? user.getCustomerId() : customerId;

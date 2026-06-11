@@ -30,6 +30,9 @@ import org.thingsboard.server.queue.util.TbRuleEngineComponent;
 import org.thingsboard.server.service.queue.processing.TbRuleEngineProcessingStrategyFactory;
 import org.thingsboard.server.service.queue.processing.TbRuleEngineSubmitStrategyFactory;
 import org.thingsboard.server.service.stats.RuleEngineStatisticsService;
+/**
+ * Tb rule engine consumer context component in the ThingsBoard queue layer.
+ */
 
 @Component
 @TbRuleEngineComponent

@@ -72,8 +72,20 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.common.data.cf.configuration.PropagationCalculatedFieldConfiguration.PROPAGATION_CONFIG_ARGUMENT;
 
+/**
+ * Serialization utilities for calculated-field runtime state and context identifiers.
+ *
+ * <p>Converts between in-memory {@link CalculatedFieldState} objects and transport-layer
+ * protobuf messages used for persistence and cross-service communication.
+ */
 public class CalculatedFieldUtils {
 
+    /**
+     * Converts a {@link CalculatedFieldId} to its protobuf representation.
+     *
+     * @param cfId calculated-field identifier
+     * @return protobuf message with MSB/LSB UUID components
+     */
     public static CalculatedFieldIdProto toProto(CalculatedFieldId cfId) {
         return CalculatedFieldIdProto.newBuilder()
                 .setCalculatedFieldIdMSB(cfId.getId().getMostSignificantBits())
@@ -81,6 +93,12 @@ public class CalculatedFieldUtils {
                 .build();
     }
 
+    /**
+     * Converts a {@link CalculatedFieldEntityCtxId} to its protobuf representation.
+     *
+     * @param ctxId calculated-field entity context identifier
+     * @return protobuf message with tenant, field, and entity UUID components
+     */
     public static CalculatedFieldEntityCtxIdProto toProto(CalculatedFieldEntityCtxId ctxId) {
         return CalculatedFieldEntityCtxIdProto.newBuilder()
                 .setTenantIdMSB(ctxId.tenantId().getId().getMostSignificantBits())
@@ -93,6 +111,12 @@ public class CalculatedFieldUtils {
                 .build();
     }
 
+    /**
+     * Reconstructs a {@link CalculatedFieldEntityCtxId} from its protobuf representation.
+     *
+     * @param ctxIdProto serialized context identifier protobuf
+     * @return domain context identifier with tenant, field, and entity IDs
+     */
     public static CalculatedFieldEntityCtxId fromProto(CalculatedFieldEntityCtxIdProto ctxIdProto) {
         TenantId tenantId = TenantId.fromUUID(new UUID(ctxIdProto.getTenantIdMSB(), ctxIdProto.getTenantIdLSB()));
         EntityId entityId = EntityIdFactory.getByTypeAndUuid(ctxIdProto.getEntityType(), new UUID(ctxIdProto.getEntityIdMSB(), ctxIdProto.getEntityIdLSB()));
@@ -100,6 +124,14 @@ public class CalculatedFieldUtils {
         return new CalculatedFieldEntityCtxId(tenantId, calculatedFieldId, entityId);
     }
 
+    /**
+     * Serializes a complete {@link CalculatedFieldState} including all argument entries
+     * and type-specific sub-state (alarm rules, aggregation timestamps, etc.).
+     *
+     * @param stateId context identifier for the state owner
+     * @param state   in-memory calculated-field state to serialize
+     * @return protobuf message suitable for persistence or transport
+     */
     public static CalculatedFieldStateProto toProto(CalculatedFieldEntityCtxId stateId, CalculatedFieldState state) {
         CalculatedFieldStateProto.Builder builder = CalculatedFieldStateProto.newBuilder()
                 .setId(toProto(stateId))
@@ -165,6 +197,13 @@ public class CalculatedFieldUtils {
         return ruleState;
     }
 
+    /**
+     * Converts a single-value argument entry to its protobuf representation.
+     *
+     * @param argName argument name key
+     * @param entry   single-value argument state entry
+     * @return protobuf message with optional timestamped value, version, and entity ID
+     */
     public static SingleValueArgumentProto toSingleValueArgumentProto(String argName, SingleValueArgumentEntry entry) {
         SingleValueArgumentProto.Builder builder = SingleValueArgumentProto.newBuilder()
                 .setArgName(argName);
@@ -182,6 +221,14 @@ public class CalculatedFieldUtils {
         return builder.build();
     }
 
+    /**
+     * Converts an entity-aggregation interval and its status to protobuf.
+     *
+     * @param argName         argument name key
+     * @param intervalEntry   aggregation interval bounds
+     * @param argumentStatus  refresh and evaluation timestamps for the interval
+     * @return protobuf message describing the aggregation interval state
+     */
     public static ArgumentIntervalProto toArgumentIntervalProto(String argName, AggIntervalEntry intervalEntry, AggIntervalEntryStatus argumentStatus) {
         return ArgumentIntervalProto.newBuilder()
                 .setArgName(argName)
@@ -192,6 +239,13 @@ public class CalculatedFieldUtils {
                 .build();
     }
 
+    /**
+     * Converts a time-series rolling argument entry to its protobuf representation.
+     *
+     * @param argName argument name key
+     * @param entry   rolling window argument with timestamped double values
+     * @return protobuf message with limit, time window, and value records
+     */
     public static TsRollingArgumentProto toRollingArgumentProto(String argName, TsRollingArgumentEntry entry) {
         TsRollingArgumentProto.Builder builder = TsRollingArgumentProto.newBuilder()
                 .setKey(argName)
@@ -224,6 +278,13 @@ public class CalculatedFieldUtils {
         return builder.build();
     }
 
+    /**
+     * Deserializes a {@link CalculatedFieldStateProto} into the appropriate in-memory state object.
+     *
+     * @param id    context identifier for the state owner
+     * @param proto serialized state protobuf
+     * @return reconstructed {@link CalculatedFieldState}, or {@code null} if type is empty
+     */
     public static CalculatedFieldState fromProto(CalculatedFieldEntityCtxId id, CalculatedFieldStateProto proto) {
         if (StringUtils.isEmpty(proto.getType())) {
             return null;
@@ -302,6 +363,12 @@ public class CalculatedFieldUtils {
         return state;
     }
 
+    /**
+     * Deserializes a single-value argument from its protobuf representation.
+     *
+     * @param proto serialized single-value argument protobuf
+     * @return {@link SingleValueArgumentEntry} with value and metadata, or empty entry if no value present
+     */
     public static SingleValueArgumentEntry fromSingleValueArgumentProto(SingleValueArgumentProto proto) {
         if (!proto.hasValue()) {
             return new SingleValueArgumentEntry();
@@ -317,6 +384,12 @@ public class CalculatedFieldUtils {
         return new SingleValueArgumentEntry(ts, kvEntry, version);
     }
 
+    /**
+     * Deserializes a time-series rolling argument from its protobuf representation.
+     *
+     * @param proto serialized rolling argument protobuf
+     * @return {@link TsRollingArgumentEntry} with sorted timestamp records, limit, and time window
+     */
     public static TsRollingArgumentEntry fromRollingArgumentProto(TsRollingArgumentProto proto) {
         TreeMap<Long, Double> tsRecords = new TreeMap<>();
         proto.getTsValueList().forEach(tsValueProto -> tsRecords.put(tsValueProto.getTs(), tsValueProto.getValue()));

@@ -43,6 +43,16 @@ import static org.thingsboard.server.common.data.NameConflictStrategy.DEFAULT;
 import static org.thingsboard.server.controller.ControllerConstants.IS_BOOTSTRAP_SERVER_PARAM_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for LwM2M device bootstrap security configuration and legacy device credential provisioning.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code TENANT_ADMIN} or {@code CUSTOMER_USER}.
+ *
+ * <p>Uses {@link org.thingsboard.server.service.lwm2m.LwM2MService} for bootstrap security info
+ * and delegates device creation to {@link DeviceController}.
+ */
 @Slf4j
 @RestController
 @TbCoreComponent
@@ -57,6 +67,15 @@ public class Lwm2mController extends BaseController {
 
     public static final String IS_BOOTSTRAP_SERVER = "isBootstrapServer";
 
+    /**
+     * GET {@code /api/lwm2m/deviceProfile/bootstrap/{isBootstrapServer}} — Return LwM2M bootstrap or server security parameters.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     *
+     * @param bootstrapServer {@code true} for bootstrap server settings, {@code false} for LwM2M server settings
+     * @return default LwM2M server security configuration for client bootstrap
+     * @throws ThingsboardException if the request cannot be processed
+     */
     @ApiOperation(value = "Get Lwm2m Bootstrap SecurityInfo (getLwm2mBootstrapSecurityInfo)",
             notes = "Get the Lwm2m Bootstrap SecurityInfo object (of the current server) based on the provided isBootstrapServer parameter. If isBootstrapServer == true, get the parameters of the current Bootstrap Server. If isBootstrapServer == false, get the parameters of the current Lwm2m Server. Used for client settings when starting the client in Bootstrap mode. " +
                     TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -69,6 +88,16 @@ public class Lwm2mController extends BaseController {
             return lwM2MService.getServerSecurityInfo(bootstrapServer);
     }
 
+    /**
+     * POST {@code /api/lwm2m/device-credentials} — Deprecated endpoint to save an LwM2M device with credentials.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     *
+     * @param deviceWithDeviceCredentials map containing {@link Device} and {@link DeviceCredentials} entries
+     * @return the created or updated {@link Device}
+     * @throws ThingsboardException if device or credentials are invalid
+     * @deprecated use {@link DeviceController#saveDeviceWithCredentials} instead
+     */
     @ApiOperation(hidden = true, value = "Save LwM2M device with credentials (saveLwm2mDeviceWithCredentials) (Deprecated)")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/lwm2m/device-credentials", method = RequestMethod.POST)

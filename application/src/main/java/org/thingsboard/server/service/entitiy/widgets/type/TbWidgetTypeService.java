@@ -19,7 +19,28 @@ import org.thingsboard.server.common.data.widget.WidgetTypeDetails;
 import org.thingsboard.server.service.entitiy.SimpleTbEntityService;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+
+ * Application-layer service API for widget type entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbWidgetTypeService extends SimpleTbEntityService<WidgetTypeDetails> {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+ * @param updateExistingByFqn update existing by fqn
+ * @param user authenticated user performing the action
+ * @return {@link WidgetTypeDetails}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     WidgetTypeDetails save(WidgetTypeDetails widgetTypeDetails, boolean updateExistingByFqn, SecurityUser user) throws Exception;
 

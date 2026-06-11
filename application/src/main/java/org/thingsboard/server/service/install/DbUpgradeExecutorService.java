@@ -19,6 +19,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.service.executors.DbCallbackExecutorService;
 
+    /**
+     * Spring service component for db upgrade executor service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Component
 @Profile("install")
 public class DbUpgradeExecutorService extends DbCallbackExecutorService {

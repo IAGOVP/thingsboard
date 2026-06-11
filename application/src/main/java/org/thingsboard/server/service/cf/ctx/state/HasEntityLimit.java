@@ -15,10 +15,35 @@
  */
 package org.thingsboard.server.service.cf.ctx.state;
 
+/**
+
+ * has entity limit contract for calculated fields (calculated-field argument resolution, runtime state, and result processing).
+
+ */
+
 public interface HasEntityLimit {
+/**
+ * Checks entity limit.
+ *
+ * @param currentEntitiesCount current entities count
+ * @param ctx calculated-field execution context
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     default void checkEntityLimit(int currentEntitiesCount, CalculatedFieldCtx ctx) {
         if (currentEntitiesCount >= ctx.getMaxRelatedEntitiesPerCfArgument()) {
+            
+            /**
+             * Illegal argument exception.
+             *
+             * @param configuration." configuration."
+             * @return the throw new value
+             * @throws Exception if an unexpected error occurs during processing
+             */
+
             throw new IllegalArgumentException(
                     "Exceeded the maximum allowed related entities per argument '"
                     + ctx.getMaxRelatedEntitiesPerCfArgument() + "'. Increase the limit in the tenant profile configuration."

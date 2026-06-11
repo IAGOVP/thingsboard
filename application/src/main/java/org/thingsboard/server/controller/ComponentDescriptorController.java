@@ -40,6 +40,15 @@ import java.util.Set;
 
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST controller for rule engine component (rule node) descriptors.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code SYS_ADMIN} or {@code TENANT_ADMIN}.
+ *
+ * <p>Related service: {@link org.thingsboard.server.service.component.ComponentDiscoveryService}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -50,6 +59,14 @@ public class ComponentDescriptorController extends BaseController {
             "The Component Descriptors are discovered at runtime by scanning the class path and searching for @RuleNode annotation. " +
             "Once discovered, the up to date list of descriptors is persisted to the database.";
 
+    /**
+     * Get Component Descriptor (getComponentDescriptorByClazz).
+     *
+     * <p>HTTP GET {@code /api/component/{componentDescriptorClazz:.+}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Component Descriptor (getComponentDescriptorByClazz)",
             notes = "Gets the Component Descriptor object using class name from the path parameters. " +
                     COMPONENT_DESCRIPTOR_DEFINITION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -63,6 +80,14 @@ public class ComponentDescriptorController extends BaseController {
         return checkComponentDescriptorByClazz(strComponentDescriptorClazz);
     }
 
+    /**
+     * Get Component Descriptors (getComponentDescriptorsByType).
+     *
+     * <p>HTTP GET {@code /api/components/{componentType}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Component Descriptors (getComponentDescriptorsByType)",
             notes = "Gets the Component Descriptors using rule node type and optional rule chain type request parameters. " +
                     COMPONENT_DESCRIPTOR_DEFINITION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -78,6 +103,14 @@ public class ComponentDescriptorController extends BaseController {
         return checkComponentDescriptorsByType(ComponentType.valueOf(strComponentType), getRuleChainType(strRuleChainType));
     }
 
+    /**
+     * Get Component Descriptors (getComponentDescriptorsByTypes).
+     *
+     * <p>HTTP GET {@code /api/components}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Component Descriptors (getComponentDescriptorsByTypes)",
             notes = "Gets the Component Descriptors using coma separated list of rule node types and optional rule chain type request parameters. " +
                     COMPONENT_DESCRIPTOR_DEFINITION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)

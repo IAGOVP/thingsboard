@@ -20,9 +20,22 @@ import org.thingsboard.common.util.NumberUtils;
 
 import java.math.BigDecimal;
 
+/**
+
+ * Argument or aggregation entry for calculated-field state (sum agg entry).
+
+ */
+
 public class SumAggEntry extends BaseAggEntry {
 
     private BigDecimal sum = BigDecimal.ZERO;
+    /**
+     * Do update.
+     *
+     * @param value value
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void doUpdate(double value) {
@@ -30,11 +43,24 @@ public class SumAggEntry extends BaseAggEntry {
             sum = sum.add(BigDecimal.valueOf(value));
         }
     }
+    /**
+     * Prepare result.
+     *
+     * @param precision precision ({@link Integer})
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Object prepareResult(Integer precision) {
         return NumberUtils.roundResult(sum.doubleValue(), precision);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link AggFunction}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AggFunction getType() {

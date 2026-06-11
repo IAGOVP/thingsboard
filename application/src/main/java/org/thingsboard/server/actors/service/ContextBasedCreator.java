@@ -18,6 +18,12 @@ package org.thingsboard.server.actors.service;
 import org.thingsboard.server.actors.ActorSystemContext;
 import org.thingsboard.server.actors.TbActorCreator;
 
+/**
+
+ * Base {@link org.thingsboard.server.actors.TbActorCreator} that injects {@link ActorSystemContext}.
+
+ */
+
 public abstract class ContextBasedCreator implements TbActorCreator {
 
     protected final transient ActorSystemContext context;

@@ -34,6 +34,12 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+/**
+ * Github oauth2client mapper for OAuth2 / social login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ * <p><b>Key dependencies:</b> {@link #oAuth2Configuration}.
+ */
 
 @Service(value = "githubOAuth2ClientMapper")
 @Slf4j
@@ -47,7 +53,15 @@ public class GithubOAuth2ClientMapper extends AbstractOAuth2ClientMapper impleme
 
     @Autowired
     private OAuth2Configuration oAuth2Configuration;
-
+    /**
+     * Returns or create user by client principal.
+     *
+     * @param request request (HttpServletRequest)
+     * @param token token (OAuth2AuthenticationToken)
+     * @param providerAccessToken provider access token (String)
+     * @param oAuth2Client o auth2client (OAuth2Client)
+     * @return {@link SecurityUser} result
+     */
     @Override
     public SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, OAuth2AuthenticationToken token, String providerAccessToken, OAuth2Client oAuth2Client) {
         OAuth2MapperConfig config = oAuth2Client.getMapperConfig();

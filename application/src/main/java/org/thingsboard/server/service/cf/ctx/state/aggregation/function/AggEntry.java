@@ -26,6 +26,9 @@ import java.util.Optional;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type"
+/**
+ * Argument or aggregation entry for calculated-field state (agg entry).
+ */
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = AvgAggEntry.class, name = "AVG"),
@@ -36,13 +39,42 @@ import java.util.Optional;
         @JsonSubTypes.Type(value = SumAggEntry.class, name = "SUM")
 })
 public interface AggEntry {
+    
+    /**
+     * Returns type.
+     *
+     * @return {@link AggFunction}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @JsonIgnore
     AggFunction getType();
+/**
+ * Updates the requested data.
+ *
+ * @param value value ({@link Object})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void update(Object value);
+/**
+ * Result.
+ *
+ * @param precision precision ({@link Integer})
+ * @return optional {@link Object}, empty if not found
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Optional<Object> result(Integer precision);
+/**
+ * Creates agg function.
+ *
+ * @param function function ({@link AggFunction})
+ * @return {@link AggEntry}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     static AggEntry createAggFunction(AggFunction function) {
         return switch (function) {

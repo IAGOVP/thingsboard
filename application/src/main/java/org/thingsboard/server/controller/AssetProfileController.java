@@ -69,6 +69,16 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHO
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST controller for asset profile configuration.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN} (write), {@code CUSTOMER_USER} (read info).
+ *
+ * <p>Related services: {@link org.thingsboard.server.service.entitiy.asset.profile.TbAssetProfileService},
+ * {@link org.thingsboard.server.dao.asset.AssetProfileService}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -79,6 +89,14 @@ public class AssetProfileController extends BaseController {
     private final TbAssetProfileService tbAssetProfileService;
     private final ImageService imageService;
 
+    /**
+     * Get Asset Profile (getAssetProfileById).
+     *
+     * <p>HTTP GET {@code /api/assetProfile/{assetProfileId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset Profile (getAssetProfileById)",
             notes = "Fetch the Asset Profile object based on the provided Asset Profile Id. " +
                     "The server checks that the asset profile is owned by the same tenant. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -99,6 +117,14 @@ public class AssetProfileController extends BaseController {
         return result;
     }
 
+    /**
+     * Get Asset Profile Info (getAssetProfileInfoById).
+     *
+     * <p>HTTP GET {@code /api/assetProfileInfo/{assetProfileId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset Profile Info (getAssetProfileInfoById)",
             notes = "Fetch the Asset Profile Info object based on the provided Asset Profile Id. "
                     + ASSET_PROFILE_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -113,6 +139,14 @@ public class AssetProfileController extends BaseController {
         return new AssetProfileInfo(checkAssetProfileId(assetProfileId, Operation.READ));
     }
 
+    /**
+     * Get Default Asset Profile (getDefaultAssetProfileInfo).
+     *
+     * <p>HTTP GET {@code /api/assetProfileInfo/default}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Default Asset Profile (getDefaultAssetProfileInfo)",
             notes = "Fetch the Default Asset Profile Info object. " +
                     ASSET_PROFILE_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -123,6 +157,14 @@ public class AssetProfileController extends BaseController {
         return checkNotNull(assetProfileService.findDefaultAssetProfileInfo(getTenantId()));
     }
 
+    /**
+     * Create Or Update Asset Profile (saveAssetProfile).
+     *
+     * <p>HTTP POST {@code /api/assetProfile}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create Or Update Asset Profile (saveAssetProfile)",
             notes = "Create or update the Asset Profile. When creating asset profile, platform generates asset profile id as " + UUID_WIKI_LINK +
                     "The newly created asset profile id will be present in the response. " +
@@ -142,6 +184,14 @@ public class AssetProfileController extends BaseController {
         return tbAssetProfileService.save(assetProfile, getCurrentUser());
     }
 
+    /**
+     * Delete asset profile (deleteAssetProfile).
+     *
+     * <p>HTTP DELETE {@code /api/assetProfile/{assetProfileId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete asset profile (deleteAssetProfile)",
             notes = "Deletes the asset profile. Referencing non-existing asset profile Id will cause an error. " +
                     "Can't delete the asset profile if it is referenced by existing assets." + TENANT_AUTHORITY_PARAGRAPH)
@@ -157,6 +207,14 @@ public class AssetProfileController extends BaseController {
         tbAssetProfileService.delete(assetProfile, getCurrentUser());
     }
 
+    /**
+     * Make Asset Profile Default (setDefaultAssetProfile).
+     *
+     * <p>HTTP POST {@code /api/assetProfile/{assetProfileId}/default}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Make Asset Profile Default (setDefaultAssetProfile)",
             notes = "Marks asset profile as default within a tenant scope." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
@@ -172,6 +230,14 @@ public class AssetProfileController extends BaseController {
         return tbAssetProfileService.setDefaultAssetProfile(assetProfile, previousDefaultAssetProfile, getCurrentUser());
     }
 
+    /**
+     * Get Asset Profiles (getAssetProfiles).
+     *
+     * <p>HTTP GET {@code /api/assetProfiles}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset Profiles (getAssetProfiles)",
             notes = "Returns a page of asset profile objects owned by tenant. " +
                     PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -192,6 +258,14 @@ public class AssetProfileController extends BaseController {
         return checkNotNull(assetProfileService.findAssetProfiles(getTenantId(), pageLink));
     }
 
+    /**
+     * Get Asset Profile infos (getAssetProfileInfos).
+     *
+     * <p>HTTP GET {@code /api/assetProfileInfos}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset Profile infos (getAssetProfileInfos)",
             notes = "Returns a page of asset profile info objects owned by tenant. " +
                     PAGE_DATA_PARAMETERS + ASSET_PROFILE_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -212,6 +286,14 @@ public class AssetProfileController extends BaseController {
         return checkNotNull(assetProfileService.findAssetProfileInfos(getTenantId(), pageLink));
     }
 
+    /**
+     * Get Asset Profile names (getAssetProfileNames).
+     *
+     * <p>HTTP GET {@code /api/assetProfile/names}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset Profile names (getAssetProfileNames)",
             notes = "Returns a set of unique asset profile names owned by the tenant."
                     + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -229,6 +311,14 @@ public class AssetProfileController extends BaseController {
     @Hidden
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/assetProfileInfos", params = {"assetProfileIds"})
+    /**
+     * getAssetProfilesByIdsV1 (internal/hidden endpoint).
+     *
+     * <p>HTTP GET {@code /api/assetProfileInfos}.
+     *
+     * <p>{@code @PreAuthorize}: hasAuthority('TENANT_ADMIN').
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     public List<AssetProfileInfo> getAssetProfilesByIdsV1(
             @Parameter(description = "A list of asset profile ids, separated by comma ','", array = @ArraySchema(schema = @Schema(type = "string")), required = true)
             @RequestParam("assetProfileIds") Set<UUID> assetProfileUUIDs) throws ThingsboardException {
@@ -240,6 +330,14 @@ public class AssetProfileController extends BaseController {
         return assetProfileService.findAssetProfilesByIds(tenantId, assetProfileIds);
     }
 
+    /**
+     * Get Asset Profiles By Ids (getAssetProfilesByIds).
+     *
+     * <p>HTTP GET {@code /api/assetProfileInfos/list}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset Profiles By Ids (getAssetProfilesByIds)",
             notes = "Requested asset profiles must be owned by tenant which is performing the request. " +
                     NEW_LINE)

@@ -21,6 +21,10 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.gen.edge.v1.ApiKeyUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.EdgeProcessor;
 
+/**
+ * Processes api key edge events for cloud↔edge synchronization.
+ */
+
 public interface ApiKeyProcessor extends EdgeProcessor {
 
     ListenableFuture<Void> processApiKeyMsgFromEdge(TenantId tenantId, Edge edge, ApiKeyUpdateMsg apiKeyUpdateMsg);

@@ -35,6 +35,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+/**
+ * Subscription state holder for notifications.
+ * <p>Links a WebSocket session to entity keys and update processors.
+ */
 
 @Getter
 public class NotificationsSubscription extends AbstractNotificationSubscription<NotificationsSubscriptionUpdate> {
@@ -42,6 +46,20 @@ public class NotificationsSubscription extends AbstractNotificationSubscription<
     private final Map<UUID, Notification> latestUnreadNotifications = new HashMap<>();
     private final int limit;
     private final Set<NotificationType> notificationTypes;
+
+    /**
+     * Constructs {@link NotificationsSubscription} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionId client command/subscription id
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param updateProcessor update processor
+     * @param limit limit
+     * @param notificationTypes notification types
+     * @return @Builder
+    public
+     */
 
     @Builder
     public NotificationsSubscription(String serviceId, String sessionId, int subscriptionId, TenantId tenantId, EntityId entityId,
@@ -52,9 +70,20 @@ public class NotificationsSubscription extends AbstractNotificationSubscription<
         this.notificationTypes = notificationTypes;
     }
 
+    /**
+     * Checks notification type.
+     * @param type type
+     * @return boolean result
+     */
+
     public boolean checkNotificationType(NotificationType type) {
         return CollectionUtils.isEmpty(notificationTypes) || notificationTypes.contains(type);
     }
+
+    /**
+     * Creates full update.
+     * @return {@link UnreadNotificationsUpdate}
+     */
 
     public UnreadNotificationsUpdate createFullUpdate() {
         return UnreadNotificationsUpdate.builder()
@@ -65,11 +94,22 @@ public class NotificationsSubscription extends AbstractNotificationSubscription<
                 .build();
     }
 
+    /**
+     * Returns sorted notifications.
+     * @return {@link List}
+     */
+
     public List<Notification> getSortedNotifications() {
         return latestUnreadNotifications.values().stream()
                 .sorted(Comparator.comparing(BaseData::getCreatedTime, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Creates partial update.
+     * @param notification notification
+     * @return {@link UnreadNotificationsUpdate}
+     */
 
     public UnreadNotificationsUpdate createPartialUpdate(Notification notification) {
         return UnreadNotificationsUpdate.builder()
@@ -79,6 +119,11 @@ public class NotificationsSubscription extends AbstractNotificationSubscription<
                 .sequenceNumber(sequence.incrementAndGet())
                 .build();
     }
+
+    /**
+     * Creates count update.
+     * @return {@link UnreadNotificationsUpdate}
+     */
 
     public UnreadNotificationsUpdate createCountUpdate() {
         return UnreadNotificationsUpdate.builder()

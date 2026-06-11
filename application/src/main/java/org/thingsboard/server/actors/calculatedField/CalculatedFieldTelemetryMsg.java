@@ -23,7 +23,10 @@ import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 import org.thingsboard.server.gen.transport.TransportProtos.CalculatedFieldTelemetryMsgProto;
 
-/** Tenant-level telemetry fan-in for calculated fields (manager actor). */
+/**
+ * Telemetry update routed to the calculated-field manager for CFs bound to the reporting entity.
+ */
+
 @Data
 public class CalculatedFieldTelemetryMsg implements ToCalculatedFieldSystemMsg {
 
@@ -31,6 +34,14 @@ public class CalculatedFieldTelemetryMsg implements ToCalculatedFieldSystemMsg {
     private final EntityId entityId;
     private final CalculatedFieldTelemetryMsgProto proto;
     private final TbCallback callback;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

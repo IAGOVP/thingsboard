@@ -115,6 +115,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+/**
+ * Consumes {@code ToCoreMsg} on tb-core: telemetry/attribute updates, RPC, notifications, subscription events, usage stats, OTA, and device-actor messages. Dispatches work to actors and subscription services.
+ */
 
 @Service
 @Slf4j
@@ -155,6 +158,33 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     private QueueConsumerManager<TbProtoQueueMsg<ToOtaPackageStateServiceMsg>> firmwareStatesConsumer;
 
     private volatile ListeningExecutorService deviceActivityEventsExecutor;
+
+    /**
+     * Constructs {@link DefaultTbCoreConsumerService} with the supplied dependencies and configuration.
+     * @param tbCoreQueueFactory tb core queue factory
+     * @param actorContext actor context
+     * @param stateService state service
+     * @param localSubscriptionService local subscription service
+     * @param subscriptionManagerService subscription manager service
+     * @param tbCoreDeviceRpcService tb core device rpc service
+     * @param statsFactory stats factory
+     * @param deviceProfileCache device profile cache
+     * @param assetProfileCache asset profile cache
+     * @param statsService stats service
+     * @param tenantProfileCache tenant profile cache
+     * @param apiUsageStateService api usage state service
+     * @param firmwareStateService firmware state service
+     * @param vcQueueService vc queue service
+     * @param partitionService partition service
+     * @param eventPublisher event publisher
+     * @param jwtSettingsService jwt settings service
+     * @param notificationSchedulerService notification scheduler service
+     * @param notificationRuleProcessor notification rule processor
+     * @param imageService image service
+     * @param tbResourceDataCache tb resource data cache
+     * @param ruleEngineCallService rule engine call service
+     * @param edqsService edqs service
+     */
 
     public DefaultTbCoreConsumerService(TbCoreQueueFactory tbCoreQueueFactory,
                                         ActorSystemContext actorContext,
@@ -197,6 +227,12 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         this.edqsService = edqsService;
     }
 
+    /**
+     * Initializes init.
+     * @return @PostConstruct
+    public void
+     */
+
     @PostConstruct
     public void init() {
         super.init("tb-core");
@@ -229,6 +265,12 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
                 .build();
     }
 
+    /**
+     * Shuts down destroy.
+     * @return @PreDestroy
+    public void
+     */
+
     @PreDestroy
     public void destroy() {
         super.destroy();
@@ -237,6 +279,12 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         }
     }
 
+    /**
+     * Starts consumers.
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void startConsumers() {
         super.startConsumers();
@@ -244,6 +292,13 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         firmwareStatesConsumer.launch();
         usageStatsConsumer.launch();
     }
+
+    /**
+     * Invoked when tb application event occurs.
+     * @param event application or cluster event
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent event) {
@@ -335,30 +390,74 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         consumer.commit();
     }
 
+    /**
+     * Returns service type.
+     * @return {@link ServiceType}
+     */
+
     @Override
     protected ServiceType getServiceType() {
         return ServiceType.TB_CORE;
     }
+
+    /**
+     * Returns notification poll duration.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
 
     @Override
     protected long getNotificationPollDuration() {
         return pollInterval;
     }
 
+    /**
+     * Returns notification pack processing timeout.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
+
     @Override
     protected long getNotificationPackProcessingTimeout() {
         return packProcessingTimeout;
     }
+
+    /**
+     * Returns mgmt thread pool size.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
 
     @Override
     protected int getMgmtThreadPoolSize() {
         return Math.max(Runtime.getRuntime().availableProcessors(), 4);
     }
 
+    /**
+     * Creates notifications consumer.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@link TbQueueConsumer}
+     */
+
     @Override
     protected TbQueueConsumer<TbProtoQueueMsg<ToCoreNotificationMsg>> createNotificationsConsumer() {
         return queueFactory.createToCoreNotificationsMsgConsumer();
     }
+
+    /**
+     * Handles notification.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param id id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void handleNotification(UUID id, TbProtoQueueMsg<ToCoreNotificationMsg> msg, TbCallback callback) {
@@ -472,7 +571,11 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
         callback.onSuccess();
     }
 
-    @Scheduled(fixedDelayString = "${queue.core.stats.print-interval-ms}")
+    /**
+     * Print stats.
+     */
+
+@Scheduled(fixedDelayString = "${queue.core.stats.print-interval-ms}")
     public void printStats() {
         if (statsEnabled) {
             stats.printStats();
@@ -738,6 +841,12 @@ public class DefaultTbCoreConsumerService extends AbstractConsumerService<ToCore
     private TenantId toTenantId(long tenantIdMSB, long tenantIdLSB) {
         return TenantId.fromUUID(new UUID(tenantIdMSB, tenantIdLSB));
     }
+
+    /**
+     * Stops consumers.
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void stopConsumers() {

@@ -30,6 +30,11 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
+/**
+ * Edge sessions holder for edge gRPC session lifecycle.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Data
 @Slf4j
@@ -41,12 +46,24 @@ public class EdgeSessionsHolder {
     private final ConcurrentMap<EdgeId, EdgeGrpcSessionManager> sessions = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, EdgeGrpcSessionManager> sessionsById = new ConcurrentHashMap<>();
 
+    /**
+     * For each.
+     *
+     * @param consumer consumer (Consumer<EdgeGrpcSessionManager>)
+     */
+
     public void forEach(Consumer<EdgeGrpcSessionManager> consumer) {
         Set<EdgeGrpcSessionManager> unique = new HashSet<>(sessions.values());
         unique.addAll(sessionsById.values());
 
         unique.forEach(consumer);
     }
+
+    /**
+     * Put.
+     *
+     * @param session session (EdgeGrpcSessionManager)
+     */
 
     public void put(EdgeGrpcSessionManager session) {
         UUID sessionId = session.getState().getSessionId();
@@ -55,21 +72,55 @@ public class EdgeSessionsHolder {
         sessions.put(edgeId, session);
     }
 
+    /**
+     * Returns by edge id.
+     *
+     * @param id id (EdgeId)
+     * @return {@link EdgeGrpcSessionManager} result
+     */
+
     public EdgeGrpcSessionManager getByEdgeId(EdgeId id) {
         return sessions.get(id);
     }
+
+    /**
+     * Has by edge id.
+     *
+     * @param id id (EdgeId)
+     * @return boolean
+     */
 
     public boolean hasByEdgeId(EdgeId id) {
         return sessions.containsKey(id);
     }
 
+    /**
+     * Removes by edge id.
+     *
+     * @param id id (EdgeId)
+     * @return {@link EdgeGrpcSessionManager} result
+     */
+
     public EdgeGrpcSessionManager removeByEdgeId(EdgeId id) {
         return sessions.remove(id);
     }
 
+    /**
+     * Removes by session id.
+     *
+     * @param sessionId session id (UUID)
+     * @return {@link EdgeGrpcSessionManager} result
+     */
+
     public EdgeGrpcSessionManager removeBySessionId(UUID sessionId) {
         return sessionsById.remove(sessionId);
     }
+
+    /**
+     * Removes .
+     *
+     * @param session session (EdgeGrpcSessionManager)
+     */
 
     public void remove(EdgeGrpcSessionManager session) {
         if (session == null) {

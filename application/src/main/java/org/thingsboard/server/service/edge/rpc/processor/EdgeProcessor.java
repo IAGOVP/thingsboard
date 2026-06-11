@@ -23,6 +23,12 @@ import org.thingsboard.server.gen.edge.v1.DownlinkMsg;
 import org.thingsboard.server.gen.edge.v1.EdgeVersion;
 import org.thingsboard.server.gen.transport.TransportProtos;
 
+/**
+ * Processes  edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
+
 public interface EdgeProcessor {
 
     ListenableFuture<Void> processEntityNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto msg);

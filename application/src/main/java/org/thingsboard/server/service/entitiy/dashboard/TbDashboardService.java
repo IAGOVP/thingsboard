@@ -27,23 +27,115 @@ import org.thingsboard.server.service.entitiy.SimpleTbEntityService;
 
 import java.util.Set;
 
+/**
+
+ * Application-layer service API for dashboard entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbDashboardService extends SimpleTbEntityService<Dashboard> {
+/**
+ * Assigns dashboard to customer.
+ *
+ * @param dashboard dashboard ({@link Dashboard})
+ * @param customer customer ({@link Customer})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     Dashboard assignDashboardToCustomer(Dashboard dashboard, Customer customer, User user) throws ThingsboardException;
+/**
+ * Assigns dashboard to public customer.
+ *
+ * @param dashboard dashboard ({@link Dashboard})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Dashboard assignDashboardToPublicCustomer(Dashboard dashboard, User user) throws ThingsboardException;
+/**
+ * Unassigns dashboard from public customer.
+ *
+ * @param dashboard dashboard ({@link Dashboard})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Dashboard unassignDashboardFromPublicCustomer(Dashboard dashboard, User user) throws ThingsboardException;
+/**
+ * Updates dashboard customers.
+ *
+ * @param dashboard dashboard ({@link Dashboard})
+ * @param customerIds customer ids ({@link Set})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Dashboard updateDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException;
+/**
+ * Add dashboard customers.
+ *
+ * @param dashboard dashboard ({@link Dashboard})
+ * @param customerIds customer ids ({@link Set})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Dashboard addDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException;
+/**
+ * Removes dashboard customers.
+ *
+ * @param dashboard dashboard ({@link Dashboard})
+ * @param customerIds customer ids ({@link Set})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Dashboard removeDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException;
+/**
+ * Asign dashboard to edge.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param dashboardId dashboard id ({@link DashboardId})
+ * @param edge edge ({@link Edge})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Dashboard asignDashboardToEdge(TenantId tenantId, DashboardId dashboardId, Edge edge, User user) throws ThingsboardException;
+/**
+ * Unassigns dashboard from edge.
+ *
+ * @param dashboard dashboard ({@link Dashboard})
+ * @param edge edge ({@link Edge})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Dashboard unassignDashboardFromEdge(Dashboard dashboard, Edge edge, User user) throws ThingsboardException;
+/**
+ * Unassigns dashboard from customer.
+ *
+ * @param dashboard dashboard ({@link Dashboard})
+ * @param customer customer ({@link Customer})
+ * @param user authenticated user performing the action
+ * @return {@link Dashboard}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Dashboard unassignDashboardFromCustomer(Dashboard dashboard, Customer customer, User user) throws ThingsboardException;
 

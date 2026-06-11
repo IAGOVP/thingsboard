@@ -73,6 +73,9 @@ import org.thingsboard.server.queue.TbQueueMsgMetadata;
 import org.thingsboard.server.service.cf.CalculatedFieldCache;
 
 import java.util.Set;
+/**
+ * Listens for entity lifecycle events to propagate state to external systems.
+ */
 
 @Slf4j
 @Component
@@ -84,11 +87,24 @@ public class EntityStateSourcingListener {
     private final EdgeSynchronizationManager edgeSynchronizationManager;
     private final JobManager jobManager;
     private final CalculatedFieldCache calculatedFieldCache;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
         log.debug("EntityStateSourcingListener initiated");
     }
+    /**
+     * Handles event.
+     *
+     * @param event event ({@link SaveEntityEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(SaveEntityEvent<?> event) {
@@ -159,6 +175,13 @@ public class EntityStateSourcingListener {
             }
         }
     }
+    /**
+     * Handles event.
+     *
+     * @param event event ({@link DeleteEntityEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(DeleteEntityEvent<?> event) {
@@ -228,6 +251,13 @@ public class EntityStateSourcingListener {
             }
         }
     }
+    /**
+     * Handles event.
+     *
+     * @param event event ({@link ActionEntityEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(ActionEntityEvent<?> event) {
@@ -262,8 +292,24 @@ public class EntityStateSourcingListener {
                             .setEventMsg(toProto(event))
                             .build();
                     tbClusterService.pushMsgToCalculatedFields(tenantId, alarm.getOriginator(), msg, new TbQueueCallback() {
+                        
+                        /**
+                         * Handles success.
+                         *
+                         * @param metadata metadata ({@link TbQueueMsgMetadata})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
+
                         @Override
                         public void onSuccess(TbQueueMsgMetadata metadata) {}
+                        /**
+                         * Handles failure.
+                         *
+                         * @param t t ({@link Throwable})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
 
                         @Override
                         public void onFailure(Throwable t) {
@@ -274,6 +320,13 @@ public class EntityStateSourcingListener {
             }
         }
     }
+    /**
+     * Handles event.
+     *
+     * @param relationEvent relation event ({@link RelationActionEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(RelationActionEvent relationEvent) {

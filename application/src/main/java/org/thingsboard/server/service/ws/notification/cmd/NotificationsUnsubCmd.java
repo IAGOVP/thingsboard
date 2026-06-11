@@ -21,12 +21,21 @@ import lombok.NoArgsConstructor;
 import org.thingsboard.server.service.ws.WsCmd;
 import org.thingsboard.server.service.ws.WsCmdType;
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.UnsubscribeCmd;
+/**
+ * WebSocket command DTO for notifications unsub.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationsUnsubCmd implements UnsubscribeCmd, WsCmd {
     private int cmdId;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

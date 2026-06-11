@@ -31,6 +31,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.thingsboard.server.service.sync.ie.importing.impl.RuleChainImportService.PROCESSED_CONFIG_FIELDS_PATTERN;
+/**
+ * Exports rule chain entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
@@ -38,6 +43,15 @@ import static org.thingsboard.server.service.sync.ie.importing.impl.RuleChainImp
 public class RuleChainExportService extends BaseEntityExportService<RuleChainId, RuleChain, RuleChainExportData> {
 
     private final RuleChainService ruleChainService;
+    /**
+     * Set related entities.
+     *
+     * @param ctx calculated-field execution context
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param exportData export data ({@link RuleChainExportData})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setRelatedEntities(EntitiesExportCtx<?> ctx, RuleChain ruleChain, RuleChainExportData exportData) {
@@ -60,6 +74,12 @@ public class RuleChainExportService extends BaseEntityExportService<RuleChainId,
             ruleChain.setFirstRuleNodeId(ctx.getExternalId(ruleChain.getFirstRuleNodeId()));
         }
     }
+    /**
+     * Returns supported entity types.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<EntityType> getSupportedEntityTypes() {

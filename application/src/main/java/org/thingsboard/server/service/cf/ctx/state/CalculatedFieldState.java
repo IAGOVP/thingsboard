@@ -41,6 +41,9 @@ import java.util.Map;
 
 import static org.thingsboard.server.common.data.cf.configuration.PropagationCalculatedFieldConfiguration.PROPAGATION_CONFIG_ARGUMENT;
 import static org.thingsboard.server.utils.CalculatedFieldUtils.toSingleValueArgumentProto;
+/**
+ * Runtime state for calculated field calculated fields.
+ */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
@@ -53,45 +56,168 @@ import static org.thingsboard.server.utils.CalculatedFieldUtils.toSingleValueArg
         @Type(value = EntityAggregationCalculatedFieldState.class, name = "ENTITY_AGGREGATION")
 })
 public interface CalculatedFieldState extends Closeable {
+    
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @JsonIgnore
     CalculatedFieldType getType();
+/**
+ * Returns entity id.
+ *
+ * @return {@link EntityId}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     EntityId getEntityId();
+/**
+ * Returns arguments.
+ *
+ * @return {@link Map}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Map<String, ArgumentEntry> getArguments();
+/**
+ * Returns arguments json.
+ *
+ * @return {@link JsonNode}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     JsonNode getArgumentsJson();
+/**
+ * Returns latest timestamp.
+ *
+ * @return the long result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     long getLatestTimestamp();
+/**
+ * Set ctx.
+ *
+ * @param ctx calculated-field execution context
+ * @param actorCtx actor ctx ({@link TbActorRef})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void setCtx(CalculatedFieldCtx ctx, TbActorRef actorCtx);
+/**
+ * Init.
+ *
+ * @param restored restored
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void init(boolean restored);
+/**
+ * Updates the requested data.
+ *
+ * @param arguments arguments ({@link Map})
+ * @param ctx calculated-field execution context
+ * @return {@link Map}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Map<String, ArgumentEntry> update(Map<String, ArgumentEntry> arguments, CalculatedFieldCtx ctx);
+/**
+ * Reset.
+ *
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void reset();
+/**
+ * Perform calculation.
+ *
+ * @param updatedArgs updated args ({@link Map})
+ * @param ctx calculated-field execution context
+ * @return future completing with {@link CalculatedFieldResult}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     ListenableFuture<CalculatedFieldResult> performCalculation(Map<String, ArgumentEntry> updatedArgs, CalculatedFieldCtx ctx) throws Exception;
+    /**
+     * Is ready.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @JsonIgnore
     boolean isReady();
+/**
+ * Returns readiness status.
+ *
+ * @return {@link ReadinessStatus}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     ReadinessStatus getReadinessStatus();
+/**
+ * Is size exceeds limit.
+ *
+ * @return the boolean result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     boolean isSizeExceedsLimit();
+    /**
+     * Is size ok.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @JsonIgnore
     default boolean isSizeOk() {
         return !isSizeExceedsLimit();
     }
+/**
+ * Returns partition.
+ *
+ * @return {@link TopicPartitionInfo}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     TopicPartitionInfo getPartition();
+/**
+ * Set partition.
+ *
+ * @param partition partition ({@link TopicPartitionInfo})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void setPartition(TopicPartitionInfo partition);
+/**
+ * Checks state size.
+ *
+ * @param ctxId ctx id ({@link CalculatedFieldEntityCtxId})
+ * @param maxStateSize max state size
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void checkStateSize(CalculatedFieldEntityCtxId ctxId, long maxStateSize);
+/**
+ * Checks argument size.
+ *
+ * @param name name ({@link String})
+ * @param entry entry ({@link ArgumentEntry})
+ * @param ctx calculated-field execution context
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     default void checkArgumentSize(String name, ArgumentEntry entry, CalculatedFieldCtx ctx) {
         if (entry instanceof TsRollingArgumentEntry || entry instanceof GeofencingArgumentEntry) {
@@ -99,10 +225,27 @@ public interface CalculatedFieldState extends Closeable {
         }
         if (entry instanceof SingleValueArgumentEntry singleValueArgumentEntry) {
             if (ctx.getMaxSingleValueArgumentSize() > 0 && toSingleValueArgumentProto(name, singleValueArgumentEntry).getSerializedSize() > ctx.getMaxSingleValueArgumentSize()) {
+                
+                /**
+                 * Illegal argument exception.
+                 *
+                 * @param calculation." calculation."
+                 * @return the throw new value
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
+
                 throw new IllegalArgumentException("Single value size exceeds the maximum allowed limit. The argument will not be used for calculation.");
             }
         }
     }
+/**
+ * Readiness status.
+ *
+ * @param ready ready
+ * @param errorMsg error msg ({@link String})
+ * @return the record value
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     record ReadinessStatus(boolean ready, String errorMsg) {
 
@@ -113,10 +256,32 @@ public interface CalculatedFieldState extends Closeable {
         public static final String MISSING_AGGREGATION_ENTITIES_ERROR = "No entities found via 'Aggregation path to related entities'. " +
                                                                         "Verify the configured relation type and direction.";
         public static final ReadinessStatus READY = new ReadinessStatus(true, null);
+/**
+ * Not ready.
+ *
+ * @param errorMsg error msg ({@link String})
+ * @return {@link ReadinessStatus}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
         public static ReadinessStatus notReady(String errorMsg) {
+            
+            /**
+             * Readiness status.
+             *
+             * @return the return new value
+             * @throws Exception if an unexpected error occurs during processing
+             */
+
             return new ReadinessStatus(false, errorMsg);
         }
+/**
+ * From.
+ *
+ * @param emptyOrMissingArguments empty or missing arguments ({@link List})
+ * @return {@link ReadinessStatus}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
         public static ReadinessStatus from(List<String> emptyOrMissingArguments) {
             if (CollectionsUtil.isEmpty(emptyOrMissingArguments)) {
@@ -124,11 +289,35 @@ public interface CalculatedFieldState extends Closeable {
             }
             boolean propagationCtxIsEmpty = emptyOrMissingArguments.remove(PROPAGATION_CONFIG_ARGUMENT);
             if (!propagationCtxIsEmpty) {
+                
+                /**
+                 * Not ready.
+                 *
+                 * @param String.join(" string.join("
+                 * @return the return value
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
+
                 return notReady(MISSING_REQUIRED_ARGUMENTS_ERROR + String.join(", ", emptyOrMissingArguments));
             }
             if (emptyOrMissingArguments.isEmpty()) {
+                
+                /**
+                 * Not ready.
+                 *
+                 * @return the return value
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
+
                 return notReady(MISSING_PROPAGATION_TARGETS_ERROR);
             }
+            /**
+             * Not ready.
+             *
+             * @param String.join(" string.join("
+             * @return the return value
+             * @throws Exception if an unexpected error occurs during processing
+             */
             return notReady(MISSING_PROPAGATION_TARGETS_AND_ARGUMENTS_ERROR + String.join(", ", emptyOrMissingArguments));
         }
     }

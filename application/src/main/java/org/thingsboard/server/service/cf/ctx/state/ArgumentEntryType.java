@@ -15,6 +15,12 @@
  */
 package org.thingsboard.server.service.cf.ctx.state;
 
+/**
+
+ * Enumerates argument entry type values used in calculated fields (calculated-field argument resolution, runtime state, and result processing).
+
+ */
+
 public enum ArgumentEntryType {
     SINGLE_VALUE, TS_ROLLING, GEOFENCING, PROPAGATION, RELATED_ENTITIES, ENTITY_AGGREGATION
 }

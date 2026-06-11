@@ -40,11 +40,24 @@ import java.util.stream.Collectors;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 
+/**
+
+ * Rule node tbel script engine (TBEL/JS script invocation from services).
+
+ */
+
 public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeService, Object> {
 
     public RuleNodeTbelScriptEngine(TenantId tenantId, TbelInvokeService scriptInvokeService, String script, String... argNames) {
         super(tenantId, scriptInvokeService, script, argNames);
     }
+    /**
+     * Prepare args.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return the Object[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Object[] prepareArgs(TbMsg msg) {
@@ -58,6 +71,14 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         args[2] = msg.getType();
         return args;
     }
+    /**
+     * Executes update transform.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @param result result ({@link Object})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected List<TbMsg> executeUpdateTransform(TbMsg msg, Object result) {
@@ -76,6 +97,14 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         }
         throw wrongResultType(result);
     }
+    /**
+     * Executes generate transform.
+     *
+     * @param prevMsg prev msg ({@link TbMsg})
+     * @param result result ({@link Object})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbMsg executeGenerateTransform(TbMsg prevMsg, Object result) {
@@ -84,6 +113,13 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         }
         throw wrongResultType(result);
     }
+    /**
+     * Executes filter transform.
+     *
+     * @param result result ({@link Object})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean executeFilterTransform(Object result) {
@@ -92,6 +128,13 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         }
         throw wrongResultType(result);
     }
+    /**
+     * Executes switch transform.
+     *
+     * @param result result ({@link Object})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Set<String> executeSwitchTransform(Object result) {
@@ -111,16 +154,37 @@ public class RuleNodeTbelScriptEngine extends RuleNodeScriptEngine<TbelInvokeSer
         }
         throw wrongResultType(result);
     }
+    /**
+     * Executes json async.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return future completing with {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<JsonNode> executeJsonAsync(TbMsg msg) {
         return Futures.transform(executeScriptAsync(msg), JacksonUtil::valueToTree, directExecutor());
     }
+    /**
+     * Convert result.
+     *
+     * @param result result ({@link Object})
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Object convertResult(Object result) {
         return result;
     }
+    /**
+     * Executes to string transform.
+     *
+     * @param result result ({@link Object})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String executeToStringTransform(Object result) {

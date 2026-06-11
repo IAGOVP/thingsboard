@@ -18,11 +18,39 @@ package org.thingsboard.server.service.cf.ctx.state;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.util.concurrent.ListenableFuture;
 
+/**
+
+ * Script execution engine for  calculated fields.
+
+ */
+
 public interface CalculatedFieldScriptEngine {
+/**
+ * Executes script async.
+ *
+ * @param args args
+ * @return future completing with {@link Object}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     ListenableFuture<Object> executeScriptAsync(Object[] args);
+/**
+ * Executes json async.
+ *
+ * @param args args
+ * @return future completing with {@link JsonNode}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     ListenableFuture<JsonNode> executeJsonAsync(Object[] args);
+/**
+ * Destroy.
+ *
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void destroy();
 

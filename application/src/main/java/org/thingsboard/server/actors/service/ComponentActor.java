@@ -33,8 +33,9 @@ import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 
 /**
- * @author Andrew Shvayka
+ * Base actor for rule-engine components (rule chains and rule nodes) with a typed message processor.
  */
+
 @Slf4j
 public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgProcessor<T>> extends ContextAwareActor {
 
@@ -53,6 +54,15 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
     }
 
     abstract protected P createProcessor(TbActorCtx ctx);
+    
+    /**
+     * Initializes the actor after creation (schedules ticks, loads metadata, creates child actors).
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
+
 
     @Override
     public void init(TbActorCtx ctx) throws TbActorException {
@@ -60,6 +70,13 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
         this.processor = createProcessor(ctx);
         initProcessor(ctx);
     }
+    /**
+     * Init processor.
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
 
     protected void initProcessor(TbActorCtx ctx) throws TbActorException {
         try {
@@ -85,6 +102,16 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
             logAndPersist("onScheduleStatsPersistMsg", e);
         }
     }
+    
+    /**
+     * Stops child actors and releases resources before the actor terminates.
+     *
+     * @param stopReason stop reason ({@link TbActorStopReason})
+     * @param cause cause ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public void destroy(TbActorStopReason stopReason, Throwable cause) {
@@ -102,6 +129,13 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
             logLifecycleEvent(ComponentLifecycleEvent.STOPPED, e);
         }
     }
+    /**
+     * Handles component lifecycle msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void onComponentLifecycleMsg(ComponentLifecycleMsg msg) {
         log.debug("[{}][{}][{}] onComponentLifecycleMsg: [{}]", tenantId, id, id.getEntityType(), msg.getEvent());
@@ -135,6 +169,13 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
             }
         }
     }
+    /**
+     * Handles cluster event msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void onClusterEventMsg(PartitionChangeMsg msg) {
         try {
@@ -143,6 +184,13 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
             logAndPersist("onClusterEventMsg", e);
         }
     }
+    /**
+     * Handles stats persist tick.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void onStatsPersistTick(EntityId entityId) {
         try {
@@ -157,10 +205,24 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
         messagesProcessed = 0;
         errorsOccurred = 0;
     }
+    /**
+     * Increase messages processed count.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void increaseMessagesProcessedCount() {
         messagesProcessed++;
     }
+    /**
+     * Log and persist.
+     *
+     * @param method method ({@link String})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void logAndPersist(String method, Exception e) {
         logAndPersist(method, e, false);
@@ -186,10 +248,24 @@ public abstract class ComponentActor<T extends EntityId, P extends ComponentMsgP
     private void logLifecycleEvent(ComponentLifecycleEvent event) {
         logLifecycleEvent(event, null);
     }
+    /**
+     * Log lifecycle event.
+     *
+     * @param event event ({@link ComponentLifecycleEvent})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void logLifecycleEvent(ComponentLifecycleEvent event, Exception e) {
         systemContext.persistLifecycleEvent(tenantId, id, event, e);
     }
+    /**
+     * Returns error persist frequency.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract long getErrorPersistFrequency();
 

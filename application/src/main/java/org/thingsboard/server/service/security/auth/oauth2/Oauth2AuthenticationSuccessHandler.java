@@ -49,6 +49,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.thingsboard.server.service.security.auth.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.PREV_URI_COOKIE_NAME;
+/**
+ * Handles success responses for OAuth2 / social login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Slf4j
 @Component(value = "oauth2AuthenticationSuccessHandler")
@@ -77,6 +82,14 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         this.systemSecurityService = systemSecurityService;
     }
 
+    /**
+     * On authentication success.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param authentication authentication (Authentication)
+     * @throws IOException if the operation fails
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -124,6 +137,13 @@ public class Oauth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8));
         }
     }
+
+    /**
+     * Clear authentication attributes.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     */
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);

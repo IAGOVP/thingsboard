@@ -23,6 +23,12 @@ import org.thingsboard.server.common.data.sync.vc.request.create.ComplexVersionC
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+
+ * Data object for complex entities export ctx used during Git-based entity version control operations.
+
+ */
+
 public class ComplexEntitiesExportCtx extends EntitiesExportCtx<ComplexVersionCreateRequest> {
 
     private final Map<EntityType, EntityExportSettings> settings = new HashMap<>();
@@ -31,10 +37,23 @@ public class ComplexEntitiesExportCtx extends EntitiesExportCtx<ComplexVersionCr
         super(user, commit, request);
         request.getEntityTypes().forEach((type, config) -> settings.put(type, buildExportSettings(config)));
     }
+    /**
+     * Returns settings.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return {@link EntityExportSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityExportSettings getSettings(EntityType entityType) {
         return settings.get(entityType);
     }
+    /**
+     * Returns settings.
+     *
+     * @return {@link EntityExportSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityExportSettings getSettings() {

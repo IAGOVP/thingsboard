@@ -15,8 +15,19 @@
  */
 package org.thingsboard.server.exception;
 
+/**
+ * Unchecked exception thrown when calculated-field state processing fails.
+ *
+ * <p>Used internally by the calculated-field actor pipeline to signal invalid or inconsistent
+ * state without forcing checked-exception propagation through the actor runtime.
+ */
 public class CalculatedFieldStateException extends RuntimeException {
 
+    /**
+     * Creates an exception with the given state-processing failure description.
+     *
+     * @param message detail message describing the calculated-field state error
+     */
     public CalculatedFieldStateException(String message) {
         super(message);
     }

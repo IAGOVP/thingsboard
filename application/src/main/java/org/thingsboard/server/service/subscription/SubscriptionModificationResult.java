@@ -33,6 +33,11 @@ public class SubscriptionModificationResult {
     private TbSubscription<?> missedUpdatesCandidate;
     private TbEntitySubEvent event;
 
+    /**
+     * Has event.
+     * @return {@code true} when the condition holds
+     */
+
     public boolean hasEvent() {
         return event != null;
     }

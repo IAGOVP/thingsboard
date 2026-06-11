@@ -21,6 +21,9 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
+/**
+ * Base type for a single WebSocket subscription tied to a session, entity, and {@link TbSubscriptionType}.
+ */
 
 @Data
 public abstract class TbSubscription<T> {
@@ -36,6 +39,12 @@ public abstract class TbSubscription<T> {
     private final TbSubscriptionType type;
     private final BiConsumer<TbSubscription<T>, T> updateProcessor;
 
+    /**
+     * Compares this object to another for equality.
+     * @param o o
+     * @return boolean result
+     */
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,6 +56,11 @@ public abstract class TbSubscription<T> {
                 entityId.equals(that.entityId) &&
                 type == that.type;
     }
+
+    /**
+     * Returns a hash code consistent with {@link #equals(Object)}.
+     * @return {@code true} when the condition holds
+     */
 
     @Override
     public int hashCode() {

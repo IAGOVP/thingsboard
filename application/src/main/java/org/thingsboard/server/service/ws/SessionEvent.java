@@ -19,6 +19,9 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Optional;
+/**
+ * Session event component in the ThingsBoard WebSocket layer.
+ */
 
 @ToString
 public class SessionEvent {
@@ -38,13 +41,29 @@ public class SessionEvent {
         this.error = Optional.ofNullable(error);
     }
 
+    /**
+     * Invoked when established occurs.
+     * @return {@link SessionEvent}
+     */
+
     public static SessionEvent onEstablished() {
         return new SessionEvent(SessionEventType.ESTABLISHED, null);
     }
 
+    /**
+     * Invoked when closed occurs.
+     * @return {@link SessionEvent}
+     */
+
     public static SessionEvent onClosed() {
         return new SessionEvent(SessionEventType.CLOSED, null);
     }
+
+    /**
+     * Invoked when error occurs.
+     * @param t t
+     * @return {@link SessionEvent}
+     */
 
     public static SessionEvent onError(Throwable t) {
         return new SessionEvent(SessionEventType.ERROR, t);

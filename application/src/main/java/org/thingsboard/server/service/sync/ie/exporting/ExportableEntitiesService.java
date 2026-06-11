@@ -23,23 +23,108 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 
+/**
+
+ * Exports exportable entities service entities to portable JSON.
+
+ *
+
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+
+ */
+
 public interface ExportableEntitiesService {
+/**
+ * Finds entity by tenant id and external id.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param externalId external id ({@link I})
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     <E extends ExportableEntity<I>, I extends EntityId> E findEntityByTenantIdAndExternalId(TenantId tenantId, I externalId);
+/**
+ * Finds entity by tenant id and id.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param id id ({@link I})
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends HasId<I>, I extends EntityId> E findEntityByTenantIdAndId(TenantId tenantId, I id);
+/**
+ * Finds entity by id.
+ *
+ * @param id id ({@link I})
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends HasId<I>, I extends EntityId> E findEntityById(I id);
+/**
+ * Finds entity by tenant id and name.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityType entity type ({@link EntityType})
+ * @param name name ({@link String})
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends ExportableEntity<I>, I extends EntityId> E findEntityByTenantIdAndName(TenantId tenantId, EntityType entityType, String name);
+/**
+ * Finds default entity by tenant id.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityType entity type ({@link EntityType})
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends ExportableEntity<I>, I extends EntityId> E findDefaultEntityByTenantId(TenantId tenantId, EntityType entityType);
+/**
+ * Finds entities by tenant id.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityType entity type ({@link EntityType})
+ * @param pageLink pagination and sort parameters
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends ExportableEntity<I>, I extends EntityId> PageData<E> findEntitiesByTenantId(TenantId tenantId, EntityType entityType, PageLink pageLink);
+/**
+ * Finds entities ids by tenant id.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityType entity type ({@link EntityType})
+ * @param pageLink pagination and sort parameters
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <I extends EntityId> PageData<I> findEntitiesIdsByTenantId(TenantId tenantId, EntityType entityType, PageLink pageLink);
+/**
+ * Returns external id by internal.
+ *
+ * @param internalId internal id ({@link I})
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <I extends EntityId> I getExternalIdByInternal(I internalId);
+/**
+ * Removes by id.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param id id ({@link I})
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <I extends EntityId> void removeById(TenantId tenantId, I id);
 

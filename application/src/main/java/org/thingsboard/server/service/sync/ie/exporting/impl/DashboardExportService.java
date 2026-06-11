@@ -30,10 +30,26 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.thingsboard.server.service.sync.ie.importing.impl.DashboardImportService.WIDGET_CONFIG_PROCESSED_FIELDS_PATTERN;
+/**
+ * Exports dashboard entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
 public class DashboardExportService extends BaseEntityExportService<DashboardId, Dashboard, EntityExportData<Dashboard>> {
+    
+    /**
+     * Set related entities.
+     *
+     * @param ctx calculated-field execution context
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param exportData export data ({@link EntityExportData})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected void setRelatedEntities(EntitiesExportCtx<?> ctx, Dashboard dashboard, EntityExportData<Dashboard> exportData) {
@@ -49,6 +65,12 @@ public class DashboardExportService extends BaseEntityExportService<DashboardId,
             replaceUuidsRecursively(ctx, JacksonUtil.getSafely(widgetConfig, "config", "actions"), Collections.emptySet(), WIDGET_CONFIG_PROCESSED_FIELDS_PATTERN);
         }
     }
+    /**
+     * Returns supported entity types.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<EntityType> getSupportedEntityTypes() {

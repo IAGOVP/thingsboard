@@ -29,12 +29,25 @@ import org.thingsboard.server.common.data.page.PageDataIterable;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.gen.edge.v1.ResourceUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base resource edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #resourceValidator}.
+ */
 
 @Slf4j
 public abstract class BaseResourceProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<TbResource> resourceValidator;
+
+    /**
+     * Creates or persists or update tb resource.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param tbResourceId tb resource id (TbResourceId)
+     * @param resourceUpdateMsg resource update msg (ResourceUpdateMsg)
+     * @return boolean
+     */
 
     protected boolean saveOrUpdateTbResource(TenantId tenantId, TbResourceId tbResourceId, ResourceUpdateMsg resourceUpdateMsg) {
         boolean resourceKeyUpdated = false;

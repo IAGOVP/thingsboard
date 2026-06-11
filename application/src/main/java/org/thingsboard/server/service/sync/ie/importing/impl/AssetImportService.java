@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 import org.thingsboard.server.dao.asset.AssetService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports asset entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -32,18 +37,49 @@ import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 public class AssetImportService extends BaseEntityImportService<AssetId, Asset, EntityExportData<Asset>> {
 
     private final AssetService assetService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param asset asset ({@link Asset})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, Asset asset, IdProvider idProvider) {
         asset.setTenantId(tenantId);
         asset.setCustomerId(idProvider.getInternalId(asset.getCustomerId()));
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param asset asset ({@link Asset})
+     * @param old old ({@link Asset})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Asset prepare(EntitiesImportCtx ctx, Asset asset, Asset old, EntityExportData<Asset> exportData, IdProvider idProvider) {
         asset.setAssetProfileId(idProvider.getInternalId(asset.getAssetProfileId()));
         return asset;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param asset asset ({@link Asset})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Asset saveOrUpdate(EntitiesImportCtx ctx, Asset asset, EntityExportData<Asset> exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -53,11 +89,25 @@ public class AssetImportService extends BaseEntityImportService<AssetId, Asset, 
         }
         return savedAsset;
     }
+    /**
+     * Deep copy.
+     *
+     * @param asset asset ({@link Asset})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Asset deepCopy(Asset asset) {
         return new Asset(asset);
     }
+    /**
+     * Cleanup for comparison.
+     *
+     * @param e e ({@link Asset})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupForComparison(Asset e) {
@@ -66,6 +116,12 @@ public class AssetImportService extends BaseEntityImportService<AssetId, Asset, 
             e.setCustomerId(null);
         }
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

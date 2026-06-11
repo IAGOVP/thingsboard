@@ -23,6 +23,12 @@ import org.thingsboard.server.common.data.sync.vc.request.create.EntityTypeVersi
 import org.thingsboard.server.common.data.sync.vc.request.create.SyncStrategy;
 import org.thingsboard.server.common.data.sync.vc.request.create.VersionCreateRequest;
 
+/**
+
+ * Data object for entity type export ctx used during Git-based entity version control operations.
+
+ */
+
 public class EntityTypeExportCtx extends EntitiesExportCtx<VersionCreateRequest> {
 
     @Getter

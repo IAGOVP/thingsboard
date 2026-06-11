@@ -22,13 +22,20 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.service.ws.telemetry.TelemetryFeature;
 
 import java.util.Map;
-
 /**
- * @author Andrew Shvayka
+ * Subscription state component in the ThingsBoard WebSocket layer.
  */
+
+
 @AllArgsConstructor
 public class SubscriptionState {
 
+
+    /**
+     * Compares this object to another for equality.
+     * @param o o
+     * @return boolean result
+     */
     @Getter private final String wsSessionId;
     @Getter private final int subscriptionId;
     @Getter private final TenantId tenantId;
@@ -51,6 +58,11 @@ public class SubscriptionState {
         return type == that.type;
     }
 
+    /**
+     * Returns a hash code consistent with {@link #equals(Object)}.
+     * @return {@code true} when the condition holds
+     */
+
     @Override
     public int hashCode() {
         int result = wsSessionId != null ? wsSessionId.hashCode() : 0;
@@ -59,6 +71,11 @@ public class SubscriptionState {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
+
+    /**
+     * To string.
+     * @return string value
+     */
 
     @Override
     public String toString() {

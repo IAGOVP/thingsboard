@@ -36,6 +36,10 @@ import org.thingsboard.server.service.sync.ie.importing.csv.AbstractBulkImportSe
 import java.util.Map;
 import java.util.Optional;
 
+    /**
+     * Spring service component for asset bulk import service (asset-specific service operations).
+     */
+
 @Service
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -43,6 +47,14 @@ public class AssetBulkImportService extends AbstractBulkImportService<Asset> {
     private final AssetService assetService;
     private final TbAssetService tbAssetService;
     private final AssetProfileService assetProfileService;
+    /**
+     * Set entity fields.
+     *
+     * @param entity entity ({@link Asset})
+     * @param fields fields ({@link Map})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setEntityFields(Asset entity, Map<BulkImportColumnType, String> fields) {
@@ -65,6 +77,15 @@ public class AssetBulkImportService extends AbstractBulkImportService<Asset> {
         });
         entity.setAdditionalInfo(additionalInfo);
     }
+    /**
+     * Saves or persists entity.
+     *
+     * @param user authenticated user performing the action
+     * @param entity entity ({@link Asset})
+     * @param fields fields ({@link Map})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @SneakyThrows
@@ -78,18 +99,40 @@ public class AssetBulkImportService extends AbstractBulkImportService<Asset> {
         entity.setAssetProfileId(assetProfile.getId());
         return tbAssetService.save(entity, user);
     }
+    /**
+     * Finds or create entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name name ({@link String})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Asset findOrCreateEntity(TenantId tenantId, String name) {
         return Optional.ofNullable(assetService.findAssetByTenantIdAndName(tenantId, name))
                 .orElseGet(Asset::new);
     }
+    /**
+     * Set owners.
+     *
+     * @param entity entity ({@link Asset})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwners(Asset entity, SecurityUser user) {
         entity.setTenantId(user.getTenantId());
         entity.setCustomerId(user.getCustomerId());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected EntityType getEntityType() {

@@ -15,7 +15,15 @@
  */
 package org.thingsboard.server.controller;
 
+/**
+ * Shared Swagger/OpenAPI description strings and path-variable constants for REST controllers.
+ *
+ * <p>Not a REST controller; constants are referenced from {@code @ApiOperation} notes and
+ * {@code @Parameter} descriptions across controller classes.
+ */
 public class ControllerConstants {
+
+    // --- General formatting and pagination ---
 
     protected static final String NEW_LINE = "\n\n";
     protected static final String UUID_WIKI_LINK = "[time-based UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)). ";
@@ -29,6 +37,9 @@ public class ControllerConstants {
     protected static final String RPC_ID = "rpcId";
     protected static final String ENTITY_ID = "entityId";
     protected static final String ASSIGNEE_ID = "assigneeId";
+
+    // --- Path variable name constants ---
+
     protected static final String PAGE_DATA_PARAMETERS = "You can specify parameters to filter the results. " +
             "The result is wrapped with PageData object that allows you to iterate over result set using pagination. " +
             "See response schema for more details. ";
@@ -37,6 +48,9 @@ public class ControllerConstants {
     protected static final String INLINE_IMAGES_DESCRIPTION = "Inline images as a data URL (Base64)";
     protected static final String INCLUDE_RESOURCES = "includeResources";
     protected static final String INCLUDE_RESOURCES_DESCRIPTION = "Export used resources and replace resource links with resource metadata";
+
+    // --- Entity ID path/query parameter descriptions ---
+
     protected static final String DASHBOARD_ID_PARAM_DESCRIPTION = "A string value representing the dashboard id. For example, '784f394c-42b6-435a-983c-b7beff2784f9'";
     protected static final String RPC_ID_PARAM_DESCRIPTION = "A string value representing the rpc id. For example, '784f394c-42b6-435a-983c-b7beff2784f9'";
     protected static final String DEVICE_ID_PARAM_DESCRIPTION = "A string value representing the device id. For example, '784f394c-42b6-435a-983c-b7beff2784f9'";
@@ -65,12 +79,18 @@ public class ControllerConstants {
     protected static final String VC_REQUEST_ID_PARAM_DESCRIPTION = "A string value representing the version control request id. For example, '784f394c-42b6-435a-983c-b7beff2784f9'";
     protected static final String RESOURCE_ID_PARAM_DESCRIPTION = "A string value representing the resource id. For example, '784f394c-42b6-435a-983c-b7beff2784f9'";
     protected static final String API_KEY_ID_PARAM_DESCRIPTION = "A string value representing the api key id. For example, '784f394c-42b6-435a-983c-b7beff2784f9'";
+
+    // --- Authority requirement paragraphs (appended to Swagger notes) ---
+
     protected static final String SYSTEM_AUTHORITY_PARAGRAPH = "\n\nAvailable for users with 'SYS_ADMIN' authority.";
     protected static final String SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH = "\n\nAvailable for users with 'SYS_ADMIN' or 'TENANT_ADMIN' authority.";
     protected static final String TENANT_AUTHORITY_PARAGRAPH = "\n\nAvailable for users with 'TENANT_ADMIN' authority.";
     protected static final String TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH = "\n\nAvailable for users with 'TENANT_ADMIN' or 'CUSTOMER_USER' authority.";
     protected static final String CUSTOMER_AUTHORITY_PARAGRAPH = "\n\nAvailable for users with 'CUSTOMER_USER' authority.";
     protected static final String AVAILABLE_FOR_ANY_AUTHORIZED_USER = "\n\nAvailable for any authorized user. ";
+
+    // --- Pagination and sorting parameter descriptions ---
+
     protected static final String PAGE_SIZE_DESCRIPTION = "Maximum amount of entities in a one page";
     protected static final String PAGE_NUMBER_DESCRIPTION = "Sequence number of page starting from 0";
     protected static final String DEVICE_TYPE_DESCRIPTION = "Device type as the name of the device profile";
@@ -79,6 +99,9 @@ public class ControllerConstants {
     protected static final String ASSET_TYPE_DESCRIPTION = "Asset type";
     protected static final String EDGE_TYPE_DESCRIPTION = "A string value representing the edge type. For example, 'default'";
     protected static final String RULE_CHAIN_TYPE_DESCRIPTION = "Rule chain type (CORE or EDGE)";
+
+    // --- Text search filter descriptions (per entity type) ---
+
     protected static final String ASSET_TEXT_SEARCH_DESCRIPTION = "The case insensitive 'substring' filter based on the asset name.";
     protected static final String DASHBOARD_TEXT_SEARCH_DESCRIPTION = "The case insensitive 'substring' filter based on the dashboard title.";
     protected static final String WIDGET_BUNDLE_TEXT_SEARCH_DESCRIPTION = "The case insensitive 'substring' filter based on the widget bundle title.";
@@ -103,6 +126,9 @@ public class ControllerConstants {
     protected static final String SORT_PROPERTY_DESCRIPTION = "Property of entity to sort by";
 
     protected static final String SORT_ORDER_DESCRIPTION = "Sort order. ASC (ASCENDING) or DESC (DESCENDING)";
+
+    // --- Extended entity info object descriptions ---
+
     protected static final String DEVICE_INFO_DESCRIPTION = "Device Info is an extension of the default Device object that contains information about the assigned customer name and device profile name. ";
     protected static final String ASSET_INFO_DESCRIPTION = "Asset Info is an extension of the default Asset object that contains information about the assigned customer name. ";
     protected static final String ALARM_INFO_DESCRIPTION = "Alarm Info is an extension of the default Alarm object that also contains name of the alarm originator.";
@@ -111,6 +137,9 @@ public class ControllerConstants {
     protected static final String DEVICE_PROFILE_INFO_DESCRIPTION = "Device Profile Info is a lightweight object that includes main information about Device Profile excluding the heavyweight configuration object. ";
 
     protected static final String ASSET_PROFILE_INFO_DESCRIPTION = "Asset Profile Info is a lightweight object that includes main information about Asset Profile. ";
+
+    // --- Queue, OTA package, and resource descriptions ---
+
     protected static final String QUEUE_SERVICE_TYPE_DESCRIPTION = "Service type (implemented only for the TB-RULE-ENGINE)";
     protected static final String QUEUE_QUEUE_TEXT_SEARCH_DESCRIPTION = "The case insensitive 'substring' filter based on the queue name.";
     protected static final String QUEUE_STATS_TEXT_SEARCH_DESCRIPTION = "The case insensitive 'substring' filter based on the queue name or service id.";
@@ -131,6 +160,8 @@ public class ControllerConstants {
     protected static final String RESOURCE_TYPE = "A string value representing the resource type.";
     protected static final String RESOURCE_SUB_TYPE = "A string value representing the resource sub-type.";
 
+    // --- LwM2M and device naming ---
+
     protected static final String LWM2M_OBJECT_DESCRIPTION = "LwM2M Object is a object that includes information about the LwM2M model which can be used in transport configuration for the LwM2M device profile. ";
 
     protected static final String DEVICE_NAME_DESCRIPTION = "A string value representing the Device name.";
@@ -138,6 +169,8 @@ public class ControllerConstants {
 
     protected static final String EVENT_START_TIME_DESCRIPTION = "Timestamp. Events with creation time before it won't be queried.";
     protected static final String EVENT_END_TIME_DESCRIPTION = "Timestamp. Events with creation time after it won't be queried.";
+
+    // --- Edge assignment async workflow descriptions ---
 
     protected static final String EDGE_UNASSIGN_ASYNC_FIRST_STEP_DESCRIPTION = "Unassignment works in async way - first, 'unassign' notification event pushed to edge queue on platform. ";
     protected static final String EDGE_UNASSIGN_RECEIVE_STEP_DESCRIPTION = "(Edge will receive this instantly, if it's currently connected, or once it's going to be connected to platform). ";
@@ -147,6 +180,8 @@ public class ControllerConstants {
     protected static final String ENTITY_VERSION_TEXT_SEARCH_DESCRIPTION = "The case insensitive 'substring' filter based on the entity version name.";
     protected static final String VERSION_ID_PARAM_DESCRIPTION = "Version id, for example fd82625bdd7d6131cf8027b44ee967012ecaf990. Represents commit hash.";
     protected static final String BRANCH_PARAM_DESCRIPTION = "The name of the working branch, for example 'master'";
+
+    // --- Markdown and event debug filter JSON examples ---
 
     protected static final String MARKDOWN_CODE_BLOCK_START = "```json\n";
     protected static final String MARKDOWN_CODE_BLOCK_END = "\n```";
@@ -216,6 +251,8 @@ public class ControllerConstants {
             "}" + MARKDOWN_CODE_BLOCK_END;
 
     protected static final String IS_BOOTSTRAP_SERVER_PARAM_DESCRIPTION = "A Boolean value representing the Server SecurityInfo for future Bootstrap client mode settings. Values: 'true' for Bootstrap Server; 'false' for Lwm2m Server. ";
+
+    // --- Device credentials JSON examples (Swagger documentation) ---
 
     protected static final String DEVICE_WITH_DEVICE_CREDENTIALS_ACCESS_TOKEN_PARAM_DESCRIPTION =
                     "{\n" +
@@ -435,6 +472,8 @@ public class ControllerConstants {
 
 
 
+    // --- Entity query API filter documentation (complex query controllers) ---
+
     protected static final String FILTER_VALUE_TYPE = NEW_LINE + "## Value Type and Operations" + NEW_LINE +
             "Provides a hint about the data type of the entity field that is defined in the filter key. " +
             "The value type impacts the list of possible operations that you may use in the corresponding predicate. For example, you may use 'STARTS_WITH' or 'END_WITH', but you can't use 'GREATER_OR_EQUAL' for string values." +
@@ -446,6 +485,8 @@ public class ControllerConstants {
 
     protected static final String RELATION_TYPE_PARAM_DESCRIPTION = "A string value representing relation type between entities. For example, 'Contains', 'Manages'. It can be any string value.";
     protected static final String RELATION_TYPE_GROUP_PARAM_DESCRIPTION = "A string value representing relation type group. For example, 'COMMON'";
+
+    // --- Dashboard and tenant validation ---
 
     public static final String INCORRECT_TENANT_ID = "Incorrect tenantId ";
     protected static final String DEFAULT_DASHBOARD = "defaultDashboardId";

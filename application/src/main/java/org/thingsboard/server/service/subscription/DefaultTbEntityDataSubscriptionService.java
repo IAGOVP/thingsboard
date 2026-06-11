@@ -90,6 +90,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+/**
+ * Default implementation of {@link TbEntityDataSubscriptionService}.
+ */
 
 @SuppressWarnings("UnstableApiUsage")
 @Slf4j
@@ -151,6 +154,12 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
     private String serviceId;
     private SubscriptionServiceStatistics stats = new SubscriptionServiceStatistics();
 
+    /**
+     * Initializes executor.
+     * @return @PostConstruct
+    public void
+     */
+
     @PostConstruct
     public void initExecutor() {
         serviceId = serviceInfoProvider.getServiceId();
@@ -163,6 +172,12 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
     }
 
+    /**
+     * Shutdown executor.
+     * @return @PreDestroy
+    public void
+     */
+
     @PreDestroy
     public void shutdownExecutor() {
         if (wsCallBackExecutor != null) {
@@ -172,6 +187,14 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
             scheduler.shutdownNow();
         }
     }
+
+    /**
+     * Handles cmd.
+     * @param session session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
 
     @Override
     public void handleCmd(WebSocketSessionRef session, EntityDataCmd cmd) {
@@ -236,10 +259,25 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
             } else {
                 TbEntityDataSubCtx finalCtx = ctx;
                 Futures.addCallback(Futures.allAsList(cmdFutures), new FutureCallback<>() {
+                    /**
+                     * Invoked when success occurs.
+                     * @param result result
+                     * @return @Override
+                    public void
+                     */
                     @Override
                     public void onSuccess(@Nullable List<Object> result) {
                         handleRegularCommands(finalCtx, cmd);
                     }
+
+                    /**
+                     * Invoked when failure occurs.
+                     *
+                     * <p>Default implementation inherited from the supertype.
+                     * @param t t
+                     * @return @Override
+                    public void
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -265,6 +303,15 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
                     Futures.addCallback(handleTimeSeriesCmd(ctx, cmd.getTsCmd()), new FutureCallback<>() {
                         @Override
                         public void onSuccess(TbEntityDataSubCtx result) {}
+
+                        /**
+                         * Invoked when failure occurs.
+                         *
+                         * <p>Default implementation inherited from the supertype.
+                         * @param t t
+                         * @return @Override
+                        public void
+                         */
 
                         @Override
                         public void onFailure(Throwable t) {
@@ -385,6 +432,14 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         wsService.close(sessionId, CloseStatus.SERVICE_RESTARTED);
     }
 
+    /**
+     * Handles cmd.
+     * @param session session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
+
     @Override
     public void handleCmd(WebSocketSessionRef session, EntityCountCmd cmd) {
         TbEntityCountSubCtx ctx = getSubCtx(session.getSessionId(), cmd.getCmdId());
@@ -404,6 +459,14 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
             log.debug("[{}][{}] Received duplicate command: {}", session.getSessionId(), cmd.getCmdId(), cmd);
         }
     }
+
+    /**
+     * Handles cmd.
+     * @param session session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
 
     @Override
     public void handleCmd(WebSocketSessionRef session, AlarmDataCmd cmd) {
@@ -437,6 +500,14 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
     }
 
+    /**
+     * Handles cmd.
+     * @param session session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
+
     @Override
     public void handleCmd(WebSocketSessionRef session, AlarmCountCmd cmd) {
         TbAlarmCountSubCtx ctx = getSubCtx(session.getSessionId(), cmd.getCmdId());
@@ -468,6 +539,14 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
             log.debug("[{}][{}] Received duplicate command: {}", session.getSessionId(), cmd.getCmdId(), cmd);
         }
     }
+
+    /**
+     * Handles cmd.
+     * @param session session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
 
     @Override
     public void handleCmd(WebSocketSessionRef session, AlarmStatusCmd cmd) {
@@ -527,7 +606,11 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         }
     }
 
-    @Scheduled(fixedDelayString = "${server.ws.dynamic_page_link.stats:10000}")
+    /**
+     * Print stats.
+     */
+
+@Scheduled(fixedDelayString = "${server.ws.dynamic_page_link.stats:10000}")
     public void printStats() {
         int alarmQueryInvocationCntValue = stats.getAlarmQueryInvocationCnt().getAndSet(0);
         long alarmQueryInvocationTimeValue = stats.getAlarmQueryTimeSpent().getAndSet(0);
@@ -727,6 +810,12 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
                 missingTelemetryFutures.put(entityData, Futures.transform(missingTsData, this::toTsValue, MoreExecutors.directExecutor()));
             }
             Futures.addCallback(Futures.allAsList(missingTelemetryFutures.values()), new FutureCallback<>() {
+                /**
+                 * Invoked when success occurs.
+                 * @param result result
+                 * @return @Override
+                public void
+                 */
                 @Override
                 public void onSuccess(@Nullable List<Map<String, TsValue>> result) {
                     missingTelemetryFutures.forEach((key, value) -> {
@@ -757,6 +846,13 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
                     }
                 }
 
+                /**
+                 * Invoked when failure occurs.
+                 * @param t t
+                 * @return @Override
+                public void
+                 */
+
                 @Override
                 public void onFailure(Throwable t) {
                     log.warn("[{}][{}] Failed to process websocket command: {}:{}", ctx.getSessionId(), ctx.getCmdId(), ctx.getQuery(), latestCmd, t);
@@ -778,6 +874,14 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
         return data.stream().collect(Collectors.toMap(TsKvEntry::getKey, value -> new TsValue(value.getTs(), value.getValueAsString())));
     }
 
+    /**
+     * Cancels subscription.
+     * @param sessionId WebSocket session identifier
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
+
     @Override
     public void cancelSubscription(String sessionId, UnsubscribeCmd cmd) {
         cleanupAndCancel(getSubCtx(sessionId, cmd.getCmdId()));
@@ -794,6 +898,13 @@ public class DefaultTbEntityDataSubscriptionService implements TbEntityDataSubsc
             }
         }
     }
+
+    /**
+     * Cancels all session subscriptions.
+     * @param sessionId WebSocket session identifier
+     * @return @Override
+    public void
+     */
 
     @Override
     public void cancelAllSessionSubscriptions(String sessionId) {

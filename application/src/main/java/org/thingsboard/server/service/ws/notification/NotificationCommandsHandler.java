@@ -22,15 +22,49 @@ import org.thingsboard.server.service.ws.notification.cmd.NotificationsCountSubC
 import org.thingsboard.server.service.ws.notification.cmd.NotificationsSubCmd;
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.UnsubscribeCmd;
 
+/**
+ * Notification commands handler contract for the ThingsBoard WebSocket layer.
+ */
+
 public interface NotificationCommandsHandler {
+
+    /**
+     * Handles unread notifications sub cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     */
 
     void handleUnreadNotificationsSubCmd(WebSocketSessionRef sessionRef, NotificationsSubCmd cmd);
 
+    /**
+     * Handles unread notifications count sub cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     */
+
     void handleUnreadNotificationsCountSubCmd(WebSocketSessionRef sessionRef, NotificationsCountSubCmd cmd);
+
+    /**
+     * Handles mark as read cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     */
 
     void handleMarkAsReadCmd(WebSocketSessionRef sessionRef, MarkNotificationsAsReadCmd cmd);
 
+    /**
+     * Handles mark all as read cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     */
+
     void handleMarkAllAsReadCmd(WebSocketSessionRef sessionRef, MarkAllNotificationsAsReadCmd cmd);
+
+    /**
+     * Handles unsub cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     */
 
     void handleUnsubCmd(WebSocketSessionRef sessionRef, UnsubscribeCmd cmd);
 

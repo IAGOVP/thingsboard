@@ -40,13 +40,29 @@ public class TbSubscriptionsInfo {
     protected Set<String> attrKeys;
     protected int seqNumber;
 
+    /**
+     * Is empty.
+     * @return {@code true} when the condition holds
+     */
+
     public boolean isEmpty() {
         return !notifications && !alarms && !tsAllKeys && !attrAllKeys && tsKeys == null && attrKeys == null;
     }
 
+    /**
+     * Copy.
+     * @return {@link TbSubscriptionsInfo}
+     */
+
     protected TbSubscriptionsInfo copy() {
         return copy(0);
     }
+
+    /**
+     * Copy.
+     * @param seqNumber seq number
+     * @return {@link TbSubscriptionsInfo}
+     */
 
     protected TbSubscriptionsInfo copy(int seqNumber) {
         return new TbSubscriptionsInfo(notifications, alarms, tsAllKeys, tsKeys != null ? new HashSet<>(tsKeys) : null, attrAllKeys, attrKeys != null ? new HashSet<>(attrKeys) : null, seqNumber);

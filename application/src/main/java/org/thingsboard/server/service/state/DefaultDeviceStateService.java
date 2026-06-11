@@ -191,6 +191,12 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
     private ListeningExecutorService deviceStateCallbackExecutor;
 
     final ConcurrentMap<DeviceId, DeviceStateData> deviceStates = new ConcurrentHashMap<>();
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
@@ -202,6 +208,12 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         scheduledExecutor.scheduleWithFixedDelay(this::checkStates, new Random().nextInt(defaultStateCheckIntervalInSec), defaultStateCheckIntervalInSec, TimeUnit.SECONDS);
         scheduledExecutor.scheduleWithFixedDelay(this::reportActivityStats, defaultActivityStatsIntervalInSec, defaultActivityStatsIntervalInSec, TimeUnit.SECONDS);
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void stop() {
@@ -213,16 +225,37 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
             deviceStateCallbackExecutor.shutdownNow();
         }
     }
+    /**
+     * Returns service name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getServiceName() {
         return "Device State";
     }
+    /**
+     * Returns scheduler executor name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getSchedulerExecutorName() {
         return "device-state-scheduled";
     }
+    /**
+     * Handles device connect.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param lastConnectTime last connect time
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceConnect(TenantId tenantId, DeviceId deviceId, long lastConnectTime) {
@@ -247,6 +280,15 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         pushRuleEngineMessage(stateData, TbMsgType.CONNECT_EVENT);
         checkAndUpdateState(deviceId, stateData);
     }
+    /**
+     * Handles device activity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param lastReportedActivity last reported activity
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceActivity(TenantId tenantId, DeviceId deviceId, long lastReportedActivity) {
@@ -278,6 +320,15 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
             cleanupEntity(deviceId);
         }
     }
+    /**
+     * Handles device disconnect.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param lastDisconnectTime last disconnect time
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceDisconnect(TenantId tenantId, DeviceId deviceId, long lastDisconnectTime) {
@@ -301,6 +352,15 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         save(tenantId, deviceId, LAST_DISCONNECT_TIME, lastDisconnectTime);
         pushRuleEngineMessage(stateData, TbMsgType.DISCONNECT_EVENT);
     }
+    /**
+     * Handles device inactivity timeout update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param inactivityTimeout inactivity timeout
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceInactivityTimeoutUpdate(TenantId tenantId, DeviceId deviceId, long inactivityTimeout) {
@@ -315,6 +375,15 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         stateData.getState().setInactivityTimeout(inactivityTimeout);
         checkAndUpdateState(deviceId, stateData);
     }
+    /**
+     * Handles device inactivity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param lastInactivityTime last inactivity time
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceInactivity(TenantId tenantId, DeviceId deviceId, long lastInactivityTime) {
@@ -342,6 +411,14 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         log.trace("[{}][{}] On device inactivity: processing inactivity event with ts [{}].", tenantId.getId(), deviceId.getId(), lastInactivityTime);
         reportInactivity(lastInactivityTime, stateData);
     }
+    /**
+     * Handles queue msg.
+     *
+     * @param proto proto
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onQueueMsg(TransportProtos.DeviceStateServiceMsgProto proto, TbCallback callback) {
@@ -356,6 +433,13 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
                 if (device != null) {
                     if (proto.getAdded()) {
                         Futures.addCallback(fetchDeviceState(device), new FutureCallback<>() {
+                            /**
+                             * Handles success.
+                             *
+                             * @param state state ({@link DeviceStateData})
+                             * @return nothing
+                             * @throws Exception if an unexpected error occurs during processing
+                             */
                             @Override
                             public void onSuccess(DeviceStateData state) {
                                 TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_CORE, tenantId, device.getId());
@@ -370,6 +454,13 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
                                     callback.onFailure(new RuntimeException("Device belongs to external partition " + tpi.getFullTopicName() + "!"));
                                 }
                             }
+                            /**
+                             * Handles failure.
+                             *
+                             * @param t t ({@link Throwable})
+                             * @return nothing
+                             * @throws Exception if an unexpected error occurs during processing
+                             */
 
                             @Override
                             public void onFailure(@NonNull Throwable t) {
@@ -411,6 +502,13 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         boolean activityState = Objects.requireNonNullElse(cachedState, fetchedState).getState().isActive();
         save(fetchedState.getTenantId(), deviceId, ACTIVITY_STATE, activityState);
     }
+    /**
+     * Handles added partitions.
+     *
+     * @param addedPartitions added partitions ({@link Set})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Map<TopicPartitionInfo, List<ListenableFuture<?>>> onAddedPartitions(Set<TopicPartitionInfo> addedPartitions) {
@@ -575,11 +673,25 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         var deviceId = stateData.getDeviceId();
 
         Futures.addCallback(save(stateData.getTenantId(), deviceId, INACTIVITY_ALARM_TIME, ts), new FutureCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param success success ({@link Void})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(Void success) {
                 stateData.getState().setLastInactivityAlarmTime(ts);
                 onDeviceActivityStatusChange(false, stateData);
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(@NonNull Throwable t) {
@@ -616,6 +728,13 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         var deviceId = stateData.getDeviceId();
 
         Futures.addCallback(save(tenantId, deviceId, ACTIVITY_STATE, active), new FutureCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param success success ({@link Void})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(Void success) {
                 stateData.getState().setActive(active);
@@ -631,6 +750,13 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
                         .deviceLabel(metaData.getValue("deviceLabel"))
                         .build());
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(@NonNull Throwable t) {
@@ -648,6 +774,13 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
         }
         return cleanup;
     }
+    /**
+     * Cleanup entity on partition removal.
+     *
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupEntityOnPartitionRemoval(DeviceId deviceId) {
@@ -692,6 +825,13 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
 
     private Function<List<? extends KvEntry>, DeviceStateData> extractDeviceStateData(Device device) {
         return new Function<>() {
+            /**
+             * Apply.
+             *
+             * @param data data ({@link List})
+             * @return {@link DeviceStateData}
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Nonnull
             @Override
             public DeviceStateData apply(@Nullable List<? extends KvEntry> data) {
@@ -924,11 +1064,25 @@ public class DefaultDeviceStateService extends AbstractPartitionBasedService<Dev
     }
 
     private record TelemetrySaveCallback<T>(DeviceId deviceId, KvEntry kvEntry) implements FutureCallback<T> {
+        /**
+         * Handles success.
+         *
+         * @param result result ({@link T})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onSuccess(@Nullable T result) {
             log.trace("[{}] Successfully updated entry {}", deviceId, kvEntry);
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(@NonNull Throwable t) {

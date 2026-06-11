@@ -22,6 +22,9 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.sync.vc.AutoCommitSettings;
+/**
+ * Manages automatic version commits when entities change.
+ */
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("AutoCommitSettingsCache")

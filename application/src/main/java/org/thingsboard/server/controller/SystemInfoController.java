@@ -55,6 +55,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Hidden
+/**
+ * REST API for system build info and UI parameters.
+ * 
+ * <p>Base path: {@code /api}. Version metadata and tenant/user-scoped UI capability flags (hidden from Swagger).
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -94,12 +100,34 @@ public class SystemInfoController extends BaseController {
     @Autowired
     private TrendzSettingsService trendzSettingsService;
 
+    /**
+
+     * Logs system build information at application startup.
+
+     * 
+
+     * <p><b>HTTP:</b> not applicable (Spring lifecycle callback)
+
+     * <p><b>Auth:</b> not applicable
+
+     * @return empty response body
+
+     */
+
     @PostConstruct
     public void init() {
         JsonNode info = buildInfoObject();
         log.info("System build info: {}", info);
     }
 
+    /**
+     * Get system version info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/system/info}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @return {@link JsonNode} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/system/info", method = RequestMethod.GET)
     @ResponseBody
@@ -107,6 +135,14 @@ public class SystemInfoController extends BaseController {
         return buildInfoObject();
     }
 
+    /**
+     * Get system params.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/system/params}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @return {@link SystemParams} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/system/params", method = RequestMethod.GET)
     @ResponseBody

@@ -26,8 +26,21 @@ import org.thingsboard.server.service.sms.aws.AwsSmsSender;
 import org.thingsboard.server.service.sms.smpp.SmppSmsSender;
 import org.thingsboard.server.service.sms.twilio.TwilioSmsSender;
 
+    /**
+     * Default Spring implementation for sms sender factory (SMS provider abstraction and message sending).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Component
 public class DefaultSmsSenderFactory implements SmsSenderFactory {
+    /**
+     * Creates sms sender.
+     *
+     * @param config config ({@link SmsProviderConfiguration})
+     * @return {@link SmsSender}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public SmsSender createSmsSender(SmsProviderConfiguration config) {

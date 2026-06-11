@@ -18,7 +18,25 @@ package org.thingsboard.server.actors.app;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbActorMsg;
 
+/**
+
+ * Initialization message sent to {@link org.thingsboard.server.actors.app.AppActor} after the actor system starts.
+
+ *
+
+ * <p>Triggers creation of tenant actors and rule-chain initialization across the cluster partition.
+
+ */
+
 public class AppInitMsg implements TbActorMsg {
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

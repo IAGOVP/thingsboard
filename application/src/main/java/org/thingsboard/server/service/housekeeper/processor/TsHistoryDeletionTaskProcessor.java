@@ -26,12 +26,23 @@ import org.thingsboard.server.dao.timeseries.TimeseriesService;
 
 import java.util.List;
 
+    /**
+     * Spring service component for ts history deletion task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class TsHistoryDeletionTaskProcessor extends HousekeeperTaskProcessor<TsHistoryDeletionHousekeeperTask> {
 
     private final TimeseriesService timeseriesService;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link TsHistoryDeletionHousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(TsHistoryDeletionHousekeeperTask task) throws Exception {
@@ -39,6 +50,12 @@ public class TsHistoryDeletionTaskProcessor extends HousekeeperTaskProcessor<TsH
         wait(timeseriesService.remove(task.getTenantId(), task.getEntityId(), List.of(deleteQuery)));
         log.debug("[{}][{}][{}] Deleted timeseries history for key '{}'", task.getTenantId(), task.getEntityId().getEntityType(), task.getEntityId(), task.getKey());
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

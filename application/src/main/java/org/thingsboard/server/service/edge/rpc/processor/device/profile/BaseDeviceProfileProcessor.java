@@ -28,12 +28,25 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.gen.edge.v1.DeviceProfileUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base device profile edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #deviceProfileValidator}.
+ */
 
 @Slf4j
 public abstract class BaseDeviceProfileProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<DeviceProfile> deviceProfileValidator;
+
+    /**
+     * Creates or persists or update device profile.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param deviceProfileId device profile id (DeviceProfileId)
+     * @param deviceProfileUpdateMsg device profile update msg (DeviceProfileUpdateMsg)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateDeviceProfile(TenantId tenantId, DeviceProfileId deviceProfileId, DeviceProfileUpdateMsg deviceProfileUpdateMsg) {
         boolean created = false;
@@ -82,9 +95,34 @@ public abstract class BaseDeviceProfileProcessor extends BaseEdgeProcessor {
         return Pair.of(created, deviceProfileNameUpdated);
     }
 
+    /**
+     * Set default rule chain id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param deviceProfile device profile (DeviceProfile)
+     * @param ruleChainId rule chain id (RuleChainId)
+     */
+
     protected abstract void setDefaultRuleChainId(TenantId tenantId, DeviceProfile deviceProfile, RuleChainId ruleChainId);
 
+    /**
+     * Set default edge rule chain id.
+     *
+     * @param deviceProfile device profile (DeviceProfile)
+     * @param ruleChainId rule chain id (RuleChainId)
+     * @param deviceProfileUpdateMsg device profile update msg (DeviceProfileUpdateMsg)
+     */
+
     protected abstract void setDefaultEdgeRuleChainId(DeviceProfile deviceProfile, RuleChainId ruleChainId, DeviceProfileUpdateMsg deviceProfileUpdateMsg);
+
+    /**
+     * Set default dashboard id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param dashboardId dashboard id (DashboardId)
+     * @param deviceProfile device profile (DeviceProfile)
+     * @param deviceProfileUpdateMsg device profile update msg (DeviceProfileUpdateMsg)
+     */
 
     protected abstract void setDefaultDashboardId(TenantId tenantId, DashboardId dashboardId, DeviceProfile deviceProfile, DeviceProfileUpdateMsg deviceProfileUpdateMsg);
 

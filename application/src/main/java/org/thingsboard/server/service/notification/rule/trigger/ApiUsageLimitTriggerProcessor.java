@@ -26,17 +26,36 @@ import org.thingsboard.server.dao.tenant.TenantService;
 
 import static org.thingsboard.server.common.data.util.CollectionsUtil.emptyOrContains;
 
+    /**
+     * Spring service component for api usage limit trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 @RequiredArgsConstructor
 public class ApiUsageLimitTriggerProcessor implements NotificationRuleTriggerProcessor<ApiUsageLimitTrigger, ApiUsageLimitNotificationRuleTriggerConfig> {
 
     private final TenantService tenantService;
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link ApiUsageLimitTrigger})
+     * @param triggerConfig trigger config ({@link ApiUsageLimitNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(ApiUsageLimitTrigger trigger, ApiUsageLimitNotificationRuleTriggerConfig triggerConfig) {
         return emptyOrContains(triggerConfig.getApiFeatures(), trigger.getState().getApiFeature()) &&
                 emptyOrContains(triggerConfig.getNotifyOn(), trigger.getStatus());
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link ApiUsageLimitTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(ApiUsageLimitTrigger trigger) {
@@ -50,6 +69,12 @@ public class ApiUsageLimitTriggerProcessor implements NotificationRuleTriggerPro
                 .tenantName(tenantService.findTenantById(trigger.getTenantId()).getName())
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

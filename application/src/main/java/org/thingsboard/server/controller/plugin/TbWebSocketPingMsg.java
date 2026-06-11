@@ -19,18 +19,34 @@ import lombok.RequiredArgsConstructor;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Singleton WebSocket ping message with an empty payload buffer.
+ *
+ * <p>Used by {@link TbWebSocketHandler.SessionMetaData} for session keep-alive.
+ */
 @RequiredArgsConstructor
 public class TbWebSocketPingMsg implements TbWebSocketMsg<ByteBuffer> {
 
+    /** Shared ping message instance. */
     public static TbWebSocketPingMsg INSTANCE = new TbWebSocketPingMsg();
 
     private static final ByteBuffer PING_MSG = ByteBuffer.wrap(new byte[]{});
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link TbWebSocketMsgType#PING}
+     */
     @Override
     public TbWebSocketMsgType getType() {
         return TbWebSocketMsgType.PING;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return empty byte buffer for the ping frame body
+     */
     @Override
     public ByteBuffer getMsg() {
         return PING_MSG;

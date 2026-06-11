@@ -27,6 +27,9 @@ import org.thingsboard.server.actors.service.ContextBasedCreator;
 import org.thingsboard.server.common.data.event.StatisticsEvent;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbActorMsg;
+/**
+ * Singleton actor that periodically persists queue and API usage statistics.
+ */
 
 @Slf4j
 public class StatsActor extends ContextAwareActor {
@@ -34,6 +37,15 @@ public class StatsActor extends ContextAwareActor {
     public StatsActor(ActorSystemContext context) {
         super(context);
     }
+    
+    /**
+     * Handles one incoming actor message; returns {@code true} if the message type was recognized.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected boolean doProcess(TbActorMsg msg) {
@@ -45,6 +57,13 @@ public class StatsActor extends ContextAwareActor {
             return false;
         }
     }
+    /**
+     * Handles stats persist msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onStatsPersistMsg(StatsPersistMsg msg) {
         if (msg.isEmpty()) {
@@ -64,6 +83,12 @@ public class StatsActor extends ContextAwareActor {
         return JacksonUtil.newObjectNode().put("server", serviceId).put("messagesProcessed", messagesProcessed).put("errorsOccurred", errorsOccurred);
     }
 
+    /**
+
+     * Factory for creating instances of the enclosing actor type.
+
+     */
+
     public static class ActorCreator extends ContextBasedCreator {
         private final String actorId;
 
@@ -71,11 +96,27 @@ public class StatsActor extends ContextAwareActor {
             super(context);
             this.actorId = actorId;
         }
+        
+        /**
+         * Builds the {@link org.thingsboard.server.actors.TbActorId} used to register the actor.
+         *
+         * @return {@link TbActorId}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActorId createActorId() {
             return new TbStringActorId(actorId);
         }
+        
+        /**
+         * Creates a new actor instance for the given actor id and context.
+         *
+         * @return {@link TbActor}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActor createActor() {

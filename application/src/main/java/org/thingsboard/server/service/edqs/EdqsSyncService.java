@@ -56,6 +56,10 @@ import static org.thingsboard.server.common.data.ObjectType.LATEST_TS_KV;
 import static org.thingsboard.server.common.data.ObjectType.RELATION;
 import static org.thingsboard.server.common.data.ObjectType.edqsTenantTypes;
 
+    /**
+     * Edqs sync service (Entity Data Query Service integration from tb-core).
+     */
+
 @Slf4j
 public abstract class EdqsSyncService {
 
@@ -81,8 +85,21 @@ public abstract class EdqsSyncService {
     private final ConcurrentHashMap<Integer, String> keys = new ConcurrentHashMap<>();
 
     private final Map<ObjectType, AtomicInteger> counters = new ConcurrentHashMap<>();
+    /**
+     * Is sync needed.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract boolean isSyncNeeded();
+    /**
+     * Sync.
+     *
+     * @param syncRequest sync request ({@link EdqsSyncRequest})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void sync(EdqsSyncRequest syncRequest) {
         log.info("Synchronizing data to EDQS");
@@ -307,6 +324,14 @@ public abstract class EdqsSyncService {
         }
         return strKey;
     }
+    /**
+     * Entity id info.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @param tenantId tenant that owns the entity or operation
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public record EntityIdInfo(EntityType entityType, TenantId tenantId) {
     }

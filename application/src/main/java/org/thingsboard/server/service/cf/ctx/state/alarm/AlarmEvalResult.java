@@ -17,6 +17,9 @@ package org.thingsboard.server.service.cf.ctx.state.alarm;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+/**
+ * Result of calculated-field evaluation (alarm eval result).
+ */
 
 @Data
 @RequiredArgsConstructor
@@ -35,10 +38,25 @@ public class AlarmEvalResult {
     public AlarmEvalResult(Status status) {
         this(status, 0, 0);
     }
+    /**
+     * Not yet true.
+     *
+     * @param leftEvents left events
+     * @param leftDuration left duration
+     * @return {@link AlarmEvalResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static AlarmEvalResult notYetTrue(long leftEvents, long leftDuration) {
         return new AlarmEvalResult(Status.NOT_YET_TRUE, leftDuration, leftEvents);
     }
+    /**
+     * With cause.
+     *
+     * @param cause cause ({@link Cause})
+     * @return {@link AlarmEvalResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public AlarmEvalResult withCause(Cause cause) {
         this.cause = cause;

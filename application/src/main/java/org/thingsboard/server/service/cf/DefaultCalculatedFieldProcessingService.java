@@ -64,6 +64,12 @@ import java.util.concurrent.ExecutionException;
 
 import static org.thingsboard.server.common.data.cf.configuration.PropagationCalculatedFieldConfiguration.PROPAGATION_CONFIG_ARGUMENT;
 import static org.thingsboard.server.utils.CalculatedFieldUtils.toProto;
+/**
+ * Default Spring implementation for calculated field processing service (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ *
+ * <p>Registered as a {@code @Service} or {@code @Component} bean.
+ */
+
 
 @TbRuleEngineComponent
 @Service
@@ -83,16 +89,38 @@ public class DefaultCalculatedFieldProcessingService extends AbstractCalculatedF
         super(attributesService, timeseriesService, tsSubService, apiLimitService, relationService, ownerService, clusterService);
         this.partitionService = partitionService;
     }
+    /**
+     * Returns executor name prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getExecutorNamePrefix() {
         return "calculated-field-callback";
     }
+    /**
+     * Fetches arguments.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @return future completing with {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Map<String, ArgumentEntry>> fetchArguments(CalculatedFieldCtx ctx, EntityId entityId) {
         return super.fetchArguments(ctx, entityId, System.currentTimeMillis());
     }
+    /**
+     * Fetches dynamic args from db.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Map<String, ArgumentEntry> fetchDynamicArgsFromDb(CalculatedFieldCtx ctx, EntityId entityId) {
@@ -100,6 +128,14 @@ public class DefaultCalculatedFieldProcessingService extends AbstractCalculatedF
                 resolveArgumentFutures(fetchGeofencingCalculatedFieldArguments(ctx, entityId, true, System.currentTimeMillis())) :
                 Collections.emptyMap();
     }
+    /**
+     * Fetches propagation argument from db.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @return optional {@link PropagationArgumentEntry}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<PropagationArgumentEntry> fetchPropagationArgumentFromDb(CalculatedFieldCtx ctx, EntityId entityId) {
@@ -109,6 +145,14 @@ public class DefaultCalculatedFieldProcessingService extends AbstractCalculatedF
         return Optional.of((PropagationArgumentEntry)
                 resolveArgumentValue(PROPAGATION_CONFIG_ARGUMENT, fetchPropagationCalculatedFieldArgument(ctx, entityId)));
     }
+    /**
+     * Fetches related entities.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<EntityId> fetchRelatedEntities(CalculatedFieldCtx ctx, EntityId entityId) {
@@ -122,6 +166,15 @@ public class DefaultCalculatedFieldProcessingService extends AbstractCalculatedF
             throw new RuntimeException("Failed to fetch related entities for entity [" + entityId + "]: " + cause.getMessage(), cause);
         }
     }
+    /**
+     * Fetches args from db.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param arguments arguments ({@link Map})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Map<String, ArgumentEntry> fetchArgsFromDb(TenantId tenantId, EntityId entityId, Map<String, Argument> arguments) {
@@ -136,11 +189,34 @@ public class DefaultCalculatedFieldProcessingService extends AbstractCalculatedF
         }
         return resolveArgumentFutures(argFutures);
     }
+    /**
+     * Fetches metric during interval.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param argKey arg key ({@link String})
+     * @param metric metric ({@link AggMetric})
+     * @param interval interval ({@link AggIntervalEntry})
+     * @return {@link ArgumentEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ArgumentEntry fetchMetricDuringInterval(TenantId tenantId, EntityId entityId, String argKey, AggMetric metric, AggIntervalEntry interval) {
         return super.fetchMetricDuringInterval(tenantId, entityId, argKey, metric, interval);
     }
+    /**
+     * Processes result.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param cfName cf name ({@link String})
+     * @param result result ({@link CalculatedFieldResult})
+     * @param cfIds cf ids ({@link List})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void processResult(TenantId tenantId, EntityId entityId, String cfName, CalculatedFieldResult result, List<CalculatedFieldId> cfIds, TbCallback callback) {
         if (result instanceof AlarmCalculatedFieldResult) {
@@ -177,6 +253,15 @@ public class DefaultCalculatedFieldProcessingService extends AbstractCalculatedF
 
         sendMsgToRuleEngine(tenantId, entityId, callback, result.toTbMsg(entityId, cfName, cfIds));
     }
+    /**
+     * Pushes msg to links.
+     *
+     * @param msg msg ({@link CalculatedFieldTelemetryMsg})
+     * @param linkedCalculatedFields linked calculated fields ({@link List})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void pushMsgToLinks(CalculatedFieldTelemetryMsg msg, List<CalculatedFieldEntityCtxId> linkedCalculatedFields, TbCallback callback) {
@@ -237,11 +322,25 @@ public class DefaultCalculatedFieldProcessingService extends AbstractCalculatedF
         public TbCallbackWrapper(TbCallback callback) {
             this.callback = callback;
         }
+        /**
+         * Handles success.
+         *
+         * @param metadata metadata ({@link TbQueueMsgMetadata})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onSuccess(TbQueueMsgMetadata metadata) {
             callback.onSuccess();
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {

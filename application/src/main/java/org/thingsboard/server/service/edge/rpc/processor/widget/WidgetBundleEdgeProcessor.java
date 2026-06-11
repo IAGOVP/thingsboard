@@ -31,12 +31,23 @@ import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
 
 import java.util.List;
+/**
+ * Processes widget bundle edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Component
 @Slf4j
 @TbCoreComponent
 public class WidgetBundleEdgeProcessor extends BaseEdgeProcessor {
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         WidgetsBundleId widgetsBundleId = new WidgetsBundleId(edgeEvent.getEntityId());
@@ -64,6 +75,10 @@ public class WidgetBundleEdgeProcessor extends BaseEdgeProcessor {
         return null;
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.WIDGETS_BUNDLE;

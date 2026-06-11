@@ -32,6 +32,12 @@ import org.thingsboard.server.dao.user.UserService;
 
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Default Spring implementation for user auth details cache (user lockout and security helpers).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -52,6 +58,13 @@ public class DefaultUserAuthDetailsCache implements UserAuthDetailsCache {
                 .expireAfterAccess(cacheValueTtl, TimeUnit.MINUTES)
                 .build();
     }
+    /**
+     * Handles component lifecycle event.
+     *
+     * @param event event ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @EventListener(ComponentLifecycleMsg.class)
     public void onComponentLifecycleEvent(ComponentLifecycleMsg event) {
@@ -61,12 +74,27 @@ public class DefaultUserAuthDetailsCache implements UserAuthDetailsCache {
             }
         }
     }
+    /**
+     * Returns user auth details.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @return {@link UserAuthDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserAuthDetails getUserAuthDetails(TenantId tenantId, UserId userId) {
         log.trace("Retrieving user with enabled credentials status for id {} for tenant {} from cache", userId, tenantId);
         return cache.get(userId, id -> userService.findUserAuthDetailsByUserId(tenantId, id));
     }
+    /**
+     * Evict.
+     *
+     * @param userId user id ({@link UserId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void evict(UserId userId) {
         cache.invalidate(userId);

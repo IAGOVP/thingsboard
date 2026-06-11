@@ -54,6 +54,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
+/**
+ * Subscription context for tb abstract entity query WebSocket commands.
+ * <p>Maintains query state, caches, and pending updates for one command id.
+ */
 
 @Slf4j
 public abstract class TbAbstractEntityQuerySubCtx<T extends EntityCountQuery> extends TbAbstractSubCtx {
@@ -69,6 +73,18 @@ public abstract class TbAbstractEntityQuerySubCtx<T extends EntityCountQuery> ex
     @Setter
     protected volatile ScheduledFuture<?> refreshTask;
 
+    /**
+     * Constructs {@link TbAbstractEntityQuerySubCtx} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param wsService ws service
+     * @param entityService entity service
+     * @param localSubscriptionService local subscription service
+     * @param attributesService attributes service
+     * @param stats stats
+     * @param sessionRef reference to the WebSocket session
+     * @param cmdId client command id
+     */
+
     public TbAbstractEntityQuerySubCtx(String serviceId, WebSocketService wsService, EntityService entityService, TbLocalSubscriptionService localSubscriptionService,
                                        AttributesService attributesService, SubscriptionServiceStatistics stats, WebSocketSessionRef sessionRef, int cmdId) {
         super(serviceId, wsService, localSubscriptionService, stats, sessionRef, cmdId);
@@ -78,19 +94,64 @@ public abstract class TbAbstractEntityQuerySubCtx<T extends EntityCountQuery> ex
         this.dynamicValues = new ConcurrentHashMap<>();
     }
 
+    /**
+     * Fetches data.
+     */
+
     public abstract void fetchData();
+
+    /**
+     * Updates update.
+     */
+
+    /**
+     * Updates.
+     */
+
+    /**
+     * Updates.
+     */
+
+    /**
+     * Updates.
+     */
 
     protected abstract void update();
 
-    public void clearSubscriptions() {
+    /**
+     * Clears subscriptions.
+     */
+
+public void clearSubscriptions() {
         clearDynamicValueSubscriptions();
     }
+
+    /**
+     * Stops stop.
+     */
+
+    /**
+     * Stops.
+     */
+
+    /**
+     * Stops.
+     */
+
+    /**
+     * Stops.
+     */
 
     public void stop() {
         super.stop();
         cancelTasks();
         clearSubscriptions();
     }
+
+    /**
+     * Sets and resolve query.
+     * @param query entity or time-series query
+     */
 
     public void setAndResolveQuery(T query) {
         dynamicValues.clear();
@@ -107,6 +168,13 @@ public abstract class TbAbstractEntityQuerySubCtx<T extends EntityCountQuery> ex
         }
         resolve(getTenantId(), getCustomerId(), getUserId());
     }
+
+    /**
+     * Resolve.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param customerId customer identifier
+     * @param userId user identifier
+     */
 
     public void resolve(TenantId tenantId, CustomerId customerId, UserId userId) {
         List<ListenableFuture<DynamicValueKeySub>> futures = new ArrayList<>();
@@ -214,6 +282,11 @@ public abstract class TbAbstractEntityQuerySubCtx<T extends EntityCountQuery> ex
         }, MoreExecutors.directExecutor());
     }
 
+    /**
+     * Updates dynamic values by key.
+     * @param sub sub
+     * @param tsValue ts value
+     */
     @SuppressWarnings("unchecked")
     protected void updateDynamicValuesByKey(DynamicValueKeySub sub, TsValue tsValue) {
         DynamicValueKey dvk = sub.getKey();
@@ -265,7 +338,11 @@ public abstract class TbAbstractEntityQuerySubCtx<T extends EntityCountQuery> ex
         }
     }
 
-    protected void clearDynamicValueSubscriptions() {
+    /**
+     * Clears dynamic value subscriptions.
+     */
+
+protected void clearDynamicValueSubscriptions() {
         if (subToDynamicValueKeySet != null) {
             for (Integer subId : subToDynamicValueKeySet) {
                 localSubscriptionService.cancelSubscription(getTenantId(), sessionRef.getSessionId(), subId);
@@ -274,7 +351,12 @@ public abstract class TbAbstractEntityQuerySubCtx<T extends EntityCountQuery> ex
         }
     }
 
-    public void setRefreshTask(ScheduledFuture<?> task) {
+    /**
+     * Sets refresh task.
+     * @param task task
+     */
+
+public void setRefreshTask(ScheduledFuture<?> task) {
         if (!stopped) {
             this.refreshTask = task;
         } else {
@@ -282,12 +364,22 @@ public abstract class TbAbstractEntityQuerySubCtx<T extends EntityCountQuery> ex
         }
     }
 
-    public void cancelTasks() {
+    /**
+     * Cancels tasks.
+     */
+
+public void cancelTasks() {
         if (this.refreshTask != null) {
             log.trace("[{}][{}] Canceling old refresh task", sessionRef.getSessionId(), cmdId);
             this.refreshTask.cancel(true);
         }
     }
+
+    /**
+     * Returns latest.
+     * @param values values
+     * @return {@link TsValue}
+     */
 
     protected TsValue getLatest(List<TsValue> values) {
         return values.stream()

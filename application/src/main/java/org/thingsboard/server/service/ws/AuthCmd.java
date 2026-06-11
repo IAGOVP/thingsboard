@@ -18,6 +18,9 @@ package org.thingsboard.server.service.ws;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+/**
+ * WebSocket command carrying JWT or login token to authenticate the session before other subscriptions.
+ */
 
 @Data
 @NoArgsConstructor
@@ -27,6 +30,11 @@ public class AuthCmd implements WsCmd {
     private int cmdId;
     private String token;
     private String apiKey;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

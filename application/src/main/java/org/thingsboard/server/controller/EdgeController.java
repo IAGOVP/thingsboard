@@ -89,6 +89,19 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHO
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST API for edge instance lifecycle, customer assignment, synchronization, and installation instructions.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code TENANT_ADMIN} for management; {@code TENANT_ADMIN} or {@code CUSTOMER_USER} for reads;
+ * all roles may check edge support availability.
+ *
+ * <p>Uses {@link org.thingsboard.server.service.entitiy.edge.TbEdgeService}, {@link org.thingsboard.server.service.edge.EdgeBulkImportService},
+ * and optional {@link org.thingsboard.server.service.edge.rpc.EdgeRpcService} for cloud-edge sync.
+ */
+
+
 @RestController
 @TbCoreComponent
 @Slf4j
@@ -106,6 +119,11 @@ public class EdgeController extends BaseController {
     public static final String EDGE_SECURITY_CHECK = "If the user has the authority of 'Tenant Administrator', the server checks that the edge is owned by the same tenant. " +
             "If the user has the authority of 'Customer User', the server checks that the edge is assigned to the same customer.";
 
+    /**
+     * GET {@code /api/edges/enabled} — Check whether edge support is enabled on this server.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @return {@code true} if edges are enabled
+     */
     @ApiOperation(value = "Is edges support enabled (isEdgesSupportEnabled)",
             notes = "Returns 'true' if edges support enabled on server, 'false' - otherwise.")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -114,6 +132,13 @@ public class EdgeController extends BaseController {
         return edgesEnabled;
     }
 
+    /**
+     * GET {@code /api/edge/{edgeId}} — Fetch an edge by id.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strEdgeId edge UUID string
+     * @return the {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if the edge does not exist or access is denied
+     */
     @ApiOperation(value = "Get Edge (getEdgeById)",
             notes = "Get the Edge object based on the provided Edge Id. " + EDGE_SECURITY_CHECK + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -125,6 +150,13 @@ public class EdgeController extends BaseController {
         return checkEdgeId(edgeId, Operation.READ);
     }
 
+    /**
+     * GET {@code /api/edge/info/{edgeId}} — Fetch edge info (includes customer title) by id.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strEdgeId edge UUID string
+     * @return the {@link org.thingsboard.server.common.data.edge.EdgeInfo}
+     * @throws ThingsboardException if the edge does not exist
+     */
     @ApiOperation(value = "Get Edge Info (getEdgeInfoById)",
             notes = "Get the Edge Info object based on the provided Edge Id. " + EDGE_SECURITY_CHECK + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -136,6 +168,13 @@ public class EdgeController extends BaseController {
         return checkEdgeInfoId(edgeId, Operation.READ);
     }
 
+    /**
+     * POST {@code /api/edge} — Create or update an edge instance.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param edge JSON body with edge configuration
+     * @return the saved {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws Exception if validation fails or edge template rule chain is missing on create
+     */
     @ApiOperation(value = "Create Or Update Edge (saveEdge)",
             notes = "Create or update the Edge. When creating edge, platform generates Edge Id as " + UUID_WIKI_LINK +
                     "The newly created edge id will be present in the response. " +
@@ -167,6 +206,12 @@ public class EdgeController extends BaseController {
         return tbEdgeService.save(edge, edgeTemplateRootRuleChain, getCurrentUser());
     }
 
+    /**
+     * DELETE {@code /api/edge/{edgeId}} — Delete an edge by id.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strEdgeId edge UUID string
+     * @throws ThingsboardException if the edge does not exist
+     */
     @ApiOperation(value = "Delete edge (deleteEdge)",
             notes = "Deletes the edge. Referencing non-existing edge Id will cause an error." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -179,6 +224,17 @@ public class EdgeController extends BaseController {
         tbEdgeService.delete(edge, getCurrentUser());
     }
 
+    /**
+     * GET {@code /api/edges} — List edges owned by the tenant (paginated).
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param pageSize items per page
+     * @param page zero-based page index
+     * @param textSearch optional text filter
+     * @param sortProperty optional sort field
+     * @param sortOrder optional sort direction
+     * @return a page of {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Get Tenant Edges (getEdges)",
             notes = "Returns a page of edges owned by tenant. " +
                     PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -199,6 +255,14 @@ public class EdgeController extends BaseController {
         return checkNotNull(edgeService.findEdgesByTenantId(tenantId, pageLink));
     }
 
+    /**
+     * POST {@code /api/customer/{customerId}/edge/{edgeId}} — Assign an edge to a customer.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strCustomerId customer UUID string
+     * @param strEdgeId edge UUID string
+     * @return the updated {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if customer or edge does not exist
+     */
     @ApiOperation(value = "Assign edge to customer (assignEdgeToCustomer)",
             notes = "Creates assignment of the edge to customer. Customer will be able to query edge afterwards." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -216,6 +280,13 @@ public class EdgeController extends BaseController {
         return tbEdgeService.assignEdgeToCustomer(getTenantId(), edgeId, customer, getCurrentUser());
     }
 
+    /**
+     * DELETE {@code /api/customer/edge/{edgeId}} — Unassign an edge from its customer.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strEdgeId edge UUID string
+     * @return the updated {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if the edge is not assigned to a customer
+     */
     @ApiOperation(value = "Unassign edge from customer (unassignEdgeFromCustomer)",
             notes = "Clears assignment of the edge to customer. Customer will not be able to query edge afterwards." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -233,6 +304,13 @@ public class EdgeController extends BaseController {
         return tbEdgeService.unassignEdgeFromCustomer(edge, customer, getCurrentUser());
     }
 
+    /**
+     * POST {@code /api/customer/public/edge/{edgeId}} — Assign an edge to the public customer.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strEdgeId edge UUID string
+     * @return the updated {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if the edge does not exist
+     */
     @ApiOperation(value = "Make edge publicly available (assignEdgeToPublicCustomer)",
             notes = "Edge will be available for non-authorized (not logged-in) users. " +
                     "This is useful to create dashboards that you plan to share/embed on a publicly available website. " +
@@ -247,6 +325,18 @@ public class EdgeController extends BaseController {
         return tbEdgeService.assignEdgeToPublicCustomer(getTenantId(), edgeId, getCurrentUser());
     }
 
+    /**
+     * GET {@code /api/tenant/edges} — List tenant edges with optional type filter.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param pageSize items per page
+     * @param page zero-based page index
+     * @param type optional edge type filter
+     * @param textSearch optional text filter
+     * @param sortProperty optional sort field
+     * @param sortOrder optional sort direction
+     * @return a page of {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Get Tenant Edges (getTenantEdges)",
             notes = "Returns a page of edges owned by tenant. " +
                     PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -274,6 +364,18 @@ public class EdgeController extends BaseController {
         }
     }
 
+    /**
+     * GET {@code /api/tenant/edgeInfos} — List tenant edge info objects with optional type filter.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param pageSize items per page
+     * @param page zero-based page index
+     * @param type optional edge type filter
+     * @param textSearch optional text filter
+     * @param sortProperty optional sort field
+     * @param sortOrder optional sort direction
+     * @return a page of {@link org.thingsboard.server.common.data.edge.EdgeInfo}
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Get Tenant Edge Infos (getTenantEdgeInfos)",
             notes = "Returns a page of edges info objects owned by tenant. " +
                     PAGE_DATA_PARAMETERS + EDGE_INFO_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -301,6 +403,13 @@ public class EdgeController extends BaseController {
         }
     }
 
+    /**
+     * GET {@code /api/tenant/edges?edgeName=} — Internal helper to fetch edge by name (hidden API).
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param edgeName unique edge name within the tenant
+     * @return the {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if not found
+     */
     @Hidden
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/tenant/edges", params = {"edgeName"})
@@ -309,6 +418,13 @@ public class EdgeController extends BaseController {
         return checkNotNull(edgeService.findEdgeByTenantIdAndName(tenantId, edgeName));
     }
 
+    /**
+     * GET {@code /api/tenant/edge?edgeName=} — Fetch a tenant edge by unique name.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param edgeName unique edge name
+     * @return the {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if not found
+     */
     @ApiOperation(value = "Get Tenant Edge by name (getTenantEdgeByName)",
             notes = "Requested edge must be owned by tenant or customer that the user belongs to. " +
                     "Edge name is an unique property of edge. So it can be used to identify the edge." + TENANT_AUTHORITY_PARAGRAPH)
@@ -319,6 +435,14 @@ public class EdgeController extends BaseController {
         return getTenantEdge(edgeName);
     }
 
+    /**
+     * POST {@code /api/edge/{edgeId}/{ruleChainId}/root} — Set the root rule chain for an edge.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strEdgeId edge UUID string
+     * @param strRuleChainId rule chain UUID string
+     * @return the updated {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws Exception if edge or rule chain validation fails
+     */
     @ApiOperation(value = "Set root rule chain for provided edge (setEdgeRootRuleChain)",
             notes = "Change root rule chain of the edge to the new provided rule chain. \n" +
                     "This operation will send a notification to update root rule chain on remote edge service." + TENANT_AUTHORITY_PARAGRAPH)
@@ -338,6 +462,19 @@ public class EdgeController extends BaseController {
         return tbEdgeService.setEdgeRootRuleChain(edge, ruleChainId, getCurrentUser());
     }
 
+    /**
+     * GET {@code /api/customer/{customerId}/edges} — List edges assigned to a customer.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strCustomerId customer UUID string
+     * @param pageSize items per page
+     * @param page zero-based page index
+     * @param type optional edge type filter
+     * @param textSearch optional text filter
+     * @param sortProperty optional sort field
+     * @param sortOrder optional sort direction
+     * @return a page of {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if customer access is denied
+     */
     @ApiOperation(value = "Get Customer Edges (getCustomerEdges)",
             notes = "Returns a page of edges objects assigned to customer. " +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -373,6 +510,19 @@ public class EdgeController extends BaseController {
         return checkNotNull(result);
     }
 
+    /**
+     * GET {@code /api/customer/{customerId}/edgeInfos} — List edge info objects for a customer.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strCustomerId customer UUID string
+     * @param pageSize items per page
+     * @param page zero-based page index
+     * @param type optional edge type filter
+     * @param textSearch optional text filter
+     * @param sortProperty optional sort field
+     * @param sortOrder optional sort direction
+     * @return a page of {@link org.thingsboard.server.common.data.edge.EdgeInfo}
+     * @throws ThingsboardException if customer access is denied
+     */
     @ApiOperation(value = "Get Customer Edge Infos (getCustomerEdgeInfos)",
             notes = "Returns a page of edges info objects assigned to customer. " +
                     PAGE_DATA_PARAMETERS + EDGE_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -408,6 +558,15 @@ public class EdgeController extends BaseController {
         return checkNotNull(result);
     }
 
+    /**
+     * GET {@code /api/edges?edgeIds=} — Internal helper to fetch edges by id list (hidden API).
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strEdgeIds array of edge UUID strings
+     * @return list of {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if any edge is inaccessible
+     * @throws java.util.concurrent.ExecutionException if async lookup fails
+     * @throws InterruptedException if the async lookup is interrupted
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/edges", params = {"edgeIds"})
@@ -431,6 +590,15 @@ public class EdgeController extends BaseController {
         return checkNotNull(edges);
     }
 
+    /**
+     * GET {@code /api/edges/list} — Fetch multiple edges by id list.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strEdgeIds array of edge UUID strings
+     * @return list of {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if any edge is inaccessible
+     * @throws java.util.concurrent.ExecutionException if async lookup fails
+     * @throws InterruptedException if the async lookup is interrupted
+     */
     @ApiOperation(value = "Get Edges By Ids (getEdgeList)",
             notes = "Requested edges must be owned by tenant or assigned to customer which user is performing the request." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -441,6 +609,15 @@ public class EdgeController extends BaseController {
         return getEdgesByIds(strEdgeIds);
     }
 
+    /**
+     * POST {@code /api/edges} — Find edges related to an entity via {@link org.thingsboard.server.common.data.edge.EdgeSearchQuery}.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query search query with entity id, relation type, and depth
+     * @return list of matching {@link org.thingsboard.server.common.data.edge.Edge}
+     * @throws ThingsboardException if the query is invalid
+     * @throws java.util.concurrent.ExecutionException if async search fails
+     * @throws InterruptedException if the search is interrupted
+     */
     @ApiOperation(value = "Find related edges (findEdgesByQuery)",
             notes = "Returns all edges that are related to the specific entity. " +
                     "The entity id, relation type, edge types, depth of the search, and other query parameters defined using complex 'EdgeSearchQuery' object. " +
@@ -466,6 +643,14 @@ public class EdgeController extends BaseController {
         return edges;
     }
 
+    /**
+     * GET {@code /api/edge/types} — Return distinct edge types for the tenant.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @return list of {@link org.thingsboard.server.common.data.EntitySubtype}
+     * @throws ThingsboardException if access is denied
+     * @throws java.util.concurrent.ExecutionException if async lookup fails
+     * @throws InterruptedException if the lookup is interrupted
+     */
     @ApiOperation(value = "Get Edge Types (getEdgeTypes)",
             notes = "Returns a set of unique edge types based on edges that are either owned by the tenant or assigned to the customer which user is performing the request."
                     + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -478,6 +663,13 @@ public class EdgeController extends BaseController {
         return checkNotNull(edgeTypes.get());
     }
 
+    /**
+     * POST {@code /api/edge/sync/{edgeId}} — Start cloud-to-edge entity synchronization.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strEdgeId edge UUID string
+     * @return deferred HTTP response completed when sync finishes
+     * @throws ThingsboardException if edges are disabled or edge id is invalid
+     */
     @ApiOperation(value = "Sync edge (syncEdge)",
             notes = "Starts synchronization process between edge and cloud. \n" +
                     "All entities that are assigned to particular edge are going to be send to remote edge service." + TENANT_AUTHORITY_PARAGRAPH)
@@ -507,6 +699,13 @@ public class EdgeController extends BaseController {
         }
     }
 
+    /**
+     * GET {@code /api/edge/missingToRelatedRuleChains/{edgeId}} — Find rule chain ids referenced but not assigned to edge.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strEdgeId edge UUID string
+     * @return JSON string with missing rule chain ids
+     * @throws ThingsboardException if the edge does not exist
+     */
     @ApiOperation(value = "Find missing rule chains (findMissingToRelatedRuleChains)",
             notes = "Returns list of rule chains ids that are not assigned to particular edge, but these rule chains are present in the already assigned rule chains to edge." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -520,6 +719,13 @@ public class EdgeController extends BaseController {
         return edgeService.findMissingToRelatedRuleChains(tenantId, edgeId, TbRuleChainInputNode.class.getName());
     }
 
+    /**
+     * POST {@code /api/edge/bulk_import} — Bulk import edges from CSV.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param request bulk import request with CSV payload
+     * @return {@link org.thingsboard.server.common.data.sync.ie.importing.csv.BulkImportResult}
+     * @throws Exception if import validation fails or edge template rule chain is missing
+     */
     @ApiOperation(value = "Import the bulk of edges (processEdgesBulkImport)",
             notes = "There's an ability to import the bulk of edges using the only .csv file." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
@@ -534,6 +740,15 @@ public class EdgeController extends BaseController {
         return edgeBulkImportService.processBulkImport(request, user);
     }
 
+    /**
+     * GET {@code /api/edge/instructions/install/{edgeId}/{method}} — Return edge installation instructions.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strEdgeId edge UUID string
+     * @param installationMethod install method ({@code docker}, {@code ubuntu}, or {@code centos})
+     * @param request HTTP request used to build instruction URLs
+     * @return {@link org.thingsboard.server.common.data.edge.EdgeInstructions}
+     * @throws ThingsboardException if edges are disabled or edge does not exist
+     */
     @ApiOperation(value = "Get Edge Install Instructions (getEdgeInstallInstructions)",
             notes = "Get an install instructions for provided edge id." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
@@ -554,6 +769,14 @@ public class EdgeController extends BaseController {
         }
     }
 
+    /**
+     * GET {@code /api/edge/instructions/upgrade/{edgeVersion}/{method}} — Return edge upgrade instructions.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param edgeVersion target edge version
+     * @param method upgrade method ({@code docker}, {@code ubuntu}, or {@code centos})
+     * @return {@link org.thingsboard.server.common.data.edge.EdgeInstructions}
+     * @throws Exception if edges are disabled
+     */
     @ApiOperation(value = "Get Edge Upgrade Instructions (getEdgeUpgradeInstructions)",
             notes = "Get an upgrade instructions for provided edge version." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
@@ -570,6 +793,13 @@ public class EdgeController extends BaseController {
         }
     }
 
+    /**
+     * GET {@code /api/edge/{edgeId}/upgrade/available} — Check whether upgrade is available for a connected edge.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     * @param strEdgeId edge UUID string
+     * @return {@code true} if upgrade is available
+     * @throws Exception if edges are disabled or edge does not exist
+     */
     @ApiOperation(value = "Is edge upgrade enabled (isEdgeUpgradeAvailable)",
             notes = "Returns 'true' if upgrade available for connected edge, 'false' - otherwise.")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")

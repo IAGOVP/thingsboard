@@ -17,6 +17,10 @@ package org.thingsboard.server.service.subscription;
 
 import org.thingsboard.server.common.data.AttributeScope;
 
+/**
+ * Enumeration of tb attribute subscription scope values used by the subscription layer.
+ */
+
 public enum TbAttributeSubscriptionScope {
 
     ANY_SCOPE(),
@@ -34,9 +38,20 @@ public enum TbAttributeSubscriptionScope {
         this.attributeScope = attributeScope;
     }
 
+    /**
+     * Returns attribute scope.
+     * @return {@link AttributeScope}
+     */
+
     public AttributeScope getAttributeScope() {
         return attributeScope;
     }
+
+    /**
+     * Of.
+     * @param attributeScope attribute scope
+     * @return {@link TbAttributeSubscriptionScope}
+     */
 
     public static TbAttributeSubscriptionScope of(AttributeScope attributeScope) {
         for (TbAttributeSubscriptionScope scope : TbAttributeSubscriptionScope.values()) {

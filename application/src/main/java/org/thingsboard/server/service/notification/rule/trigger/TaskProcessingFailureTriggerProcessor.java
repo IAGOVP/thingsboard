@@ -24,13 +24,32 @@ import org.thingsboard.server.common.data.notification.rule.trigger.TaskProcessi
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NotificationRuleTriggerType;
 import org.thingsboard.server.common.data.notification.rule.trigger.config.TaskProcessingFailureNotificationRuleTriggerConfig;
 
+    /**
+     * Spring service component for task processing failure trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 public class TaskProcessingFailureTriggerProcessor implements NotificationRuleTriggerProcessor<TaskProcessingFailureTrigger, TaskProcessingFailureNotificationRuleTriggerConfig> {
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link TaskProcessingFailureTrigger})
+     * @param triggerConfig trigger config ({@link TaskProcessingFailureNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(TaskProcessingFailureTrigger trigger, TaskProcessingFailureNotificationRuleTriggerConfig triggerConfig) {
         return true;
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link TaskProcessingFailureTrigger})
+     * @return {@link TaskProcessingFailureNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TaskProcessingFailureNotificationInfo constructNotificationInfo(TaskProcessingFailureTrigger trigger) {
@@ -44,6 +63,12 @@ public class TaskProcessingFailureTriggerProcessor implements NotificationRuleTr
                 .attempt(trigger.getAttempt())
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

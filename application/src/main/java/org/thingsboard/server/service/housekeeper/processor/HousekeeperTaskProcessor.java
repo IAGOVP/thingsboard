@@ -22,14 +22,40 @@ import org.thingsboard.server.common.msg.housekeeper.HousekeeperClient;
 
 import java.util.concurrent.Future;
 
+/**
+
+ * Housekeeper task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+
+ */
+
 public abstract class HousekeeperTaskProcessor<T extends HousekeeperTask> {
 
     @Autowired
     protected HousekeeperClient housekeeperClient;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link T})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract void process(T task) throws Exception;
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract HousekeeperTaskType getTaskType();
+    /**
+     * Wait.
+     *
+     * @param future future ({@link Future})
+     * @return {@link V}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public <V> V wait(Future<V> future) throws Exception {
         try {

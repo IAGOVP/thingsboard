@@ -27,6 +27,9 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.relation.EntityRelation;
 import org.thingsboard.server.service.action.EntityActionService;
+/**
+ * Default implementation of {@link TbLogEntityActionService}.
+ */
 
 @Slf4j
 @Service
@@ -34,18 +37,55 @@ import org.thingsboard.server.service.action.EntityActionService;
 public class DefaultTbLogEntityActionService implements TbLogEntityActionService {
 
     private final EntityActionService entityActionService;
+    /**
+     * Log entity action.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param actionType action type ({@link ActionType})
+     * @param user authenticated user performing the action
+     * @param e e ({@link Exception})
+     * @param additionalInfo additional info
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <I extends EntityId> void logEntityAction(TenantId tenantId, I entityId, ActionType actionType,
                                                      User user, Exception e, Object... additionalInfo) {
         logEntityAction(tenantId, entityId, null, null, actionType, user, e, additionalInfo);
     }
+    /**
+     * Log entity action.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param entity entity ({@link E})
+     * @param actionType action type ({@link ActionType})
+     * @param user authenticated user performing the action
+     * @param additionalInfo additional info
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends HasName, I extends EntityId> void logEntityAction(TenantId tenantId, I entityId, E entity,
                                                                         ActionType actionType, User user, Object... additionalInfo) {
         logEntityAction(tenantId, entityId, entity, null, actionType, user, null, additionalInfo);
     }
+    /**
+     * Log entity action.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param entity entity ({@link E})
+     * @param actionType action type ({@link ActionType})
+     * @param user authenticated user performing the action
+     * @param e e ({@link Exception})
+     * @param additionalInfo additional info
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends HasName, I extends EntityId> void logEntityAction(TenantId tenantId, I entityId, E entity,
@@ -53,12 +93,39 @@ public class DefaultTbLogEntityActionService implements TbLogEntityActionService
                                                                         Object... additionalInfo) {
         logEntityAction(tenantId, entityId, entity, null, actionType, user, e, additionalInfo);
     }
+    /**
+     * Log entity action.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param entity entity ({@link E})
+     * @param customerId customer id ({@link CustomerId})
+     * @param actionType action type ({@link ActionType})
+     * @param user authenticated user performing the action
+     * @param additionalInfo additional info
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends HasName, I extends EntityId> void logEntityAction(TenantId tenantId, I entityId, E entity, CustomerId customerId,
                                                                         ActionType actionType, User user, Object... additionalInfo) {
         logEntityAction(tenantId, entityId, entity, customerId, actionType, user, null, additionalInfo);
     }
+    /**
+     * Log entity action.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param entity entity ({@link E})
+     * @param customerId customer id ({@link CustomerId})
+     * @param actionType action type ({@link ActionType})
+     * @param user authenticated user performing the action
+     * @param e e ({@link Exception})
+     * @param additionalInfo additional info
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends HasName, I extends EntityId> void logEntityAction(TenantId tenantId, @NotNull I entityId, E entity,
@@ -70,6 +137,19 @@ public class DefaultTbLogEntityActionService implements TbLogEntityActionService
             entityActionService.pushEntityActionToRuleEngine(entityId, entity, tenantId, customerId, actionType, null, additionalInfo);
         }
     }
+    /**
+     * Log entity relation action.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param relation relation ({@link EntityRelation})
+     * @param user authenticated user performing the action
+     * @param actionType action type ({@link ActionType})
+     * @param e e ({@link Exception})
+     * @param additionalInfo additional info
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void logEntityRelationAction(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user,

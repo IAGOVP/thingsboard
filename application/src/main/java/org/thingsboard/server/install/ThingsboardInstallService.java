@@ -35,6 +35,18 @@ import org.thingsboard.server.service.install.migrate.TsLatestMigrateService;
 import org.thingsboard.server.service.install.update.CacheCleanupService;
 import org.thingsboard.server.service.install.update.DataUpdateService;
 
+/**
+ * Orchestrates ThingsBoard fresh installation and version upgrade under the {@code install} profile.
+ *
+ * <p>On fresh install, creates entity and timeseries schemas, loads system widgets, default
+ * tenant profiles, OAuth templates, and optional demo data. On upgrade, validates schema
+ * settings, applies migration scripts, refreshes views and indexes, and runs data-update tasks.
+ *
+ * <p>Always terminates the Spring context in a {@code finally} block after completion or failure.
+ *
+ * @see ThingsboardInstallApplication
+ * @see ThingsboardInstallException
+ */
 @Service
 @Profile("install")
 @Slf4j
@@ -91,6 +103,14 @@ public class ThingsboardInstallService {
     @Autowired
     private DatabaseSchemaSettingsService databaseSchemaVersionService;
 
+    /**
+     * Executes either a fresh installation or an upgrade, depending on {@code install.upgrade}.
+     *
+     * <p>Fresh install creates all database schemas and loads system data. Upgrade validates
+     * version compatibility, applies SQL and programmatic migrations, and updates schema version
+     * metadata. On any unexpected error, wraps the cause in {@link ThingsboardInstallException}
+     * and exits the application context.
+     */
     public void performInstall() {
         try {
             if (isUpgrade) {

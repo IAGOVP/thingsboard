@@ -65,6 +65,11 @@ public class TelemetryCmdsWrapper {
 
     private List<AlarmCountUnsubscribeCmd> alarmCountUnsubscribeCmds;
 
+    /**
+     * To common cmds wrapper.
+     * @return {@link WsCommandsWrapper}
+     */
+
     @JsonIgnore
     public WsCommandsWrapper toCommonCmdsWrapper() {
         return new WsCommandsWrapper(null, Stream.of(

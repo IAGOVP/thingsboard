@@ -19,11 +19,39 @@ import org.thingsboard.server.common.data.Device;
 import org.thingsboard.server.common.data.DeviceProfile;
 import org.thingsboard.server.gen.transport.TransportProtos.ToOtaPackageStateServiceMsg;
 
+/**
+
+ * Service contract for ota package state operations (over-the-air firmware/software package handling).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface OtaPackageStateService {
 
     void update(Device device, Device oldDevice);
 
+    /**
+     * Updates the requested data.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param isFirmwareChanged is firmware changed
+     * @param isSoftwareChanged is software changed
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void update(DeviceProfile deviceProfile, boolean isFirmwareChanged, boolean isSoftwareChanged);
+
+    /**
+     * Processes the requested data.
+     *
+     * @param msg msg ({@link ToOtaPackageStateServiceMsg})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean process(ToOtaPackageStateServiceMsg msg);
 

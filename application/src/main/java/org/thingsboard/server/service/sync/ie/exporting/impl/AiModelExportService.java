@@ -23,10 +23,23 @@ import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 
 import java.util.Set;
+/**
+ * Exports ai model entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
 class AiModelExportService extends BaseEntityExportService<AiModelId, AiModel, EntityExportData<AiModel>> {
+    
+    /**
+     * Returns supported entity types.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public Set<EntityType> getSupportedEntityTypes() {

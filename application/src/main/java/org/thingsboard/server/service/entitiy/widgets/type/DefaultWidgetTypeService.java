@@ -30,6 +30,12 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 import org.thingsboard.server.service.resource.TbResourceService;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Default Spring implementation for widget type service (REST-layer entity operations (application-layer entity CRUD with audit logging and version-control hooks)).
+ *
+ * <p>Registered as a {@code @Service} or {@code @Component} bean.
+ */
+
 
 @Service
 @TbCoreComponent
@@ -38,11 +44,28 @@ public class DefaultWidgetTypeService extends AbstractTbEntityService implements
 
     private final WidgetTypeService widgetTypeService;
     private final TbResourceService tbResourceService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param entity entity ({@link WidgetTypeDetails})
+     * @param user authenticated user performing the action
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeDetails save(WidgetTypeDetails entity, SecurityUser user) throws Exception {
         return this.save(entity, false, user);
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @param updateExistingByFqn update existing by fqn
+     * @param user authenticated user performing the action
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeDetails save(WidgetTypeDetails widgetTypeDetails, boolean updateExistingByFqn, SecurityUser user) throws Exception {
@@ -69,6 +92,14 @@ public class DefaultWidgetTypeService extends AbstractTbEntityService implements
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(WidgetTypeDetails widgetTypeDetails, User user) {

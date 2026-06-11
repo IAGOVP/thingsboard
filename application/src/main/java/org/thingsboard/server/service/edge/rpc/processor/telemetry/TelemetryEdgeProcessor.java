@@ -31,6 +31,12 @@ import org.thingsboard.server.common.msg.notification.NotificationRuleProcessor;
 import org.thingsboard.server.gen.edge.v1.DownlinkMsg;
 import org.thingsboard.server.gen.edge.v1.EntityDataProto;
 import org.thingsboard.server.queue.util.TbCoreComponent;
+/**
+ * Processes telemetry edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ * <p><b>Key dependencies:</b> {@link #notificationRuleProcessor}.
+ */
 
 @Slf4j
 @Component
@@ -44,10 +50,22 @@ public class TelemetryEdgeProcessor extends BaseTelemetryProcessor {
     @Autowired
     private NotificationRuleProcessor notificationRuleProcessor;
 
+    /**
+     * Returns msg source key.
+     *
+     */
     @Override
     protected String getMsgSourceKey() {
         return DataConstants.EDGE_MSG_SOURCE;
     }
+
+    /**
+     * Converts telemetry event to downlink.
+     *
+     * @param edge edge (Edge)
+     * @param edgeEvent edge event (EdgeEvent)
+     * @return {@link DownlinkMsg} result
+     */
 
     public DownlinkMsg convertTelemetryEventToDownlink(Edge edge, EdgeEvent edgeEvent) {
         if (edgeEvent.getBody() != null) {

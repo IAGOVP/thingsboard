@@ -64,6 +64,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+    /**
+     * Default Spring implementation for mail service (SMTP email sending and templating).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -99,11 +105,23 @@ public class DefaultMailService implements MailService {
     private void init() {
         updateMailConfiguration();
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void destroy() {
         timeoutScheduler.shutdownNow();
     }
+    /**
+     * Updates mail configuration.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateMailConfiguration() {
@@ -117,11 +135,29 @@ public class DefaultMailService implements MailService {
             throw new IncorrectParameterException("Failed to update mail configuration. Settings not found!");
         }
     }
+    /**
+     * Send email.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param email email ({@link String})
+     * @param subject subject ({@link String})
+     * @param message message ({@link String})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendEmail(TenantId tenantId, String email, String subject, String message) throws ThingsboardException {
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Send test mail.
+     *
+     * @param jsonConfig json config ({@link JsonNode})
+     * @param email email ({@link String})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendTestMail(JsonNode jsonConfig, String email) throws ThingsboardException {
@@ -137,6 +173,15 @@ public class DefaultMailService implements MailService {
 
         sendMail(testMailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Send activation email.
+     *
+     * @param activationLink activation link ({@link String})
+     * @param ttlMs ttl ms
+     * @param email email ({@link String})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendActivationEmail(String activationLink, long ttlMs, String email) throws ThingsboardException {
@@ -151,6 +196,14 @@ public class DefaultMailService implements MailService {
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Send account activated email.
+     *
+     * @param loginLink login link ({@link String})
+     * @param email email ({@link String})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendAccountActivatedEmail(String loginLink, String email) throws ThingsboardException {
@@ -165,6 +218,15 @@ public class DefaultMailService implements MailService {
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Send reset password email.
+     *
+     * @param passwordResetLink password reset link ({@link String})
+     * @param ttlMs ttl ms
+     * @param email email ({@link String})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendResetPasswordEmail(String passwordResetLink, long ttlMs, String email) throws ThingsboardException {
@@ -180,6 +242,15 @@ public class DefaultMailService implements MailService {
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Send reset password email async.
+     *
+     * @param passwordResetLink password reset link ({@link String})
+     * @param ttlMs ttl ms
+     * @param email email ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendResetPasswordEmailAsync(String passwordResetLink, long ttlMs, String email) {
@@ -191,6 +262,14 @@ public class DefaultMailService implements MailService {
             }
         });
     }
+    /**
+     * Send password was reset email.
+     *
+     * @param loginLink login link ({@link String})
+     * @param email email ({@link String})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendPasswordWasResetEmail(String loginLink, String email) throws ThingsboardException {
@@ -205,11 +284,31 @@ public class DefaultMailService implements MailService {
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Send.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param tbEmail tb email ({@link TbEmail})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void send(TenantId tenantId, CustomerId customerId, TbEmail tbEmail) throws ThingsboardException {
         sendMail(tenantId, customerId, tbEmail, this.mailSender, timeout);
     }
+    /**
+     * Send.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param tbEmail tb email ({@link TbEmail})
+     * @param javaMailSender java mail sender ({@link JavaMailSender})
+     * @param timeout timeout
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void send(TenantId tenantId, CustomerId customerId, TbEmail tbEmail, JavaMailSender javaMailSender, long timeout) throws ThingsboardException {
@@ -256,6 +355,15 @@ public class DefaultMailService implements MailService {
             throw new RuntimeException("Email sending is disabled due to API limits!");
         }
     }
+    /**
+     * Send account lockout email.
+     *
+     * @param lockoutEmail lockout email ({@link String})
+     * @param email email ({@link String})
+     * @param maxFailedLoginAttempts max failed login attempts ({@link Integer})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendAccountLockoutEmail(String lockoutEmail, String email, Integer maxFailedLoginAttempts) throws ThingsboardException {
@@ -270,6 +378,15 @@ public class DefaultMailService implements MailService {
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Send two fa verification email.
+     *
+     * @param email email ({@link String})
+     * @param verificationCode verification code ({@link String})
+     * @param expirationTimeSeconds expiration time seconds
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendTwoFaVerificationEmail(String email, String verificationCode, int expirationTimeSeconds) throws ThingsboardException {
@@ -282,6 +399,16 @@ public class DefaultMailService implements MailService {
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Send api feature state email.
+     *
+     * @param apiFeature api feature ({@link ApiFeature})
+     * @param stateValue state value ({@link ApiUsageStateValue})
+     * @param email email ({@link String})
+     * @param recordState record state ({@link ApiUsageRecordState})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendApiFeatureStateEmail(ApiFeature apiFeature, ApiUsageStateValue stateValue, String email, ApiUsageRecordState recordState) throws ThingsboardException {
@@ -308,11 +435,25 @@ public class DefaultMailService implements MailService {
 
         sendMail(mailSender, mailFrom, email, subject, message, timeout);
     }
+    /**
+     * Test connection.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void testConnection(TenantId tenantId) throws Exception {
         mailSender.testConnection();
     }
+    /**
+     * Is configured.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isConfigured(TenantId tenantId) {
@@ -410,6 +551,13 @@ public class DefaultMailService implements MailService {
             throw new ThingsboardException("Failed to process mail template: " + e.getMessage(), e, ThingsboardErrorCode.GENERAL);
         }
     }
+    /**
+     * Handles exception.
+     *
+     * @param exception exception ({@link Throwable})
+     * @return {@link ThingsboardException}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ThingsboardException handleException(Throwable exception) {
         if (exception instanceof ThingsboardException thingsboardException) {

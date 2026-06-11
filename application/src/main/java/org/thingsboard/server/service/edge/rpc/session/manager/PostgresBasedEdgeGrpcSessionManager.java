@@ -36,6 +36,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+/**
+ * Postgres based edge grpc session manager for edge gRPC session lifecycle.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @Slf4j
@@ -51,35 +56,60 @@ public class PostgresBasedEdgeGrpcSessionManager extends AbstractEdgeGrpcSession
     private PostgresGeneralEdgeEventsDispatcher generalEdgeEventsDispatcher;
     private volatile boolean hasNewEvents;
 
+    /**
+     * Add event to high priority queue.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     */
     @Override
     public void addEventToHighPriorityQueue(EdgeEvent edgeEvent) {
         super.addEventToHighPriorityQueue(edgeEvent);
         markHasNewEvents();
     }
 
+    /**
+     * On edge connect.
+     *
+     */
     @Override
     public void onEdgeConnect() {
         markHasNewEvents();
         scheduleEdgeEventsCheck();
     }
 
+    /**
+     * On edge event update.
+     *
+     */
     @Override
     public void onEdgeEventUpdate() {
         markHasNewEvents();
     }
 
+    /**
+     * On edge disconnect.
+     *
+     */
     @Override
     public void onEdgeDisconnect() {
         markHasNoEvents();
         cancelScheduleEdgeEventsCheck();
     }
 
+    /**
+     * On edge removal.
+     *
+     */
     @Override
     public void onEdgeRemoval() {
         markHasNoEvents();
         cancelScheduleEdgeEventsCheck();
     }
 
+    /**
+     * Releases resources and shuts down background executors.
+     *
+     */
     @Override
     public boolean destroy() {
         markHasNoEvents();
@@ -123,6 +153,11 @@ public class PostgresBasedEdgeGrpcSessionManager extends AbstractEdgeGrpcSession
 
     private void processEdgeEventsWithCallback(TenantId tenantId, EdgeId edgeId) throws Exception {
         Futures.addCallback(processEdgeEvents(), new FutureCallback<>() {
+            /**
+             * On success.
+             *
+             * @param newEventsAdded new events added (Boolean)
+             */
             @Override
             public void onSuccess(Boolean newEventsAdded) {
                 if (Boolean.TRUE.equals(newEventsAdded)) {
@@ -132,6 +167,11 @@ public class PostgresBasedEdgeGrpcSessionManager extends AbstractEdgeGrpcSession
                 scheduleEdgeEventsCheck();
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 log.warn("[{}] Failed to process edge events for edge [{}]!", tenantId, edgeId, t);
@@ -139,6 +179,13 @@ public class PostgresBasedEdgeGrpcSessionManager extends AbstractEdgeGrpcSession
             }
         }, ctx.getGrpcCallbackExecutorService());
     }
+
+    /**
+     * Processes edge events.
+     *
+     * @return {@link ListenableFuture} result
+     * @throws Exception if the operation fails
+     */
 
     public ListenableFuture<Boolean> processEdgeEvents() throws Exception {
         if (generalEdgeEventsDispatcher == null) {

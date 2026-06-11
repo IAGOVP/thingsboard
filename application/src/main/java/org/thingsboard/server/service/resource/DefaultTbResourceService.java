@@ -56,6 +56,12 @@ import static org.thingsboard.server.dao.service.Validator.validateId;
 import static org.thingsboard.server.utils.LwM2mObjectModelUtils.toLwM2mObject;
 import static org.thingsboard.server.utils.LwM2mObjectModelUtils.toLwm2mResource;
 
+    /**
+     * Default Spring implementation for tb resource service (tenant/system resource file management).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 @TbCoreComponent
@@ -66,6 +72,14 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
     private final ImageService imageService;
     private final TbImageService tbImageService;
     private final AccessControlService accessControlService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param resource resource ({@link TbResource})
+     * @param user authenticated user performing the action
+     * @return {@link TbResourceInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public TbResourceInfo save(TbResource resource, SecurityUser user) throws ThingsboardException {
@@ -88,6 +102,15 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param tbResource tb resource ({@link TbResourceInfo})
+     * @param force force
+     * @param user authenticated user performing the action
+     * @return {@link TbResourceDeleteResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceDeleteResult delete(TbResourceInfo tbResource, boolean force, User user) {
@@ -109,6 +132,16 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
             throw e;
         }
     }
+    /**
+     * Finds lw m2m object.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param sortOrder sort order ({@link String})
+     * @param sortProperty sort property ({@link String})
+     * @param objectIds object ids
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<LwM2mObject> findLwM2mObject(TenantId tenantId, String sortOrder, String sortProperty, String[] objectIds) {
@@ -121,6 +154,16 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
                 .sorted(getComparator(sortProperty, sortOrder))
                 .collect(Collectors.toList());
     }
+    /**
+     * Finds lw m2m object page.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param sortProperty sort property ({@link String})
+     * @param sortOrder sort order ({@link String})
+     * @param pageLink pagination and sort parameters
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<LwM2mObject> findLwM2mObjectPage(TenantId tenantId, String sortProperty, String sortOrder, PageLink pageLink) {
@@ -132,16 +175,40 @@ public class DefaultTbResourceService extends AbstractTbEntityService implements
                 .sorted(getComparator(sortProperty, sortOrder))
                 .collect(Collectors.toList());
     }
+    /**
+     * Exports resources.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param user authenticated user performing the action
+     * @return {@link List}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public List<ResourceExportData> exportResources(Dashboard dashboard, SecurityUser user) throws ThingsboardException {
         return exportResources(() -> imageService.getUsedImages(dashboard), () -> resourceService.getUsedResources(user.getTenantId(), dashboard), user);
     }
+    /**
+     * Exports resources.
+     *
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @param user authenticated user performing the action
+     * @return {@link List}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public List<ResourceExportData> exportResources(WidgetTypeDetails widgetTypeDetails, SecurityUser user) throws ThingsboardException {
         return exportResources(() -> imageService.getUsedImages(widgetTypeDetails), () -> resourceService.getUsedResources(user.getTenantId(), widgetTypeDetails), user);
     }
+    /**
+     * Imports resources.
+     *
+     * @param resources resources ({@link List})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void importResources(List<ResourceExportData> resources, SecurityUser user) throws Exception {

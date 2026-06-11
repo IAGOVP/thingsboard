@@ -17,9 +17,27 @@ package org.thingsboard.server.service.gateway_device;
 
 import org.thingsboard.server.common.data.Device;
 
+/**
+
+ * Service contract for gateway notifications operations (gateway child-device session management).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface GatewayNotificationsService {
 
     void onDeviceUpdated(Device device, Device oldDevice);
+
+    /**
+     * Handles device deleted.
+     *
+     * @param device device ({@link Device})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void onDeviceDeleted(Device device);
 }

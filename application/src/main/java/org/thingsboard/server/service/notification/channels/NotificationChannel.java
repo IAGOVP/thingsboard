@@ -21,11 +21,32 @@ import org.thingsboard.server.common.data.notification.targets.NotificationRecip
 import org.thingsboard.server.common.data.notification.template.DeliveryMethodNotificationTemplate;
 import org.thingsboard.server.service.notification.NotificationProcessingContext;
 
+/**
+
+ * notification channel contract for notification delivery, templates, targets, and rule-trigger processing.
+
+ */
+
 public interface NotificationChannel<R extends NotificationRecipient, T extends DeliveryMethodNotificationTemplate> {
 
     void sendNotification(R recipient, T processedTemplate, NotificationProcessingContext ctx) throws Exception;
 
+    /**
+     * Checks the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void check(TenantId tenantId) throws Exception;
+
+    /**
+     * Returns delivery method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     NotificationDeliveryMethod getDeliveryMethod();
 

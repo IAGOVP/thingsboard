@@ -224,13 +224,24 @@ import static org.thingsboard.server.controller.UserController.YOU_DON_T_HAVE_PE
 import static org.thingsboard.server.dao.service.Validator.validateId;
 
 /**
- * Base class for ThingsBoard REST controllers.
+ * Base class for all ThingsBoard REST API controllers.
  *
- * <p>Provides: current user/tenant resolution, entity access checks, DAO/service autowiring helpers,
- * {@link org.thingsboard.server.common.data.exception.ThingsboardException} handling via {@code @ExceptionHandler},
- * and async {@link DeferredResult} utilities.
+ * <p>Not mapped to a REST path directly; concrete controllers extend this class and define
+ * {@code @RequestMapping} base paths (typically {@code /api}).
  *
- * <p>Concrete APIs live in {@code *Controller} subclasses; see {@code application/REST_API_CONTROLLERS.md}.
+ * <p>Provides shared infrastructure:
+ * <ul>
+ *   <li>Autowired DAO and service beans (tenant, device, asset, alarm, rule chain, etc.)</li>
+ *   <li>{@link #getCurrentUser()} / {@link #getTenantId()} security context helpers</li>
+ *   <li>Entity existence and {@link org.thingsboard.server.service.security.permission.AccessControlService} permission checks</li>
+ *   <li>Pagination helpers ({@link #createPageLink}, {@link #createTimePageLink})</li>
+ *   <li>Global {@code @ExceptionHandler} methods for {@link ThingsboardException} and validation errors</li>
+ *   <li>Async {@link DeferredResult} wrapping via {@link #wrapFuture}</li>
+ * </ul>
+ *
+ * <p>Type-specific helpers such as {@code checkDeviceId} load the entity and verify the caller
+ * has the requested {@link org.thingsboard.server.service.security.permission.Operation} on the
+ * corresponding {@link org.thingsboard.server.service.security.permission.Resource}.
  */
 @TbCoreComponent
 public abstract class BaseController {
@@ -413,6 +424,13 @@ public abstract class BaseController {
     protected boolean edgesEnabled;
 
     @ExceptionHandler(Exception.class)
+    /**
+     * Global exception handler that maps any {@link Exception} to {@link ThingsboardException}
+     * and delegates to {@link org.thingsboard.server.exception.ThingsboardErrorResponseHandler}.
+     *
+     * @param e the uncaught exception
+     * @param response HTTP response to write the error payload to
+     */
     public void handleControllerException(Exception e, HttpServletResponse response) {
         ThingsboardException thingsboardException = handleException(e);
         if (thingsboardException.getErrorCode() == ThingsboardErrorCode.GENERAL && thingsboardException.getCause() instanceof Exception
@@ -425,6 +443,12 @@ public abstract class BaseController {
     }
 
     @ExceptionHandler(ThingsboardException.class)
+    /**
+     * Exception handler for {@link ThingsboardException} thrown from controller methods.
+     *
+     * @param ex the ThingsBoard exception
+     * @param response HTTP response to write the error payload to
+     */
     public void handleThingsboardException(ThingsboardException ex, HttpServletResponse response) {
         errorResponseHandler.handle(ex, response);
     }
@@ -486,6 +510,13 @@ public abstract class BaseController {
      * Handles validation error for controller method arguments annotated with @{@link jakarta.validation.Valid}
      * */
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    /**
+     * Exception handler for {@link jakarta.validation.Valid} constraint violations
+     * on controller method arguments.
+     *
+     * @param validationError Spring validation exception
+     * @param response HTTP response to write the error payload to
+     */
     public void handleValidationError(MethodArgumentNotValidException validationError, HttpServletResponse response) {
         List<ConstraintViolation<Object>> constraintsViolations = validationError.getFieldErrors().stream()
                 .map(fieldError -> {
@@ -542,6 +573,16 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Parses and validates an enum request parameter (case-insensitive via upper-casing).
+     *
+     * @param name parameter name for error messages
+     * @param param raw string value
+     * @param valueOf converter function (typically {@code Enum::valueOf})
+     * @param <T> enum type
+     * @return parsed enum value
+     * @throws ThingsboardException if the value is not a valid enum constant
+     */
     protected <T> T checkEnumParameter(String name, String param, Function<String, T> valueOf) throws ThingsboardException {
         try {
             return valueOf.apply(param.toUpperCase());
@@ -584,6 +625,12 @@ public abstract class BaseController {
         return new TimePageLink(pageLink, startTime, endTime);
     }
 
+    /**
+     * Returns the authenticated {@link SecurityUser} from the Spring Security context.
+     *
+     * @return current security principal
+     * @throws ThingsboardException with {@link ThingsboardErrorCode#AUTHENTICATION} if not authenticated
+     */
     protected SecurityUser getCurrentUser() throws ThingsboardException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
@@ -593,6 +640,9 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Loads a tenant and verifies {@link Resource#TENANT} permission for the given operation.
+     */
     Tenant checkTenantId(TenantId tenantId, Operation operation) throws ThingsboardException {
         return checkEntityId(tenantId, (t, i) -> tenantService.findTenantById(tenantId), operation);
     }
@@ -613,18 +663,39 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Returns the tenant id of the currently authenticated user.
+     *
+     * @return tenant id
+     * @throws ThingsboardException if the user is not authenticated
+     */
     protected TenantId getTenantId() throws ThingsboardException {
         return getCurrentUser().getTenantId();
     }
 
+    /**
+     * Loads a customer and verifies {@link Resource#CUSTOMER} permission for the given operation.
+     */
     Customer checkCustomerId(CustomerId customerId, Operation operation) throws ThingsboardException {
         return checkEntityId(customerId, customerService::findCustomerById, operation);
     }
 
+    /**
+     * Loads a user and verifies {@link Resource#USER} permission for the given operation.
+     */
     User checkUserId(UserId userId, Operation operation) throws ThingsboardException {
         return checkEntityId(userId, userService::findUserById, operation);
     }
 
+    /**
+     * Validates create vs update permission for an entity being saved.
+     * Checks {@link Operation#CREATE} when {@code entityId} is null, otherwise delegates to {@link #checkEntityId}.
+     *
+     * @param entityId existing entity id, or null when creating
+     * @param entity entity payload
+     * @param resource access-control resource type
+     * @throws ThingsboardException if permission is denied
+     */
     protected <I extends EntityId, T extends HasTenantId> void checkEntity(I entityId, T entity, Resource resource) throws ThingsboardException {
         if (entityId == null) {
             accessControlService.checkPermission(getCurrentUser(), resource, Operation.CREATE, null, entity);
@@ -633,6 +704,15 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Resolves an entity by {@link EntityId}, verifies it exists, and checks access permission.
+     * Dispatches to type-specific {@code check*Id} helpers based on {@link EntityType}.
+     *
+     * @param entityId entity identifier (required)
+     * @param operation required operation (READ, WRITE, DELETE, etc.)
+     * @return the entity implementing {@link HasId}
+     * @throws ThingsboardException if id is missing, entity not found, or permission denied
+     */
     protected HasId<? extends EntityId> checkEntityId(EntityId entityId, Operation operation) throws ThingsboardException {
         try {
             if (entityId == null) {
@@ -673,6 +753,17 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Generic entity lookup: loads entity via {@code findingFunction} and checks permission.
+     *
+     * @param entityId entity id
+     * @param findingFunction tenant-scoped finder
+     * @param operation required operation
+     * @param <E> entity type
+     * @param <I> entity id type
+     * @return entity with permission verified
+     * @throws ThingsboardException if not found or access denied
+     */
     protected <E extends HasId<I> & HasTenantId, I extends EntityId> E checkEntityId(I entityId, ThrowingBiFunction<TenantId, I, E> findingFunction, Operation operation) throws ThingsboardException {
         try {
             validateId((UUIDBased) entityId, id -> "Invalid entity id");
@@ -685,12 +776,30 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Checks {@link org.thingsboard.server.service.security.permission.Resource} permission for a loaded entity.
+     *
+     * @param user security user performing the operation
+     * @param entity loaded entity
+     * @param operation required operation
+     * @param <E> entity type
+     * @param <I> entity id type
+     * @return the same entity after permission check
+     * @throws ThingsboardException if permission is denied
+     */
     protected <E extends HasId<I> & HasTenantId, I extends EntityId> E checkEntity(SecurityUser user, E entity, Operation operation) throws ThingsboardException {
         checkNotNull(entity, "Entity not found");
         accessControlService.checkPermission(user, Resource.of(entity.getId().getEntityType()), operation, entity.getId(), entity);
         return entity;
     }
 
+    /**
+     * Validates that all entities referenced in a calculated-field configuration exist and are readable.
+     * Supports TENANT (no check), CUSTOMER, ASSET, and DEVICE reference types.
+     *
+     * @param calculatedFieldConfig calculated field configuration containing referenced entity ids
+     * @throws ThingsboardException if a referenced entity is inaccessible
+     */
     protected void checkReferencedEntities(CalculatedFieldConfiguration calculatedFieldConfig) throws ThingsboardException {
         for (EntityId referencedEntityId : calculatedFieldConfig.getReferencedEntities()) {
             EntityType refEntityType = referencedEntityId.getEntityType();
@@ -702,18 +811,40 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Loads a device and verifies {@link Resource#DEVICE} permission for the given operation.
+     *
+     * @param deviceId device id
+     * @param operation e.g. READ, WRITE, DELETE, READ_CREDENTIALS, ASSIGN_TO_CUSTOMER
+     * @return device if found and accessible
+     * @throws ThingsboardException if not found or permission denied
+     */
     Device checkDeviceId(DeviceId deviceId, Operation operation) throws ThingsboardException {
         return checkEntityId(deviceId, deviceService::findDeviceById, operation);
     }
 
+    /**
+     * Loads device info and verifies {@link Resource#DEVICE} permission for the given operation.
+     */
     DeviceInfo checkDeviceInfoId(DeviceId deviceId, Operation operation) throws ThingsboardException {
         return checkEntityId(deviceId, deviceService::findDeviceInfoById, operation);
     }
 
+    /**
+     * Loads a device profile and verifies {@link Resource#DEVICE_PROFILE} permission.
+     */
     DeviceProfile checkDeviceProfileId(DeviceProfileId deviceProfileId, Operation operation) throws ThingsboardException {
         return checkEntityId(deviceProfileId, deviceProfileService::findDeviceProfileById, operation);
     }
 
+    /**
+     * Loads an entity view and checks {@link Resource#ENTITY_VIEW} permission.
+     *
+     * @param entityViewId entity view id
+     * @param operation required operation
+     * @return entity view
+     * @throws ThingsboardException if not found or access denied
+     */
     protected EntityView checkEntityViewId(EntityViewId entityViewId, Operation operation) throws ThingsboardException {
         return checkEntityId(entityViewId, entityViewService::findEntityViewById, operation);
     }
@@ -722,22 +853,37 @@ public abstract class BaseController {
         return checkEntityId(entityViewId, entityViewService::findEntityViewInfoById, operation);
     }
 
+    /**
+     * Loads an asset and verifies {@link Resource#ASSET} permission for the given operation.
+     */
     Asset checkAssetId(AssetId assetId, Operation operation) throws ThingsboardException {
         return checkEntityId(assetId, assetService::findAssetById, operation);
     }
 
+    /**
+     * Loads asset info and verifies {@link Resource#ASSET} permission.
+     */
     AssetInfo checkAssetInfoId(AssetId assetId, Operation operation) throws ThingsboardException {
         return checkEntityId(assetId, assetService::findAssetInfoById, operation);
     }
 
+    /**
+     * Loads an asset profile and verifies {@link Resource#ASSET_PROFILE} permission.
+     */
     AssetProfile checkAssetProfileId(AssetProfileId assetProfileId, Operation operation) throws ThingsboardException {
         return checkEntityId(assetProfileId, assetProfileService::findAssetProfileById, operation);
     }
 
+    /**
+     * Loads an alarm and verifies {@link Resource#ALARM} permission for the given operation.
+     */
     Alarm checkAlarmId(AlarmId alarmId, Operation operation) throws ThingsboardException {
         return checkEntityId(alarmId, alarmService::findAlarmById, operation);
     }
 
+    /**
+     * Loads alarm info and verifies {@link Resource#ALARM} permission.
+     */
     AlarmInfo checkAlarmInfoId(AlarmId alarmId, Operation operation) throws ThingsboardException {
         return checkEntityId(alarmId, alarmService::findAlarmInfoById, operation);
     }
@@ -811,10 +957,26 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Loads a rule chain and checks {@link Resource#RULE_CHAIN} permission.
+     *
+     * @param ruleChainId rule chain id
+     * @param operation required operation
+     * @return rule chain
+     * @throws ThingsboardException if not found or access denied
+     */
     protected RuleChain checkRuleChain(RuleChainId ruleChainId, Operation operation) throws ThingsboardException {
         return checkEntityId(ruleChainId, ruleChainService::findRuleChainById, operation);
     }
 
+    /**
+     * Loads a rule node, verifies its parent rule chain, and checks permission on the chain.
+     *
+     * @param ruleNodeId rule node id
+     * @param operation required operation on the parent rule chain
+     * @return rule node
+     * @throws ThingsboardException if not found or access denied
+     */
     protected RuleNode checkRuleNode(RuleNodeId ruleNodeId, Operation operation) throws ThingsboardException {
         validateId(ruleNodeId, id -> "Incorrect ruleNodeId " + id);
         RuleNode ruleNode = ruleChainService.findRuleNodeById(getTenantId(), ruleNodeId);
@@ -843,6 +1005,15 @@ public abstract class BaseController {
         return checkEntityId(rpcId, rpcService::findById, operation);
     }
 
+    /**
+     * Loads a queue and checks {@link Resource#QUEUE} permission.
+     * Denies tenant access to system queues when tenant uses isolated rule engine.
+     *
+     * @param queueId queue id
+     * @param operation required operation
+     * @return queue
+     * @throws ThingsboardException if not found or access denied
+     */
     protected Queue checkQueueId(QueueId queueId, Operation operation) throws ThingsboardException {
         Queue queue = checkEntityId(queueId, queueService::findQueueById, operation);
         TenantId tenantId = getTenantId();
@@ -884,28 +1055,60 @@ public abstract class BaseController {
         return checkEntityId(settingsId, (tenantId, id) -> aiModelService.findAiModelByTenantIdAndId(tenantId, id).orElse(null), operation);
     }
 
+    /**
+     * Loads an API key and verifies {@link Resource#API_KEY} permission for the given operation.
+     */
     ApiKey checkApiKeyId(ApiKeyId apiKeyId, Operation operation) throws ThingsboardException {
         return checkEntityId(apiKeyId, apiKeyService::findApiKeyById, operation);
     }
 
+    /**
+     * Returns a null-UUID placeholder {@link EntityId} for the given entity type (used in audit logging).
+     *
+     * @param entityType entity type
+     * @param <I> entity id type
+     * @return placeholder entity id
+     */
     protected <I extends EntityId> I emptyId(EntityType entityType) {
         return (I) EntityIdFactory.getByTypeAndUuid(entityType, ModelConstants.NULL_UUID);
     }
 
+    /**
+     * Converts a {@link Throwable} to an {@link Exception}, wrapping non-Exception throwables.
+     *
+     * @param error throwable, may be null
+     * @return exception instance or null
+     */
     public static Exception toException(Throwable error) {
         return error != null ? (error instanceof Exception ? (Exception) error : new Exception(error)) : null;
     }
 
+    /**
+     * Records an entity action in the audit log via {@link org.thingsboard.server.service.entitiy.TbLogEntityActionService}.
+     */
     protected <E extends HasName & HasId<? extends EntityId>> void logEntityAction(SecurityUser user, EntityType entityType, E savedEntity, ActionType actionType) {
         logEntityAction(user, entityType, null, savedEntity, actionType, null);
     }
 
+    /**
+     * Records an entity action in the audit log via {@link org.thingsboard.server.service.entitiy.TbLogEntityActionService}.
+     */
     protected <E extends HasName & HasId<? extends EntityId>> void logEntityAction(SecurityUser user, EntityType entityType, E entity, E savedEntity, ActionType actionType, Exception e) {
         EntityId entityId = savedEntity != null ? savedEntity.getId() : emptyId(entityType);
         entityActionService.logEntityAction(user, entityId, savedEntity != null ? savedEntity : entity,
                 user.getCustomerId(), actionType, e);
     }
 
+    /**
+     * Saves an entity, logs ADDED/UPDATED audit action, and rethrows on failure.
+     *
+     * @param entityType entity type for audit logging
+     * @param entity entity to save
+     * @param savingFunction DAO save function
+     * @param <E> entity type
+     * @return saved entity
+     * @throws Exception if save fails
+     */
     protected <E extends HasName & HasId<? extends EntityId>> E doSaveAndLog(EntityType entityType, E entity, BiFunction<TenantId, E, E> savingFunction) throws Exception {
         ActionType actionType = entity.getId() == null ? ActionType.ADDED : ActionType.UPDATED;
         SecurityUser user = getCurrentUser();
@@ -919,6 +1122,14 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Deletes an entity, logs DELETED audit action, and rethrows on failure.
+     *
+     * @param entityType entity type for audit logging
+     * @param entity entity to delete
+     * @param deleteFunction DAO delete function
+     * @throws Exception if delete fails
+     */
     protected <E extends HasName & HasId<I>, I extends EntityId> void doDeleteAndLog(EntityType entityType, E entity, BiConsumer<TenantId, I> deleteFunction) throws Exception {
         SecurityUser user = getCurrentUser();
         try {
@@ -930,6 +1141,13 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Enriches user {@code additionalInfo} with credentials state (enabled, activated, last login)
+     * and validates embedded dashboard references.
+     *
+     * @param user user whose additional info is updated in place
+     * @throws ThingsboardException if dashboard references are invalid
+     */
     protected void checkUserInfo(User user) throws ThingsboardException {
         ObjectNode info;
         if (user.getAdditionalInfo() instanceof ObjectNode additionalInfo) {
@@ -946,11 +1164,25 @@ public abstract class BaseController {
         info.put("lastLoginTs", userCredentials.getLastLoginTs());
     }
 
+    /**
+     * Removes stale default/home dashboard id references from {@code additionalInfo} JSON
+     * when the dashboard no longer exists.
+     *
+     * @param additionalInfo user/tenant/customer additional info node
+     * @throws ThingsboardException if validation fails
+     */
     protected void checkDashboardInfo(JsonNode additionalInfo) throws ThingsboardException {
         checkDashboardInfo(additionalInfo, DEFAULT_DASHBOARD);
         checkDashboardInfo(additionalInfo, HOME_DASHBOARD);
     }
 
+    /**
+     * Removes a stale dashboard id from {@code additionalInfo} when the dashboard does not exist.
+     *
+     * @param node additional info JSON object node
+     * @param dashboardField field name (e.g. {@code homeDashboardId})
+     * @throws ThingsboardException if validation fails
+     */
     protected void checkDashboardInfo(JsonNode node, String dashboardField) throws ThingsboardException {
         if (node instanceof ObjectNode additionalInfo) {
             DashboardId dashboardId = Optional.ofNullable(additionalInfo.get(dashboardField))
@@ -978,6 +1210,13 @@ public abstract class BaseController {
         return cf;
     }
 
+    /**
+     * Resolves home dashboard configuration from user, then customer, then tenant additional info.
+     *
+     * @param securityUser current user
+     * @param additionalInfo user additional info JSON
+     * @return home dashboard info, or null if not configured
+     */
     protected HomeDashboardInfo getHomeDashboardInfo(SecurityUser securityUser, JsonNode additionalInfo) {
         HomeDashboardInfo homeDashboardInfo = extractHomeDashboardInfoFromAdditionalInfo(additionalInfo);
         if (homeDashboardInfo == null) {
@@ -1010,6 +1249,12 @@ public abstract class BaseController {
         return null;
     }
 
+    /**
+     * Parses a Content-Type header value, defaulting to {@link MediaType#APPLICATION_OCTET_STREAM} on error.
+     *
+     * @param contentType raw content type string
+     * @return parsed media type
+     */
     protected MediaType parseMediaType(String contentType) {
         try {
             return MediaType.parseMediaType(contentType);
@@ -1018,18 +1263,31 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Wraps a {@link ListenableFuture} in a Spring {@link DeferredResult} for async REST responses.
+     */
     protected <T> DeferredResult<T> wrapFuture(ListenableFuture<T> future) {
         DeferredResult<T> deferredResult = new DeferredResult<>(); // Timeout of spring.mvc.async.request-timeout is used
         DonAsynchron.withCallback(future, deferredResult::setResult, deferredResult::setErrorResult);
         return deferredResult;
     }
 
+    /**
+     * Wraps a {@link ListenableFuture} in a Spring {@link DeferredResult} for async REST responses.
+     */
     protected <T> DeferredResult<T> wrapFuture(ListenableFuture<T> future, long timeoutMs) {
         DeferredResult<T> deferredResult = new DeferredResult<>(timeoutMs);
         DonAsynchron.withCallback(future, deferredResult::setResult, deferredResult::setErrorResult);
         return deferredResult;
     }
 
+    /**
+     * Builds an {@link EntityDataSortOrder} from REST sort query parameters.
+     *
+     * @param sortProperty entity field property name
+     * @param sortOrder ASC or DESC
+     * @return sort order, or null if sortProperty is empty
+     */
     protected EntityDataSortOrder createEntityDataSortOrder(String sortProperty, String sortOrder) {
         if (isNotEmpty(sortProperty)) {
             EntityDataSortOrder entityDataSortOrder = new EntityDataSortOrder();
@@ -1043,6 +1301,14 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Writes response bytes, gzip-compressing when Accept-Encoding contains gzip.
+     *
+     * @param acceptEncodingHeader Accept-Encoding request header
+     * @param response servlet response
+     * @param content raw response bytes
+     * @throws IOException on stream errors
+     */
     protected void compressResponseWithGzipIFAccepted(String acceptEncodingHeader, HttpServletResponse response, byte[] content) throws IOException {
         if (StringUtils.isNotEmpty(acceptEncodingHeader) && acceptEncodingHeader.contains("gzip")) {
             response.setHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
@@ -1059,10 +1325,24 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Builds an empty {@link ResponseEntity} with the given HTTP status.
+     *
+     * @param status HTTP status
+     * @param <T> response body type
+     * @return response entity without body
+     */
     protected <T> ResponseEntity<T> response(HttpStatus status) {
         return ResponseEntity.status(status).build();
     }
 
+    /**
+     * Builds a 303 See Other redirect {@link ResponseEntity} to the given location.
+     *
+     * @param location redirect URI string
+     * @param <T> response body type
+     * @return redirect response
+     */
     protected <T> ResponseEntity<T> redirectTo(String location) {
         URI uri;
         try {
@@ -1076,6 +1356,13 @@ public abstract class BaseController {
                 .build();
     }
 
+    /**
+     * Converts UUID array to {@link OAuth2ClientId} list, validating READ permission on each client.
+     *
+     * @param ids OAuth2 client UUIDs, may be null
+     * @return list of validated client ids (empty if ids is null)
+     * @throws ThingsboardException if any client is not accessible
+     */
     protected List<OAuth2ClientId> getOAuth2ClientIds(UUID[] ids) throws ThingsboardException {
         if (ids == null) {
             return Collections.emptyList();

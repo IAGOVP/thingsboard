@@ -38,6 +38,12 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for notification rules cache (notification delivery, templates, targets, and rule-trigger processing).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -60,6 +66,13 @@ public class DefaultNotificationRulesCache implements NotificationRulesCache {
                 .expireAfterAccess(cacheValueTtl, TimeUnit.MINUTES)
                 .build();
     }
+    /**
+     * Handles component lifecycle event.
+     *
+     * @param event event ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @EventListener(ComponentLifecycleMsg.class)
     public void onComponentLifecycleEvent(ComponentLifecycleMsg event) {
@@ -86,6 +99,14 @@ public class DefaultNotificationRulesCache implements NotificationRulesCache {
                 break;
         }
     }
+    /**
+     * Returns enabled.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param triggerType trigger type ({@link NotificationRuleTriggerType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<NotificationRule> getEnabled(TenantId tenantId, NotificationRuleTriggerType triggerType) {
@@ -101,6 +122,13 @@ public class DefaultNotificationRulesCache implements NotificationRulesCache {
             lock.readLock().unlock();
         }
     }
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void evict(TenantId tenantId) {
         cache.invalidateAll(Arrays.stream(NotificationRuleTriggerType.values())

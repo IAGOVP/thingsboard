@@ -44,6 +44,11 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
+/**
+ * Service implementation for default two factor auth in two-factor authentication (MFA).
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -60,14 +65,26 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
     private static final ThingsboardException PROVIDER_NOT_CONFIGURED_ERROR = new ThingsboardException("2FA provider is not configured", ThingsboardErrorCode.BAD_REQUEST_PARAMS);
     private static final ThingsboardException PROVIDER_NOT_AVAILABLE_ERROR = new ThingsboardException("2FA provider is not available", ThingsboardErrorCode.GENERAL);
     private static final ThingsboardException TOO_MANY_REQUESTS_ERROR = new ThingsboardException("Too many requests", ThingsboardErrorCode.TOO_MANY_REQUESTS);
-
+    /**
+     * Returns whether two fa enabled.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param user user (User)
+     * @return boolean
+     */
     @Override
     public boolean isTwoFaEnabled(TenantId tenantId, User user) {
         return configManager.getAccountTwoFaSettings(tenantId, user)
                 .map(settings -> !settings.getConfigs().isEmpty())
                 .orElse(false);
     }
-
+    /**
+     * Returns whether enforce two fa enabled.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param user user (User)
+     * @return boolean
+     */
     @Override
     public boolean isEnforceTwoFaEnabled(TenantId tenantId, User user) {
         SystemLevelUsersFilter enforcedUsersFilter = configManager.getPlatformTwoFaSettings(TenantId.SYS_TENANT_ID, true)
@@ -81,12 +98,27 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
         return userService.matchesFilter(tenantId, enforcedUsersFilter, user);
     }
 
+    /**
+     * Check provider.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param providerType provider type (TwoFaProviderType)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public void checkProvider(TenantId tenantId, TwoFaProviderType providerType) throws ThingsboardException {
         getTwoFaProvider(providerType).check(tenantId);
     }
 
 
+    /**
+     * Prepare verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param providerType provider type (TwoFaProviderType)
+     * @param checkLimits check limits (boolean)
+     * @throws Exception if the operation fails
+     */
     @Override
     public void prepareVerificationCode(SecurityUser user, TwoFaProviderType providerType, boolean checkLimits) throws Exception {
         TwoFaAccountConfig accountConfig = configManager.getTwoFaAccountConfig(user.getTenantId(), user, providerType)
@@ -94,6 +126,14 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
         prepareVerificationCode(user, accountConfig, checkLimits);
     }
 
+    /**
+     * Prepare verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param accountConfig account config (TwoFaAccountConfig)
+     * @param checkLimits check limits (boolean)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public void prepareVerificationCode(SecurityUser user, TwoFaAccountConfig accountConfig, boolean checkLimits) throws ThingsboardException {
         PlatformTwoFaSettings twoFaSettings = configManager.getPlatformTwoFaSettings(user.getTenantId(), true)
@@ -114,15 +154,32 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
                 .orElseThrow(() -> PROVIDER_NOT_CONFIGURED_ERROR);
         getTwoFaProvider(accountConfig.getProviderType()).prepareVerificationCode(user, providerConfig, accountConfig);
     }
-
-
+    /**
+     * Check verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param providerType provider type (TwoFaProviderType)
+     * @param verificationCode verification code (String)
+     * @param checkLimits check limits (boolean)
+     * @return boolean
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public boolean checkVerificationCode(SecurityUser user, TwoFaProviderType providerType, String verificationCode, boolean checkLimits) throws ThingsboardException {
         TwoFaAccountConfig accountConfig = configManager.getTwoFaAccountConfig(user.getTenantId(), user, providerType)
                 .orElseThrow(() -> ACCOUNT_NOT_CONFIGURED_ERROR);
         return checkVerificationCode(user, verificationCode, accountConfig, checkLimits);
     }
-
+    /**
+     * Check verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param verificationCode verification code (String)
+     * @param accountConfig account config (TwoFaAccountConfig)
+     * @param checkLimits check limits (boolean)
+     * @return boolean
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public boolean checkVerificationCode(SecurityUser user, String verificationCode, TwoFaAccountConfig accountConfig, boolean checkLimits) throws ThingsboardException {
         if (!userService.findUserCredentialsByUserId(user.getTenantId(), user.getId()).isEnabled()) {
@@ -159,7 +216,14 @@ public class DefaultTwoFactorAuthService implements TwoFactorAuthService {
         }
         return verificationSuccess;
     }
-
+    /**
+     * Generate new account config.
+     *
+     * @param user user (User)
+     * @param providerType provider type (TwoFaProviderType)
+     * @return {@link TwoFaAccountConfig} result
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public TwoFaAccountConfig generateNewAccountConfig(User user, TwoFaProviderType providerType) throws ThingsboardException {
         TwoFaProviderConfig providerConfig = getTwoFaProviderConfig(user.getTenantId(), providerType);

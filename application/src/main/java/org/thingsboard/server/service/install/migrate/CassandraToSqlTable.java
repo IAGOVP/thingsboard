@@ -36,6 +36,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+    /**
+     * Cassandra to sql table (database schema installation, upgrades, and demo data loading).
+     */
+
 @Data
 @Slf4j
 public class CassandraToSqlTable {
@@ -73,6 +77,14 @@ public class CassandraToSqlTable {
             this.columns.get(i).setSqlIndex(i+1);
         }
     }
+    /**
+     * Migrate to sql.
+     *
+     * @param session session ({@link GuavaSession})
+     * @param conn conn ({@link Connection})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     public void migrateToSql(GuavaSession session, Connection conn) throws SQLException {
         log.info("[{}] Migrating data from cassandra '{}' Column Family to '{}' SQL table...", this.sqlTableName, this.cassandraCf, this.sqlTableName);
@@ -127,6 +139,13 @@ public class CassandraToSqlTable {
         }
         return this.validateColumnData(data);
     }
+    /**
+     * Validates column data.
+     *
+     * @param data data
+     * @return the CassandraToSqlColumnData[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected CassandraToSqlColumnData[] validateColumnData(CassandraToSqlColumnData[] data) {
         for (int i=0;i<data.length;i++) {
@@ -147,6 +166,14 @@ public class CassandraToSqlTable {
         }
         return data;
     }
+    /**
+     * Batch insert.
+     *
+     * @param batchData batch data ({@link List})
+     * @param conn conn ({@link Connection})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     protected void batchInsert(List<CassandraToSqlColumnData[]> batchData, Connection conn) throws SQLException {
         boolean retry = false;
@@ -201,11 +228,28 @@ public class CassandraToSqlTable {
         stringData.append("}");
         return stringData.toString();
     }
+    /**
+     * Handles constraint violation.
+     *
+     * @param batchData batch data ({@link List})
+     * @param data data
+     * @param constraint constraint ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean onConstraintViolation(List<CassandraToSqlColumnData[]> batchData,
                                             CassandraToSqlColumnData[] data, String constraint) {
         return false;
     }
+    /**
+     * Handles unique name violation.
+     *
+     * @param data data
+     * @param entityType entity type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void handleUniqueNameViolation(CassandraToSqlColumnData[] data, String entityType) {
         CassandraToSqlColumn nameColumn = this.getColumn("name");
@@ -219,6 +263,13 @@ public class CassandraToSqlTable {
         String id = UUIDConverter.fromString(this.getColumnData(data, "id").getValue()).toString();
         log.warn("Found {} with duplicate name [id:[{}]]. Attempting to rename {} from '{}' to '{}'...", entityType, id, entityType, prevName, newName);
     }
+    /**
+     * Handles unique email violation.
+     *
+     * @param data data
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void handleUniqueEmailViolation(CassandraToSqlColumnData[] data) {
         CassandraToSqlColumn emailColumn = this.getColumn("email");
@@ -232,6 +283,14 @@ public class CassandraToSqlTable {
         String id = UUIDConverter.fromString(this.getColumnData(data, "id").getValue()).toString();
         log.warn("Found user with duplicate email [id:[{}]]. Attempting to rename email from '{}' to '{}'...", id, prevEmail, newEmail);
     }
+    /**
+     * Ignore record.
+     *
+     * @param batchData batch data ({@link List})
+     * @param data data
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void ignoreRecord(List<CassandraToSqlColumnData[]> batchData, CassandraToSqlColumnData[] data) {
         log.warn("[{}] Affected data:\n{}", this.sqlTableName, this.dataToString(data));
@@ -240,10 +299,25 @@ public class CassandraToSqlTable {
             batchData.remove(index);
         }
     }
+    /**
+     * Returns column.
+     *
+     * @param sqlColumnName sql column name ({@link String})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected CassandraToSqlColumn getColumn(String sqlColumnName) {
         return this.columns.stream().filter(col -> col.getSqlColumnName().equals(sqlColumnName)).findFirst().get();
     }
+    /**
+     * Returns column data.
+     *
+     * @param data data
+     * @param sqlColumnName sql column name ({@link String})
+     * @return {@link CassandraToSqlColumnData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected CassandraToSqlColumnData getColumnData(CassandraToSqlColumnData[] data, String sqlColumnName) {
         CassandraToSqlColumn column = this.getColumn(sqlColumnName);
@@ -268,6 +342,12 @@ public class CassandraToSqlTable {
         }
         return Optional.empty();
     }
+    /**
+     * Creates cassandra select statement.
+     *
+     * @return {@link Statement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Statement createCassandraSelectStatement() {
         StringBuilder selectStatementBuilder = new StringBuilder();

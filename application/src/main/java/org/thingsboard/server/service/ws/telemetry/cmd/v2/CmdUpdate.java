@@ -18,6 +18,10 @@ package org.thingsboard.server.service.ws.telemetry.cmd.v2;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+/**
+ * Outbound WebSocket update payload for cmd.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @Data
 @AllArgsConstructor
@@ -27,6 +31,11 @@ public abstract class CmdUpdate {
     private final int cmdId;
     private final int errorCode;
     private final String errorMsg;
+
+    /**
+     * Returns cmd update type.
+     * @return {@link CmdUpdateType}
+     */
 
     public abstract CmdUpdateType getCmdUpdateType();
 

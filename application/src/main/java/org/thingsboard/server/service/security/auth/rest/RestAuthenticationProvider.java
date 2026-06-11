@@ -45,6 +45,11 @@ import org.thingsboard.server.service.security.exception.UserPasswordNotValidExc
 import org.thingsboard.server.service.security.model.SecurityUser;
 import org.thingsboard.server.service.security.model.UserPrincipal;
 import org.thingsboard.server.service.security.system.SystemSecurityService;
+/**
+ * Spring Security authentication provider for username/password REST login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Integrates with Spring Security filter chain.
+ */
 
 @Component
 @Slf4j
@@ -68,7 +73,13 @@ public class RestAuthenticationProvider extends AbstractAuthenticationProvider {
         this.securitySettingsService = securitySettingsService;
         this.twoFactorAuthService = twoFactorAuthService;
     }
-
+    /**
+     * Authenticates credentials and returns a populated security principal.
+     *
+     * @param authentication authentication (Authentication)
+     * @return {@link Authentication} result
+     * @throws AuthenticationException if the operation fails
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.notNull(authentication, "No authentication data provided");
@@ -142,7 +153,12 @@ public class RestAuthenticationProvider extends AbstractAuthenticationProvider {
     private SecurityUser authenticateByPublicId(UserPrincipal userPrincipal, String publicId) {
         return super.authenticateByPublicId(publicId, "Public Id", userPrincipal);
     }
-
+    /**
+     * Indicates whether this provider can authenticate the given authentication token type.
+     *
+     * @param authentication authentication (Class<?>)
+     * @return boolean
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));

@@ -60,13 +60,31 @@ public abstract class AbstractSubscriptionService extends TbApplicationEventList
     protected Optional<SubscriptionManagerService> subscriptionManagerService;
 
     protected ExecutorService wsCallBackExecutor;
+    /**
+     * Returns executor prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getExecutorPrefix();
+    /**
+     * Init executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void initExecutor() {
         wsCallBackExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName(getExecutorPrefix() + "-service-ws-callback"));
     }
+    /**
+     * Shutdown executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -74,6 +92,13 @@ public abstract class AbstractSubscriptionService extends TbApplicationEventList
             wsCallBackExecutor.shutdownNow();
         }
     }
+    /**
+     * Handles tb application event.
+     *
+     * @param partitionChangeEvent partition change event ({@link PartitionChangeEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent partitionChangeEvent) {
@@ -82,6 +107,16 @@ public abstract class AbstractSubscriptionService extends TbApplicationEventList
             currentPartitions.addAll(partitionChangeEvent.getCorePartitions());
         }
     }
+    /**
+     * Forward to subscription manager service.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param toSubscriptionManagerService to subscription manager service ({@link Consumer})
+     * @param toCore to core ({@link Supplier})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void forwardToSubscriptionManagerService(TenantId tenantId, EntityId entityId,
                                                        Consumer<SubscriptionManagerService> toSubscriptionManagerService,
@@ -98,22 +133,60 @@ public abstract class AbstractSubscriptionService extends TbApplicationEventList
             clusterService.pushMsgToCore(tpi, entityId.getId(), toCoreMsg, null);
         }
     }
+    /**
+     * Add ws callback.
+     *
+     * @param saveFuture save future ({@link ListenableFuture})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected <T> void addWsCallback(ListenableFuture<T> saveFuture, Consumer<T> callback) {
         addCallback(saveFuture, callback, wsCallBackExecutor);
     }
+    /**
+     * Add callback.
+     *
+     * @param saveFuture save future ({@link ListenableFuture})
+     * @param callback queue callback invoked when processing completes
+     * @param executor executor ({@link Executor})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected <T> void addCallback(ListenableFuture<T> saveFuture, Consumer<T> callback, Executor executor) {
         Futures.addCallback(saveFuture, new FutureCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param result result ({@link T})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(@Nullable T result) {
                 callback.accept(result);
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {}
         }, executor);
     }
+    /**
+     * Safe callback.
+     *
+     * @param callback queue callback invoked when processing completes
+     * @return {@link Consumer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected static Consumer<Throwable> safeCallback(FutureCallback<Void> callback) {
         if (callback != null) {

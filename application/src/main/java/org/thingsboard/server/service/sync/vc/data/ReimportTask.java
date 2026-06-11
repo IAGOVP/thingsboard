@@ -18,6 +18,9 @@ package org.thingsboard.server.service.sync.vc.data;
 import lombok.Data;
 import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 import org.thingsboard.server.common.data.sync.ie.EntityImportSettings;
+/**
+ * Reimport task (Git-based entity version control (entity version control, Git repository sync, and import/export)).
+ */
 
 @Data
 public class ReimportTask {

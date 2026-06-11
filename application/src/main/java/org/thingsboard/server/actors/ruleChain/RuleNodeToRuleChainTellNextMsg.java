@@ -31,8 +31,9 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Rule node completion message instructing the parent chain to continue on a named relation.
  */
+
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString
@@ -53,12 +54,27 @@ public class RuleNodeToRuleChainTellNextMsg extends TbRuleEngineActorMsg impleme
         this.relationTypes = relationTypes;
         this.failureMessage = failureMessage;
     }
+    /**
+     * Handles tb actor stopped.
+     *
+     * @param reason reason ({@link TbActorStopReason})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onTbActorStopped(TbActorStopReason reason) {
         String message = reason == TbActorStopReason.STOPPED ? String.format("Rule chain [%s] stopped", ruleChainId.getId()) : String.format("Failed to initialize rule chain [%s]!", ruleChainId.getId());
         msg.getCallback().onFailure(new RuleEngineException(message));
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

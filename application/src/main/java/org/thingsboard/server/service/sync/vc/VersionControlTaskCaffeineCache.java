@@ -22,6 +22,9 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 
 import java.util.UUID;
+/**
+ * Spring service component for version control task caffeine cache (Git-based entity version control (entity version control, Git repository sync, and import/export)).
+ */
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("VersionControlTaskCache")

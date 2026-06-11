@@ -23,6 +23,10 @@ import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.gen.transport.TransportProtos;
 
+    /**
+     * Spring service component for session caffeine cache (device session and connectivity state).
+     */
+
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("SessionCache")
 public class SessionCaffeineCache extends CaffeineTbTransactionalCache<DeviceId, TransportProtos.DeviceSessionsCacheEntry> {

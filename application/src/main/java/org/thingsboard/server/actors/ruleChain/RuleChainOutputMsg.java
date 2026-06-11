@@ -24,8 +24,9 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Message carrying rule-chain output {@link org.thingsboard.server.common.msg.TbMsg} to a caller or parent chain.
  */
+
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public final class RuleChainOutputMsg extends TbToRuleChainActorMsg {
@@ -41,6 +42,14 @@ public final class RuleChainOutputMsg extends TbToRuleChainActorMsg {
         this.targetRuleNodeId = targetRuleNodeId;
         this.relationType = relationType;
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

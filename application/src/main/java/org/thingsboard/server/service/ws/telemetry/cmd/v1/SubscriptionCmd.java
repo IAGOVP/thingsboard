@@ -18,6 +18,10 @@ package org.thingsboard.server.service.ws.telemetry.cmd.v1;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+/**
+ * WebSocket command DTO for subscription.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +34,11 @@ public abstract class SubscriptionCmd implements TelemetryPluginCmd {
     private String keys;
     private String scope;
     private boolean unsubscribe;
+
+    /**
+     * To string.
+     * @return string value
+     */
 
     @Override
     public String toString() {

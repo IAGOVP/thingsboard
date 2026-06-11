@@ -18,12 +18,21 @@ package org.thingsboard.server.service.ws.telemetry.cmd.v2;
 import lombok.Data;
 import lombok.Getter;
 import org.thingsboard.server.service.ws.WsCmd;
+/**
+ * WebSocket command DTO for data.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 public abstract class DataCmd implements WsCmd {
 
     @Getter
     private final int cmdId;
+
+    /**
+     * Constructs {@link DataCmd} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     */
 
     public DataCmd(int cmdId) {
         this.cmdId = cmdId;

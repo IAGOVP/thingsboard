@@ -53,6 +53,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+/**
+ * Jwt token factory for security DTOs and principals.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @RequiredArgsConstructor
@@ -105,6 +110,13 @@ public class JwtTokenFactory {
         return new AccessJwtToken(token);
     }
 
+    /**
+     * Parses access jwt token.
+     *
+     * @param token token (String)
+     * @return {@link SecurityUser} result
+     */
+
     public SecurityUser parseAccessJwtToken(String token) {
         Jws<Claims> jwsClaims = parseTokenClaims(token);
         Claims claims = jwsClaims.getPayload();
@@ -147,6 +159,13 @@ public class JwtTokenFactory {
         return securityUser;
     }
 
+    /**
+     * Creates or persists refresh token.
+     *
+     * @param securityUser security user (SecurityUser)
+     * @return {@link JwtToken} result
+     */
+
     public JwtToken createRefreshToken(SecurityUser securityUser) {
         UserPrincipal principal = securityUser.getUserPrincipal();
 
@@ -156,6 +175,13 @@ public class JwtTokenFactory {
 
         return new AccessJwtToken(token);
     }
+
+    /**
+     * Parses refresh token.
+     *
+     * @param token token (String)
+     * @return {@link SecurityUser} result
+     */
 
     public SecurityUser parseRefreshToken(String token) {
         Jws<Claims> jwsClaims = parseTokenClaims(token);
@@ -179,6 +205,15 @@ public class JwtTokenFactory {
         return securityUser;
     }
 
+    /**
+     * Creates or persists mfa token.
+     *
+     * @param user user (SecurityUser)
+     * @param scope scope (Authority)
+     * @param expirationTime expiration time (Integer)
+     * @return {@link JwtToken} result
+     */
+
     public JwtToken createMfaToken(SecurityUser user, Authority scope, Integer expirationTime) {
         JwtBuilder jwtBuilder = setUpToken(user, Collections.singletonList(scope.name()), expirationTime)
                 .claim(TENANT_ID, user.getTenantId().toString());
@@ -187,6 +222,11 @@ public class JwtTokenFactory {
         }
         return new AccessJwtToken(jwtBuilder.compact());
     }
+
+    /**
+     * Reload.
+     *
+     */
 
     public void reload() {
         getSecretKey(true);
@@ -219,6 +259,13 @@ public class JwtTokenFactory {
                 .signWith(getSecretKey(false), Jwts.SIG.HS512);
     }
 
+    /**
+     * Parses token claims.
+     *
+     * @param token token (String)
+     * @return {@link Jws} result
+     */
+
     public Jws<Claims> parseTokenClaims(String token) {
         try {
             return getJwtParser(false).parseSignedClaims(token);
@@ -230,6 +277,13 @@ public class JwtTokenFactory {
             throw new JwtExpiredTokenException(token, "JWT Token expired", expiredEx);
         }
     }
+
+    /**
+     * Creates or persists token pair.
+     *
+     * @param securityUser security user (SecurityUser)
+     * @return {@link JwtPair} result
+     */
 
     public JwtPair createTokenPair(SecurityUser securityUser) {
         securityUser.setSessionId(UUID.randomUUID().toString());

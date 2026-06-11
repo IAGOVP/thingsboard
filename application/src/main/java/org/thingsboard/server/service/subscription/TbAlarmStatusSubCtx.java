@@ -30,6 +30,10 @@ import org.thingsboard.server.service.ws.telemetry.sub.AlarmSubscriptionUpdate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+/**
+ * Subscription context for tb alarm status WebSocket commands.
+ * <p>Maintains query state, caches, and pending updates for one command id.
+ */
 
 @Slf4j
 @ToString(callSuper = true)
@@ -39,6 +43,18 @@ public class TbAlarmStatusSubCtx extends TbAbstractSubCtx {
     private final int alarmsPerAlarmStatusSubscriptionCacheSize;
 
     private volatile TbAlarmStatusSubscription subscription;
+
+    /**
+     * Constructs {@link TbAlarmStatusSubCtx} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param wsService ws service
+     * @param localSubscriptionService local subscription service
+     * @param stats stats
+     * @param alarmService alarm service
+     * @param alarmsPerAlarmStatusSubscriptionCacheSize alarms per alarm status subscription cache size
+     * @param sessionRef reference to the WebSocket session
+     * @param cmdId client command id
+     */
 
     public TbAlarmStatusSubCtx(String serviceId, WebSocketService wsService,
                                TbLocalSubscriptionService localSubscriptionService,
@@ -50,16 +66,36 @@ public class TbAlarmStatusSubCtx extends TbAbstractSubCtx {
         this.alarmsPerAlarmStatusSubscriptionCacheSize = alarmsPerAlarmStatusSubscriptionCacheSize;
     }
 
+    /**
+     * Is dynamic.
+     * @return {@code true} when the condition holds
+     */
+
     @Override
     public boolean isDynamic() {
         return false;
     }
+
+    /**
+     * Stops stop.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return @Override
+    public void
+     */
 
     @Override
     public void stop() {
         super.stop();
         localSubscriptionService.cancelSubscription(getTenantId(), sessionRef.getSessionId(), subscription.getSubscriptionId());
     }
+
+    /**
+     * Creates subscription.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param cmd cmd
+     */
 
     public void createSubscription(AlarmStatusCmd cmd) {
         SecurityUser securityCtx = sessionRef.getSecurityCtx();
@@ -76,14 +112,22 @@ public class TbAlarmStatusSubCtx extends TbAbstractSubCtx {
         localSubscriptionService.addSubscription(subscription, sessionRef);
     }
 
-    public void sendUpdate() {
+    /**
+     * Sends update.
+     */
+
+public void sendUpdate() {
         sendWsMsg(AlarmStatusUpdate.builder()
                 .cmdId(cmdId)
                 .active(subscription.hasAlarms())
                 .build());
     }
 
-    public void fetchActiveAlarms() {
+    /**
+     * Fetches active alarms.
+     */
+
+public void fetchActiveAlarms() {
         log.trace("[{}, subId: {}] Fetching active alarms from DB", subscription.getSessionId(), subscription.getSubscriptionId());
         OriginatorAlarmFilter originatorAlarmFilter = new OriginatorAlarmFilter(subscription.getEntityId(), subscription.getTypeList(), subscription.getSeverityList());
         List<UUID> alarmIds = alarmService.findActiveOriginatorAlarms(subscription.getTenantId(), originatorAlarmFilter, alarmsPerAlarmStatusSubscriptionCacheSize);

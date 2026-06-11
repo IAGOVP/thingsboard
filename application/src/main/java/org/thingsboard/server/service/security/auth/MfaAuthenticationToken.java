@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.auth;
 
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+ * Spring Security authentication token carrying platform security credentials or principal.
+ */
+
 public class MfaAuthenticationToken extends AbstractJwtAuthenticationToken {
     public MfaAuthenticationToken(SecurityUser securityUser) {
         super(securityUser);

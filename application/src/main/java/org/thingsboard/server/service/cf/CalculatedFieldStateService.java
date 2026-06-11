@@ -27,19 +27,84 @@ import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldState;
 
 import java.util.Set;
 
+
+/**
+
+ * Service contract for calculated field state operations (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
+
 public interface CalculatedFieldStateService {
+/**
+ * Init.
+ *
+ * @param eventConsumer event consumer ({@link PartitionedQueueConsumerManager})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     void init(PartitionedQueueConsumerManager<TbProtoQueueMsg<ToCalculatedFieldMsg>> eventConsumer);
+/**
+ * Persist state.
+ *
+ * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+ * @param state state ({@link CalculatedFieldState})
+ * @param callback queue callback invoked when processing completes
+ * @return nothing
+ * @throws CalculatedFieldStateException if calculated field state exception is thrown during processing
+ */
 
     void persistState(CalculatedFieldEntityCtxId stateId, CalculatedFieldState state, TbCallback callback) throws CalculatedFieldStateException;
+/**
+ * Deletes state.
+ *
+ * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+ * @param callback queue callback invoked when processing completes
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void deleteState(CalculatedFieldEntityCtxId stateId, TbCallback callback);
+/**
+ * Restore.
+ *
+ * @param queueKey queue key ({@link QueueKey})
+ * @param partitions partitions ({@link Set})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void restore(QueueKey queueKey, Set<TopicPartitionInfo> partitions);
+/**
+ * Deletes the requested data.
+ *
+ * @param partitions partitions ({@link Set})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void delete(Set<TopicPartitionInfo> partitions);
+/**
+ * Returns partitions.
+ *
+ * @return {@link Set}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Set<TopicPartitionInfo> getPartitions();
+/**
+ * Stop.
+ *
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void stop();
 

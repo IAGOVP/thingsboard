@@ -23,6 +23,10 @@ import org.thingsboard.server.service.ws.WsCmdType;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * WebSocket command DTO for mark notifications as read.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 @NoArgsConstructor
@@ -30,6 +34,11 @@ import java.util.UUID;
 public class MarkNotificationsAsReadCmd implements WsCmd {
     private int cmdId;
     private List<UUID> notifications;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

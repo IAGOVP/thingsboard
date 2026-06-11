@@ -24,6 +24,12 @@ import org.thingsboard.common.util.JacksonUtil;
 
 import java.io.IOException;
 
+    /**
+     * Default Spring implementation for tb mail config template service (SMTP email sending and templating).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 public class DefaultTbMailConfigTemplateService implements TbMailConfigTemplateService {
@@ -34,6 +40,12 @@ public class DefaultTbMailConfigTemplateService implements TbMailConfigTemplateS
     private void postConstruct() throws IOException {
         mailConfigTemplates = JacksonUtil.toJsonNode(new ClassPathResource("/templates/mail_config_templates.json").getInputStream());
     }
+    /**
+     * Finds all mail config templates.
+     *
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JsonNode findAllMailConfigTemplates() {

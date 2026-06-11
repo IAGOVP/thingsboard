@@ -54,6 +54,16 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST API for platform-wide domain configuration used in white-labeling and OAuth2 client routing.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code SYS_ADMIN} only.
+ *
+ * <p>Delegates create/update/delete operations to {@link org.thingsboard.server.service.entitiy.domain.TbDomainService}
+ * and reads domain data via inherited {@code domainService} from {@link BaseController}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -63,6 +73,16 @@ public class DomainController extends BaseController {
 
     private final TbDomainService tbDomainService;
 
+    /**
+     * POST {@code /api/domain} — Create or update a domain and optionally associate OAuth2 clients.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}.
+     *
+     * @param domain        JSON body with domain configuration
+     * @param ids           optional OAuth2 client registration UUIDs to link to the domain
+     * @return the saved {@link Domain}
+     * @throws Exception if validation fails or the referenced domain does not exist
+     */
     @ApiOperation(value = "Save or Update Domain (saveDomain)",
             notes = "Create or update the Domain. When creating domain, platform generates Domain Id as " + UUID_WIKI_LINK +
                     "The newly created Domain Id will be present in the response. " +
@@ -81,6 +101,15 @@ public class DomainController extends BaseController {
         return tbDomainService.save(domain, getOAuth2ClientIds(ids), getCurrentUser());
     }
 
+    /**
+     * PUT {@code /api/domain/{id}/oauth2Clients} — Replace OAuth2 clients linked to a domain.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}.
+     *
+     * @param id        domain UUID
+     * @param clientIds array of OAuth2 client UUIDs to assign
+     * @throws ThingsboardException if the domain does not exist or the caller lacks permission
+     */
     @ApiOperation(value = "Update oauth2 clients (updateDomainOauth2Clients)",
             notes = "Update oauth2 clients for the specified domain. ")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
@@ -93,6 +122,19 @@ public class DomainController extends BaseController {
         tbDomainService.updateOauth2Clients(domain, oAuth2ClientIds, getCurrentUser());
     }
 
+    /**
+     * GET {@code /api/domain/infos} — List domain info objects with pagination and text search.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}.
+     *
+     * @param pageSize     number of items per page
+     * @param page         zero-based page index
+     * @param textSearch   optional case-insensitive substring filter on domain name
+     * @param sortProperty optional property to sort by
+     * @param sortOrder    optional sort direction ({@code ASC} or {@code DESC})
+     * @return a page of {@link DomainInfo} records
+     * @throws ThingsboardException if the caller lacks domain read permission
+     */
     @ApiOperation(value = "Get Domain infos (getDomainInfos)", notes = SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @GetMapping(value = "/domain/infos")
@@ -111,6 +153,15 @@ public class DomainController extends BaseController {
         return domainService.findDomainInfosByTenantId(getTenantId(), pageLink);
     }
 
+    /**
+     * GET {@code /api/domain/info/{id}} — Fetch a single domain info object by id.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}.
+     *
+     * @param id domain UUID
+     * @return the {@link DomainInfo} for the given id
+     * @throws ThingsboardException if the domain does not exist or access is denied
+     */
     @ApiOperation(value = "Get Domain info by Id (getDomainInfoById)", notes = SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @GetMapping(value = "/domain/info/{id}")
@@ -119,6 +170,14 @@ public class DomainController extends BaseController {
         return checkEntityId(domainId, domainService::findDomainInfoById, Operation.READ);
     }
 
+    /**
+     * DELETE {@code /api/domain/{id}} — Delete a domain by id.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}.
+     *
+     * @param id domain UUID to delete
+     * @throws Exception if the domain does not exist or deletion fails
+     */
     @ApiOperation(value = "Delete Domain by ID (deleteDomain)",
             notes = "Deletes Domain by ID. Referencing non-existing domain Id will cause an error." + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")

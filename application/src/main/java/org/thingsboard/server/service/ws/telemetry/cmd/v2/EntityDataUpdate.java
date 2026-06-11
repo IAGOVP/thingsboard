@@ -24,6 +24,10 @@ import org.thingsboard.server.common.data.query.EntityData;
 import org.thingsboard.server.service.subscription.SubscriptionErrorCode;
 
 import java.util.List;
+/**
+ * Outbound WebSocket update payload for entity data.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @ToString
 public class EntityDataUpdate extends DataUpdate<EntityData> {
@@ -31,14 +35,34 @@ public class EntityDataUpdate extends DataUpdate<EntityData> {
     @Getter
     private long allowedEntities;
 
+    /**
+     * Constructs {@link EntityDataUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param data data
+     * @param update subscription update payload
+     * @param allowedEntities allowed entities
+     */
+
     public EntityDataUpdate(int cmdId, PageData<EntityData> data, List<EntityData> update, long allowedEntities) {
         super(cmdId, data, update, SubscriptionErrorCode.NO_ERROR.getCode(), null);
         this.allowedEntities = allowedEntities;
     }
 
+    /**
+     * Constructs {@link EntityDataUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     */
+
     public EntityDataUpdate(int cmdId, int errorCode, String errorMsg) {
         super(cmdId, null, null, errorCode, errorMsg);
     }
+
+    /**
+     * Returns cmd update type.
+     * @return {@link CmdUpdateType}
+     */
 
     @Override
     public CmdUpdateType getCmdUpdateType() {

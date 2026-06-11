@@ -22,8 +22,9 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Internal message routed back to the same rule node actor (for example, async completion).
  */
+
 @EqualsAndHashCode(callSuper = true)
 @ToString
 final class RuleNodeToSelfMsg extends TbToRuleNodeActorMsg {
@@ -31,6 +32,14 @@ final class RuleNodeToSelfMsg extends TbToRuleNodeActorMsg {
     public RuleNodeToSelfMsg(TbContext ctx, TbMsg tbMsg) {
         super(ctx, tbMsg);
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

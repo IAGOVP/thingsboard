@@ -18,9 +18,20 @@ package org.thingsboard.server.service.edge.rpc.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.edge.rpc.EdgeVersionComparator;
 import org.thingsboard.server.gen.edge.v1.EdgeVersion;
+/**
+ * Edge version utils for edge gRPC RPC transport.
+ */
 
 @Slf4j
 public final class EdgeVersionUtils {
+
+    /**
+     * Returns whether edge version older than.
+     *
+     * @param currentVersion current version (EdgeVersion)
+     * @param requiredVersion required version (EdgeVersion)
+     * @return boolean
+     */
 
     public static boolean isEdgeVersionOlderThan(EdgeVersion currentVersion, EdgeVersion requiredVersion) {
         return EdgeVersionComparator.INSTANCE.compare(currentVersion, requiredVersion) < 0;

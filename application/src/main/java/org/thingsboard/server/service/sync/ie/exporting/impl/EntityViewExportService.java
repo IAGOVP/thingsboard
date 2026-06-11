@@ -24,16 +24,38 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesExportCtx;
 
 import java.util.Set;
+/**
+ * Exports entity view entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
 public class EntityViewExportService extends BaseEntityExportService<EntityViewId, EntityView, EntityExportData<EntityView>> {
+    
+    /**
+     * Set related entities.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityView entity view ({@link EntityView})
+     * @param exportData export data ({@link EntityExportData})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected void setRelatedEntities(EntitiesExportCtx<?> ctx, EntityView entityView, EntityExportData<EntityView> exportData) {
         entityView.setEntityId(getExternalIdOrElseInternal(ctx, entityView.getEntityId()));
         entityView.setCustomerId(getExternalIdOrElseInternal(ctx, entityView.getCustomerId()));
     }
+    /**
+     * Returns supported entity types.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<EntityType> getSupportedEntityTypes() {

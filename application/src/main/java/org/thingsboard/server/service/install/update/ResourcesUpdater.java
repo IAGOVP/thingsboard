@@ -49,6 +49,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+    /**
+     * Spring service component for resources updater (database schema installation, upgrades, and demo data loading).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -63,23 +67,48 @@ public class ResourcesUpdater {
     private final DashboardService dashboardService;
     private final DeviceProfileDao deviceProfileDao;
     private final AssetProfileDao assetProfileDao;
+    /**
+     * Updates widgets bundles images.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateWidgetsBundlesImages() {
         log.info("Updating widgets bundles images...");
         var widgetsBundles = new PageDataIterable<>(widgetsBundleDao::findAllWidgetsBundles, 128);
         updateImages(widgetsBundles, "bundle", imageService::replaceBase64WithImageUrl, widgetsBundleDao);
     }
+    /**
+     * Updates widget types images.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateWidgetTypesImages() {
         log.info("Updating widget types images...");
         var widgetTypesIds = new PageDataIterable<>(widgetTypeDao::findAllWidgetTypesIds, 1024);
         updateImages(widgetTypesIds, "widget type", imageService::updateImagesUsage, widgetTypeDao);
     }
+    /**
+     * Updates dashboards images.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateDashboardsImages() {
         log.info("Updating dashboards images...");
         updateImages("dashboard", dashboardDao::findIdsByTenantId, imageService::updateImagesUsage, dashboardDao);
     }
+    /**
+     * Creates system images and resources.
+     *
+     * @param defaultDashboard default dashboard ({@link Dashboard})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createSystemImagesAndResources(Dashboard defaultDashboard) {
         defaultDashboard.setTenantId(TenantId.SYS_TENANT_ID);
@@ -89,6 +118,12 @@ public class ResourcesUpdater {
         imageService.updateImagesUsage(defaultDashboard);
         log.debug("Created/updated system images and resources for default dashboard '{}'", defaultDashboard.getTitle());
     }
+    /**
+     * Updates dashboards resources.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public void updateDashboardsResources() {
@@ -118,6 +153,12 @@ public class ResourcesUpdater {
         }
         log.info("Updated {} dashboards", updatedCount);
     }
+    /**
+     * Updates widgets resources.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public void updateWidgetsResources() {
@@ -147,12 +188,24 @@ public class ResourcesUpdater {
         }
         log.info("Updated {} widgets", updatedCount);
     }
+    /**
+     * Updates device profiles images.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateDeviceProfilesImages() {
         log.info("Updating device profiles images...");
         var deviceProfiles = new PageDataIterable<>(deviceProfileDao::findAllWithImages, 256);
         updateImages(deviceProfiles, "device profile", imageService::replaceBase64WithImageUrl, deviceProfileDao);
     }
+    /**
+     * Updates asset profiles images.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateAssetProfilesImages() {
         log.info("Updating asset profiles images...");

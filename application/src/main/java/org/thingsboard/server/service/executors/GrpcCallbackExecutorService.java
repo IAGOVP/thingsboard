@@ -19,11 +19,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.AbstractListeningExecutor;
 
+    /**
+     * Spring service component for grpc callback executor service (shared thread-pool executors for async service work).
+     */
+
 @Component
 public class GrpcCallbackExecutorService extends AbstractListeningExecutor {
 
     @Value("${edges.grpc_callback_thread_pool_size}")
     private int grpcCallbackExecutorThreadPoolSize;
+    /**
+     * Returns thread poll size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getThreadPollSize() {

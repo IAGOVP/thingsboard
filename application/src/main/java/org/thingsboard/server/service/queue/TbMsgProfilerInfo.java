@@ -24,6 +24,9 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+/**
+ * Tb msg profiler info component in the ThingsBoard queue layer.
+ */
 
 @Slf4j
 public class TbMsgProfilerInfo {
@@ -33,9 +36,19 @@ public class TbMsgProfilerInfo {
     private RuleNodeId currentRuleNodeId;
     private long stateChangeTime;
 
+    /**
+     * Constructs {@link TbMsgProfilerInfo} with the supplied dependencies and configuration.
+     * @param msgId msg id
+     */
+
     public TbMsgProfilerInfo(UUID msgId) {
         this.msgId = msgId;
     }
+
+    /**
+     * Invoked when start occurs.
+     * @param ruleNodeId rule node identifier
+     */
 
     public void onStart(RuleNodeId ruleNodeId) {
         long currentTime = System.currentTimeMillis();
@@ -47,6 +60,12 @@ public class TbMsgProfilerInfo {
             stateLock.unlock();
         }
     }
+
+    /**
+     * Invoked when end occurs.
+     * @param ruleNodeId rule node identifier
+     * @return numeric result
+     */
 
     public long onEnd(RuleNodeId ruleNodeId) {
         long currentTime = System.currentTimeMillis();
@@ -66,6 +85,11 @@ public class TbMsgProfilerInfo {
             stateLock.unlock();
         }
     }
+
+    /**
+     * Invoked when timeout occurs.
+     * @return {@link Map.Entry}
+     */
 
     public Map.Entry<UUID, Long> onTimeout() {
         long currentTime = System.currentTimeMillis();

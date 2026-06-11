@@ -21,6 +21,11 @@ import lombok.Getter;
 import org.thingsboard.server.common.data.query.AlarmCountQuery;
 import org.thingsboard.server.service.ws.WsCmdType;
 
+/**
+ * WebSocket command DTO for alarm count.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
+
 public class AlarmCountCmd extends DataCmd {
 
     @Getter
@@ -32,6 +37,11 @@ public class AlarmCountCmd extends DataCmd {
         super(cmdId);
         this.query = query;
     }
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

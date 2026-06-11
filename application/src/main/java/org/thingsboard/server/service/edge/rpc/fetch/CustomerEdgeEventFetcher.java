@@ -29,18 +29,35 @@ import org.thingsboard.server.common.data.page.PageLink;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Fetches customer entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @AllArgsConstructor
 public class CustomerEdgeEventFetcher implements EdgeEventFetcher {
 
     private final CustomerId customerId;
-
+    /**
+     * Returns page link.
+     *
+     * @param pageSize page size (int)
+     * @return {@link PageLink} result
+     */
     @Override
     public PageLink getPageLink(int pageSize) {
         return null;
     }
-
+    /**
+     * Fetches edge events for edge synchronization.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
     @Override
     public PageData<EdgeEvent> fetchEdgeEvents(TenantId tenantId, Edge edge, PageLink pageLink) {
         List<EdgeEvent> result = new ArrayList<>();

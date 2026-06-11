@@ -29,6 +29,11 @@ import org.thingsboard.server.common.msg.TbActorMsg;
 import org.thingsboard.server.common.msg.TbMsg;
 import org.thingsboard.server.common.msg.plugin.ComponentLifecycleMsg;
 import org.thingsboard.server.common.msg.queue.PartitionChangeMsg;
+/**
+ * Actor representing one rule node within a rule chain.
+ *
+ * <p>Executes the node component (filter, transformation, external REST, etc.) via {@link org.thingsboard.server.actors.ruleChain.RuleNodeActorMessageProcessor}.
+ */
 
 @Slf4j
 public class RuleNodeActor extends RuleEngineComponentActor<RuleNodeId, RuleNodeActorMessageProcessor> {
@@ -44,11 +49,27 @@ public class RuleNodeActor extends RuleEngineComponentActor<RuleNodeId, RuleNode
         this.ruleChainId = ruleChainId;
         this.ruleNodeId = ruleNodeId;
     }
+    /**
+     * Creates processor.
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return {@link RuleNodeActorMessageProcessor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleNodeActorMessageProcessor createProcessor(TbActorCtx ctx) {
         return new RuleNodeActorMessageProcessor(tenantId, this.ruleChainName, ruleNodeId, systemContext, ctx);
     }
+    
+    /**
+     * Handles one incoming actor message; returns {@code true} if the message type was recognized.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected boolean doProcess(TbActorMsg msg) {
@@ -106,6 +127,12 @@ public class RuleNodeActor extends RuleEngineComponentActor<RuleNodeId, RuleNode
         }
     }
 
+    /**
+
+     * Factory for creating instances of the enclosing actor type.
+
+     */
+
     public static class ActorCreator extends ContextBasedCreator {
 
         private final TenantId tenantId;
@@ -120,27 +147,61 @@ public class RuleNodeActor extends RuleEngineComponentActor<RuleNodeId, RuleNode
             this.ruleChainName = ruleChainName;
             this.ruleNodeId = ruleNodeId;
         }
+        
+        /**
+         * Builds the {@link org.thingsboard.server.actors.TbActorId} used to register the actor.
+         *
+         * @return {@link TbActorId}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActorId createActorId() {
             return new TbEntityActorId(ruleNodeId);
         }
+        
+        /**
+         * Creates a new actor instance for the given actor id and context.
+         *
+         * @return {@link TbActor}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActor createActor() {
             return new RuleNodeActor(context, tenantId, ruleChainId, ruleChainName, ruleNodeId);
         }
     }
+    /**
+     * Returns rule chain id.
+     *
+     * @return {@link RuleChainId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleChainId getRuleChainId() {
         return ruleChainId;
     }
+    /**
+     * Returns rule chain name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getRuleChainName() {
         return ruleChainName;
     }
+    /**
+     * Returns error persist frequency.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected long getErrorPersistFrequency() {

@@ -29,6 +29,11 @@ import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.dao.tenant.TenantService;
 
 import java.util.List;
+/**
+ * Fetches tenant entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @AllArgsConstructor
 @Slf4j

@@ -28,6 +28,11 @@ import org.thingsboard.server.service.security.model.token.JwtTokenFactory;
 import java.util.Optional;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+/**
+ * Service implementation for default token outdating in platform security.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 public class DefaultTokenOutdatingService implements TokenOutdatingService {
@@ -40,13 +45,24 @@ public class DefaultTokenOutdatingService implements TokenOutdatingService {
         this.tokenFactory = tokenFactory;
     }
 
+    /**
+     * On user auth data changed.
+     *
+     * @param event event (UserAuthDataChangedEvent)
+     */
     @EventListener(classes = UserAuthDataChangedEvent.class)
     public void onUserAuthDataChanged(UserAuthDataChangedEvent event) {
         if (StringUtils.hasText(event.getId())) {
             cache.put(event.getId(), event.getTs());
         }
     }
-
+    /**
+     * Returns whether outdated.
+     *
+     * @param token token (String)
+     * @param userId user id (UserId)
+     * @return boolean
+     */
     @Override
     public boolean isOutdated(String token, UserId userId) {
         Claims claims = tokenFactory.parseTokenClaims(token).getPayload();

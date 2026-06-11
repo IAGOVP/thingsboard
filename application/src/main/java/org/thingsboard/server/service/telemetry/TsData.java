@@ -17,6 +17,10 @@ package org.thingsboard.server.service.telemetry;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+    /**
+     * Ts data (telemetry subscription and WebSocket push to clients).
+     */
+
 @Schema
 public class TsData implements Comparable<TsData>{
 
@@ -28,16 +32,35 @@ public class TsData implements Comparable<TsData>{
         this.ts = ts;
         this.value = value;
     }
+    /**
+     * Returns ts.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Schema(description = "Timestamp last updated timeseries, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     public long getTs() {
         return ts;
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Schema(description = "Object representing value of timeseries key", example = "20", accessMode = Schema.AccessMode.READ_ONLY)
     public Object getValue() {
         return value;
     }
+    /**
+     * Compares to.
+     *
+     * @param o o ({@link TsData})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int compareTo(TsData o) {

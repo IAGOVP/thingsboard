@@ -24,12 +24,27 @@ import org.thingsboard.server.service.subscription.TbSubscriptionType;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
+/**
+ * Subscription state holder for abstract notification.
+ * <p>Links a WebSocket session to entity keys and update processors.
+ */
 
 @Getter
 public abstract class AbstractNotificationSubscription<T> extends TbSubscription<T> {
 
     protected final AtomicInteger sequence = new AtomicInteger();
     protected final AtomicInteger totalUnreadCounter = new AtomicInteger();
+
+    /**
+     * Constructs {@link AbstractNotificationSubscription} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionId client command/subscription id
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param type type
+     * @param updateProcessor update processor
+     */
 
     public AbstractNotificationSubscription(String serviceId, String sessionId, int subscriptionId, TenantId tenantId, EntityId entityId, TbSubscriptionType type, BiConsumer<TbSubscription<T>, T> updateProcessor) {
         super(serviceId, sessionId, subscriptionId, tenantId, entityId, type, updateProcessor);

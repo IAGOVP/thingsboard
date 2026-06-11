@@ -36,6 +36,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+/**
+ * Data object for entities import ctx used during Git-based entity version control operations.
+ */
 
 @Slf4j
 @Data
@@ -70,41 +73,100 @@ public class EntitiesImportCtx {
         this.versionId = versionId;
         this.settings = settings;
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TenantId getTenantId() {
         return user.getTenantId();
     }
+    /**
+     * Is find existing by name.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isFindExistingByName() {
         return getSettings().isFindExistingByName();
     }
+    /**
+     * Is update relations.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isUpdateRelations() {
         return getSettings().isUpdateRelations();
     }
+    /**
+     * Is save attributes.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isSaveAttributes() {
         return getSettings().isSaveAttributes();
     }
+    /**
+     * Is save credentials.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isSaveCredentials() {
         return getSettings().isSaveCredentials();
     }
+    /**
+     * Is save calculated fields.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isSaveCalculatedFields() {
         return getSettings().isSaveCalculatedFields();
     }
+    /**
+     * Returns internal id.
+     *
+     * @param externalId external id ({@link EntityId})
+     * @return {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityId getInternalId(EntityId externalId) {
         var result = externalToInternalIdMap.get(externalId);
         log.debug("[{}][{}] Local cache {} for id", externalId.getEntityType(), externalId.getId(), result != null ? "hit" : "miss");
         return result;
     }
+    /**
+     * Put internal id.
+     *
+     * @param externalId external id ({@link EntityId})
+     * @param internalId internal id ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void putInternalId(EntityId externalId, EntityId internalId) {
         log.debug("[{}][{}] Local cache put: {}", externalId.getEntityType(), externalId.getId(), internalId);
         externalToInternalIdMap.put(externalId, internalId);
     }
+    /**
+     * Register result.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @param created created
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void registerResult(EntityType entityType, boolean created) {
         EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
@@ -114,31 +176,74 @@ public class EntitiesImportCtx {
             result.setUpdated(result.getUpdated() + 1);
         }
     }
+    /**
+     * Register deleted.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void registerDeleted(EntityType entityType) {
         EntityTypeLoadResult result = results.computeIfAbsent(entityType, EntityTypeLoadResult::new);
         result.setDeleted(result.getDeleted() + 1);
     }
+    /**
+     * Add relations.
+     *
+     * @param values values ({@link Collection})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void addRelations(Collection<EntityRelation> values) {
         relations.addAll(values);
     }
+    /**
+     * Add reference callback.
+     *
+     * @param externalId external id ({@link EntityId})
+     * @param tr tr ({@link ThrowingRunnable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void addReferenceCallback(EntityId externalId, ThrowingRunnable tr) {
         if (tr != null) {
             referenceCallbacks.put(externalId, tr);
         }
     }
+    /**
+     * Add event callback.
+     *
+     * @param tr tr ({@link ThrowingRunnable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void addEventCallback(ThrowingRunnable tr) {
         if (tr != null) {
             eventCallbacks.add(tr);
         }
     }
+    /**
+     * Register not found.
+     *
+     * @param externalId external id ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void registerNotFound(EntityId externalId) {
         notFoundIds.add(externalId);
     }
+    /**
+     * Is not found.
+     *
+     * @param externalId external id ({@link EntityId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isNotFound(EntityId externalId) {
         return notFoundIds.contains(externalId);

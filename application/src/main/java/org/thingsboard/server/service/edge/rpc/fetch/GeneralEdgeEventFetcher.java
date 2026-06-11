@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.common.data.page.TimePageLink;
 import org.thingsboard.server.dao.edge.EdgeEventService;
+/**
+ * Fetches general entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @AllArgsConstructor
 @Slf4j
@@ -40,7 +45,12 @@ public class GeneralEdgeEventFetcher implements EdgeEventFetcher {
     // This ensures early events with lower seqId are not skipped due to partitioning by `created_time`.
     // See: edge_event is partitioned by created_time but sorted by seqId during retrieval.
     private final long misorderingCompensationMillis;
-
+    /**
+     * Returns page link.
+     *
+     * @param pageSize page size (int)
+     * @return {@link PageLink} result
+     */
     @Override
     public PageLink getPageLink(int pageSize) {
         return new TimePageLink(
@@ -51,7 +61,14 @@ public class GeneralEdgeEventFetcher implements EdgeEventFetcher {
                 queueStartTs > 0 ? queueStartTs - misorderingCompensationMillis : 0,
                 System.currentTimeMillis());
     }
-
+    /**
+     * Fetches edge events for edge synchronization.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
     @Override
     public PageData<EdgeEvent> fetchEdgeEvents(TenantId tenantId, Edge edge, PageLink pageLink) {
         try {

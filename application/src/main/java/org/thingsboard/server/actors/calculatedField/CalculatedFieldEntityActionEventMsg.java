@@ -28,7 +28,10 @@ import org.thingsboard.server.common.msg.queue.TbCallback;
 import org.thingsboard.server.common.util.ProtoUtils;
 import org.thingsboard.server.gen.transport.TransportProtos.EntityActionEventProto;
 
-/** Entity lifecycle or profile event affecting calculated fields. */
+/**
+ * Entity lifecycle or action event that may trigger calculated-field re-evaluation.
+ */
+
 @Data
 @Builder
 public class CalculatedFieldEntityActionEventMsg implements ToCalculatedFieldSystemMsg {
@@ -38,6 +41,14 @@ public class CalculatedFieldEntityActionEventMsg implements ToCalculatedFieldSys
     private final JsonNode entity;
     private final ActionType action;
     private final TbCallback callback;
+    /**
+     * From proto.
+     *
+     * @param proto proto ({@link EntityActionEventProto})
+     * @param callback queue callback invoked when processing completes
+     * @return {@link CalculatedFieldEntityActionEventMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CalculatedFieldEntityActionEventMsg fromProto(EntityActionEventProto proto,
                                                                 TbCallback callback) {
@@ -49,6 +60,14 @@ public class CalculatedFieldEntityActionEventMsg implements ToCalculatedFieldSys
                 .callback(callback)
                 .build();
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

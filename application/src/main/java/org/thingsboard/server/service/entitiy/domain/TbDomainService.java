@@ -21,11 +21,49 @@ import org.thingsboard.server.common.data.id.OAuth2ClientId;
 
 import java.util.List;
 
+/**
+
+ * Application-layer service API for domain entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbDomainService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param domain domain ({@link Domain})
+ * @param oAuth2Clients o auth2clients ({@link List})
+ * @param user authenticated user performing the action
+ * @return {@link Domain}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     Domain save(Domain domain, List<OAuth2ClientId> oAuth2Clients, User user) throws Exception;
+/**
+ * Updates oauth2clients.
+ *
+ * @param domain domain ({@link Domain})
+ * @param oAuth2ClientIds o auth2client ids ({@link List})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void updateOauth2Clients(Domain domain, List<OAuth2ClientId> oAuth2ClientIds, User user);
+/**
+ * Deletes the requested data.
+ *
+ * @param domain domain ({@link Domain})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void delete(Domain domain, User user);
 

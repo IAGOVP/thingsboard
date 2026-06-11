@@ -60,6 +60,12 @@ import java.util.function.Supplier;
 
 import static org.thingsboard.server.common.util.ProtoUtils.toTsKvProto;
 import static org.thingsboard.server.utils.CalculatedFieldUtils.toProto;
+/**
+ * Default Spring implementation for calculated field queue service (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ *
+ * <p>Registered as a {@code @Service} or {@code @Component} bean.
+ */
+
 
 @Service
 @Slf4j
@@ -67,9 +73,25 @@ import static org.thingsboard.server.utils.CalculatedFieldUtils.toProto;
 public class DefaultCalculatedFieldQueueService implements CalculatedFieldQueueService {
 
     public static final TbQueueCallback DUMMY_TB_QUEUE_CALLBACK = new TbQueueCallback() {
+        
+        /**
+         * Handles success.
+         *
+         * @param metadata metadata ({@link TbQueueMsgMetadata})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
         @Override
         public void onSuccess(TbQueueMsgMetadata metadata) {
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {
@@ -79,6 +101,15 @@ public class DefaultCalculatedFieldQueueService implements CalculatedFieldQueueS
     private final CalculatedFieldCache calculatedFieldCache;
     private final TbClusterService clusterService;
     private final RelationService relationService;
+    /**
+     * Pushes request to queue.
+     *
+     * @param request request payload with operation parameters
+     * @param result result ({@link TimeseriesSaveResult})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void pushRequestToQueue(TimeseriesSaveRequest request, TimeseriesSaveResult result, FutureCallback<Void> callback) {
@@ -92,11 +123,28 @@ public class DefaultCalculatedFieldQueueService implements CalculatedFieldQueueS
                 cf -> cf.relatedEntityMatches(entries),
                 () -> toCalculatedFieldTelemetryMsgProto(request, result), callback);
     }
+    /**
+     * Pushes request to queue.
+     *
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void pushRequestToQueue(TimeseriesSaveRequest request, FutureCallback<Void> callback) {
         pushRequestToQueue(request, null, callback);
     }
+    /**
+     * Pushes request to queue.
+     *
+     * @param request request payload with operation parameters
+     * @param result result ({@link AttributesSaveResult})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void pushRequestToQueue(AttributesSaveRequest request, AttributesSaveResult result, FutureCallback<Void> callback) {
@@ -111,11 +159,28 @@ public class DefaultCalculatedFieldQueueService implements CalculatedFieldQueueS
                 cf -> cf.relatedEntityMatches(entries, scope),
                 () -> toCalculatedFieldTelemetryMsgProto(request, result), callback);
     }
+    /**
+     * Pushes request to queue.
+     *
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void pushRequestToQueue(AttributesSaveRequest request, FutureCallback<Void> callback) {
         pushRequestToQueue(request, null, callback);
     }
+    /**
+     * Pushes request to queue.
+     *
+     * @param request request payload with operation parameters
+     * @param result result ({@link List})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void pushRequestToQueue(AttributesDeleteRequest request, List<String> result, FutureCallback<Void> callback) {
@@ -129,6 +194,15 @@ public class DefaultCalculatedFieldQueueService implements CalculatedFieldQueueS
                 cf -> cf.matchesRelatedEntityKeys(result, scope),
                 () -> toCalculatedFieldTelemetryMsgProto(request, result), callback);
     }
+    /**
+     * Pushes request to queue.
+     *
+     * @param request request payload with operation parameters
+     * @param result result ({@link List})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void pushRequestToQueue(TimeseriesDeleteRequest request, List<String> result, FutureCallback<Void> callback) {
@@ -322,11 +396,25 @@ public class DefaultCalculatedFieldQueueService implements CalculatedFieldQueueS
         public FutureCallbackWrapper(FutureCallback<Void> callback) {
             this.callback = callback;
         }
+        /**
+         * Handles success.
+         *
+         * @param metadata metadata ({@link TbQueueMsgMetadata})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onSuccess(TbQueueMsgMetadata metadata) {
             callback.onSuccess(null);
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {

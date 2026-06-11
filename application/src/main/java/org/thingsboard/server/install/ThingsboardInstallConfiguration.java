@@ -23,10 +23,25 @@ import org.thingsboard.server.dao.audit.AuditLogLevelProperties;
 
 import java.util.HashMap;
 
+/**
+ * Spring configuration active only under the {@code install} profile.
+ *
+ * <p>Provides beans required during database installation and upgrade that differ from
+ * normal server runtime configuration, such as a no-op audit log level filter.
+ *
+ * @see ThingsboardInstallApplication
+ * @see ThingsboardInstallService
+ */
 @Configuration
 @Profile("install")
 public class ThingsboardInstallConfiguration {
 
+    /**
+     * Supplies an {@link AuditLogLevelFilter} with an empty mask so audit filtering
+     * does not interfere with install-time data loading.
+     *
+     * @return audit log level filter configured with no level overrides
+     */
     @Bean
     public AuditLogLevelFilter emptyAuditLogLevelFilter() {
         var props = new AuditLogLevelProperties();

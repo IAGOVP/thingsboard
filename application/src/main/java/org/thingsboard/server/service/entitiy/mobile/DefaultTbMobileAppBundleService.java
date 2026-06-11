@@ -29,12 +29,24 @@ import org.thingsboard.server.dao.mobile.MobileAppBundleService;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 
 import java.util.List;
+/**
+ * Default implementation of {@link TbMobileAppBundleService}.
+ */
 
 @Service
 @AllArgsConstructor
 public class DefaultTbMobileAppBundleService extends AbstractTbEntityService implements TbMobileAppBundleService {
 
     private final MobileAppBundleService mobileAppBundleService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param mobileAppBundle mobile app bundle ({@link MobileAppBundle})
+     * @param oauth2Clients oauth2clients ({@link List})
+     * @param user authenticated user performing the action
+     * @return {@link MobileAppBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileAppBundle save(MobileAppBundle mobileAppBundle, List<OAuth2ClientId> oauth2Clients, User user) throws Exception {
@@ -52,6 +64,15 @@ public class DefaultTbMobileAppBundleService extends AbstractTbEntityService imp
             throw e;
         }
     }
+    /**
+     * Updates oauth2clients.
+     *
+     * @param mobileAppBundle mobile app bundle ({@link MobileAppBundle})
+     * @param oAuth2ClientIds o auth2client ids ({@link List})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateOauth2Clients(MobileAppBundle mobileAppBundle, List<OAuth2ClientId> oAuth2ClientIds, User user) {
@@ -66,6 +87,14 @@ public class DefaultTbMobileAppBundleService extends AbstractTbEntityService imp
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param mobileAppBundle mobile app bundle ({@link MobileAppBundle})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(MobileAppBundle mobileAppBundle, User user) {

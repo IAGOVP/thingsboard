@@ -23,6 +23,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Contract for permission checker in role-based access control (RBAC).
+ *
+ * <p><b>Responsibilities:</b> Evaluates tenant/customer/system-admin scopes against Resource and Operation.
+ */
+
 public interface PermissionChecker<I extends EntityId, T extends HasTenantId> {
 
     default boolean hasPermission(SecurityUser user, Operation operation) {
@@ -40,12 +46,26 @@ public interface PermissionChecker<I extends EntityId, T extends HasTenantId> {
         public GenericPermissionChecker(Operation... operations) {
             allowedOperations = new HashSet<Operation>(Arrays.asList(operations));
         }
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation) {
             return allowedOperations.contains(Operation.ALL) || allowedOperations.contains(operation);
         }
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (I)
+         * @param entity entity (T)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, I entityId, T entity) {
             return allowedOperations.contains(Operation.ALL) || allowedOperations.contains(operation);
@@ -55,12 +75,26 @@ public interface PermissionChecker<I extends EntityId, T extends HasTenantId> {
     public static PermissionChecker denyAllPermissionChecker = new PermissionChecker() {};
 
     public static PermissionChecker allowAllPermissionChecker = new PermissionChecker<EntityId, HasTenantId>() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation) {
             return true;
         }
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (EntityId)
+         * @param entity entity (HasTenantId)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
             return true;

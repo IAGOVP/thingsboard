@@ -46,6 +46,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for rule engine statistics service (queue and service statistics collection).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @TbRuleEngineComponent
 @Service
 @Slf4j
@@ -54,10 +60,24 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
 
     public static final String RULE_ENGINE_EXCEPTION = "ruleEngineException";
     public static final FutureCallback<Void> CALLBACK = new FutureCallback<Void>() {
+        /**
+         * Handles success.
+         *
+         * @param result result ({@link Void})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
         @Override
         public void onSuccess(@Nullable Void result) {
 
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {
@@ -74,6 +94,14 @@ public class DefaultRuleEngineStatisticsService implements RuleEngineStatisticsS
 
     @Value("${queue.rule-engine.stats.max-error-message-length:4096}")
     private int maxErrorMessageLength;
+    /**
+     * Report queue stats.
+     *
+     * @param ts ts
+     * @param ruleEngineStats rule engine stats ({@link TbRuleEngineConsumerStats})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reportQueueStats(long ts, TbRuleEngineConsumerStats ruleEngineStats) {

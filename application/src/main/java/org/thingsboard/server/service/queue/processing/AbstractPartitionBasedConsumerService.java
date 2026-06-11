@@ -33,11 +33,28 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Extends {@link AbstractConsumerService} with per-partition consumer manager wiring.
+ */
+
 public abstract class AbstractPartitionBasedConsumerService<N extends com.google.protobuf.GeneratedMessageV3> extends AbstractConsumerService<N> {
 
     private final Lock startupLock = new ReentrantLock();
     private volatile boolean started = false;
     private List<PartitionChangeEvent> pendingEvents = new ArrayList<>();
+
+    /**
+     * Constructs {@link AbstractPartitionBasedConsumerService} with the supplied dependencies and configuration.
+     * @param actorContext actor context
+     * @param tenantProfileCache tenant profile cache
+     * @param deviceProfileCache device profile cache
+     * @param assetProfileCache asset profile cache
+     * @param tbResourceDataCache tb resource data cache
+     * @param apiUsageStateService api usage state service
+     * @param partitionService partition service
+     * @param eventPublisher event publisher
+     * @param jwtSettingsService jwt settings service
+     */
 
     public AbstractPartitionBasedConsumerService(ActorSystemContext actorContext,
                                                  TbTenantProfileCache tenantProfileCache,
@@ -51,11 +68,22 @@ public abstract class AbstractPartitionBasedConsumerService<N extends com.google
         super(actorContext, tenantProfileCache, deviceProfileCache, assetProfileCache, tbResourceDataCache, apiUsageStateService, partitionService, eventPublisher, jwtSettingsService);
     }
 
+    /**
+     * Initializes init.
+     * @return @PostConstruct
+    public void
+     */
+
     @PostConstruct
     public void init() {
         super.init(getPrefix());
     }
 
+    /**
+     * After start up.
+     * @return @Override
+    public void
+     */
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     @Override
     public void afterStartUp() {
@@ -78,6 +106,13 @@ public abstract class AbstractPartitionBasedConsumerService<N extends com.google
         }
     }
 
+    /**
+     * Invoked when tb application event occurs.
+     * @param event application or cluster event
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent event) {
         log.debug("Received partition change event: {}", event);
@@ -97,9 +132,23 @@ public abstract class AbstractPartitionBasedConsumerService<N extends com.google
         onPartitionChangeEvent(event);
     }
 
+    /**
+     * Invoked when start up occurs.
+     */
+
     protected abstract void onStartUp();
 
+    /**
+     * Invoked when partition change event occurs.
+     * @param event application or cluster event
+     */
+
     protected abstract void onPartitionChangeEvent(PartitionChangeEvent event);
+
+    /**
+     * Returns prefix.
+     * @return string value
+     */
 
     protected abstract String getPrefix();
 

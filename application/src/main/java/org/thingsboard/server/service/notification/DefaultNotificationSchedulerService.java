@@ -53,6 +53,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Default Spring implementation for notification scheduler service (notification delivery, templates, targets, and rule-trigger processing).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @TbCoreComponent
 @Service
 @RequiredArgsConstructor
@@ -65,12 +71,25 @@ public class DefaultNotificationSchedulerService extends AbstractPartitionBasedS
     private final ScheduledExecutorService scheduler = ThingsBoardExecutors.newSingleThreadScheduledExecutor("notification-scheduler");
 
     private final Map<NotificationRequestId, ScheduledRequestMetadata> scheduledNotificationRequests = new ConcurrentHashMap<>();
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @PostConstruct
     public void init() {
         super.init();
     }
+    /**
+     * Handles added partitions.
+     *
+     * @param addedPartitions added partitions ({@link Set})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Map<TopicPartitionInfo, List<ListenableFuture<?>>> onAddedPartitions(Set<TopicPartitionInfo> addedPartitions) {
@@ -86,6 +105,15 @@ public class DefaultNotificationSchedulerService extends AbstractPartitionBasedS
         }
         return Collections.emptyMap();
     }
+    /**
+     * Schedule notification request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationRequestId notification request id ({@link NotificationRequestId})
+     * @param requestTs request ts
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void scheduleNotificationRequest(TenantId tenantId, NotificationRequestId notificationRequestId, long requestTs) {
@@ -122,6 +150,13 @@ public class DefaultNotificationSchedulerService extends AbstractPartitionBasedS
         }, delayInMs, TimeUnit.MILLISECONDS);
         scheduledNotificationRequests.put(request.getId(), new ScheduledRequestMetadata(tenantId, scheduledTask));
     }
+    /**
+     * Handles component lifecycle event.
+     *
+     * @param event event ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @EventListener(ComponentLifecycleMsg.class)
     public void handleComponentLifecycleEvent(ComponentLifecycleMsg event) {
@@ -143,6 +178,13 @@ public class DefaultNotificationSchedulerService extends AbstractPartitionBasedS
             }
         }
     }
+    /**
+     * Cleanup entity on partition removal.
+     *
+     * @param notificationRequestId notification request id ({@link NotificationRequestId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupEntityOnPartitionRemoval(NotificationRequestId notificationRequestId) {
@@ -155,16 +197,34 @@ public class DefaultNotificationSchedulerService extends AbstractPartitionBasedS
             md.getFuture().cancel(false);
         }
     }
+    /**
+     * Returns service name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getServiceName() {
         return "Notifications scheduler";
     }
+    /**
+     * Returns scheduler executor name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getSchedulerExecutorName() {
         return "notifications-scheduler";
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @PreDestroy

@@ -35,6 +35,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+/**
+ * Service implementation for default zombie session cleanup in edge gRPC session lifecycle.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ * <p><b>Key dependencies:</b> {@link #edgeSessionsHolder}.
+ */
 
 @Service
 @Slf4j
@@ -53,18 +59,30 @@ public class DefaultZombieSessionCleanupService implements ZombieSessionCleanupS
         this.zombieSessionsExecutorService = ThingsBoardExecutors.newSingleThreadScheduledExecutor("zombie-sessions");
     }
 
+    /**
+     * Initializes resources required by this component.
+     *
+     */
     @PostConstruct
     public void init() {
         this.zombieSessionsExecutorService.scheduleAtFixedRate(this::cleanupZombieSessions, 30, 60, TimeUnit.SECONDS);
     }
 
+    /**
+     * Releases resources and shuts down background executors.
+     *
+     */
     @PreDestroy
     public void destroy() {
         if (zombieSessionsExecutorService != null && !zombieSessionsExecutorService.isShutdown()) {
             zombieSessionsExecutorService.shutdown();
         }
     }
-
+    /**
+     * Add.
+     *
+     * @param session session (EdgeGrpcSessionManager)
+     */
     @Override
     public void add(EdgeGrpcSessionManager session) {
         zombieSessions.add(session);

@@ -17,6 +17,16 @@ package org.thingsboard.server.service.lwm2m;
 
 import org.thingsboard.server.common.data.device.profile.lwm2m.bootstrap.LwM2MServerSecurityConfigDefault;
 
+/**
+
+ * Service contract for lw m2m operations (LwM2M bootstrap and model integration).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface LwM2MService {
 
     LwM2MServerSecurityConfigDefault getServerSecurityInfo(boolean bootstrapServer);

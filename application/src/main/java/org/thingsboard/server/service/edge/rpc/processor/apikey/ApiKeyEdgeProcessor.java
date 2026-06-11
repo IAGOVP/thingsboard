@@ -36,12 +36,24 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.UUID;
+/**
+ * Processes api key edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class ApiKeyEdgeProcessor extends BaseApiKeyProcessor implements ApiKeyProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param apiKeyUpdateMsg api key update msg (ApiKeyUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processApiKeyMsgFromEdge(TenantId tenantId, Edge edge, ApiKeyUpdateMsg apiKeyUpdateMsg) {
         ApiKeyId apiKeyId = new ApiKeyId(new UUID(apiKeyUpdateMsg.getIdMSB(), apiKeyUpdateMsg.getIdLSB()));
@@ -71,7 +83,13 @@ public class ApiKeyEdgeProcessor extends BaseApiKeyProcessor implements ApiKeyPr
             edgeSynchronizationManager.getEdgeId().remove();
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         ApiKeyId apiKeyId = new ApiKeyId(edgeEvent.getEntityId());
@@ -98,6 +116,10 @@ public class ApiKeyEdgeProcessor extends BaseApiKeyProcessor implements ApiKeyPr
         return null;
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.API_KEY;

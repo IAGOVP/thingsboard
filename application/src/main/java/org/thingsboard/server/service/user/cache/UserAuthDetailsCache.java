@@ -19,6 +19,12 @@ import org.thingsboard.server.common.data.UserAuthDetails;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.id.UserId;
 
+/**
+
+ * user auth details cache contract for user lockout and security helpers.
+
+ */
+
 public interface UserAuthDetailsCache {
 
     UserAuthDetails getUserAuthDetails(TenantId tenantId, UserId userId);

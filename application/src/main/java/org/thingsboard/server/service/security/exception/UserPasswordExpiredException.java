@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.exception;
 
 import org.springframework.security.authentication.CredentialsExpiredException;
 
+/**
+ * Thrown when user password expired during security operations.
+ */
+
 public class UserPasswordExpiredException extends CredentialsExpiredException {
 
     private final String resetToken;
@@ -25,6 +29,11 @@ public class UserPasswordExpiredException extends CredentialsExpiredException {
         super(msg);
         this.resetToken = resetToken;
     }
+
+    /**
+     * Returns reset token.
+     *
+     */
 
     public String getResetToken() {
         return resetToken;

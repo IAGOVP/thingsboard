@@ -39,6 +39,12 @@ import java.util.List;
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for OAuth2 client registration templates.
+ * 
+ * <p>Base path: {@code /api/oauth2/config/template}. System-level OAuth2 provider templates used when registering OAuth2 clients.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api/oauth2/config/template")
@@ -48,6 +54,15 @@ public class OAuth2ConfigTemplateController extends BaseController {
 
     private static final String OAUTH2_CLIENT_REGISTRATION_TEMPLATE_DEFINITION = "Client registration template is OAuth2 provider configuration template with default settings for registering new OAuth2 clients";
 
+    /**
+     * Create or update OAuth2 client registration template.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/oauth2/config/template}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param clientRegistrationTemplate client Registration Template
+     * @return {@link OAuth2ClientRegistrationTemplate} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create or update OAuth2 client registration template (saveClientRegistrationTemplate)" + SYSTEM_AUTHORITY_PARAGRAPH,
             notes = OAUTH2_CLIENT_REGISTRATION_TEMPLATE_DEFINITION)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
@@ -58,6 +73,15 @@ public class OAuth2ConfigTemplateController extends BaseController {
         return oAuth2ConfigTemplateService.saveClientRegistrationTemplate(clientRegistrationTemplate);
     }
 
+    /**
+     * Delete OAuth2 client registration template by id.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/oauth2/config/template/{clientRegistrationTemplateId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param strClientRegistrationTemplateId str Client Registration Template Id
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete OAuth2 client registration template by id (deleteClientRegistrationTemplate)" + SYSTEM_AUTHORITY_PARAGRAPH,
             notes = OAUTH2_CLIENT_REGISTRATION_TEMPLATE_DEFINITION)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")

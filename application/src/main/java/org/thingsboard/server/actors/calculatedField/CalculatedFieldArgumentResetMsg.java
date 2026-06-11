@@ -23,7 +23,10 @@ import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldCtx;
 
-/** Clears cached argument state for one or more calculated fields. */
+/**
+ * Resets cached argument state for one or more calculated fields on an entity actor.
+ */
+
 @Data
 public class CalculatedFieldArgumentResetMsg implements ToCalculatedFieldSystemMsg {
 
@@ -31,6 +34,14 @@ public class CalculatedFieldArgumentResetMsg implements ToCalculatedFieldSystemM
     private final CalculatedFieldCtx ctx;
     private final CalculatedFieldEventType eventType;
     private final TbCallback callback;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

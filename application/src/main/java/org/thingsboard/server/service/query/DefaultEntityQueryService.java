@@ -79,6 +79,12 @@ import java.util.stream.Collectors;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 
+    /**
+     * Default Spring implementation for entity query service (entity query helpers for core services).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 @TbCoreComponent
@@ -101,11 +107,27 @@ public class DefaultEntityQueryService implements EntityQueryService {
 
     @Autowired
     private AttributesService attributesService;
+    /**
+     * Counts entities by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link EntityCountQuery})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long countEntitiesByQuery(SecurityUser securityUser, EntityCountQuery query) {
         return entityService.countEntitiesByQuery(securityUser.getTenantId(), securityUser.getCustomerId(), query);
     }
+    /**
+     * Finds entity data by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link EntityDataQuery})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<EntityData> findEntityDataByQuery(SecurityUser securityUser, EntityDataQuery query) {
@@ -175,6 +197,14 @@ public class DefaultEntityQueryService implements EntityQueryService {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Finds alarm data by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link AlarmDataQuery})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<AlarmData> findAlarmDataByQuery(SecurityUser securityUser, AlarmDataQuery query) {
@@ -201,6 +231,14 @@ public class DefaultEntityQueryService implements EntityQueryService {
             return new PageData<>();
         }
     }
+    /**
+     * Counts alarms by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link AlarmCountQuery})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long countAlarmsByQuery(SecurityUser securityUser, AlarmCountQuery query) {
@@ -235,6 +273,18 @@ public class DefaultEntityQueryService implements EntityQueryService {
         EntityDataPageLink edpl = new EntityDataPageLink(maxEntitiesPerAlarmSubscription, 0, null, entitiesSortOrder);
         return new EntityDataQuery(query.getEntityFilter(), edpl, query.getEntityFields(), query.getLatestValues(), query.getKeyFilters(), query.getKeyFiltersOperationOrDefault());
     }
+    /**
+     * Returns keys by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param tenantId tenant that owns the entity or operation
+     * @param query query ({@link EntityDataQuery})
+     * @param isTimeseries is timeseries
+     * @param isAttributes is attributes
+     * @param scope scope ({@link AttributeScope})
+     * @return future completing with {@link AvailableEntityKeys}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<AvailableEntityKeys> getKeysByQuery(SecurityUser securityUser, TenantId tenantId, EntityDataQuery query,
@@ -283,6 +333,18 @@ public class DefaultEntityQueryService implements EntityQueryService {
                     }
                 }, dbCallbackExecutor);
     }
+    /**
+     * Finds available entity keys by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link EntityDataQuery})
+     * @param includeTimeseries include timeseries
+     * @param includeAttributes include attributes
+     * @param scopes scopes ({@link Set})
+     * @param includeSamples include samples
+     * @return future completing with {@link AvailableEntityKeysV2}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<AvailableEntityKeysV2> findAvailableEntityKeysByQuery(SecurityUser securityUser, EntityDataQuery query,

@@ -17,6 +17,10 @@ package org.thingsboard.server.service.mobile.secret;
 
 import lombok.Data;
 
+    /**
+     * Mobile secret evict event (mobile app bundles, secrets, and deep-link support).
+     */
+
 @Data
 public class MobileSecretEvictEvent {
 

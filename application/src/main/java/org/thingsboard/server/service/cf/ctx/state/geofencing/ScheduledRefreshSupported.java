@@ -15,11 +15,37 @@
  */
 package org.thingsboard.server.service.cf.ctx.state.geofencing;
 
+/**
+
+ * scheduled refresh supported contract for calculated fields (calculated-field argument resolution, runtime state, and result processing).
+
+ */
+
 public interface ScheduledRefreshSupported {
+/**
+ * Reset scheduled refresh ts.
+ *
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     void resetScheduledRefreshTs();
+/**
+ * Returns last scheduled refresh ts.
+ *
+ * @return the long result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     long getLastScheduledRefreshTs();
+/**
+ * Updates scheduled refresh ts.
+ *
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void updateScheduledRefreshTs();
 

@@ -51,6 +51,17 @@ import static org.thingsboard.server.controller.ControllerConstants.RELATION_INF
 import static org.thingsboard.server.controller.ControllerConstants.RELATION_TYPE_GROUP_PARAM_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.RELATION_TYPE_PARAM_DESCRIPTION;
 
+/**
+ * REST API for creating, deleting, and querying directed relations between platform entities.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER} with entity-level checks.
+ *
+ * <p>Uses {@link org.thingsboard.server.service.entitiy.entity.relation.TbEntityRelationService} and inherited {@code relationService}.
+ */
+
+
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -73,6 +84,12 @@ public class EntityRelationController extends BaseController {
             "If the user has the authority of 'Tenant Administrator', the server checks that the entity is owned by the same tenant. " +
             "If the user has the authority of 'Customer User', the server checks that the entity is assigned to the same customer.";
 
+    /**
+     * POST {@code /api/relation} — Legacy create/update relation endpoint (hidden, void response).
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param relation JSON relation body
+     * @throws ThingsboardException if entities are inaccessible
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping(value = "/relation")
@@ -81,6 +98,13 @@ public class EntityRelationController extends BaseController {
         doSave(relation);
     }
 
+    /**
+     * POST {@code /api/v2/relation} — Create or update a relation between two entities.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param relation JSON relation body
+     * @return the saved {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if endpoint entities fail access checks
+     */
     @ApiOperation(value = "Create Relation (saveRelation)",
             notes = "Creates or updates a relation between two entities in the platform. " +
                     "Relations unique key is a combination of from/to entity id and relation type group and relation type. " +
@@ -102,6 +126,17 @@ public class EntityRelationController extends BaseController {
         return tbEntityRelationService.save(getTenantId(), getCurrentUser().getCustomerId(), relation, getCurrentUser());
     }
 
+    /**
+     * DELETE {@code /api/relation} — Legacy delete relation endpoint (hidden, query params).
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromId from-entity id
+     * @param strFromType from-entity type
+     * @param strRelationType relation type name
+     * @param strRelationTypeGroup optional relation type group
+     * @param strToId to-entity id
+     * @param strToType to-entity type
+     * @throws ThingsboardException if relation or entities are invalid
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @DeleteMapping(value = "/relation")
@@ -114,6 +149,18 @@ public class EntityRelationController extends BaseController {
         doDelete(strFromId, strFromType, strRelationType, strRelationTypeGroup, strToId, strToType);
     }
 
+    /**
+     * DELETE {@code /api/v2/relation} — Delete a relation identified by from/to entities and type.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromId from-entity id
+     * @param strFromType from-entity type
+     * @param strRelationType relation type name
+     * @param strRelationTypeGroup optional relation type group
+     * @param strToId to-entity id
+     * @param strToType to-entity type
+     * @return the deleted {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if relation does not exist
+     */
     @ApiOperation(value = "Delete Relation (deleteRelation)",
             notes = "Deletes a relation between two entities in the platform. " + SECURITY_CHECKS_ENTITIES_DESCRIPTION)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -142,6 +189,13 @@ public class EntityRelationController extends BaseController {
         return tbEntityRelationService.delete(getTenantId(), getCurrentUser().getCustomerId(), relation, getCurrentUser());
     }
 
+    /**
+     * DELETE {@code /api/relations} — Delete all COMMON-group relations for an entity (both directions).
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strId entity id
+     * @param strType entity type
+     * @throws ThingsboardException if entity write access is denied
+     */
     @ApiOperation(value = "Delete common relations (deleteRelations)",
             notes = "Deletes all the relations ('from' and 'to' direction) for the specified entity and relation type group: 'COMMON'. " +
                     SECURITY_CHECKS_ENTITY_DESCRIPTION)
@@ -156,6 +210,18 @@ public class EntityRelationController extends BaseController {
         tbEntityRelationService.deleteCommonRelations(getTenantId(), getCurrentUser().getCustomerId(), entityId, getCurrentUser());
     }
 
+    /**
+     * GET {@code /api/relation} — Fetch a single relation between two entities.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromId from-entity id
+     * @param strFromType from-entity type
+     * @param strRelationType relation type
+     * @param strRelationTypeGroup optional relation type group
+     * @param strToId to-entity id
+     * @param strToType to-entity type
+     * @return the {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if relation is not found
+     */
     @ApiOperation(value = "Get Relation (getRelation)",
             notes = "Returns relation object between two specified entities if present. Otherwise throws exception. " + SECURITY_CHECKS_ENTITIES_DESCRIPTION)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -178,6 +244,15 @@ public class EntityRelationController extends BaseController {
         return checkNotNull(relationService.getRelation(getTenantId(), fromId, toId, strRelationType, typeGroup));
     }
 
+    /**
+     * GET {@code /api/relations?fromId=&fromType=} — Hidden legacy endpoint: outbound relations from entity.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromId from-entity id query param
+     * @param strFromType from-entity type query param
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if entity read access is denied
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/relations", params = {FROM_ID, FROM_TYPE})
@@ -192,6 +267,15 @@ public class EntityRelationController extends BaseController {
         return checkNotNull(filterRelationsByReadPermission(relationService.findByFrom(getTenantId(), entityId, typeGroup)));
     }
 
+    /**
+     * GET {@code /api/relations/from/{fromType}/{fromId}} — List outbound relations from an entity.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromType from-entity type path variable
+     * @param strFromId from-entity id path variable
+     * @param strRelationTypeGroup optional relation type group query param
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if entity read access is denied
+     */
     @ApiOperation(value = "Get List of Relations (findEntityRelationsByFrom)",
             notes = "Returns list of relation objects for the specified entity by the 'from' direction. " +
                     SECURITY_CHECKS_ENTITY_DESCRIPTION)
@@ -204,6 +288,17 @@ public class EntityRelationController extends BaseController {
         return findByFrom(strFromId, strFromType, strRelationTypeGroup);
     }
 
+    /**
+     * GET {@code /api/relations/info?fromId=&fromType=} — Hidden legacy endpoint: outbound relation infos.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromId from-entity id
+     * @param strFromType from-entity type
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelationInfo}
+     * @throws ThingsboardException if entity read access is denied
+     * @throws java.util.concurrent.ExecutionException if async enrichment fails
+     * @throws InterruptedException if interrupted
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/relations/info", params = {FROM_ID, FROM_TYPE})
@@ -219,6 +314,17 @@ public class EntityRelationController extends BaseController {
         return checkNotNull(filterRelationsByReadPermission(relationService.findInfoByFrom(getTenantId(), entityId, typeGroup).get()));
     }
 
+    /**
+     * GET {@code /api/relations/info/from/{fromType}/{fromId}} — List outbound relation info objects.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromType from-entity type
+     * @param strFromId from-entity id
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelationInfo}
+     * @throws ThingsboardException if entity read access is denied
+     * @throws java.util.concurrent.ExecutionException if async enrichment fails
+     * @throws InterruptedException if interrupted
+     */
     @ApiOperation(value = "Get List of Relation Infos (findEntityRelationInfosByFrom)",
             notes = "Returns list of relation info objects for the specified entity by the 'from' direction. " +
                     SECURITY_CHECKS_ENTITY_DESCRIPTION + " " + RELATION_INFO_DESCRIPTION)
@@ -231,6 +337,16 @@ public class EntityRelationController extends BaseController {
         return findInfoByFrom(strFromId, strFromType, strRelationTypeGroup);
     }
 
+    /**
+     * GET {@code /api/relations?fromId=&fromType=&relationType=} — Hidden legacy endpoint: outbound relations by type.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromId from-entity id
+     * @param strFromType from-entity type
+     * @param strRelationType relation type filter
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if entity read access is denied
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/relations", params = {FROM_ID, FROM_TYPE, RELATION_TYPE})
@@ -247,6 +363,16 @@ public class EntityRelationController extends BaseController {
         return checkNotNull(filterRelationsByReadPermission(relationService.findByFromAndType(getTenantId(), entityId, strRelationType, typeGroup)));
     }
 
+    /**
+     * GET {@code /api/relations/from/{fromType}/{fromId}/{relationType}} — Outbound relations filtered by type.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strFromType from-entity type
+     * @param strFromId from-entity id
+     * @param strRelationType relation type path variable
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if entity read access is denied
+     */
     @ApiOperation(value = "Get List of Relations (findEntityRelationsByFromAndRelationType)",
             notes = "Returns list of relation objects for the specified entity by the 'from' direction and relation type. " +
                     SECURITY_CHECKS_ENTITY_DESCRIPTION)
@@ -260,6 +386,15 @@ public class EntityRelationController extends BaseController {
         return findByFrom(strFromId, strFromType, strRelationType, strRelationTypeGroup);
     }
 
+    /**
+     * GET {@code /api/relations?toId=&toType=} — Hidden legacy endpoint: inbound relations to entity.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strToId to-entity id
+     * @param strToType to-entity type
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if entity read access is denied
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/relations", params = {TO_ID, TO_TYPE})
@@ -275,6 +410,15 @@ public class EntityRelationController extends BaseController {
         return checkNotNull(filterRelationsByReadPermission(relationService.findByTo(getTenantId(), entityId, typeGroup)));
     }
 
+    /**
+     * GET {@code /api/relations/to/{toType}/{toId}} — List inbound relations to an entity.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strToType to-entity type
+     * @param strToId to-entity id
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if entity read access is denied
+     */
     @ApiOperation(value = "Get List of Relations (findEntityRelationsByTo)",
             notes = "Returns list of relation objects for the specified entity by the 'to' direction. " +
                     SECURITY_CHECKS_ENTITY_DESCRIPTION)
@@ -287,6 +431,17 @@ public class EntityRelationController extends BaseController {
         return findByTo(strToId, strToType, strRelationTypeGroup);
     }
 
+    /**
+     * GET {@code /api/relations/info?toId=&toType=} — Hidden legacy endpoint: inbound relation infos.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strToId to-entity id
+     * @param strToType to-entity type
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelationInfo}
+     * @throws ThingsboardException if entity read access is denied
+     * @throws java.util.concurrent.ExecutionException if async enrichment fails
+     * @throws InterruptedException if interrupted
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/relations/info", params = {TO_ID, TO_TYPE})
@@ -302,6 +457,17 @@ public class EntityRelationController extends BaseController {
         return checkNotNull(filterRelationsByReadPermission(relationService.findInfoByTo(getTenantId(), entityId, typeGroup).get()));
     }
 
+    /**
+     * GET {@code /api/relations/info/to/{toType}/{toId}} — List inbound relation info objects.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strToType to-entity type
+     * @param strToId to-entity id
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelationInfo}
+     * @throws ThingsboardException if entity read access is denied
+     * @throws java.util.concurrent.ExecutionException if async enrichment fails
+     * @throws InterruptedException if interrupted
+     */
     @ApiOperation(value = "Get List of Relation Infos (findEntityRelationInfosByTo)",
             notes = "Returns list of relation info objects for the specified entity by the 'to' direction. " +
                     SECURITY_CHECKS_ENTITY_DESCRIPTION + " " + RELATION_INFO_DESCRIPTION)
@@ -314,6 +480,16 @@ public class EntityRelationController extends BaseController {
         return findInfoByTo(strToId, strToType, strRelationTypeGroup);
     }
 
+    /**
+     * GET {@code /api/relations?toId=&toType=&relationType=} — Hidden legacy endpoint: inbound relations by type.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strToId to-entity id
+     * @param strToType to-entity type
+     * @param strRelationType relation type filter
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if entity read access is denied
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/relations", params = {TO_ID, TO_TYPE, RELATION_TYPE})
@@ -331,6 +507,16 @@ public class EntityRelationController extends BaseController {
         return checkNotNull(filterRelationsByReadPermission(relationService.findByToAndType(getTenantId(), entityId, strRelationType, typeGroup)));
     }
 
+    /**
+     * GET {@code /api/relations/to/{toType}/{toId}/{relationType}} — Inbound relations filtered by type.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strToType to-entity type
+     * @param strToId to-entity id
+     * @param strRelationType relation type
+     * @param strRelationTypeGroup optional relation type group
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if entity read access is denied
+     */
     @ApiOperation(value = "Get List of Relations (findEntityRelationsByToAndRelationType)",
             notes = "Returns list of relation objects for the specified entity by the 'to' direction and relation type. " +
                     SECURITY_CHECKS_ENTITY_DESCRIPTION)
@@ -344,6 +530,15 @@ public class EntityRelationController extends BaseController {
         return findByTo(strToId, strToType, strRelationType, strRelationTypeGroup);
     }
 
+    /**
+     * POST {@code /api/relations} — Find relations using {@link org.thingsboard.server.common.data.relation.EntityRelationsQuery}.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query relations query JSON
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelation}
+     * @throws ThingsboardException if query root entity access is denied
+     * @throws java.util.concurrent.ExecutionException if async search fails
+     * @throws InterruptedException if interrupted
+     */
     @ApiOperation(value = "Find related entities (findEntityRelationsByQuery)",
             notes = "Returns all entities that are related to the specific entity. " +
                     "The entity id, relation type, entity types, depth of the search, and other query parameters defined using complex 'EntityRelationsQuery' object. " +
@@ -358,6 +553,15 @@ public class EntityRelationController extends BaseController {
         return checkNotNull(filterRelationsByReadPermission(relationService.findByQuery(getTenantId(), query).get()));
     }
 
+    /**
+     * POST {@code /api/relations/info} — Find relation infos using {@link org.thingsboard.server.common.data.relation.EntityRelationsQuery}.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query relations query JSON
+     * @return list of {@link org.thingsboard.server.common.data.relation.EntityRelationInfo}
+     * @throws ThingsboardException if query root entity access is denied
+     * @throws java.util.concurrent.ExecutionException if async search fails
+     * @throws InterruptedException if interrupted
+     */
     @ApiOperation(value = "Find related entity infos (findEntityRelationInfosByQuery)",
             notes = "Returns all entity infos that are related to the specific entity. " +
                     "The entity id, relation type, entity types, depth of the search, and other query parameters defined using complex 'EntityRelationsQuery' object. " +

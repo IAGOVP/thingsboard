@@ -79,6 +79,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+
+ * Imports abstract bulk entities from export JSON.
+
+ *
+
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+
+ */
+
 public abstract class AbstractBulkImportService<E extends HasId<? extends EntityId> & HasTenantId> {
     @Autowired
     private TelemetrySubscriptionService tsSubscriptionService;
@@ -97,6 +107,14 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
     private void initExecutor() {
         executor = ThingsBoardExecutors.newLimitedTasksExecutor(Runtime.getRuntime().availableProcessors(), 150_000, "bulk-import");
     }
+    /**
+     * Processes bulk import.
+     *
+     * @param request request payload with operation parameters
+     * @param user authenticated user performing the action
+     * @return {@link BulkImportResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public final BulkImportResult<E> processBulkImport(BulkImportRequest request, SecurityUser user) throws Exception {
         List<EntityData> entitiesData = parseData(request);
@@ -159,17 +177,63 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
         importedEntityInfo.setEntity(savedEntity);
         return importedEntityInfo;
     }
+    /**
+     * Finds or create entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name name ({@link String})
+     * @return {@link E}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     protected abstract E findOrCreateEntity(TenantId tenantId, String name);
+    /**
+     * Set owners.
+     *
+     * @param entity entity ({@link E})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void setOwners(E entity, SecurityUser user);
+    /**
+     * Set entity fields.
+     *
+     * @param entity entity ({@link E})
+     * @param fields fields ({@link Map})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void setEntityFields(E entity, Map<BulkImportColumnType, String> fields);
+    /**
+     * Saves or persists entity.
+     *
+     * @param user authenticated user performing the action
+     * @param entity entity ({@link E})
+     * @param fields fields ({@link Map})
+     * @return {@link E}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract E saveEntity(SecurityUser user, E entity, Map<BulkImportColumnType, String> fields);
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract EntityType getEntityType();
+    /**
+     * Returns or create additional info obj.
+     *
+     * @param entity entity ({@link HasAdditionalInfo})
+     * @return {@link ObjectNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ObjectNode getOrCreateAdditionalInfoObj(HasAdditionalInfo entity) {
         return entity.getAdditionalInfo() == null || entity.getAdditionalInfo().isNull() ?
@@ -221,11 +285,27 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
                     .entries(timeseries)
                     .ttl(tenantTtl)
                     .callback(new FutureCallback<>() {
+                        
+                        /**
+                         * Handles success.
+                         *
+                         * @param tmp tmp ({@link Void})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
+
                         @Override
                         public void onSuccess(@Nullable Void tmp) {
                             entityActionService.logEntityAction(user, (UUIDBased & EntityId) entityId, null, null,
                                     ActionType.TIMESERIES_UPDATED, null, timeseries);
                         }
+                        /**
+                         * Handles failure.
+                         *
+                         * @param t t ({@link Throwable})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
 
                         @Override
                         public void onFailure(Throwable t) {
@@ -250,11 +330,27 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
                     .scope(AttributeScope.valueOf(scope))
                     .entries(attributes)
                     .callback(new FutureCallback<>() {
+                        
+                        /**
+                         * Handles success.
+                         *
+                         * @param unused unused ({@link Void})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
+
                         @Override
                         public void onSuccess(Void unused) {
                             entityActionService.logEntityAction(user, (UUIDBased & EntityId) entityId, null,
                                     null, ActionType.ATTRIBUTES_UPDATED, null, AttributeScope.valueOf(scope), attributes);
                         }
+                        /**
+                         * Handles failure.
+                         *
+                         * @param throwable throwable ({@link Throwable})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
 
                         @Override
                         public void onFailure(Throwable throwable) {
@@ -317,6 +413,12 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
     protected static class ParsedValue {
         private final Object value;
         private final DataType dataType;
+        /**
+         * To json primitive.
+         *
+         * @return {@link JsonPrimitive}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public JsonPrimitive toJsonPrimitive() {
             return switch (dataType) {
@@ -327,6 +429,12 @@ public abstract class AbstractBulkImportService<E extends HasId<? extends Entity
                 default -> null;
             };
         }
+        /**
+         * String value.
+         *
+         * @return {@link String}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public String stringValue() {
             return value.toString();

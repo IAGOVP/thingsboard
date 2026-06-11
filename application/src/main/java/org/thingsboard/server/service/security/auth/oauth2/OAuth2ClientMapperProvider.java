@@ -21,6 +21,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.common.data.oauth2.MapperType;
 import org.thingsboard.server.queue.util.TbCoreComponent;
+/**
+ * Oauth2client mapper provider for OAuth2 / social login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @Slf4j
@@ -42,6 +47,13 @@ public class OAuth2ClientMapperProvider {
     @Autowired
     @Qualifier("appleOAuth2ClientMapper")
     private OAuth2ClientMapper appleOAuth2ClientMapper;
+
+    /**
+     * Returns oauth2client mapper by type.
+     *
+     * @param oauth2MapperType oauth2mapper type (MapperType)
+     * @return {@link OAuth2ClientMapper} result
+     */
 
     public OAuth2ClientMapper getOAuth2ClientMapperByType(MapperType oauth2MapperType) {
         switch (oauth2MapperType) {

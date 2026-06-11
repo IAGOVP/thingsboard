@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.common.data.widget.WidgetsBundle;
 import org.thingsboard.server.dao.widget.WidgetsBundleService;
+/**
+ * Fetches base widgets bundles entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @AllArgsConstructor
@@ -44,6 +49,14 @@ public abstract class BaseWidgetsBundlesEdgeEventFetcher extends BasePageableEdg
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.WIDGETS_BUNDLE,
                 EdgeEventActionType.ADDED, widgetsBundle.getId(), null);
     }
+
+    /**
+     * Loads widgets bundles.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
 
     protected abstract PageData<WidgetsBundle> findWidgetsBundles(TenantId tenantId, PageLink pageLink);
 

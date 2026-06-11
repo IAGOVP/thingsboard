@@ -26,6 +26,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+    /**
+     * Cassandra abstract database schema service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Slf4j
 public abstract class CassandraAbstractDatabaseSchemaService implements DatabaseSchemaService {
 
@@ -47,11 +51,24 @@ public abstract class CassandraAbstractDatabaseSchemaService implements Database
     protected CassandraAbstractDatabaseSchemaService(String schemaCql) {
         this.schemaCql = schemaCql;
     }
+    /**
+     * Creates database schema.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseSchema() throws Exception {
         this.createDatabaseSchema(true);
     }
+    /**
+     * Creates database schema.
+     *
+     * @param createIndexes create indexes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseSchema(boolean createIndexes) throws Exception {
@@ -59,6 +76,12 @@ public abstract class CassandraAbstractDatabaseSchemaService implements Database
         Path schemaFile = Paths.get(installScripts.getDataDir(), CASSANDRA_DIR, schemaCql);
         loadCql(schemaFile);
     }
+    /**
+     * Creates database indexes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseIndexes() throws Exception {

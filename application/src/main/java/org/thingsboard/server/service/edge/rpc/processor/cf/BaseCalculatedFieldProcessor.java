@@ -27,12 +27,25 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.gen.edge.v1.CalculatedFieldUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base calculated field edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #calculatedFieldValidator}.
+ */
 
 @Slf4j
 public abstract class BaseCalculatedFieldProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<CalculatedField> calculatedFieldValidator;
+
+    /**
+     * Creates or persists or update calculated field.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param calculatedFieldId calculated field id (CalculatedFieldId)
+     * @param calculatedFieldUpdateMsg calculated field update msg (CalculatedFieldUpdateMsg)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateCalculatedField(TenantId tenantId, CalculatedFieldId calculatedFieldId, CalculatedFieldUpdateMsg calculatedFieldUpdateMsg) {
         boolean isCreated = false;

@@ -17,6 +17,9 @@ package org.thingsboard.server.service.cf.ctx.state.aggregation.single;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+/**
+ * Argument or aggregation entry for calculated-field state (agg interval entry).
+ */
 
 @Data
 @AllArgsConstructor
@@ -24,10 +27,23 @@ public class AggIntervalEntry {
 
     private Long startTs;
     private Long endTs;
+    /**
+     * Belongs to interval.
+     *
+     * @param ts ts
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean belongsToInterval(long ts) {
         return ts >= startTs && ts < endTs;
     }
+    /**
+     * Returns interval duration.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getIntervalDuration() {
         return endTs - startTs;

@@ -22,6 +22,10 @@ import org.thingsboard.server.gen.edge.v1.UserCredentialsUpdateMsg;
 import org.thingsboard.server.gen.edge.v1.UserUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.EdgeProcessor;
 
+/**
+ * Processes user edge events for cloud↔edge synchronization.
+ */
+
 public interface UserProcessor extends EdgeProcessor {
 
     ListenableFuture<Void> processUserMsgFromEdge(TenantId tenantId, Edge edge, UserUpdateMsg userUpdateMsg);

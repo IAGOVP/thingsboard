@@ -21,6 +21,9 @@ import org.thingsboard.server.common.data.sync.vc.VersionCreationResult;
 import org.thingsboard.server.common.data.sync.vc.VersionLoadResult;
 
 import java.io.Serializable;
+/**
+ * Version control task cache entry (Git-based entity version control (entity version control, Git repository sync, and import/export)).
+ */
 
 @Data
 @AllArgsConstructor
@@ -30,10 +33,24 @@ public class VersionControlTaskCacheEntry implements Serializable {
 
     private VersionCreationResult exportResult;
     private VersionLoadResult importResult;
+    /**
+     * New for export.
+     *
+     * @param result result ({@link VersionCreationResult})
+     * @return {@link VersionControlTaskCacheEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static VersionControlTaskCacheEntry newForExport(VersionCreationResult result) {
         return new VersionControlTaskCacheEntry(result, null);
     }
+    /**
+     * New for import.
+     *
+     * @param result result ({@link VersionLoadResult})
+     * @return {@link VersionControlTaskCacheEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static VersionControlTaskCacheEntry newForImport(VersionLoadResult result) {
         return new VersionControlTaskCacheEntry(null, result);

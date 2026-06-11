@@ -32,6 +32,11 @@ import org.thingsboard.server.dao.device.DeviceProfileService;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Fetches default profiles entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @AllArgsConstructor
 @Slf4j
@@ -39,12 +44,24 @@ public class DefaultProfilesEdgeEventFetcher implements EdgeEventFetcher {
 
     private final DeviceProfileService deviceProfileService;
     private final AssetProfileService assetProfileService;
-
+    /**
+     * Returns page link.
+     *
+     * @param pageSize page size (int)
+     * @return {@link PageLink} result
+     */
     @Override
     public PageLink getPageLink(int pageSize) {
         return null;
     }
-
+    /**
+     * Fetches edge events for edge synchronization.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
     @Override
     public PageData<EdgeEvent> fetchEdgeEvents(TenantId tenantId, Edge edge, PageLink pageLink) {
         List<EdgeEvent> result = new ArrayList<>();

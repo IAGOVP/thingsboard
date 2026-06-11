@@ -18,6 +18,9 @@ package org.thingsboard.server.controller;
 /**
  * Shared URL path prefixes for REST controllers that are not mounted on plain {@code /api}.
  *
+ * <p>These constants are referenced by controllers and security configuration to keep
+ * non-standard API paths consistent across the codebase.
+ *
  * @see TelemetryController
  * @see RpcV1Controller
  * @see RpcV2Controller
@@ -25,18 +28,35 @@ package org.thingsboard.server.controller;
  */
 public class TbUrlConstants {
 
-    /** Device and server telemetry/attributes plugin API ({@link TelemetryController}). */
+    /**
+     * Device and server telemetry/attributes plugin API base path.
+     *
+     * @see TelemetryController
+     */
     public static final String TELEMETRY_URL_PREFIX = "/api/plugins/telemetry";
 
-    /** Legacy device RPC API ({@link RpcV1Controller}). */
+    /**
+     * Legacy device RPC API base path (v1).
+     *
+     * @see RpcV1Controller
+     */
     public static final String RPC_V1_URL_PREFIX = "/api/plugins/rpc";
 
-    /** Device RPC API v2 ({@link RpcV2Controller}). */
+    /**
+     * Device RPC API v2 base path.
+     *
+     * @see RpcV2Controller
+     */
     public static final String RPC_V2_URL_PREFIX = "/api/rpc";
 
-    /** HTTP entry to push payloads into the rule engine ({@link RuleEngineController}). */
+    /**
+     * HTTP entry point to push payloads into the rule engine.
+     *
+     * @see RuleEngineController
+     */
     public static final String RULE_ENGINE_URL_PREFIX = "/api/rule-engine/";
 
+    /** Utility class; do not instantiate. */
     private TbUrlConstants() {
     }
 }

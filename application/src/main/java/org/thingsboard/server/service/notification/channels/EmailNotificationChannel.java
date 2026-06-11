@@ -25,11 +25,24 @@ import org.thingsboard.server.common.data.notification.NotificationDeliveryMetho
 import org.thingsboard.server.common.data.notification.template.EmailDeliveryMethodNotificationTemplate;
 import org.thingsboard.server.service.notification.NotificationProcessingContext;
 
+    /**
+     * Spring service component for email notification channel (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Component
 @RequiredArgsConstructor
 public class EmailNotificationChannel implements NotificationChannel<User, EmailDeliveryMethodNotificationTemplate> {
 
     private final MailService mailService;
+    /**
+     * Send notification.
+     *
+     * @param recipient recipient ({@link User})
+     * @param processedTemplate processed template ({@link EmailDeliveryMethodNotificationTemplate})
+     * @param ctx calculated-field execution context
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendNotification(User recipient, EmailDeliveryMethodNotificationTemplate processedTemplate, NotificationProcessingContext ctx) throws Exception {
@@ -40,6 +53,13 @@ public class EmailNotificationChannel implements NotificationChannel<User, Email
                 .html(true)
                 .build());
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void check(TenantId tenantId) throws Exception {
@@ -47,6 +67,12 @@ public class EmailNotificationChannel implements NotificationChannel<User, Email
             throw new RuntimeException("Mail server is not configured");
         }
     }
+    /**
+     * Returns delivery method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationDeliveryMethod getDeliveryMethod() {

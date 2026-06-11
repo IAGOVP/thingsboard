@@ -55,6 +55,17 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CU
 import static org.thingsboard.server.dao.util.DeviceConnectivityUtil.CA_ROOT_CERT_PEM;
 import static org.thingsboard.server.dao.util.DeviceConnectivityUtil.DOCKER_COMPOSE_YML;
 
+/**
+ * REST controller for device connectivity helpers (sample commands, certificates, gateway compose).
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN} or {@code CUSTOMER_USER} for device-scoped endpoints;
+ * certificate download is public.
+ *
+ * <p>Related services: {@link org.thingsboard.server.dao.device.DeviceConnectivityService},
+ * {@link org.thingsboard.server.service.security.system.SystemSecurityService}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")

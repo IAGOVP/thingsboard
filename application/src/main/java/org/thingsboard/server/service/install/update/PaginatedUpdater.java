@@ -19,11 +19,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 
+    /**
+     * Paginated updater (database schema installation, upgrades, and demo data loading).
+     */
+
 @Slf4j
 public abstract class PaginatedUpdater<I, D> {
 
     private static final int DEFAULT_LIMIT = 100;
     private int updated = 0;
+    /**
+     * Updates entities.
+     *
+     * @param id id ({@link I})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateEntities(I id) {
         updated = 0;
@@ -46,18 +57,51 @@ public abstract class PaginatedUpdater<I, D> {
             }
         }
     }
+    /**
+     * Updates entities.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateEntities() {
         updateEntities(null);
     }
+    /**
+     * Force report total.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean forceReportTotal() {
         return false;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getName();
+    /**
+     * Finds entities.
+     *
+     * @param id id ({@link I})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract PageData<D> findEntities(I id, PageLink pageLink);
+    /**
+     * Updates entity.
+     *
+     * @param entity entity ({@link D})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void updateEntity(D entity);
 

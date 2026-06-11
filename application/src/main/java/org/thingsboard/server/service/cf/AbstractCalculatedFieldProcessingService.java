@@ -102,6 +102,9 @@ import static org.thingsboard.server.utils.CalculatedFieldArgumentUtils.transfor
 import static org.thingsboard.server.utils.CalculatedFieldArgumentUtils.transformAggregationArgument;
 import static org.thingsboard.server.utils.CalculatedFieldArgumentUtils.transformSingleValueArgument;
 import static org.thingsboard.server.utils.CalculatedFieldArgumentUtils.transformTsRollingArgument;
+/**
+ * Abstract calculated field processing service (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ */
 
 @Data
 @Slf4j
@@ -116,12 +119,24 @@ public abstract class AbstractCalculatedFieldProcessingService {
     protected final TbClusterService clusterService;
 
     protected ListeningExecutorService calculatedFieldCallbackExecutor;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
         calculatedFieldCallbackExecutor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newWorkStealingPool(
                 Math.max(4, Runtime.getRuntime().availableProcessors()), getExecutorNamePrefix()));
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void stop() {
@@ -129,8 +144,23 @@ public abstract class AbstractCalculatedFieldProcessingService {
             calculatedFieldCallbackExecutor.shutdownNow();
         }
     }
+    /**
+     * Returns executor name prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getExecutorNamePrefix();
+    /**
+     * Fetches arguments.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @param ts ts
+     * @return future completing with {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<Map<String, ArgumentEntry>> fetchArguments(CalculatedFieldCtx ctx, EntityId entityId, long ts) {
         Map<String, ListenableFuture<ArgumentEntry>> argFutures = switch (ctx.getCfType()) {
@@ -156,6 +186,15 @@ public abstract class AbstractCalculatedFieldProcessingService {
         }
         return futures;
     }
+    /**
+     * Resolve entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param argument argument ({@link Argument})
+     * @return {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected EntityId resolveEntityId(TenantId tenantId, EntityId entityId, Argument argument) {
         if (argument.getRefEntityId() != null) {
@@ -166,6 +205,13 @@ public abstract class AbstractCalculatedFieldProcessingService {
         }
         return resolveOwnerArgument(tenantId, entityId);
     }
+    /**
+     * Resolve argument futures.
+     *
+     * @param argFutures arg futures ({@link Map})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Map<String, ArgumentEntry> resolveArgumentFutures(Map<String, ListenableFuture<ArgumentEntry>> argFutures) {
         return argFutures.entrySet().stream()
@@ -174,6 +220,14 @@ public abstract class AbstractCalculatedFieldProcessingService {
                         entry -> resolveArgumentValue(entry.getKey(), entry.getValue())
                 ));
     }
+    /**
+     * Resolve argument value.
+     *
+     * @param key key ({@link String})
+     * @param future future ({@link ListenableFuture})
+     * @return {@link ArgumentEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ArgumentEntry resolveArgumentValue(String key, ListenableFuture<ArgumentEntry> future) {
         try {
@@ -185,11 +239,29 @@ public abstract class AbstractCalculatedFieldProcessingService {
             throw new RuntimeException("Failed to fetch '" + key + "' argument!", e);
         }
     }
+    /**
+     * Fetches propagation calculated field argument.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @return future completing with {@link ArgumentEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<ArgumentEntry> fetchPropagationCalculatedFieldArgument(CalculatedFieldCtx ctx, EntityId entityId) {
         ListenableFuture<List<EntityId>> propagationEntityIds = fromDynamicSource(ctx.getTenantId(), entityId, ctx.getPropagationArgument());
         return Futures.transform(propagationEntityIds, ArgumentEntry::createPropagationArgument, MoreExecutors.directExecutor());
     }
+    /**
+     * Fetches geofencing calculated field arguments.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @param dynamicArgumentsOnly dynamic arguments only
+     * @param startTs start ts
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Map<String, ListenableFuture<ArgumentEntry>> fetchGeofencingCalculatedFieldArguments(CalculatedFieldCtx ctx, EntityId entityId, boolean dynamicArgumentsOnly, long startTs) {
         Map<String, ListenableFuture<ArgumentEntry>> argFutures = new HashMap<>();
@@ -236,6 +308,15 @@ public abstract class AbstractCalculatedFieldProcessingService {
                         entry -> fetchTimeSeries(ctx.getTenantId(), entityId, entry.getValue(), config.getInterval(), ts)
                 ));
     }
+    /**
+     * Resolve related entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param relation relation ({@link RelationPathLevel})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<List<EntityId>> resolveRelatedEntities(TenantId tenantId, EntityId entityId, RelationPathLevel relation) {
         Predicate<EntityRelation> filter = entityRelation -> CalculatedField.isSupportedRefEntity(entityRelation.getFrom()) && CalculatedField.isSupportedRefEntity(entityRelation.getTo());
@@ -318,6 +399,16 @@ public abstract class AbstractCalculatedFieldProcessingService {
                 ),
                 MoreExecutors.directExecutor());
     }
+    /**
+     * Fetches argument value.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param argument argument ({@link Argument})
+     * @param startTs start ts
+     * @return future completing with {@link ArgumentEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<ArgumentEntry> fetchArgumentValue(TenantId tenantId, EntityId entityId, Argument argument, long startTs) {
         return switch (argument.getRefEntityKey().getType()) {
@@ -326,6 +417,17 @@ public abstract class AbstractCalculatedFieldProcessingService {
             case TS_LATEST -> fetchTsLatest(tenantId, entityId, argument, startTs);
         };
     }
+    /**
+     * Fetches metric during interval.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param argKey arg key ({@link String})
+     * @param metric metric ({@link AggMetric})
+     * @param interval interval ({@link AggIntervalEntry})
+     * @return {@link ArgumentEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ArgumentEntry fetchMetricDuringInterval(TenantId tenantId, EntityId entityId, String argKey, AggMetric metric, AggIntervalEntry interval) {
         AggFunction function = metric.getFunction();
@@ -384,6 +486,15 @@ public abstract class AbstractCalculatedFieldProcessingService {
         int limit = argumentLimit == 0 || argumentLimit > maxDataPoints ? (int) maxDataPoints : argumentLimit;
         return new BaseReadTsKvQuery(argument.getRefEntityKey().getKey(), startTs, endTs, 0, limit, Aggregation.NONE);
     }
+    /**
+     * Handles propagation results.
+     *
+     * @param propagationResult propagation result ({@link PropagationCalculatedFieldResult})
+     * @param callback queue callback invoked when processing completes
+     * @param telemetryResultHandler telemetry result handler ({@link TriConsumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void handlePropagationResults(PropagationCalculatedFieldResult propagationResult, TbCallback callback,
                                           TriConsumer<EntityId, TelemetryCalculatedFieldResult, TbCallback> telemetryResultHandler) {
@@ -402,15 +513,41 @@ public abstract class AbstractCalculatedFieldProcessingService {
             telemetryResultHandler.accept(propagationEntityId, propagationResult.getResult(), multipleTbCallback);
         }
     }
+    /**
+     * Send msg to rule engine.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param callback queue callback invoked when processing completes
+     * @param msg msg ({@link TbMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void sendMsgToRuleEngine(TenantId tenantId, EntityId entityId, TbCallback callback, TbMsg msg) {
         try {
             clusterService.pushMsgToRuleEngine(tenantId, entityId, msg, new TbQueueCallback() {
+                
+                /**
+                 * Handles success.
+                 *
+                 * @param metadata metadata ({@link TbQueueMsgMetadata})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
+
                 @Override
                 public void onSuccess(TbQueueMsgMetadata metadata) {
                     log.trace("[{}][{}] Pushed message to rule engine: {} ", tenantId, entityId, msg);
                     callback.onSuccess();
                 }
+                /**
+                 * Handles failure.
+                 *
+                 * @param t t ({@link Throwable})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
 
                 @Override
                 public void onFailure(Throwable t) {
@@ -422,6 +559,18 @@ public abstract class AbstractCalculatedFieldProcessingService {
             callback.onFailure(e);
         }
     }
+    /**
+     * Saves or persists telemetry result.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param cfName cf name ({@link String})
+     * @param cfResult cf result ({@link TelemetryCalculatedFieldResult})
+     * @param cfIds cf ids ({@link List})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void saveTelemetryResult(TenantId tenantId, EntityId entityId, String cfName, TelemetryCalculatedFieldResult cfResult, List<CalculatedFieldId> cfIds, TbCallback callback) {
         OutputType type = cfResult.getType();
@@ -479,6 +628,15 @@ public abstract class AbstractCalculatedFieldProcessingService {
                 .strategy(strategy)
                 .previousCalculatedFieldIds(cfIds)
                 .callback(new FutureCallback<>() {
+                    
+                    /**
+                     * Handles success.
+                     *
+                     * @param result result ({@link Void})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
+
                     @Override
                     public void onSuccess(Void result) {
                         if (sendAttributesUpdatedNotification) {
@@ -487,6 +645,13 @@ public abstract class AbstractCalculatedFieldProcessingService {
                         callback.onSuccess();
                         log.debug("[{}][{}] Saved CF result: {}", tenantId, entityId, entries);
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -519,11 +684,27 @@ public abstract class AbstractCalculatedFieldProcessingService {
                 .entries(tsEntries)
                 .strategy(strategy)
                 .callback(new FutureCallback<>() {
+                    
+                    /**
+                     * Handles success.
+                     *
+                     * @param result result ({@link Void})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
+
                     @Override
                     public void onSuccess(Void result) {
                         callback.onSuccess();
                         log.debug("[{}][{}] Saved CF result: {}", tenantId, entityId, tsEntries);
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {

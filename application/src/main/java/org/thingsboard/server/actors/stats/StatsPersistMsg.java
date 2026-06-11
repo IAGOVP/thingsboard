@@ -22,6 +22,9 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbActorMsg;
+/**
+ * Carries statistics snapshot data to {@link org.thingsboard.server.actors.stats.StatsActor} for persistence.
+ */
 
 @AllArgsConstructor
 @Getter
@@ -32,11 +35,25 @@ public final class StatsPersistMsg implements TbActorMsg {
     private final long errorsOccurred;
     private final TenantId tenantId;
     private final EntityId entityId;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {
         return MsgType.STATS_PERSIST_MSG;
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isEmpty() {
         return messagesProcessed == 0 && errorsOccurred == 0;

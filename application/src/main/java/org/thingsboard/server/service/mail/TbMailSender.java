@@ -44,6 +44,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static org.thingsboard.server.service.mail.RefreshTokenExpCheckService.AZURE_DEFAULT_REFRESH_TOKEN_LIFETIME_IN_DAYS;
 
+    /**
+     * Tb mail sender (SMTP email sending and templating).
+     */
+
 @Slf4j
 public class TbMailSender extends JavaMailSenderImpl {
 
@@ -72,26 +76,60 @@ public class TbMailSender extends JavaMailSenderImpl {
         }
         setJavaMailProperties(createJavaMailProperties(jsonConfig));
     }
+    /**
+     * Do send.
+     *
+     * @param mimeMessages mime messages
+     * @param originalMessages original messages
+     * @return nothing
+     * @throws MailException if mail exception is thrown during processing
+     */
 
     @Override
     protected void doSend(MimeMessage[] mimeMessages, @Nullable Object[] originalMessages) throws MailException {
         updateOauth2PasswordIfExpired();
         doSendSuper(mimeMessages, originalMessages);
     }
+    /**
+     * Do send super.
+     *
+     * @param mimeMessages mime messages
+     * @param originalMessages original messages
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void doSendSuper(MimeMessage[] mimeMessages, Object[] originalMessages) {
         super.doSend(mimeMessages, originalMessages);
     }
+    /**
+     * Test connection.
+     *
+     * @return nothing
+     * @throws MessagingException if messaging exception is thrown during processing
+     */
 
     @Override
     public void testConnection() throws MessagingException {
         updateOauth2PasswordIfExpired();
         testConnectionSuper();
     }
+    /**
+     * Test connection super.
+     *
+     * @return nothing
+     * @throws MessagingException if messaging exception is thrown during processing
+     */
 
     public void testConnectionSuper() throws MessagingException {
         super.testConnection();
     }
+    /**
+     * Updates oauth2password if expired.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateOauth2PasswordIfExpired() {
         if (getOauth2Enabled() && (System.currentTimeMillis() > getTokenExpires())) {
@@ -144,6 +182,12 @@ public class TbMailSender extends JavaMailSenderImpl {
         }
         return javaMailProperties;
     }
+    /**
+     * Refresh access token.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void refreshAccessToken() {
         lock.lock();

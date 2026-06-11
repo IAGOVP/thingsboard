@@ -20,9 +20,39 @@ import org.thingsboard.server.common.data.alarm.Alarm;
 import org.thingsboard.server.common.data.alarm.AlarmComment;
 import org.thingsboard.server.common.data.exception.ThingsboardException;
 
+/**
+
+ * Application-layer service API for alarm comment entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbAlarmCommentService {
+/**
+ * Saves or persists alarm comment.
+ *
+ * @param alarm alarm ({@link Alarm})
+ * @param alarmComment alarm comment ({@link AlarmComment})
+ * @param user authenticated user performing the action
+ * @return {@link AlarmComment}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     AlarmComment saveAlarmComment(Alarm alarm, AlarmComment alarmComment, User user) throws ThingsboardException;
+/**
+ * Deletes alarm comment.
+ *
+ * @param alarm alarm ({@link Alarm})
+ * @param alarmComment alarm comment ({@link AlarmComment})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     void deleteAlarmComment(Alarm alarm, AlarmComment alarmComment, User user) throws ThingsboardException;
 }

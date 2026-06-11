@@ -153,16 +153,35 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+/**
+ * Spring component holding shared dependencies for all ThingsBoard actors.
+ *
+ * <p>Exposes DAO services, cluster messaging, calculated-field helpers, rule-engine utilities, and debug/rate-limit state. Injected into {@link org.thingsboard.server.actors.service.ContextAwareActor} subclasses and message processors.
+ */
 
 @Slf4j
 @Component
 public class ActorSystemContext {
 
     private static final FutureCallback<Void> RULE_CHAIN_DEBUG_EVENT_ERROR_CALLBACK = new FutureCallback<>() {
+        /**
+         * Handles success.
+         *
+         * @param event event ({@link Void})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
         @Override
         public void onSuccess(@Nullable Void event) {
 
         }
+        /**
+         * Handles failure.
+         *
+         * @param th th ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable th) {
@@ -170,10 +189,24 @@ public class ActorSystemContext {
         }
     };
     private static final FutureCallback<Void> RULE_NODE_DEBUG_EVENT_ERROR_CALLBACK = new FutureCallback<>() {
+        /**
+         * Handles success.
+         *
+         * @param event event ({@link Void})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
         @Override
         public void onSuccess(@Nullable Void event) {
 
         }
+        /**
+         * Handles failure.
+         *
+         * @param th th ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable th) {
@@ -182,10 +215,24 @@ public class ActorSystemContext {
     };
 
     private static final FutureCallback<Void> CALCULATED_FIELD_DEBUG_EVENT_ERROR_CALLBACK = new FutureCallback<>() {
+        /**
+         * Handles success.
+         *
+         * @param event event ({@link Void})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
         @Override
         public void onSuccess(@Nullable Void event) {
 
         }
+        /**
+         * Handles failure.
+         *
+         * @param th th ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable th) {
@@ -194,6 +241,12 @@ public class ActorSystemContext {
     };
 
     private final ConcurrentMap<TenantId, DebugTbRateLimits> debugPerTenantLimits = new ConcurrentHashMap<>();
+    /**
+     * Returns debug per tenant limits.
+     *
+     * @return {@link ConcurrentMap}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ConcurrentMap<TenantId, DebugTbRateLimits> getDebugPerTenantLimits() {
         return debugPerTenantLimits;
@@ -625,6 +678,14 @@ public class ActorSystemContext {
 
     @Value("${actors.rule.external.ssrf_allowed_hosts:}")
     private List<String> ssrfAllowedHosts;
+    
+    /**
+     * Initializes the actor after creation (schedules ticks, loads metadata, creates child actors).
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @PostConstruct
     public void init() {
@@ -722,10 +783,26 @@ public class ActorSystemContext {
     @Autowired(required = false)
     @Getter
     private RedisTemplate<String, Object> redisTemplate;
+    /**
+     * Returns scheduler.
+     *
+     * @return {@link ScheduledExecutorService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ScheduledExecutorService getScheduler() {
         return actorSystem.getScheduler();
     }
+    /**
+     * Persist error.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @param method method ({@link String})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistError(TenantId tenantId, EntityId entityId, String method, Exception e) {
         eventService.saveAsync(ErrorEvent.builder()
@@ -735,6 +812,16 @@ public class ActorSystemContext {
                 .method(method)
                 .error(toString(e)).build());
     }
+    /**
+     * Persist lifecycle event.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @param lcEvent lc event ({@link ComponentLifecycleEvent})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistLifecycleEvent(TenantId tenantId, EntityId entityId, ComponentLifecycleEvent lcEvent, Exception e) {
         LifecycleEvent.LifecycleEventBuilder event = LifecycleEvent.builder()
@@ -757,38 +844,126 @@ public class ActorSystemContext {
         e.printStackTrace(new PrintWriter(sw));
         return sw.toString();
     }
+    /**
+     * Resolve.
+     *
+     * @param serviceType service type ({@link ServiceType})
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @return {@link TopicPartitionInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TopicPartitionInfo resolve(ServiceType serviceType, TenantId tenantId, EntityId entityId) {
         return partitionService.resolve(serviceType, tenantId, entityId);
     }
+    /**
+     * Resolve.
+     *
+     * @param serviceType service type ({@link ServiceType})
+     * @param queueName queue name ({@link String})
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @return {@link TopicPartitionInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TopicPartitionInfo resolve(ServiceType serviceType, String queueName, TenantId tenantId, EntityId entityId) {
         return partitionService.resolve(serviceType, queueName, tenantId, entityId);
     }
+    /**
+     * Resolve.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @param msg actor message to process
+     * @return {@link TopicPartitionInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TopicPartitionInfo resolve(TenantId tenantId, EntityId entityId, TbMsg msg) {
         return partitionService.resolve(ServiceType.TB_RULE_ENGINE, msg.getQueueName(), tenantId, entityId, msg.getPartition());
     }
+    /**
+     * Returns service id.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getServiceId() {
         return serviceInfoProvider.getServiceId();
     }
+    /**
+     * Persist debug input.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationType relation type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistDebugInput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType) {
         persistDebugAsync(tenantId, entityId, "IN", tbMsg, relationType, null, null);
     }
+    /**
+     * Persist debug input.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationType relation type ({@link String})
+     * @param error error ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistDebugInput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType, Throwable error) {
         persistDebugAsync(tenantId, entityId, "IN", tbMsg, relationType, error, null);
     }
+    /**
+     * Persist debug output.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationType relation type ({@link String})
+     * @param error error ({@link Throwable})
+     * @param failureMessage failure message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistDebugOutput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType, Throwable error, String failureMessage) {
         persistDebugAsync(tenantId, entityId, "OUT", tbMsg, relationType, error, failureMessage);
     }
+    /**
+     * Persist debug output.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationType relation type ({@link String})
+     * @param error error ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistDebugOutput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType, Throwable error) {
         persistDebugAsync(tenantId, entityId, "OUT", tbMsg, relationType, error, null);
     }
+    /**
+     * Persist debug output.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param entityId target entity identifier
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationType relation type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistDebugOutput(TenantId tenantId, EntityId entityId, TbMsg tbMsg, String relationType) {
         persistDebugAsync(tenantId, entityId, "OUT", tbMsg, relationType, null, null);
@@ -856,6 +1031,13 @@ public class ActorSystemContext {
         ListenableFuture<Void> future = eventService.saveAsync(event.build());
         Futures.addCallback(future, RULE_CHAIN_DEBUG_EVENT_ERROR_CALLBACK, MoreExecutors.directExecutor());
     }
+    /**
+     * Persist calculated field debug error.
+     *
+     * @param cfe cfe ({@link CalculatedFieldException})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistCalculatedFieldDebugError(CalculatedFieldException cfe) {
         String message;
@@ -868,6 +1050,20 @@ public class ActorSystemContext {
         }
         persistCalculatedFieldDebugEvent(cfe.getCtx().getTenantId(), cfe.getCtx().getCfId(), cfe.getEventEntity(), cfe.getArguments(), cfe.getMsgId(), cfe.getMsgType(), null, message);
     }
+    /**
+     * Persist calculated field debug event.
+     *
+     * @param tenantId tenant that owns the actor or target entity
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @param entityId target entity identifier
+     * @param arguments arguments ({@link JsonNode})
+     * @param tbMsgId tb msg id ({@link UUID})
+     * @param tbMsgType tb msg type ({@link String})
+     * @param result result ({@link String})
+     * @param errorMessage error message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void persistCalculatedFieldDebugEvent(TenantId tenantId, CalculatedFieldId calculatedFieldId, EntityId entityId, JsonNode arguments, UUID tbMsgId, String tbMsgType, String result, String errorMessage) {
         if (checkLimits(tenantId)) {
@@ -911,23 +1107,63 @@ public class ActorSystemContext {
         }
         return true;
     }
+    /**
+     * To exception.
+     *
+     * @param error error ({@link Throwable})
+     * @return {@link Exception}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Exception toException(Throwable error) {
         return Exception.class.isInstance(error) ? (Exception) error : new Exception(error);
     }
+    /**
+     * Tell.
+     *
+     * @param tbActorMsg tb actor msg ({@link TbActorMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void tell(TbActorMsg tbActorMsg) {
         appActor.tell(tbActorMsg);
     }
+    /**
+     * Tell with high priority.
+     *
+     * @param tbActorMsg tb actor msg ({@link TbActorMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void tellWithHighPriority(TbActorMsg tbActorMsg) {
         appActor.tellWithHighPriority(tbActorMsg);
     }
+    /**
+     * Schedule periodic msg with delay.
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @param msg actor message to process
+     * @param delayInMs delay in ms
+     * @param periodInMs period in ms
+     * @return {@link ScheduledFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ScheduledFuture<?> schedulePeriodicMsgWithDelay(TbActorRef ctx, TbActorMsg msg, long delayInMs, long periodInMs) {
         log.debug("Scheduling periodic msg {} every {} ms with delay {} ms", msg, periodInMs, delayInMs);
         return getScheduler().scheduleWithFixedDelay(() -> ctx.tell(msg), delayInMs, periodInMs, TimeUnit.MILLISECONDS);
     }
+    /**
+     * Schedule msg with delay.
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @param msg actor message to process
+     * @param delayInMs delay in ms
+     * @return {@link ScheduledFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ScheduledFuture<?> scheduleMsgWithDelay(TbActorRef ctx, TbActorMsg msg, long delayInMs) {
         log.debug("Scheduling msg {} with delay {} ms", msg, delayInMs);

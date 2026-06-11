@@ -106,10 +106,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.thingsboard.server.common.data.DataConstants.LATEST_TELEMETRY_SCOPE;
-
 /**
- * Created by ashvayka on 27.03.18.
+ * Default {@link WebSocketService} implementation on tb-core. Authenticates sessions, dispatches telemetry/notification commands to {@link org.thingsboard.server.service.subscription.TbLocalSubscriptionService}, and pushes {@link org.thingsboard.server.service.ws.telemetry.sub.TelemetrySubscriptionUpdate} payloads back to browsers.
  */
+
 @Service
 @TbCoreComponent
 @Slf4j
@@ -153,6 +153,12 @@ public class DefaultWebSocketService implements WebSocketService {
 
     private Map<WsCmdType, WsCmdHandler<? extends WsCmd>> cmdsHandlers;
 
+    /**
+     * Initializes init.
+     * @return @PostConstruct
+    public void
+     */
+
     @PostConstruct
     public void init() {
         serviceId = serviceInfoProvider.getServiceId();
@@ -182,6 +188,12 @@ public class DefaultWebSocketService implements WebSocketService {
         cmdsHandlers.put(WsCmdType.NOTIFICATIONS_UNSUBSCRIBE, newCmdHandler(notificationCmdsHandler::handleUnsubCmd));
     }
 
+    /**
+     * Shutdown executor.
+     * @return @PreDestroy
+    public void
+     */
+
     @PreDestroy
     public void shutdownExecutor() {
         if (pingExecutor != null) {
@@ -192,6 +204,14 @@ public class DefaultWebSocketService implements WebSocketService {
             executor.shutdownNow();
         }
     }
+
+    /**
+     * Handles session event.
+     * @param sessionRef reference to the WebSocket session
+     * @param event application or cluster event
+     * @return @Override
+    public void
+     */
 
     @Override
     public void handleSessionEvent(WebSocketSessionRef sessionRef, SessionEvent event) {
@@ -212,6 +232,14 @@ public class DefaultWebSocketService implements WebSocketService {
                 break;
         }
     }
+
+    /**
+     * Handles commands.
+     * @param sessionRef reference to the WebSocket session
+     * @param commandsWrapper batch of inbound WebSocket commands
+     * @return @Override
+    public void
+     */
 
     @Override
     public void handleCommands(WebSocketSessionRef sessionRef, WsCommandsWrapper commandsWrapper) {
@@ -271,16 +299,45 @@ public class DefaultWebSocketService implements WebSocketService {
         }
     }
 
+    /**
+     * Sends update.
+     * @param sessionId WebSocket session identifier
+     * @param cmdId client command id
+     * @param update subscription update payload
+     * @return @Override
+    public void
+     */
+
     @Override
     public void sendUpdate(String sessionId, int cmdId, TelemetrySubscriptionUpdate update) {
         // We substitute the subscriptionId with cmdId for old-style subscriptions.
         doSendUpdate(sessionId, cmdId, update.withSubscriptionId(cmdId));
     }
 
+    /**
+     * Sends update.
+     * @param sessionId WebSocket session identifier
+     * @param update subscription update payload
+     * @return @Override
+    public void
+     */
+
     @Override
     public void sendUpdate(String sessionId, CmdUpdate update) {
         doSendUpdate(sessionId, update.getCmdId(), update);
     }
+
+    /**
+     * Sends error.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param sessionRef reference to the WebSocket session
+     * @param subId sub id
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     * @return @Override
+    public void
+     */
 
     @Override
     public void sendError(WebSocketSessionRef sessionRef, int subId, SubscriptionErrorCode errorCode, String errorMsg) {
@@ -295,6 +352,14 @@ public class DefaultWebSocketService implements WebSocketService {
         }
     }
 
+    /**
+     * Closes close.
+     * @param sessionId WebSocket session identifier
+     * @param status WebSocket close status
+     * @return @Override
+    public void
+     */
+
     @Override
     public void close(String sessionId, CloseStatus status) {
         WsSessionMetaData md = wsSessionsMap.get(sessionId);
@@ -306,6 +371,14 @@ public class DefaultWebSocketService implements WebSocketService {
             }
         }
     }
+
+    /**
+     * Cleans up if stale.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param sessionId WebSocket session identifier
+     * @return @Override
+    public void
+     */
 
     @Override
     public void cleanupIfStale(TenantId tenantId, String sessionId) {
@@ -449,6 +522,12 @@ public class DefaultWebSocketService implements WebSocketService {
                                                       List<String> keys) {
         long queryTs = System.currentTimeMillis();
         FutureCallback<List<AttributeKvEntry>> callback = new FutureCallback<>() {
+            /**
+             * Invoked when success occurs.
+             * @param data data
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(List<AttributeKvEntry> data) {
                 List<TsKvEntry> attributesData = data.stream().map(d -> new BasicTsKvEntry(d.getLastUpdateTs(), d)).collect(Collectors.toList());
@@ -489,6 +568,13 @@ public class DefaultWebSocketService implements WebSocketService {
                 }
 
             }
+
+            /**
+             * Invoked when failure occurs.
+             * @param e e
+             * @return @Override
+            public void
+             */
 
             @Override
             public void onFailure(Throwable e) {
@@ -535,10 +621,25 @@ public class DefaultWebSocketService implements WebSocketService {
                 .collect(Collectors.toList());
 
         FutureCallback<List<TsKvEntry>> callback = new FutureCallback<List<TsKvEntry>>() {
+            /**
+             * Invoked when success occurs.
+             * @param data data
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(List<TsKvEntry> data) {
                 sendUpdate(sessionRef, new TelemetrySubscriptionUpdate(cmd.getCmdId(), data));
             }
+
+            /**
+             * Invoked when failure occurs.
+             *
+             * <p>Default implementation inherited from the supertype.
+             * @param e e
+             * @return @Override
+            public void
+             */
 
             @Override
             public void onFailure(Throwable e) {
@@ -563,6 +664,12 @@ public class DefaultWebSocketService implements WebSocketService {
                                                 EntityId entityId) {
         long queryTs = System.currentTimeMillis();
         FutureCallback<List<AttributeKvEntry>> callback = new FutureCallback<>() {
+            /**
+             * Invoked when success occurs.
+             * @param data data
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(List<AttributeKvEntry> data) {
                 List<TsKvEntry> attributesData = data.stream().map(d -> new BasicTsKvEntry(d.getLastUpdateTs(), d)).collect(Collectors.toList());
@@ -601,6 +708,13 @@ public class DefaultWebSocketService implements WebSocketService {
                     subLock.unlock();
                 }
             }
+
+            /**
+             * Invoked when failure occurs.
+             * @param e e
+             * @return @Override
+            public void
+             */
 
             @Override
             public void onFailure(Throwable e) {
@@ -665,6 +779,12 @@ public class DefaultWebSocketService implements WebSocketService {
                                                 TimeseriesSubscriptionCmd cmd, String sessionId, EntityId entityId) {
         long queryTs = System.currentTimeMillis();
         FutureCallback<List<TsKvEntry>> callback = new FutureCallback<List<TsKvEntry>>() {
+            /**
+             * Invoked when success occurs.
+             * @param data data
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(List<TsKvEntry> data) {
                 Map<String, Long> subState = new HashMap<>(data.size());
@@ -681,6 +801,13 @@ public class DefaultWebSocketService implements WebSocketService {
                     subLock.unlock();
                 }
             }
+
+            /**
+             * Invoked when failure occurs.
+             * @param e e
+             * @return @Override
+            public void
+             */
 
             @Override
             public void onFailure(Throwable e) {
@@ -724,6 +851,12 @@ public class DefaultWebSocketService implements WebSocketService {
     private FutureCallback<List<TsKvEntry>> getSubscriptionCallback(final WebSocketSessionRef sessionRef, final TimeseriesSubscriptionCmd cmd,
                                                                     final String sessionId, final EntityId entityId, final long queryTs, final long startTs, final List<String> keys) {
         return new FutureCallback<>() {
+            /**
+             * Invoked when success occurs.
+             * @param data data
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(List<TsKvEntry> data) {
                 Map<String, Long> subState = new HashMap<>(keys.size());
@@ -741,6 +874,13 @@ public class DefaultWebSocketService implements WebSocketService {
                     subLock.unlock();
                 }
             }
+
+            /**
+             * Invoked when failure occurs.
+             * @param e e
+             * @return @Override
+            public void
+             */
 
             @Override
             public void onFailure(Throwable e) {
@@ -897,6 +1037,12 @@ public class DefaultWebSocketService implements WebSocketService {
 
     private <T> FutureCallback<ValidationResult> getAttributesFetchCallback(final TenantId tenantId, final EntityId entityId, final List<String> keys, final FutureCallback<List<AttributeKvEntry>> callback) {
         return new FutureCallback<ValidationResult>() {
+            /**
+             * Invoked when success occurs.
+             * @param result result
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(@Nullable ValidationResult result) {
                 List<ListenableFuture<List<AttributeKvEntry>>> futures = new ArrayList<>();
@@ -908,6 +1054,13 @@ public class DefaultWebSocketService implements WebSocketService {
                 Futures.addCallback(future, callback, MoreExecutors.directExecutor());
             }
 
+            /**
+             * Invoked when failure occurs.
+             * @param t t
+             * @return @Override
+            public void
+             */
+
             @Override
             public void onFailure(Throwable t) {
                 callback.onFailure(t);
@@ -917,10 +1070,23 @@ public class DefaultWebSocketService implements WebSocketService {
 
     private <T> FutureCallback<ValidationResult> getAttributesFetchCallback(final TenantId tenantId, final EntityId entityId, final String scope, final List<String> keys, final FutureCallback<List<AttributeKvEntry>> callback) {
         return new FutureCallback<ValidationResult>() {
+            /**
+             * Invoked when success occurs.
+             * @param result result
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(@Nullable ValidationResult result) {
                 Futures.addCallback(attributesService.find(tenantId, entityId, AttributeScope.valueOf(scope), keys), callback, MoreExecutors.directExecutor());
             }
+
+            /**
+             * Invoked when failure occurs.
+             * @param t t
+             * @return @Override
+            public void
+             */
 
             @Override
             public void onFailure(Throwable t) {
@@ -931,6 +1097,12 @@ public class DefaultWebSocketService implements WebSocketService {
 
     private <T> FutureCallback<ValidationResult> getAttributesFetchCallback(final TenantId tenantId, final EntityId entityId, final FutureCallback<List<AttributeKvEntry>> callback) {
         return new FutureCallback<ValidationResult>() {
+            /**
+             * Invoked when success occurs.
+             * @param result result
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(@Nullable ValidationResult result) {
                 List<ListenableFuture<List<AttributeKvEntry>>> futures = new ArrayList<>();
@@ -942,6 +1114,13 @@ public class DefaultWebSocketService implements WebSocketService {
                 Futures.addCallback(future, callback, MoreExecutors.directExecutor());
             }
 
+            /**
+             * Invoked when failure occurs.
+             * @param t t
+             * @return @Override
+            public void
+             */
+
             @Override
             public void onFailure(Throwable t) {
                 callback.onFailure(t);
@@ -951,10 +1130,23 @@ public class DefaultWebSocketService implements WebSocketService {
 
     private <T> FutureCallback<ValidationResult> getAttributesFetchCallback(final TenantId tenantId, final EntityId entityId, final String scope, final FutureCallback<List<AttributeKvEntry>> callback) {
         return new FutureCallback<ValidationResult>() {
+            /**
+             * Invoked when success occurs.
+             * @param result result
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(@Nullable ValidationResult result) {
                 Futures.addCallback(attributesService.findAll(tenantId, entityId, AttributeScope.valueOf(scope)), callback, MoreExecutors.directExecutor());
             }
+
+            /**
+             * Invoked when failure occurs.
+             * @param t t
+             * @return @Override
+            public void
+             */
 
             @Override
             public void onFailure(Throwable t) {
@@ -965,6 +1157,12 @@ public class DefaultWebSocketService implements WebSocketService {
 
     private FutureCallback<ValidationResult> on(Consumer<Void> success, Consumer<Throwable> failure) {
         return new FutureCallback<ValidationResult>() {
+            /**
+             * Invoked when success occurs.
+             * @param result result
+             * @return @Override
+            public void
+             */
             @Override
             public void onSuccess(@Nullable ValidationResult result) {
                 ValidationResultCode resultCode = result.getResultCode();
@@ -975,12 +1173,28 @@ public class DefaultWebSocketService implements WebSocketService {
                 }
             }
 
+            /**
+             * Invoked when failure occurs.
+             * @param t t
+             * @return @Override
+            public void
+             */
+
             @Override
             public void onFailure(Throwable t) {
                 failure.accept(t);
             }
         };
     }
+
+
+    /**
+     * Returns aggregation.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param agg agg
+     * @return {@link Aggregation}
+     */
 
 
     public static Aggregation getAggregation(String agg) {
@@ -996,7 +1210,12 @@ public class DefaultWebSocketService implements WebSocketService {
                 .map(TenantProfile::getDefaultProfileConfiguration).orElse(null);
     }
 
-    public static <C extends WsCmd> WsCmdHandler<C> newCmdHandler(BiConsumer<WebSocketSessionRef, C> handler) {
+    /**
+     * New cmd handler.
+     * @param handler handler
+     */
+
+public static <C extends WsCmd> WsCmdHandler<C> newCmdHandler(BiConsumer<WebSocketSessionRef, C> handler) {
         return new WsCmdHandler<>(handler);
     }
 
@@ -1005,6 +1224,12 @@ public class DefaultWebSocketService implements WebSocketService {
     @SuppressWarnings("unchecked")
     public static class WsCmdHandler<C extends WsCmd> {
         protected final BiConsumer<WebSocketSessionRef, C> handler;
+
+        /**
+         * Handles handle.
+         * @param sessionRef reference to the WebSocket session
+         * @param cmd cmd
+         */
 
         public void handle(WebSocketSessionRef sessionRef, WsCmd cmd) {
             handler.accept(sessionRef, (C) cmd);

@@ -18,9 +18,24 @@ package org.thingsboard.server.service.ws;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
+/**
+ * Marker for inbound WebSocket command DTOs deserialized from JSON; exposes command id and {@link WsCmdType}.
+ */
+
+
 public interface WsCmd {
 
+    /**
+     * Returns cmd id.
+     * @return numeric result
+     */
+
     int getCmdId();
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @JsonIgnore
     WsCmdType getType();

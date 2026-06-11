@@ -41,12 +41,24 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+/**
+ * Processes dashboard edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class DashboardEdgeProcessor extends BaseDashboardProcessor implements DashboardProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param dashboardUpdateMsg dashboard update msg (DashboardUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processDashboardMsgFromEdge(TenantId tenantId, Edge edge, DashboardUpdateMsg dashboardUpdateMsg) {
         log.trace("[{}] executing processDashboardMsgFromEdge [{}] from edge [{}]", tenantId, dashboardUpdateMsg, edge.getId());
@@ -91,7 +103,13 @@ public class DashboardEdgeProcessor extends BaseDashboardProcessor implements Da
         Dashboard dashboard = edgeCtx.getDashboardService().findDashboardById(tenantId, dashboardId);
         pushEntityEventToRuleEngine(tenantId, edge, dashboard, TbMsgType.ENTITY_CREATED);
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         DashboardId dashboardId = new DashboardId(edgeEvent.getEntityId());
@@ -117,7 +135,15 @@ public class DashboardEdgeProcessor extends BaseDashboardProcessor implements Da
         }
         return null;
     }
-
+    /**
+     * Filter non existing customers.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeCustomerId edge customer id (CustomerId)
+     * @param currentAssignedCustomers current assigned customers (Set<ShortCustomerInfo>)
+     * @param newAssignedCustomers new assigned customers (Set<ShortCustomerInfo>)
+     * @return {@link Set} result
+     */
     @Override
     protected Set<ShortCustomerInfo> filterNonExistingCustomers(TenantId tenantId, CustomerId edgeCustomerId, Set<ShortCustomerInfo> currentAssignedCustomers, Set<ShortCustomerInfo> newAssignedCustomers) {
         boolean edgeCustomerPresentInNewAssignments = newAssignedCustomers.stream()
@@ -135,6 +161,10 @@ public class DashboardEdgeProcessor extends BaseDashboardProcessor implements Da
         }
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.DASHBOARD;

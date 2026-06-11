@@ -136,6 +136,12 @@ import static org.thingsboard.server.controller.ControllerConstants.TELEMETRY_SC
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.TS_STRICT_DATA_EXAMPLE;
 
+/**
+ * REST API for entity telemetry and attributes.
+ * 
+ * <p>Base path: {@code /api/plugins/telemetry}. Read/write attributes and time-series for devices and other entities.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping(TbUrlConstants.TELEMETRY_URL_PREFIX)
@@ -153,6 +159,20 @@ public class TelemetryController extends BaseController {
 
     private ExecutorService executor;
 
+    /**
+
+     * Creates the background executor used for telemetry controller callbacks.
+
+     * 
+
+     * <p><b>HTTP:</b> not applicable (Spring lifecycle callback)
+
+     * <p><b>Auth:</b> not applicable
+
+     * @return empty response body
+
+     */
+
     @PostConstruct
     public void initExecutor() {
         executor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("telemetry-controller"));
@@ -165,6 +185,16 @@ public class TelemetryController extends BaseController {
         }
     }
 
+    /**
+     * Get all attribute keys.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/plugins/telemetry/{entityType}/{entityId}/keys/attributes}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get all attribute keys (getAttributeKeys)",
             notes = "Returns a set of unique attribute key names for the selected entity. " +
                     "The response will include merged key names set for all attribute scopes:" +
@@ -181,6 +211,17 @@ public class TelemetryController extends BaseController {
         return accessValidator.validateEntityAndCallback(getCurrentUser(), Operation.READ_ATTRIBUTES, entityType, entityIdStr, this::getAttributeKeysCallback);
     }
 
+    /**
+     * Get all attribute keys by scope.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/plugins/telemetry/{entityType}/{entityId}/keys/attributes/{scope}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param scope scope
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get all attribute keys by scope (getAttributeKeysByScope)",
             notes = "Returns a set of unique attribute key names for the selected entity and attributes scope: " +
                     "\n\n * SERVER_SCOPE - supported for all entity types;" +
@@ -209,6 +250,18 @@ public class TelemetryController extends BaseController {
     @Parameters({
             @Parameter(name = "key", description = "Repeatable key query parameter (alternative to comma-separated 'keys')", in = ParameterIn.QUERY, required = false, array = @ArraySchema(schema = @Schema(type = "string")))
     })
+    /**
+     * Get attributes.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/plugins/telemetry/{entityType}/{entityId}/values/attributes}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param keysStr keys Str
+     * @param params params
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/{entityType}/{entityId}/values/attributes")
     public DeferredResult<ResponseEntity> getAttributes(
@@ -237,6 +290,19 @@ public class TelemetryController extends BaseController {
     @Parameters({
             @Parameter(name = "key", description = "Repeatable key query parameter (alternative to comma-separated 'keys')", in = ParameterIn.QUERY, required = false, array = @ArraySchema(schema = @Schema(type = "string")))
     })
+    /**
+     * Get attributes by scope.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/plugins/telemetry/{entityType}/{entityId}/values/attributes/{scope}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param scope scope
+     * @param keysStr keys Str
+     * @param params params
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/{entityType}/{entityId}/values/attributes/{scope}")
     public DeferredResult<ResponseEntity> getAttributesByScope(
@@ -252,6 +318,16 @@ public class TelemetryController extends BaseController {
                 (result, tenantId, entityId) -> getAttributeValuesCallback(result, user, entityId, scope, keys));
     }
 
+    /**
+     * Get time series keys.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/plugins/telemetry/{entityType}/{entityId}/keys/timeseries}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get time series keys (getTimeseriesKeys)",
             notes = "Returns a set of unique time series key names for the selected entity. " +
                     "\n\n" + INVALID_ENTITY_ID_OR_ENTITY_TYPE_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH,
@@ -281,6 +357,19 @@ public class TelemetryController extends BaseController {
     @Parameters({
             @Parameter(name = "key", description = "Repeatable key query parameter (alternative to comma-separated 'keys')", in = ParameterIn.QUERY, required = false, array = @ArraySchema(schema = @Schema(type = "string")))
     })
+    /**
+     * Get latest timeseries.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/plugins/telemetry/{entityType}/{entityId}/values/timeseries}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param keysStr keys Str
+     * @param useStrictDataTypes use Strict Data Types
+     * @param params params
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/{entityType}/{entityId}/values/timeseries")
     public DeferredResult<ResponseEntity> getLatestTimeseries(
@@ -297,6 +386,27 @@ public class TelemetryController extends BaseController {
                 (result, tenantId, entityId) -> getLatestTimeseriesValuesCallback(result, user, entityId, keys, useStrictDataTypes));
     }
 
+    /**
+     * Get timeseries.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/plugins/telemetry/{entityType}/{entityId}/values/timeseries}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param keysStr keys Str
+     * @param startTs start Ts
+     * @param endTs end Ts
+     * @param intervalType interval Type
+     * @param interval interval
+     * @param timeZone time Zone
+     * @param limit limit
+     * @param aggStr agg Str
+     * @param orderBy order By
+     * @param useStrictDataTypes use Strict Data Types
+     * @param params params
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/{entityType}/{entityId}/values/timeseries", params = {"startTs", "endTs"})
@@ -335,6 +445,27 @@ public class TelemetryController extends BaseController {
     @Parameters({
             @Parameter(name = "key", description = "Repeatable key query parameter (alternative to comma-separated 'keys')", in = ParameterIn.QUERY, required = false, array = @ArraySchema(schema = @Schema(type = "string")))
     })
+    /**
+     * Get timeseries history.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/plugins/telemetry/{entityType}/{entityId}/values/timeseries/history}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param keysStr keys Str
+     * @param startTs start Ts
+     * @param endTs end Ts
+     * @param intervalType interval Type
+     * @param interval interval
+     * @param timeZone time Zone
+     * @param limit limit
+     * @param aggStr agg Str
+     * @param orderBy order By
+     * @param useStrictDataTypes use Strict Data Types
+     * @param params params
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/{entityType}/{entityId}/values/timeseries/history")
     public DeferredResult<ResponseEntity> getTimeseriesHistory(
@@ -380,6 +511,17 @@ public class TelemetryController extends BaseController {
             @ApiResponse(responseCode = "500", description = "The exception was thrown during processing the request. " +
                     "Platform creates an audit log event about device attributes updates with action type 'ATTRIBUTES_UPDATED' that includes an error stacktrace."),
     })
+    /**
+     * Save device attributes.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/plugins/telemetry/{deviceId}/{scope}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param deviceIdStr device Id Str
+     * @param scope scope
+     * @param request request
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping(value = "/{deviceId}/{scope}")
     public DeferredResult<ResponseEntity> saveDeviceAttributes(@Parameter(description = DEVICE_ID_PARAM_DESCRIPTION, required = true)
@@ -404,6 +546,18 @@ public class TelemetryController extends BaseController {
             @ApiResponse(responseCode = "401", description = SAVE_ENTITY_ATTRIBUTES_STATUS_UNAUTHORIZED),
             @ApiResponse(responseCode = "500", description = SAVE_ENTITY_ATTRIBUTES_STATUS_INTERNAL_SERVER_ERROR),
     })
+    /**
+     * Save entity attributes v1.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/plugins/telemetry/{entityType}/{entityId}/{scope}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param scope scope
+     * @param request request
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping(value = "/{entityType}/{entityId}/{scope}")
     public DeferredResult<ResponseEntity> saveEntityAttributesV1(@Parameter(description = ENTITY_TYPE_PARAM_DESCRIPTION, required = true, schema = @Schema(defaultValue = "DEVICE"))
@@ -430,6 +584,18 @@ public class TelemetryController extends BaseController {
             @ApiResponse(responseCode = "401", description = SAVE_ENTITY_ATTRIBUTES_STATUS_UNAUTHORIZED),
             @ApiResponse(responseCode = "500", description = SAVE_ENTITY_ATTRIBUTES_STATUS_INTERNAL_SERVER_ERROR),
     })
+    /**
+     * Save entity attributes v2.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/plugins/telemetry/{entityType}/{entityId}/attributes/{scope}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param scope scope
+     * @param request request
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping(value = "/{entityType}/{entityId}/attributes/{scope}")
     public DeferredResult<ResponseEntity> saveEntityAttributesV2(@Parameter(description = ENTITY_TYPE_PARAM_DESCRIPTION, required = true, schema = @Schema(defaultValue = "DEVICE"))
@@ -457,6 +623,18 @@ public class TelemetryController extends BaseController {
             @ApiResponse(responseCode = "401", description = SAVE_ENTITY_TIMESERIES_STATUS_UNAUTHORIZED),
             @ApiResponse(responseCode = "500", description = SAVE_ENTITY_TIMESERIES_STATUS_INTERNAL_SERVER_ERROR),
     })
+    /**
+     * Save entity telemetry.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/plugins/telemetry/{entityType}/{entityId}/timeseries/{scope}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param scope scope
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping(value = "/{entityType}/{entityId}/timeseries/{scope}")
     public DeferredResult<ResponseEntity> saveEntityTelemetry(
@@ -481,6 +659,19 @@ public class TelemetryController extends BaseController {
             @ApiResponse(responseCode = "401", description = SAVE_ENTITY_TIMESERIES_STATUS_UNAUTHORIZED),
             @ApiResponse(responseCode = "500", description = SAVE_ENTITY_TIMESERIES_STATUS_INTERNAL_SERVER_ERROR),
     })
+    /**
+     * Save entity telemetry with ttl.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/plugins/telemetry/{entityType}/{entityId}/timeseries/{scope}/{ttl}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param scope scope
+     * @param ttl ttl
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping(value = "/{entityType}/{entityId}/timeseries/{scope}/{ttl}")
     public DeferredResult<ResponseEntity> saveEntityTelemetryWithTTL(
@@ -513,6 +704,23 @@ public class TelemetryController extends BaseController {
             @ApiResponse(responseCode = "500", description = "The exception was thrown during processing the request. " +
                     "Platform creates an audit log event about entity time series removal with action type 'TIMESERIES_DELETED' that includes an error stacktrace."),
     })
+    /**
+     * Delete entity timeseries.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/plugins/telemetry/{entityType}/{entityId}/timeseries/delete}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param keysStr keys Str
+     * @param deleteAllDataForKeys delete All Data For Keys
+     * @param startTs start Ts
+     * @param endTs end Ts
+     * @param deleteLatest delete Latest
+     * @param rewriteLatestIfDeleted rewrite Latest If Deleted
+     * @param params params
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @DeleteMapping(value = "/{entityType}/{entityId}/timeseries/delete")
     public DeferredResult<ResponseEntity> deleteEntityTimeseries(
@@ -598,6 +806,18 @@ public class TelemetryController extends BaseController {
             @ApiResponse(responseCode = "500", description = "The exception was thrown during processing the request. " +
                     "Platform creates an audit log event about device attributes removal with action type 'ATTRIBUTES_DELETED' that includes an error stacktrace."),
     })
+    /**
+     * Delete device attributes.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/plugins/telemetry/{deviceId}/{scope}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param deviceIdStr device Id Str
+     * @param scope scope
+     * @param keysStr keys Str
+     * @param params params
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @DeleteMapping(value = "/{deviceId}/{scope}")
     public DeferredResult<ResponseEntity> deleteDeviceAttributes(
@@ -626,6 +846,19 @@ public class TelemetryController extends BaseController {
             @ApiResponse(responseCode = "500", description = "The exception was thrown during processing the request. " +
                     "Platform creates an audit log event about entity attributes removal with action type 'ATTRIBUTES_DELETED' that includes an error stacktrace."),
     })
+    /**
+     * Delete entity attributes.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/plugins/telemetry/{entityType}/{entityId}/{scope}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param scope scope
+     * @param keysStr keys Str
+     * @param params params
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @DeleteMapping(value = "/{entityType}/{entityId}/{scope}")
     public DeferredResult<ResponseEntity> deleteEntityAttributes(

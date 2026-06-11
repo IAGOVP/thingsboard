@@ -20,12 +20,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.thingsboard.server.service.ws.WsCmd;
 import org.thingsboard.server.service.ws.WsCmdType;
+/**
+ * WebSocket command DTO for mark all notifications as read.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MarkAllNotificationsAsReadCmd implements WsCmd {
     private int cmdId;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

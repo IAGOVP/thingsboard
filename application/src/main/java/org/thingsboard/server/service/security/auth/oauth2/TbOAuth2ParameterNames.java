@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.service.security.auth.oauth2;
 
+/**
+ * Contract for tb oauth2parameter names in OAuth2 / social login.
+ */
+
 public interface TbOAuth2ParameterNames {
 
     String CALLBACK_URL_SCHEME = "callback_url_scheme";

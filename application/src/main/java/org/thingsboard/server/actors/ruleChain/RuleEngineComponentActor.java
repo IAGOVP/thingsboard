@@ -26,11 +26,25 @@ import org.thingsboard.server.common.data.notification.rule.trigger.RuleEngineCo
 import org.thingsboard.server.common.data.plugin.ComponentLifecycleEvent;
 import org.thingsboard.server.common.msg.TbActorStopReason;
 
+/**
+
+ * Base class for rule-chain and rule-node actors with shared lifecycle and debug handling.
+
+ */
+
 public abstract class RuleEngineComponentActor<T extends EntityId, P extends ComponentMsgProcessor<T>> extends ComponentActor<T, P> {
 
     public RuleEngineComponentActor(ActorSystemContext systemContext, TenantId tenantId, T id) {
         super(systemContext, tenantId, id);
     }
+    /**
+     * Log lifecycle event.
+     *
+     * @param event event ({@link ComponentLifecycleEvent})
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void logLifecycleEvent(ComponentLifecycleEvent event, Exception e) {
@@ -40,6 +54,16 @@ public abstract class RuleEngineComponentActor<T extends EntityId, P extends Com
         }
         processNotificationRule(event, e);
     }
+    
+    /**
+     * Stops child actors and releases resources before the actor terminates.
+     *
+     * @param stopReason stop reason ({@link TbActorStopReason})
+     * @param cause cause ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public void destroy(TbActorStopReason stopReason, Throwable cause) {
@@ -63,8 +87,20 @@ public abstract class RuleEngineComponentActor<T extends EntityId, P extends Com
                 .error(e)
                 .build());
     }
+    /**
+     * Returns rule chain id.
+     *
+     * @return {@link RuleChainId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract RuleChainId getRuleChainId();
+    /**
+     * Returns rule chain name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getRuleChainName();
 

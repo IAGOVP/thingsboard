@@ -77,6 +77,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
+/**
+ * Edge grpc session for edge gRPC session lifecycle.
+ */
 
 @Slf4j
 @RequiredArgsConstructor
@@ -102,14 +105,27 @@ public class EdgeGrpcSession implements EdgeSession {
 
     private int clientMaxInboundMessageSize;
 
+    /**
+     * Returns state.
+     *
+     */
     @Override
     public EdgeSessionState getState() {
         return state;
     }
 
+    /**
+     * Initializes resources required by this component.
+     *
+     */
     @Override
     public StreamObserver<RequestMsg> initInputStream() {
         return new StreamObserver<>() {
+            /**
+             * On next.
+             *
+             * @param requestMsg request msg (RequestMsg)
+             */
             @Override
             public void onNext(RequestMsg requestMsg) {
                 if (!state.isConnected() && requestMsg.getMsgType().equals(RequestMsgType.CONNECT_RPC_MESSAGE)) {
@@ -152,12 +168,21 @@ public class EdgeGrpcSession implements EdgeSession {
                 }
             }
 
+            /**
+             * On error.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onError(Throwable t) {
                 log.trace("[{}][{}] Stream was terminated due to error:", getTenantId(), getSessionId(), t);
                 closeSession();
             }
 
+            /**
+             * On completed.
+             *
+             */
             @Override
             public void onCompleted() {
                 log.info("[{}][{}] Stream was closed and completed successfully!", getTenantId(), getSessionId());
@@ -180,6 +205,11 @@ public class EdgeGrpcSession implements EdgeSession {
         };
     }
 
+    /**
+     * Start sync process.
+     *
+     * @param fullSync full sync (boolean)
+     */
     @Override
     public void startSyncProcess(boolean fullSync) {
         if (state.tryStartSync()) {
@@ -192,6 +222,11 @@ public class EdgeGrpcSession implements EdgeSession {
         }
     }
 
+    /**
+     * Send downlink msg.
+     *
+     * @param responseMsg response msg (ResponseMsg)
+     */
     @Override
     public void sendDownlinkMsg(ResponseMsg responseMsg) {
         if (state.isConnected()) {
@@ -212,6 +247,11 @@ public class EdgeGrpcSession implements EdgeSession {
         }
     }
 
+    /**
+     * Add high priority event.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     */
     @Override
     public void addHighPriorityEvent(EdgeEvent edgeEvent) {
         while (highPriorityQueue.size() > maxHighPriorityQueueSizePerSession) {
@@ -226,6 +266,10 @@ public class EdgeGrpcSession implements EdgeSession {
                 statsCounterService.recordEvent(EdgeStatsKey.DOWNLINK_MSGS_ADDED, state.getEdge().getTenantId(), edgeEvent.getEdgeId(), 1));
     }
 
+    /**
+     * Processes high priority events.
+     *
+     */
     @Override
     public void processHighPriorityEvents() {
         try {
@@ -247,11 +291,21 @@ public class EdgeGrpcSession implements EdgeSession {
         }
     }
 
+    /**
+     * Has high priority events.
+     *
+     */
     @Override
     public boolean hasHighPriorityEvents() {
         return !highPriorityQueue.isEmpty();
     }
 
+    /**
+     * Fetches and send edge events for edge synchronization.
+     *
+     * @param fetcher fetcher (EdgeEventFetcher)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Pair<Long, Long>> fetchAndSendEdgeEvents(EdgeEventFetcher fetcher) {
         SettableFuture<Pair<Long, Long>> result = SettableFuture.create();
@@ -259,7 +313,12 @@ public class EdgeGrpcSession implements EdgeSession {
         fetchAndSendEdgeEvents(fetcher, pageLink, result);
         return result;
     }
-
+    /**
+     * Send downlink msgs pack.
+     *
+     * @param downlinkMsgsPack downlink msgs pack (List<DownlinkMsg>)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Boolean> sendDownlinkMsgsPack(List<DownlinkMsg> downlinkMsgsPack) {
         interruptPreviousSendDownlinkMsgsTask();
@@ -272,7 +331,10 @@ public class EdgeGrpcSession implements EdgeSession {
 
         return state.getSendDownlinkMsgsFuture();
     }
-
+    /**
+     * Close.
+     *
+     */
     @Override
     public void close() {
         log.debug("[{}][{}] Closing session", getTenantId(), getSessionId());
@@ -289,11 +351,21 @@ public class EdgeGrpcSession implements EdgeSession {
             return;
         }
         Futures.addCallback(uplinkMessageDispatcher.processUplinkMsg(state, uplinkMsg), new FutureCallback<>() {
+            /**
+             * On success.
+             *
+             * @param result result (@Nullable List<Void>)
+             */
             @Override
             public void onSuccess(@Nullable List<Void> result) {
                 sendResponseMessage(uplinkMsg.getUplinkMsgId(), true, null);
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 String errorMsg = EdgeUtils.createErrorMsgFromRootCauseAndStackTrace(t);
@@ -359,11 +431,21 @@ public class EdgeGrpcSession implements EdgeSession {
                     getTenantId(), getEdgeId(), cursor.getCurrentIdx(), next.getClass().getSimpleName());
             ListenableFuture<Pair<Long, Long>> future = fetchAndSendEdgeEvents(next);
             Futures.addCallback(future, new FutureCallback<>() {
+                /**
+                 * On success.
+                 *
+                 * @param result result (@Nullable Pair<Long, Long>)
+                 */
                 @Override
                 public void onSuccess(@Nullable Pair<Long, Long> result) {
                     doSync(cursor);
                 }
 
+                /**
+                 * On failure.
+                 *
+                 * @param t t (Throwable)
+                 */
                 @Override
                 public void onFailure(Throwable t) {
                     log.error("[{}][{}] Exception during sync process", getTenantId(), getEdgeId(), t);
@@ -376,11 +458,21 @@ public class EdgeGrpcSession implements EdgeSession {
                     .setSyncCompletedMsg(SyncCompletedMsg.newBuilder().build())
                     .build();
             Futures.addCallback(sendDownlinkMsgsPack(Collections.singletonList(syncCompleteDownlinkMsg)), new FutureCallback<>() {
+                /**
+                 * On success.
+                 *
+                 * @param isInterrupted is interrupted (Boolean)
+                 */
                 @Override
                 public void onSuccess(Boolean isInterrupted) {
                     markSyncCompletedSendEdgeEventUpdate();
                 }
 
+                /**
+                 * On failure.
+                 *
+                 * @param t t (Throwable)
+                 */
                 @Override
                 public void onFailure(Throwable t) {
                     log.error("[{}][{}] Exception during sending sync complete", getTenantId(), getEdgeId(), t);
@@ -412,6 +504,11 @@ public class EdgeGrpcSession implements EdgeSession {
                 log.trace("[{}][{}][{}] event(s) are going to be processed.", tenantId, edge.getId(), pageData.getData().size());
                 List<DownlinkMsg> downlinkMsgsPack = downlinkMessageMapper.convertToDownlinkMsgsPack(state, pageData.getData());
                 Futures.addCallback(sendDownlinkMsgsPack(downlinkMsgsPack), new FutureCallback<>() {
+                    /**
+                     * On success.
+                     *
+                     * @param isInterrupted is interrupted (@Nullable Boolean)
+                     */
                     @Override
                     public void onSuccess(@Nullable Boolean isInterrupted) {
                         if (Boolean.TRUE.equals(isInterrupted)) {
@@ -434,6 +531,11 @@ public class EdgeGrpcSession implements EdgeSession {
                         }
                     }
 
+                    /**
+                     * On failure.
+                     *
+                     * @param t t (Throwable)
+                     */
                     @Override
                     public void onFailure(Throwable t) {
                         log.error("[{}] Failed to send downlink msgs pack", edge.getId(), t);

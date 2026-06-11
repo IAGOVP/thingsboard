@@ -19,10 +19,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.thingsboard.server.service.ws.WsCmdType;
-
 /**
- * @author Andrew Shvayka
+ * WebSocket command DTO for get history.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
  */
+
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -37,6 +39,11 @@ public class GetHistoryCmd implements TelemetryPluginCmd {
     private long interval;
     private int limit;
     private String agg;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

@@ -21,10 +21,23 @@ import org.thingsboard.common.util.NumberUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+
+ * Argument or aggregation entry for calculated-field state (avg agg entry).
+
+ */
+
 public class AvgAggEntry extends BaseAggEntry {
 
     private BigDecimal sum = BigDecimal.ZERO;
     private long count = 0L;
+    /**
+     * Do update.
+     *
+     * @param value value
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void doUpdate(double value) {
@@ -33,12 +46,25 @@ public class AvgAggEntry extends BaseAggEntry {
         }
         this.count++;
     }
+    /**
+     * Prepare result.
+     *
+     * @param precision precision ({@link Integer})
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Object prepareResult(Integer precision) {
         double result = sum.divide(BigDecimal.valueOf(count), RoundingMode.HALF_UP).doubleValue();
         return NumberUtils.roundResult(result, precision);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link AggFunction}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AggFunction getType() {

@@ -87,9 +87,11 @@ import org.thingsboard.server.service.security.permission.Resource;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.BiConsumer;
-
 /**
- * Created by ashvayka on 27.03.18.
+ * Access validator for platform security.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ * <p><b>Key dependencies:</b> {@link #tenantService}, {@link #customerService}, {@link #userService}, {@link #deviceService}, {@link #deviceProfileService}, {@link #assetProfileService}, {@link #assetService}, {@link #alarmService}.
  */
 @Component
 public class AccessValidator {
@@ -151,11 +153,19 @@ public class AccessValidator {
 
     private ExecutorService executor;
 
+    /**
+     * Initializes resources required by this component.
+     *
+     */
     @PostConstruct
     public void initExecutor() {
         executor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("access-validator"));
     }
 
+    /**
+     * Releases resources and shuts down background executors.
+     *
+     */
     @PreDestroy
     public void shutdownExecutor() {
         if (executor != null) {
@@ -163,10 +173,35 @@ public class AccessValidator {
         }
     }
 
+    /**
+     * Validates entity and callback and invokes the callback with the result.
+     *
+     * @param currentUser current user (SecurityUser)
+     * @param operation operation (Operation)
+     * @param entityType entity type (String)
+     * @param entityIdStr entity id str (String)
+     * @param onSuccess on success (ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId>)
+     * @return {@link DeferredResult} result
+     * @throws ThingsboardException if the operation fails
+     */
+
     public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, String entityType, String entityIdStr,
                                                                     ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws ThingsboardException {
         return validateEntityAndCallback(currentUser, operation, entityType, entityIdStr, onSuccess, (result, t) -> handleError(t, result, HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
+    /**
+     * Validates entity and callback and invokes the callback with the result.
+     *
+     * @param currentUser current user (SecurityUser)
+     * @param operation operation (Operation)
+     * @param entityType entity type (String)
+     * @param entityIdStr entity id str (String)
+     * @param onSuccess on success (ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId>)
+     * @param onFailure on failure (BiConsumer<DeferredResult<ResponseEntity>, Throwable>)
+     * @return {@link DeferredResult} result
+     * @throws ThingsboardException if the operation fails
+     */
 
     public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, String entityType, String entityIdStr,
                                                                     ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess,
@@ -175,10 +210,33 @@ public class AccessValidator {
                 onSuccess, onFailure);
     }
 
+    /**
+     * Validates entity and callback and invokes the callback with the result.
+     *
+     * @param currentUser current user (SecurityUser)
+     * @param operation operation (Operation)
+     * @param entityId entity id (EntityId)
+     * @param onSuccess on success (ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId>)
+     * @return {@link DeferredResult} result
+     * @throws ThingsboardException if the operation fails
+     */
+
     public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, EntityId entityId,
                                                                     ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess) throws ThingsboardException {
         return validateEntityAndCallback(currentUser, operation, entityId, onSuccess, (result, t) -> handleError(t, result, HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
+    /**
+     * Validates entity and callback and invokes the callback with the result.
+     *
+     * @param currentUser current user (SecurityUser)
+     * @param operation operation (Operation)
+     * @param entityId entity id (EntityId)
+     * @param onSuccess on success (ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId>)
+     * @param onFailure on failure (BiConsumer<DeferredResult<ResponseEntity>, Throwable>)
+     * @return {@link DeferredResult} result
+     * @throws ThingsboardException if the operation fails
+     */
 
     public DeferredResult<ResponseEntity> validateEntityAndCallback(SecurityUser currentUser, Operation operation, EntityId entityId,
                                                                     ThreeConsumer<DeferredResult<ResponseEntity>, TenantId, EntityId> onSuccess,
@@ -188,6 +246,11 @@ public class AccessValidator {
 
         validate(currentUser, operation, entityId, new HttpValidationCallback(response,
                 new FutureCallback<DeferredResult<ResponseEntity>>() {
+                    /**
+                     * On success.
+                     *
+                     * @param result result (@Nullable DeferredResult<ResponseEntity>)
+                     */
                     @Override
                     public void onSuccess(@Nullable DeferredResult<ResponseEntity> result) {
                         try {
@@ -197,6 +260,11 @@ public class AccessValidator {
                         }
                     }
 
+                    /**
+                     * On failure.
+                     *
+                     * @param t t (Throwable)
+                     */
                     @Override
                     public void onFailure(Throwable t) {
                         onFailure.accept(response, t);
@@ -205,6 +273,15 @@ public class AccessValidator {
 
         return response;
     }
+
+    /**
+     * Validates the request and invokes the callback with the result.
+     *
+     * @param currentUser current user (SecurityUser)
+     * @param operation operation (Operation)
+     * @param entityId entity id (EntityId)
+     * @param callback callback (FutureCallback<ValidationResult>)
+     */
 
     public void validate(SecurityUser currentUser, Operation operation, EntityId entityId, FutureCallback<ValidationResult> callback) {
         switch (entityId.getEntityType()) {
@@ -528,17 +605,35 @@ public class AccessValidator {
 
     private <T, V> FutureCallback<T> getCallback(FutureCallback<ValidationResult> callback, Function<T, ValidationResult<V>> transformer) {
         return new FutureCallback<T>() {
+            /**
+             * On success.
+             *
+             * @param result result (@Nullable T)
+             */
             @Override
             public void onSuccess(@Nullable T result) {
                 callback.onSuccess(transformer.apply(result));
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 callback.onFailure(t);
             }
         };
     }
+
+    /**
+     * Handles error.
+     *
+     * @param e e (Throwable)
+     * @param response response (final DeferredResult<ResponseEntity>)
+     * @param defaultErrorStatus default error status (HttpStatus)
+     */
 
     public static void handleError(Throwable e, final DeferredResult<ResponseEntity> response, HttpStatus defaultErrorStatus) {
         ResponseEntity responseEntity;

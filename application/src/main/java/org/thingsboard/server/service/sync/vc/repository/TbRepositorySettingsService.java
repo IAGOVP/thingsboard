@@ -18,13 +18,57 @@ package org.thingsboard.server.service.sync.vc.repository;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.sync.vc.RepositorySettings;
 
+
+/**
+
+ * Service contract for tb repository settings operations (Git-based entity version control (entity version control, Git repository sync, and import/export)).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
+
 public interface TbRepositorySettingsService {
+/**
+ * Restore.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param versionControlSettings version control settings ({@link RepositorySettings})
+ * @return {@link RepositorySettings}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     RepositorySettings restore(TenantId tenantId, RepositorySettings versionControlSettings);
+/**
+ * Returns the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @return {@link RepositorySettings}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     RepositorySettings get(TenantId tenantId);
+/**
+ * Saves or persists the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param versionControlSettings version control settings ({@link RepositorySettings})
+ * @return {@link RepositorySettings}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     RepositorySettings save(TenantId tenantId, RepositorySettings versionControlSettings);
+/**
+ * Deletes the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @return the boolean result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     boolean delete(TenantId tenantId);
 

@@ -27,6 +27,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiConsumer;
+/**
+ * Rule-engine message submit strategy: sequential by entity id tb rule engine submit strategy.
+ * <p>Controls parallelism and ordering when a pack of {@code TbMsg} is handed to actors.
+ */
 
 @Slf4j
 public abstract class SequentialByEntityIdTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSubmitStrategy {
@@ -35,15 +39,36 @@ public abstract class SequentialByEntityIdTbRuleEngineSubmitStrategy extends Abs
     private volatile ConcurrentMap<UUID, EntityId> msgToEntityIdMap = new ConcurrentHashMap<>();
     private volatile ConcurrentMap<EntityId, Queue<IdMsgPair<TransportProtos.ToRuleEngineMsg>>> entityIdToListMap = new ConcurrentHashMap<>();
 
+    /**
+     * Constructs {@link SequentialByEntityIdTbRuleEngineSubmitStrategy} with the supplied dependencies and configuration.
+     * @param queueName queue name
+     */
+
     public SequentialByEntityIdTbRuleEngineSubmitStrategy(String queueName) {
         super(queueName);
     }
+
+    /**
+     * Initializes init.
+     * @param msgs msgs
+     * @return @Override
+    public void
+     */
 
     @Override
     public void init(List<TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgs) {
         super.init(msgs);
         initMaps();
     }
+
+    /**
+     * Submits attempt.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param msgConsumer msg consumer
+     * @return @Override
+    public void
+     */
 
     @Override
     public void submitAttempt(BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer) {
@@ -56,11 +81,27 @@ public abstract class SequentialByEntityIdTbRuleEngineSubmitStrategy extends Abs
         });
     }
 
+    /**
+     * Updates update.
+     * @param reprocessMap reprocess map
+     * @return @Override
+    public void
+     */
+
     @Override
     public void update(ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> reprocessMap) {
         super.update(reprocessMap);
         initMaps();
     }
+
+    /**
+     * Do on success.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param id id
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void doOnSuccess(UUID id) {
@@ -94,6 +135,12 @@ public abstract class SequentialByEntityIdTbRuleEngineSubmitStrategy extends Abs
             }
         }
     }
+
+    /**
+     * Returns entity id.
+     * @param msg queue or transport message
+     * @return {@link EntityId}
+     */
 
     protected abstract EntityId getEntityId(TransportProtos.ToRuleEngineMsg msg);
 

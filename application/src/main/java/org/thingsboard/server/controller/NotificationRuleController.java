@@ -56,6 +56,12 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.service.security.permission.Resource.NOTIFICATION;
 
+/**
+ * REST API for notification rules.
+ * 
+ * <p>Base path: {@code /api/notification}. Defines when and how platform events trigger notifications.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api/notification")
@@ -65,6 +71,16 @@ public class NotificationRuleController extends BaseController {
 
     private final NotificationRuleService notificationRuleService;
 
+    /**
+     * Save notification rule.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/notification/rule}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param notificationRule rule payload; tenant id is taken from the authenticated user
+     * @param user authenticated system or tenant administrator
+     * @return saved {@link NotificationRule}
+     * @throws Exception if validation, permission check, or persistence fails
+     */
     @ApiOperation(value = "Save notification rule (saveNotificationRule)",
             notes = "Creates or updates notification rule. " + NEW_LINE +
                     "Mandatory properties are `name`, `templateId` (of a template with `notificationType` matching to rule's `triggerType`), " +
@@ -127,6 +143,15 @@ public class NotificationRuleController extends BaseController {
         return doSaveAndLog(EntityType.NOTIFICATION_RULE, notificationRule, notificationRuleService::saveNotificationRule);
     }
 
+    /**
+     * Get notification rule by id.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/rule/{id}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @return {@link NotificationRuleInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get notification rule by id (getNotificationRuleById)",
             notes = "Fetches notification rule info by rule's id.\n" +
                     "In addition to regular notification rule fields, " +
@@ -139,6 +164,20 @@ public class NotificationRuleController extends BaseController {
         return checkEntityId(notificationRuleId, notificationRuleService::findNotificationRuleInfoById, Operation.READ);
     }
 
+    /**
+     * Get notification rules.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/rules}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @param user user
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get notification rules (getNotificationRules)",
             notes = "Returns the page of notification rules." + NEW_LINE +
                     PAGE_DATA_PARAMETERS +
@@ -161,6 +200,16 @@ public class NotificationRuleController extends BaseController {
         return notificationRuleService.findNotificationRulesInfosByTenantId(user.getTenantId(), pageLink);
     }
 
+    /**
+     * Delete notification rule.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/notification/rule/{id}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @param user user
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete notification rule (deleteNotificationRule)",
             notes = "Deletes notification rule by id.\n" +
                     "Cancels all related scheduled notification requests (e.g. due to escalation table)" +

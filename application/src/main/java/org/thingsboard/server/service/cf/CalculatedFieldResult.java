@@ -24,13 +24,48 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.List;
 import java.util.Objects;
 
+/**
+
+ * Result of calculated-field evaluation (calculated field result).
+
+ */
+
 public interface CalculatedFieldResult {
+/**
+ * To tb msg.
+ *
+ * @param entityId target entity identifier
+ * @param cfName cf name ({@link String})
+ * @param cfIds cf ids ({@link List})
+ * @return {@link TbMsg}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     TbMsg toTbMsg(EntityId entityId, String cfName, List<CalculatedFieldId> cfIds);
+/**
+ * String value.
+ *
+ * @return {@link String}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     String stringValue();
+/**
+ * Is empty.
+ *
+ * @return the boolean result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     boolean isEmpty();
+/**
+ * To json element.
+ *
+ * @return {@link JsonElement}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     default JsonElement toJsonElement() {
         return JsonParser.parseString(Objects.requireNonNull(stringValue()));

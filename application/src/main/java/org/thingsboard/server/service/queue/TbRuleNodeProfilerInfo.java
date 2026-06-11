@@ -22,6 +22,10 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Tb rule node profiler info component in the ThingsBoard queue layer.
+ */
+
 public class TbRuleNodeProfilerInfo {
     @Getter
     private final UUID ruleNodeId;
@@ -31,10 +35,20 @@ public class TbRuleNodeProfilerInfo {
     private AtomicLong executionTime = new AtomicLong(0);
     private AtomicLong maxExecutionTime = new AtomicLong(0);
 
+    /**
+     * Constructs {@link TbRuleNodeProfilerInfo} with the supplied dependencies and configuration.
+     * @param ruleNodeInfo rule node info
+     */
+
     public TbRuleNodeProfilerInfo(RuleNodeInfo ruleNodeInfo) {
         this.ruleNodeId = ruleNodeInfo.getRuleNodeId().getId();
         this.label = ruleNodeInfo.toString();
     }
+
+    /**
+     * Constructs {@link TbRuleNodeProfilerInfo} with the supplied dependencies and configuration.
+     * @param ruleNodeId rule node id
+     */
 
     public TbRuleNodeProfilerInfo(UUID ruleNodeId) {
         this.ruleNodeId = ruleNodeId;

@@ -20,12 +20,22 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 import org.thingsboard.server.edqs.util.EdqsRocksDb;
 
+    /**
+     * Spring service component for local edqs sync service (Entity Data Query Service integration from tb-core).
+     */
+
 @Service
 @RequiredArgsConstructor
 @ConditionalOnExpression("'${queue.edqs.sync.enabled:true}' == 'true' && '${queue.type:null}' == 'in-memory'")
 public class LocalEdqsSyncService extends EdqsSyncService {
 
     private final EdqsRocksDb db;
+    /**
+     * Is sync needed.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isSyncNeeded() {

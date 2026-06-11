@@ -26,17 +26,67 @@ import org.thingsboard.server.gen.transport.TransportProtos.ToUsageStatsServiceM
 import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 import org.thingsboard.server.queue.discovery.event.PartitionChangeEvent;
 
+/**
+
+ * Service contract for tb api usage state operations (tenant API usage metering and rate-limit state).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface TbApiUsageStateService extends TbApiUsageStateClient, RuleEngineApiUsageStateService, ApplicationListener<PartitionChangeEvent> {
 
     void process(TbProtoQueueMsg<ToUsageStatsServiceMsg> msg, TbCallback callback);
 
+    /**
+     * Handles tenant profile update.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void onTenantProfileUpdate(TenantProfileId tenantProfileId);
+
+    /**
+     * Handles tenant update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void onTenantUpdate(TenantId tenantId);
 
+    /**
+     * Handles tenant delete.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void onTenantDelete(TenantId tenantId);
 
+    /**
+     * Handles customer delete.
+     *
+     * @param customerId customer id ({@link CustomerId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void onCustomerDelete(CustomerId customerId);
+
+    /**
+     * Handles api usage state update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void onApiUsageStateUpdate(TenantId tenantId);
 }

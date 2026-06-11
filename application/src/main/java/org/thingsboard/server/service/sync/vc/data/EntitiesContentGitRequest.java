@@ -21,6 +21,9 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 
 import java.util.List;
+/**
+ * Git repository integration for entities content request.
+ */
 
 @Getter
 public class EntitiesContentGitRequest extends PendingGitRequest<List<EntityExportData>> {

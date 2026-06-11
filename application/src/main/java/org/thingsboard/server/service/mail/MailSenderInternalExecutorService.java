@@ -28,6 +28,12 @@ public class MailSenderInternalExecutorService extends AbstractListeningExecutor
 
     @Value("${actors.rule.mail_thread_pool_size}")
     private int mailExecutorThreadPoolSize;
+    /**
+     * Returns thread poll size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getThreadPollSize() {

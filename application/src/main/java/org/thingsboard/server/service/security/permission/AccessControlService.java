@@ -20,6 +20,12 @@ import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+ * Service contract for role-based access control (RBAC).
+ *
+ * <p><b>Responsibilities:</b> Evaluates tenant/customer/system-admin scopes against Resource and Operation.
+ */
+
 public interface AccessControlService {
 
     void checkPermission(SecurityUser user, Resource resource, Operation operation) throws ThingsboardException;

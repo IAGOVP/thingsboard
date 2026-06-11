@@ -45,6 +45,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.thingsboard.server.service.state.DefaultDeviceStateService.LAST_CONNECT_TIME;
 
+    /**
+     * Spring service component for kafka edge topics clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @Slf4j
 @Service
 @TbCoreComponent
@@ -73,6 +77,12 @@ public class KafkaEdgeTopicsCleanUpService extends AbstractCleanUpService {
         this.attributesService = attributesService;
         this.kafkaAdmin = kafkaAdmin;
     }
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Scheduled(initialDelayString = "#{T(org.apache.commons.lang3.RandomUtils).nextLong(0, ${sql.ttl.edge_events.execution_interval_ms})}", fixedDelayString = "${sql.ttl.edge_events.execution_interval_ms}")
     public void cleanUp() {

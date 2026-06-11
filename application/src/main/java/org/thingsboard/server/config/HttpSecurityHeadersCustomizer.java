@@ -22,6 +22,13 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/**
+ * Applies configurable HTTP security response headers to Spring Security filter chains.
+ *
+ * <p>Reads settings from {@link HttpSecurityHeadersProperties} ({@code security.headers.*})
+ * and enables the corresponding headers on each {@link org.springframework.security.config.annotation.web.builders.HttpSecurity}
+ * instance that calls {@link #customize}.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -29,6 +36,14 @@ public class HttpSecurityHeadersCustomizer {
 
     private final HttpSecurityHeadersProperties properties;
 
+    /**
+     * Applies all enabled security headers to the given headers configurer.
+     *
+     * <p>Supported headers: X-Content-Type-Options, Referrer-Policy, X-Frame-Options,
+     * and Content-Security-Policy (enforcing or report-only).
+     *
+     * @param headers Spring Security headers configurer from an {@link org.springframework.security.web.SecurityFilterChain} builder
+     */
     public void customize(HeadersConfigurer<?> headers) {
         if (properties.getXContentTypeOptions().isEnabled()) {
             headers.contentTypeOptions(config -> {});

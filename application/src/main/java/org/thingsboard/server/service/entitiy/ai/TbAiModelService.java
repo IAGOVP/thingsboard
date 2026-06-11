@@ -18,9 +18,37 @@ package org.thingsboard.server.service.entitiy.ai;
 import org.thingsboard.server.common.data.User;
 import org.thingsboard.server.common.data.ai.AiModel;
 
+/**
+
+ * Application-layer service API for ai model entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbAiModelService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param model model ({@link AiModel})
+ * @param user authenticated user performing the action
+ * @return {@link AiModel}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     AiModel save(AiModel model, User user);
+/**
+ * Deletes the requested data.
+ *
+ * @param model model ({@link AiModel})
+ * @param user authenticated user performing the action
+ * @return the boolean result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     boolean delete(AiModel model, User user);
 

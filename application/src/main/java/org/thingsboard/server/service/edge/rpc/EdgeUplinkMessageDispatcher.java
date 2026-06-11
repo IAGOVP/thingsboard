@@ -57,6 +57,11 @@ import org.thingsboard.server.service.edge.EdgeContextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Edge uplink message dispatcher for ThingsBoard Edge integration.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @Slf4j
@@ -66,6 +71,14 @@ import java.util.List;
 public class EdgeUplinkMessageDispatcher {
 
     private final EdgeContextComponent ctx;
+
+    /**
+     * Processes uplink msg.
+     *
+     * @param state state (EdgeSessionState)
+     * @param uplinkMsg uplink msg (UplinkMsg)
+     * @return {@link ListenableFuture} result
+     */
 
     public ListenableFuture<List<Void>> processUplinkMsg(EdgeSessionState state, UplinkMsg uplinkMsg) {
         Edge edge = state.getEdge();

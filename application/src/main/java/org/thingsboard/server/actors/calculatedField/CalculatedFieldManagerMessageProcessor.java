@@ -145,6 +145,12 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
     void init(TbActorCtx ctx) {
         this.ctx = ctx;
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void stop() {
         log.info("[{}] Stopping CF manager actor.", tenantId);
@@ -155,6 +161,13 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
         cancelReevaluationTask();
         ctx.stop(ctx.getSelf());
     }
+    /**
+     * Handles cache init msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onCacheInitMsg(CalculatedFieldCacheInitMsg msg) {
         log.debug("[{}] Processing CF actor init message.", msg.getTenantId().getId());
@@ -164,6 +177,13 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
         scheduleCfsReevaluation();
         msg.getCallback().onSuccess();
     }
+    /**
+     * Handles state restore msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onStateRestoreMsg(CalculatedFieldStateRestoreMsg msg) {
         var cfId = msg.getId().cfId();
@@ -180,6 +200,13 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
             msg.getCallback().onSuccess();
         }
     }
+    /**
+     * Handles state partition restore msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onStatePartitionRestoreMsg(CalculatedFieldStatePartitionRestoreMsg msg) {
         ctx.broadcastToChildren(msg, true);
@@ -201,6 +228,13 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
             }
         }, cfCheckInterval, cfCheckInterval, TimeUnit.SECONDS);
     }
+    /**
+     * Handles entity lifecycle msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     public void onEntityLifecycleMsg(CalculatedFieldEntityLifecycleMsg msg) throws CalculatedFieldException {
         var event = msg.getData().getEvent();
@@ -243,6 +277,13 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
             default -> msg.getCallback().onSuccess();
         }
     }
+    /**
+     * Handles entity action event msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onEntityActionEventMsg(CalculatedFieldEntityActionEventMsg msg) {
         switch (msg.getAction()) {
@@ -496,11 +537,24 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
                 }
 
                 applyToTargetCfEntityActors(newCfCtx, new TbCallback() {
+                    /**
+                     * Handles success.
+                     *
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
                     @Override
                     public void onSuccess() {
                         oldCfCtx.close();
                         callback.onSuccess();
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -523,11 +577,24 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
         entityIdCalculatedFields.get(cfCtx.getEntityId()).remove(cfCtx);
         deleteLinks(cfCtx);
         applyToTargetCfEntityActors(cfCtx, new TbCallback() {
+            /**
+             * Handles success.
+             *
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess() {
                 cfCtx.close();
                 callback.onSuccess();
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {
@@ -536,6 +603,13 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
             }
         }, (id, cb) -> deleteCfForEntity(id, cfId, cb));
     }
+    /**
+     * Handles telemetry msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onTelemetryMsg(CalculatedFieldTelemetryMsg msg) {
         EntityId entityId = msg.getEntityId();
@@ -613,6 +687,13 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
         }
         return result;
     }
+    /**
+     * Handles linked telemetry msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onLinkedTelemetryMsg(CalculatedFieldLinkedTelemetryMsg msg) {
         EntityId sourceEntityId = msg.getEntityId();
@@ -797,10 +878,23 @@ public class CalculatedFieldManagerMessageProcessor extends AbstractContextAware
         var oldLinks = oldCf.getConfiguration().buildCalculatedFieldLinks(tenantId, oldCf.getEntityId(), oldCf.getId());
         oldLinks.forEach(link -> entityIdCalculatedFieldLinks.computeIfAbsent(link.entityId(), id -> new CopyOnWriteArrayList<>()).remove(link));
     }
+    /**
+     * Handles partition change.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onPartitionChange(CalculatedFieldPartitionChangeMsg msg) {
         ctx.broadcastToChildren(msg, true);
     }
+    /**
+     * Init calculated fields.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void initCalculatedFields() {
         PageDataIterable<CalculatedField> cfs = new PageDataIterable<>(pageLink -> cfDaoService.findCalculatedFieldsByTenantId(tenantId, pageLink), cfSettings.getInitTenantFetchPackSize());

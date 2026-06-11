@@ -23,6 +23,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+    /**
+     * Cqlstatements parser (database schema installation, upgrades, and demo data loading).
+     */
+
 @Slf4j
 public class CQLStatementsParser {
 
@@ -60,6 +64,12 @@ public class CQLStatementsParser {
             throw e;
         }
     }
+    /**
+     * Returns statements.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<String> getStatements() {
         return this.statements;

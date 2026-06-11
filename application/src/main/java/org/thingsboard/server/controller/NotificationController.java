@@ -102,6 +102,18 @@ import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TE
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.service.security.permission.Resource.NOTIFICATION;
 
+/**
+ * REST API for in-app notifications, notification requests, delivery settings, and user preferences.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: any authenticated role for user notifications; {@code SYS_ADMIN}/{@code TENANT_ADMIN} for requests and settings.
+ *
+ * <p>Uses {@link org.thingsboard.server.dao.notification.NotificationService}, {@link org.thingsboard.rule.engine.api.NotificationCenter},
+ * and related notification DAO services.
+ */
+
+
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -117,6 +129,7 @@ public class NotificationController extends BaseController {
     private final NotificationSettingsService notificationSettingsService;
     private final SystemSecurityService systemSecurityService;
 
+    /** GET {@code /api/notifications} — Page of notifications for current user. Requires any authenticated role. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get notifications (getNotifications)",
             notes = "Returns the page of notifications for current user." + NEW_LINE +
                     PAGE_DATA_PARAMETERS +
@@ -192,6 +205,7 @@ public class NotificationController extends BaseController {
         return notificationService.findNotificationsByRecipientIdAndReadStatus(user.getTenantId(), deliveryMethod, user.getId(), unreadOnly, pageLink);
     }
 
+    /** GET {@code /api/notifications/unread/count} — Unread count by delivery method. Requires any authenticated role. */
     @ApiOperation(value = "Get unread notifications count (getUnreadNotificationsCount)",
             notes = "Returns unread notifications count for chosen delivery method." +
                     AVAILABLE_FOR_ANY_AUTHORIZED_USER)
@@ -203,6 +217,7 @@ public class NotificationController extends BaseController {
         return notificationService.countUnreadNotificationsByRecipientId(user.getTenantId(), deliveryMethod, user.getId());
     }
 
+    /** PUT {@code /api/notification/{id}/read} — Mark one notification read. Requires any authenticated role. */
     @ApiOperation(value = "Mark notification as read (markNotificationAsRead)",
             notes = "Marks notification as read by its id." +
                     AVAILABLE_FOR_ANY_AUTHORIZED_USER)
@@ -215,6 +230,7 @@ public class NotificationController extends BaseController {
         notificationCenter.markNotificationAsRead(user.getTenantId(), user.getId(), notificationId);
     }
 
+    /** PUT {@code /api/notifications/read} — Mark all unread notifications read. Requires any authenticated role. */
     @ApiOperation(value = "Mark all notifications as read (markAllNotificationsAsRead)",
             notes = "Marks all unread notifications as read." +
                     AVAILABLE_FOR_ANY_AUTHORIZED_USER)
@@ -227,6 +243,7 @@ public class NotificationController extends BaseController {
         notificationCenter.markAllNotificationsAsRead(user.getTenantId(), deliveryMethod, user.getId());
     }
 
+    /** DELETE {@code /api/notification/{id}} — Delete notification for current user. Requires any authenticated role. */
     @ApiOperation(value = "Delete notification (deleteNotification)",
             notes = "Deletes notification by its id." +
                     AVAILABLE_FOR_ANY_AUTHORIZED_USER)
@@ -239,6 +256,7 @@ public class NotificationController extends BaseController {
         notificationCenter.deleteNotification(user.getTenantId(), user.getId(), notificationId);
     }
 
+    /** POST {@code /api/notification/request} — Submit notification request for async delivery. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "Create notification request (createNotificationRequest)",
             notes = "Processes notification request.\n" +
                     "Mandatory request properties are `targets` (list of targets ids to send notification to), " +
@@ -293,6 +311,7 @@ public class NotificationController extends BaseController {
         return doSaveAndLog(EntityType.NOTIFICATION_REQUEST, notificationRequest, (tenantId, request) -> notificationCenter.processNotificationRequest(tenantId, request, null));
     }
 
+    /** POST {@code /api/notification/entitiesLimitIncreaseRequest/{entityType}} — Tenant requests higher entity limit. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "Send entity limit increase request notification to System administrators (sendEntitiesLimitIncreaseRequest)",
                   notes = "Send entity limit increase request notification by Tenant Administrator to System administrators." +
                   TENANT_AUTHORITY_PARAGRAPH)
@@ -321,6 +340,7 @@ public class NotificationController extends BaseController {
         }
     }
 
+    /** POST {@code /api/notification/request/preview} — Preview rendered templates and recipients. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException on failure. */
     @ApiOperation(value = "Get notification request preview (getNotificationRequestPreview)",
             notes = "Returns preview for notification request." + NEW_LINE +
                     "`processedTemplates` shows how the notifications for each delivery method will look like " +
@@ -429,6 +449,7 @@ public class NotificationController extends BaseController {
         return preview;
     }
 
+    /** GET {@code /api/notification/request/{id}} — Fetch notification request info. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if not found. */
     @ApiOperation(value = "Get notification request by id (getNotificationRequestById)",
             notes = "Fetches notification request info by request id." +
                     SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -439,6 +460,7 @@ public class NotificationController extends BaseController {
         return checkEntityId(notificationRequestId, notificationRequestService::findNotificationRequestInfoById, Operation.READ);
     }
 
+    /** GET {@code /api/notification/requests} — Page of user-submitted notification requests. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get notification requests (getNotificationRequests)",
             notes = "Returns the page of notification requests submitted by users of this tenant or sysadmins." + NEW_LINE +
                     PAGE_DATA_PARAMETERS +
@@ -461,6 +483,7 @@ public class NotificationController extends BaseController {
         return notificationRequestService.findNotificationRequestsInfosByTenantIdAndOriginatorType(user.getTenantId(), EntityType.USER, pageLink);
     }
 
+    /** DELETE {@code /api/notification/request/{id}} — Cancel or delete notification request. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "Delete notification request (deleteNotificationRequest)",
             notes = "Deletes notification request by its id." + NEW_LINE +
                     "If the request has status `SENT` - all sent notifications for this request will be deleted. " +
@@ -475,6 +498,7 @@ public class NotificationController extends BaseController {
     }
 
 
+    /** POST {@code /api/notification/settings} — Save tenant/sysadmin notification delivery settings. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Save notification settings (saveNotificationSettings)",
             notes = "Saves notification settings for this tenant or sysadmin.\n" +
                     "`deliveryMethodsConfigs` of the settings must be specified." + NEW_LINE +
@@ -500,6 +524,7 @@ public class NotificationController extends BaseController {
         return notificationSettings;
     }
 
+    /** GET {@code /api/notification/settings} — Get tenant/sysadmin notification settings. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get notification settings (getNotificationSettings)",
             notes = "Retrieves notification settings for this tenant or sysadmin." +
                     SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -511,6 +536,7 @@ public class NotificationController extends BaseController {
         return notificationSettingsService.findNotificationSettings(tenantId);
     }
 
+    /** GET {@code /api/notification/deliveryMethods} — Configured delivery methods. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get available delivery methods (getAvailableDeliveryMethods)",
             notes = "Returns the list of delivery methods that are properly configured and are allowed to be used for sending notifications." +
                     SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -521,6 +547,7 @@ public class NotificationController extends BaseController {
     }
 
 
+    /** POST {@code /api/notification/settings/user} — Save per-user notification preferences. Requires any authenticated role. @return saved {@link org.thingsboard.server.common.data.notification.settings.UserNotificationSettings}. */
     @PostMapping("/notification/settings/user")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     public UserNotificationSettings saveUserNotificationSettings(@RequestBody @Valid UserNotificationSettings settings,
@@ -528,6 +555,7 @@ public class NotificationController extends BaseController {
         return notificationSettingsService.saveUserNotificationSettings(user.getTenantId(), user.getId(), settings);
     }
 
+    /** GET {@code /api/notification/settings/user} — Get per-user notification preferences. Requires any authenticated role. @return {@link org.thingsboard.server.common.data.notification.settings.UserNotificationSettings}. */
     @GetMapping("/notification/settings/user")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     public UserNotificationSettings getUserNotificationSettings(@AuthenticationPrincipal SecurityUser user) {

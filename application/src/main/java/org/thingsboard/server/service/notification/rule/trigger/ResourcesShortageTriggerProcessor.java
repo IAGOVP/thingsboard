@@ -23,9 +23,21 @@ import org.thingsboard.server.common.data.notification.rule.trigger.ResourcesSho
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NotificationRuleTriggerType;
 import org.thingsboard.server.common.data.notification.rule.trigger.config.ResourcesShortageNotificationRuleTriggerConfig;
 
+    /**
+     * Spring service component for resources shortage trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 @RequiredArgsConstructor
 public class ResourcesShortageTriggerProcessor implements NotificationRuleTriggerProcessor<ResourcesShortageTrigger, ResourcesShortageNotificationRuleTriggerConfig> {
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link ResourcesShortageTrigger})
+     * @param triggerConfig trigger config ({@link ResourcesShortageNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(ResourcesShortageTrigger trigger, ResourcesShortageNotificationRuleTriggerConfig triggerConfig) {
@@ -36,6 +48,13 @@ public class ResourcesShortageTriggerProcessor implements NotificationRuleTrigge
             case STORAGE -> usagePercent >= triggerConfig.getStorageThreshold();
         };
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link ResourcesShortageTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(ResourcesShortageTrigger trigger) {
@@ -46,6 +65,12 @@ public class ResourcesShortageTriggerProcessor implements NotificationRuleTrigge
                 .serviceType(trigger.getServiceType())
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

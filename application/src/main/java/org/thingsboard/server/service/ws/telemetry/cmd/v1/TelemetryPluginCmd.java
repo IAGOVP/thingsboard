@@ -16,15 +16,31 @@
 package org.thingsboard.server.service.ws.telemetry.cmd.v1;
 
 import org.thingsboard.server.service.ws.WsCmd;
-
 /**
- * @author Andrew Shvayka
+ * Telemetry plugin cmd contract for the ThingsBoard WebSocket layer.
  */
+
+
 public interface TelemetryPluginCmd extends WsCmd {
+
+    /**
+     * Returns cmd id.
+     * @return numeric result
+     */
 
     int getCmdId();
 
+    /**
+     * Sets cmd id.
+     * @param cmdId client command id
+     */
+
     void setCmdId(int cmdId);
+
+    /**
+     * Returns keys.
+     * @return string value
+     */
 
     String getKeys();
 

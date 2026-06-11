@@ -41,6 +41,9 @@ import org.thingsboard.server.service.ws.telemetry.cmd.v2.EntityDataUnsubscribeC
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.AlarmStatusUnsubscribeCmd;
 
 import java.util.List;
+/**
+ * Root JSON envelope for a batch of WebSocket commands sent by the UI in one frame.
+ */
 
 @Data
 @AllArgsConstructor

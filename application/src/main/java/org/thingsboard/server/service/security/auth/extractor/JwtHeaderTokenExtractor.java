@@ -18,6 +18,11 @@ package org.thingsboard.server.service.security.auth.extractor;
 import org.springframework.stereotype.Component;
 
 import static org.thingsboard.server.config.ThingsboardSecurityConfiguration.BEARER_HEADER_PREFIX;
+/**
+ * Extracts bearer/API tokens from HTTP requests for HTTP token extraction for security filters.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component(value = "jwtHeaderTokenExtractor")
 public class JwtHeaderTokenExtractor extends AbstractHeaderTokenExtractor {

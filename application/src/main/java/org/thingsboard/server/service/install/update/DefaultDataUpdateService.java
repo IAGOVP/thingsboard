@@ -35,6 +35,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+    /**
+     * Default Spring implementation for data update service (database schema installation, upgrades, and demo data loading).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Profile("install")
 @Slf4j
@@ -47,6 +53,12 @@ public class DefaultDataUpdateService implements DataUpdateService {
     private final RuleChainService ruleChainService;
     private final ComponentDiscoveryService componentDiscoveryService;
     private final DbUpgradeExecutorService executorService;
+    /**
+     * Updates data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateData() throws Exception {
@@ -55,6 +67,12 @@ public class DefaultDataUpdateService implements DataUpdateService {
 
         log.info("Data updated.");
     }
+    /**
+     * Upgrade rule nodes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void upgradeRuleNodes() {
@@ -123,6 +141,14 @@ public class DefaultDataUpdateService implements DataUpdateService {
         ).forEach(ruleNodeIds::add);
         return ruleNodeIds;
     }
+    /**
+     * Returns env.
+     *
+     * @param name name ({@link String})
+     * @param defaultValue default value
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean getEnv(String name, boolean defaultValue) {
         String env = System.getenv(name);

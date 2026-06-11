@@ -24,6 +24,10 @@ import org.thingsboard.server.service.ws.WsCmd;
 import org.thingsboard.server.service.ws.WsCmdType;
 
 import java.util.List;
+/**
+ * WebSocket command DTO for alarm status.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 @AllArgsConstructor
@@ -34,6 +38,11 @@ public class AlarmStatusCmd implements WsCmd {
     private EntityId originatorId;
     private List<String> typeList;
     private List<AlarmSeverity> severityList;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

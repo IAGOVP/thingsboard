@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.service.ws.telemetry.cmd.v2;
 
+/**
+ * Enumeration of cmd update type values used by the WebSocket layer.
+ */
+
 public enum CmdUpdateType {
     ENTITY_DATA,
     ALARM_DATA,

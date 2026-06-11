@@ -42,12 +42,24 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.UUID;
+/**
+ * Processes asset profile edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class AssetProfileEdgeProcessor extends BaseAssetProfileProcessor implements AssetProfileProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param assetProfileUpdateMsg asset profile update msg (AssetProfileUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processAssetProfileMsgFromEdge(TenantId tenantId, Edge edge, AssetProfileUpdateMsg assetProfileUpdateMsg) {
         log.trace("[{}] executing processAssetProfileMsgFromEdge [{}] from edge [{}]", tenantId, assetProfileUpdateMsg, edge.getId());
@@ -93,7 +105,13 @@ public class AssetProfileEdgeProcessor extends BaseAssetProfileProcessor impleme
             log.warn("[{}][{}] Failed to push asset profile action to rule engine: {}", tenantId, assetProfileId, TbMsgType.ENTITY_CREATED.name(), e);
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         AssetProfileId assetProfileId = new AssetProfileId(edgeEvent.getEntityId());
@@ -120,23 +138,49 @@ public class AssetProfileEdgeProcessor extends BaseAssetProfileProcessor impleme
         return null;
     }
 
+    /**
+     * Set default rule chain id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param assetProfile asset profile (AssetProfile)
+     * @param ruleChainId rule chain id (RuleChainId)
+     */
     @Override
     protected void setDefaultRuleChainId(TenantId tenantId, AssetProfile assetProfile, RuleChainId ruleChainId) {
         assetProfile.setDefaultRuleChainId(ruleChainId);
     }
 
+    /**
+     * Set default edge rule chain id.
+     *
+     * @param assetProfile asset profile (AssetProfile)
+     * @param ruleChainId rule chain id (RuleChainId)
+     * @param assetProfileUpdateMsg asset profile update msg (AssetProfileUpdateMsg)
+     */
     @Override
     protected void setDefaultEdgeRuleChainId(AssetProfile assetProfile, RuleChainId ruleChainId, AssetProfileUpdateMsg assetProfileUpdateMsg) {
         UUID defaultEdgeRuleChainUUID = ruleChainId != null ? ruleChainId.getId() : null;
         assetProfile.setDefaultEdgeRuleChainId(defaultEdgeRuleChainUUID != null ? new RuleChainId(defaultEdgeRuleChainUUID) : null);
     }
 
+    /**
+     * Set default dashboard id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param dashboardId dashboard id (DashboardId)
+     * @param assetProfile asset profile (AssetProfile)
+     * @param assetProfileUpdateMsg asset profile update msg (AssetProfileUpdateMsg)
+     */
     @Override
     protected void setDefaultDashboardId(TenantId tenantId, DashboardId dashboardId, AssetProfile assetProfile, AssetProfileUpdateMsg assetProfileUpdateMsg) {
         UUID defaultDashboardUUID = assetProfile.getDefaultDashboardId() != null ? assetProfile.getDefaultDashboardId().getId() : (dashboardId != null ? dashboardId.getId() : null);
         assetProfile.setDefaultDashboardId(defaultDashboardUUID != null ? new DashboardId(defaultDashboardUUID) : null);
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.ASSET_PROFILE;

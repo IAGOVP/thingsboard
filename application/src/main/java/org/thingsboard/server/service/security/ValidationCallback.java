@@ -20,9 +20,8 @@ import org.thingsboard.server.exception.AccessDeniedException;
 import org.thingsboard.server.exception.EntityNotFoundException;
 import org.thingsboard.server.exception.InternalErrorException;
 import org.thingsboard.server.exception.UnauthorizedException;
-
 /**
- * Created by ashvayka on 31.03.18.
+ * Validation callback for platform security.
  */
 public class ValidationCallback<T> implements FutureCallback<ValidationResult> {
 
@@ -34,6 +33,11 @@ public class ValidationCallback<T> implements FutureCallback<ValidationResult> {
         this.action = action;
     }
 
+    /**
+     * On success.
+     *
+     * @param result result (ValidationResult)
+     */
     @Override
     public void onSuccess(ValidationResult result) {
         if (result.getResultCode() == ValidationResultCode.OK) {
@@ -43,10 +47,22 @@ public class ValidationCallback<T> implements FutureCallback<ValidationResult> {
         }
     }
 
+    /**
+     * On failure.
+     *
+     * @param e e (Throwable)
+     */
     @Override
     public void onFailure(Throwable e) {
         action.onFailure(e);
     }
+
+    /**
+     * Returns exception.
+     *
+     * @param result result (ValidationResult)
+     * @return {@link Exception} result
+     */
 
     public static Exception getException(ValidationResult result) {
         ValidationResultCode resultCode = result.getResultCode();

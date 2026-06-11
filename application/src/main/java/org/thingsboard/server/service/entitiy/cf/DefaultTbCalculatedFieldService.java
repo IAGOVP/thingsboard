@@ -53,6 +53,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+/**
+ * Default implementation of {@link TbCalculatedFieldService}.
+ */
 
 @TbCoreComponent
 @Service
@@ -66,6 +69,14 @@ public class DefaultTbCalculatedFieldService extends AbstractTbEntityService imp
 
     @Autowired(required = false)
     private TbelInvokeService tbelInvokeService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param calculatedField calculated field ({@link CalculatedField})
+     * @param user authenticated user performing the action
+     * @return {@link CalculatedField}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public CalculatedField save(CalculatedField calculatedField, SecurityUser user) throws ThingsboardException {
@@ -85,17 +96,43 @@ public class DefaultTbCalculatedFieldService extends AbstractTbEntityService imp
             throw e;
         }
     }
+    /**
+     * Finds by id.
+     *
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @param user authenticated user performing the action
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedField findById(CalculatedFieldId calculatedFieldId, SecurityUser user) {
         return calculatedFieldService.findById(user.getTenantId(), calculatedFieldId);
     }
+    /**
+     * Finds by tenant id and entity id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param type type ({@link CalculatedFieldType})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<CalculatedField> findByTenantIdAndEntityId(TenantId tenantId, EntityId entityId, CalculatedFieldType type, PageLink pageLink) {
         checkEntity(tenantId, entityId, type);
         return calculatedFieldService.findCalculatedFieldsByEntityId(tenantId, entityId, type, pageLink);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param calculatedField calculated field ({@link CalculatedField})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -111,6 +148,14 @@ public class DefaultTbCalculatedFieldService extends AbstractTbEntityService imp
             throw e;
         }
     }
+    /**
+     * Executes test script.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param inputParams input params ({@link JsonNode})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JsonNode executeTestScript(TenantId tenantId, JsonNode inputParams) {

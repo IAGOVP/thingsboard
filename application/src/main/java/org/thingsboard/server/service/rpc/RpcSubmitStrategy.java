@@ -17,9 +17,22 @@ package org.thingsboard.server.service.rpc;
 
 import java.util.Arrays;
 
+/**
+
+ * Enumerates rpc submit strategy values used in device RPC orchestration between REST, rule engine, and transport.
+
+ */
+
 public enum RpcSubmitStrategy {
 
     BURST, SEQUENTIAL_ON_ACK_FROM_DEVICE, SEQUENTIAL_ON_RESPONSE_FROM_DEVICE;
+    /**
+     * Parse.
+     *
+     * @param strategyStr strategy str ({@link String})
+     * @return {@link RpcSubmitStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static RpcSubmitStrategy parse(String strategyStr) {
         return Arrays.stream(RpcSubmitStrategy.values())

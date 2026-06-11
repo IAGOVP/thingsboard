@@ -28,10 +28,20 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+/**
+ * Factory that selects or builds tb rule engine processing strategy implementations.
+ */
 
 @Component
 @Slf4j
 public class TbRuleEngineProcessingStrategyFactory {
+
+    /**
+     * New instance.
+     * @param name name
+     * @param processingStrategy processing strategy
+     * @return {@link TbRuleEngineProcessingStrategy}
+     */
 
     public TbRuleEngineProcessingStrategy newInstance(String name, ProcessingStrategy processingStrategy) {
         switch (processingStrategy.getType()) {
@@ -66,6 +76,15 @@ public class TbRuleEngineProcessingStrategyFactory {
         private int initialTotalCount;
         private int retryCount;
 
+        /**
+         * Retry strategy.
+         * @param queueName queue name
+         * @param retrySuccessful retry successful
+         * @param retryFailed retry failed
+         * @param retryTimeout retry timeout
+         * @param processingStrategy processing strategy
+         */
+
         public RetryStrategy(String queueName, boolean retrySuccessful, boolean retryFailed, boolean retryTimeout, ProcessingStrategy processingStrategy) {
             this.queueName = queueName;
             this.retrySuccessful = retrySuccessful;
@@ -77,10 +96,23 @@ public class TbRuleEngineProcessingStrategyFactory {
             this.maxPauseBetweenRetries = processingStrategy.getMaxPauseBetweenRetries();
         }
 
+        /**
+         * Is skip timeout msgs.
+         * @return {@code true} when the condition holds
+         */
+
         @Override
         public boolean isSkipTimeoutMsgs() {
             return true;
         }
+
+        /**
+         * Analyze.
+         *
+         * <p>Default implementation inherited from the supertype.
+         * @param result result
+         * @return {@link TbRuleEngineProcessingDecision}
+         */
 
         @Override
         public TbRuleEngineProcessingDecision analyze(TbRuleEngineProcessingResult result) {
@@ -148,15 +180,34 @@ public class TbRuleEngineProcessingStrategyFactory {
         private final String queueName;
         private final boolean skipTimeoutMsgs;
 
+        /**
+         * Skip strategy.
+         * @param name name
+         * @param skipTimeoutMsgs skip timeout msgs
+         */
+
         public SkipStrategy(String name, boolean skipTimeoutMsgs) {
             this.queueName = name;
             this.skipTimeoutMsgs = skipTimeoutMsgs;
         }
 
+        /**
+         * Is skip timeout msgs.
+         * @return {@code true} when the condition holds
+         */
+
         @Override
         public boolean isSkipTimeoutMsgs() {
             return skipTimeoutMsgs;
         }
+
+        /**
+         * Analyze.
+         *
+         * <p>Default implementation inherited from the supertype.
+         * @param result result
+         * @return {@link TbRuleEngineProcessingDecision}
+         */
 
         @Override
         public TbRuleEngineProcessingDecision analyze(TbRuleEngineProcessingResult result) {

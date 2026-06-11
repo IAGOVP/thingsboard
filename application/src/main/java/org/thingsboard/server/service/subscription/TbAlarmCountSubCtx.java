@@ -39,6 +39,10 @@ import org.thingsboard.server.service.ws.telemetry.cmd.v2.AlarmCountUpdate;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+/**
+ * Subscription context for tb alarm count WebSocket commands.
+ * <p>Maintains query state, caches, and pending updates for one command id.
+ */
 
 @Slf4j
 @ToString(callSuper = true)
@@ -65,6 +69,21 @@ public class TbAlarmCountSubCtx extends TbAbstractEntityQuerySubCtx<AlarmCountQu
 
     private int alarmCountInvocationAttempts;
 
+    /**
+     * Constructs {@link TbAlarmCountSubCtx} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param wsService ws service
+     * @param entityService entity service
+     * @param localSubscriptionService local subscription service
+     * @param attributesService attributes service
+     * @param stats stats
+     * @param alarmService alarm service
+     * @param sessionRef reference to the WebSocket session
+     * @param cmdId client command id
+     * @param maxEntitiesPerAlarmSubscription max entities per alarm subscription
+     * @param maxAlarmQueriesPerRefreshInterval max alarm queries per refresh interval
+     */
+
     public TbAlarmCountSubCtx(String serviceId, WebSocketService wsService,
                               EntityService entityService, TbLocalSubscriptionService localSubscriptionService,
                               AttributesService attributesService, SubscriptionServiceStatistics stats, AlarmService alarmService,
@@ -77,10 +96,24 @@ public class TbAlarmCountSubCtx extends TbAbstractEntityQuerySubCtx<AlarmCountQu
         this.entitiesIds = null;
     }
 
+    /**
+     * Clears subscriptions.
+     * @return @Override
+    public void
+     */
+
     @Override
     public void clearSubscriptions() {
         clearAlarmSubscriptions();
     }
+
+    /**
+     * Fetches data.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return @Override
+    public void
+     */
 
     @Override
     public void fetchData() {
@@ -97,16 +130,35 @@ public class TbAlarmCountSubCtx extends TbAbstractEntityQuerySubCtx<AlarmCountQu
         }
     }
 
+    /**
+     * Updates update.
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void update() {
         resetInvocationCounter();
         fetchAlarmCount();
     }
 
+    /**
+     * Is dynamic.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@code true} when the condition holds
+     */
+
     @Override
     public boolean isDynamic() {
         return true;
     }
+
+    /**
+     * Fetches alarm count.
+     *
+     * <p>Default implementation inherited from the supertype.
+     */
 
     public void fetchAlarmCount() {
         alarmCountInvocationAttempts++;
@@ -122,7 +174,11 @@ public class TbAlarmCountSubCtx extends TbAbstractEntityQuerySubCtx<AlarmCountQu
         }
     }
 
-    public void doFetchAlarmCount() {
+    /**
+     * Do fetch alarm count.
+     */
+
+public void doFetchAlarmCount() {
         result = (int) alarmService.countAlarmsByQuery(getTenantId(), getCustomerId(), query, entitiesIds);
         sendWsMsg(new AlarmCountUpdate(cmdId, result));
     }
@@ -137,7 +193,11 @@ public class TbAlarmCountSubCtx extends TbAbstractEntityQuerySubCtx<AlarmCountQu
         alarmCountInvocationAttempts = 0;
     }
 
-    public void createAlarmSubscriptions() {
+    /**
+     * Creates alarm subscriptions.
+     */
+
+public void createAlarmSubscriptions() {
         for (EntityId entityId : entitiesIds) {
             createAlarmSubscriptionForEntity(entityId);
         }
@@ -158,7 +218,11 @@ public class TbAlarmCountSubCtx extends TbAbstractEntityQuerySubCtx<AlarmCountQu
         localSubscriptionService.addSubscription(subscription, sessionRef);
     }
 
-    public void clearAlarmSubscriptions() {
+    /**
+     * Clears alarm subscriptions.
+     */
+
+public void clearAlarmSubscriptions() {
         if (subToEntityIdMap != null) {
             for (Integer subId : subToEntityIdMap.keySet()) {
                 localSubscriptionService.cancelSubscription(getTenantId(), getSessionId(), subId);

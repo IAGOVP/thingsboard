@@ -26,6 +26,11 @@ import org.thingsboard.server.common.data.id.UserId;
 import org.thingsboard.server.common.data.pat.ApiKeyInfo;
 import org.thingsboard.server.common.data.security.Authority;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Defines RBAC permission rules for tenant admin users.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Evaluates tenant/customer/system-admin scopes against Resource and Operation.
+ */
 
 @Component
 public class TenantAdminPermissions extends AbstractPermissions {
@@ -65,12 +70,26 @@ public class TenantAdminPermissions extends AbstractPermissions {
     }
 
     public static final PermissionChecker tenantEntityPermissionChecker = new PermissionChecker() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation) {
             return true;
         }
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (EntityId)
+         * @param entity entity (HasTenantId)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
             if (!user.getTenantId().equals(entity.getTenantId())) {
@@ -82,7 +101,15 @@ public class TenantAdminPermissions extends AbstractPermissions {
 
     private static final PermissionChecker tenantPermissionChecker =
             new PermissionChecker.GenericPermissionChecker(Operation.READ, Operation.READ_ATTRIBUTES, Operation.READ_TELEMETRY, Operation.DELETE) {
-
+                /**
+                 * Returns whether the user is allowed to perform the operation.
+                 *
+                 * @param user user (SecurityUser)
+                 * @param operation operation (Operation)
+                 * @param entityId entity id (EntityId)
+                 * @param entity entity (HasTenantId)
+                 * @return boolean
+                 */
                 @Override
                 @SuppressWarnings("unchecked")
                 public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
@@ -98,7 +125,15 @@ public class TenantAdminPermissions extends AbstractPermissions {
             };
 
     private static final PermissionChecker userPermissionChecker = new PermissionChecker<UserId, User>() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param userId user id (UserId)
+         * @param userEntity user entity (User)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, UserId userId, User userEntity) {
             if (Authority.SYS_ADMIN.equals(userEntity.getAuthority())) {
@@ -113,7 +148,15 @@ public class TenantAdminPermissions extends AbstractPermissions {
     };
 
     private static final PermissionChecker widgetsPermissionChecker = new PermissionChecker() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (EntityId)
+         * @param entity entity (HasTenantId)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
             if (entity.getTenantId() == null || entity.getTenantId().isNullUid()) {
@@ -128,7 +171,15 @@ public class TenantAdminPermissions extends AbstractPermissions {
     };
 
     private static final PermissionChecker tbResourcePermissionChecker = new PermissionChecker() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (EntityId)
+         * @param entity entity (HasTenantId)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
             if (entity.getTenantId() == null || entity.getTenantId().isNullUid()) {
@@ -143,7 +194,15 @@ public class TenantAdminPermissions extends AbstractPermissions {
     };
 
     private static final PermissionChecker queuePermissionChecker = new PermissionChecker() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (EntityId)
+         * @param entity entity (HasTenantId)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
             if (entity.getTenantId() == null || entity.getTenantId().isNullUid()) {
@@ -158,12 +217,26 @@ public class TenantAdminPermissions extends AbstractPermissions {
     };
 
     private static final PermissionChecker<AiModelId, AiModel> aiModelPermissionChecker = new PermissionChecker<>() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation) {
             return true;
         }
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (AiModelId)
+         * @param entity entity (AiModel)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, AiModelId entityId, AiModel entity) {
             return user.getTenantId().equals(entity.getTenantId());
@@ -172,12 +245,26 @@ public class TenantAdminPermissions extends AbstractPermissions {
     };
 
     private static final PermissionChecker<ApiKeyId, ApiKeyInfo> apiKeysPermissionChecker = new PermissionChecker<>() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation) {
             return true;
         }
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (ApiKeyId)
+         * @param entity entity (ApiKeyInfo)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, ApiKeyId entityId, ApiKeyInfo entity) {
             return user.getTenantId().equals(entity.getTenantId());

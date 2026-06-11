@@ -65,6 +65,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for job manager (background job scheduling and execution).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Component
 @Slf4j
 public class DefaultJobManager implements JobManager {
@@ -92,22 +98,51 @@ public class DefaultJobManager implements JobManager {
         this.cleanupScheduler = ThingsBoardExecutors.newSingleThreadScheduledExecutor("job-callback-cleanup");
         this.cleanupScheduler.scheduleWithFixedDelay(this::cleanupStaleCallbacks, 1, 1, TimeUnit.HOURS);
     }
+    /**
+     * Submit job.
+     *
+     * @param job job ({@link Job})
+     * @return future completing with {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Job> submitJob(Job job) {
         log.debug("Submitting job: {}", job);
         return Futures.submit(() -> jobService.saveJob(job.getTenantId(), job), executor);
     }
+    /**
+     * Submit job.
+     *
+     * @param job job ({@link Job})
+     * @param finishCallback finish callback ({@link TbCallback})
+     * @return future completing with {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Job> submitJob(Job job, TbCallback finishCallback) {
         ListenableFuture<Job> saveFuture = submitJob(job);
         if (finishCallback != null) {
             Futures.addCallback(saveFuture, new FutureCallback<>() {
+                /**
+                 * Handles success.
+                 *
+                 * @param savedJob saved job ({@link Job})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
                 @Override
                 public void onSuccess(Job savedJob) {
                     finishCallbacks.put(savedJob.getId(), finishCallback);
                 }
+                /**
+                 * Handles failure.
+                 *
+                 * @param t t ({@link Throwable})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
 
                 @Override
                 public void onFailure(Throwable t) {
@@ -117,6 +152,13 @@ public class DefaultJobManager implements JobManager {
         }
         return saveFuture;
     }
+    /**
+     * Handles job update.
+     *
+     * @param job job ({@link Job})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onJobUpdate(Job job) {
@@ -142,6 +184,13 @@ public class DefaultJobManager implements JobManager {
             }
         }
     }
+    /**
+     * Handles job update event.
+     *
+     * @param event event ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @EventListener
     public void onJobUpdateEvent(ComponentLifecycleMsg event) {
@@ -191,12 +240,28 @@ public class DefaultJobManager implements JobManager {
             jobService.markAsFailed(tenantId, jobId, e.getMessage());
         }
     }
+    /**
+     * Cancel job.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param jobId job id ({@link JobId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void cancelJob(TenantId tenantId, JobId jobId) {
         log.info("[{}][{}] Cancelling job", tenantId, jobId);
         jobService.cancelJob(tenantId, jobId);
     }
+    /**
+     * Reprocess job.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param jobId job id ({@link JobId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reprocessJob(TenantId tenantId, JobId jobId) {
@@ -246,10 +311,24 @@ public class DefaultJobManager implements JobManager {
         }
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TASK_PROCESSOR, task.getJobType().name(), task.getTenantId(), entityId);
         producer.send(tpi, new TbProtoQueueMsg<>(UUID.randomUUID(), taskProto), new TbQueueCallback() {
+            /**
+             * Handles success.
+             *
+             * @param metadata metadata ({@link TbQueueMsgMetadata})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(TbQueueMsgMetadata metadata) {
                 log.trace("Submitted task to {}: {}", tpi, taskProto);
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {

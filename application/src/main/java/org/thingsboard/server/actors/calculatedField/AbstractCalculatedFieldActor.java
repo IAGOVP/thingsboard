@@ -46,9 +46,17 @@ public abstract class AbstractCalculatedFieldActor extends ContextAwareActor {
         this.tenantId = tenantId;
     }
 
+    
+    
     /**
-     * Dispatches calculated-field system messages; delegates to {@link #doProcessCfMsg(ToCalculatedFieldSystemMsg)}.
+     * Handles one incoming actor message; returns {@code true} if the message type was recognized.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
      */
+
+
     @Override
     protected boolean doProcess(TbActorMsg msg) {
         if (msg instanceof ToCalculatedFieldSystemMsg cfm) {

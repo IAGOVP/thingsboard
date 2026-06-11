@@ -22,6 +22,9 @@ import org.thingsboard.server.common.data.sync.vc.AutoCommitSettings;
 import org.thingsboard.server.dao.settings.AdminSettingsService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.TbAbstractVersionControlSettingsService;
+/**
+ * Manages automatic version commits when entities change.
+ */
 
 @Service
 @TbCoreComponent

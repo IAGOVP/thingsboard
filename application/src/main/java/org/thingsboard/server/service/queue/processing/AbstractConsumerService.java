@@ -62,6 +62,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+/**
+ * Base class for partition-aware queue consumers. Manages consumer managers, pack callbacks, and reacts to {@link org.thingsboard.server.queue.discovery.event.PartitionChangeEvent}.
+ */
 
 @RequiredArgsConstructor
 public abstract class AbstractConsumerService<N extends com.google.protobuf.GeneratedMessageV3> extends TbApplicationEventListener<PartitionChangeEvent> {
@@ -84,6 +87,26 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
     protected ExecutorService mgmtExecutor;
     protected ScheduledExecutorService scheduler;
 
+    /**
+     * Initializes init.
+     * @param prefix prefix
+     */
+
+    /**
+     * Initializes.
+     * @param prefix prefix
+     */
+
+    /**
+     * Initializes.
+     * @param prefix prefix
+     */
+
+    /**
+     * Initializes.
+     * @param prefix prefix
+     */
+
     public void init(String prefix) {
         this.consumersExecutor = Executors.newCachedThreadPool(ThingsBoardThreadFactory.forName(prefix + "-consumer"));
         this.mgmtExecutor = ThingsBoardExecutors.newWorkStealingPool(getMgmtThreadPoolSize(), prefix + "-mgmt");
@@ -99,34 +122,86 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
                 .build();
     }
 
-    @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
+    /**
+     * After start up.
+     */
+
+@AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void afterStartUp() {
         startConsumers();
     }
 
-    protected void startConsumers() {
+    /**
+     * Starts consumers.
+     */
+
+protected void startConsumers() {
         nfConsumer.subscribe();
         nfConsumer.launch();
     }
+
+    /**
+     * Filter tb application event.
+     * @param event application or cluster event
+     * @return boolean result
+     */
 
     @Override
     protected boolean filterTbApplicationEvent(PartitionChangeEvent event) {
         return event.getServiceType() == getServiceType();
     }
 
+    /**
+     * Returns service type.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@link ServiceType}
+     */
+
     protected abstract ServiceType getServiceType();
 
-    protected void stopConsumers() {
+    /**
+     * Stops consumers.
+     */
+
+protected void stopConsumers() {
         nfConsumer.stop();
     }
 
+    /**
+     * Returns notification poll duration.
+     * @return numeric result
+     */
+
     protected abstract long getNotificationPollDuration();
+
+    /**
+     * Returns notification pack processing timeout.
+     * @return numeric result
+     */
 
     protected abstract long getNotificationPackProcessingTimeout();
 
+    /**
+     * Returns mgmt thread pool size.
+     * @return numeric result
+     */
+
     protected abstract int getMgmtThreadPoolSize();
 
+    /**
+     * Creates notifications consumer.
+     * @return {@link TbQueueConsumer}
+     */
+
     protected abstract TbQueueConsumer<TbProtoQueueMsg<N>> createNotificationsConsumer();
+
+    /**
+     * Processes notifications.
+     * @param msgs msgs
+     * @param consumer consumer
+     * @throws Exception if processing fails
+     */
 
     protected void processNotifications(List<TbProtoQueueMsg<N>> msgs, TbQueueConsumer<TbProtoQueueMsg<N>> consumer) throws Exception {
         List<IdMsgPair<N>> orderedMsgList = msgs.stream().map(msg -> new IdMsgPair<>(UUID.randomUUID(), msg)).toList();
@@ -153,6 +228,12 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
         }
         consumer.commit();
     }
+
+    /**
+     * Handles component lifecycle msg.
+     * @param id id
+     * @param componentLifecycleMsg component lifecycle msg
+     */
 
     protected final void handleComponentLifecycleMsg(UUID id, ComponentLifecycleMsg componentLifecycleMsg) {
         TenantId tenantId = componentLifecycleMsg.getTenantId();
@@ -204,7 +285,21 @@ public abstract class AbstractConsumerService<N extends com.google.protobuf.Gene
         actorContext.tellWithHighPriority(componentLifecycleMsg);
     }
 
+    /**
+     * Handles notification.
+     * @param id id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @throws Exception if processing fails
+     */
+
     protected abstract void handleNotification(UUID id, TbProtoQueueMsg<N> msg, TbCallback callback) throws Exception;
+
+    /**
+     * Shuts down destroy.
+     * @return @PreDestroy
+    public void
+     */
 
     @PreDestroy
     public void destroy() {

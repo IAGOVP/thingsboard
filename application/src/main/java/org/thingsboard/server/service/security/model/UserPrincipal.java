@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.model;
 
 import java.io.Serializable;
 
+/**
+ * User principal for security DTOs and principals.
+ */
+
 public class UserPrincipal implements Serializable {
 
     private final Type type;
@@ -27,9 +31,19 @@ public class UserPrincipal implements Serializable {
         this.value = value;
     }
 
+    /**
+     * Returns type.
+     *
+     */
+
     public Type getType() {
         return type;
     }
+
+    /**
+     * Returns value.
+     *
+     */
 
     public String getValue() {
         return value;

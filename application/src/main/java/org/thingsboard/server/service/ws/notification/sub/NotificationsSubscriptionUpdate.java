@@ -16,6 +16,10 @@
 package org.thingsboard.server.service.ws.notification.sub;
 
 import lombok.Data;
+/**
+ * Outbound WebSocket update payload for notifications subscription.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @Data
 public class NotificationsSubscriptionUpdate {
@@ -23,10 +27,20 @@ public class NotificationsSubscriptionUpdate {
     private final NotificationUpdate notificationUpdate;
     private final NotificationRequestUpdate notificationRequestUpdate;
 
+    /**
+     * Constructs {@link NotificationsSubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param notificationUpdate notification update
+     */
+
     public NotificationsSubscriptionUpdate(NotificationUpdate notificationUpdate) {
         this.notificationUpdate = notificationUpdate;
         this.notificationRequestUpdate = null;
     }
+
+    /**
+     * Constructs {@link NotificationsSubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param notificationRequestUpdate notification request update
+     */
 
     public NotificationsSubscriptionUpdate(NotificationRequestUpdate notificationRequestUpdate) {
         this.notificationUpdate = null;

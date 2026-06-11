@@ -17,4 +17,14 @@ package org.thingsboard.server.service.ai;
 
 import org.thingsboard.rule.engine.api.RuleEngineAiChatModelService;
 
+/**
+
+ * Service contract for ai chat model operations (AI model invocation for platform features).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface AiChatModelService extends RuleEngineAiChatModelService {}

@@ -76,6 +76,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static org.thingsboard.server.dao.edge.BaseRelatedEdgesService.RELATED_EDGES_CACHE_ITEMS;
+/**
+ * Processes base edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ * <p><b>Key dependencies:</b> {@link #edgeCtx}, {@link #entityDaoRegistry}, {@link #edgeSynchronizationManager}, {@link #dbCallbackExecutorService}.
+ */
 
 @Slf4j
 public abstract class BaseEdgeProcessor implements EdgeProcessor {
@@ -96,6 +102,18 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
     @Autowired
     protected DbCallbackExecutorService dbCallbackExecutorService;
 
+    /**
+     * Creates or persists edge event.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeId edge id (EdgeId)
+     * @param type type (EdgeEventType)
+     * @param action action (EdgeEventActionType)
+     * @param entityId entity id (EntityId)
+     * @param body body (JsonNode)
+     * @return {@link ListenableFuture} result
+     */
+
     protected ListenableFuture<Void> saveEdgeEvent(TenantId tenantId,
                                                    EdgeId edgeId,
                                                    EdgeEventType type,
@@ -104,6 +122,19 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
                                                    JsonNode body) {
         return saveEdgeEvent(tenantId, edgeId, type, action, entityId, body, true);
     }
+
+    /**
+     * Creates or persists edge event.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeId edge id (EdgeId)
+     * @param type type (EdgeEventType)
+     * @param action action (EdgeEventActionType)
+     * @param entityId entity id (EntityId)
+     * @param body body (JsonNode)
+     * @param doValidate do validate (boolean)
+     * @return {@link ListenableFuture} result
+     */
 
     protected ListenableFuture<Void> saveEdgeEvent(TenantId tenantId,
                                                    EdgeId edgeId,
@@ -161,6 +192,18 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         return edgeCtx.getEdgeEventService().saveAsync(edgeEvent);
     }
 
+    /**
+     * Processes action for all edges.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param type type (EdgeEventType)
+     * @param actionType action type (EdgeEventActionType)
+     * @param entityId entity id (EntityId)
+     * @param body body (JsonNode)
+     * @param sourceEdgeId source edge id (EdgeId)
+     * @return {@link ListenableFuture} result
+     */
+
     protected ListenableFuture<Void> processActionForAllEdges(TenantId tenantId, EdgeEventType type,
                                                               EdgeEventActionType actionType, EntityId entityId,
                                                               JsonNode body, EdgeId sourceEdgeId) {
@@ -192,11 +235,25 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         return futures;
     }
 
+    /**
+     * Handles unsupported msg type.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @return {@link ListenableFuture} result
+     */
+
     protected ListenableFuture<Void> handleUnsupportedMsgType(UpdateMsgType msgType) {
         String errMsg = String.format("Unsupported msg type %s", msgType);
         log.error(errMsg);
         return Futures.immediateFailedFuture(new RuntimeException(errMsg));
     }
+
+    /**
+     * Returns update msg type.
+     *
+     * @param actionType action type (EdgeEventActionType)
+     * @return {@link UpdateMsgType} result
+     */
 
     protected UpdateMsgType getUpdateMsgType(EdgeEventActionType actionType) {
         return switch (actionType) {
@@ -209,7 +266,13 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
             default -> throw new RuntimeException("Unsupported actionType [" + actionType + "]");
         };
     }
-
+    /**
+     * Processes entity notification.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeNotificationMsg edge notification msg (EdgeNotificationMsgProto)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processEntityNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         EdgeEventType type = EdgeEventType.valueOf(edgeNotificationMsg.getType());
@@ -259,6 +322,14 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         }
     }
 
+    /**
+     * Safe get edge id.
+     *
+     * @param edgeIdMSB edge id msb (long)
+     * @param edgeIdLSB edge id lsb (long)
+     * @return {@link EdgeId} result
+     */
+
     protected EdgeId safeGetEdgeId(long edgeIdMSB, long edgeIdLSB) {
         if (edgeIdMSB != 0 && edgeIdLSB != 0) {
             return new EdgeId(new UUID(edgeIdMSB, edgeIdLSB));
@@ -266,6 +337,18 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
             return null;
         }
     }
+
+    /**
+     * Processes notification to related edges.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param ownerEntityId owner entity id (EntityId)
+     * @param entityId entity id (EntityId)
+     * @param type type (EdgeEventType)
+     * @param actionType action type (EdgeEventActionType)
+     * @param sourceEdgeId source edge id (EdgeId)
+     * @return {@link ListenableFuture} result
+     */
 
     protected ListenableFuture<Void> processNotificationToRelatedEdges(TenantId tenantId, EntityId ownerEntityId, EntityId entityId, EdgeEventType type,
                                                                        EdgeEventActionType actionType, EdgeId sourceEdgeId) {
@@ -310,6 +393,15 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         };
     }
 
+    /**
+     * Construct entity id.
+     *
+     * @param entityTypeStr entity type str (String)
+     * @param entityIdMSB entity id msb (long)
+     * @param entityIdLSB entity id lsb (long)
+     * @return {@link EntityId} result
+     */
+
     protected EntityId constructEntityId(String entityTypeStr, long entityIdMSB, long entityIdLSB) {
         EntityType entityType = EntityType.valueOf(entityTypeStr);
         return switch (entityType) {
@@ -329,9 +421,25 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         };
     }
 
+    /**
+     * Safe get uuid.
+     *
+     * @param mSB m sb (long)
+     * @param lSB l sb (long)
+     * @return {@link UUID} result
+     */
+
     protected UUID safeGetUUID(long mSB, long lSB) {
         return mSB != 0 && lSB != 0 ? new UUID(mSB, lSB) : null;
     }
+
+    /**
+     * Safe get customer id.
+     *
+     * @param mSB m sb (long)
+     * @param lSB l sb (long)
+     * @return {@link CustomerId} result
+     */
 
     protected CustomerId safeGetCustomerId(long mSB, long lSB) {
         CustomerId customerId = null;
@@ -342,9 +450,25 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         return customerId;
     }
 
+    /**
+     * Returns whether entity exists.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param entityId entity id (EntityId)
+     * @return boolean
+     */
+
     protected boolean isEntityExists(TenantId tenantId, EntityId entityId) {
         return entityDaoRegistry.getDao(entityId.getEntityType()).existsById(tenantId, entityId.getId());
     }
+
+    /**
+     * Creates or persists relation from edge.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeId edge id (EdgeId)
+     * @param entityId entity id (EntityId)
+     */
 
     protected void createRelationFromEdge(TenantId tenantId, EdgeId edgeId, EntityId entityId) {
         EntityRelation relation = new EntityRelation();
@@ -355,9 +479,28 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         edgeCtx.getRelationService().saveRelation(tenantId, relation);
     }
 
+    /**
+     * Push entity event to rule engine.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param entity entity (T)
+     * @param msgType msg type (TbMsgType)
+     * @return <T extends HasId<? extends EntityId>>
+     */
+
     protected <T extends HasId<? extends EntityId>> void pushEntityEventToRuleEngine(TenantId tenantId, T entity, TbMsgType msgType) {
         pushEntityEventToRuleEngine(tenantId, null, entity, msgType);
     }
+
+    /**
+     * Push entity event to rule engine.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param entity entity (T)
+     * @param msgType msg type (TbMsgType)
+     * @return <T extends HasId<? extends EntityId>>
+     */
 
     protected <T extends HasId<? extends EntityId>> void pushEntityEventToRuleEngine(TenantId tenantId, Edge edge, T entity, TbMsgType msgType) {
         try {
@@ -378,6 +521,14 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         return null;
     }
 
+    /**
+     * Returns edge action tb msg meta data.
+     *
+     * @param edge edge (Edge)
+     * @param customerId customer id (CustomerId)
+     * @return {@link TbMsgMetaData} result
+     */
+
     protected TbMsgMetaData getEdgeActionTbMsgMetaData(Edge edge, CustomerId customerId) {
         TbMsgMetaData metaData = new TbMsgMetaData();
         metaData.putValue("edgeId", edge.getId().toString());
@@ -387,6 +538,17 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         }
         return metaData;
     }
+
+    /**
+     * Push entity event to rule engine.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param entityId entity id (EntityId)
+     * @param customerId customer id (CustomerId)
+     * @param msgType msg type (TbMsgType)
+     * @param msgData msg data (String)
+     * @param metaData meta data (TbMsgMetaData)
+     */
 
     protected void pushEntityEventToRuleEngine(TenantId tenantId, EntityId entityId, CustomerId customerId,
                                                TbMsgType msgType, String msgData, TbMsgMetaData metaData) {
@@ -399,17 +561,35 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
                 .data(msgData)
                 .build();
         edgeCtx.getClusterService().pushMsgToRuleEngine(tenantId, entityId, tbMsg, new TbQueueCallback() {
+            /**
+             * On success.
+             *
+             * @param metadata metadata (TbQueueMsgMetadata)
+             */
             @Override
             public void onSuccess(TbQueueMsgMetadata metadata) {
                 log.debug("[{}] Successfully send ENTITY_CREATED EVENT to rule engine [{}]", tenantId, msgData);
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 log.warn("[{}] Failed to send ENTITY_CREATED EVENT to rule engine [{}]", tenantId, msgData, t);
             }
         });
     }
+
+    /**
+     * Returns whether save required.
+     *
+     * @param current current (HasVersion)
+     * @param updated updated (HasVersion)
+     * @return boolean
+     */
 
     protected boolean isSaveRequired(HasVersion current, HasVersion updated) {
         if (current != null) {
@@ -431,6 +611,13 @@ public abstract class BaseEdgeProcessor implements EdgeProcessor {
         log.warn("[{}] Entity with name '{}' already exists (id={}). Renaming to '{}'", tenantId, currentName, entityWithSameName.getId(), newEntityName);
         return Optional.of(newEntityName);
     }
+
+    /**
+     * Generate random alphabetic string.
+     *
+     * @param prefix prefix (String)
+     * @return {@link String} result
+     */
 
     protected static String generateRandomAlphabeticString(String prefix) {
         return prefix + "_" + StringUtils.randomAlphabetic(15);

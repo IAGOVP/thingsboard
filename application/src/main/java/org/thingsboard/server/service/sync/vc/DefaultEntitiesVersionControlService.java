@@ -97,6 +97,12 @@ import java.util.function.Function;
 
 import static com.google.common.util.concurrent.Futures.transform;
 import static org.thingsboard.server.common.data.sync.vc.VcUtils.checkBranchName;
+/**
+ * Default Spring implementation for entities version control service (Git-based entity version control (entity version control, Git repository sync, and import/export)).
+ *
+ * <p>Registered as a {@code @Service} or {@code @Component} bean.
+ */
+
 
 @Service
 @TbCoreComponent
@@ -113,6 +119,14 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
     private final TransactionTemplate transactionTemplate;
     private final TbTransactionalCache<UUID, VersionControlTaskCacheEntry> taskCache;
     private final VersionControlExecutor executor;
+    /**
+     * Saves or persists entities version.
+     *
+     * @param user authenticated user performing the action
+     * @param request request payload with operation parameters
+     * @return future completing with {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<UUID> saveEntitiesVersion(User user, VersionCreateRequest request) {
@@ -147,11 +161,27 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
 
         return transform(pendingCommit, CommitGitRequest::getTxId, MoreExecutors.directExecutor());
     }
+    /**
+     * Returns version create status.
+     *
+     * @param user authenticated user performing the action
+     * @param requestId request id ({@link UUID})
+     * @return {@link VersionCreationResult}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public VersionCreationResult getVersionCreateStatus(User user, UUID requestId) throws ThingsboardException {
         return getStatus(user, requestId, VersionControlTaskCacheEntry::getExportResult);
     }
+    /**
+     * Returns version load status.
+     *
+     * @param user authenticated user performing the action
+     * @param requestId request id ({@link UUID})
+     * @return {@link VersionLoadResult}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public VersionLoadResult getVersionLoadStatus(User user, UUID requestId) throws ThingsboardException {
@@ -212,31 +242,85 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
         EntityExportData<ExportableEntity<EntityId>> entityData = exportImportService.exportEntity(ctx, entityId);
         return gitServiceQueue.addToCommit(ctx.getCommit(), entityData);
     }
+    /**
+     * Lists entity versions.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param branch Git branch name
+     * @param externalId external id ({@link EntityId})
+     * @param pageLink pagination and sort parameters
+     * @return future completing with {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<PageData<EntityVersion>> listEntityVersions(TenantId tenantId, String branch, EntityId externalId, PageLink pageLink) throws Exception {
         return gitServiceQueue.listVersions(tenantId, branch, externalId, pageLink);
     }
+    /**
+     * Lists entity type versions.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param branch Git branch name
+     * @param entityType entity type ({@link EntityType})
+     * @param pageLink pagination and sort parameters
+     * @return future completing with {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<PageData<EntityVersion>> listEntityTypeVersions(TenantId tenantId, String branch, EntityType entityType, PageLink pageLink) throws Exception {
         return gitServiceQueue.listVersions(tenantId, branch, entityType, pageLink);
     }
+    /**
+     * Lists versions.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param branch Git branch name
+     * @param pageLink pagination and sort parameters
+     * @return future completing with {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, PageLink pageLink) throws Exception {
         return gitServiceQueue.listVersions(tenantId, branch, pageLink);
     }
+    /**
+     * Lists entities at version.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param versionId entity version identifier in the repository
+     * @param entityType entity type ({@link EntityType})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<VersionedEntityInfo>> listEntitiesAtVersion(TenantId tenantId, String versionId, EntityType entityType) throws Exception {
         return gitServiceQueue.listEntitiesAtVersion(tenantId, versionId, entityType);
     }
+    /**
+     * Lists all entities at version.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param versionId entity version identifier in the repository
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<VersionedEntityInfo>> listAllEntitiesAtVersion(TenantId tenantId, String versionId) throws Exception {
         return gitServiceQueue.listEntitiesAtVersion(tenantId, versionId);
     }
+    /**
+     * Loads entities version.
+     *
+     * @param user authenticated user performing the action
+     * @param request request payload with operation parameters
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings({"rawtypes"})
     @Override
@@ -469,6 +553,15 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
             }
         }
     }
+    /**
+     * Compares entity data to version.
+     *
+     * @param user authenticated user performing the action
+     * @param entityId target entity identifier
+     * @param versionId entity version identifier in the repository
+     * @return future completing with {@link EntityDataDiff}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<EntityDataDiff> compareEntityDataToVersion(User user, EntityId entityId, String versionId) {
@@ -495,22 +588,53 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
                     return new EntityDataDiff(currentVersion.sort(), otherVersion.sort());
                 }, MoreExecutors.directExecutor());
     }
+    /**
+     * Returns entity data info.
+     *
+     * @param user authenticated user performing the action
+     * @param entityId target entity identifier
+     * @param versionId entity version identifier in the repository
+     * @return future completing with {@link EntityDataInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<EntityDataInfo> getEntityDataInfo(User user, EntityId entityId, String versionId) {
         return Futures.transform(gitServiceQueue.getEntity(user.getTenantId(), versionId, entityId),
                 entity -> new EntityDataInfo(entity.hasRelations(), entity.hasAttributes(), entity.hasCredentials(), entity.hasCalculatedFields()), MoreExecutors.directExecutor());
     }
+    /**
+     * Lists branches.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<BranchInfo>> listBranches(TenantId tenantId) {
         return gitServiceQueue.listBranches(tenantId);
     }
+    /**
+     * Returns version control settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link RepositorySettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RepositorySettings getVersionControlSettings(TenantId tenantId) {
         return repositorySettingsService.get(tenantId);
     }
+    /**
+     * Saves or persists version control settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param versionControlSettings version control settings ({@link RepositorySettings})
+     * @return future completing with {@link RepositorySettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<RepositorySettings> saveVersionControlSettings(TenantId tenantId, RepositorySettings versionControlSettings) {
@@ -524,6 +648,13 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
             throw new RuntimeException("Failed to init repository!", e);
         }
     }
+    /**
+     * Deletes version control settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> deleteVersionControlSettings(TenantId tenantId) {
@@ -531,6 +662,14 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
         repositorySettingsService.delete(tenantId);
         return gitServiceQueue.clearRepository(tenantId);
     }
+    /**
+     * Checks version control access.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link RepositorySettings})
+     * @return future completing with {@link Void}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public ListenableFuture<Void> checkVersionControlAccess(TenantId tenantId, RepositorySettings settings) throws ThingsboardException {
@@ -543,6 +682,14 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
                     ThingsboardErrorCode.GENERAL);
         }
     }
+    /**
+     * Triggers auto-commit for the requested data.
+     *
+     * @param user authenticated user performing the action
+     * @param entityId target entity identifier
+     * @return future completing with {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<UUID> autoCommit(User user, EntityId entityId) {
@@ -570,6 +717,15 @@ public class DefaultEntitiesVersionControlService implements EntitiesVersionCont
         vcr.setConfig(autoCommitConfig);
         return saveEntitiesVersion(user, vcr);
     }
+    /**
+     * Triggers auto-commit for the requested data.
+     *
+     * @param user authenticated user performing the action
+     * @param entityType entity type ({@link EntityType})
+     * @param entityIds entity ids ({@link List})
+     * @return future completing with {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<UUID> autoCommit(User user, EntityType entityType, List<UUID> entityIds) {

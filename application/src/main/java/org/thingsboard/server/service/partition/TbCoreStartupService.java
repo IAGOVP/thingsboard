@@ -28,6 +28,10 @@ import org.thingsboard.server.queue.discovery.TbServiceInfoProvider;
 import org.thingsboard.server.queue.util.AfterStartUp;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 
+    /**
+     * Spring service component for tb core startup service (Kafka partition resolution for tenants and queues).
+     */
+
 @Slf4j
 @TbCoreComponent
 @Service
@@ -37,6 +41,13 @@ public class TbCoreStartupService {
     private final PartitionService partitionService;
     private final TbServiceInfoProvider serviceInfoProvider;
     private final TbClusterService clusterService;
+    /**
+     * Handles application event.
+     *
+     * @param event event ({@link ApplicationReadyEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.STARTUP_SERVICE)
     public void onApplicationEvent(ApplicationReadyEvent event) {

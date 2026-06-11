@@ -65,6 +65,10 @@ import java.util.stream.Stream;
 
 import static org.thingsboard.server.utils.LwM2mObjectModelUtils.toLwm2mResource;
 
+    /**
+     * Spring service component for install scripts (database schema installation, upgrades, and demo data loading).
+     */
+
 @Component
 @Slf4j
 public class InstallScripts {
@@ -130,14 +134,32 @@ public class InstallScripts {
     Path getEdgeRuleChainsDir() {
         return Paths.get(getDataDir(), JSON_DIR, EDGE_DIR, RULE_CHAINS_DIR);
     }
+    /**
+     * Returns widget types dir.
+     *
+     * @return {@link Path}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Path getWidgetTypesDir() {
         return Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, WIDGET_TYPES_DIR);
     }
+    /**
+     * Returns widget bundles dir.
+     *
+     * @return {@link Path}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Path getWidgetBundlesDir() {
         return Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, WIDGET_BUNDLES_DIR);
     }
+    /**
+     * Returns data dir.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getDataDir() {
         if (!StringUtils.isEmpty(dataDir)) {
@@ -159,11 +181,25 @@ public class InstallScripts {
             }
         }
     }
+    /**
+     * Creates default rule chains.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createDefaultRuleChains(TenantId tenantId) {
         Path tenantChainsDir = getTenantRuleChainsDir();
         loadRuleChainsFromPath(tenantId, tenantChainsDir);
     }
+    /**
+     * Creates default edge rule chains.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createDefaultEdgeRuleChains(TenantId tenantId) {
         Path edgeChainsDir = getEdgeRuleChainsDir();
@@ -186,10 +222,27 @@ public class InstallScripts {
             return files.toList();
         }
     }
+    /**
+     * Creates default rule chain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainName rule chain name ({@link String})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public RuleChain createDefaultRuleChain(TenantId tenantId, String ruleChainName) {
         return createRuleChainFromFile(tenantId, getDeviceProfileDefaultRuleChainTemplateFilePath(), ruleChainName);
     }
+    /**
+     * Creates rule chain from file.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param templateFilePath template file path ({@link Path})
+     * @param newRuleChainName new rule chain name ({@link String})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public RuleChain createRuleChainFromFile(TenantId tenantId, Path templateFilePath, String newRuleChainName) {
         JsonNode ruleChainJson = JacksonUtil.toJsonNode(templateFilePath.toFile());
@@ -207,6 +260,12 @@ public class InstallScripts {
 
         return ruleChain;
     }
+    /**
+     * Loads system widgets.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void loadSystemWidgets() {
         log.info("Loading system widgets");
@@ -392,6 +451,12 @@ public class InstallScripts {
             widgetsBundleService.deleteWidgetsBundle(TenantId.SYS_TENANT_ID, widgetsBundle.getId());
         }
     }
+    /**
+     * Loads system images and resources.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void loadSystemImagesAndResources() {
         log.info("Loading system images and resources...");
@@ -414,11 +479,27 @@ public class InstallScripts {
         loadSystemResources(resourcesDir.resolve("js_modules"), ResourceType.JS_MODULE, ResourceSubType.MODULE);
         loadSystemResources(resourcesDir.resolve("dashboards"), ResourceType.DASHBOARD, null);
     }
+    /**
+     * Loads dashboards.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void loadDashboards(TenantId tenantId, CustomerId customerId) {
         Path dashboardsDir = Paths.get(getDataDir(), JSON_DIR, DEMO_DIR, DASHBOARDS_DIR);
         loadDashboardsFromDir(tenantId, customerId, dashboardsDir);
     }
+    /**
+     * Creates default tenant dashboards.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createDefaultTenantDashboards(TenantId tenantId, CustomerId customerId) {
         Path dashboardsDir = Paths.get(getDataDir(), JSON_DIR, TENANT_DIR, DASHBOARDS_DIR);
@@ -443,6 +524,13 @@ public class InstallScripts {
             });
         }
     }
+    /**
+     * Loads demo rule chains.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void loadDemoRuleChains(TenantId tenantId) {
         try {
@@ -454,6 +542,12 @@ public class InstallScripts {
             throw new RuntimeException("Unable to load rule chain from json", e);
         }
     }
+    /**
+     * Creates oauth2templates.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createOAuth2Templates() {
         Path oauth2ConfigTemplatesDir = Paths.get(getDataDir(), JSON_DIR, SYSTEM_DIR, OAUTH2_CONFIG_TEMPLATES_DIR);
@@ -477,6 +571,12 @@ public class InstallScripts {
             );
         }
     }
+    /**
+     * Loads system lwm2m resources.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void loadSystemLwm2mResources() {
         Path resourceLwm2mPath = Paths.get(getDataDir(), MODELS_LWM2M_DIR);

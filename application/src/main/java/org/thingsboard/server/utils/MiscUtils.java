@@ -21,18 +21,34 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.nio.charset.Charset;
 
-
 /**
+ * Miscellaneous server-side helpers for configuration messages, hash functions,
+ * and HTTP request URL construction behind reverse proxies.
+ *
  * @author Andrew Shvayka
  */
 public class MiscUtils {
 
+    /** UTF-8 charset constant used across server string operations. */
     public static final Charset UTF8 = Charset.forName("UTF-8");
 
+    /**
+     * Builds a standard message for a missing required configuration property.
+     *
+     * @param propertyName name of the property that must be set
+     * @return formatted error message string
+     */
     public static String missingProperty(String propertyName) {
         return "The " + propertyName + " property need to be set!";
     }
 
+    /**
+     * Returns a Guava {@link HashFunction} instance by symbolic name.
+     *
+     * @param name hash algorithm name: {@code murmur3_32}, {@code murmur3_128}, {@code crc32}, or {@code md5}
+     * @return corresponding {@link HashFunction}
+     * @throws IllegalArgumentException if the name does not match a supported algorithm
+     */
     @SuppressWarnings("deprecation")
     public static HashFunction forName(String name) {
         switch (name) {
@@ -49,6 +65,13 @@ public class MiscUtils {
         }
     }
 
+    /**
+     * Constructs the base URL ({@code scheme://host:port}) for the incoming request,
+     * honoring {@code x-forwarded-proto} and {@code x-forwarded-port} headers when present.
+     *
+     * @param request current HTTP servlet request
+     * @return formatted base URL string
+     */
     public static String constructBaseUrl(HttpServletRequest request) {
         return String.format("%s://%s:%d",
                 getScheme(request),
@@ -56,6 +79,12 @@ public class MiscUtils {
                 getPort(request));
     }
 
+    /**
+     * Resolves the request scheme, preferring the {@code x-forwarded-proto} header when set.
+     *
+     * @param request current HTTP servlet request
+     * @return {@code http} or {@code https} scheme string
+     */
     public static String getScheme(HttpServletRequest request){
         String scheme = request.getScheme();
         String forwardedProto = request.getHeader("x-forwarded-proto");
@@ -65,10 +94,24 @@ public class MiscUtils {
         return scheme;
     }
 
+    /**
+     * Returns the server host name from the servlet request.
+     *
+     * @param request current HTTP servlet request
+     * @return domain or host name (without port)
+     */
     public static String getDomainName(HttpServletRequest request){
         return request.getServerName();
     }
 
+    /**
+     * Returns the domain name with a non-default port appended when required.
+     *
+     * <p>Omits the port for standard HTTP (80) and HTTPS (443) combinations.
+     *
+     * @param request current HTTP servlet request
+     * @return host name optionally suffixed with {@code :port}
+     */
     public static String getDomainNameAndPort(HttpServletRequest request){
         String domainName = getDomainName(request);
         String scheme = getScheme(request);
@@ -85,6 +128,13 @@ public class MiscUtils {
         return !isHttpDefault && !isHttpsDefault;
     }
 
+    /**
+     * Resolves the effective server port, honoring {@code x-forwarded-port} and
+     * {@code x-forwarded-proto} headers when present.
+     *
+     * @param request current HTTP servlet request
+     * @return resolved port number
+     */
     public static int getPort(HttpServletRequest request){
         String forwardedProto = request.getHeader("x-forwarded-proto");
 

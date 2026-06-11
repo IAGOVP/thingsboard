@@ -80,6 +80,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.thingsboard.server.service.cf.ctx.state.BaseCalculatedFieldState.DEFAULT_LAST_UPDATE_TS;
+/**
+ * Calculated field ctx (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ */
 
 @Data
 @Slf4j
@@ -220,6 +223,12 @@ public class CalculatedFieldCtx implements Closeable {
 
         setTenantProfileProperties();
     }
+    /**
+     * Requires scheduled reevaluation.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean requiresScheduledReevaluation() {
         long now = System.currentTimeMillis();
@@ -257,6 +266,12 @@ public class CalculatedFieldCtx implements Closeable {
         }
         return requiresScheduledReevaluation;
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void init() {
         switch (cfType) {
@@ -301,6 +316,12 @@ public class CalculatedFieldCtx implements Closeable {
             case ENTITY_AGGREGATION -> initialized = true;
         }
     }
+    /**
+     * Set tenant profile properties.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setTenantProfileProperties() {
         TenantProfile tenantProfile = systemContext.getTenantProfileCache().get(tenantId);
@@ -319,6 +340,14 @@ public class CalculatedFieldCtx implements Closeable {
             this.minDeduplicationIntervalMillis = TimeUnit.SECONDS.toMillis(config.getMinAllowedDeduplicationIntervalInSecForCF());
         });
     }
+    /**
+     * Evaluate simple expression.
+     *
+     * @param expression expression ({@link Expression})
+     * @param state state ({@link CalculatedFieldState})
+     * @return the double result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public double evaluateSimpleExpression(Expression expression, CalculatedFieldState state) {
         for (Map.Entry<String, ArgumentEntry> entry : state.getArguments().entrySet()) {
@@ -337,18 +366,52 @@ public class CalculatedFieldCtx implements Closeable {
         }
         return expression.evaluate();
     }
+    /**
+     * Evaluate tbel expression.
+     *
+     * @param expression expression ({@link String})
+     * @param state state ({@link CalculatedFieldState})
+     * @return future completing with {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ListenableFuture<Object> evaluateTbelExpression(String expression, CalculatedFieldState state) {
         return evaluateTbelExpression(tbelExpressions.get(expression), state.getArguments(), state.getLatestTimestamp());
     }
+    /**
+     * Evaluate tbel expression.
+     *
+     * @param expression expression ({@link CalculatedFieldScriptEngine})
+     * @param state state ({@link CalculatedFieldState})
+     * @return future completing with {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ListenableFuture<Object> evaluateTbelExpression(CalculatedFieldScriptEngine expression, CalculatedFieldState state) {
         return evaluateTbelExpression(expression, state.getArguments(), state.getLatestTimestamp());
     }
+    /**
+     * Evaluate tbel expression.
+     *
+     * @param expression expression ({@link String})
+     * @param entries entries ({@link Map})
+     * @param latestTimestamp latest timestamp
+     * @return future completing with {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ListenableFuture<Object> evaluateTbelExpression(String expression, Map<String, ArgumentEntry> entries, long latestTimestamp) {
         return evaluateTbelExpression(tbelExpressions.get(expression), entries, latestTimestamp);
     }
+    /**
+     * Evaluate tbel expression.
+     *
+     * @param expression expression ({@link CalculatedFieldScriptEngine})
+     * @param entries entries ({@link Map})
+     * @param latestTimestamp latest timestamp
+     * @return future completing with {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ListenableFuture<Object> evaluateTbelExpression(CalculatedFieldScriptEngine expression, Map<String, ArgumentEntry> entries, long latestTimestamp) {
         Map<String, TbelCfArg> arguments = new LinkedHashMap<>();
@@ -367,6 +430,14 @@ public class CalculatedFieldCtx implements Closeable {
 
         return expression.executeScriptAsync(args.toArray());
     }
+    /**
+     * Schedule reevaluation.
+     *
+     * @param delayMs delay ms
+     * @param actorCtx actor ctx ({@link TbActorRef})
+     * @return {@link ScheduledFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ScheduledFuture<?> scheduleReevaluation(long delayMs, TbActorRef actorCtx) {
         log.debug("[{}] Scheduling CF reevaluation in {} ms", cfId, delayMs);
@@ -433,28 +504,75 @@ public class CalculatedFieldCtx implements Closeable {
             return false;
         }
     }
+    /**
+     * Matches.
+     *
+     * @param values values ({@link List})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean matches(List<AttributeKvEntry> values, AttributeScope scope) {
         return matchesAttributes(mainEntityArguments, values, scope);
     }
+    /**
+     * Link matches.
+     *
+     * @param entityId target entity identifier
+     * @param values values ({@link List})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean linkMatches(EntityId entityId, List<AttributeKvEntry> values, AttributeScope scope) {
         var map = linkedEntityArguments.get(entityId);
         return map != null && matchesAttributes(map, values, scope);
     }
+    /**
+     * Matches.
+     *
+     * @param values values ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean matches(List<TsKvEntry> values) {
         return matchesTimeSeries(mainEntityArguments, values);
     }
+    /**
+     * Link matches.
+     *
+     * @param entityId target entity identifier
+     * @param values values ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean linkMatches(EntityId entityId, List<TsKvEntry> values) {
         var map = linkedEntityArguments.get(entityId);
         return map != null && matchesTimeSeries(map, values);
     }
+    /**
+     * Dynamic source matches.
+     *
+     * @param values values ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean dynamicSourceMatches(List<TsKvEntry> values) {
         return matchesTimeSeries(dynamicEntityArguments, values);
     }
+    /**
+     * Dynamic source matches.
+     *
+     * @param values values ({@link List})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean dynamicSourceMatches(List<AttributeKvEntry> values, AttributeScope scope) {
         return matchesAttributes(dynamicEntityArguments, values, scope);
@@ -494,18 +612,48 @@ public class CalculatedFieldCtx implements Closeable {
 
         return false;
     }
+    /**
+     * Matches keys.
+     *
+     * @param keys keys ({@link List})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean matchesKeys(List<String> keys, AttributeScope scope) {
         return matchesAttributesKeys(mainEntityArguments, keys, scope);
     }
+    /**
+     * Matches keys.
+     *
+     * @param keys keys ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean matchesKeys(List<String> keys) {
         return matchesTimeSeriesKeys(mainEntityArguments, keys);
     }
+    /**
+     * Matches dynamic source keys.
+     *
+     * @param keys keys ({@link List})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean matchesDynamicSourceKeys(List<String> keys, AttributeScope scope) {
         return matchesAttributesKeys(dynamicEntityArguments, keys, scope);
     }
+    /**
+     * Matches dynamic source keys.
+     *
+     * @param keys keys ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean matchesDynamicSourceKeys(List<String> keys) {
         return matchesTimeSeriesKeys(dynamicEntityArguments, keys);
@@ -546,32 +694,86 @@ public class CalculatedFieldCtx implements Closeable {
 
         return false;
     }
+    /**
+     * Link matches attr keys.
+     *
+     * @param entityId target entity identifier
+     * @param keys keys ({@link List})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean linkMatchesAttrKeys(EntityId entityId, List<String> keys, AttributeScope scope) {
         var map = linkedEntityArguments.get(entityId);
         return map != null && matchesAttributesKeys(map, keys, scope);
     }
+    /**
+     * Link matches ts keys.
+     *
+     * @param entityId target entity identifier
+     * @param keys keys ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean linkMatchesTsKeys(EntityId entityId, List<String> keys) {
         var map = linkedEntityArguments.get(entityId);
         return map != null && matchesTimeSeriesKeys(map, keys);
     }
+    /**
+     * Related entity matches.
+     *
+     * @param values values ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean relatedEntityMatches(List<TsKvEntry> values) {
         return matchesTimeSeries(relatedEntityArguments, values);
     }
+    /**
+     * Related entity matches.
+     *
+     * @param values values ({@link List})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean relatedEntityMatches(List<AttributeKvEntry> values, AttributeScope scope) {
         return matchesAttributes(relatedEntityArguments, values, scope);
     }
+    /**
+     * Matches related entity keys.
+     *
+     * @param keys keys ({@link List})
+     * @param scope scope ({@link AttributeScope})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean matchesRelatedEntityKeys(List<String> keys, AttributeScope scope) {
         return matchesAttributesKeys(relatedEntityArguments, keys, scope);
     }
+    /**
+     * Matches related entity keys.
+     *
+     * @param keys keys ({@link List})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean matchesRelatedEntityKeys(List<String> keys) {
         return matchesTimeSeriesKeys(relatedEntityArguments, keys);
     }
+    /**
+     * Related entity matches.
+     *
+     * @param proto proto ({@link CalculatedFieldTelemetryMsgProto})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean relatedEntityMatches(CalculatedFieldTelemetryMsgProto proto) {
         if (!proto.getTsDataList().isEmpty()) {
@@ -591,6 +793,13 @@ public class CalculatedFieldCtx implements Closeable {
             return matchesRelatedEntityKeys(proto.getRemovedAttrKeysList(), AttributeScope.valueOf(proto.getScope().name()));
         }
     }
+    /**
+     * Dynamic source matches.
+     *
+     * @param proto proto ({@link CalculatedFieldTelemetryMsgProto})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean dynamicSourceMatches(CalculatedFieldTelemetryMsgProto proto) {
         if (!proto.getTsDataList().isEmpty()) {
@@ -610,6 +819,14 @@ public class CalculatedFieldCtx implements Closeable {
             return matchesDynamicSourceKeys(proto.getRemovedAttrKeysList(), AttributeScope.valueOf(proto.getScope().name()));
         }
     }
+    /**
+     * Link matches.
+     *
+     * @param entityId target entity identifier
+     * @param proto proto ({@link CalculatedFieldTelemetryMsgProto})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean linkMatches(EntityId entityId, CalculatedFieldTelemetryMsgProto proto) {
         if (!proto.getTsDataList().isEmpty()) {
@@ -629,6 +846,13 @@ public class CalculatedFieldCtx implements Closeable {
             return linkMatchesAttrKeys(entityId, proto.getRemovedAttrKeysList(), AttributeScope.valueOf(proto.getScope().name()));
         }
     }
+    /**
+     * Returns linked and dynamic args.
+     *
+     * @param entityId target entity identifier
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Map<ReferencedEntityKey, Set<String>> getLinkedAndDynamicArgs(EntityId entityId) {
         var argNames = new HashMap<ReferencedEntityKey, Set<String>>();
@@ -641,10 +865,23 @@ public class CalculatedFieldCtx implements Closeable {
         }
         return argNames;
     }
+    /**
+     * To calculated field entity ctx id.
+     *
+     * @return {@link CalculatedFieldEntityCtxId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public CalculatedFieldEntityCtxId toCalculatedFieldEntityCtxId() {
         return new CalculatedFieldEntityCtxId(tenantId, cfId, entityId);
     }
+    /**
+     * Has refresh context only changes.
+     *
+     * @param other other ({@link CalculatedFieldCtx})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean hasRefreshContextOnlyChanges(CalculatedFieldCtx other) { // has changes that do not require state recalculation
         if (output != null) {
@@ -664,6 +901,13 @@ public class CalculatedFieldCtx implements Closeable {
 
         return false;
     }
+    /**
+     * Has context only changes.
+     *
+     * @param other other ({@link CalculatedFieldCtx})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean hasContextOnlyChanges(CalculatedFieldCtx other) { // has changes that do not require state reinit and will be picked up by the state on the fly
         if (calculatedField.getConfiguration() instanceof ExpressionBasedCalculatedFieldConfiguration && !Objects.equals(expression, other.expression)) {
@@ -712,6 +956,13 @@ public class CalculatedFieldCtx implements Closeable {
         }
         return false;
     }
+    /**
+     * Has state changes.
+     *
+     * @param other other ({@link CalculatedFieldCtx})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean hasStateChanges(CalculatedFieldCtx other) {
         if (!arguments.equals(other.arguments)) {
@@ -769,10 +1020,23 @@ public class CalculatedFieldCtx implements Closeable {
     private boolean isScheduledUpdateDisabled() {
         return scheduledUpdateIntervalMillis == DISABLED_INTERVAL_VALUE;
     }
+    /**
+     * Has related entities.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean hasRelatedEntities() {
         return cfHasRelationPathQuerySource;
     }
+    /**
+     * Should fetch related entities.
+     *
+     * @param state state ({@link CalculatedFieldState})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean shouldFetchRelatedEntities(CalculatedFieldState state) {
         if (!cfHasRelationPathQuerySource) {
@@ -789,6 +1053,12 @@ public class CalculatedFieldCtx implements Closeable {
         }
         return scheduledRefreshSupported.getLastScheduledRefreshTs() < System.currentTimeMillis() - Math.max(scheduledUpdateIntervalMillis, minScheduledUpdateIntervalMillis);
     }
+    /**
+     * Close.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void close() {
@@ -803,10 +1073,22 @@ public class CalculatedFieldCtx implements Closeable {
             log.warn("Failed to stop {}", this, e);
         }
     }
+    /**
+     * Returns size exceeds limit message.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getSizeExceedsLimitMessage() {
         return "State size exceeds limit of " + (maxStateSize / 1024) + "Kb!";
     }
+    /**
+     * Has current owner source arguments.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean hasCurrentOwnerSourceArguments() {
         return !dynamicEntityArguments.isEmpty();

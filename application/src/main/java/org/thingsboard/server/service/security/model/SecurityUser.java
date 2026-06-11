@@ -27,6 +27,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Security user for security DTOs and principals.
+ */
+
 public class SecurityUser extends User {
 
     private static final long serialVersionUID = -797397440703066079L;
@@ -52,6 +56,11 @@ public class SecurityUser extends User {
         this.enabled = enabled;
         this.userPrincipal = userPrincipal;
     }
+
+    /**
+     * Returns authorities.
+     *
+     */
 
     public Collection<GrantedAuthority> getAuthorities() {
         if (authorities == null) {

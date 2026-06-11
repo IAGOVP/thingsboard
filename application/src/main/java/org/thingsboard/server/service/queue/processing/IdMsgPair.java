@@ -20,4 +20,8 @@ import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
 import java.util.UUID;
 
+/**
+ * Immutable record holding id msg pair data.
+ */
+
 public record IdMsgPair<T extends GeneratedMessageV3>(UUID uuid, TbProtoQueueMsg<T> msg) {}

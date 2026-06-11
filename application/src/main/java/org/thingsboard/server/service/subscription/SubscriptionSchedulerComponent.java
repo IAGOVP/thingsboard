@@ -25,6 +25,9 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+/**
+ * Scheduled tasks for subscription housekeeping (stale session cleanup, stats).
+ */
 
 @TbCoreComponent
 @Service
@@ -33,10 +36,22 @@ public class SubscriptionSchedulerComponent {
     @Getter
     private ScheduledExecutorService scheduler;
 
+    /**
+     * Initializes executor.
+     * @return @PostConstruct
+    public void
+     */
+
     @PostConstruct
     public void initExecutor() {
         scheduler = ThingsBoardExecutors.newSingleThreadScheduledExecutor("subscription-scheduler");
     }
+
+    /**
+     * Shutdown executor.
+     * @return @PreDestroy
+    public void
+     */
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -44,6 +59,15 @@ public class SubscriptionSchedulerComponent {
             scheduler.shutdownNow();
         }
     }
+
+    /**
+     * Schedules with fixed delay.
+     * @param command command
+     * @param initialDelay initial delay
+     * @param delay delay
+     * @param unit unit
+     * @return {@link ScheduledFuture}
+     */
 
     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
         return scheduler.scheduleWithFixedDelay(command, initialDelay, delay, unit);

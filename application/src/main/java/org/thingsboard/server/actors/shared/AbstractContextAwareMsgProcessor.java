@@ -22,6 +22,9 @@ import org.thingsboard.server.common.msg.TbActorMsg;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+/**
+ * Base message processor with {@link ActorSystemContext} and actor context references.
+ */
 
 @Slf4j
 public abstract class AbstractContextAwareMsgProcessor {
@@ -36,10 +39,29 @@ public abstract class AbstractContextAwareMsgProcessor {
     private ScheduledExecutorService getScheduler() {
         return systemContext.getScheduler();
     }
+    /**
+     * Schedule periodic msg with delay.
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @param msg actor message to process
+     * @param delayInMs delay in ms
+     * @param periodInMs period in ms
+     * @return {@link ScheduledFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ScheduledFuture<?> schedulePeriodicMsgWithDelay(TbActorCtx ctx, TbActorMsg msg, long delayInMs, long periodInMs) {
         return systemContext.schedulePeriodicMsgWithDelay(ctx, msg, delayInMs, periodInMs);
     }
+    /**
+     * Schedule msg with delay.
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @param msg actor message to process
+     * @param delayInMs delay in ms
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void scheduleMsgWithDelay(TbActorCtx ctx, TbActorMsg msg, long delayInMs) {
         systemContext.scheduleMsgWithDelay(ctx, msg, delayInMs);

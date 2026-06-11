@@ -66,6 +66,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static org.thingsboard.server.common.data.StringUtils.isBlank;
+/**
+ * Default implementation of {@link TbEntityViewService}.
+ */
 
 @Service
 @AllArgsConstructor
@@ -78,11 +81,30 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     private final TimeseriesService tsService;
 
     final Map<TenantId, Map<EntityId, List<EntityView>>> localCache = new ConcurrentHashMap<>();
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param entityView entity view ({@link EntityView})
+     * @param existingEntityView existing entity view ({@link EntityView})
+     * @param user authenticated user performing the action
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityView save(EntityView entityView, EntityView existingEntityView, User user) throws Exception {
         return save(entityView, existingEntityView, NameConflictStrategy.DEFAULT, user);
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param entityView entity view ({@link EntityView})
+     * @param existingEntityView existing entity view ({@link EntityView})
+     * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+     * @param user authenticated user performing the action
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityView save(EntityView entityView, EntityView existingEntityView, NameConflictStrategy nameConflictStrategy, User user) throws Exception {
@@ -101,6 +123,16 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Updates entity view attributes.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param savedEntityView saved entity view ({@link EntityView})
+     * @param oldEntityView old entity view ({@link EntityView})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void updateEntityViewAttributes(TenantId tenantId, EntityView savedEntityView, EntityView oldEntityView, User user) throws ThingsboardException {
@@ -132,6 +164,14 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             }
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param entityView entity view ({@link EntityView})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void delete(EntityView entityView, User user) throws ThingsboardException {
@@ -149,6 +189,16 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Assigns entity view to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link EntityView}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public EntityView assignEntityViewToCustomer(TenantId tenantId, EntityViewId entityViewId, Customer customer, User user) throws ThingsboardException {
@@ -165,6 +215,16 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Unassigns entity view from customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link EntityView}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public EntityView unassignEntityViewFromCustomer(TenantId tenantId, EntityViewId entityViewId, Customer customer, User user) throws ThingsboardException {
@@ -180,6 +240,15 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Assigns entity view to public customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @param user authenticated user performing the action
+     * @return {@link EntityView}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public EntityView assignEntityViewToPublicCustomer(TenantId tenantId, EntityViewId entityViewId, User user) throws ThingsboardException {
@@ -197,6 +266,17 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Assigns entity view to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return {@link EntityView}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public EntityView assignEntityViewToEdge(TenantId tenantId, CustomerId customerId, EntityViewId entityViewId, Edge edge, User user) throws ThingsboardException {
@@ -213,6 +293,17 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Unassigns entity view from edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param entityView entity view ({@link EntityView})
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return {@link EntityView}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public EntityView unassignEntityViewFromEdge(TenantId tenantId, CustomerId customerId, EntityView entityView,
@@ -231,6 +322,14 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Finds entity views by tenant id and entity id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<EntityView>> findEntityViewsByTenantIdAndEntityIdAsync(TenantId tenantId, EntityId entityId) {
@@ -247,6 +346,13 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
             return entityViewList;
         }, MoreExecutors.directExecutor());
     }
+    /**
+     * Handles component lifecycle msg.
+     *
+     * @param componentLifecycleMsg component lifecycle msg ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onComponentLifecycleMsg(ComponentLifecycleMsg componentLifecycleMsg) {
@@ -300,6 +406,15 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                             .scope(scope)
                             .entries(attributes)
                             .callback(new FutureCallback<>() {
+                                
+                                /**
+                                 * Handles success.
+                                 *
+                                 * @param tmp tmp ({@link Void})
+                                 * @return nothing
+                                 * @throws Exception if an unexpected error occurs during processing
+                                 */
+
                                 @Override
                                 public void onSuccess(@Nullable Void tmp) {
                                     try {
@@ -308,6 +423,13 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                                         log.error("Failed to log attribute updates", e);
                                     }
                                 }
+                                /**
+                                 * Handles failure.
+                                 *
+                                 * @param t t ({@link Throwable})
+                                 * @return nothing
+                                 * @throws Exception if an unexpected error occurs during processing
+                                 */
 
                                 @Override
                                 public void onFailure(Throwable t) {
@@ -356,9 +478,25 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                         .entries(latestValues)
                         .strategy(TimeseriesSaveRequest.Strategy.LATEST_AND_WS)
                         .callback(new FutureCallback<Void>() {
+                            
+                            /**
+                             * Handles success.
+                             *
+                             * @param tmp tmp ({@link Void})
+                             * @return nothing
+                             * @throws Exception if an unexpected error occurs during processing
+                             */
+
                             @Override
                             public void onSuccess(@Nullable Void tmp) {
                             }
+                            /**
+                             * Handles failure.
+                             *
+                             * @param t t ({@link Throwable})
+                             * @return nothing
+                             * @throws Exception if an unexpected error occurs during processing
+                             */
 
                             @Override
                             public void onFailure(Throwable t) {
@@ -381,6 +519,15 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                     .scope(scope)
                     .keys(keys)
                     .callback(new FutureCallback<>() {
+                        
+                        /**
+                         * Handles success.
+                         *
+                         * @param tmp tmp ({@link Void})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
+
                         @Override
                         public void onSuccess(@Nullable Void tmp) {
                             try {
@@ -390,6 +537,13 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                             }
                             resultFuture.set(tmp);
                         }
+                        /**
+                         * Handles failure.
+                         *
+                         * @param t t ({@link Throwable})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
 
                         @Override
                         public void onFailure(Throwable t) {
@@ -416,6 +570,15 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                 .entityId(entityId)
                 .keys(keys)
                 .callback(new FutureCallback<>() {
+                    
+                    /**
+                     * Handles success.
+                     *
+                     * @param result result ({@link List})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
+
                     @Override
                     public void onSuccess(@Nullable List<String> result) {
                         try {
@@ -425,6 +588,13 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
                         }
                         resultFuture.set(null);
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -451,6 +621,13 @@ public class DefaultTbEntityViewService extends AbstractTbEntityService implemen
     private void logTimeseriesDeleted(TenantId tenantId, User user, EntityId entityId, List<String> keys, Throwable e) throws ThingsboardException {
         logEntityActionService.logEntityAction(tenantId, entityId, ActionType.TIMESERIES_DELETED, user, toException(e), keys);
     }
+    /**
+     * To exception.
+     *
+     * @param error error ({@link Throwable})
+     * @return {@link Exception}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Exception toException(Throwable error) {
         return error != null ? (Exception.class.isInstance(error) ? (Exception) error : new Exception(error)) : null;

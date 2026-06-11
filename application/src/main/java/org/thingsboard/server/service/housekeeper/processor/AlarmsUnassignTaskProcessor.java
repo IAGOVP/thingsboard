@@ -30,6 +30,10 @@ import org.thingsboard.server.service.entitiy.alarm.TbAlarmService;
 import java.util.List;
 import java.util.UUID;
 
+    /**
+     * Spring service component for alarms unassign task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -37,6 +41,13 @@ public class AlarmsUnassignTaskProcessor extends HousekeeperTaskProcessor<Alarms
 
     private final TbAlarmService tbAlarmService;
     private final AlarmService alarmService;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link AlarmsUnassignHousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(AlarmsUnassignHousekeeperTask task) throws Exception {
@@ -62,6 +73,12 @@ public class AlarmsUnassignTaskProcessor extends HousekeeperTaskProcessor<Alarms
             log.debug("[{}][{}] Unassigned {} alarms", tenantId, userId, task.getAlarms().size());
         }
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

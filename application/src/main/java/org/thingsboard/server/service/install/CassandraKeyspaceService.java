@@ -26,6 +26,9 @@ import org.thingsboard.server.dao.util.NoSqlAnyDaoNonCloud;
 * Without this service cloud DB will end up with exception like
 * UnauthorizedException: Missing correct permission on thingsboard
 * */
+/**
+ * Spring service component for cassandra keyspace service (database schema installation, upgrades, and demo data loading).
+ */
 @Service
 @NoSqlAnyDaoNonCloud
 @Profile("install")

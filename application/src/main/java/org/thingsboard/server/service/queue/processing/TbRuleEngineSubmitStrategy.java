@@ -23,17 +23,78 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiConsumer;
 
+/**
+ * Rule-engine message submit strategy: tb rule engine submit strategy.
+ * <p>Controls parallelism and ordering when a pack of {@code TbMsg} is handed to actors.
+ */
+
 public interface TbRuleEngineSubmitStrategy {
+
+    /**
+     * Initializes init.
+     * @param msgs msgs
+     */
+
+    /**
+     * Initializes.
+     * @param msgs msgs
+     */
+
+    /**
+     * Initializes.
+     * @param msgs msgs
+     */
+
+    /**
+     * Initializes.
+     * @param msgs msgs
+     */
 
     void init(List<TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgs);
 
+    /**
+     * Returns pending map.
+     * @return {@link ConcurrentMap}
+     */
+
     ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> getPendingMap();
+
+    /**
+     * Submits attempt.
+     * @param msgConsumer msg consumer
+     */
 
     void submitAttempt(BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer);
 
+    /**
+     * Updates update.
+     * @param reprocessMap reprocess map
+     */
+
     void update(ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> reprocessMap);
 
+    /**
+     * Invoked when success occurs.
+     * @param id id
+     */
+
     void onSuccess(UUID id);
+
+    /**
+     * Stops stop.
+     */
+
+    /**
+     * Stops.
+     */
+
+    /**
+     * Stops.
+     */
+
+    /**
+     * Stops.
+     */
 
     void stop();
 }

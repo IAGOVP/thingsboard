@@ -34,6 +34,12 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+    /**
+     * Default Spring implementation for device state manager (device and entity state tracking).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -44,6 +50,16 @@ public class DefaultDeviceStateManager implements DeviceStateManager {
 
     private final Optional<DeviceStateService> deviceStateService;
     private final TbClusterService clusterService;
+    /**
+     * Handles device connect.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param connectTime connect time
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceConnect(TenantId tenantId, DeviceId deviceId, long connectTime, TbCallback callback) {
@@ -66,6 +82,16 @@ public class DefaultDeviceStateManager implements DeviceStateManager {
                             .build();
                 }, callback);
     }
+    /**
+     * Handles device activity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param activityTime activity time
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceActivity(TenantId tenantId, DeviceId deviceId, long activityTime, TbCallback callback) {
@@ -88,6 +114,16 @@ public class DefaultDeviceStateManager implements DeviceStateManager {
                             .build();
                 }, callback);
     }
+    /**
+     * Handles device disconnect.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param disconnectTime disconnect time
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceDisconnect(TenantId tenantId, DeviceId deviceId, long disconnectTime, TbCallback callback) {
@@ -110,6 +146,16 @@ public class DefaultDeviceStateManager implements DeviceStateManager {
                             .build();
                 }, callback);
     }
+    /**
+     * Handles device inactivity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param inactivityTime inactivity time
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceInactivity(TenantId tenantId, DeviceId deviceId, long inactivityTime, TbCallback callback) {
@@ -132,6 +178,16 @@ public class DefaultDeviceStateManager implements DeviceStateManager {
                             .build();
                 }, callback);
     }
+    /**
+     * Handles device inactivity timeout update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param inactivityTimeout inactivity timeout
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceInactivityTimeoutUpdate(TenantId tenantId, DeviceId deviceId, long inactivityTimeout, TbCallback callback) {

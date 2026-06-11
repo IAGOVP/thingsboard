@@ -26,15 +26,69 @@ import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+
+ * Application-layer service API for calculated field entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbCalculatedFieldService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param calculatedField calculated field ({@link CalculatedField})
+ * @param user authenticated user performing the action
+ * @return {@link CalculatedField}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     CalculatedField save(CalculatedField calculatedField, SecurityUser user) throws ThingsboardException;
+/**
+ * Finds by id.
+ *
+ * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+ * @param user authenticated user performing the action
+ * @return {@link CalculatedField}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     CalculatedField findById(CalculatedFieldId calculatedFieldId, SecurityUser user);
+/**
+ * Finds by tenant id and entity id.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param type type ({@link CalculatedFieldType})
+ * @param pageLink pagination and sort parameters
+ * @return {@link PageData}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     PageData<CalculatedField> findByTenantIdAndEntityId(TenantId tenantId, EntityId entityId, CalculatedFieldType type, PageLink pageLink);
+/**
+ * Deletes the requested data.
+ *
+ * @param calculatedField calculated field ({@link CalculatedField})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void delete(CalculatedField calculatedField, SecurityUser user);
+/**
+ * Executes test script.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param inputParams input params ({@link JsonNode})
+ * @return {@link JsonNode}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     JsonNode executeTestScript(TenantId tenantId, JsonNode inputParams);
 

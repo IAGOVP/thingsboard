@@ -19,6 +19,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.thingsboard.server.common.data.exception.ThingsboardErrorCode;
 
+/**
+ * Standard JSON error payload returned by ThingsBoard REST and security endpoints.
+ *
+ * <p>Combines an HTTP status, human-readable message, platform-specific {@link ThingsboardErrorCode},
+ * and a server-side timestamp. Specialized subclasses extend this type with additional fields
+ * (for example password-reset tokens or entity-limit details).
+ *
+ * @see ThingsboardErrorResponseHandler
+ */
 @Schema
 public class ThingsboardErrorResponse {
     // HTTP Response Status Code
@@ -32,6 +41,13 @@ public class ThingsboardErrorResponse {
 
     private final long timestamp;
 
+    /**
+     * Creates an immutable error response with the current timestamp.
+     *
+     * @param message   human-readable error description
+     * @param errorCode platform error code mapped to the HTTP status
+     * @param status    HTTP status associated with this error
+     */
     protected ThingsboardErrorResponse(final String message, final ThingsboardErrorCode errorCode, HttpStatus status) {
         this.message = message;
         this.errorCode = errorCode;
@@ -39,20 +55,43 @@ public class ThingsboardErrorResponse {
         this.timestamp = System.currentTimeMillis();
     }
 
+    /**
+     * Factory method for constructing a standard error response.
+     *
+     * @param message   human-readable error description
+     * @param errorCode platform error code
+     * @param status    HTTP status to return to the client
+     * @return new {@link ThingsboardErrorResponse} instance
+     */
     public static ThingsboardErrorResponse of(final String message, final ThingsboardErrorCode errorCode, HttpStatus status) {
         return new ThingsboardErrorResponse(message, errorCode, status);
     }
 
+    /**
+     * Returns the numeric HTTP status code.
+     *
+     * @return HTTP status value (for example 401, 403, 404)
+     */
     @Schema(description = "HTTP Response Status Code", example = "401", accessMode = Schema.AccessMode.READ_ONLY)
     public Integer getStatus() {
         return status.value();
     }
 
+    /**
+     * Returns the human-readable error message.
+     *
+     * @return error message text
+     */
     @Schema(description = "Error message", example = "Authentication failed", accessMode = Schema.AccessMode.READ_ONLY)
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Returns the platform-specific error code.
+     *
+     * @return {@link ThingsboardErrorCode} identifying the error category
+     */
     @Schema(description = "Platform error code:" +
             "\n* `2` - General error (HTTP: 500 - Internal Server Error)" +
             "\n\n* `10` - Authentication failed (HTTP: 401 - Unauthorized)" +
@@ -72,6 +111,11 @@ public class ThingsboardErrorResponse {
         return errorCode;
     }
 
+    /**
+     * Returns the server timestamp when this error response was created.
+     *
+     * @return epoch milliseconds at response construction time
+     */
     @Schema(description = "Timestamp", accessMode = Schema.AccessMode.READ_ONLY)
     public long getTimestamp() {
         return timestamp;

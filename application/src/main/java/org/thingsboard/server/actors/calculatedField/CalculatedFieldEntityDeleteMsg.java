@@ -22,7 +22,10 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 
-/** Tears down calculated-field state when an entity is deleted. */
+/**
+ * Removes a calculated-field entity actor and clears its runtime state.
+ */
+
 @Data
 public class CalculatedFieldEntityDeleteMsg implements ToCalculatedFieldSystemMsg {
 
@@ -37,6 +40,14 @@ public class CalculatedFieldEntityDeleteMsg implements ToCalculatedFieldSystemMs
         this.entityId = entityId;
         this.callback = callback;
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

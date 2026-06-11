@@ -24,11 +24,27 @@ import org.thingsboard.server.service.sync.vc.EntitiesVersionControlService;
 
 import java.util.UUID;
 
+/**
+ * Base controller providing version-control auto-commit support for entity save operations.
+ *
+ * <p>Not a standalone REST controller; extended by entity controllers that trigger
+ * automatic Git commits after entity changes when auto-commit is configured.
+ *
+ * <p>Related service: {@link EntitiesVersionControlService}.
+ */
 public class AutoCommitController extends BaseController {
 
     @Autowired
     private EntitiesVersionControlService vcService;
 
+    /**
+     * Triggers an asynchronous auto-commit for the given entity if version control is enabled.
+     *
+     * @param user the user performing the entity change
+     * @param entityId the entity that was created or updated
+     * @return listenable future with the commit UUID, or a failed future if auto-commit is not supported
+     * @throws Exception if the version control service fails
+     */
     protected ListenableFuture<UUID> autoCommit(User user, EntityId entityId) throws Exception {
         if (vcService != null) {
             return vcService.autoCommit(user, entityId);

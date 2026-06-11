@@ -21,11 +21,27 @@ import org.thingsboard.server.gen.transport.TransportProtos;
 
 import java.util.UUID;
 
+/**
+ * Rule-engine message submit strategy: sequential by tenant id tb rule engine submit strategy.
+ * <p>Controls parallelism and ordering when a pack of {@code TbMsg} is handed to actors.
+ */
+
 public class SequentialByTenantIdTbRuleEngineSubmitStrategy extends SequentialByEntityIdTbRuleEngineSubmitStrategy {
+
+    /**
+     * Constructs {@link SequentialByTenantIdTbRuleEngineSubmitStrategy} with the supplied dependencies and configuration.
+     * @param queueName queue name
+     */
 
     public SequentialByTenantIdTbRuleEngineSubmitStrategy(String queueName) {
         super(queueName);
     }
+
+    /**
+     * Returns entity id.
+     * @param msg queue or transport message
+     * @return {@link EntityId}
+     */
 
     @Override
     protected EntityId getEntityId(TransportProtos.ToRuleEngineMsg msg) {

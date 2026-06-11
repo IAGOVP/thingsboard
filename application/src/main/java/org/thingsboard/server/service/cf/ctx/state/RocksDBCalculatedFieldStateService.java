@@ -32,6 +32,9 @@ import org.thingsboard.server.service.cf.CfRocksDb;
 import org.thingsboard.server.service.cf.ctx.CalculatedFieldEntityCtxId;
 
 import java.util.Set;
+/**
+ * Spring service component for rocks dbcalculated field state service (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -40,23 +43,55 @@ import java.util.Set;
 public class RocksDBCalculatedFieldStateService extends AbstractCalculatedFieldStateService {
 
     private final CfRocksDb cfRocksDb;
+    /**
+     * Init.
+     *
+     * @param eventConsumer event consumer ({@link PartitionedQueueConsumerManager})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(PartitionedQueueConsumerManager<TbProtoQueueMsg<ToCalculatedFieldMsg>> eventConsumer) {
         super.stateService = new DefaultQueueStateService<>(eventConsumer);
     }
+    /**
+     * Do persist.
+     *
+     * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+     * @param stateMsgProto state msg proto ({@link CalculatedFieldStateProto})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void doPersist(CalculatedFieldEntityCtxId stateId, CalculatedFieldStateProto stateMsgProto, TbCallback callback) {
         cfRocksDb.put(stateId.toKey(), stateMsgProto.toByteArray());
         callback.onSuccess();
     }
+    /**
+     * Do remove.
+     *
+     * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void doRemove(CalculatedFieldEntityCtxId stateId, TbCallback callback) {
         cfRocksDb.delete(stateId.toKey());
         callback.onSuccess();
     }
+    /**
+     * Restore.
+     *
+     * @param queueKey queue key ({@link QueueKey})
+     * @param partitions partitions ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void restore(QueueKey queueKey, Set<TopicPartitionInfo> partitions) {
@@ -70,8 +105,23 @@ public class RocksDBCalculatedFieldStateService extends AbstractCalculatedFieldS
                     return;
                 }
                 processRestoredState(stateMsg, null, new TbCallback() {
+                    
+                    /**
+                     * Handles success.
+                     *
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
+
                     @Override
                     public void onSuccess() {}
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {

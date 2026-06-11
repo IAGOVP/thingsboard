@@ -21,6 +21,10 @@ import lombok.Data;
 
 import java.util.List;
 
+    /**
+     * Teams message card (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Data
 public class TeamsMessageCard {
     @JsonProperty("@type")

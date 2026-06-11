@@ -63,6 +63,11 @@ import org.thingsboard.server.service.transport.msg.TransportToDeviceActorMsgWra
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+/**
+ * Per-tenant actor managing child device, rule-chain, and calculated-field actors.
+ *
+ * <p>Extends {@link org.thingsboard.server.actors.ruleChain.RuleChainManagerActor} to own rule chains and dispatches device transport, RPC, calculated-field, and lifecycle messages to the appropriate child actor.
+ */
 
 @Slf4j
 public class TenantActor extends RuleChainManagerActor {
@@ -79,6 +84,15 @@ public class TenantActor extends RuleChainManagerActor {
     }
 
     boolean cantFindTenant = false;
+    
+    /**
+     * Initializes the actor after creation (schedules ticks, loads metadata, creates child actors).
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
+
 
     @Override
     public void init(TbActorCtx ctx) throws TbActorException {
@@ -125,6 +139,16 @@ public class TenantActor extends RuleChainManagerActor {
             log.warn("[{}] Unknown failure", tenantId, e);
         }
     }
+    
+    /**
+     * Stops child actors and releases resources before the actor terminates.
+     *
+     * @param stopReason stop reason ({@link TbActorStopReason})
+     * @param cause cause ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public void destroy(TbActorStopReason stopReason, Throwable cause) {
@@ -134,6 +158,15 @@ public class TenantActor extends RuleChainManagerActor {
             cfActor = null;
         }
     }
+    
+    /**
+     * Handles one incoming actor message; returns {@code true} if the message type was recognized.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected boolean doProcess(TbActorMsg msg) {
@@ -315,6 +348,13 @@ public class TenantActor extends RuleChainManagerActor {
             broadcast(msg);
         } else if (ServiceType.TB_CORE.equals(serviceType)) {
             List<TbActorId> deviceActorIds = ctx.filterChildren(new TbEntityTypeActorIdPredicate(EntityType.DEVICE) {
+                /**
+                 * Test entity id.
+                 *
+                 * @param entityId target entity identifier
+                 * @return the boolean result
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
                 @Override
                 protected boolean testEntityId(EntityId entityId) {
                     return super.testEntityId(entityId) && !isMyPartition(entityId);
@@ -378,12 +418,28 @@ public class TenantActor extends RuleChainManagerActor {
         }
         return apiUsageState;
     }
+    
+    /**
+     * Strategy invoked when message processing fails inside the actor.
+     *
+     * @param msg actor message to process
+     * @param t t ({@link Throwable})
+     * @return {@link ProcessFailureStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public ProcessFailureStrategy onProcessFailure(TbActorMsg msg, Throwable t) {
         log.error("[{}] Failed to process msg: {}", tenantId, msg, t);
         return doProcessFailure(t);
     }
+
+    /**
+
+     * Factory for creating instances of the enclosing actor type.
+
+     */
 
     public static class ActorCreator extends ContextBasedCreator {
 
@@ -393,11 +449,27 @@ public class TenantActor extends RuleChainManagerActor {
             super(context);
             this.tenantId = tenantId;
         }
+        
+        /**
+         * Builds the {@link org.thingsboard.server.actors.TbActorId} used to register the actor.
+         *
+         * @return {@link TbActorId}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActorId createActorId() {
             return new TbEntityActorId(tenantId);
         }
+        
+        /**
+         * Creates a new actor instance for the given actor id and context.
+         *
+         * @return {@link TbActor}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActor createActor() {

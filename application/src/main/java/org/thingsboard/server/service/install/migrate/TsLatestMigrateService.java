@@ -15,6 +15,16 @@
  */
 package org.thingsboard.server.service.install.migrate;
 
+/**
+
+ * Service contract for ts latest migrate operations (database schema installation, upgrades, and demo data loading).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface TsLatestMigrateService {
 
     void migrate() throws Exception;

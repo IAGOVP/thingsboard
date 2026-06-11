@@ -19,6 +19,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 
+/**
+
+ * Service contract for tb mail config template operations (SMTP email sending and templating).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface TbMailConfigTemplateService {
     JsonNode findAllMailConfigTemplates() throws IOException;
 }

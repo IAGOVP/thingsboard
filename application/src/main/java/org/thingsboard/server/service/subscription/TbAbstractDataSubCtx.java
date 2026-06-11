@@ -42,6 +42,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+/**
+ * Subscription context for tb abstract data WebSocket commands.
+ * <p>Maintains query state, caches, and pending updates for one command id.
+ */
 
 @Slf4j
 public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends EntityDataPageLink>> extends TbAbstractEntityQuerySubCtx<T> {
@@ -49,6 +53,18 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
     protected final Map<Integer, EntityId> subToEntityIdMap;
     @Getter
     protected PageData<EntityData> data;
+
+    /**
+     * Constructs {@link TbAbstractDataSubCtx} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param wsService ws service
+     * @param entityService entity service
+     * @param localSubscriptionService local subscription service
+     * @param attributesService attributes service
+     * @param stats stats
+     * @param sessionRef reference to the WebSocket session
+     * @param cmdId client command id
+     */
 
     public TbAbstractDataSubCtx(String serviceId, WebSocketService wsService,
                                 EntityService entityService, TbLocalSubscriptionService localSubscriptionService,
@@ -58,10 +74,23 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         this.subToEntityIdMap = new ConcurrentHashMap<>();
     }
 
+    /**
+     * Fetches data.
+     * @return @Override
+    public void
+     */
+
     @Override
     public void fetchData() {
         this.data = findEntityData();
     }
+
+    /**
+     * Finds entity data.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@link PageData}
+     */
 
     protected PageData<EntityData> findEntityData() {
         PageData<EntityData> result = entityService.findEntityDataByQuery(getTenantId(), getCustomerId(), buildEntityDataQuery());
@@ -73,10 +102,23 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         return result;
     }
 
+    /**
+     * Is dynamic.
+     * @return {@code true} when the condition holds
+     */
+
     @Override
     public boolean isDynamic() {
         return query != null && query.getPageLink().isDynamic();
     }
+
+    /**
+     * Updates update.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return @Override
+    protected synchronized void
+     */
 
     @Override
     protected synchronized void update() {
@@ -96,19 +138,46 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         }
     }
 
+    /**
+     * Do update.
+     * @param newDataMap new data map
+     */
+
     protected abstract void doUpdate(Map<EntityId, EntityData> newDataMap);
 
+    /**
+     * Builds entity data query.
+     * @return {@link EntityDataQuery}
+     */
+
     protected abstract EntityDataQuery buildEntityDataQuery();
+
+    /**
+     * Returns entities data.
+     * @return {@link List}
+     */
 
     public List<EntityData> getEntitiesData() {
         return data.getData();
     }
+
+    /**
+     * Clears subscriptions.
+     * @return @Override
+    public void
+     */
 
     @Override
     public void clearSubscriptions() {
         clearEntitySubscriptions();
         super.clearSubscriptions();
     }
+
+    /**
+     * Clears entity subscriptions.
+     *
+     * <p>Default implementation inherited from the supertype.
+     */
 
     public void clearEntitySubscriptions() {
         if (subToEntityIdMap != null) {
@@ -119,13 +188,33 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         }
     }
 
+    /**
+     * Creates latest values subscriptions.
+     * @param keys keys
+     */
+
     public void createLatestValuesSubscriptions(List<EntityKey> keys) {
         createSubscriptions(keys, true, 0, 0);
     }
 
+    /**
+     * Creates time series subscriptions.
+     * @param entityKeyStates entity key states
+     * @param startTs start ts
+     * @param endTs end ts
+     */
+
     public void createTimeSeriesSubscriptions(Map<EntityData, Map<String, Long>> entityKeyStates, long startTs, long endTs) {
         createTimeSeriesSubscriptions(entityKeyStates, startTs, endTs, false);
     }
+
+    /**
+     * Creates time series subscriptions.
+     * @param entityKeyStates entity key states
+     * @param startTs start ts
+     * @param endTs end ts
+     * @param resultToLatestValues result to latest values
+     */
 
     public void createTimeSeriesSubscriptions(Map<EntityData, Map<String, Long>> entityKeyStates, long startTs, long endTs, boolean resultToLatestValues) {
         entityKeyStates.forEach((entityData, keyStates) -> {
@@ -144,11 +233,27 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
         }
     }
 
+    /**
+     * Returns entity key by type map.
+     * @param keys keys
+     * @return {@link Map}
+     */
+
     protected Map<EntityKeyType, List<EntityKey>> getEntityKeyByTypeMap(List<EntityKey> keys) {
         Map<EntityKeyType, List<EntityKey>> keysByType = new HashMap<>();
         keys.forEach(key -> keysByType.computeIfAbsent(key.getType(), k -> new ArrayList<>()).add(key));
         return keysByType;
     }
+
+    /**
+     * Registers subscriptions.
+     * @param entityData entity data
+     * @param keysByType keys by type
+     * @param latestValues latest values
+     * @param startTs start ts
+     * @param endTs end ts
+     * @return {@link List}
+     */
 
     protected List<TbSubscription> addSubscriptions(EntityData entityData, Map<EntityKeyType, List<EntityKey>> keysByType, boolean latestValues, long startTs, long endTs) {
         List<TbSubscription> subscriptionList = new ArrayList<>();
@@ -252,6 +357,11 @@ public abstract class TbAbstractDataSubCtx<T extends AbstractDataQuery<? extends
     }
 
     abstract void sendWsMsg(String sessionId, TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType, boolean resultToLatestValues);
+
+    /**
+     * Returns current aggregation.
+     * @return {@link Aggregation}
+     */
 
     protected abstract Aggregation getCurrentAggregation();
 

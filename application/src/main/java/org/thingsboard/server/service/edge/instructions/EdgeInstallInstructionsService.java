@@ -19,6 +19,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.thingsboard.server.common.data.edge.Edge;
 import org.thingsboard.server.common.data.edge.EdgeInstructions;
 
+/**
+ * Service contract for edge upgrade instructions.
+ */
+
 public interface EdgeInstallInstructionsService {
 
     EdgeInstructions getInstallInstructions(Edge edge, String installationMethod, HttpServletRequest request);

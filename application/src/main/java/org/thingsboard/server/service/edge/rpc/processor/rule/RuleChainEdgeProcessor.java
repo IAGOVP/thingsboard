@@ -43,11 +43,25 @@ import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 import java.util.UUID;
 
 import static org.thingsboard.server.dao.edge.EdgeServiceImpl.EDGE_IS_ROOT_BODY_KEY;
+/**
+ * Processes rule chain edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class RuleChainEdgeProcessor extends BaseRuleChainProcessor {
+
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param ruleChainUpdateMsg rule chain update msg (RuleChainUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
 
     public ListenableFuture<Void> processRuleChainMsgFromEdge(TenantId tenantId, Edge edge, RuleChainUpdateMsg ruleChainUpdateMsg) {
         log.trace("[{}] executing processRuleChainMsgFromEdge [{}] from edge [{}]", tenantId, ruleChainUpdateMsg, edge.getName());
@@ -111,6 +125,15 @@ public class RuleChainEdgeProcessor extends BaseRuleChainProcessor {
         }
     }
 
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param ruleChainMetadataUpdateMsg rule chain metadata update msg (RuleChainMetadataUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
+
     public ListenableFuture<Void> processRuleChainMetadataMsgFromEdge(TenantId tenantId, Edge edge, RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg) {
         log.trace("[{}] executing processRuleChainMetadataMsgFromEdge [{}] from edge [{}]", tenantId, ruleChainMetadataUpdateMsg, edge.getName());
         try {
@@ -133,7 +156,13 @@ public class RuleChainEdgeProcessor extends BaseRuleChainProcessor {
             edgeSynchronizationManager.getEdgeId().remove();
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         RuleChainId ruleChainId = new RuleChainId(edgeEvent.getEntityId());
@@ -175,6 +204,10 @@ public class RuleChainEdgeProcessor extends BaseRuleChainProcessor {
         return downlinkMsg;
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.RULE_CHAIN;

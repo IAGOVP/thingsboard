@@ -19,6 +19,9 @@ import lombok.Getter;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.sync.ie.EntityExportData;
+/**
+ * Git repository integration for entity content request.
+ */
 
 @Getter
 public class EntityContentGitRequest extends PendingGitRequest<EntityExportData> {

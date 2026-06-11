@@ -17,6 +17,9 @@ package org.thingsboard.server.service.security.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+/**
+ * DTO for security DTOs and principals: change password request.
+ */
 
 @Schema
 @Data

@@ -18,23 +18,51 @@ package org.thingsboard.server.service.component;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.RuleNode;
 
+    /**
+     * Rule node class info (rule-engine component descriptor registry).
+     */
+
 @Data
 public class RuleNodeClassInfo {
 
     private final Class<?> clazz;
     private final RuleNode annotation;
+    /**
+     * Returns class name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getClassName(){
         return clazz.getName();
     }
+    /**
+     * Returns simple name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getSimpleName() {
         return clazz.getSimpleName();
     }
+    /**
+     * Returns current version.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public int getCurrentVersion() {
         return annotation.version();
     }
+    /**
+     * Is versioned.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isVersioned() {
         return annotation.version() > 0;

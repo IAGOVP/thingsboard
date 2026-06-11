@@ -56,6 +56,12 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.utils.CalculatedFieldArgumentUtils.createDefaultMetricArgumentEntry;
 
+/**
+
+ * Runtime state for entity aggregation calculated field calculated fields.
+
+ */
+
 public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldState {
 
     private AggInterval interval;
@@ -73,6 +79,14 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
     public EntityAggregationCalculatedFieldState(EntityId entityId) {
         super(entityId);
     }
+    /**
+     * Set ctx.
+     *
+     * @param ctx calculated-field execution context
+     * @param actorCtx actor ctx ({@link TbActorRef})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setCtx(CalculatedFieldCtx ctx, TbActorRef actorCtx) {
@@ -85,6 +99,13 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
         metrics = configuration.getMetrics();
         produceIntermediateResult = configuration.isProduceIntermediateResult();
     }
+    /**
+     * Init.
+     *
+     * @param restored restored
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(boolean restored) {
@@ -93,11 +114,25 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
             fillMissingIntervals();
         }
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldType getType() {
         return CalculatedFieldType.ENTITY_AGGREGATION;
     }
+    /**
+     * Perform calculation.
+     *
+     * @param updatedArgs updated args ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return future completing with {@link CalculatedFieldResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<CalculatedFieldResult> performCalculation(Map<String, ArgumentEntry> updatedArgs, CalculatedFieldCtx ctx) throws Exception {
@@ -132,6 +167,14 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
                 .result(result)
                 .build());
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param argumentValues argument values ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Map<String, ArgumentEntry> update(Map<String, ArgumentEntry> argumentValues, CalculatedFieldCtx ctx) {
@@ -281,6 +324,14 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
     }
+    /**
+     * To result.
+     *
+     * @param results results ({@link Map})
+     * @param precision precision ({@link Integer})
+     * @return {@link ArrayNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ArrayNode toResult(Map<AggIntervalEntry, Map<String, ArgumentEntry>> results, Integer precision) {
         ArrayNode result = JacksonUtil.newArrayNode();
@@ -311,6 +362,12 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
         });
         return result;
     }
+    /**
+     * Returns arguments json.
+     *
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JsonNode getArgumentsJson() {
@@ -320,6 +377,12 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
         EntityAggregationDebugArguments debugArguments = debugTracker.toDebugArguments();
         return debugArguments == null ? null : JacksonUtil.valueToTree(debugArguments);
     }
+    /**
+     * Is ready.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isReady() {
@@ -327,14 +390,37 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
     }
 
     record EntityAggregationDebugArgumentsTracker(Map<AggIntervalEntry, Map<String, TbelCfArg>> processedIntervals) {
+        
+        /**
+         * Reset.
+         *
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         public void reset() {
             processedIntervals.clear();
         }
+        /**
+         * Add interval.
+         *
+         * @param interval interval ({@link AggIntervalEntry})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public void addInterval(AggIntervalEntry interval) {
             processedIntervals.computeIfAbsent(interval, k -> new HashMap<>());
         }
+        /**
+         * Record updated args.
+         *
+         * @param updatedArgs updated args ({@link Map})
+         * @param arguments arguments ({@link Map})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public void recordUpdatedArgs(Map<String, ArgumentEntry> updatedArgs, Map<String, ArgumentEntry> arguments) {
             if (updatedArgs != null && !updatedArgs.isEmpty()) {
@@ -351,10 +437,25 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
                 });
             }
         }
+        /**
+         * Record arg.
+         *
+         * @param interval interval ({@link AggIntervalEntry})
+         * @param argName arg name ({@link String})
+         * @param value value ({@link TbelCfArg})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public void recordArg(AggIntervalEntry interval, String argName, TbelCfArg value) {
             processedIntervals.computeIfAbsent(interval, k -> new HashMap<>()).put(argName, value);
         }
+        /**
+         * To debug arguments.
+         *
+         * @return {@link EntityAggregationDebugArguments}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public EntityAggregationDebugArguments toDebugArguments() {
             if (processedIntervals.isEmpty()) {
@@ -366,6 +467,15 @@ public class EntityAggregationCalculatedFieldState extends BaseCalculatedFieldSt
     }
 
     record EntityAggregationDebugArguments(List<IntervalDebugArgument> processedIntervals) {
+        
+        /**
+         * To debug arguments.
+         *
+         * @param processedIntervals processed intervals ({@link Map})
+         * @return {@link EntityAggregationDebugArguments}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         public static EntityAggregationDebugArguments toDebugArguments(Map<AggIntervalEntry, Map<String, TbelCfArg>> processedIntervals) {
             List<IntervalDebugArgument> result = new ArrayList<>();

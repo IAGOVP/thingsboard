@@ -15,9 +15,26 @@
  */
 package org.thingsboard.server.service.install;
 
+/**
+
+ * Service contract for entity database schema operations (database schema installation, upgrades, and demo data loading).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface EntityDatabaseSchemaService extends DatabaseSchemaService {
 
     void createOrUpdateDeviceInfoView(boolean activityStateInTelemetry);
+
+    /**
+     * Creates or update views and functions.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void createOrUpdateViewsAndFunctions() throws Exception;
 

@@ -132,6 +132,12 @@ import static org.thingsboard.server.common.data.DataConstants.DEFAULT_DEVICE_TY
 import static org.thingsboard.server.service.security.auth.jwt.settings.DefaultJwtSettingsService.isSigningKeyDefault;
 import static org.thingsboard.server.service.security.auth.jwt.settings.DefaultJwtSettingsService.validateKeyLength;
 
+    /**
+     * Default Spring implementation for system data loader service (database schema installation, upgrades, and demo data loading).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Profile("install")
 @Slf4j
@@ -176,6 +182,12 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
     private String tokenIssuer;
     @Value("${security.jwt.tokenSigningKey:thingsboardDefaultSigningKey}")
     private String tokenSigningKey;
+    /**
+     * Password encoder.
+     *
+     * @return {@link BCryptPasswordEncoder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Bean
     protected BCryptPasswordEncoder passwordEncoder() {
@@ -183,11 +195,23 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
     }
 
     private ExecutorService tsCallBackExecutor;
+    /**
+     * Init executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void initExecutor() {
         tsCallBackExecutor = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("sys-loader-ts-callback"));
     }
+    /**
+     * Shutdown executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -195,11 +219,23 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             tsCallBackExecutor.shutdownNow();
         }
     }
+    /**
+     * Creates sys admin.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createSysAdmin() {
         createUser(Authority.SYS_ADMIN, null, null, "sysadmin@thingsboard.org", "sysadmin");
     }
+    /**
+     * Creates default tenant profiles.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDefaultTenantProfiles() throws Exception {
@@ -244,6 +280,12 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             log.warn(e.getMessage());
         }
     }
+    /**
+     * Creates admin settings.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createAdminSettings() throws Exception {
@@ -280,6 +322,12 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         connectivitySettings.setJsonValue(JacksonUtil.valueToTree(connectivityConfiguration.getConnectivity()));
         adminSettingsService.saveAdminSettings(TenantId.SYS_TENANT_ID, connectivitySettings);
     }
+    /**
+     * Creates random jwt settings.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createRandomJwtSettings() throws Exception {
@@ -294,6 +342,12 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             log.info("Skip creating JWT admin settings because they already exist.");
         }
     }
+    /**
+     * Updates security settings.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateSecuritySettings() {
@@ -337,11 +391,23 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         return Base64.getEncoder().encodeToString(
                 RandomStringUtils.randomAlphanumeric(64).getBytes(StandardCharsets.UTF_8));
     }
+    /**
+     * Creates oauth2templates.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createOAuth2Templates() throws Exception {
         installScripts.createOAuth2Templates();
     }
+    /**
+     * Loads demo data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void loadDemoData() throws Exception {
@@ -558,6 +624,12 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
 
         calculatedFieldService.save(lowHumidity);
     }
+    /**
+     * Loads system widgets.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void loadSystemWidgets() throws Exception {
@@ -632,11 +704,25 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             this.key = key;
             this.value = value;
         }
+        /**
+         * Handles success.
+         *
+         * @param result result ({@link T})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onSuccess(@Nullable T result) {
             log.trace("[{}] Successfully updated attribute [{}] with value [{}]", deviceId, key, value);
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {
@@ -647,10 +733,24 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
 
     private <S> void addTsCallback(ListenableFuture<S> saveFuture, final FutureCallback<S> callback) {
         Futures.addCallback(saveFuture, new FutureCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param result result ({@link S})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(@Nullable S result) {
                 callback.onSuccess(result);
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {
@@ -658,6 +758,12 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             }
         }, tsCallBackExecutor);
     }
+    /**
+     * Creates queues.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createQueues() {
@@ -733,6 +839,12 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
             queueService.saveQueue(sequentialByOriginatorQueue);
         }
     }
+    /**
+     * Creates default notification configs.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @SneakyThrows
@@ -759,6 +871,13 @@ public class DefaultSystemDataLoaderService implements SystemDataLoaderService {
         executor.shutdown();
         executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
     }
+    /**
+     * Updates default notification configs.
+     *
+     * @param updateTenants update tenants
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @SneakyThrows

@@ -32,6 +32,11 @@ import org.thingsboard.server.service.install.InstallScripts;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+/**
+ * Service implementation for default edge upgrade instructions in edge upgrade instructions.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @Slf4j
@@ -49,7 +54,13 @@ public class DefaultEdgeUpgradeInstructionsService extends BaseEdgeInstallUpgrad
         super(installScripts);
         this.attributesService = attributesService;
     }
-
+    /**
+     * Returns upgrade instructions.
+     *
+     * @param edgeVersion edge version (String)
+     * @param upgradeMethod upgrade method (String)
+     * @return {@link EdgeInstructions} result
+     */
     @Override
     public EdgeInstructions getUpgradeInstructions(String edgeVersion, String upgradeMethod) {
         String currentEdgeVersion = convertEdgeVersionToDocsFormat(edgeVersion);
@@ -61,13 +72,25 @@ public class DefaultEdgeUpgradeInstructionsService extends BaseEdgeInstallUpgrad
         };
     }
 
+    /**
+     * Updates instruction map.
+     *
+     * @param map map (Map<String, EdgeUpgradeInfo>)
+     */
     @Override
     public void updateInstructionMap(Map<String, EdgeUpgradeInfo> map) {
         for (String key : map.keySet()) {
             upgradeVersionHashMap.put(key, map.get(key));
         }
     }
-
+    /**
+     * Returns whether upgrade available.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeId edge id (EdgeId)
+     * @return boolean
+     * @throws Exception if the operation fails
+     */
     @Override
     public boolean isUpgradeAvailable(TenantId tenantId, EdgeId edgeId) throws Exception {
         Optional<AttributeKvEntry> attributeKvEntryOpt = attributesService.find(tenantId, edgeId, AttributeScope.SERVER_SCOPE, DataConstants.EDGE_VERSION_ATTR_KEY).get();
@@ -153,6 +176,10 @@ public class DefaultEdgeUpgradeInstructionsService extends BaseEdgeInstallUpgrad
         return new EdgeInstructions(result.toString());
     }
 
+    /**
+     * Returns base dir name.
+     *
+     */
     @Override
     protected String getBaseDirName() {
         return UPGRADE_DIR;

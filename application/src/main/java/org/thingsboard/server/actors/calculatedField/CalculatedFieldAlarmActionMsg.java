@@ -24,7 +24,12 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 
-/** Alarm create/update/clear used as CF input arguments. */
+/**
+ * Alarm create/clear/update event routed to calculated-field actors.
+ */
+
+
+
 @Data
 @Builder
 public class CalculatedFieldAlarmActionMsg implements ToCalculatedFieldSystemMsg {
@@ -33,6 +38,14 @@ public class CalculatedFieldAlarmActionMsg implements ToCalculatedFieldSystemMsg
     private final Alarm alarm;
     private final ActionType action;
     private final TbCallback callback;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

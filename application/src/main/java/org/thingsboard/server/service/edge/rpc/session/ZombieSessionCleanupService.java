@@ -17,6 +17,10 @@ package org.thingsboard.server.service.edge.rpc.session;
 
 import org.thingsboard.server.service.edge.rpc.session.manager.EdgeGrpcSessionManager;
 
+/**
+ * Service contract for edge gRPC session lifecycle.
+ */
+
 public interface ZombieSessionCleanupService {
 
     void add(EdgeGrpcSessionManager session);

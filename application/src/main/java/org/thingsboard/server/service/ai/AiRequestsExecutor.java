@@ -20,6 +20,12 @@ import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 
+/**
+
+ * ai requests executor contract for AI model invocation for platform features.
+
+ */
+
 public interface AiRequestsExecutor {
 
     FluentFuture<ChatResponse> sendChatRequestAsync(ChatModel chatModel, ChatRequest chatRequest);

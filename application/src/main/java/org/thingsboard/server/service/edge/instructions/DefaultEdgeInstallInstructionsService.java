@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.edge.EdgeInstructions;
 import org.thingsboard.server.dao.util.DeviceConnectivityUtil;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.install.InstallScripts;
+/**
+ * Service implementation for default edge install instructions in edge upgrade instructions.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @Slf4j
@@ -43,7 +48,14 @@ public class DefaultEdgeInstallInstructionsService extends BaseEdgeInstallUpgrad
     public DefaultEdgeInstallInstructionsService(InstallScripts installScripts) {
         super(installScripts);
     }
-
+    /**
+     * Returns install instructions.
+     *
+     * @param edge edge (Edge)
+     * @param installationMethod installation method (String)
+     * @param request request (HttpServletRequest)
+     * @return {@link EdgeInstructions} result
+     */
     @Override
     public EdgeInstructions getInstallInstructions(Edge edge, String installationMethod, HttpServletRequest request) {
         return switch (installationMethod.toLowerCase()) {
@@ -87,6 +99,10 @@ public class DefaultEdgeInstallInstructionsService extends BaseEdgeInstallUpgrad
         return instructions;
     }
 
+    /**
+     * Returns base dir name.
+     *
+     */
     @Override
     protected String getBaseDirName() {
         return INSTALL_DIR;

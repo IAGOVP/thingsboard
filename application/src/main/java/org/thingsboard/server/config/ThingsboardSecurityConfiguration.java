@@ -65,6 +65,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Primary Spring Security configuration for ThingsBoard core / monolith nodes.
+ *
+ * <p>Defines two {@link SecurityFilterChain} beans:
+ * <ol>
+ *   <li><b>Static resources chain</b> — permits JS/CSS/assets without authentication</li>
+ *   <li><b>Main API chain</b> — stateless JWT/API-key auth, rate limiting, OAuth2 login, CORS</li>
+ * </ol>
+ *
+ * <p>Authentication methods (in filter order before {@link UsernamePasswordAuthenticationFilter}):
+ * REST login, public login, JWT bearer ({@value #AUTHORIZATION_HEADER} or {@value #AUTHORIZATION_HEADER_V2}),
+ * API key ({@value #API_KEY_HEADER_PREFIX}), refresh token, payload size guard, then rate limits.
+ *
+ * <p>Key public endpoints (no JWT required): {@value #FORM_BASED_LOGIN_ENTRY_POINT},
+ * {@value #PUBLIC_LOGIN_ENTRY_POINT}, {@value #TOKEN_REFRESH_ENTRY_POINT}, {@value #WS_ENTRY_POINT},
+ * static assets, and device HTTP API ({@value #DEVICE_API_ENTRY_POINT}).
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -72,6 +89,7 @@ import java.util.stream.Stream;
 @TbCoreComponent
 public class ThingsboardSecurityConfiguration {
 
+    /** Legacy JWT header name used by ThingsBoard UI and older clients. */
     public static final String AUTHORIZATION_HEADER = "X-Authorization";
     public static final String AUTHORIZATION_HEADER_V2 = "Authorization";
     public static final String JWT_TOKEN_QUERY_PARAM = "token";

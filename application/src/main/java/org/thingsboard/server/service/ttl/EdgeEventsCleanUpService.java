@@ -29,6 +29,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.thingsboard.server.dao.model.ModelConstants.EDGE_EVENT_TABLE_NAME;
 
+    /**
+     * Spring service component for edge events clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @TbCoreComponent
 @Slf4j
 @Service
@@ -56,6 +60,12 @@ public class EdgeEventsCleanUpService extends AbstractCleanUpService {
         this.edgeEventService = edgeEventService;
         this.partitioningRepository = partitioningRepository;
     }
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Scheduled(initialDelayString = RANDOM_DELAY_INTERVAL_MS_EXPRESSION, fixedDelayString = "${sql.ttl.edge_events.execution_interval_ms}")
     public void cleanUp() {

@@ -27,6 +27,11 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+/**
+ * Service implementation for default access control in role-based access control (RBAC).
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Evaluates tenant/customer/system-admin scopes against Resource and Operation.
+ */
 
 @Service
 @Slf4j
@@ -46,6 +51,14 @@ public class DefaultAccessControlService implements AccessControlService {
         authorityPermissions.put(Authority.MFA_CONFIGURATION_TOKEN, mfaConfigurationPermissions);
     }
 
+    /**
+     * Verifies the user is allowed to perform the operation; throws if denied.
+     *
+     * @param user user (SecurityUser)
+     * @param resource resource (Resource)
+     * @param operation operation (Operation)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public void checkPermission(SecurityUser user, Resource resource, Operation operation) throws ThingsboardException {
         PermissionChecker permissionChecker = getPermissionChecker(user.getAuthority(), resource);
@@ -53,7 +66,15 @@ public class DefaultAccessControlService implements AccessControlService {
             permissionDenied();
         }
     }
-
+    /**
+     * Returns whether the user is allowed to perform the operation.
+     *
+     * @param user user (SecurityUser)
+     * @param resource resource (Resource)
+     * @param operation operation (Operation)
+     * @return boolean
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     @SuppressWarnings("unchecked")
     public boolean hasPermission(SecurityUser user, Resource resource, Operation operation) throws ThingsboardException {
@@ -61,6 +82,16 @@ public class DefaultAccessControlService implements AccessControlService {
         return permissionChecker.hasPermission(user, operation);
     }
 
+    /**
+     * Verifies the user is allowed to perform the operation; throws if denied.
+     *
+     * @param user user (SecurityUser)
+     * @param resource resource (Resource)
+     * @param operation operation (Operation)
+     * @param entityId entity id (I)
+     * @param entity entity (T)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <I extends EntityId, T extends HasTenantId> void checkPermission(SecurityUser user, Resource resource,
@@ -70,7 +101,17 @@ public class DefaultAccessControlService implements AccessControlService {
             permissionDenied();
         }
     }
-
+    /**
+     * Returns whether the user is allowed to perform the operation.
+     *
+     * @param user user (SecurityUser)
+     * @param resource resource (Resource)
+     * @param operation operation (Operation)
+     * @param entityId entity id (I)
+     * @param entity entity (T)
+     * @return boolean
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <I extends EntityId, T extends HasTenantId> boolean hasPermission(SecurityUser user, Resource resource, Operation operation, I entityId, T entity) throws ThingsboardException {

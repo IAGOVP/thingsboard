@@ -18,9 +18,22 @@ package org.thingsboard.server.service.cf.ctx.state.aggregation.function;
 import org.thingsboard.server.common.data.cf.configuration.aggregation.AggFunction;
 import org.thingsboard.common.util.NumberUtils;
 
+/**
+
+ * Argument or aggregation entry for calculated-field state (min agg entry).
+
+ */
+
 public class MinAggEntry extends BaseAggEntry {
 
     private double min = Double.MAX_VALUE;
+    /**
+     * Do update.
+     *
+     * @param value value
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void doUpdate(double value) {
@@ -28,11 +41,24 @@ public class MinAggEntry extends BaseAggEntry {
             min = value;
         }
     }
+    /**
+     * Prepare result.
+     *
+     * @param precision precision ({@link Integer})
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Object prepareResult(Integer precision) {
         return NumberUtils.roundResult(min, precision);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link AggFunction}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AggFunction getType() {

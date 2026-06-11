@@ -35,6 +35,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+    /**
+     * Spring service component for housekeeper stats service (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Service
 @Slf4j
 @ConditionalOnProperty(name = "queue.core.housekeeper.stats.enabled", havingValue = "true", matchIfMissing = true)
@@ -68,6 +72,15 @@ public class HousekeeperStatsService {
             log.info("Housekeeper stats: {}", statsStr);
         }
     }
+    /**
+     * Report processed.
+     *
+     * @param taskType task type ({@link HousekeeperTaskType})
+     * @param msg msg ({@link ToHousekeeperServiceMsg})
+     * @param timing timing
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void reportProcessed(HousekeeperTaskType taskType, ToHousekeeperServiceMsg msg, long timing) {
         HousekeeperStats stats = this.stats.get(taskType);
@@ -78,6 +91,14 @@ public class HousekeeperStatsService {
         }
         stats.getProcessingTimer().record(timing);
     }
+    /**
+     * Report failure.
+     *
+     * @param taskType task type ({@link HousekeeperTaskType})
+     * @param msg msg ({@link ToHousekeeperServiceMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void reportFailure(HousekeeperTaskType taskType, ToHousekeeperServiceMsg msg) {
         HousekeeperStats stats = this.stats.get(taskType);
@@ -114,6 +135,12 @@ public class HousekeeperStatsService {
             counters.add(counter);
             return counter;
         }
+        /**
+         * Reset.
+         *
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public void reset() {
             counters.forEach(DefaultCounter::clear);

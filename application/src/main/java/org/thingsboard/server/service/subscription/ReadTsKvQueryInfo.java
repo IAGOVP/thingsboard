@@ -18,6 +18,9 @@ package org.thingsboard.server.service.subscription;
 import lombok.Data;
 import org.thingsboard.server.common.data.kv.ReadTsKvQuery;
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.AggKey;
+/**
+ * Read ts kv query info component in the ThingsBoard subscription layer.
+ */
 
 @Data
 public class ReadTsKvQueryInfo {

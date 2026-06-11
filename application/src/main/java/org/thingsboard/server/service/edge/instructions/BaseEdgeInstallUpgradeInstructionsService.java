@@ -26,6 +26,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.thingsboard.edge.rpc.EdgeGrpcClient.getNewestEdgeVersion;
+/**
+ * Service implementation for base edge install upgrade instructions in edge upgrade instructions.
+ */
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,9 +42,23 @@ public abstract class BaseEdgeInstallUpgradeInstructionsService {
     @Setter
     protected String platformEdgeVersion = convertEdgeVersionToDocsFormat(getNewestEdgeVersion().name());
 
+    /**
+     * Converts edge version to docs format.
+     *
+     * @param edgeVersion edge version (String)
+     * @return {@link String} result
+     */
+
     protected String convertEdgeVersionToDocsFormat(String edgeVersion) {
         return edgeVersion.replace("_", ".").substring(2);
     }
+
+    /**
+     * Read file.
+     *
+     * @param file file (Path)
+     * @return {@link String} result
+     */
 
     protected String readFile(Path file) {
         try {
@@ -52,17 +69,42 @@ public abstract class BaseEdgeInstallUpgradeInstructionsService {
         }
     }
 
+    /**
+     * Returns tag version.
+     *
+     * @param version version (String)
+     * @return {@link String} result
+     */
+
     protected String getTagVersion(String version) {
         return version.endsWith(".0") ? version.substring(0, version.length() - 2) : version;
     }
+
+    /**
+     * Resolve file.
+     *
+     * @param subDir sub dir (String)
+     * @param subDirs sub dirs
+     * @return {@link Path} result
+     */
 
     protected Path resolveFile(String subDir, String... subDirs) {
         return getEdgeInstructionsDir().resolve(Paths.get(subDir, subDirs));
     }
 
+    /**
+     * Returns edge instructions dir.
+     *
+     */
+
     protected Path getEdgeInstructionsDir() {
         return Paths.get(installScripts.getDataDir(), InstallScripts.JSON_DIR, EDGE_DIR, INSTRUCTIONS_DIR, getBaseDirName());
     }
+
+    /**
+     * Returns base dir name.
+     *
+     */
 
     protected abstract String getBaseDirName();
 

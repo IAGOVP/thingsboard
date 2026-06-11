@@ -56,6 +56,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+/**
+ * Subscription context for tb alarm data WebSocket commands.
+ * <p>Maintains query state, caches, and pending updates for one command id.
+ */
 
 @Slf4j
 @ToString(callSuper = true)
@@ -80,6 +84,21 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
 
     private int alarmInvocationAttempts;
 
+    /**
+     * Constructs {@link TbAlarmDataSubCtx} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param wsService ws service
+     * @param entityService entity service
+     * @param localSubscriptionService local subscription service
+     * @param attributesService attributes service
+     * @param stats stats
+     * @param alarmService alarm service
+     * @param sessionRef reference to the WebSocket session
+     * @param cmdId client command id
+     * @param maxEntitiesPerAlarmSubscription max entities per alarm subscription
+     * @param maxAlarmQueriesPerRefreshInterval max alarm queries per refresh interval
+     */
+
     public TbAlarmDataSubCtx(String serviceId, WebSocketService wsService,
                              EntityService entityService, TbLocalSubscriptionService localSubscriptionService,
                              AttributesService attributesService, SubscriptionServiceStatistics stats, AlarmService alarmService,
@@ -93,10 +112,22 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         this.alarmsMap = new HashMap<>();
     }
 
+    /**
+     * Clears subscriptions.
+     * @return @Override
+    public void
+     */
+
     @Override
     public void clearSubscriptions() {
         super.clearSubscriptions();
     }
+
+    /**
+     * Fetches alarms.
+     *
+     * <p>Default implementation inherited from the supertype.
+     */
 
     public void fetchAlarms() {
         alarmInvocationAttempts++;
@@ -124,7 +155,11 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         sendWsMsg(update);
     }
 
-    public void fetchData() {
+    /**
+     * Fetches data.
+     */
+
+public void fetchData() {
         resetInvocationCounter();
         log.trace("[{}] Fetching data: {}", cmdId, alarmInvocationAttempts);
         super.fetchData();
@@ -135,9 +170,20 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         }
     }
 
+    /**
+     * Returns ordered entity ids.
+     * @return {@link Collection}
+     */
+
     public Collection<EntityId> getOrderedEntityIds() {
         return entitiesMap.keySet();
     }
+
+    /**
+     * Sets and merge alarms data.
+     * @param alarms alarms
+     * @return {@link PageData}
+     */
 
     public PageData<AlarmData> setAndMergeAlarmsData(PageData<AlarmData> alarms) {
         this.alarms = alarms;
@@ -155,11 +201,24 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         return this.alarms;
     }
 
+    /**
+     * Creates latest values subscriptions.
+     * @param keys keys
+     * @return @Override
+    public void
+     */
+
     @Override
     public void createLatestValuesSubscriptions(List<EntityKey> keys) {
         super.createLatestValuesSubscriptions(keys);
         createAlarmSubscriptions();
     }
+
+    /**
+     * Creates alarm subscriptions.
+     *
+     * <p>Default implementation inherited from the supertype.
+     */
 
     public void createAlarmSubscriptions() {
         AlarmDataPageLink pageLink = query.getPageLink();
@@ -208,6 +267,11 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         }
     }
 
+    /**
+     * Returns current aggregation.
+     * @return {@link Aggregation}
+     */
+
     @Override
     protected Aggregation getCurrentAggregation() {
         return Aggregation.NONE;
@@ -239,7 +303,11 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         }
     }
 
-    public void cleanupOldAlarms() {
+    /**
+     * Cleans up old alarms.
+     */
+
+public void cleanupOldAlarms() {
         long expTime = System.currentTimeMillis() - query.getPageLink().getTimeWindow();
         boolean shouldRefresh = false;
         for (AlarmData alarmData : alarms.getData()) {
@@ -299,7 +367,11 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
         return true;
     }
 
-    public synchronized void checkAndResetInvocationCounter() {
+    /**
+     * Checks and reset invocation counter.
+     */
+
+public synchronized void checkAndResetInvocationCounter() {
         boolean fetchNeeded = this.alarmInvocationAttempts > maxAlarmQueriesPerRefreshInterval;
         resetInvocationCounter();
         if (fetchNeeded) {
@@ -308,6 +380,13 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
             cleanupOldAlarms();
         }
     }
+
+    /**
+     * Do update.
+     * @param newDataMap new data map
+     * @return @Override
+    protected synchronized void
+     */
 
     @Override
     protected synchronized void doUpdate(Map<EntityId, EntityData> newDataMap) {
@@ -352,6 +431,11 @@ public class TbAlarmDataSubCtx extends TbAbstractDataSubCtx<AlarmDataQuery> {
     private void resetInvocationCounter() {
         alarmInvocationAttempts = 0;
     }
+
+    /**
+     * Builds entity data query.
+     * @return {@link EntityDataQuery}
+     */
 
     @Override
     protected EntityDataQuery buildEntityDataQuery() {

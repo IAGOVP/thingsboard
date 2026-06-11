@@ -24,9 +24,21 @@ import org.thingsboard.server.common.data.notification.rule.trigger.EdgeCommunic
 import org.thingsboard.server.common.data.notification.rule.trigger.config.EdgeCommunicationFailureNotificationRuleTriggerConfig;
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NotificationRuleTriggerType;
 
+    /**
+     * Spring service component for edge communication failure trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 @RequiredArgsConstructor
 public class EdgeCommunicationFailureTriggerProcessor implements NotificationRuleTriggerProcessor<EdgeCommunicationFailureTrigger, EdgeCommunicationFailureNotificationRuleTriggerConfig> {
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link EdgeCommunicationFailureTrigger})
+     * @param triggerConfig trigger config ({@link EdgeCommunicationFailureNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(EdgeCommunicationFailureTrigger trigger, EdgeCommunicationFailureNotificationRuleTriggerConfig triggerConfig) {
@@ -35,6 +47,13 @@ public class EdgeCommunicationFailureTriggerProcessor implements NotificationRul
         }
         return true;
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link EdgeCommunicationFailureTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(EdgeCommunicationFailureTrigger trigger) {
@@ -46,6 +65,12 @@ public class EdgeCommunicationFailureTriggerProcessor implements NotificationRul
                 .failureMsg(truncateFailureMsg(trigger.getFailureMsg()))
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

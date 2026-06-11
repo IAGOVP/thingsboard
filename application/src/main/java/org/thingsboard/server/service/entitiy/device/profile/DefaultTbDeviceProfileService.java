@@ -29,6 +29,9 @@ import org.thingsboard.server.dao.device.DeviceProfileService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Default implementation of {@link TbDeviceProfileService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -37,6 +40,14 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 public class DefaultTbDeviceProfileService extends AbstractTbEntityService implements TbDeviceProfileService {
 
     private final DeviceProfileService deviceProfileService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param user authenticated user performing the action
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceProfile save(DeviceProfile deviceProfile, SecurityUser user) throws Exception {
@@ -54,6 +65,14 @@ public class DefaultTbDeviceProfileService extends AbstractTbEntityService imple
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(DeviceProfile deviceProfile, User user) {
@@ -71,6 +90,15 @@ public class DefaultTbDeviceProfileService extends AbstractTbEntityService imple
             throw e;
         }
     }
+    /**
+     * Set default device profile.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param previousDefaultDeviceProfile previous default device profile ({@link DeviceProfile})
+     * @param user authenticated user performing the action
+     * @return {@link DeviceProfile}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public DeviceProfile setDefaultDeviceProfile(DeviceProfile deviceProfile, DeviceProfile previousDefaultDeviceProfile, User user) throws ThingsboardException {

@@ -30,12 +30,23 @@ import org.thingsboard.server.common.data.security.model.mfa.provider.TwoFaProvi
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.security.auth.mfa.provider.TwoFaProvider;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Totp two fa provider for two-factor authentication (MFA).
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @RequiredArgsConstructor
 @TbCoreComponent
 public class TotpTwoFaProvider implements TwoFaProvider<TotpTwoFaProviderConfig, TotpTwoFaAccountConfig> {
-
+    /**
+     * Generate new account config.
+     *
+     * @param user user (User)
+     * @param providerConfig provider config (TotpTwoFaProviderConfig)
+     * @return {@link TotpTwoFaAccountConfig} result
+     */
     @Override
     public final TotpTwoFaAccountConfig generateNewAccountConfig(User user, TotpTwoFaProviderConfig providerConfig) {
         TotpTwoFaAccountConfig config = new TotpTwoFaAccountConfig();
@@ -43,7 +54,15 @@ public class TotpTwoFaProvider implements TwoFaProvider<TotpTwoFaProviderConfig,
         config.setAuthUrl(getTotpAuthUrl(user, secretKey, providerConfig));
         return config;
     }
-
+    /**
+     * Check verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param code code (String)
+     * @param providerConfig provider config (TotpTwoFaProviderConfig)
+     * @param accountConfig account config (TotpTwoFaAccountConfig)
+     * @return boolean
+     */
     @Override
     public final boolean checkVerificationCode(SecurityUser user, String code, TotpTwoFaProviderConfig providerConfig, TotpTwoFaAccountConfig accountConfig) {
         String secretKey = UriComponentsBuilder.fromUriString(accountConfig.getAuthUrl()).build().getQueryParams().getFirst("secret");
@@ -66,6 +85,10 @@ public class TotpTwoFaProvider implements TwoFaProvider<TotpTwoFaProviderConfig,
     }
 
 
+    /**
+     * Returns type.
+     *
+     */
     @Override
     public TwoFaProviderType getType() {
         return TwoFaProviderType.TOTP;

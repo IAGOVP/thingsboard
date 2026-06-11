@@ -67,6 +67,12 @@ public class TbCoreTransportApiService {
         this.transportApiService = transportApiService;
         this.statsFactory = statsFactory;
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
@@ -89,6 +95,13 @@ public class TbCoreTransportApiService {
         builder.stats(queueStats);
         transportApiTemplate = builder.build();
     }
+    /**
+     * Handles application event.
+     *
+     * @param applicationReadyEvent application ready event ({@link ApplicationReadyEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
@@ -96,6 +109,12 @@ public class TbCoreTransportApiService {
         transportApiTemplate.subscribe();
         transportApiTemplate.launch(transportApiService);
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void destroy() {

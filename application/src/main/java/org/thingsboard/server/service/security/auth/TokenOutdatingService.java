@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.auth;
 
 import org.thingsboard.server.common.data.id.UserId;
 
+/**
+ * Service contract for platform security.
+ */
+
 public interface TokenOutdatingService {
 
     boolean isOutdated(String token, UserId userId);

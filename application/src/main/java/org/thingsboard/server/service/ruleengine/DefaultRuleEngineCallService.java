@@ -34,6 +34,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+    /**
+     * Default Spring implementation for rule engine call service (rule engine message injection from core).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 public class DefaultRuleEngineCallService implements RuleEngineCallService {
@@ -47,11 +53,23 @@ public class DefaultRuleEngineCallService implements RuleEngineCallService {
     public DefaultRuleEngineCallService(TbClusterService clusterService) {
         this.clusterService = clusterService;
     }
+    /**
+     * Init executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void initExecutor() {
         executor = ThingsBoardExecutors.newSingleThreadScheduledExecutor("re-rest-callback");
     }
+    /**
+     * Shutdown executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -59,6 +77,17 @@ public class DefaultRuleEngineCallService implements RuleEngineCallService {
             executor.shutdownNow();
         }
     }
+    /**
+     * Processes rest api call to rule engine.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param requestId request id ({@link UUID})
+     * @param request request payload with operation parameters
+     * @param useQueueFromTbMsg use queue from tb msg
+     * @param responseConsumer response consumer ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processRestApiCallToRuleEngine(TenantId tenantId, UUID requestId, TbMsg request, boolean useQueueFromTbMsg, Consumer<TbMsg> responseConsumer) {
@@ -67,6 +96,14 @@ public class DefaultRuleEngineCallService implements RuleEngineCallService {
         sendRequestToRuleEngine(tenantId, request, useQueueFromTbMsg);
         scheduleTimeout(request, requestId, requests);
     }
+    /**
+     * Handles queue msg.
+     *
+     * @param restApiCallResponseMsg rest api call response msg
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onQueueMsg(TransportProtos.RestApiCallResponseMsgProto restApiCallResponseMsg, TbCallback callback) {

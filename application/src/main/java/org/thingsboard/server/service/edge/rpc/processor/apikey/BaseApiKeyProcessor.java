@@ -25,9 +25,21 @@ import org.thingsboard.server.common.data.msg.TbMsgType;
 import org.thingsboard.server.common.data.pat.ApiKey;
 import org.thingsboard.server.gen.edge.v1.ApiKeyUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base api key edge events for cloud↔edge synchronization.
+ */
 
 @Slf4j
 public abstract class BaseApiKeyProcessor extends BaseEdgeProcessor {
+
+    /**
+     * Creates or persists or update api key.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param apiKeyId api key id (ApiKeyId)
+     * @param apiKeyUpdateMsg api key update msg (ApiKeyUpdateMsg)
+     * @return boolean
+     */
 
     protected boolean saveOrUpdateApiKey(TenantId tenantId, ApiKeyId apiKeyId, ApiKeyUpdateMsg apiKeyUpdateMsg) {
         boolean isCreated = false;
@@ -51,6 +63,14 @@ public abstract class BaseApiKeyProcessor extends BaseEdgeProcessor {
         }
         return isCreated;
     }
+
+    /**
+     * Removes api key.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param apiKeyId api key id (ApiKeyId)
+     */
 
     protected void deleteApiKey(TenantId tenantId, Edge edge, ApiKeyId apiKeyId) {
         ApiKey apiKey = edgeCtx.getApiKeyService().findApiKeyById(tenantId, apiKeyId);

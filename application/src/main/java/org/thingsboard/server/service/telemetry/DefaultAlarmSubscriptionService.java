@@ -76,11 +76,24 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
     private final TbApiUsageReportClient apiUsageClient;
     private final TbApiUsageStateService apiUsageStateService;
     private final NotificationRuleProcessor notificationRuleProcessor;
+    /**
+     * Returns executor prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getExecutorPrefix() {
         return "alarm";
     }
+    /**
+     * Creates alarm.
+     *
+     * @param request request payload with operation parameters
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmApiCallResult createAlarm(AlarmCreateOrUpdateActiveRequest request) {
@@ -91,36 +104,100 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
         }
         return withWsCallback(request, result);
     }
+    /**
+     * Updates alarm.
+     *
+     * @param request request payload with operation parameters
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmApiCallResult updateAlarm(AlarmUpdateRequest request) {
         return withWsCallback(alarmService.updateAlarm(request));
     }
+    /**
+     * Acknowledge alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param ackTs ack ts
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmApiCallResult acknowledgeAlarm(TenantId tenantId, AlarmId alarmId, long ackTs) {
         return withWsCallback(alarmService.acknowledgeAlarm(tenantId, alarmId, ackTs));
     }
+    /**
+     * Clear alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param clearTs clear ts
+     * @param details details ({@link JsonNode})
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmApiCallResult clearAlarm(TenantId tenantId, AlarmId alarmId, long clearTs, JsonNode details) {
         return clearAlarm(tenantId, alarmId, clearTs, details, true);
     }
+    /**
+     * Clear alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param clearTs clear ts
+     * @param details details ({@link JsonNode})
+     * @param pushEvent push event
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmApiCallResult clearAlarm(TenantId tenantId, AlarmId alarmId, long clearTs, JsonNode details, boolean pushEvent) {
         return withWsCallback(alarmService.clearAlarm(tenantId, alarmId, clearTs, details, pushEvent));
     }
+    /**
+     * Assigns alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param assigneeId assignee id ({@link UserId})
+     * @param assignTs assign ts
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmApiCallResult assignAlarm(TenantId tenantId, AlarmId alarmId, UserId assigneeId, long assignTs) {
         return withWsCallback(alarmService.assignAlarm(tenantId, alarmId, assigneeId, assignTs));
     }
+    /**
+     * Unassigns alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @param assignTs assign ts
+     * @return {@link AlarmApiCallResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmApiCallResult unassignAlarm(TenantId tenantId, AlarmId alarmId, long assignTs) {
         return withWsCallback(alarmService.unassignAlarm(tenantId, alarmId, assignTs));
     }
+    /**
+     * Deletes alarm.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean deleteAlarm(TenantId tenantId, AlarmId alarmId) {
@@ -128,66 +205,179 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
         onAlarmDeleted(result);
         return result.isSuccessful();
     }
+    /**
+     * Finds alarm by id async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return future completing with {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Alarm> findAlarmByIdAsync(TenantId tenantId, AlarmId alarmId) {
         return alarmService.findAlarmByIdAsync(tenantId, alarmId);
     }
+    /**
+     * Finds alarm by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Alarm findAlarmById(TenantId tenantId, AlarmId alarmId) {
         return alarmService.findAlarmById(tenantId, alarmId);
     }
+    /**
+     * Finds alarm info by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return {@link AlarmInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmInfo findAlarmInfoById(TenantId tenantId, AlarmId alarmId) {
         return alarmService.findAlarmInfoById(tenantId, alarmId);
     }
+    /**
+     * Finds alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query query ({@link AlarmQuery})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<AlarmInfo> findAlarms(TenantId tenantId, AlarmQuery query) {
         return alarmService.findAlarms(tenantId, query);
     }
+    /**
+     * Finds customer alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param query query ({@link AlarmQuery})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<AlarmInfo> findCustomerAlarms(TenantId tenantId, CustomerId customerId, AlarmQuery query) {
         return alarmService.findCustomerAlarms(tenantId, customerId, query);
     }
+    /**
+     * Finds alarms v2.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query query ({@link AlarmQueryV2})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<AlarmInfo> findAlarmsV2(TenantId tenantId, AlarmQueryV2 query) {
         return alarmService.findAlarmsV2(tenantId, query);
     }
+    /**
+     * Finds customer alarms v2.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param query query ({@link AlarmQueryV2})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<AlarmInfo> findCustomerAlarmsV2(TenantId tenantId, CustomerId customerId, AlarmQueryV2 query) {
         return alarmService.findCustomerAlarmsV2(tenantId, customerId, query);
     }
+    /**
+     * Finds highest alarm severity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param alarmSearchStatus alarm search status ({@link AlarmSearchStatus})
+     * @param alarmStatus alarm status ({@link AlarmStatus})
+     * @param assigneeId assignee id ({@link String})
+     * @return {@link AlarmSeverity}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmSeverity findHighestAlarmSeverity(TenantId tenantId, EntityId entityId, AlarmSearchStatus alarmSearchStatus, AlarmStatus alarmStatus, String assigneeId) {
         return alarmService.findHighestAlarmSeverity(tenantId, entityId, alarmSearchStatus, alarmStatus, assigneeId);
     }
+    /**
+     * Finds alarm data by query for entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param query query ({@link AlarmDataQuery})
+     * @param orderedEntityIds ordered entity ids ({@link Collection})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<AlarmData> findAlarmDataByQueryForEntities(TenantId tenantId, AlarmDataQuery query, Collection<EntityId> orderedEntityIds) {
         return alarmService.findAlarmDataByQueryForEntities(tenantId, query, orderedEntityIds);
     }
+    /**
+     * Finds latest active by originator and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Alarm findLatestActiveByOriginatorAndType(TenantId tenantId, EntityId originator, String type) {
         return alarmService.findLatestActiveByOriginatorAndType(tenantId, originator, type);
     }
+    /**
+     * Finds latest active by originator and type async.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<Alarm> findLatestActiveByOriginatorAndTypeAsync(TenantId tenantId, EntityId originator, String type) {
         return alarmService.findLatestActiveByOriginatorAndTypeAsync(tenantId, originator, type);
     }
+    /**
+     * Finds latest by originator and type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param originator originator ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Alarm findLatestByOriginatorAndType(TenantId tenantId, EntityId originator, String type) {
         return alarmService.findLatestActiveByOriginatorAndType(tenantId, originator, type);
     }
+    /**
+     * Finds alarm types by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<EntitySubtype> findAlarmTypesByTenantId(TenantId tenantId, PageLink pageLink) {
@@ -230,10 +420,24 @@ public class DefaultAlarmSubscriptionService extends AbstractSubscriptionService
     }
 
     private class AlarmUpdateCallback implements FutureCallback<AlarmApiCallResult> {
+        /**
+         * Handles success.
+         *
+         * @param result result ({@link AlarmApiCallResult})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
         @Override
         public void onSuccess(@Nullable AlarmApiCallResult result) {
             onAlarmUpdated(result);
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {

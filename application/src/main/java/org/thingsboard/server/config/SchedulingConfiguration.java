@@ -23,15 +23,36 @@ import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
+/**
+ * Configures the Spring {@link org.springframework.scheduling.annotation.Scheduled} infrastructure.
+ *
+ * <p>Replaces the default single-threaded scheduler with a pooled {@link TaskScheduler}
+ * sized to the number of available CPU cores. Used by TTL cleanup services, housekeeper
+ * tasks, edge session maintenance, and other {@code @Scheduled} beans across the application.
+ */
 @Configuration
 @EnableScheduling
 public class SchedulingConfiguration implements SchedulingConfigurer {
 
+    /**
+     * Wires the custom thread-pool scheduler into Spring's scheduled task registrar.
+     *
+     * @param taskRegistrar Spring's registrar for all {@code @Scheduled} methods
+     */
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.setScheduler(taskScheduler());
     }
 
+    /**
+     * Creates a shared task scheduler backed by a thread pool.
+     *
+     * <p>Pool size equals {@link Runtime#availableProcessors()}. Threads are named
+     * {@code TB-Scheduling-N} for easy identification in thread dumps. Cancelled tasks
+     * are removed from the queue immediately ({@code removeOnCancelPolicy=true}).
+     *
+     * @return the application-wide {@link TaskScheduler} bean
+     */
     @Bean(destroyMethod="shutdown")
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler threadPoolScheduler = new ThreadPoolTaskScheduler();

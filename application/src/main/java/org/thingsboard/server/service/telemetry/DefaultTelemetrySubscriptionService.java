@@ -113,17 +113,35 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         this.calculatedFieldQueueService = calculatedFieldQueueService;
         this.deviceStateManager = deviceStateManager;
     }
+    /**
+     * Init executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void initExecutor() {
         super.initExecutor();
         tsCallBackExecutor = ThingsBoardExecutors.newWorkStealingPool(callbackThreadPoolSize, "ts-service-ts-callback");
     }
+    /**
+     * Returns executor prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getExecutorPrefix() {
         return "ts";
     }
+    /**
+     * Shutdown executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -132,6 +150,13 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }
         super.shutdownExecutor();
     }
+    /**
+     * Saves or persists timeseries.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void saveTimeseries(TimeseriesSaveRequest request) {
@@ -149,6 +174,13 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
             request.getCallback().onFailure(new RuntimeException("DB storage writes are disabled due to API limits!"));
         }
     }
+    /**
+     * Saves or persists timeseries internal.
+     *
+     * @param request request payload with operation parameters
+     * @return future completing with {@link TimeseriesSaveResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<TimeseriesSaveResult> saveTimeseriesInternal(TimeseriesSaveRequest request) {
@@ -183,12 +215,26 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
         }
         return resultFuture;
     }
+    /**
+     * Saves or persists attributes.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void saveAttributes(AttributesSaveRequest request) {
         checkInternalEntity(request.getEntityId());
         saveAttributesInternal(request);
     }
+    /**
+     * Saves or persists attributes internal.
+     *
+     * @param request request payload with operation parameters
+     * @return future completing with {@link AttributesSaveResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<AttributesSaveResult> saveAttributesInternal(AttributesSaveRequest request) {
@@ -256,12 +302,26 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
             return 0L;
         }
     }
+    /**
+     * Deletes attributes.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteAttributes(AttributesDeleteRequest request) {
         checkInternalEntity(request.getEntityId());
         deleteAttributesInternal(request);
     }
+    /**
+     * Deletes attributes internal.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteAttributesInternal(AttributesDeleteRequest request) {
@@ -305,12 +365,26 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
                 && request.getScope() == AttributeScope.SERVER_SCOPE
                 && request.getKeys().stream().anyMatch(key -> Objects.equals(DefaultDeviceStateService.INACTIVITY_TIMEOUT, key));
     }
+    /**
+     * Deletes timeseries.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteTimeseries(TimeseriesDeleteRequest request) {
         checkInternalEntity(request.getEntityId());
         deleteTimeseriesInternal(request);
     }
+    /**
+     * Deletes timeseries internal.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteTimeseriesInternal(TimeseriesDeleteRequest request) {
@@ -336,6 +410,13 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
     private void copyLatestToEntityViews(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts) {
         Futures.addCallback(tbEntityViewService.findEntityViewsByTenantIdAndEntityIdAsync(tenantId, entityId),
                 new FutureCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param result result ({@link List})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
                     @Override
                     public void onSuccess(@Nullable List<EntityView> result) {
                         if (result != null && !result.isEmpty()) {
@@ -365,8 +446,22 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
                                             .entries(entityViewLatest)
                                             .strategy(TimeseriesSaveRequest.Strategy.LATEST_AND_WS)
                                             .callback(new FutureCallback<>() {
+                                                /**
+                                                 * Handles success.
+                                                 *
+                                                 * @param tmp tmp ({@link Void})
+                                                 * @return nothing
+                                                 * @throws Exception if an unexpected error occurs during processing
+                                                 */
                                                 @Override
                                                 public void onSuccess(@Nullable Void tmp) {}
+                                                /**
+                                                 * Handles failure.
+                                                 *
+                                                 * @param t t ({@link Throwable})
+                                                 * @return nothing
+                                                 * @throws Exception if an unexpected error occurs during processing
+                                                 */
 
                                                 @Override
                                                 public void onFailure(Throwable t) {
@@ -378,6 +473,13 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
                             }
                         }
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -445,6 +547,13 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
 
     private FutureCallback<TimeseriesSaveResult> getApiUsageCallback(TenantId tenantId, CustomerId customerId, boolean sysTenant) {
         return new FutureCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param result result ({@link TimeseriesSaveResult})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(TimeseriesSaveResult result) {
                 Integer dataPoints = result.getDataPoints();
@@ -452,6 +561,13 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
                     apiUsageClient.report(tenantId, customerId, ApiUsageRecordKey.STORAGE_DP_COUNT, dataPoints);
                 }
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {}
@@ -460,10 +576,24 @@ public class DefaultTelemetrySubscriptionService extends AbstractSubscriptionSer
 
     private FutureCallback<Void> getCalculatedFieldCallback(FutureCallback<List<String>> originalCallback, List<String> keys) {
         return new FutureCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param unused unused ({@link Void})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(Void unused) {
                 originalCallback.onSuccess(keys);
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {

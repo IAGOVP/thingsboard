@@ -31,12 +31,26 @@ import org.thingsboard.server.gen.edge.v1.RuleChainUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
 
 import java.util.function.Function;
+/**
+ * Processes base rule chain edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #ruleChainValidator}.
+ */
 
 @Slf4j
 public class BaseRuleChainProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<RuleChain> ruleChainValidator;
+
+    /**
+     * Creates or persists or update rule chain.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param ruleChainId rule chain id (RuleChainId)
+     * @param ruleChainUpdateMsg rule chain update msg (RuleChainUpdateMsg)
+     * @param ruleChainType rule chain type (RuleChainType)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateRuleChain(TenantId tenantId, RuleChainId ruleChainId, RuleChainUpdateMsg ruleChainUpdateMsg, RuleChainType ruleChainType) {
         boolean created = false;
@@ -64,6 +78,13 @@ public class BaseRuleChainProcessor extends BaseEdgeProcessor {
         edgeCtx.getRuleChainService().saveRuleChain(ruleChain, true, false);
         return Pair.of(created, isRoot);
     }
+
+    /**
+     * Creates or persists or update rule chain metadata.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param ruleChainMetadataUpdateMsg rule chain metadata update msg (RuleChainMetadataUpdateMsg)
+     */
 
     protected void saveOrUpdateRuleChainMetadata(TenantId tenantId, RuleChainMetadataUpdateMsg ruleChainMetadataUpdateMsg) {
         RuleChainMetaData ruleChainMetadata = JacksonUtil.fromString(ruleChainMetadataUpdateMsg.getEntity(), RuleChainMetaData.class, true);

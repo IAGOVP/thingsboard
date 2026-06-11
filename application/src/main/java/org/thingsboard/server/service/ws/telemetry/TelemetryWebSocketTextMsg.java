@@ -17,10 +17,10 @@ package org.thingsboard.server.service.ws.telemetry;
 
 import lombok.Data;
 import org.thingsboard.server.service.ws.WebSocketSessionRef;
-
 /**
- * Created by ashvayka on 27.03.18.
+ * Telemetry web socket text msg component in the ThingsBoard WebSocket layer.
  */
+
 @Data
 public class TelemetryWebSocketTextMsg {
 

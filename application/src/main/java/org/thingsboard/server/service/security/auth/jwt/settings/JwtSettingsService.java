@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.auth.jwt.settings;
 
 import org.thingsboard.server.common.data.security.model.JwtSettings;
 
+/**
+ * Service contract for JWT bearer-token authentication.
+ */
+
 public interface JwtSettingsService {
 
     String ADMIN_SETTINGS_JWT_KEY = "jwt";

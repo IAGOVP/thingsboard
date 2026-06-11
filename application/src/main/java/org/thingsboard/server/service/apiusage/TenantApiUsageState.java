@@ -33,6 +33,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+
+ * Tenant api usage state (tenant API usage metering and rate-limit state).
+
+ */
+
 public class TenantApiUsageState extends BaseApiUsageState {
     @Getter
     @Setter
@@ -50,14 +56,35 @@ public class TenantApiUsageState extends BaseApiUsageState {
     public TenantApiUsageState(ApiUsageState apiUsageState) {
         super(apiUsageState);
     }
+    /**
+     * Returns profile threshold.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getProfileThreshold(ApiUsageRecordKey key) {
         return tenantProfileData.getConfiguration().getProfileThreshold(key);
     }
+    /**
+     * Returns profile feature enabled.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean getProfileFeatureEnabled(ApiUsageRecordKey key) {
         return tenantProfileData.getConfiguration().getProfileFeatureEnabled(key);
     }
+    /**
+     * Returns profile warn threshold.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getProfileWarnThreshold(ApiUsageRecordKey key) {
         return tenantProfileData.getConfiguration().getWarnThreshold(key);
@@ -86,11 +113,24 @@ public class TenantApiUsageState extends BaseApiUsageState {
         }
         return setFeatureValue(feature, featureValue) ? Pair.of(feature, featureValue) : null;
     }
+    /**
+     * Checks state updated due to thresholds.
+     *
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     public Map<ApiFeature, ApiUsageStateValue> checkStateUpdatedDueToThresholds() {
         return checkStateUpdatedDueToThreshold(new HashSet<>(Arrays.asList(ApiFeature.values())));
     }
+    /**
+     * Checks state updated due to threshold.
+     *
+     * @param features features ({@link Set})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Map<ApiFeature, ApiUsageStateValue> checkStateUpdatedDueToThreshold(Set<ApiFeature> features) {
         Map<ApiFeature, ApiUsageStateValue> result = new HashMap<>();
@@ -102,6 +142,12 @@ public class TenantApiUsageState extends BaseApiUsageState {
         }
         return result;
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

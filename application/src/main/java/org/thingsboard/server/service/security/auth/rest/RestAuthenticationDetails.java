@@ -21,6 +21,9 @@ import ua_parser.Client;
 import ua_parser.Parser;
 
 import java.io.Serializable;
+/**
+ * Rest authentication details for username/password REST login.
+ */
 
 @Data
 public class RestAuthenticationDetails implements Serializable {

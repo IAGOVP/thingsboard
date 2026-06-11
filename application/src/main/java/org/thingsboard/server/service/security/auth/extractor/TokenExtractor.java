@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.auth.extractor;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Extracts bearer/API tokens from HTTP requests for HTTP token extraction for security filters.
+ */
+
 public interface TokenExtractor {
 
     String extract(HttpServletRequest request);

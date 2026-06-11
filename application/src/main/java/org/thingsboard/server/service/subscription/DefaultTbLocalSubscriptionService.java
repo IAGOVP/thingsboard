@@ -79,6 +79,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+/**
+ * Default {@link TbLocalSubscriptionService}: indexes subscriptions by session and entity, applies rate limits, and invokes {@link org.thingsboard.server.service.ws.WebSocketService} to push updates.
+ */
 
 @Slf4j
 @TbCoreComponent
@@ -106,6 +109,18 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
     @Value("${server.ws.rate_limits.subscriptions_per_user:}")
     private String subscriptionsPerUserRateLimit;
 
+    /**
+     * Constructs {@link DefaultTbLocalSubscriptionService} with the supplied dependencies and configuration.
+     * @param attrService attr service
+     * @param tsService ts service
+     * @param serviceInfoProvider service info provider
+     * @param partitionService partition service
+     * @param clusterService cluster service
+     * @param subscriptionManagerService subscription manager service
+     * @param webSocketService web socket service
+     * @param rateLimitService rate limit service
+     */
+
     public DefaultTbLocalSubscriptionService(AttributesService attrService, TimeseriesService tsService, TbServiceInfoProvider serviceInfoProvider,
                                              PartitionService partitionService, TbClusterService clusterService,
                                              @Lazy SubscriptionManagerService subscriptionManagerService, @Lazy WebSocketService webSocketService,
@@ -125,6 +140,12 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
 
     private final ConcurrentReferenceHashMap<TenantId, Lock> locks = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
 
+    /**
+     * Initializes executor.
+     * @return @PostConstruct
+    public void
+     */
+
     @PostConstruct
     public void initExecutor() {
         subscriptionUpdateExecutor = ThingsBoardExecutors.newWorkStealingPool(20, getClass());
@@ -133,6 +154,12 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
         staleSessionCleanupExecutor = ThingsBoardExecutors.newSingleThreadScheduledExecutor("stale-session-cleanup");
         staleSessionCleanupExecutor.scheduleWithFixedDelay(this::cleanupStaleSessions, 60, 60, TimeUnit.SECONDS);
     }
+
+    /**
+     * Shutdown executor.
+     * @return @PreDestroy
+    public void
+     */
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -147,6 +174,12 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
         }
     }
 
+    /**
+     * Invoked when application event occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param event application or cluster event
+     */
     @Override
     @EventListener(ClusterTopologyChangeEvent.class)
     public void onApplicationEvent(ClusterTopologyChangeEvent event) {
@@ -185,6 +218,13 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
         }
     }
 
+    /**
+     * Invoked when core startup msg occurs.
+     * @param coreStartupMsg core startup msg
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onCoreStartupMsg(TransportProtos.CoreStartupMsg coreStartupMsg) {
         subscriptionUpdateExecutor.submit(() -> {
@@ -204,6 +244,14 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
     Lock getSubsLock(TenantId tenantId) {
         return locks.computeIfAbsent(tenantId, x -> new ReentrantLock());
     }
+
+    /**
+     * Registers subscription.
+     * @param subscription subscription to register or remove
+     * @param sessionRef reference to the WebSocket session
+     * @return @Override
+    public void
+     */
 
     @Override
     public void addSubscription(TbSubscription<?> subscription, WebSocketSessionRef sessionRef) {
@@ -234,6 +282,14 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
         }
     }
 
+    /**
+     * Invoked when sub event callback occurs.
+     * @param subEventCallback sub event callback
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onSubEventCallback(TransportProtos.TbEntitySubEventCallbackProto subEventCallback, TbCallback callback) {
         TenantId tenantId;
@@ -245,6 +301,17 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
         UUID entityId = new UUID(subEventCallback.getEntityIdMSB(), subEventCallback.getEntityIdLSB());
         onSubEventCallback(tenantId, entityId, subEventCallback.getSeqNumber(), new TbEntityUpdatesInfo(subEventCallback.getAttributesUpdateTs(), subEventCallback.getTimeSeriesUpdateTs()), callback);
     }
+
+    /**
+     * Invoked when sub event callback occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param seqNumber seq number
+     * @param entityUpdatesInfo entity updates info
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onSubEventCallback(TenantId tenantId, EntityId entityId, int seqNumber, TbEntityUpdatesInfo entityUpdatesInfo, TbCallback callback) {
@@ -270,6 +337,15 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
         }
         callback.onSuccess();
     }
+
+    /**
+     * Cancels subscription.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionId client command/subscription id
+     * @return @Override
+    public void
+     */
 
     @Override
     public void cancelSubscription(TenantId tenantId, String sessionId, int subscriptionId) {
@@ -300,6 +376,14 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
         }
     }
 
+    /**
+     * Cancels all session subscriptions.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param sessionId WebSocket session identifier
+     * @return @Override
+    public void
+     */
+
     @Override
     public void cancelAllSessionSubscriptions(TenantId tenantId, String sessionId) {
         log.debug("[{}][{}] Going to remove session subscriptions.", tenantId, sessionId);
@@ -325,11 +409,28 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
         }
     }
 
+    /**
+     * Invoked when time series update occurs.
+     * @param proto proto
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onTimeSeriesUpdate(TransportProtos.TbSubUpdateProto proto, TbCallback callback) {
         //TODO: optimize to avoid re-wrapping from TsValueListProto -> List<KV> -> Map<String, List<Object>>. Low priority.
         onTimeSeriesUpdate(new UUID(proto.getEntityIdMSB(), proto.getEntityIdLSB()), TbSubscriptionUtils.fromProto(proto), callback);
     }
+
+    /**
+     * Invoked when time series update occurs.
+     * @param entityId target entity id
+     * @param data data
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onTimeSeriesUpdate(EntityId entityId, List<TsKvEntry> data, TbCallback callback) {
@@ -379,10 +480,28 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
                 }, callback);
     }
 
+    /**
+     * Invoked when attributes update occurs.
+     * @param proto proto
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onAttributesUpdate(TransportProtos.TbSubUpdateProto proto, TbCallback callback) {
         onAttributesUpdate(new UUID(proto.getEntityIdMSB(), proto.getEntityIdLSB()), proto.getScope(), TbSubscriptionUtils.fromProto(proto), callback);
     }
+
+    /**
+     * Invoked when attributes update occurs.
+     * @param entityId target entity id
+     * @param scope scope
+     * @param data data
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onAttributesUpdate(EntityId entityId, String scope, List<TsKvEntry> data, TbCallback callback) {
@@ -418,10 +537,28 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
                 }, callback);
     }
 
+    /**
+     * Invoked when alarm update occurs.
+     * @param proto proto
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onAlarmUpdate(TransportProtos.TbAlarmSubUpdateProto proto, TbCallback callback) {
         onAlarmUpdate(new UUID(proto.getEntityIdMSB(), proto.getEntityIdLSB()), TbSubscriptionUtils.fromProto(proto), callback);
     }
+
+    /**
+     * Invoked when alarm update occurs.
+     * @param entityId target entity id
+     * @param alarm alarm
+     * @param deleted deleted
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onAlarmUpdate(EntityId entityId, AlarmInfo alarm, boolean deleted, TbCallback callback) {
@@ -434,10 +571,27 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
                 update, callback);
     }
 
+    /**
+     * Invoked when notification update occurs.
+     * @param proto proto
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onNotificationUpdate(TransportProtos.NotificationsSubUpdateProto proto, TbCallback callback) {
         onNotificationUpdate(new UUID(proto.getEntityIdMSB(), proto.getEntityIdLSB()), TbSubscriptionUtils.fromProto(proto), callback);
     }
+
+    /**
+     * Invoked when notification update occurs.
+     * @param entityId target entity id
+     * @param update subscription update payload
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onNotificationUpdate(EntityId entityId, NotificationsSubscriptionUpdate update, TbCallback callback) {
@@ -450,6 +604,14 @@ public class DefaultTbLocalSubscriptionService implements TbLocalSubscriptionSer
                 update, callback);
     }
 
+    /**
+     * Invoked when notification request update occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param update subscription update payload
+     * @param callback queue callback to ack or retry the message
+     */
     @Override
     @SuppressWarnings("unchecked")
     public void onNotificationRequestUpdate(TenantId tenantId, NotificationRequestUpdate update, TbCallback callback) {

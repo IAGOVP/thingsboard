@@ -23,6 +23,12 @@ import org.thingsboard.server.actors.service.ContextBasedCreator;
 import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+
+ * Factory that creates {@link org.thingsboard.server.actors.device.DeviceActor} instances for a tenant/device pair.
+
+ */
+
 public class DeviceActorCreator extends ContextBasedCreator {
 
     private final TenantId tenantId;
@@ -33,11 +39,27 @@ public class DeviceActorCreator extends ContextBasedCreator {
         this.tenantId = tenantId;
         this.deviceId = deviceId;
     }
+    
+    /**
+     * Builds the {@link org.thingsboard.server.actors.TbActorId} used to register the actor.
+     *
+     * @return {@link TbActorId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public TbActorId createActorId() {
         return new TbEntityActorId(deviceId);
     }
+    
+    /**
+     * Creates a new actor instance for the given actor id and context.
+     *
+     * @return {@link TbActor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public TbActor createActor() {

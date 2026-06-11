@@ -44,6 +44,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Spring service component for alarms clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @TbCoreComponent
 @Service
 @Slf4j
@@ -59,6 +63,12 @@ public class AlarmsCleanUpService {
     private final EntityActionService entityActionService;
     private final PartitionService partitionService;
     private final TbTenantProfileCache tenantProfileCache;
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Scheduled(initialDelayString = "#{T(org.apache.commons.lang3.RandomUtils).nextLong(0, ${sql.ttl.alarms.checking_interval})}", fixedDelayString = "${sql.ttl.alarms.checking_interval}")
     public void cleanUp() {

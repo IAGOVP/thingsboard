@@ -38,6 +38,9 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 
 import java.util.HashSet;
 import java.util.Set;
+/**
+ * Default implementation of {@link TbDashboardService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -46,6 +49,14 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
 
     private final DashboardService dashboardService;
     private final TbResourceService tbResourceService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Dashboard save(Dashboard dashboard, SecurityUser user) throws Exception {
@@ -67,6 +78,14 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(Dashboard dashboard, User user) {
@@ -81,6 +100,15 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Assigns dashboard to customer.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard assignDashboardToCustomer(Dashboard dashboard, Customer customer, User user) throws ThingsboardException {
@@ -99,6 +127,14 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Assigns dashboard to public customer.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard assignDashboardToPublicCustomer(Dashboard dashboard, User user) throws ThingsboardException {
@@ -116,6 +152,14 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Unassigns dashboard from public customer.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard unassignDashboardFromPublicCustomer(Dashboard dashboard, User user) throws ThingsboardException {
@@ -133,6 +177,15 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Updates dashboard customers.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param customerIds customer ids ({@link Set})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard updateDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException {
@@ -181,6 +234,15 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Add dashboard customers.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param customerIds customer ids ({@link Set})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard addDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException {
@@ -211,6 +273,15 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Removes dashboard customers.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param customerIds customer ids ({@link Set})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard removeDashboardCustomers(Dashboard dashboard, Set<CustomerId> customerIds, User user) throws ThingsboardException {
@@ -241,6 +312,16 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Asign dashboard to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard asignDashboardToEdge(TenantId tenantId, DashboardId dashboardId, Edge edge, User user) throws ThingsboardException {
@@ -257,6 +338,15 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Unassigns dashboard from edge.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard unassignDashboardFromEdge(Dashboard dashboard, Edge edge, User user) throws ThingsboardException {
@@ -275,6 +365,15 @@ public class DefaultTbDashboardService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Unassigns dashboard from customer.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link Dashboard}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Dashboard unassignDashboardFromCustomer(Dashboard dashboard, Customer customer, User user) throws ThingsboardException {

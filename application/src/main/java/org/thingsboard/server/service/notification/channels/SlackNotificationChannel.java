@@ -27,18 +27,38 @@ import org.thingsboard.server.common.data.notification.template.SlackDeliveryMet
 import org.thingsboard.server.dao.notification.NotificationSettingsService;
 import org.thingsboard.server.service.notification.NotificationProcessingContext;
 
+    /**
+     * Spring service component for slack notification channel (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Component
 @RequiredArgsConstructor
 public class SlackNotificationChannel implements NotificationChannel<SlackConversation, SlackDeliveryMethodNotificationTemplate> {
 
     private final SlackService slackService;
     private final NotificationSettingsService notificationSettingsService;
+    /**
+     * Send notification.
+     *
+     * @param conversation conversation ({@link SlackConversation})
+     * @param processedTemplate processed template ({@link SlackDeliveryMethodNotificationTemplate})
+     * @param ctx calculated-field execution context
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendNotification(SlackConversation conversation, SlackDeliveryMethodNotificationTemplate processedTemplate, NotificationProcessingContext ctx) throws Exception {
         SlackNotificationDeliveryMethodConfig config = ctx.getDeliveryMethodConfig(NotificationDeliveryMethod.SLACK);
         slackService.sendMessage(ctx.getTenantId(), config.getBotToken(), conversation.getId(), processedTemplate.getBody());
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void check(TenantId tenantId) throws Exception {
@@ -47,6 +67,12 @@ public class SlackNotificationChannel implements NotificationChannel<SlackConver
             throw new RuntimeException("Slack API token is not configured");
         }
     }
+    /**
+     * Returns delivery method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationDeliveryMethod getDeliveryMethod() {

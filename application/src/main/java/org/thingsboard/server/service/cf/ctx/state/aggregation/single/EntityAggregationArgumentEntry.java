@@ -31,6 +31,9 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+/**
+ * Argument or aggregation entry for calculated-field state (entity aggregation argument entry).
+ */
 
 @Data
 public class EntityAggregationArgumentEntry implements ArgumentEntry {
@@ -42,16 +45,36 @@ public class EntityAggregationArgumentEntry implements ArgumentEntry {
     public EntityAggregationArgumentEntry(Map<AggIntervalEntry, AggIntervalEntryStatus> aggIntervals) {
         this.aggIntervals = aggIntervals;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link ArgumentEntryType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ArgumentEntryType getType() {
         return ArgumentEntryType.ENTITY_AGGREGATION;
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Object getValue() {
         return aggIntervals;
     }
+    /**
+     * Updates entry.
+     *
+     * @param entry entry ({@link ArgumentEntry})
+     * @param ctx calculated-field execution context
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean updateEntry(ArgumentEntry entry, CalculatedFieldCtx ctx) {
@@ -110,16 +133,34 @@ public class EntityAggregationArgumentEntry implements ArgumentEntry {
         aggIntervals.computeIfAbsent(newInterval, i -> new AggIntervalEntryStatus(now));
         return true;
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isEmpty() {
         return aggIntervals.isEmpty();
     }
+    /**
+     * Json value.
+     *
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JsonNode jsonValue() {
         return JacksonUtil.valueToTree(aggIntervals);
     }
+    /**
+     * To tbel cf arg.
+     *
+     * @return {@link TbelCfArg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbelCfArg toTbelCfArg() {

@@ -31,12 +31,26 @@ import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
 
 import java.util.HashSet;
 import java.util.Set;
+/**
+ * Processes base dashboard edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #dashboardValidator}.
+ */
 
 @Slf4j
 public abstract class BaseDashboardProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<Dashboard> dashboardValidator;
+
+    /**
+     * Creates or persists or update dashboard.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param dashboardId dashboard id (DashboardId)
+     * @param dashboardUpdateMsg dashboard update msg (DashboardUpdateMsg)
+     * @param customerId customer id (CustomerId)
+     * @return boolean
+     */
 
     protected boolean saveOrUpdateDashboard(TenantId tenantId, DashboardId dashboardId, DashboardUpdateMsg dashboardUpdateMsg, CustomerId customerId) {
         boolean created = false;
@@ -101,9 +115,24 @@ public abstract class BaseDashboardProcessor extends BaseEdgeProcessor {
         }
     }
 
+    /**
+     * Removes dashboard.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param dashboardId dashboard id (DashboardId)
+     */
+
     protected void deleteDashboard(TenantId tenantId, DashboardId dashboardId) {
         deleteDashboard(tenantId, null, dashboardId);
     }
+
+    /**
+     * Removes dashboard.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param dashboardId dashboard id (DashboardId)
+     */
 
     protected void deleteDashboard(TenantId tenantId, Edge edge, DashboardId dashboardId) {
         Dashboard dashboardById = edgeCtx.getDashboardService().findDashboardById(tenantId, dashboardId);
@@ -112,6 +141,16 @@ public abstract class BaseDashboardProcessor extends BaseEdgeProcessor {
             pushEntityEventToRuleEngine(tenantId, edge, dashboardById, TbMsgType.ENTITY_DELETED);
         }
     }
+
+    /**
+     * Filter non existing customers.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param currentAssignedCustomers current assigned customers (Set<ShortCustomerInfo>)
+     * @param newAssignedCustomers new assigned customers (Set<ShortCustomerInfo>)
+     * @return {@link Set} result
+     */
 
     protected abstract Set<ShortCustomerInfo> filterNonExistingCustomers(TenantId tenantId, CustomerId customerId, Set<ShortCustomerInfo> currentAssignedCustomers, Set<ShortCustomerInfo> newAssignedCustomers);
 

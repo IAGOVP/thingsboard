@@ -28,6 +28,11 @@ import org.thingsboard.server.dao.eventsourcing.DeleteEntityEvent;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+/**
+ * Related edges sourcing listener for ThingsBoard Edge integration.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @RequiredArgsConstructor
@@ -38,12 +43,20 @@ public class RelatedEdgesSourcingListener {
 
     private ExecutorService executorService;
 
+    /**
+     * Initializes resources required by this component.
+     *
+     */
     @PostConstruct
     public void init() {
         log.debug("RelatedEdgesSourcingListener initiated");
         executorService = Executors.newSingleThreadExecutor(ThingsBoardThreadFactory.forName("related-edges-listener"));
     }
 
+    /**
+     * Releases resources and shuts down background executors.
+     *
+     */
     @PreDestroy
     public void destroy() {
         log.debug("RelatedEdgesSourcingListener destroy");
@@ -52,6 +65,11 @@ public class RelatedEdgesSourcingListener {
         }
     }
 
+    /**
+     * Handles event.
+     *
+     * @param event event (ActionEntityEvent<?>)
+     */
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(ActionEntityEvent<?> event) {
         switch (event.getActionType()) {
@@ -72,6 +90,11 @@ public class RelatedEdgesSourcingListener {
             fallbackExecution = true,
             condition = "#event.entityId.getEntityType() != T(org.thingsboard.server.common.data.EntityType).AI_MODEL"
     )
+    /**
+     * Handles event.
+     *
+     * @param event event (DeleteEntityEvent<?>)
+     */
     public void handleEvent(DeleteEntityEvent<?> event) {
         executorService.submit(() -> {
             log.trace("[{}] DeleteEntityEvent called: {}", event.getTenantId(), event);

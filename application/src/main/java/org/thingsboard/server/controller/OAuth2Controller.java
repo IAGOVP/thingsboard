@@ -62,6 +62,12 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for OAuth2 clients and login.
+ * 
+ * <p>Base path: {@code /api}. OAuth2 client CRUD, login discovery, and login-processing URL configuration.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -74,6 +80,16 @@ public class OAuth2Controller extends BaseController {
     private final TbOauth2ClientService tbOauth2ClientService;
 
 
+    /**
+     * Get OAuth2 clients.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/noauth/oauth2Clients}
+     * <p><b>Auth:</b> None (public / noauth endpoint)
+     * @param pkgName pkg Name
+     * @param platform platform
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OAuth2 clients (getOAuth2Clients)", notes = "Get the list of OAuth2 clients " +
             "to log in with, available for such domain scheme (HTTP or HTTPS) (if x-forwarded-proto request header is present - " +
             "the scheme is known from it) and domain name and port (port may be known from x-forwarded-port header)")
@@ -106,6 +122,15 @@ public class OAuth2Controller extends BaseController {
         }
     }
 
+    /**
+     * Save OAuth2 Client.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/oauth2/client}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param oAuth2Client o Auth2Client
+     * @return {@link OAuth2Client} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Save OAuth2 Client (saveOAuth2Client)", notes = SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @PostMapping(value = "/oauth2/client")
@@ -116,6 +141,19 @@ public class OAuth2Controller extends BaseController {
         return tbOauth2ClientService.save(oAuth2Client, getCurrentUser());
     }
 
+    /**
+     * Get OAuth2 Client infos.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/oauth2/client/infos}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OAuth2 Client infos (findOAuth2ClientInfos)", notes = SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/oauth2/client/infos")
@@ -133,6 +171,15 @@ public class OAuth2Controller extends BaseController {
         return oAuth2ClientService.findOAuth2ClientInfosByTenantId(getTenantId(), pageLink);
     }
 
+    /**
+     * Find tenant oauth2client infos by ids v1.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/oauth2/client/infos}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param clientIds client Ids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/oauth2/client/infos", params = {"clientIds"})
@@ -142,6 +189,15 @@ public class OAuth2Controller extends BaseController {
         return oAuth2ClientService.findOAuth2ClientInfosByIds(getTenantId(), oAuth2ClientIds);
     }
 
+    /**
+     * Get OAuth2 Client infos By Ids.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/oauth2/client/list}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param clientIds client Ids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OAuth2 Client infos By Ids (findTenantOAuth2ClientInfosByIds)",
             notes = "Fetch OAuth2 Client info objects based on the provided ids. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -152,6 +208,15 @@ public class OAuth2Controller extends BaseController {
         return findTenantOAuth2ClientInfosByIdsV1(clientIds);
     }
 
+    /**
+     * Get OAuth2 Client by id.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/oauth2/client/{id}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @return {@link OAuth2Client} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OAuth2 Client by id (getOAuth2ClientById)", notes = SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/oauth2/client/{id}")
@@ -160,6 +225,15 @@ public class OAuth2Controller extends BaseController {
         return checkEntityId(oAuth2ClientId, oAuth2ClientService::findOAuth2ClientById, Operation.READ);
     }
 
+    /**
+     * Delete oauth2 client.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/oauth2/client/{id}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete oauth2 client (deleteOauth2Client)",
             notes = "Deletes the oauth2 client. Referencing non-existing oauth2 client Id will cause an error." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -170,6 +244,14 @@ public class OAuth2Controller extends BaseController {
         tbOauth2ClientService.delete(oAuth2Client, getCurrentUser());
     }
 
+    /**
+     * Get OAuth2 log in processing URL.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/oauth2/loginProcessingUrl}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @return {@link String} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OAuth2 log in processing URL (getLoginProcessingUrl)", notes = "Returns the URL enclosed in " +
             "double quotes. After successful authentication with OAuth2 provider, it makes a redirect to this path so that the platform can do " +
             "further log in processing. This URL may be configured as 'security.oauth2.loginProcessingUrl' property in yml configuration file, or " +

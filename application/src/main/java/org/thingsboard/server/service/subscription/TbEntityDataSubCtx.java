@@ -45,6 +45,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+/**
+ * Subscription context for tb entity data WebSocket commands.
+ * <p>Maintains query state, caches, and pending updates for one command id.
+ */
 
 @Slf4j
 public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
@@ -58,6 +62,19 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
     private final int maxEntitiesPerDataSubscription;
     private Map<EntityId, Map<String, TsValue>> latestTsEntityData;
 
+    /**
+     * Constructs {@link TbEntityDataSubCtx} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param wsService ws service
+     * @param entityService entity service
+     * @param localSubscriptionService local subscription service
+     * @param attributesService attributes service
+     * @param stats stats
+     * @param sessionRef reference to the WebSocket session
+     * @param cmdId client command id
+     * @param maxEntitiesPerDataSubscription max entities per data subscription
+     */
+
     public TbEntityDataSubCtx(String serviceId, WebSocketService wsService, EntityService entityService,
                               TbLocalSubscriptionService localSubscriptionService, AttributesService attributesService,
                               SubscriptionServiceStatistics stats, WebSocketSessionRef sessionRef, int cmdId, int maxEntitiesPerDataSubscription) {
@@ -65,11 +82,29 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
         this.maxEntitiesPerDataSubscription = maxEntitiesPerDataSubscription;
     }
 
+    /**
+     * Fetches data.
+     * @return @Override
+    public void
+     */
+
     @Override
     public void fetchData() {
         super.fetchData();
         this.updateLatestTsData(this.data);
     }
+
+    /**
+     * Sends ws msg.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionUpdate subscription update
+     * @param keyType key type
+     * @param resultToLatestValues result to latest values
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void sendWsMsg(String sessionId, TelemetrySubscriptionUpdate subscriptionUpdate, EntityKeyType keyType, boolean resultToLatestValues) {
@@ -85,6 +120,11 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
             log.trace("[{}][{}][{}][{}] Received stale subscription update: {}", sessionId, cmdId, subscriptionUpdate.getSubscriptionId(), keyType, subscriptionUpdate);
         }
     }
+
+    /**
+     * Returns current aggregation.
+     * @return {@link Aggregation}
+     */
 
     @Override
     protected Aggregation getCurrentAggregation() {
@@ -189,6 +229,13 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
         });
     }
 
+    /**
+     * Do update.
+     * @param newDataMap new data map
+     * @return @Override
+    public synchronized void
+     */
+
     @Override
     public synchronized void doUpdate(Map<EntityId, EntityData> newDataMap) {
         this.updateLatestTsData(this.data);
@@ -225,10 +272,20 @@ public class TbEntityDataSubCtx extends TbAbstractDataSubCtx<EntityDataQuery> {
         sendWsMsg(new EntityDataUpdate(cmdId, data, null, maxEntitiesPerDataSubscription));
     }
 
-    public void setCurrentCmd(EntityDataCmd cmd) {
+    /**
+     * Sets current cmd.
+     * @param cmd cmd
+     */
+
+public void setCurrentCmd(EntityDataCmd cmd) {
         curTsCmd = cmd.getTsCmd();
         latestValueCmd = cmd.getLatestCmd();
     }
+
+    /**
+     * Builds entity data query.
+     * @return {@link EntityDataQuery}
+     */
 
     @Override
     protected EntityDataQuery buildEntityDataQuery() {

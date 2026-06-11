@@ -91,6 +91,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+/**
+ * Central Spring context for ThingsBoard Edge: wires DAO services, edge processors, and gRPC/RPC helpers used during cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ * <p><b>Key dependencies:</b> {@link #tsSubService}, {@link #adminSettingsService}, {@link #alarmCommentService}, {@link #alarmService}, {@link #assetProfileService}, {@link #assetService}, {@link #attributesService}, {@link #customerService}.
+ */
 
 @Lazy
 @Data
@@ -299,6 +305,13 @@ public class EdgeContextComponent {
 
     @Autowired
     private UserProcessor userProcessor;
+
+    /**
+     * Returns processor.
+     *
+     * @param edgeEventType edge event type (EdgeEventType)
+     * @return {@link EdgeProcessor} result
+     */
 
     public EdgeProcessor getProcessor(EdgeEventType edgeEventType) {
         EdgeProcessor processor = processorMap.get(edgeEventType);

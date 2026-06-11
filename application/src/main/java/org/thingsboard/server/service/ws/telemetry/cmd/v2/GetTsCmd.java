@@ -21,25 +21,79 @@ import org.thingsboard.server.common.data.kv.IntervalType;
 
 import java.util.List;
 
+/**
+ * Get ts cmd contract for the ThingsBoard WebSocket layer.
+ */
+
 public interface GetTsCmd {
+
+    /**
+     * Returns start ts.
+     * @return numeric result
+     */
 
     long getStartTs();
 
+    /**
+     * Returns end ts.
+     * @return numeric result
+     */
+
     long getEndTs();
+
+    /**
+     * Returns keys.
+     * @return {@link List}
+     */
 
     List<String> getKeys();
 
+    /**
+     * Returns interval type.
+     * @return {@link IntervalType}
+     */
+
     IntervalType getIntervalType();
+
+    /**
+     * Returns interval.
+     * @return numeric result
+     */
 
     long getInterval();
 
+    /**
+     * Returns time zone id.
+     * @return string value
+     */
+
     String getTimeZoneId();
+
+    /**
+     * Returns limit.
+     * @return numeric result
+     */
 
     int getLimit();
 
+    /**
+     * Returns agg.
+     * @return {@link Aggregation}
+     */
+
     Aggregation getAgg();
 
+    /**
+     * Is fetch latest previous point.
+     * @return {@code true} when the condition holds
+     */
+
     boolean isFetchLatestPreviousPoint();
+
+    /**
+     * To aggregation params.
+     * @return {@link AggregationParams}
+     */
 
     default AggregationParams toAggregationParams() {
         var agg = getAgg();

@@ -19,18 +19,33 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbActorMsg;
 
 /**
- * Created by ashvayka on 29.10.18.
+ * Periodic tick message broadcast from {@link org.thingsboard.server.actors.app.AppActor} to detect stale device sessions.
  */
+
 public class SessionTimeoutCheckMsg implements TbActorMsg {
 
     private static final SessionTimeoutCheckMsg INSTANCE = new SessionTimeoutCheckMsg();
 
     private SessionTimeoutCheckMsg() {
     }
+    /**
+     * Instance.
+     *
+     * @return {@link SessionTimeoutCheckMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static SessionTimeoutCheckMsg instance() {
         return INSTANCE;
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

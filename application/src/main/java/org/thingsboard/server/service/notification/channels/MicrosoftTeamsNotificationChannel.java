@@ -46,6 +46,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
+    /**
+     * Spring service component for microsoft teams notification channel (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Component
 @RequiredArgsConstructor
 public class MicrosoftTeamsNotificationChannel implements NotificationChannel<MicrosoftTeamsNotificationTargetConfig, MicrosoftTeamsDeliveryMethodNotificationTemplate> {
@@ -57,6 +61,15 @@ public class MicrosoftTeamsNotificationChannel implements NotificationChannel<Mi
             .setConnectTimeout(Duration.of(15, ChronoUnit.SECONDS))
             .setReadTimeout(Duration.of(15, ChronoUnit.SECONDS))
             .build();
+    /**
+     * Send notification.
+     *
+     * @param targetConfig target config ({@link MicrosoftTeamsNotificationTargetConfig})
+     * @param processedTemplate processed template ({@link MicrosoftTeamsDeliveryMethodNotificationTemplate})
+     * @param ctx calculated-field execution context
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendNotification(MicrosoftTeamsNotificationTargetConfig targetConfig, MicrosoftTeamsDeliveryMethodNotificationTemplate processedTemplate, NotificationProcessingContext ctx) throws Exception {
@@ -189,10 +202,23 @@ public class MicrosoftTeamsNotificationChannel implements NotificationChannel<Mi
         }
         return null;
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void check(TenantId tenantId) throws Exception {
     }
+    /**
+     * Returns delivery method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationDeliveryMethod getDeliveryMethod() {

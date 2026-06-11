@@ -47,6 +47,12 @@ public class TransportToDeviceActorMsgWrapper implements TbActorMsg, DeviceAware
         this.tenantId = TenantId.fromUUID(new UUID(msg.getSessionInfo().getTenantIdMSB(), msg.getSessionInfo().getTenantIdLSB()));
         this.deviceId = new DeviceId(new UUID(msg.getSessionInfo().getDeviceIdMSB(), msg.getSessionInfo().getDeviceIdLSB()));
     }
+    /**
+     * Returns msg type.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MsgType getMsgType() {

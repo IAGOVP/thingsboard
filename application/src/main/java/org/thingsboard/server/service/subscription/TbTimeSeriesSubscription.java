@@ -24,6 +24,11 @@ import org.thingsboard.server.service.ws.telemetry.sub.TelemetrySubscriptionUpda
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+/**
+ * Subscription state holder for tb time series.
+ * <p>Links a WebSocket session to entity keys and update processors.
+ */
+
 public class TbTimeSeriesSubscription extends TbSubscription<TelemetrySubscriptionUpdate> {
 
     @Getter
@@ -39,6 +44,24 @@ public class TbTimeSeriesSubscription extends TbSubscription<TelemetrySubscripti
     @Getter
     private final boolean latestValues;
 
+    /**
+     * Constructs {@link TbTimeSeriesSubscription} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionId client command/subscription id
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param updateProcessor update processor
+     * @param queryTs query ts
+     * @param allKeys all keys
+     * @param keyStates key states
+     * @param startTime start time
+     * @param endTime end time
+     * @param latestValues latest values
+     * @return @Builder
+    public
+     */
+
     @Builder
     public TbTimeSeriesSubscription(String serviceId, String sessionId, int subscriptionId, TenantId tenantId, EntityId entityId,
                                     BiConsumer<TbSubscription<TelemetrySubscriptionUpdate>, TelemetrySubscriptionUpdate> updateProcessor,
@@ -52,10 +75,23 @@ public class TbTimeSeriesSubscription extends TbSubscription<TelemetrySubscripti
         this.latestValues = latestValues;
     }
 
+    /**
+     * Compares this object to another for equality.
+     * @param o o
+     * @return boolean result
+     */
+
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
     }
+
+    /**
+     * Returns a hash code consistent with {@link #equals(Object)}.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@code true} when the condition holds
+     */
 
     @Override
     public int hashCode() {

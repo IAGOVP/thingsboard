@@ -48,6 +48,10 @@ import java.util.Set;
 
 import static org.thingsboard.server.common.data.notification.NotificationDeliveryMethod.MOBILE_APP;
 
+    /**
+     * Spring service component for mobile app notification channel (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -57,6 +61,15 @@ public class MobileAppNotificationChannel implements NotificationChannel<User, M
     private final UserService userService;
     private final NotificationService notificationService;
     private final NotificationSettingsService notificationSettingsService;
+    /**
+     * Send notification.
+     *
+     * @param recipient recipient ({@link User})
+     * @param processedTemplate processed template ({@link MobileAppDeliveryMethodNotificationTemplate})
+     * @param ctx calculated-field execution context
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendNotification(User recipient, MobileAppDeliveryMethodNotificationTemplate processedTemplate, NotificationProcessingContext ctx) throws Exception {
@@ -143,6 +156,13 @@ public class MobileAppNotificationChannel implements NotificationChannel<User, M
         data.replaceAll((key, value) -> Strings.nullToEmpty(value));
         return data;
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void check(TenantId tenantId) throws Exception {
@@ -151,6 +171,12 @@ public class MobileAppNotificationChannel implements NotificationChannel<User, M
             throw new RuntimeException("Push-notifications to mobile are not configured");
         }
     }
+    /**
+     * Returns delivery method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationDeliveryMethod getDeliveryMethod() {

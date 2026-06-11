@@ -24,21 +24,107 @@ import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.common.data.id.AssetId;
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+
+ * Application-layer service API for asset entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbAssetService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param asset asset ({@link Asset})
+ * @param user authenticated user performing the action
+ * @return {@link Asset}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     Asset save(Asset asset, User user) throws Exception;
+/**
+ * Saves or persists the requested data.
+ *
+ * @param asset asset ({@link Asset})
+ * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+ * @param user authenticated user performing the action
+ * @return {@link Asset}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Asset save(Asset asset, NameConflictStrategy nameConflictStrategy, User user) throws Exception;
+/**
+ * Deletes the requested data.
+ *
+ * @param asset asset ({@link Asset})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     void delete(Asset asset, User user);
+/**
+ * Assigns asset to customer.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param assetId asset id ({@link AssetId})
+ * @param customer customer ({@link Customer})
+ * @param user authenticated user performing the action
+ * @return {@link Asset}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Asset assignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws ThingsboardException;
+/**
+ * Unassigns asset to customer.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param assetId asset id ({@link AssetId})
+ * @param customer customer ({@link Customer})
+ * @param user authenticated user performing the action
+ * @return {@link Asset}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Asset unassignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws ThingsboardException;
+/**
+ * Assigns asset to public customer.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param assetId asset id ({@link AssetId})
+ * @param user authenticated user performing the action
+ * @return {@link Asset}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Asset assignAssetToPublicCustomer(TenantId tenantId, AssetId assetId, User user) throws ThingsboardException;
+/**
+ * Assigns asset to edge.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param assetId asset id ({@link AssetId})
+ * @param edge edge ({@link Edge})
+ * @param user authenticated user performing the action
+ * @return {@link Asset}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Asset assignAssetToEdge(TenantId tenantId, AssetId assetId, Edge edge, User user) throws ThingsboardException;
+/**
+ * Unassigns asset from edge.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param asset asset ({@link Asset})
+ * @param edge edge ({@link Edge})
+ * @param user authenticated user performing the action
+ * @return {@link Asset}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     Asset unassignAssetFromEdge(TenantId tenantId, Asset asset, Edge edge, User user) throws ThingsboardException;
 

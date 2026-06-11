@@ -22,6 +22,9 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+/**
+ * Tb pack processing context component in the ThingsBoard queue layer.
+ */
 
 @Slf4j
 public class TbPackProcessingContext<T> {
@@ -30,6 +33,13 @@ public class TbPackProcessingContext<T> {
     private final CountDownLatch processingTimeoutLatch;
     private final ConcurrentMap<UUID, T> ackMap;
     private final ConcurrentMap<UUID, T> failedMap;
+
+    /**
+     * Constructs {@link TbPackProcessingContext} with the supplied dependencies and configuration.
+     * @param processingTimeoutLatch processing timeout latch
+     * @param ackMap ack map
+     * @param failedMap failed map
+     */
 
     public TbPackProcessingContext(CountDownLatch processingTimeoutLatch,
                                    ConcurrentMap<UUID, T> ackMap,
@@ -40,9 +50,22 @@ public class TbPackProcessingContext<T> {
         this.failedMap = failedMap;
     }
 
+    /**
+     * Waits until await.
+     * @param packProcessingTimeout pack processing timeout
+     * @param milliseconds milliseconds
+     * @return boolean result
+     * @throws InterruptedException if processing fails
+     */
+
     public boolean await(long packProcessingTimeout, TimeUnit milliseconds) throws InterruptedException {
         return processingTimeoutLatch.await(packProcessingTimeout, milliseconds);
     }
+
+    /**
+     * Invoked when success occurs.
+     * @param id id
+     */
 
     public void onSuccess(UUID id) {
         boolean empty = false;
@@ -62,6 +85,12 @@ public class TbPackProcessingContext<T> {
         }
     }
 
+    /**
+     * Invoked when failure occurs.
+     * @param id id
+     * @param t t
+     */
+
     public void onFailure(UUID id, Throwable t) {
         boolean empty = false;
         T msg = ackMap.remove(id);
@@ -80,9 +109,19 @@ public class TbPackProcessingContext<T> {
         }
     }
 
+    /**
+     * Returns ack map.
+     * @return {@link ConcurrentMap}
+     */
+
     public ConcurrentMap<UUID, T> getAckMap() {
         return ackMap;
     }
+
+    /**
+     * Returns failed map.
+     * @return {@link ConcurrentMap}
+     */
 
     public ConcurrentMap<UUID, T> getFailedMap() {
         return failedMap;

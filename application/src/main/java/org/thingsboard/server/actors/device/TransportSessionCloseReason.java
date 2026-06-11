@@ -16,6 +16,11 @@
 package org.thingsboard.server.actors.device;
 
 import lombok.Getter;
+/**
+ * Reason codes recorded when a device transport session is closed.
+ */
+
+
 
 @Getter
 public enum TransportSessionCloseReason {

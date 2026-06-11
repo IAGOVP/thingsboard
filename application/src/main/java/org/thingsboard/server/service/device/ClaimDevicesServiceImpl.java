@@ -58,6 +58,10 @@ import java.util.Optional;
 
 import static org.thingsboard.server.common.data.CacheConstants.CLAIM_DEVICES_CACHE;
 
+    /**
+     * Spring service component for claim devices service impl (device claim and provisioning helpers).
+     */
+
 @Service
 @Slf4j
 @TbCoreComponent
@@ -82,6 +86,16 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
 
     @Value("${security.claim.duration}")
     private long systemDurationMs;
+    /**
+     * Register claiming info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param secretKey secret key ({@link String})
+     * @param durationMs duration ms
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> registerClaimingInfo(TenantId tenantId, DeviceId deviceId, String secretKey, long durationMs) {
@@ -130,6 +144,15 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
             }, MoreExecutors.directExecutor());
         }
     }
+    /**
+     * Claim device.
+     *
+     * @param device device ({@link Device})
+     * @param customerId customer id ({@link CustomerId})
+     * @param secretKey secret key ({@link String})
+     * @return future completing with {@link ClaimResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<ClaimResult> claimDevice(Device device, CustomerId customerId, String secretKey) {
@@ -167,6 +190,14 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
     private boolean secretKeyIsEmptyOrEqual(String secretKeyA, String secretKeyB) {
         return (StringUtils.isEmpty(secretKeyA) && StringUtils.isEmpty(secretKeyB)) || secretKeyA.equals(secretKeyB);
     }
+    /**
+     * Re claim device.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @return future completing with {@link ReclaimResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<ReclaimResult> reClaimDevice(TenantId tenantId, Device device) {
@@ -185,10 +216,24 @@ public class ClaimDevicesServiceImpl implements ClaimDevicesService {
                     .scope(AttributeScope.SERVER_SCOPE)
                     .entry(new BooleanDataEntry(CLAIM_ATTRIBUTE_NAME, true))
                     .callback(new FutureCallback<>() {
+                        /**
+                         * Handles success.
+                         *
+                         * @param tmp tmp ({@link Void})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
                         @Override
                         public void onSuccess(@Nullable Void tmp) {
                             result.set(new ReclaimResult(unassignedCustomer));
                         }
+                        /**
+                         * Handles failure.
+                         *
+                         * @param t t ({@link Throwable})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
 
                         @Override
                         public void onFailure(Throwable t) {

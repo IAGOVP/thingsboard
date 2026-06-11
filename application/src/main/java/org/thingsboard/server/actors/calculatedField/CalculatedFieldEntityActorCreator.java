@@ -37,11 +37,27 @@ public class CalculatedFieldEntityActorCreator extends ContextBasedCreator {
         this.tenantId = tenantId;
         this.entityId = entityId;
     }
+    
+    /**
+     * Builds the {@link org.thingsboard.server.actors.TbActorId} used to register the actor.
+     *
+     * @return {@link TbActorId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public TbActorId createActorId() {
         return new TbCalculatedFieldEntityActorId(entityId);
     }
+    
+    /**
+     * Creates a new actor instance for the given actor id and context.
+     *
+     * @return {@link TbActor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public TbActor createActor() {

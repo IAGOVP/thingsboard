@@ -30,12 +30,25 @@ import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.gen.edge.v1.DeviceCredentialsUpdateMsg;
 import org.thingsboard.server.gen.edge.v1.DeviceUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base device edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #deviceValidator}.
+ */
 
 @Slf4j
 public abstract class BaseDeviceProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<Device> deviceValidator;
+
+    /**
+     * Creates or persists or update device.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param deviceId device id (DeviceId)
+     * @param deviceUpdateMsg device update msg (DeviceUpdateMsg)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateDevice(TenantId tenantId, DeviceId deviceId, DeviceUpdateMsg deviceUpdateMsg) {
         boolean created = false;
@@ -82,6 +95,13 @@ public abstract class BaseDeviceProcessor extends BaseEdgeProcessor {
         }).orElse(false);
     }
 
+    /**
+     * Updates device credentials.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param deviceCredentialsUpdateMsg device credentials update msg (DeviceCredentialsUpdateMsg)
+     */
+
     protected void updateDeviceCredentials(TenantId tenantId, DeviceCredentialsUpdateMsg deviceCredentialsUpdateMsg) {
         DeviceCredentials deviceCredentials = JacksonUtil.fromString(deviceCredentialsUpdateMsg.getEntity(), DeviceCredentials.class, true);
         if (deviceCredentials == null) {
@@ -112,11 +132,35 @@ public abstract class BaseDeviceProcessor extends BaseEdgeProcessor {
         }
     }
 
+    /**
+     * Set customer id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param device device (Device)
+     * @param deviceUpdateMsg device update msg (DeviceUpdateMsg)
+     */
+
     protected abstract void setCustomerId(TenantId tenantId, CustomerId customerId, Device device, DeviceUpdateMsg deviceUpdateMsg);
+
+    /**
+     * Removes device.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param deviceId device id (DeviceId)
+     */
 
     protected void deleteDevice(TenantId tenantId, DeviceId deviceId) {
         deleteDevice(tenantId, null, deviceId);
     }
+
+    /**
+     * Removes device.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param deviceId device id (DeviceId)
+     */
 
     protected void deleteDevice(TenantId tenantId, Edge edge, DeviceId deviceId) {
         Device deviceById = edgeCtx.getDeviceService().findDeviceById(tenantId, deviceId);

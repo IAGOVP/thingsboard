@@ -66,6 +66,12 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CU
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
 @Slf4j
+/**
+ * REST API for OTA (over-the-air) firmware and software packages.
+ * 
+ * <p>Base path: {@code /api}. Package metadata, binary upload/download, and tenant-scoped package listings.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -77,6 +83,15 @@ public class OtaPackageController extends BaseController {
     public static final String OTA_PACKAGE_ID = "otaPackageId";
     public static final String CHECKSUM_ALGORITHM = "checksumAlgorithm";
 
+    /**
+     * Download OTA Package.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/otaPackage/{otaPackageId}/download}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strOtaPackageId str Ota Package Id
+     * @return {@link OtaPackageInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Download OTA Package (downloadOtaPackage)", notes = "Download OTA Package based on the provided OTA Package Id." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority( 'TENANT_ADMIN')")
     @GetMapping(value = "/otaPackage/{otaPackageId}/download")
@@ -99,6 +114,15 @@ public class OtaPackageController extends BaseController {
                 .body(resource);
     }
 
+    /**
+     * Get OTA Package Info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/otaPackage/info/{otaPackageId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param strOtaPackageId str Ota Package Id
+     * @return {@link OtaPackageInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OTA Package Info (getOtaPackageInfoById)",
             notes = "Fetch the OTA Package Info object based on the provided OTA Package Id. " +
                     OTA_PACKAGE_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -111,6 +135,15 @@ public class OtaPackageController extends BaseController {
         return checkNotNull(otaPackageService.findOtaPackageInfoById(getTenantId(), otaPackageId));
     }
 
+    /**
+     * Get OTA Package.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/otaPackage/{otaPackageId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strOtaPackageId str Ota Package Id
+     * @return {@link OtaPackage} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OTA Package (getOtaPackageById)",
             notes = "Fetch the OTA Package object based on the provided OTA Package Id. " +
                     "The server checks that the OTA Package is owned by the same tenant. " + OTA_PACKAGE_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -123,6 +156,15 @@ public class OtaPackageController extends BaseController {
         return checkOtaPackageId(otaPackageId, Operation.READ);
     }
 
+    /**
+     * Create Or Update OTA Package Info.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/otaPackage}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param otaPackageInfo ota Package Info
+     * @return {@link OtaPackageInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create Or Update OTA Package Info (saveOtaPackageInfo)",
             notes = "Create or update the OTA Package Info. When creating OTA Package Info, platform generates OTA Package id as " + UUID_WIKI_LINK +
                     "The newly created OTA Package id will be present in the response. " +
@@ -139,6 +181,18 @@ public class OtaPackageController extends BaseController {
         return tbOtaPackageService.save(otaPackageInfo, getCurrentUser());
     }
 
+    /**
+     * Save OTA Package data.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/otaPackage/{otaPackageId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strOtaPackageId str Ota Package Id
+     * @param checksum checksum
+     * @param checksumAlgorithmStr checksum Algorithm Str
+     * @param file file
+     * @return {@link OtaPackageInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Save OTA Package data (saveOtaPackageData)",
             notes = "Update the OTA Package. Adds the date to the existing OTA Package Info" + TENANT_AUTHORITY_PARAGRAPH,
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MULTIPART_FORM_DATA_VALUE)))
@@ -162,6 +216,19 @@ public class OtaPackageController extends BaseController {
                 data, file.getOriginalFilename(), file.getContentType(), getCurrentUser());
     }
 
+    /**
+     * Get OTA Package Infos.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/otaPackages}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OTA Package Infos (getOtaPackages)",
             notes = "Returns a page of OTA Package Info objects owned by tenant. " +
                     PAGE_DATA_PARAMETERS + OTA_PACKAGE_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -181,6 +248,21 @@ public class OtaPackageController extends BaseController {
         return checkNotNull(otaPackageService.findTenantOtaPackagesByTenantId(getTenantId(), pageLink));
     }
 
+    /**
+     * Get OTA Package Infos by device profile and type.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/otaPackages/{deviceProfileId}/{type}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param strDeviceProfileId str Device Profile Id
+     * @param strType str Type
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get OTA Package Infos by device profile and type (getOtaPackagesByDeviceProfileAndType)",
             notes = "Returns a page of OTA Package Info objects owned by tenant. " +
                     PAGE_DATA_PARAMETERS + OTA_PACKAGE_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -207,6 +289,15 @@ public class OtaPackageController extends BaseController {
                 new DeviceProfileId(toUUID(strDeviceProfileId)), OtaPackageType.valueOf(strType), pageLink));
     }
 
+    /**
+     * Delete OTA Package.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/otaPackage/{otaPackageId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strOtaPackageId str Ota Package Id
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete OTA Package (deleteOtaPackage)",
             notes = "Deletes the OTA Package. Referencing non-existing OTA Package Id will cause an error. " +
                     "Can't delete the OTA Package if it is referenced by existing devices or device profile." + TENANT_AUTHORITY_PARAGRAPH)

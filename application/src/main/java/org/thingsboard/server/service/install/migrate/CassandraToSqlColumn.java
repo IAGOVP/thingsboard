@@ -23,6 +23,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
+    /**
+     * Cassandra to sql column (database schema installation, upgrades, and demo data loading).
+     */
+
 @Data
 public class CassandraToSqlColumn {
 
@@ -38,38 +42,104 @@ public class CassandraToSqlColumn {
     private int size;
     private Class<? extends Enum> enumClass;
     private boolean allowNullBoolean = false;
+    /**
+     * Id column.
+     *
+     * @param name name ({@link String})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn idColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.ID);
     }
+    /**
+     * String column.
+     *
+     * @param name name ({@link String})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn stringColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.STRING);
     }
+    /**
+     * String column.
+     *
+     * @param cassandraColumnName cassandra column name ({@link String})
+     * @param sqlColumnName sql column name ({@link String})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn stringColumn(String cassandraColumnName, String sqlColumnName) {
         return new CassandraToSqlColumn(cassandraColumnName, sqlColumnName);
     }
+    /**
+     * Bigint column.
+     *
+     * @param name name ({@link String})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn bigintColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.BIGINT);
     }
+    /**
+     * Double column.
+     *
+     * @param name name ({@link String})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn doubleColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.DOUBLE);
     }
+    /**
+     * Boolean column.
+     *
+     * @param name name ({@link String})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn booleanColumn(String name) {
         return booleanColumn(name, false);
     }
+    /**
+     * Boolean column.
+     *
+     * @param name name ({@link String})
+     * @param allowNullBoolean allow null boolean
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn booleanColumn(String name, boolean allowNullBoolean) {
         return new CassandraToSqlColumn(name, name, CassandraToSqlColumnType.BOOLEAN, null, allowNullBoolean);
     }
+    /**
+     * Json column.
+     *
+     * @param name name ({@link String})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn jsonColumn(String name) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.JSON);
     }
+    /**
+     * Enum to int column.
+     *
+     * @param name name ({@link String})
+     * @param enumClass enum class ({@link Class})
+     * @return {@link CassandraToSqlColumn}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static CassandraToSqlColumn enumToIntColumn(String name, Class<? extends Enum> enumClass) {
         return new CassandraToSqlColumn(name, CassandraToSqlColumnType.ENUM_TO_INT, enumClass);
@@ -99,6 +169,13 @@ public class CassandraToSqlColumn {
         this.enumClass = enumClass;
         this.allowNullBoolean = allowNullBoolean;
     }
+    /**
+     * Returns column value.
+     *
+     * @param row row ({@link Row})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getColumnValue(Row row) {
         if (row.isNull(index)) {
@@ -130,6 +207,14 @@ public class CassandraToSqlColumn {
             }
         }
     }
+    /**
+     * Set column value.
+     *
+     * @param sqlInsertStatement sql insert statement ({@link PreparedStatement})
+     * @param value value ({@link String})
+     * @return nothing
+     * @throws SQLException if sqlexception is thrown during processing
+     */
 
     public void setColumnValue(PreparedStatement sqlInsertStatement, String value) throws SQLException {
         if (value == null) {

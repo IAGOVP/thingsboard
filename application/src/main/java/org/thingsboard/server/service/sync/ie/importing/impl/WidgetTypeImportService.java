@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.widget.WidgetTypeDetails;
 import org.thingsboard.server.dao.widget.WidgetTypeService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports widget type entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -32,31 +37,85 @@ import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 public class WidgetTypeImportService extends BaseEntityImportService<WidgetTypeId, WidgetTypeDetails, WidgetTypeExportData> {
 
     private final WidgetTypeService widgetTypeService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param widgetsBundle widgets bundle ({@link WidgetTypeDetails})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, WidgetTypeDetails widgetsBundle, IdProvider idProvider) {
         widgetsBundle.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param widgetTypeDetails widget type details ({@link WidgetTypeDetails})
+     * @param old old ({@link WidgetTypeDetails})
+     * @param exportData export data ({@link WidgetTypeExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected WidgetTypeDetails prepare(EntitiesImportCtx ctx, WidgetTypeDetails widgetTypeDetails, WidgetTypeDetails old, WidgetTypeExportData exportData, IdProvider idProvider) {
         return widgetTypeDetails;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param widgetsBundle widgets bundle ({@link WidgetTypeDetails})
+     * @param exportData export data ({@link WidgetTypeExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected WidgetTypeDetails saveOrUpdate(EntitiesImportCtx ctx, WidgetTypeDetails widgetsBundle, WidgetTypeExportData exportData, IdProvider idProvider, CompareResult compareResult) {
         return widgetTypeService.saveWidgetType(widgetsBundle);
     }
+    /**
+     * Compares the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param exportData export data ({@link WidgetTypeExportData})
+     * @param prepared prepared ({@link WidgetTypeDetails})
+     * @param existing existing ({@link WidgetTypeDetails})
+     * @return {@link CompareResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected CompareResult compare(EntitiesImportCtx ctx, WidgetTypeExportData exportData, WidgetTypeDetails prepared, WidgetTypeDetails existing) {
         return new CompareResult(true);
     }
+    /**
+     * Deep copy.
+     *
+     * @param widgetsBundle widgets bundle ({@link WidgetTypeDetails})
+     * @return {@link WidgetTypeDetails}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected WidgetTypeDetails deepCopy(WidgetTypeDetails widgetsBundle) {
         return new WidgetTypeDetails(widgetsBundle);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

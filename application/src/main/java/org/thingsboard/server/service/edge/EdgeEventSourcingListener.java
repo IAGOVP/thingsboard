@@ -76,11 +76,20 @@ public class EdgeEventSourcingListener {
     private final TenantService tenantService;
     private final EdgeSynchronizationManager edgeSynchronizationManager;
 
+    /**
+     * Initializes resources required by this component.
+     *
+     */
     @PostConstruct
     public void init() {
         log.debug("EdgeEventSourcingListener initiated");
     }
 
+    /**
+     * Handles event.
+     *
+     * @param event event (SaveEntityEvent<?>)
+     */
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(SaveEntityEvent<?> event) {
         if (Boolean.FALSE.equals(event.getBroadcastEvent())) {
@@ -104,6 +113,11 @@ public class EdgeEventSourcingListener {
         }
     }
 
+    /**
+     * Handles event.
+     *
+     * @param event event (DeleteEntityEvent<?>)
+     */
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(DeleteEntityEvent<?> event) {
         TenantId tenantId = event.getTenantId();
@@ -136,6 +150,11 @@ public class EdgeEventSourcingListener {
         return EdgeEventActionType.DELETED;
     }
 
+    /**
+     * Handles event.
+     *
+     * @param event event (ActionEntityEvent<?>)
+     */
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(ActionEntityEvent<?> event) {
         if (EntityType.DEVICE.equals(event.getEntityId().getEntityType()) && ActionType.ASSIGNED_TO_TENANT.equals(event.getActionType())) {
@@ -165,6 +184,11 @@ public class EdgeEventSourcingListener {
         }
     }
 
+    /**
+     * Handles event.
+     *
+     * @param event event (RelationActionEvent)
+     */
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(RelationActionEvent event) {
         try {

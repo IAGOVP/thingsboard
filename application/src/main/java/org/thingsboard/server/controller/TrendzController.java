@@ -39,6 +39,15 @@ import static org.thingsboard.server.controller.ControllerConstants.NEW_LINE;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for Trendz analytics integration settings at the tenant level.
+ *
+ * <p>Base path: {@code /api/trendz}. Clients authenticate with a JWT
+ * ({@code Authorization: Bearer &lt;token&gt;}). Trendz URL and enable flag are stored per tenant.
+ *
+ * @see org.thingsboard.server.common.data.trendz.TrendzSettings
+ * @see org.thingsboard.server.dao.trendz.TrendzSettingsService
+ */
 @RestController
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -47,6 +56,18 @@ public class TrendzController extends BaseController {
 
     private final TrendzSettingsService trendzSettingsService;
 
+    /**
+     * Creates or updates Trendz integration settings for the caller's tenant.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/trendz/settings}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}; {@link org.thingsboard.server.service.security.permission.Resource#ADMIN_SETTINGS}
+     * write permission via access control.
+     *
+     * @param trendzSettings JSON body with {@code enabled} and {@code baseUrl}
+     * @param user authenticated tenant administrator
+     * @return the saved settings
+     * @throws ThingsboardException if the caller lacks admin-settings write permission
+     */
     @ApiOperation(value = "Save Trendz settings (saveTrendzSettings)",
             notes = "Saves Trendz settings for this tenant.\n" + NEW_LINE +
                     "Here is an example of the Trendz settings:\n" +
@@ -67,6 +88,15 @@ public class TrendzController extends BaseController {
         return trendzSettings;
     }
 
+    /**
+     * Returns Trendz integration settings for the caller's tenant.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/trendz/settings}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @param user authenticated user (tenant or customer scope)
+     * @return tenant Trendz settings, or {@code null} if not configured
+     */
     @ApiOperation(value = "Get Trendz Settings (getTrendzSettings)",
             notes = "Retrieves Trendz settings for this tenant." +
                     TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)

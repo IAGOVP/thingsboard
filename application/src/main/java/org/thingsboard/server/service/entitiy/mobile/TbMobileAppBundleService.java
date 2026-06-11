@@ -21,11 +21,49 @@ import org.thingsboard.server.common.data.mobile.bundle.MobileAppBundle;
 
 import java.util.List;
 
+/**
+
+ * Application-layer service API for mobile app bundle entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbMobileAppBundleService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param mobileAppBundle mobile app bundle ({@link MobileAppBundle})
+ * @param oauth2Clients oauth2clients ({@link List})
+ * @param user authenticated user performing the action
+ * @return {@link MobileAppBundle}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     MobileAppBundle save(MobileAppBundle mobileAppBundle, List<OAuth2ClientId> oauth2Clients, User user) throws Exception;
+/**
+ * Updates oauth2clients.
+ *
+ * @param mobileAppBundle mobile app bundle ({@link MobileAppBundle})
+ * @param oAuth2ClientIds o auth2client ids ({@link List})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void updateOauth2Clients(MobileAppBundle mobileAppBundle, List<OAuth2ClientId> oAuth2ClientIds, User user);
+/**
+ * Deletes the requested data.
+ *
+ * @param mobileAppBundle mobile app bundle ({@link MobileAppBundle})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void delete(MobileAppBundle mobileAppBundle, User user);
 

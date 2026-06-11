@@ -38,6 +38,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for tb asset profile cache (device and asset profile resolution).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
@@ -55,6 +61,14 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
         this.assetProfileService = assetProfileService;
         this.assetService = assetService;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetProfile get(TenantId tenantId, AssetProfileId assetProfileId) {
@@ -77,6 +91,14 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
         log.trace("[{}] Found asset profile in cache: {}", assetProfileId, profile);
         return profile;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetProfile get(TenantId tenantId, AssetId assetId) {
@@ -92,6 +114,14 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
         }
         return get(tenantId, profileId);
     }
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileId profile id ({@link AssetProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evict(TenantId tenantId, AssetProfileId profileId) {
@@ -102,6 +132,14 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
             notifyProfileListeners(newProfile);
         }
     }
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evict(TenantId tenantId, AssetId assetId) {
@@ -113,6 +151,16 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
             }
         }
     }
+    /**
+     * Add listener.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param listenerId listener id ({@link EntityId})
+     * @param profileListener profile listener ({@link Consumer})
+     * @param assetListener asset listener ({@link BiConsumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addListener(TenantId tenantId, EntityId listenerId,
@@ -125,16 +173,39 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
             assetProfileListeners.computeIfAbsent(tenantId, id -> new ConcurrentHashMap<>()).put(listenerId, assetListener);
         }
     }
+    /**
+     * Finds the requested data.
+     *
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetProfile find(AssetProfileId assetProfileId) {
         return assetProfileService.findAssetProfileById(TenantId.SYS_TENANT_ID, assetProfileId);
     }
+    /**
+     * Finds or create asset profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileName profile name ({@link String})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetProfile findOrCreateAssetProfile(TenantId tenantId, String profileName) {
         return assetProfileService.findOrCreateAssetProfile(tenantId, profileName);
     }
+    /**
+     * Removes listener.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param listenerId listener id ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeListener(TenantId tenantId, EntityId listenerId) {
@@ -147,6 +218,13 @@ public class DefaultTbAssetProfileCache implements TbAssetProfileCache {
             assetListeners.remove(listenerId);
         }
     }
+    /**
+     * Handles component lifecycle event.
+     *
+     * @param event event ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @EventListener(ComponentLifecycleMsg.class)
     public void onComponentLifecycleEvent(ComponentLifecycleMsg event) {

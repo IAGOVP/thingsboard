@@ -19,6 +19,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.thingsboard.server.dao.util.SqlTsDao;
 
+    /**
+     * Spring service component for sql ts database schema service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Service
 @SqlTsDao
 @Profile("install")
@@ -27,6 +31,12 @@ public class SqlTsDatabaseSchemaService extends SqlAbstractDatabaseSchemaService
     public SqlTsDatabaseSchemaService() {
         super("schema-ts-psql.sql", null);
     }
+    /**
+     * Creates database schema.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseSchema() throws Exception {

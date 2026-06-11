@@ -18,12 +18,30 @@ package org.thingsboard.server.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * Checked exception indicating invalid or malformed request parameters.
+ *
+ * <p>When converted to an HTTP response via {@link ToErrorResponseEntity}, this exception
+ * maps to {@link HttpStatus#BAD_REQUEST} (400).
+ *
+ * @see ToErrorResponseEntity
+ */
 public class InvalidParametersException extends Exception implements ToErrorResponseEntity {
 
+    /**
+     * Creates an exception with the given parameter-validation failure description.
+     *
+     * @param message detail message describing which parameters are invalid
+     */
     public InvalidParametersException(String message) {
         super(message);
     }
 
+    /**
+     * Builds an HTTP 400 response containing the exception message as the response body.
+     *
+     * @return response entity with status {@link HttpStatus#BAD_REQUEST} and plain-text body
+     */
     @Override
     public ResponseEntity<String> toErrorResponseEntity() {
         return new ResponseEntity<>(getMessage(), HttpStatus.BAD_REQUEST);

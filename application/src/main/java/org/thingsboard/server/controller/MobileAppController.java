@@ -68,6 +68,17 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST API for mobile application registration, login metadata, and tenant-scoped app management.
+ *
+ * <p>Base path: {@code /api} (including unauthenticated {@code /api/noauth/mobile} login info).
+ *
+ * <p>Authorization: public login info endpoint; {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+ * for authenticated mobile user info; {@code SYS_ADMIN} or {@code TENANT_ADMIN} for app CRUD.
+ *
+ * <p>Uses {@link org.thingsboard.server.service.entitiy.mobile.TbMobileAppService} for persistence
+ * and inherited services for OAuth2 clients, bundles, and user data.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -77,6 +88,13 @@ public class MobileAppController extends BaseController {
 
     private final TbMobileAppService tbMobileAppService;
 
+    /**
+     * GET {@code /api/noauth/mobile} — Return OAuth2, store, and version info for mobile login (no authentication).
+     *
+     * @param pkgName  mobile application package name
+     * @param platform target platform ({@code ANDROID} or {@code IOS})
+     * @return {@link org.thingsboard.server.common.data.mobile.LoginMobileInfo} for the given app
+     */
     @ApiOperation(value = "Get mobile app login info (getLoginMobileInfo)")
     @GetMapping(value = "/noauth/mobile")
     public LoginMobileInfo getLoginMobileInfo(@Parameter(description = "Mobile application package name")
@@ -90,6 +108,17 @@ public class MobileAppController extends BaseController {
         return new LoginMobileInfo(oauth2Clients, storeInfo, versionInfo);
     }
 
+    /**
+     * GET {@code /api/mobile} — Return authenticated user's mobile dashboard and bundle layout info.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     *
+     * @param pkgName  mobile application package name
+     * @param platform target platform ({@code ANDROID} or {@code IOS})
+     * @return {@link org.thingsboard.server.common.data.mobile.UserMobileInfo} for the current user
+     * @throws ThingsboardException if user data cannot be loaded
+     * @throws com.fasterxml.jackson.core.JsonProcessingException if layout serialization fails
+     */
     @ApiOperation(value = "Get user mobile app basic info (getUserMobileInfo)", notes = AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN','TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/mobile")
@@ -107,6 +136,15 @@ public class MobileAppController extends BaseController {
         return new UserMobileInfo(user, storeInfo, versionInfo, homeDashboardInfo, getVisiblePages(mobileAppBundle));
     }
 
+    /**
+     * POST {@code /api/mobile/app} — Create or update a mobile application record.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param mobileApp JSON body with mobile app configuration
+     * @return the saved {@link org.thingsboard.server.common.data.mobile.app.MobileApp}
+     * @throws Exception if validation fails or a referenced app id does not exist
+     */
     @ApiOperation(value = "Save Or update Mobile app (saveMobileApp)",
             notes = "Create or update the Mobile app. When creating mobile app, platform generates Mobile App Id as " + UUID_WIKI_LINK +
                     "The newly created Mobile App Id will be present in the response. " +
@@ -123,6 +161,20 @@ public class MobileAppController extends BaseController {
         return tbMobileAppService.save(mobileApp, getCurrentUser());
     }
 
+    /**
+     * GET {@code /api/mobile/app} — List mobile apps for the current tenant with pagination.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param platformType optional platform filter
+     * @param pageSize     items per page
+     * @param page         zero-based page index
+     * @param textSearch   optional name substring filter
+     * @param sortProperty optional sort field
+     * @param sortOrder    optional sort direction
+     * @return a page of {@link org.thingsboard.server.common.data.mobile.app.MobileApp}
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Get mobile app infos (getTenantMobileApps)", notes = SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/mobile/app")
@@ -142,6 +194,15 @@ public class MobileAppController extends BaseController {
         return mobileAppService.findMobileAppsByTenantId(getTenantId(), platformType, pageLink);
     }
 
+    /**
+     * GET {@code /api/mobile/app/{id}} — Fetch a mobile app by id.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param id mobile app UUID
+     * @return the {@link org.thingsboard.server.common.data.mobile.app.MobileApp}
+     * @throws ThingsboardException if the app does not exist
+     */
     @ApiOperation(value = "Get mobile info by id (getMobileAppById)", notes = SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/mobile/app/{id}")
@@ -150,6 +211,14 @@ public class MobileAppController extends BaseController {
         return checkEntityId(mobileAppId, mobileAppService::findMobileAppById, Operation.READ);
     }
 
+    /**
+     * DELETE {@code /api/mobile/app/{id}} — Delete a mobile app by id.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param id mobile app UUID
+     * @throws Exception if the app does not exist or deletion fails
+     */
     @ApiOperation(value = "Delete Mobile App by ID (deleteMobileApp)",
             notes = "Deletes Mobile App by ID. Referencing non-existing mobile app Id will cause an error." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")

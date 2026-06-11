@@ -22,6 +22,10 @@ import org.thingsboard.server.common.data.security.model.mfa.account.TwoFaAccoun
 import org.thingsboard.server.common.data.security.model.mfa.provider.TwoFaProviderType;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+ * Service contract for two-factor authentication (MFA).
+ */
+
 public interface TwoFactorAuthService {
 
     boolean isTwoFaEnabled(TenantId tenantId, User user);

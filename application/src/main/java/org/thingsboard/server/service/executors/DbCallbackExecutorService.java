@@ -19,11 +19,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.AbstractListeningExecutor;
 
+    /**
+     * Spring service component for db callback executor service (shared thread-pool executors for async service work).
+     */
+
 @Component
 public class DbCallbackExecutorService extends AbstractListeningExecutor {
 
     @Value("${actors.rule.db_callback_thread_pool_size}")
     private int dbCallbackExecutorThreadPoolSize;
+    /**
+     * Returns thread poll size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getThreadPollSize() {

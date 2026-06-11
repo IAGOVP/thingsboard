@@ -28,6 +28,9 @@ import org.thingsboard.server.common.msg.queue.PartitionChangeMsg;
 import org.thingsboard.server.common.msg.queue.RuleNodeException;
 
 import java.util.concurrent.ScheduledFuture;
+/**
+ * Message processor for rule-engine component actors with lifecycle and partition handling.
+ */
 
 @Slf4j
 public abstract class ComponentMsgProcessor<T extends EntityId> extends AbstractContextAwareMsgProcessor {
@@ -41,34 +44,102 @@ public abstract class ComponentMsgProcessor<T extends EntityId> extends Abstract
         this.tenantId = tenantId;
         this.entityId = id;
     }
+    /**
+     * Returns tenant profile configuration.
+     *
+     * @return {@link TenantProfileConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TenantProfileConfiguration getTenantProfileConfiguration() {
         return systemContext.getTenantProfileCache().get(tenantId).getProfileData().getConfiguration();
     }
+    /**
+     * Returns component name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract String getComponentName();
+    /**
+     * Start.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract void start(TbActorCtx context) throws Exception;
+    /**
+     * Stop.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract void stop(TbActorCtx context) throws Exception;
+    /**
+     * Handles partition change msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract void onPartitionChangeMsg(PartitionChangeMsg msg) throws Exception;
+    /**
+     * Handles created.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onCreated(TbActorCtx context) throws Exception {
         start(context);
     }
+    /**
+     * Handles update.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onUpdate(TbActorCtx context) throws Exception {
         restart(context);
     }
+    /**
+     * Handles activate.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onActivate(TbActorCtx context) throws Exception {
         restart(context);
     }
+    /**
+     * Handles suspend.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onSuspend(TbActorCtx context) throws Exception {
         stop(context);
     }
+    /**
+     * Handles stop.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onStop(TbActorCtx context) throws Exception {
         stop(context);
@@ -78,10 +149,25 @@ public abstract class ComponentMsgProcessor<T extends EntityId> extends Abstract
         stop(context);
         start(context);
     }
+    /**
+     * Schedule stats persist tick.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @param statsPersistFrequency stats persist frequency
+     * @return {@link ScheduledFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ScheduledFuture<?> scheduleStatsPersistTick(TbActorCtx context, long statsPersistFrequency) {
         return schedulePeriodicMsgWithDelay(context, StatsPersistTick.INSTANCE, statsPersistFrequency, statsPersistFrequency);
     }
+    /**
+     * Checks msg valid.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean checkMsgValid(TbMsg tbMsg) {
         var valid = tbMsg.isValid();
@@ -92,6 +178,13 @@ public abstract class ComponentMsgProcessor<T extends EntityId> extends Abstract
         }
         return valid;
     }
+    /**
+     * Checks component state active.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @return nothing
+     * @throws RuleNodeException if rule node exception is thrown during processing
+     */
 
     protected void checkComponentStateActive(TbMsg tbMsg) throws RuleNodeException {
         if (state != ComponentLifecycleState.ACTIVE) {

@@ -21,12 +21,24 @@ import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.dao.user.UserService;
 
+/**
+ * Fetches tenant admin users entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
+
 public class TenantAdminUsersEdgeEventFetcher extends BaseUsersEdgeEventFetcher {
 
     public TenantAdminUsersEdgeEventFetcher(UserService userService) {
         super(userService);
     }
-
+    /**
+     * Loads users.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
     @Override
     protected PageData<User> findUsers(TenantId tenantId, PageLink pageLink) {
         return userService.findTenantAdmins(tenantId, pageLink);

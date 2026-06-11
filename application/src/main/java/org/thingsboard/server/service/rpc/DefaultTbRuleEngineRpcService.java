@@ -49,6 +49,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+    /**
+     * Default Spring implementation for tb rule engine rpc service (device RPC orchestration between REST, rule engine, and transport).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @TbRuleEngineComponent
 @Slf4j
@@ -74,17 +80,36 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
         this.serviceInfoProvider = serviceInfoProvider;
         this.rpcService = rpcService;
     }
+    /**
+     * Set tb core rpc service.
+     *
+     * @param tbCoreRpcService tb core rpc service ({@link Optional})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Autowired(required = false)
     public void setTbCoreRpcService(Optional<TbCoreDeviceRpcService> tbCoreRpcService) {
         this.tbCoreRpcService = tbCoreRpcService;
     }
+    /**
+     * Init executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void initExecutor() {
         scheduler = ThingsBoardExecutors.newSingleThreadScheduledExecutor("rule-engine-rpc-scheduler");
         serviceId = serviceInfoProvider.getServiceId();
     }
+    /**
+     * Shutdown executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -92,6 +117,16 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
             scheduler.shutdownNow();
         }
     }
+    /**
+     * Send rpc reply to device.
+     *
+     * @param serviceId service id ({@link String})
+     * @param sessionId session id ({@link UUID})
+     * @param requestId request id
+     * @param body body ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendRpcReplyToDevice(String serviceId, UUID sessionId, int requestId, String body) {
@@ -109,6 +144,14 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
                 .build();
         clusterService.pushNotificationToTransport(serviceId, msg, null);
     }
+    /**
+     * Send rpc request to device.
+     *
+     * @param src src ({@link RuleEngineDeviceRpcRequest})
+     * @param consumer consumer ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendRpcRequestToDevice(RuleEngineDeviceRpcRequest src, Consumer<RuleEngineDeviceRpcResponse> consumer) {
@@ -127,6 +170,15 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
                     .build());
         });
     }
+    /**
+     * Send rest api call reply.
+     *
+     * @param serviceId service id ({@link String})
+     * @param requestId request id ({@link UUID})
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendRestApiCallReply(String serviceId, UUID requestId, TbMsg tbMsg) {
@@ -137,11 +189,26 @@ public class DefaultTbRuleEngineRpcService implements TbRuleEngineDeviceRpcServi
                 .build();
         clusterService.pushNotificationToCore(serviceId, msg, null);
     }
+    /**
+     * Finds rpc by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link RpcId})
+     * @return {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Rpc findRpcById(TenantId tenantId, RpcId id) {
         return rpcService.findById(tenantId, id);
     }
+    /**
+     * Processes rpc response from device.
+     *
+     * @param response response ({@link FromDeviceRpcResponse})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processRpcResponseFromDevice(FromDeviceRpcResponse response) {

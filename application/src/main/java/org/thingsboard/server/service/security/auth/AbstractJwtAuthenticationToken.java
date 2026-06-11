@@ -19,6 +19,10 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.thingsboard.server.service.security.model.SecurityUser;
 import org.thingsboard.server.service.security.model.token.RawAccessJwtToken;
 
+/**
+ * Spring Security authentication token carrying platform security credentials or principal.
+ */
+
 public abstract class AbstractJwtAuthenticationToken extends AbstractAuthenticationToken {
 
     private static final long serialVersionUID = -6212297506742428406L;
@@ -39,6 +43,11 @@ public abstract class AbstractJwtAuthenticationToken extends AbstractAuthenticat
         super.setAuthenticated(true);
     }
 
+    /**
+     * Set authenticated.
+     *
+     * @param authenticated authenticated (boolean)
+     */
     @Override
     public void setAuthenticated(boolean authenticated) {
         if (authenticated) {
@@ -48,16 +57,28 @@ public abstract class AbstractJwtAuthenticationToken extends AbstractAuthenticat
         super.setAuthenticated(false);
     }
 
+    /**
+     * Returns credentials.
+     *
+     */
     @Override
     public Object getCredentials() {
         return rawAccessToken;
     }
 
+    /**
+     * Returns principal.
+     *
+     */
     @Override
     public Object getPrincipal() {
         return this.securityUser;
     }
 
+    /**
+     * Erase credentials.
+     *
+     */
     @Override
     public void eraseCredentials() {
         super.eraseCredentials();

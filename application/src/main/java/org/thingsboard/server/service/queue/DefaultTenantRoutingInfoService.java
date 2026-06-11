@@ -26,6 +26,9 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.dao.tenant.TbTenantProfileCache;
 import org.thingsboard.server.queue.discovery.TenantRoutingInfo;
 import org.thingsboard.server.queue.discovery.TenantRoutingInfoService;
+/**
+ * Default {@link TenantRoutingInfoService} implementation.
+ */
 
 @Slf4j
 @Service
@@ -35,6 +38,12 @@ public class DefaultTenantRoutingInfoService implements TenantRoutingInfoService
     @Lazy
     @Autowired
     private TbTenantProfileCache tenantProfileCache;
+
+    /**
+     * Returns routing info.
+     * @param tenantId tenant that owns the subscription or entity
+     * @return {@link TenantRoutingInfo}
+     */
 
     @Override
     public TenantRoutingInfo getRoutingInfo(TenantId tenantId) {

@@ -15,5 +15,9 @@
  */
 package org.thingsboard.server.service.queue;
 
+/**
+ * Contract for edge-related queue consumption on tb-core.
+ */
+
 public interface TbEdgeConsumerService {
 }

@@ -21,9 +21,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
+/**
+ * Configures internationalization (i18n) message resolution for the server.
+ *
+ * <p>Registers a {@link ResourceBundleMessageSource} that loads translated strings from
+ * {@code classpath:i18n/messages*.properties}. Controllers and services resolve user-facing
+ * error messages and labels via {@link org.springframework.context.MessageSource#getMessage}.
+ */
 @Configuration
 public class ThingsboardMessageConfiguration {
 
+    /**
+     * Primary {@link MessageSource} bean for the application.
+     *
+     * <p>Basename {@code i18n/messages} resolves locale-specific files such as
+     * {@code messages_en.properties}, {@code messages_de.properties}, etc.
+     *
+     * @return UTF-8 encoded resource bundle message source
+     */
     @Bean
     @Primary
     public MessageSource messageSource() {

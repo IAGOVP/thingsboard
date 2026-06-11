@@ -22,6 +22,11 @@ import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.common.data.widget.WidgetsBundle;
 import org.thingsboard.server.common.data.widget.WidgetsBundleFilter;
 import org.thingsboard.server.dao.widget.WidgetsBundleService;
+/**
+ * Fetches system widgets bundles entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 public class SystemWidgetsBundlesEdgeEventFetcher extends BaseWidgetsBundlesEdgeEventFetcher {
@@ -29,7 +34,13 @@ public class SystemWidgetsBundlesEdgeEventFetcher extends BaseWidgetsBundlesEdge
     public SystemWidgetsBundlesEdgeEventFetcher(WidgetsBundleService widgetsBundleService) {
         super(widgetsBundleService);
     }
-
+    /**
+     * Loads widgets bundles.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
     @Override
     protected PageData<WidgetsBundle> findWidgetsBundles(TenantId tenantId, PageLink pageLink) {
         return widgetsBundleService.findSystemWidgetsBundlesByPageLink(WidgetsBundleFilter.fromTenantId(tenantId), pageLink);

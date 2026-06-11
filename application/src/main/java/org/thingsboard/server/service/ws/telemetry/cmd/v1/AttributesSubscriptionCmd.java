@@ -17,12 +17,19 @@ package org.thingsboard.server.service.ws.telemetry.cmd.v1;
 
 import lombok.NoArgsConstructor;
 import org.thingsboard.server.service.ws.WsCmdType;
-
 /**
- * @author Andrew Shvayka
+ * WebSocket command DTO for attributes subscription.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
  */
+
+
 @NoArgsConstructor
 public class AttributesSubscriptionCmd extends SubscriptionCmd {
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

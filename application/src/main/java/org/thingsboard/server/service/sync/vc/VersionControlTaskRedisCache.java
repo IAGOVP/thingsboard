@@ -25,6 +25,9 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 
 import java.util.UUID;
+/**
+ * Spring service component for version control task redis cache (Git-based entity version control (entity version control, Git repository sync, and import/export)).
+ */
 
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("VersionControlTaskCache")

@@ -64,6 +64,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Central exception and error handler for ThingsBoard REST API and Spring Security flows.
+ *
+ * <p>Translates thrown exceptions, servlet errors, and Spring MVC validation failures into
+ * JSON {@link ThingsboardErrorResponse} payloads with consistent HTTP status codes and
+ * {@link ThingsboardErrorCode} values. Also implements {@link AccessDeniedHandler} for
+ * filter-chain permission denials and {@link ErrorController} for the {@code /error} endpoint.
+ *
+ * @see ThingsboardErrorResponse
+ */
 @Slf4j
 @Controller
 @RestControllerAdvice
@@ -110,6 +120,15 @@ public class ThingsboardErrorResponseHandler extends ResponseEntityExceptionHand
         return errorCodeToStatusMap.getOrDefault(errorCode, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Handles requests forwarded to Spring Boot's {@code /error} endpoint.
+     *
+     * <p>Reads the servlet error status and exception from request attributes and returns
+     * a structured {@link ThingsboardErrorResponse} with a mapped {@link ThingsboardErrorCode}.
+     *
+     * @param request the servlet request carrying {@code ERROR_STATUS_CODE} and {@code ERROR_EXCEPTION} attributes
+     * @return JSON error response with appropriate HTTP status
+     */
     @RequestMapping("/error")
     public ResponseEntity<Object> handleError(HttpServletRequest request) {
         HttpStatus httpStatus = Optional.ofNullable(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE))
@@ -121,6 +140,17 @@ public class ThingsboardErrorResponseHandler extends ResponseEntityExceptionHand
         return new ResponseEntity<>(ThingsboardErrorResponse.of(errorMessage, statusToErrorCode(httpStatus), httpStatus), httpStatus);
     }
 
+    /**
+     * Handles Spring Security {@link AccessDeniedException} from the filter chain.
+     *
+     * <p>Writes a JSON 403 response when the response has not yet been committed.
+     *
+     * @param request                incoming servlet request
+     * @param response               servlet response to write the error payload to
+     * @param accessDeniedException  security access-denied exception
+     * @throws IOException      if writing the response body fails
+     * @throws ServletException if servlet processing fails
+     */
     @Override
     @ExceptionHandler(AccessDeniedException.class)
     public void handle(HttpServletRequest request, HttpServletResponse response,
@@ -135,6 +165,16 @@ public class ThingsboardErrorResponseHandler extends ResponseEntityExceptionHand
         }
     }
 
+    /**
+     * Global catch-all handler for unhandled controller and service exceptions.
+     *
+     * <p>Dispatches to specialized handlers based on exception type, including
+     * {@link ThingsboardException}, rate-limit violations, authentication failures,
+     * database errors, and payload-size limits. Falls back to HTTP 500 for unknown errors.
+     *
+     * @param exception the thrown exception
+     * @param response  servlet response to write the JSON error payload to
+     */
     @ExceptionHandler(Exception.class)
     public void handle(Exception exception, HttpServletResponse response) {
         log.debug("Processing exception {}", exception.getMessage(), exception);
@@ -177,6 +217,19 @@ public class ThingsboardErrorResponseHandler extends ResponseEntityExceptionHand
         }
     }
 
+    /**
+     * Converts Spring MVC internal exceptions into {@link ThingsboardErrorResponse} entities.
+     *
+     * <p>Overrides the default {@link ResponseEntityExceptionHandler} behavior to include
+     * platform error codes mapped from the HTTP status.
+     *
+     * @param ex         the thrown exception
+     * @param body       optional response body (ignored; replaced with {@link ThingsboardErrorResponse})
+     * @param headers    HTTP headers to include in the response
+     * @param statusCode HTTP status code for the error
+     * @param request    current web request
+     * @return response entity with structured error payload
+     */
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, @Nullable Object body,

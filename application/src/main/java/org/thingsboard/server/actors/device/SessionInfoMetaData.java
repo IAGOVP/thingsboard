@@ -18,8 +18,9 @@ package org.thingsboard.server.actors.device;
 import lombok.Data;
 
 /**
- * @author Andrew Shvayka
+ * Extended session metadata including last activity time and RPC correlation state.
  */
+
 @Data
 class SessionInfoMetaData {
     private final SessionInfo sessionInfo;

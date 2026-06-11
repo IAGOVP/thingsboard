@@ -67,6 +67,15 @@ import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LI
 import static org.thingsboard.server.controller.ControllerConstants.WIDGET_BUNDLE_ID_PARAM_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.WIDGET_BUNDLE_TEXT_SEARCH_DESCRIPTION;
 
+/**
+ * REST API for widget bundles that group widget types for dashboards.
+ *
+ * <p>Base path: {@code /api/widgetsBundle} and {@code /api/widgetsBundles}. Bundles may be
+ * system-level or tenant-owned; alias is unique per tenant.
+ *
+ * @see WidgetTypeController
+ * @see org.thingsboard.server.service.entitiy.widgets.bundle.TbWidgetsBundleService
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -81,6 +90,17 @@ public class WidgetsBundleController extends BaseController {
     private static final String SCADA_FIRST_PARAM_DESCRIPTION = "Optional boolean parameter indicating whether to fetch widgets bundles with SCADA symbols first. Works only when fullSearch parameter is enabled";
     private static final String TENANT_BUNDLES_ONLY_DESCRIPTION = "Optional boolean parameter to include only tenant-level bundles without system";
 
+    /**
+     * Returns a widgets bundle by id, optionally with inlined image data.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetsBundle/{widgetsBundleId}?inlineImages=true|false}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @param inlineImages when {@code true}, embeds image bytes in the response
+     * @return {@link WidgetsBundle}
+     * @throws ThingsboardException if not found or access denied
+     */
     @ApiOperation(value = "Get Widget Bundle (getWidgetsBundleById)",
             notes = "Get the Widget Bundle based on the provided Widget Bundle Id. " + WIDGET_BUNDLE_DESCRIPTION + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -99,6 +119,16 @@ public class WidgetsBundleController extends BaseController {
         return result;
     }
 
+    /**
+     * Creates or updates a widgets bundle.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/widgetsBundle}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param widgetsBundle widgets bundle JSON body
+     * @return saved {@link WidgetsBundle}
+     * @throws Exception on validation or permission errors
+     */
     @ApiOperation(value = "Create Or Update Widget Bundle (saveWidgetsBundle)",
             notes = "Create or update the Widget Bundle. " + WIDGET_BUNDLE_DESCRIPTION + " " +
                     "When creating the bundle, platform generates Widget Bundle Id as " + UUID_WIKI_LINK +
@@ -126,6 +156,16 @@ public class WidgetsBundleController extends BaseController {
         return tbWidgetsBundleService.save(widgetsBundle, currentUser);
     }
 
+    /**
+     * Replaces the ordered widget type id list for a widgets bundle.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/widgetsBundle/{widgetsBundleId}/widgetTypes}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @param strWidgetTypeIds ordered list of widget type UUID strings
+     * @throws Exception if bundle or types are invalid
+     */
     @ApiOperation(value = "Update widgets bundle widgets types list (updateWidgetsBundleWidgetTypes)",
             notes = "Updates widgets bundle widgets list." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -152,6 +192,16 @@ public class WidgetsBundleController extends BaseController {
         tbWidgetsBundleService.updateWidgetsBundleWidgetTypes(widgetsBundleId, new ArrayList<>(widgetTypeIds), currentUser);
     }
 
+    /**
+     * Replaces the ordered widget type FQN list for a widgets bundle.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/widgetsBundle/{widgetsBundleId}/widgetTypeFqns}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @param widgetTypeFqns ordered list of widget type FQNs
+     * @throws Exception if bundle or FQNs are invalid
+     */
     @ApiOperation(value = "Update widgets bundle widgets list from widget type FQNs list (updateWidgetsBundleWidgetFqns)",
             notes = "Updates widgets bundle widgets list from widget type FQNs list." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -169,6 +219,15 @@ public class WidgetsBundleController extends BaseController {
         tbWidgetsBundleService.updateWidgetsBundleWidgetFqns(widgetsBundleId, widgetTypeFqns, currentUser);
     }
 
+    /**
+     * Deletes a widgets bundle by id.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/widgetsBundle/{widgetsBundleId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @throws ThingsboardException if not found or access denied
+     */
     @ApiOperation(value = "Delete widgets bundle (deleteWidgetsBundle)",
             notes = "Deletes the widget bundle. Referencing non-existing Widget Bundle Id will cause an error." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -183,6 +242,23 @@ public class WidgetsBundleController extends BaseController {
         tbWidgetsBundleService.delete(widgetsBundle, getCurrentUser());
     }
 
+    /**
+     * Returns a paginated list of widgets bundles available to the caller.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetsBundles?pageSize=&amp;page=&amp;...}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param pageSize page size
+     * @param page zero-based page index
+     * @param textSearch optional title filter
+     * @param sortProperty sort field
+     * @param sortOrder {@code ASC} or {@code DESC}
+     * @param tenantOnly tenant-owned bundles only
+     * @param fullSearch extended search including widget type text
+     * @param scadaFirst prioritize bundles with SCADA symbols
+     * @return page of {@link WidgetsBundle}
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get Widget Bundles (getWidgetsBundles)",
             notes = "Returns a page of Widget Bundle objects available for current user. " + WIDGET_BUNDLE_DESCRIPTION + " " +
                     PAGE_DATA_PARAMETERS + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
@@ -222,6 +298,15 @@ public class WidgetsBundleController extends BaseController {
         }
     }
 
+    /**
+     * Returns all widgets bundles for the caller without pagination (legacy API).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetsBundles}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @return list of {@link WidgetsBundle}
+     * @throws ThingsboardException on authorization failure
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/widgetsBundles")
@@ -234,6 +319,15 @@ public class WidgetsBundleController extends BaseController {
         }
     }
 
+    /**
+     * Returns all widgets bundles available to the caller (non-paginated).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetsBundles/all}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @return list of {@link WidgetsBundle}
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get all Widget Bundles (getAllWidgetsBundles)",
             notes = "Returns an array of Widget Bundle objects that are available for current user." + WIDGET_BUNDLE_DESCRIPTION + " " + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -242,6 +336,16 @@ public class WidgetsBundleController extends BaseController {
         return getWidgetsBundlesV1();
     }
 
+    /**
+     * Returns widgets bundles by id list (legacy query-param API).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetsBundles?widgetsBundleIds=&lt;uuid&gt;,&lt;uuid&gt;}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param widgetsBundleUUIDs set of widgets bundle UUIDs
+     * @return list of {@link WidgetsBundle}
+     * @throws ThingsboardException on authorization failure
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/widgetsBundles", params = {"widgetsBundleIds"})
@@ -254,6 +358,16 @@ public class WidgetsBundleController extends BaseController {
         return widgetsBundleService.findSystemOrTenantWidgetsBundlesByIds(getTenantId(), widgetsBundleIds);
     }
 
+    /**
+     * Returns widgets bundles by id list.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetsBundles/list?widgetsBundleIds=&lt;uuid&gt;,&lt;uuid&gt;}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param widgetsBundleUUIDs set of widgets bundle UUIDs
+     * @return list of {@link WidgetsBundle}
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get Widgets Bundles By Ids (getWidgetsBundlesList)",
             notes = "Requested widgets bundles must be system level or owned by tenant of the user which is performing the request. " +
                     NEW_LINE)

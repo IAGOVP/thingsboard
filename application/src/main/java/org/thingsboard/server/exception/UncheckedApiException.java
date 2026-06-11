@@ -19,15 +19,35 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Objects;
 
+/**
+ * Runtime wrapper for checked API exceptions that implement {@link ToErrorResponseEntity}.
+ *
+ * <p>Allows {@code ToErrorResponseEntity} exceptions to propagate through APIs and lambdas
+ * that do not declare checked exceptions, while preserving the original HTTP mapping via
+ * delegation to the wrapped cause.
+ *
+ * @see ToErrorResponseEntity
+ */
 public class UncheckedApiException extends RuntimeException implements ToErrorResponseEntity {
 
     private final ToErrorResponseEntity cause;
 
+    /**
+     * Wraps a checked API exception for unchecked propagation.
+     *
+     * @param <T>   type of the wrapped exception, constrained to {@link Exception} and {@link ToErrorResponseEntity}
+     * @param cause the original checked exception; must not be {@code null}
+     */
     public <T extends Exception & ToErrorResponseEntity> UncheckedApiException(T cause) {
         super(cause.getMessage(), Objects.requireNonNull(cause));
         this.cause = cause;
     }
 
+    /**
+     * Delegates HTTP response construction to the wrapped {@link ToErrorResponseEntity} cause.
+     *
+     * @return response entity produced by the original checked exception
+     */
     @Override
     public ResponseEntity<String> toErrorResponseEntity() {
         return cause.toErrorResponseEntity();

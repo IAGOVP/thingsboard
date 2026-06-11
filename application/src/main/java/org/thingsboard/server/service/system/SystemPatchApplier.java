@@ -451,8 +451,26 @@ public class SystemPatchApplier {
             throw new UncheckedIOException(e);
         }
     }
+    /**
+     * Version info.
+     *
+     * @param major major
+     * @param minor minor
+     * @param maintenance maintenance
+     * @param patch patch
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public record VersionInfo(int major, int minor, int maintenance, int patch) {}
+    /**
+     * Widget type stats.
+     *
+     * @param created created
+     * @param updated updated
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public record WidgetTypeStats(int created, int updated) {}
 

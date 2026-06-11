@@ -23,6 +23,10 @@ import org.thingsboard.server.service.ws.WsCmd;
 import org.thingsboard.server.service.ws.WsCmdType;
 
 import java.util.Set;
+/**
+ * WebSocket command DTO for notifications sub.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 @NoArgsConstructor
@@ -31,6 +35,11 @@ public class NotificationsSubCmd implements WsCmd {
     private int cmdId;
     private int limit;
     private Set<NotificationType> types;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

@@ -23,6 +23,12 @@ import org.thingsboard.server.dao.settings.AdminSettingsService;
 
 import java.io.Serializable;
 
+/**
+
+ * Tb abstract version control settings service (Git-based entity version control (entity version control, Git repository sync, and import/export)).
+
+ */
+
 public abstract class TbAbstractVersionControlSettingsService<T extends Serializable> {
 
     private final String settingsKey;
@@ -36,6 +42,13 @@ public abstract class TbAbstractVersionControlSettingsService<T extends Serializ
         this.clazz = clazz;
         this.settingsKey = settingsKey;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public T get(TenantId tenantId) {
         return cache.getAndPutInTransaction(tenantId, () -> {
@@ -50,6 +63,14 @@ public abstract class TbAbstractVersionControlSettingsService<T extends Serializ
             return null;
         }, true);
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link T})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public T save(TenantId tenantId, T settings) {
         AdminSettings adminSettings = adminSettingsService.findAdminSettingsByTenantIdAndKey(tenantId, settingsKey);
@@ -70,6 +91,13 @@ public abstract class TbAbstractVersionControlSettingsService<T extends Serializ
         cache.evict(tenantId);
         return savedSettings;
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean delete(TenantId tenantId) {
         boolean result = adminSettingsService.deleteAdminSettingsByTenantIdAndKey(tenantId, settingsKey);

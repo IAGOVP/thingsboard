@@ -32,6 +32,11 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+/**
+ * Backup code two fa provider for two-factor authentication (MFA).
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @TbCoreComponent
@@ -39,7 +44,13 @@ public class BackupCodeTwoFaProvider implements TwoFaProvider<BackupCodeTwoFaPro
 
     @Autowired @Lazy
     private TwoFaConfigManager twoFaConfigManager;
-
+    /**
+     * Generate new account config.
+     *
+     * @param user user (User)
+     * @param providerConfig provider config (BackupCodeTwoFaProviderConfig)
+     * @return {@link BackupCodeTwoFaAccountConfig} result
+     */
     @Override
     public BackupCodeTwoFaAccountConfig generateNewAccountConfig(User user, BackupCodeTwoFaProviderConfig providerConfig) {
         BackupCodeTwoFaAccountConfig config = new BackupCodeTwoFaAccountConfig();
@@ -53,7 +64,15 @@ public class BackupCodeTwoFaProvider implements TwoFaProvider<BackupCodeTwoFaPro
                 .distinct().limit(count)
                 .collect(Collectors.toSet());
     }
-
+    /**
+     * Check verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param code code (String)
+     * @param providerConfig provider config (BackupCodeTwoFaProviderConfig)
+     * @param accountConfig account config (BackupCodeTwoFaAccountConfig)
+     * @return boolean
+     */
     @Override
     public boolean checkVerificationCode(SecurityUser user, String code, BackupCodeTwoFaProviderConfig providerConfig, BackupCodeTwoFaAccountConfig accountConfig) {
         if (CollectionsUtil.contains(accountConfig.getCodes(), code)) {
@@ -65,6 +84,10 @@ public class BackupCodeTwoFaProvider implements TwoFaProvider<BackupCodeTwoFaPro
         }
     }
 
+    /**
+     * Returns type.
+     *
+     */
     @Override
     public TwoFaProviderType getType() {
         return TwoFaProviderType.BACKUP_CODE;

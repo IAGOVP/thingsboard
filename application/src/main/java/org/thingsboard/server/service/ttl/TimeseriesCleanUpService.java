@@ -23,6 +23,10 @@ import org.thingsboard.server.dao.timeseries.TimeseriesService;
 import org.thingsboard.server.queue.discovery.PartitionService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 
+    /**
+     * Spring service component for timeseries clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @TbCoreComponent
 @Slf4j
 @Service
@@ -40,6 +44,12 @@ public class TimeseriesCleanUpService extends AbstractCleanUpService {
         super(partitionService);
         this.timeseriesService = timeseriesService;
     }
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Scheduled(initialDelayString = "${sql.ttl.ts.execution_interval_ms}", fixedDelayString = "${sql.ttl.ts.execution_interval_ms}")
     public void cleanUp() {

@@ -24,6 +24,9 @@ import org.thingsboard.server.queue.discovery.QueueRoutingInfoService;
 
 import java.util.List;
 import java.util.stream.Collectors;
+/**
+ * Default {@link QueueRoutingInfoService} implementation.
+ */
 
 @Slf4j
 @Service
@@ -32,9 +35,19 @@ public class DefaultQueueRoutingInfoService implements QueueRoutingInfoService {
 
     private final QueueService queueService;
 
+    /**
+     * Constructs {@link DefaultQueueRoutingInfoService} with the supplied dependencies and configuration.
+     * @param queueService queue service
+     */
+
     public DefaultQueueRoutingInfoService(QueueService queueService) {
         this.queueService = queueService;
     }
+
+    /**
+     * Returns all queues routing info.
+     * @return {@link List}
+     */
 
     @Override
     public List<QueueRoutingInfo> getAllQueuesRoutingInfo() {

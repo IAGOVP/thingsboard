@@ -21,6 +21,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.Optional;
+/**
+ * Enumeration of web socket session type values used by the WebSocket layer.
+ */
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +33,12 @@ public enum WebSocketSessionType {
     NOTIFICATIONS("notifications"); // deprecated
 
     private String name;
+
+    /**
+     * For name.
+     * @param name name
+     * @return {@link Optional}
+     */
 
     public static Optional<WebSocketSessionType> forName(String name) {
         return Arrays.stream(values())

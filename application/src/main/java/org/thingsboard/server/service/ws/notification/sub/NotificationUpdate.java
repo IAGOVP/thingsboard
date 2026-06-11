@@ -24,6 +24,10 @@ import org.thingsboard.server.common.data.notification.NotificationStatus;
 import org.thingsboard.server.common.data.notification.NotificationType;
 
 import java.util.UUID;
+/**
+ * Outbound WebSocket update payload for notification.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @Data
 @NoArgsConstructor

@@ -24,6 +24,10 @@ import org.thingsboard.server.queue.discovery.PartitionService;
 
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Spring service component for events clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @Slf4j
 @Service
 public class EventsCleanUpService extends AbstractCleanUpService {
@@ -46,6 +50,12 @@ public class EventsCleanUpService extends AbstractCleanUpService {
         super(partitionService);
         this.eventService = eventService;
     }
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Scheduled(initialDelayString = RANDOM_DELAY_INTERVAL_MS_EXPRESSION, fixedDelayString = "${sql.ttl.events.execution_interval_ms}")
     public void cleanUp() {

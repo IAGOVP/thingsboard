@@ -22,11 +22,27 @@ import org.thingsboard.server.dao.entity.EntityService;
 import org.thingsboard.server.service.ws.WebSocketService;
 import org.thingsboard.server.service.ws.WebSocketSessionRef;
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.EntityCountUpdate;
+/**
+ * Subscription context for tb entity count WebSocket commands.
+ * <p>Maintains query state, caches, and pending updates for one command id.
+ */
 
 @Slf4j
 public class TbEntityCountSubCtx extends TbAbstractEntityQuerySubCtx<EntityCountQuery> {
 
     private volatile int result;
+
+    /**
+     * Constructs {@link TbEntityCountSubCtx} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param wsService ws service
+     * @param entityService entity service
+     * @param localSubscriptionService local subscription service
+     * @param attributesService attributes service
+     * @param stats stats
+     * @param sessionRef reference to the WebSocket session
+     * @param cmdId client command id
+     */
 
     public TbEntityCountSubCtx(String serviceId, WebSocketService wsService, EntityService entityService,
                                TbLocalSubscriptionService localSubscriptionService, AttributesService attributesService,
@@ -34,11 +50,23 @@ public class TbEntityCountSubCtx extends TbAbstractEntityQuerySubCtx<EntityCount
         super(serviceId, wsService, entityService, localSubscriptionService, attributesService, stats, sessionRef, cmdId);
     }
 
+    /**
+     * Fetches data.
+     * @return @Override
+    public void
+     */
+
     @Override
     public void fetchData() {
         result = (int) entityService.countEntitiesByQuery(getTenantId(), getCustomerId(), query);
         sendWsMsg(new EntityCountUpdate(cmdId, result));
     }
+
+    /**
+     * Updates update.
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void update() {
@@ -48,6 +76,11 @@ public class TbEntityCountSubCtx extends TbAbstractEntityQuerySubCtx<EntityCount
             sendWsMsg(new EntityCountUpdate(cmdId, result));
         }
     }
+
+    /**
+     * Is dynamic.
+     * @return {@code true} when the condition holds
+     */
 
     @Override
     public boolean isDynamic() {

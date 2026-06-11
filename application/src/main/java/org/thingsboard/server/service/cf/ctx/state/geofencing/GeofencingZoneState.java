@@ -30,6 +30,9 @@ import org.thingsboard.server.gen.transport.TransportProtos.GeofencingZoneProto;
 
 import static org.thingsboard.server.common.data.cf.configuration.geofencing.GeofencingPresenceStatus.INSIDE;
 import static org.thingsboard.server.common.data.cf.configuration.geofencing.GeofencingPresenceStatus.OUTSIDE;
+/**
+ * Runtime state for geofencing zone calculated fields.
+ */
 
 @Data
 public class GeofencingZoneState {
@@ -66,6 +69,13 @@ public class GeofencingZoneState {
             this.lastPresence = proto.getInside() ? INSIDE : OUTSIDE;
         }
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param newZoneState new zone state ({@link GeofencingZoneState})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean update(GeofencingZoneState newZoneState) {
         if (newZoneState.getTs() <= this.ts) {
@@ -81,6 +91,13 @@ public class GeofencingZoneState {
         }
         return false;
     }
+    /**
+     * Evaluate.
+     *
+     * @param entityCoordinates entity coordinates ({@link Coordinates})
+     * @return {@link GeofencingEvalResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public GeofencingEvalResult evaluate(Coordinates entityCoordinates) {
         boolean nowInside = perimeterDefinition.checkMatches(entityCoordinates);

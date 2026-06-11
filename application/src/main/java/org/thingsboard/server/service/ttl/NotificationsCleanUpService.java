@@ -33,6 +33,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.thingsboard.server.dao.model.ModelConstants.NOTIFICATION_TABLE_NAME;
 
+    /**
+     * Spring service component for notifications clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @Slf4j
 @Service
 @ConditionalOnExpression("${sql.ttl.notifications.enabled:true} && ${sql.ttl.notifications.ttl:0} > 0")
@@ -59,6 +63,12 @@ public class NotificationsCleanUpService extends AbstractCleanUpService {
 
     @Scheduled(initialDelayString = "#{T(org.apache.commons.lang3.RandomUtils).nextLong(0, ${sql.ttl.notifications.checking_interval_ms:86400000})}",
             fixedDelayString = "${sql.ttl.notifications.checking_interval_ms:86400000}")
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void cleanUp() {
         long expTime = System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(ttlInSec);
         long partitionDurationMs = TimeUnit.HOURS.toMillis(partitionSizeInHours);

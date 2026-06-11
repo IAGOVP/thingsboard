@@ -28,6 +28,9 @@ import org.thingsboard.server.common.data.id.TenantId;
 import javax.script.ScriptException;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+/**
+ * Script execution engine for tbel calculated fields.
+ */
 
 @Slf4j
 public class CalculatedFieldTbelScriptEngine implements CalculatedFieldScriptEngine {
@@ -50,6 +53,13 @@ public class CalculatedFieldTbelScriptEngine implements CalculatedFieldScriptEng
             throw new IllegalArgumentException("Can't compile script: " + t.getMessage(), t);
         }
     }
+    /**
+     * Executes script async.
+     *
+     * @param args args
+     * @return future completing with {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Object> executeScriptAsync(Object[] args) {
@@ -69,11 +79,24 @@ public class CalculatedFieldTbelScriptEngine implements CalculatedFieldScriptEng
                     }
                 }, MoreExecutors.directExecutor());
     }
+    /**
+     * Executes json async.
+     *
+     * @param args args
+     * @return future completing with {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<JsonNode> executeJsonAsync(Object[] args) {
         return Futures.transform(executeScriptAsync(args), JacksonUtil::valueToTree, MoreExecutors.directExecutor());
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {

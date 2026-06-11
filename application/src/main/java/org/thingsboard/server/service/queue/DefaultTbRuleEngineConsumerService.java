@@ -61,6 +61,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
+/**
+ * Rule-engine queue consumer: submits message packs to the actor system using configurable {@link org.thingsboard.server.service.queue.processing.TbRuleEngineSubmitStrategy} and {@link org.thingsboard.server.service.queue.processing.TbRuleEngineProcessingStrategy}.
+ */
 
 @Service
 @TbRuleEngineComponent
@@ -72,6 +75,23 @@ public class DefaultTbRuleEngineConsumerService extends AbstractPartitionBasedCo
     private final TbMsgPackProcessingContextFactory packProcessingContextFactory;
 
     private final ConcurrentMap<QueueKey, TbRuleEngineQueueConsumerManager> consumers = new ConcurrentHashMap<>();
+
+    /**
+     * Constructs {@link DefaultTbRuleEngineConsumerService} with the supplied dependencies and configuration.
+     * @param ctx ctx
+     * @param actorContext actor context
+     * @param tbDeviceRpcService tb device rpc service
+     * @param queueService queue service
+     * @param deviceProfileCache device profile cache
+     * @param assetProfileCache asset profile cache
+     * @param tbResourceDataCache tb resource data cache
+     * @param tenantProfileCache tenant profile cache
+     * @param apiUsageStateService api usage state service
+     * @param partitionService partition service
+     * @param eventPublisher event publisher
+     * @param jwtSettingsService jwt settings service
+     * @param packProcessingContextFactory pack processing context factory
+     */
 
     public DefaultTbRuleEngineConsumerService(TbRuleEngineConsumerContext ctx,
                                               ActorSystemContext actorContext,
@@ -93,6 +113,12 @@ public class DefaultTbRuleEngineConsumerService extends AbstractPartitionBasedCo
         this.packProcessingContextFactory = packProcessingContextFactory;
     }
 
+    /**
+     * Invoked when start up occurs.
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void onStartUp() {
         List<Queue> queues = queueService.findAllQueues();
@@ -103,6 +129,13 @@ public class DefaultTbRuleEngineConsumerService extends AbstractPartitionBasedCo
             }
         }
     }
+
+    /**
+     * Invoked when partition change event occurs.
+     * @param event application or cluster event
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void onPartitionChangeEvent(PartitionChangeEvent event) {
@@ -137,6 +170,12 @@ public class DefaultTbRuleEngineConsumerService extends AbstractPartitionBasedCo
                 });
     }
 
+    /**
+     * Stops consumers.
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void stopConsumers() {
         super.stopConsumers();
@@ -144,35 +183,84 @@ public class DefaultTbRuleEngineConsumerService extends AbstractPartitionBasedCo
         consumers.values().forEach(TbRuleEngineQueueConsumerManager::awaitStop);
     }
 
+    /**
+     * Returns service type.
+     * @return {@link ServiceType}
+     */
+
     @Override
     protected ServiceType getServiceType() {
         return ServiceType.TB_RULE_ENGINE;
     }
+
+    /**
+     * Returns prefix.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return string value
+     */
 
     @Override
     protected String getPrefix() {
         return "tb-rule-engine";
     }
 
+    /**
+     * Returns notification poll duration.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
+
     @Override
     protected long getNotificationPollDuration() {
         return ctx.getPollDuration();
     }
+
+    /**
+     * Returns notification pack processing timeout.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
 
     @Override
     protected long getNotificationPackProcessingTimeout() {
         return ctx.getPackProcessingTimeout();
     }
 
+    /**
+     * Returns mgmt thread pool size.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
+
     @Override
     protected int getMgmtThreadPoolSize() {
         return ctx.getMgmtThreadPoolSize();
     }
 
+    /**
+     * Creates notifications consumer.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@link TbQueueConsumer}
+     */
+
     @Override
     protected TbQueueConsumer<TbProtoQueueMsg<ToRuleEngineNotificationMsg>> createNotificationsConsumer() {
         return ctx.getQueueFactory().createToRuleEngineNotificationsMsgConsumer();
     }
+
+    /**
+     * Handles notification.
+     * @param id id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void handleNotification(UUID id, TbProtoQueueMsg<ToRuleEngineNotificationMsg> msg, TbCallback callback) {
@@ -231,6 +319,13 @@ public class DefaultTbRuleEngineConsumerService extends AbstractPartitionBasedCo
         partitionService.recalculatePartitions(ctx.getServiceInfoProvider().getServiceInfo(), new ArrayList<>(partitionService.getOtherServices(ServiceType.TB_RULE_ENGINE)));
     }
 
+    /**
+     * Handles component lifecycle event.
+     * @param event application or cluster event
+     * @return @EventListener
+    public void
+     */
+
     @EventListener
     public void handleComponentLifecycleEvent(ComponentLifecycleMsg event) {
         if (event.getEntityId().getEntityType() == EntityType.TENANT) {
@@ -267,7 +362,11 @@ public class DefaultTbRuleEngineConsumerService extends AbstractPartitionBasedCo
         return Optional.ofNullable(consumers.remove(queueKey));
     }
 
-    @Scheduled(fixedDelayString = "${queue.rule-engine.stats.print-interval-ms}")
+    /**
+     * Print stats.
+     */
+
+@Scheduled(fixedDelayString = "${queue.rule-engine.stats.print-interval-ms}")
     public void printStats() {
         if (ctx.isStatsEnabled()) {
             long ts = System.currentTimeMillis();

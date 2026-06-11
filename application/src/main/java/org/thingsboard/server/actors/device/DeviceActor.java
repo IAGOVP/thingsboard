@@ -31,6 +31,11 @@ import org.thingsboard.server.common.msg.rule.engine.DeviceEdgeUpdateMsg;
 import org.thingsboard.server.common.msg.rule.engine.DeviceNameOrTypeUpdateMsg;
 import org.thingsboard.server.common.msg.timeout.DeviceActorServerSideRpcTimeoutMsg;
 import org.thingsboard.server.service.transport.msg.TransportToDeviceActorMsgWrapper;
+/**
+ * Per-device actor handling transport sessions, attribute updates, and RPC.
+ *
+ * <p>One instance exists per active {@link org.thingsboard.server.common.data.id.DeviceId} under a {@link org.thingsboard.server.actors.tenant.TenantActor}. Delegates processing to {@link org.thingsboard.server.actors.device.DeviceActorMessageProcessor}.
+ */
 
 @Slf4j
 public class DeviceActor extends ContextAwareActor {
@@ -41,6 +46,15 @@ public class DeviceActor extends ContextAwareActor {
         super(systemContext);
         this.processor = new DeviceActorMessageProcessor(systemContext, tenantId, deviceId);
     }
+    
+    /**
+     * Initializes the actor after creation (schedules ticks, loads metadata, creates child actors).
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
+
 
     @Override
     public void init(TbActorCtx ctx) throws TbActorException {
@@ -54,6 +68,15 @@ public class DeviceActor extends ContextAwareActor {
             throw new TbActorException("Failed to initialize device actor", e);
         }
     }
+    
+    /**
+     * Handles one incoming actor message; returns {@code true} if the message type was recognized.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected boolean doProcess(TbActorMsg msg) {

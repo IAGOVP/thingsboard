@@ -50,16 +50,44 @@ import java.util.Map;
 
 import static org.thingsboard.server.service.cf.ctx.state.SingleValueArgumentEntry.DEFAULT_VERSION;
 
+/**
+ * Factory and transformation helpers for calculated-field argument entries and initial state objects.
+ *
+ * <p>Converts telemetry, attribute, and aggregation inputs into {@link ArgumentEntry} instances
+ * and creates type-appropriate {@link CalculatedFieldState} objects for new field contexts.
+ */
 public class CalculatedFieldArgumentUtils {
 
+    /**
+     * Wraps a single key-value entry as a calculated-field argument.
+     *
+     * @param kvEntry telemetry or attribute value; must not be {@code null}
+     * @return {@link SingleValueArgumentEntry} with the value, or an empty entry if the value is {@code null}
+     */
     public static ArgumentEntry transformSingleValueArgument(@NonNull KvEntry kvEntry) {
         return kvEntry.getValue() != null ? ArgumentEntry.createSingleValueArgument(kvEntry) : new SingleValueArgumentEntry();
     }
 
+    /**
+     * Builds a time-series rolling-window argument from historical telemetry samples.
+     *
+     * @param tsRolling      list of time-series key-value entries within the window
+     * @param limit          maximum number of records to retain
+     * @param argTimeWindow  rolling window duration in milliseconds
+     * @return {@link ArgumentEntry} representing the rolling time-series argument
+     */
     public static ArgumentEntry transformTsRollingArgument(List<TsKvEntry> tsRolling, int limit, long argTimeWindow) {
         return ArgumentEntry.createTsRollingArgument(tsRolling, limit, argTimeWindow);
     }
 
+    /**
+     * Builds an aggregation metric argument from time-series data, falling back to defaults when empty.
+     *
+     * @param timeSeries list of time-series entries for the metric; may be empty
+     * @param argKey     argument key name
+     * @param aggMetric  aggregation metric definition including optional default value
+     * @return single-value or default metric {@link ArgumentEntry}
+     */
     public static ArgumentEntry transformAggMetricArgument(List<TsKvEntry> timeSeries, String argKey, AggMetric aggMetric) {
         if (timeSeries == null || timeSeries.isEmpty()) {
             return createDefaultMetricArgumentEntry(argKey, aggMetric);
@@ -67,6 +95,13 @@ public class CalculatedFieldArgumentUtils {
         return ArgumentEntry.createSingleValueArgument(timeSeries.get(0));
     }
 
+    /**
+     * Creates a default metric argument entry using the metric's configured default value.
+     *
+     * @param argKey  argument key name
+     * @param metric  aggregation metric with optional {@link AggMetric#getDefaultValue()}
+     * @return {@link SingleValueArgumentEntry} with default double value, or empty entry if no default
+     */
     public static ArgumentEntry createDefaultMetricArgumentEntry(String argKey, AggMetric metric) {
         Double defaultValue = metric.getDefaultValue();
         if (defaultValue != null) {
@@ -75,6 +110,14 @@ public class CalculatedFieldArgumentUtils {
         return new SingleValueArgumentEntry();
     }
 
+    /**
+     * Builds an entity-aggregation interval argument from time-series data for a given window.
+     *
+     * @param timeSeries       time-series entries for the interval; may be empty
+     * @param startIntervalTs  interval start timestamp
+     * @param endIntervalTs    interval end timestamp
+     * @return {@link EntityAggregationArgumentEntry} with interval status tracking
+     */
     public static ArgumentEntry transformAggregationArgument(List<TsKvEntry> timeSeries, long startIntervalTs, long endIntervalTs) {
         Map<AggIntervalEntry, AggIntervalEntryStatus> aggIntervals = new HashMap<>();
         AggIntervalEntry aggIntervalEntry = new AggIntervalEntry(startIntervalTs, endIntervalTs);
@@ -101,13 +144,35 @@ public class CalculatedFieldArgumentUtils {
         return new StringDataEntry(key, defaultValue);
     }
 
+    /**
+     * Creates a default time-series key-value entry from an argument's configured default value.
+     *
+     * @param argument calculated-field argument definition with optional default
+     * @param ts       timestamp to assign to the entry
+     * @return {@link BasicTsKvEntry} with typed default value
+     */
     public static TsKvEntry createDefaultTsKvEntry(Argument argument, long ts) {
         return new BasicTsKvEntry(ts, createDefaultKvEntry(argument), DEFAULT_VERSION);
     }
+
+    /**
+     * Creates a default attribute key-value entry from an argument's configured default value.
+     *
+     * @param argument calculated-field argument definition with optional default
+     * @param ts       timestamp to assign to the entry
+     * @return {@link BaseAttributeKvEntry} with typed default value
+     */
     public static AttributeKvEntry createDefaultAttributeEntry(Argument argument, long ts) {
         return new BaseAttributeKvEntry(createDefaultKvEntry(argument), ts, DEFAULT_VERSION);
     }
 
+    /**
+     * Instantiates an empty {@link CalculatedFieldState} appropriate for the field type in the context.
+     *
+     * @param ctx      calculated-field runtime context providing the field type
+     * @param entityId target entity for which state is created
+     * @return new state object matching {@link CalculatedFieldCtx#getCfType()}
+     */
     public static CalculatedFieldState createStateByType(CalculatedFieldCtx ctx, EntityId entityId) {
         return switch (ctx.getCfType()) {
             case SIMPLE -> new SimpleCalculatedFieldState(entityId);

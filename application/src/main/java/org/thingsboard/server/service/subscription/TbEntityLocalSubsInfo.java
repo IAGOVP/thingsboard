@@ -60,6 +60,12 @@ public class TbEntityLocalSubsInfo {
 
     private int seqNumber = 0;
 
+    /**
+     * Registers add.
+     * @param subscription subscription to register or remove
+     * @return {@link TbEntitySubEvent}
+     */
+
     public TbEntitySubEvent add(TbSubscription<?> subscription) {
         log.trace("[{}][{}][{}] Adding: {}", tenantId, entityId, subscription.getSubscriptionId(), subscription);
         boolean created = subs.isEmpty();
@@ -125,6 +131,12 @@ public class TbEntityLocalSubsInfo {
         }
     }
 
+    /**
+     * Removes remove.
+     * @param sub sub
+     * @return {@link TbEntitySubEvent}
+     */
+
     public TbEntitySubEvent remove(TbSubscription<?> sub) {
         log.trace("[{}][{}][{}] Removing: {}", tenantId, entityId, sub.getSubscriptionId(), sub);
         if (!subs.remove(sub)) {
@@ -138,6 +150,12 @@ public class TbEntityLocalSubsInfo {
         clearState(newState, type);
         return updateState(Set.of(type), newState);
     }
+
+    /**
+     * Removes all.
+     * @param subsToRemove subs to remove
+     * @return {@link TbEntitySubEvent}
+     */
 
     public TbEntitySubEvent removeAll(List<? extends TbSubscription<?>> subsToRemove) {
         Set<TbSubscriptionType> changedTypes = new HashSet<>();
@@ -233,6 +251,12 @@ public class TbEntityLocalSubsInfo {
         }
     }
 
+    /**
+     * To event.
+     * @param type type
+     * @return {@link TbEntitySubEvent}
+     */
+
     public TbEntitySubEvent toEvent(ComponentLifecycleEvent type) {
         seqNumber++;
         var result = TbEntitySubEvent.builder().tenantId(tenantId).entityId(entityId).type(type).seqNumber(seqNumber);
@@ -242,14 +266,32 @@ public class TbEntityLocalSubsInfo {
         return result.build();
     }
 
+    /**
+     * Is nf.
+     * @return {@code true} when the condition holds
+     */
+
     public boolean isNf() {
         return state.notifications;
     }
 
 
+    /**
+     * Is empty.
+     * @return {@code true} when the condition holds
+     */
+
+
     public boolean isEmpty() {
         return subs.isEmpty();
     }
+
+    /**
+     * Registers pending subscription.
+     * @param subscription subscription to register or remove
+     * @param event application or cluster event
+     * @return {@link TbSubscription}
+     */
 
     public TbSubscription<?> registerPendingSubscription(TbSubscription<?> subscription, TbEntitySubEvent event) {
         if (TbSubscriptionType.ATTRIBUTES.equals(subscription.getType())) {
@@ -279,6 +321,12 @@ public class TbEntityLocalSubsInfo {
         }
         return null;
     }
+
+    /**
+     * Clears pending subscriptions.
+     * @param seqNumber seq number
+     * @return {@link Set}
+     */
 
     public Set<TbSubscription<?>> clearPendingSubscriptions(int seqNumber) {
         if (pendingTimeSeriesEvent == seqNumber) {

@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+/**
+ * Consumer statistics counters for tb tenant rule engine stats.
+ */
 
 @Slf4j
 @Data
@@ -39,6 +42,11 @@ public class TbTenantRuleEngineStats {
 
     private final Map<String, AtomicInteger> counters = new HashMap<>();
 
+    /**
+     * Constructs {@link TbTenantRuleEngineStats} with the supplied dependencies and configuration.
+     * @param tenantId tenant that owns the subscription or entity
+     */
+
     public TbTenantRuleEngineStats(UUID tenantId) {
         this.tenantId = tenantId;
         counters.put(TbRuleEngineConsumerStats.TOTAL_MSGS, totalMsgCounter);
@@ -50,32 +58,56 @@ public class TbTenantRuleEngineStats {
         counters.put(TbRuleEngineConsumerStats.TMP_FAILED, tmpFailedMsgCounter);
     }
 
-    public void logSuccess() {
+    /**
+     * Logs success.
+     */
+
+public void logSuccess() {
         totalMsgCounter.incrementAndGet();
         successMsgCounter.incrementAndGet();
     }
 
-    public void logFailed() {
+    /**
+     * Logs failed.
+     */
+
+public void logFailed() {
         totalMsgCounter.incrementAndGet();
         failedMsgCounter.incrementAndGet();
     }
 
-    public void logTimeout() {
+    /**
+     * Logs timeout.
+     */
+
+public void logTimeout() {
         totalMsgCounter.incrementAndGet();
         timeoutMsgCounter.incrementAndGet();
     }
 
-    public void logTmpFailed() {
+    /**
+     * Logs tmp failed.
+     */
+
+public void logTmpFailed() {
         totalMsgCounter.incrementAndGet();
         tmpFailedMsgCounter.incrementAndGet();
     }
 
-    public void logTmpTimeout() {
+    /**
+     * Logs tmp timeout.
+     */
+
+public void logTmpTimeout() {
         totalMsgCounter.incrementAndGet();
         tmpTimeoutMsgCounter.incrementAndGet();
     }
 
-    public void printStats() {
+    /**
+     * Print stats.
+     */
+
+public void printStats() {
         int total = totalMsgCounter.get();
         if (total > 0) {
             StringBuilder stats = new StringBuilder();
@@ -85,6 +117,22 @@ public class TbTenantRuleEngineStats {
             log.info("[{}] Stats: {}", tenantId, stats);
         }
     }
+
+    /**
+     * Resets reset.
+     */
+
+    /**
+     * Resets.
+     */
+
+    /**
+     * Resets.
+     */
+
+    /**
+     * Resets.
+     */
 
     public void reset() {
         counters.values().forEach(counter -> counter.set(0));

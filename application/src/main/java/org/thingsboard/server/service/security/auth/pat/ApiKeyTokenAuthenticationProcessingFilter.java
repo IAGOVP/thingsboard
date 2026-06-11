@@ -37,6 +37,10 @@ import static org.thingsboard.server.config.ThingsboardSecurityConfiguration.API
 import static org.thingsboard.server.config.ThingsboardSecurityConfiguration.AUTHORIZATION_HEADER;
 import static org.thingsboard.server.config.ThingsboardSecurityConfiguration.AUTHORIZATION_HEADER_V2;
 
+/**
+ * Servlet filter that handles personal access token (API key) authentication login/token requests.
+ */
+
 public class ApiKeyTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     private final AuthenticationFailureHandler failureHandler;
@@ -49,7 +53,14 @@ public class ApiKeyTokenAuthenticationProcessingFilter extends AbstractAuthentic
         this.failureHandler = failureHandler;
         this.tokenExtractor = tokenExtractor;
     }
-
+    /**
+     * Attempt authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @return {@link Authentication} result
+     * @throws AuthenticationException if the operation fails
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String apiKeyValue = tokenExtractor.extract(request);
@@ -57,6 +68,16 @@ public class ApiKeyTokenAuthenticationProcessingFilter extends AbstractAuthentic
         return getAuthenticationManager().authenticate(new ApiKeyAuthenticationToken(apiKeyAuthRequest));
     }
 
+    /**
+     * Successful authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param chain chain (FilterChain)
+     * @param authResult auth result (Authentication)
+     * @throws IOException if the operation fails
+     * @throws ServletException if the operation fails
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
@@ -65,7 +86,13 @@ public class ApiKeyTokenAuthenticationProcessingFilter extends AbstractAuthentic
         SecurityContextHolder.setContext(context);
         chain.doFilter(request, response);
     }
-
+    /**
+     * Requires authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @return boolean
+     */
     @Override
     protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
         if (!super.requiresAuthentication(request, response)) {
@@ -78,6 +105,15 @@ public class ApiKeyTokenAuthenticationProcessingFilter extends AbstractAuthentic
         return header != null && header.startsWith(API_KEY_HEADER_PREFIX);
     }
 
+    /**
+     * Unsuccessful authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param failed failed (AuthenticationException)
+     * @throws IOException if the operation fails
+     * @throws ServletException if the operation fails
+     */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {

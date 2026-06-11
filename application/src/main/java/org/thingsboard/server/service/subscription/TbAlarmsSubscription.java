@@ -23,10 +23,28 @@ import org.thingsboard.server.service.ws.telemetry.sub.AlarmSubscriptionUpdate;
 
 import java.util.function.BiConsumer;
 
+/**
+ * Subscription state holder for tb alarms.
+ * <p>Links a WebSocket session to entity keys and update processors.
+ */
+
 public class TbAlarmsSubscription extends TbSubscription<AlarmSubscriptionUpdate> {
 
     @Getter
     private final long ts;
+
+    /**
+     * Constructs {@link TbAlarmsSubscription} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionId client command/subscription id
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param updateProcessor update processor
+     * @param ts ts
+     * @return @Builder
+    public
+     */
 
     @Builder
     public TbAlarmsSubscription(String serviceId, String sessionId, int subscriptionId, TenantId tenantId, EntityId entityId,
@@ -35,10 +53,23 @@ public class TbAlarmsSubscription extends TbSubscription<AlarmSubscriptionUpdate
         this.ts = ts;
     }
 
+    /**
+     * Compares this object to another for equality.
+     * @param o o
+     * @return boolean result
+     */
+
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
     }
+
+    /**
+     * Returns a hash code consistent with {@link #equals(Object)}.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@code true} when the condition holds
+     */
 
     @Override
     public int hashCode() {

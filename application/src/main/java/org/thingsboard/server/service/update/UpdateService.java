@@ -17,6 +17,16 @@ package org.thingsboard.server.service.update;
 
 import org.thingsboard.server.common.data.UpdateMessage;
 
+/**
+
+ * Service contract for update operations (platform update checks and notifications).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface UpdateService {
 
     UpdateMessage checkUpdates();

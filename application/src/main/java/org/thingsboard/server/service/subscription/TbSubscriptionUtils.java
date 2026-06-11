@@ -52,7 +52,18 @@ import static org.thingsboard.server.common.util.KvProtoUtil.fromTsValueProtoLis
 import static org.thingsboard.server.common.util.KvProtoUtil.toTsKvProtoBuilder;
 import static org.thingsboard.server.common.util.KvProtoUtil.toTsValueProto;
 
+/**
+ * Tb subscription utils component in the ThingsBoard subscription layer.
+ */
+
 public class TbSubscriptionUtils {
+
+    /**
+     * To sub event proto.
+     * @param serviceId service id
+     * @param event application or cluster event
+     * @return {@link ToCoreMsg}
+     */
 
     public static ToCoreMsg toSubEventProto(String serviceId, TbEntitySubEvent event) {
         SubscriptionMgrMsgProto.Builder msgBuilder = SubscriptionMgrMsgProto.newBuilder();
@@ -82,6 +93,15 @@ public class TbSubscriptionUtils {
         return ToCoreMsg.newBuilder().setToSubscriptionMgrMsg(msgBuilder).build();
     }
 
+    /**
+     * To proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param id id
+     * @param seqNumber seq number
+     * @param update subscription update payload
+     * @return {@link ToCoreNotificationMsg}
+     */
+
     public static ToCoreNotificationMsg toProto(TenantId tenantId, UUID id, int seqNumber, TbEntityUpdatesInfo update) {
         TransportProtos.TbEntitySubEventCallbackProto.Builder updateProto = TransportProtos.TbEntitySubEventCallbackProto.newBuilder()
                 .setEntityIdMSB(id.getMostSignificantBits())
@@ -100,6 +120,13 @@ public class TbSubscriptionUtils {
     }
 
 
+    /**
+     * From proto.
+     * @param proto proto
+     * @return {@link TbEntitySubEvent}
+     */
+
+
     public static TbEntitySubEvent fromProto(TbEntitySubEventProto proto) {
         ComponentLifecycleEvent event = ComponentLifecycleEvent.valueOf(proto.getType());
         var builder = TbEntitySubEvent.builder()
@@ -116,6 +143,12 @@ public class TbSubscriptionUtils {
         return builder.build();
     }
 
+    /**
+     * From proto.
+     * @param proto proto
+     * @return {@link AlarmSubscriptionUpdate}
+     */
+
     public static AlarmSubscriptionUpdate fromProto(TransportProtos.TbAlarmSubUpdateProto proto) {
         if (proto.getErrorCode() > 0) {
             return new AlarmSubscriptionUpdate(SubscriptionErrorCode.forCode(proto.getErrorCode()), proto.getErrorMsg());
@@ -124,6 +157,12 @@ public class TbSubscriptionUtils {
             return new AlarmSubscriptionUpdate(alarm, proto.getDeleted());
         }
     }
+
+    /**
+     * From proto.
+     * @param proto proto
+     * @return {@link NotificationsSubscriptionUpdate}
+     */
 
     public static NotificationsSubscriptionUpdate fromProto(TransportProtos.NotificationsSubUpdateProto proto) {
         NotificationsSubscriptionUpdate update;
@@ -136,6 +175,14 @@ public class TbSubscriptionUtils {
         }
         return update;
     }
+
+    /**
+     * To alarm sub update to proto.
+     * @param entityId target entity id
+     * @param alarmInfo alarm info
+     * @param deleted deleted
+     * @return {@link ToCoreNotificationMsg}
+     */
 
     public static ToCoreNotificationMsg toAlarmSubUpdateToProto(EntityId entityId, AlarmInfo alarmInfo, boolean deleted) {
         TransportProtos.TbAlarmSubUpdateProto.Builder updateProto = TransportProtos.TbAlarmSubUpdateProto.newBuilder()
@@ -150,6 +197,13 @@ public class TbSubscriptionUtils {
                                 .build())
                 .build();
     }
+
+    /**
+     * Notifications sub update to proto.
+     * @param entityId target entity id
+     * @param update subscription update payload
+     * @return {@link ToCoreNotificationMsg}
+     */
 
     public static ToCoreNotificationMsg notificationsSubUpdateToProto(EntityId entityId, NotificationsSubscriptionUpdate update) {
         TransportProtos.NotificationsSubUpdateProto.Builder updateProto = TransportProtos.NotificationsSubUpdateProto.newBuilder()
@@ -168,6 +222,14 @@ public class TbSubscriptionUtils {
                 .build();
     }
 
+    /**
+     * To timeseries update proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param ts ts
+     * @return {@link ToCoreMsg}
+     */
+
     public static ToCoreMsg toTimeseriesUpdateProto(TenantId tenantId, EntityId entityId, List<TsKvEntry> ts) {
         TbTimeSeriesUpdateProto.Builder builder = TbTimeSeriesUpdateProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
@@ -181,6 +243,14 @@ public class TbSubscriptionUtils {
         return ToCoreMsg.newBuilder().setToSubscriptionMgrMsg(msgBuilder.build()).build();
     }
 
+    /**
+     * To timeseries delete proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param keys keys
+     * @return {@link ToCoreMsg}
+     */
+
     public static ToCoreMsg toTimeseriesDeleteProto(TenantId tenantId, EntityId entityId, List<String> keys) {
         TbTimeSeriesDeleteProto.Builder builder = TbTimeSeriesDeleteProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
@@ -193,6 +263,15 @@ public class TbSubscriptionUtils {
         msgBuilder.setTsDelete(builder);
         return ToCoreMsg.newBuilder().setToSubscriptionMgrMsg(msgBuilder.build()).build();
     }
+
+    /**
+     * To attributes update proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param scope scope
+     * @param attributes attributes
+     * @return {@link ToCoreMsg}
+     */
 
     public static ToCoreMsg toAttributesUpdateProto(TenantId tenantId, EntityId entityId, String scope, List<AttributeKvEntry> attributes) {
         TbAttributeUpdateProto.Builder builder = TbAttributeUpdateProto.newBuilder();
@@ -209,6 +288,15 @@ public class TbSubscriptionUtils {
         return ToCoreMsg.newBuilder().setToSubscriptionMgrMsg(msgBuilder.build()).build();
     }
 
+    /**
+     * To attributes delete proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param scope scope
+     * @param keys keys
+     * @return {@link ToCoreMsg}
+     */
+
     public static ToCoreMsg toAttributesDeleteProto(TenantId tenantId, EntityId entityId, String scope, List<String> keys) {
         TbAttributeDeleteProto.Builder builder = TbAttributeDeleteProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
@@ -224,9 +312,25 @@ public class TbSubscriptionUtils {
         return ToCoreMsg.newBuilder().setToSubscriptionMgrMsg(msgBuilder.build()).build();
     }
 
+    /**
+     * To entity id.
+     * @param entityType entity type
+     * @param entityIdMSB entity id msb
+     * @param entityIdLSB entity id lsb
+     * @return {@link EntityId}
+     */
+
     public static EntityId toEntityId(String entityType, long entityIdMSB, long entityIdLSB) {
         return EntityIdFactory.getByTypeAndUuid(entityType, new UUID(entityIdMSB, entityIdLSB));
     }
+
+    /**
+     * To alarm update proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param alarm alarm
+     * @return {@link ToCoreMsg}
+     */
 
     public static ToCoreMsg toAlarmUpdateProto(TenantId tenantId, EntityId entityId, AlarmInfo alarm) {
         TbAlarmUpdateProto.Builder builder = TbAlarmUpdateProto.newBuilder();
@@ -241,6 +345,14 @@ public class TbSubscriptionUtils {
         return ToCoreMsg.newBuilder().setToSubscriptionMgrMsg(msgBuilder.build()).build();
     }
 
+    /**
+     * To alarm deleted proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param alarm alarm
+     * @return {@link ToCoreMsg}
+     */
+
     public static ToCoreMsg toAlarmDeletedProto(TenantId tenantId, EntityId entityId, AlarmInfo alarm) {
         TbAlarmDeleteProto.Builder builder = TbAlarmDeleteProto.newBuilder();
         builder.setEntityType(entityId.getEntityType().name());
@@ -253,6 +365,14 @@ public class TbSubscriptionUtils {
         msgBuilder.setAlarmDelete(builder);
         return ToCoreMsg.newBuilder().setToSubscriptionMgrMsg(msgBuilder.build()).build();
     }
+
+    /**
+     * Notification update to proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param recipientId user identifier
+     * @param notificationUpdate notification update
+     * @return {@link ToCoreMsg}
+     */
 
     public static ToCoreMsg notificationUpdateToProto(TenantId tenantId, UserId recipientId, NotificationUpdate notificationUpdate) {
         TransportProtos.NotificationUpdateProto updateProto = TransportProtos.NotificationUpdateProto.newBuilder()
@@ -269,6 +389,13 @@ public class TbSubscriptionUtils {
                 .build();
     }
 
+    /**
+     * Notification request update to proto.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param notificationRequestUpdate notification request update
+     * @return {@link ToCoreNotificationMsg}
+     */
+
     public static ToCoreNotificationMsg notificationRequestUpdateToProto(TenantId tenantId, NotificationRequestUpdate notificationRequestUpdate) {
         TransportProtos.NotificationRequestUpdateProto updateProto = TransportProtos.NotificationRequestUpdateProto.newBuilder()
                 .setTenantIdMSB(tenantId.getId().getMostSignificantBits())
@@ -281,6 +408,12 @@ public class TbSubscriptionUtils {
                         .build())
                 .build();
     }
+
+    /**
+     * From proto.
+     * @param proto proto
+     * @return {@link List}
+     */
 
     public static List<TsKvEntry> fromProto(TransportProtos.TbSubUpdateProto proto) {
         List<TsKvEntry> result = new ArrayList<>();

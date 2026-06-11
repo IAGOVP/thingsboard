@@ -77,17 +77,36 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
         this.serviceInfoProvider = serviceInfoProvider;
         this.actorContext = actorContext;
     }
+    /**
+     * Set tb rule engine rpc service.
+     *
+     * @param tbRuleEngineRpcService tb rule engine rpc service ({@link Optional})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Autowired(required = false)
     public void setTbRuleEngineRpcService(Optional<TbRuleEngineDeviceRpcService> tbRuleEngineRpcService) {
         this.tbRuleEngineRpcService = tbRuleEngineRpcService;
     }
+    /**
+     * Init executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void initExecutor() {
         scheduler = ThingsBoardExecutors.newSingleThreadScheduledExecutor("tb-core-rpc-scheduler");
         serviceId = serviceInfoProvider.getServiceId();
     }
+    /**
+     * Shutdown executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void shutdownExecutor() {
@@ -95,6 +114,15 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
             scheduler.shutdownNow();
         }
     }
+    /**
+     * Processes rest api rpc request.
+     *
+     * @param request request payload with operation parameters
+     * @param responseConsumer response consumer ({@link Consumer})
+     * @param currentUser current user ({@link SecurityUser})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processRestApiRpcRequest(ToDeviceRpcRequest request, Consumer<FromDeviceRpcResponse> responseConsumer, SecurityUser currentUser) {
@@ -104,6 +132,13 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
         sendRpcRequestToRuleEngine(request, currentUser);
         scheduleToRuleEngineTimeout(request, requestId);
     }
+    /**
+     * Processes rpc response from rule engine.
+     *
+     * @param response response ({@link FromDeviceRpcResponse})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processRpcResponseFromRuleEngine(FromDeviceRpcResponse response) {
@@ -116,6 +151,13 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
             log.trace("[{}] Unknown or stale rpc response received [{}]", requestId, response);
         }
     }
+    /**
+     * Forward rpc request to device actor.
+     *
+     * @param rpcMsg rpc msg ({@link ToDeviceRpcRequestActorMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void forwardRpcRequestToDeviceActor(ToDeviceRpcRequestActorMsg rpcMsg) {
@@ -126,6 +168,13 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
         actorContext.tellWithHighPriority(rpcMsg);
         scheduleToDeviceTimeout(request, requestId);
     }
+    /**
+     * Processes rpc response from device actor.
+     *
+     * @param response response ({@link FromDeviceRpcResponse})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processRpcResponseFromDeviceActor(FromDeviceRpcResponse response) {
@@ -138,6 +187,13 @@ public class DefaultTbCoreDeviceRpcService implements TbCoreDeviceRpcService {
             log.trace("[{}] Unknown or stale rpc response received [{}]", requestId, response);
         }
     }
+    /**
+     * Processes remove rpc.
+     *
+     * @param removeRpcMsg remove rpc msg ({@link RemoveRpcActorMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processRemoveRpc(RemoveRpcActorMsg removeRpcMsg) {

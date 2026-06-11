@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 package org.thingsboard.server.service.security;
-
 /**
- * Created by ashvayka on 17.05.18.
+ * Enumeration of validation result code used in platform security.
  */
 public enum ValidationResultCode {
     OK,

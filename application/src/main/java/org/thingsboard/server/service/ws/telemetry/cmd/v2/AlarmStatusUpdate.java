@@ -20,6 +20,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.thingsboard.server.service.subscription.SubscriptionErrorCode;
+/**
+ * Outbound WebSocket update payload for alarm status.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @ToString
 @Getter
@@ -28,10 +32,23 @@ public class AlarmStatusUpdate extends CmdUpdate {
     @Getter
     private boolean active;
 
+    /**
+     * Constructs {@link AlarmStatusUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param active active
+     */
+
     public AlarmStatusUpdate(int cmdId, boolean active) {
         super(cmdId, SubscriptionErrorCode.NO_ERROR.getCode(), null);
         this.active = active;
     }
+
+    /**
+     * Constructs {@link AlarmStatusUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     */
 
     public AlarmStatusUpdate(int cmdId, int errorCode, String errorMsg) {
         super(cmdId, errorCode, errorMsg);
@@ -45,6 +62,11 @@ public class AlarmStatusUpdate extends CmdUpdate {
         super(cmdId, errorCode, errorMsg);
         this.active = active;
     }
+
+    /**
+     * Returns cmd update type.
+     * @return {@link CmdUpdateType}
+     */
 
     @Override
     public CmdUpdateType getCmdUpdateType() {

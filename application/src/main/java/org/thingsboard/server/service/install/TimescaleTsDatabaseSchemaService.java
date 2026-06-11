@@ -21,6 +21,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.thingsboard.server.dao.util.TimescaleDBTsDao;
 
+    /**
+     * Spring service component for timescale ts database schema service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Service
 @TimescaleDBTsDao
 @Profile("install")
@@ -33,6 +37,12 @@ public class TimescaleTsDatabaseSchemaService extends SqlAbstractDatabaseSchemaS
     public TimescaleTsDatabaseSchemaService() {
         super("schema-timescale.sql", null);
     }
+    /**
+     * Creates database schema.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseSchema() throws Exception {

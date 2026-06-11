@@ -23,6 +23,10 @@ import org.thingsboard.server.dao.pat.ApiKeyDao;
 import org.thingsboard.server.queue.discovery.PartitionService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 
+    /**
+     * Spring service component for api keys clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @Slf4j
 @Service
 @TbCoreComponent
@@ -43,6 +47,12 @@ public class ApiKeysCleanUpService extends AbstractCleanUpService {
             initialDelayString = RANDOM_DELAY_INTERVAL_MS_EXPRESSION,
             fixedDelayString = "${sql.ttl.api_keys.checking_interval_ms:86400000}"
     )
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void cleanUp() {
         long threshold = System.currentTimeMillis();
         if (isSystemTenantPartitionMine()) {

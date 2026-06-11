@@ -31,12 +31,25 @@ import org.thingsboard.server.gen.edge.v1.AiModelUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
 
 import java.util.Optional;
+/**
+ * Processes base ai model edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #aiModelValidator}.
+ */
 
 @Slf4j
 public abstract class BaseAiModelProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<AiModel> aiModelValidator;
+
+    /**
+     * Creates or persists or update ai model.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param aiModelId ai model id (AiModelId)
+     * @param aiModelUpdateMsg ai model update msg (AiModelUpdateMsg)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateAiModel(TenantId tenantId, AiModelId aiModelId, AiModelUpdateMsg aiModelUpdateMsg) {
         boolean isCreated = false;
@@ -79,6 +92,14 @@ public abstract class BaseAiModelProcessor extends BaseEdgeProcessor {
         }
         return Pair.of(isCreated, isNameUpdated);
     }
+
+    /**
+     * Removes ai model.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param aiModelId ai model id (AiModelId)
+     */
 
     protected void deleteAiModel(TenantId tenantId, Edge edge, AiModelId aiModelId) {
         Optional<AiModel> aiModel = edgeCtx.getAiModelService().findAiModelById(tenantId, aiModelId);

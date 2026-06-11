@@ -29,12 +29,23 @@ import org.thingsboard.server.dao.entity.EntityServiceRegistry;
 
 import java.util.UUID;
 
+    /**
+     * Spring service component for entities deletion task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class EntitiesDeletionTaskProcessor extends HousekeeperTaskProcessor<EntitiesDeletionHousekeeperTask> {
 
     private final EntityServiceRegistry entityServiceRegistry;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link EntitiesDeletionHousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(EntitiesDeletionHousekeeperTask task) throws Exception {
@@ -48,6 +59,12 @@ public class EntitiesDeletionTaskProcessor extends HousekeeperTaskProcessor<Enti
         }
         log.debug("[{}] Deleted {} {}s", tenantId, task.getEntities().size(), entityType.getNormalName().toLowerCase());
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

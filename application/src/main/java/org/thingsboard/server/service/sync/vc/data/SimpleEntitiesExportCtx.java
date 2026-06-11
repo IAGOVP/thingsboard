@@ -20,6 +20,12 @@ import org.thingsboard.server.common.data.User;
 import org.thingsboard.server.common.data.sync.ie.EntityExportSettings;
 import org.thingsboard.server.common.data.sync.vc.request.create.SingleEntityVersionCreateRequest;
 
+/**
+
+ * Data object for simple entities export ctx used during Git-based entity version control operations.
+
+ */
+
 public class SimpleEntitiesExportCtx extends EntitiesExportCtx<SingleEntityVersionCreateRequest> {
 
     @Getter

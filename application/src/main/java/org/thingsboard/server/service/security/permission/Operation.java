@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.service.security.permission;
 
+/**
+ * Enumeration of operation used in role-based access control (RBAC).
+ */
+
 public enum Operation {
 
     ALL, CREATE, READ, WRITE, DELETE, ASSIGN_TO_CUSTOMER, UNASSIGN_FROM_CUSTOMER, RPC_CALL,

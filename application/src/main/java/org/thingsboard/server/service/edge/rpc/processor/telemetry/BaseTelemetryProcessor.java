@@ -84,6 +84,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+/**
+ * Processes base telemetry edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #partitionService}, {@link #tsSubService}, {@link #deviceProfileCache}, {@link #assetProfileCache}, {@link #producerProvider}.
+ */
 
 @Slf4j
 public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
@@ -108,12 +112,25 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
 
     private TbQueueProducer<TbProtoQueueMsg<TransportProtos.ToCoreMsg>> tbCoreMsgProducer;
 
+    /**
+     * Initializes resources required by this component.
+     *
+     */
     @PostConstruct
     public void init() {
         tbCoreMsgProducer = producerProvider.getTbCoreMsgProducer();
     }
 
     abstract protected String getMsgSourceKey();
+
+    /**
+     * Processes telemetry msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param entityData entity data (EntityDataProto)
+     * @return {@link List} result
+     * @throws Exception if the operation fails
+     */
 
     public List<ListenableFuture<Void>> processTelemetryMsg(TenantId tenantId, EntityDataProto entityData) throws Exception {
         log.trace("[{}] processTelemetryMsg [{}]", tenantId, entityData);
@@ -223,11 +240,21 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
                     .ruleChainId(defaultQueueAndRuleChain.getValue())
                     .build();
             edgeCtx.getClusterService().pushMsgToRuleEngine(tenantId, tbMsg.getOriginator(), tbMsg, new TbQueueCallback() {
+                /**
+                 * On success.
+                 *
+                 * @param metadata metadata (TbQueueMsgMetadata)
+                 */
                 @Override
                 public void onSuccess(TbQueueMsgMetadata metadata) {
                     futureToSet.set(null);
                 }
 
+                /**
+                 * On failure.
+                 *
+                 * @param t t (Throwable)
+                 */
                 @Override
                 public void onFailure(Throwable t) {
                     log.error("[{}] Can't process post telemetry [{}]", tenantId, msg, t);
@@ -269,6 +296,11 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
         List<AttributeKvEntry> attributes = JsonConverter.convertToAttributes(json, ts);
         ListenableFuture<List<AttributeKvEntry>> future = filterAttributesByTs(tenantId, entityId, scope, attributes);
         Futures.addCallback(future, new FutureCallback<>() {
+            /**
+             * On success.
+             *
+             * @param attributesToSave attributes to save (List<AttributeKvEntry>)
+             */
             @Override
             public void onSuccess(List<AttributeKvEntry> attributesToSave) {
                 JsonObject jsonToSave = filterAttributesFromJson(json, attributesToSave);
@@ -283,11 +315,21 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
                         .ruleChainId(defaultQueueAndRuleChain.getValue())
                         .build();
                 edgeCtx.getClusterService().pushMsgToRuleEngine(tenantId, tbMsg.getOriginator(), tbMsg, new TbQueueCallback() {
+                    /**
+                     * On success.
+                     *
+                     * @param metadata metadata (TbQueueMsgMetadata)
+                     */
                     @Override
                     public void onSuccess(TbQueueMsgMetadata metadata) {
                         futureToSet.set(null);
                     }
 
+                    /**
+                     * On failure.
+                     *
+                     * @param t t (Throwable)
+                     */
                     @Override
                     public void onFailure(Throwable t) {
                         log.error("[{}] Can't process post attributes [{}]", tenantId, msg, t);
@@ -296,6 +338,11 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
                 });
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 log.error("[{}] Can't process post attributes [{}]", tenantId, msg, t);
@@ -317,6 +364,11 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
         List<AttributeKvEntry> attributes = JsonConverter.convertToAttributes(json, ts);
         ListenableFuture<List<AttributeKvEntry>> future = filterAttributesByTs(tenantId, entityId, scope, attributes);
         Futures.addCallback(future, new FutureCallback<>() {
+            /**
+             * On success.
+             *
+             * @param attributesToSave attributes to save (List<AttributeKvEntry>)
+             */
             @Override
             public void onSuccess(List<AttributeKvEntry> attributesToSave) {
                 JsonObject jsonToSave = filterAttributesFromJson(json, attributesToSave);
@@ -326,6 +378,11 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
                         .scope(scope)
                         .entries(attributesToSave)
                         .callback(new FutureCallback<>() {
+                            /**
+                             * On success.
+                             *
+                             * @param tmp tmp (@Nullable Void)
+                             */
                             @Override
                             public void onSuccess(@Nullable Void tmp) {
                                 var defaultQueueAndRuleChain = getDefaultQueueNameAndRuleChainId(tenantId, entityId);
@@ -339,11 +396,21 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
                                         .ruleChainId(defaultQueueAndRuleChain.getValue())
                                         .build();
                                 edgeCtx.getClusterService().pushMsgToRuleEngine(tenantId, tbMsg.getOriginator(), tbMsg, new TbQueueCallback() {
+                                    /**
+                                     * On success.
+                                     *
+                                     * @param metadata metadata (TbQueueMsgMetadata)
+                                     */
                                     @Override
                                     public void onSuccess(TbQueueMsgMetadata metadata) {
                                         futureToSet.set(null);
                                     }
 
+                                    /**
+                                     * On failure.
+                                     *
+                                     * @param t t (Throwable)
+                                     */
                                     @Override
                                     public void onFailure(Throwable t) {
                                         log.error("[{}] Can't process attributes update [{}]", tenantId, msg, t);
@@ -352,6 +419,11 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
                                 });
                             }
 
+                            /**
+                             * On failure.
+                             *
+                             * @param t t (Throwable)
+                             */
                             @Override
                             public void onFailure(Throwable t) {
                                 log.error("[{}] Can't process attributes update [{}]", tenantId, msg, t);
@@ -361,6 +433,11 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
                         .build());
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 log.error("[{}] Can't process attributes update [{}]", tenantId, msg, t);
@@ -387,11 +464,21 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
                 SettableFuture<Void> futureToSet = SettableFuture.create();
                 edgeCtx.getClusterService().pushMsgToCore(DeviceAttributesEventNotificationMsg.onDelete(
                         tenantId, (DeviceId) entityId, scope, attributeKeys), new TbQueueCallback() {
+                    /**
+                     * On success.
+                     *
+                     * @param metadata metadata (TbQueueMsgMetadata)
+                     */
                     @Override
                     public void onSuccess(TbQueueMsgMetadata metadata) {
                         futureToSet.set(null);
                     }
 
+                    /**
+                     * On failure.
+                     *
+                     * @param t t (Throwable)
+                     */
                     @Override
                     public void onFailure(Throwable t) {
                         log.error("[{}] Can't process attribute delete msg [{}]", tenantId, attributeDeleteMsg, t);
@@ -404,6 +491,17 @@ public abstract class BaseTelemetryProcessor extends BaseEdgeProcessor {
             }
         }, dbCallbackExecutorService);
     }
+
+    /**
+     * Converts telemetry event to entity data proto.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param entityType entity type (EntityType)
+     * @param entityUUID entity uuid (UUID)
+     * @param actionType action type (EdgeEventActionType)
+     * @param body body (JsonNode)
+     * @return {@link EntityDataProto} result
+     */
 
     public EntityDataProto convertTelemetryEventToEntityDataProto(TenantId tenantId,
                                                                   EntityType entityType,

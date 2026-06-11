@@ -34,6 +34,10 @@ import org.thingsboard.server.common.msg.TbMsgMetaData;
 import org.thingsboard.server.dao.rpc.RpcService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 
+    /**
+     * Spring service component for tb rpc service (device RPC orchestration between REST, rule engine, and transport).
+     */
+
 @TbCoreComponent
 @Service
 @RequiredArgsConstructor
@@ -41,12 +45,30 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 public class TbRpcService {
     private final RpcService rpcService;
     private final TbClusterService tbClusterService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param rpc rpc ({@link Rpc})
+     * @return {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Rpc save(TenantId tenantId, Rpc rpc) {
         Rpc saved = rpcService.save(rpc);
         pushRpcMsgToRuleEngine(tenantId, saved);
         return saved;
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param rpcId rpc id ({@link RpcId})
+     * @param newStatus new status ({@link RpcStatus})
+     * @param response response ({@link JsonNode})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void save(TenantId tenantId, RpcId rpcId, RpcStatus newStatus, JsonNode response) {
         Rpc foundRpc = rpcService.findById(tenantId, rpcId);
@@ -71,10 +93,28 @@ public class TbRpcService {
                 .build();
         tbClusterService.pushMsgToRuleEngine(tenantId, rpc.getDeviceId(), msg, null);
     }
+    /**
+     * Finds rpc by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param rpcId rpc id ({@link RpcId})
+     * @return {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Rpc findRpcById(TenantId tenantId, RpcId rpcId) {
         return rpcService.findById(tenantId, rpcId);
     }
+    /**
+     * Finds all by device id and status.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @param rpcStatus rpc status ({@link RpcStatus})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<Rpc> findAllByDeviceIdAndStatus(TenantId tenantId, DeviceId deviceId, RpcStatus rpcStatus, PageLink pageLink) {
         return rpcService.findAllByDeviceIdAndStatus(tenantId, deviceId, rpcStatus, pageLink);

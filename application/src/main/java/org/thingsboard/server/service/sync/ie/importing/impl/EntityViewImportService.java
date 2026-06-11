@@ -30,6 +30,11 @@ import org.thingsboard.server.dao.entityview.EntityViewService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.entityview.TbEntityViewService;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports entity view entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -41,34 +46,88 @@ public class EntityViewImportService extends BaseEntityImportService<EntityViewI
     @Lazy
     @Autowired
     private TbEntityViewService tbEntityViewService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityView entity view ({@link EntityView})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, EntityView entityView, IdProvider idProvider) {
         entityView.setTenantId(tenantId);
         entityView.setCustomerId(idProvider.getInternalId(entityView.getCustomerId()));
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityView entity view ({@link EntityView})
+     * @param old old ({@link EntityView})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected EntityView prepare(EntitiesImportCtx ctx, EntityView entityView, EntityView old, EntityExportData<EntityView> exportData, IdProvider idProvider) {
         entityView.setEntityId(idProvider.getInternalId(entityView.getEntityId()));
         return entityView;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityView entity view ({@link EntityView})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected EntityView saveOrUpdate(EntitiesImportCtx ctx, EntityView entityView, EntityExportData<EntityView> exportData, IdProvider idProvider, CompareResult compareResult) {
         return entityViewService.saveEntityView(entityView);
     }
+    /**
+     * Handles entity saved.
+     *
+     * @param user authenticated user performing the action
+     * @param savedEntityView saved entity view ({@link EntityView})
+     * @param oldEntityView old entity view ({@link EntityView})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     protected void onEntitySaved(User user, EntityView savedEntityView, EntityView oldEntityView) throws ThingsboardException {
         tbEntityViewService.updateEntityViewAttributes(user.getTenantId(), savedEntityView, oldEntityView, user);
         super.onEntitySaved(user, savedEntityView, oldEntityView);
     }
+    /**
+     * Deep copy.
+     *
+     * @param entityView entity view ({@link EntityView})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected EntityView deepCopy(EntityView entityView) {
         return new EntityView(entityView);
     }
+    /**
+     * Cleanup for comparison.
+     *
+     * @param e e ({@link EntityView})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupForComparison(EntityView e) {
@@ -77,6 +136,12 @@ public class EntityViewImportService extends BaseEntityImportService<EntityViewI
             e.setCustomerId(null);
         }
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

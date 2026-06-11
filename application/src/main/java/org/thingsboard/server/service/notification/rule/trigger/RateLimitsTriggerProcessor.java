@@ -30,18 +30,37 @@ import org.thingsboard.server.dao.tenant.TenantService;
 
 import java.util.Optional;
 
+    /**
+     * Spring service component for rate limits trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 @RequiredArgsConstructor
 public class RateLimitsTriggerProcessor implements NotificationRuleTriggerProcessor<RateLimitsTrigger, RateLimitsNotificationRuleTriggerConfig> {
 
     private final TenantService tenantService;
     private final EntityService entityService;
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link RateLimitsTrigger})
+     * @param triggerConfig trigger config ({@link RateLimitsNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(RateLimitsTrigger trigger, RateLimitsNotificationRuleTriggerConfig triggerConfig) {
         return trigger.getLimitLevel() != null && trigger.getApi().getLabel() != null &&
                 CollectionsUtil.emptyOrContains(triggerConfig.getApis(), trigger.getApi());
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link RateLimitsTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(RateLimitsTrigger trigger) {
@@ -62,6 +81,12 @@ public class RateLimitsTriggerProcessor implements NotificationRuleTriggerProces
                 .limitLevelEntityName(limitLevelEntityName)
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

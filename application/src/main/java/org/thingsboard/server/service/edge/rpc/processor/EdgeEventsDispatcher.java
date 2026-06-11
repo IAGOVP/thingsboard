@@ -17,6 +17,10 @@ package org.thingsboard.server.service.edge.rpc.processor;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+/**
+ * Contract for edge events dispatcher in edge downlink/uplink entity synchronization.
+ */
+
 public interface EdgeEventsDispatcher {
 
     ListenableFuture<Boolean> processNewEvents() throws Exception;

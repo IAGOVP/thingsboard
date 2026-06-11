@@ -22,11 +22,23 @@ import org.thingsboard.server.common.data.oauth2.OAuth2MapperConfig;
 import org.thingsboard.server.dao.oauth2.OAuth2User;
 
 import java.util.Map;
+/**
+ * Basic mapper utils for OAuth2 / social login.
+ */
 
 @Slf4j
 public class BasicMapperUtils {
     private static final String START_PLACEHOLDER_PREFIX = "%{";
     private static final String END_PLACEHOLDER_PREFIX = "}";
+
+    /**
+     * Returns oauth2user.
+     *
+     * @param email email (String)
+     * @param attributes attributes (Map<String, Object>)
+     * @param config config (OAuth2MapperConfig)
+     * @return {@link OAuth2User} result
+     */
 
     public static OAuth2User getOAuth2User(String email, Map<String, Object> attributes, OAuth2MapperConfig config) {
         OAuth2User oauth2User = new OAuth2User();
@@ -52,6 +64,15 @@ public class BasicMapperUtils {
         return oauth2User;
     }
 
+    /**
+     * Returns tenant name.
+     *
+     * @param email email (String)
+     * @param attributes attributes (Map<String, Object>)
+     * @param config config (OAuth2MapperConfig)
+     * @return {@link String} result
+     */
+
     public static String getTenantName(String email, Map<String, Object> attributes, OAuth2MapperConfig config) {
         switch (config.getBasic().getTenantNameStrategy()) {
             case EMAIL:
@@ -65,6 +86,14 @@ public class BasicMapperUtils {
                 throw new RuntimeException("Tenant Name Strategy with type " + config.getBasic().getTenantNameStrategy() + " is not supported!");
         }
     }
+
+    /**
+     * Returns string attribute by key.
+     *
+     * @param attributes attributes (Map<String, Object>)
+     * @param key key (String)
+     * @return {@link String} result
+     */
 
     public static String getStringAttributeByKey(Map<String, Object> attributes, String key) {
         String result = null;

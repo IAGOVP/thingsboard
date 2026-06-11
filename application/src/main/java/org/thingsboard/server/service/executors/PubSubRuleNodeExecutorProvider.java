@@ -26,6 +26,10 @@ import org.thingsboard.server.queue.util.TbRuleEngineComponent;
 
 import java.util.concurrent.ScheduledExecutorService;
 
+    /**
+     * Spring service component for pub sub rule node executor provider (shared thread-pool executors for async service work).
+     */
+
 @Lazy
 @TbRuleEngineComponent
 @Component
@@ -39,6 +43,12 @@ public class PubSubRuleNodeExecutorProvider implements ExecutorProvider {
     */
     private static final int THREADS_PER_CPU = 5;
     private ScheduledExecutorService executor;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
@@ -47,6 +57,12 @@ public class PubSubRuleNodeExecutorProvider implements ExecutorProvider {
         }
         executor = ThingsBoardExecutors.newScheduledThreadPool(threadPoolSize, "pubsub-rule-nodes");
     }
+    /**
+     * Returns executor.
+     *
+     * @return {@link ScheduledExecutorService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ScheduledExecutorService getExecutor() {

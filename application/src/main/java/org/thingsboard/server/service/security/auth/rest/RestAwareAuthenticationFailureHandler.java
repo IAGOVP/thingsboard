@@ -22,6 +22,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.exception.ThingsboardErrorResponseHandler;
+/**
+ * Handles failure responses for username/password REST login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component(value = "defaultAuthenticationFailureHandler")
 public class RestAwareAuthenticationFailureHandler implements AuthenticationFailureHandler {
@@ -33,6 +38,13 @@ public class RestAwareAuthenticationFailureHandler implements AuthenticationFail
         this.errorResponseHandler = errorResponseHandler;
     }
 
+    /**
+     * On authentication failure.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param e e (AuthenticationException)
+     */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) {
         errorResponseHandler.handle(e, response);

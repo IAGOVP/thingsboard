@@ -56,6 +56,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+    /**
+     * Spring service component for entity action service (entity lifecycle actions, audit, and rule-engine events).
+     */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -63,6 +67,19 @@ public class EntityActionService {
     private final TbClusterService tbClusterService;
     private final AuditLogService auditLogService;
     private final NotificationRuleProcessor notificationRuleProcessor;
+    /**
+     * Pushes entity action to rule engine.
+     *
+     * @param entityId target entity identifier
+     * @param entity entity ({@link HasName})
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param actionType action type ({@link ActionType})
+     * @param user authenticated user performing the action
+     * @param additionalInfo additional info
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void pushEntityActionToRuleEngine(EntityId entityId, HasName entity, TenantId tenantId, CustomerId customerId,
                                              ActionType actionType, User user, Object... additionalInfo) {
@@ -235,6 +252,19 @@ public class EntityActionService {
                 break;
         }
     }
+    /**
+     * Log entity action.
+     *
+     * @param user authenticated user performing the action
+     * @param entityId target entity identifier
+     * @param entity entity ({@link E})
+     * @param customerId customer id ({@link CustomerId})
+     * @param actionType action type ({@link ActionType})
+     * @param e e ({@link Exception})
+     * @param additionalInfo additional info
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public <E extends HasName, I extends EntityId> void logEntityAction(User user, @NotNull I entityId, E entity, CustomerId customerId,
                                                                         ActionType actionType, Exception e, Object... additionalInfo) {

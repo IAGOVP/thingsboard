@@ -17,15 +17,35 @@ package org.thingsboard.server.service.cf.ctx.state.aggregation.function;
 
 import java.util.Optional;
 
+/**
+
+ * Argument or aggregation entry for calculated-field state (base agg entry).
+
+ */
+
 public abstract class BaseAggEntry implements AggEntry {
 
     private boolean hasResult = false;
+    /**
+     * Updates the requested data.
+     *
+     * @param value value ({@link Object})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void update(Object value) {
         doUpdate(extractDoubleValue(value));
         hasResult = true;
     }
+    /**
+     * Result.
+     *
+     * @param precision precision ({@link Integer})
+     * @return optional {@link Object}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<Object> result(Integer precision) {
@@ -36,10 +56,31 @@ public abstract class BaseAggEntry implements AggEntry {
             return Optional.empty();
         }
     }
+    /**
+     * Do update.
+     *
+     * @param value value
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void doUpdate(double value);
+    /**
+     * Prepare result.
+     *
+     * @param precision precision ({@link Integer})
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract Object prepareResult(Integer precision);
+    /**
+     * Extract double value.
+     *
+     * @param value value ({@link Object})
+     * @return the double result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected double extractDoubleValue(Object value) {
         try {

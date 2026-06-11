@@ -76,6 +76,17 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHO
 import static org.thingsboard.server.controller.ControllerConstants.VC_REQUEST_ID_PARAM_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.VERSION_ID_PARAM_DESCRIPTION;
 
+/**
+ * REST API for Git-based entity version control: create versions, list/load versions, diff, and branch management.
+ *
+ * <p>Base path: {@code /api/entities/vc}.
+ *
+ * <p>Authorization: class-level {@code TENANT_ADMIN}; individual operations also check {@code VERSION_CONTROL} resource permissions.
+ *
+ * <p>Uses {@link org.thingsboard.server.service.sync.vc.EntitiesVersionControlService}.
+ */
+
+
 @RestController
 @TbCoreComponent
 @RequestMapping("/api/entities/vc")
@@ -88,6 +99,7 @@ public class EntitiesVersionControlController extends BaseController {
     @Value("${queue.vc.request-timeout:180000}")
     private int vcRequestTimeout;
 
+    /** POST {@code /api/entities/vc/version} — Create entity version(s) in remote repo. Requires {@code TENANT_ADMIN}. @return deferred request UUID. @throws Exception on failure. */
     @ApiOperation(value = "Save entities version (saveEntitiesVersion)", notes = "" +
             "Creates a new version of entities (or a single entity) by request.\n" +
             "Supported entity types: CUSTOMER, ASSET, RULE_CHAIN, DASHBOARD, DEVICE_PROFILE, DEVICE, ENTITY_VIEW, WIDGETS_BUNDLE." + NEW_LINE +
@@ -166,6 +178,7 @@ public class EntitiesVersionControlController extends BaseController {
         return wrapFuture(versionControlService.saveEntitiesVersion(user, request));
     }
 
+    /** GET {@code /api/entities/vc/version/{requestId}/status} — Version create operation status. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "Get version create request status (getVersionCreateRequestStatus)", notes = "" +
             "Returns the status of previously made version create request. " + NEW_LINE +
             "This status contains following properties:\n" +
@@ -199,6 +212,7 @@ public class EntitiesVersionControlController extends BaseController {
         return versionControlService.getVersionCreateStatus(getCurrentUser(), requestId);
     }
 
+    /** GET {@code /api/entities/vc/version/{entityType}/{externalEntityUuid}} — List versions for one entity. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "List entity versions (listEntityVersions)", notes = "" +
             "Returns list of versions for a specific entity in a concrete branch. \n" +
             "You need to specify external id of an entity to list versions for. This is `externalId` property of an entity, " +
@@ -258,6 +272,7 @@ public class EntitiesVersionControlController extends BaseController {
         return wrapFuture(versionControlService.listEntityVersions(getTenantId(), branch, externalEntityId, pageLink));
     }
 
+    /** GET {@code /api/entities/vc/version/{entityType}} — List versions for entity type in branch. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "List entity type versions (listEntityTypeVersions)", notes = "" +
             "Returns list of versions of an entity type in a branch. This is a collected list of versions that were created " +
             "for entities of this type in a remote branch. \n" +
@@ -284,6 +299,7 @@ public class EntitiesVersionControlController extends BaseController {
         return wrapFuture(versionControlService.listEntityTypeVersions(getTenantId(), branch, entityType, pageLink));
     }
 
+    /** GET {@code /api/entities/vc/version} — List all versions in branch. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "List all versions (listVersions)", notes = "" +
             "Lists all available versions in a branch for all entity types. \n" +
             "If specified branch does not exist - empty page data will be returned. " +
@@ -308,6 +324,7 @@ public class EntitiesVersionControlController extends BaseController {
     }
 
 
+    /** GET {@code /api/entities/vc/entity/{entityType}/{versionId}} — Entities of type at version. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "List entities at version (listEntitiesAtVersion)", notes = "" +
             "Returns a list of remote entities of a specific entity type that are available at a concrete version. \n" +
             "Each entity item in the result has `externalId` property. " +
@@ -322,6 +339,7 @@ public class EntitiesVersionControlController extends BaseController {
         return wrapFuture(versionControlService.listEntitiesAtVersion(getTenantId(), versionId, entityType));
     }
 
+    /** GET {@code /api/entities/vc/entity/{versionId}} — All entities at version. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "List all entities at version (listAllEntitiesAtVersion)", notes = "" +
             "Returns a list of all remote entities available in a specific version. " +
             "Response type is the same as for listAllEntitiesAtVersion API method. \n" +
@@ -334,6 +352,7 @@ public class EntitiesVersionControlController extends BaseController {
         return wrapFuture(versionControlService.listAllEntitiesAtVersion(getTenantId(), versionId));
     }
 
+    /** GET {@code /api/entities/vc/info/{versionId}/{entityType}/{externalEntityUuid}} — Remote entity data flags. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "Get entity data info (getEntityDataInfo)", notes = "" +
             "Retrieves short info about the remote entity by external id at a concrete version. \n" +
             "Returned entity data info contains following properties: " +
@@ -352,6 +371,7 @@ public class EntitiesVersionControlController extends BaseController {
         return wrapFuture(versionControlService.getEntityDataInfo(getCurrentUser(), entityId, versionId));
     }
 
+    /** GET {@code /api/entities/vc/diff/{entityType}/{internalEntityUuid}} — Diff local vs versioned entity. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "Compare entity data to version (compareEntityDataToVersion)", notes = "" +
             "Returns an object with current entity data and the one at a specific version. " +
             "Entity data structure is the same as stored in a repository. " +
@@ -368,6 +388,7 @@ public class EntitiesVersionControlController extends BaseController {
         return wrapFuture(versionControlService.compareEntityDataToVersion(getCurrentUser(), entityId, versionId));
     }
 
+    /** POST {@code /api/entities/vc/entity} — Restore entities from version. Requires {@code TENANT_ADMIN}. @return load request UUID. @throws Exception on failure. */
     @ApiOperation(value = "Load entities version (loadEntitiesVersion)", notes = "" +
             "Loads specific version of remote entities (or single entity) by request. " +
             "Supported entity types: CUSTOMER, ASSET, RULE_CHAIN, DASHBOARD, DEVICE_PROFILE, DEVICE, ENTITY_VIEW, WIDGETS_BUNDLE." + NEW_LINE +
@@ -434,6 +455,7 @@ public class EntitiesVersionControlController extends BaseController {
         return versionControlService.loadEntitiesVersion(user, request);
     }
 
+    /** GET {@code /api/entities/vc/entity/{requestId}/status} — Version load operation status. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "Get version load request status (getVersionLoadRequestStatus)", notes = "" +
             "Returns the status of previously made version load request. " +
             "The structure contains following parameters:\n" +
@@ -477,6 +499,7 @@ public class EntitiesVersionControlController extends BaseController {
     }
 
 
+    /** GET {@code /api/entities/vc/branches} — List remote repository branches. Requires {@code TENANT_ADMIN}. @throws Exception on failure. */
     @ApiOperation(value = "List branches (listBranches)", notes = "" +
             "Lists branches available in the remote repository. \n\n" +
             "Response example: \n" +
@@ -519,6 +542,12 @@ public class EntitiesVersionControlController extends BaseController {
         }, MoreExecutors.directExecutor()));
     }
 
+    /**
+     * Wraps a listenable future in a deferred result using the configured VC request timeout.
+     * @param future async operation future
+     * @param <T> result type
+     * @return deferred result completed when the future finishes
+     */
     @Override
     protected <T> DeferredResult<T> wrapFuture(ListenableFuture<T> future) {
         return wrapFuture(future, vcRequestTimeout);

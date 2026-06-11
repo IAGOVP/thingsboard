@@ -40,6 +40,10 @@ import org.thingsboard.server.service.sms.AbstractSmsSender;
 import java.io.IOException;
 import java.util.Optional;
 
+    /**
+     * Smpp sms sender (SMS provider abstraction and message sending).
+     */
+
 @Slf4j
 public class SmppSmsSender extends AbstractSmsSender {
     protected SmppSmsProviderConfiguration config;
@@ -70,6 +74,14 @@ public class SmppSmsSender extends AbstractSmsSender {
     }
 
     private SmppSmsSender() {} // for testing purposes
+    /**
+     * Send sms.
+     *
+     * @param numberTo number to ({@link String})
+     * @param message message ({@link String})
+     * @return the int result
+     * @throws SmsException if sms exception is thrown during processing
+     */
 
 
     @Override
@@ -109,6 +121,12 @@ public class SmppSmsSender extends AbstractSmsSender {
             smppSession = initSmppSession();
         }
     }
+    /**
+     * Init smpp session.
+     *
+     * @return {@link Session}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Session initSmppSession() {
         try {
@@ -172,6 +190,12 @@ public class SmppSmsSender extends AbstractSmsSender {
         }
         return number;
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {

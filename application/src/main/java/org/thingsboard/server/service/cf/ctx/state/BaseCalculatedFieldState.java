@@ -36,6 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+/**
+ * Runtime state for base calculated field calculated fields.
+ */
 
 @Getter
 public abstract class BaseCalculatedFieldState implements CalculatedFieldState, Closeable {
@@ -57,6 +60,14 @@ public abstract class BaseCalculatedFieldState implements CalculatedFieldState, 
     public BaseCalculatedFieldState(EntityId entityId) {
         this.entityId = entityId;
     }
+    /**
+     * Set ctx.
+     *
+     * @param ctx calculated-field execution context
+     * @param actorCtx actor ctx ({@link TbActorRef})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setCtx(CalculatedFieldCtx ctx, TbActorRef actorCtx) {
@@ -65,10 +76,25 @@ public abstract class BaseCalculatedFieldState implements CalculatedFieldState, 
         this.requiredArguments = ctx.getArgNames();
         this.readinessStatus = checkReadiness();
     }
+    /**
+     * Init.
+     *
+     * @param restored restored
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(boolean restored) {
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param argumentValues argument values ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Map<String, ArgumentEntry> update(Map<String, ArgumentEntry> argumentValues, CalculatedFieldCtx ctx) {
@@ -111,10 +137,25 @@ public abstract class BaseCalculatedFieldState implements CalculatedFieldState, 
         readinessStatus = checkReadiness();
         return updatedArguments;
     }
+    /**
+     * Updates entry.
+     *
+     * @param existingEntry existing entry ({@link ArgumentEntry})
+     * @param newEntry new entry ({@link ArgumentEntry})
+     * @param ctx calculated-field execution context
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean updateEntry(ArgumentEntry existingEntry, ArgumentEntry newEntry, CalculatedFieldCtx ctx) {
         return existingEntry.updateEntry(newEntry, ctx);
     }
+    /**
+     * Reset.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reset() { // must reset everything dependent on arguments
@@ -122,11 +163,25 @@ public abstract class BaseCalculatedFieldState implements CalculatedFieldState, 
         arguments.clear();
         sizeExceedsLimit = false;
     }
+    /**
+     * Is ready.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isReady() {
         return readinessStatus.ready();
     }
+    /**
+     * Checks state size.
+     *
+     * @param ctxId ctx id ({@link CalculatedFieldEntityCtxId})
+     * @param maxStateSize max state size
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void checkStateSize(CalculatedFieldEntityCtxId ctxId, long maxStateSize) {
@@ -135,13 +190,34 @@ public abstract class BaseCalculatedFieldState implements CalculatedFieldState, 
             sizeExceedsLimit = true;
         }
     }
+    /**
+     * Close.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void close() {
     }
+    /**
+     * Validates new entry.
+     *
+     * @param key key ({@link String})
+     * @param newEntry new entry ({@link ArgumentEntry})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void validateNewEntry(String key, ArgumentEntry newEntry) {
     }
+    /**
+     * To result node.
+     *
+     * @param valuesNode values node ({@link ObjectNode})
+     * @return {@link ObjectNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ObjectNode toResultNode(ObjectNode valuesNode) {
         if (ctx.getOutput().getType() == OutputType.ATTRIBUTES || !ctx.isUseLatestTs()) {
@@ -156,6 +232,12 @@ public abstract class BaseCalculatedFieldState implements CalculatedFieldState, 
         resultNode.set("values", valuesNode);
         return resultNode;
     }
+    /**
+     * Returns latest timestamp.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getLatestTimestamp() {
         long latestTs = DEFAULT_LAST_UPDATE_TS;
@@ -181,6 +263,12 @@ public abstract class BaseCalculatedFieldState implements CalculatedFieldState, 
 
         return latestTs;
     }
+    /**
+     * Checks readiness.
+     *
+     * @return {@link ReadinessStatus}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ReadinessStatus checkReadiness() {
         if (arguments == null) {
@@ -198,6 +286,12 @@ public abstract class BaseCalculatedFieldState implements CalculatedFieldState, 
         }
         return ReadinessStatus.from(emptyArguments);
     }
+    /**
+     * Returns arguments json.
+     *
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JsonNode getArgumentsJson() {

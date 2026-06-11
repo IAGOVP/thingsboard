@@ -20,7 +20,28 @@ import org.thingsboard.server.common.data.User;
 import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.service.entitiy.SimpleTbEntityService;
 
+/**
+
+ * Application-layer service API for device profile entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbDeviceProfileService extends SimpleTbEntityService<DeviceProfile> {
+/**
+ * Set default device profile.
+ *
+ * @param deviceProfile device profile ({@link DeviceProfile})
+ * @param previousDefaultDeviceProfile previous default device profile ({@link DeviceProfile})
+ * @param user authenticated user performing the action
+ * @return {@link DeviceProfile}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     DeviceProfile setDefaultDeviceProfile(DeviceProfile deviceProfile, DeviceProfile previousDefaultDeviceProfile, User user) throws ThingsboardException;
 }

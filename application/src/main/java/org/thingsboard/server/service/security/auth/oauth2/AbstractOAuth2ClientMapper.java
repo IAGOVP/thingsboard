@@ -53,6 +53,10 @@ import org.thingsboard.server.service.security.model.UserPrincipal;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+/**
+ * Base class for oauth2client mapper implementations in OAuth2 / social login.
+ * <p><b>Key dependencies:</b> {@link #userService}, {@link #passwordEncoder}, {@link #tenantService}, {@link #tbTenantService}, {@link #customerService}, {@link #dashboardService}, {@link #tbUserService}, {@link #tenantProfileCache}.
+ */
 
 @Slf4j
 public abstract class AbstractOAuth2ClientMapper {
@@ -88,6 +92,14 @@ public abstract class AbstractOAuth2ClientMapper {
     private boolean edgesEnabled;
 
     private final Lock userCreationLock = new ReentrantLock();
+
+    /**
+     * Returns or create security user from oauth2user.
+     *
+     * @param oauth2User oauth2user (OAuth2User)
+     * @param oAuth2Client o auth2client (OAuth2Client)
+     * @return {@link SecurityUser} result
+     */
 
     protected SecurityUser getOrCreateSecurityUserFromOAuth2User(OAuth2User oauth2User, OAuth2Client oAuth2Client) {
 

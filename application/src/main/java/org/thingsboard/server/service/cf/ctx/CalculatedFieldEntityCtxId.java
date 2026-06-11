@@ -19,7 +19,21 @@ import org.thingsboard.server.common.data.id.CalculatedFieldId;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+
+ * Calculated field entity ctx id (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+
+ */
+
 public record CalculatedFieldEntityCtxId(TenantId tenantId, CalculatedFieldId cfId, EntityId entityId) {
+    
+    /**
+     * To key.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     public String toKey() {
         return cfId + "_" + entityId;

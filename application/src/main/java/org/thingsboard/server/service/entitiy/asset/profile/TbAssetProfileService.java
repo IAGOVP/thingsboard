@@ -20,7 +20,28 @@ import org.thingsboard.server.common.data.asset.AssetProfile;
 import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.service.entitiy.SimpleTbEntityService;
 
+/**
+
+ * Application-layer service API for asset profile entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbAssetProfileService extends SimpleTbEntityService<AssetProfile> {
+/**
+ * Set default asset profile.
+ *
+ * @param assetProfile asset profile ({@link AssetProfile})
+ * @param previousDefaultAssetProfile previous default asset profile ({@link AssetProfile})
+ * @param user authenticated user performing the action
+ * @return {@link AssetProfile}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     AssetProfile setDefaultAssetProfile(AssetProfile assetProfile, AssetProfile previousDefaultAssetProfile, User user) throws ThingsboardException;
 }

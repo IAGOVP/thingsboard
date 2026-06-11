@@ -38,6 +38,12 @@ import org.thingsboard.server.common.stats.TbApiUsageReportClient;
 import org.thingsboard.server.dao.settings.AdminSettingsService;
 import org.thingsboard.server.service.apiusage.TbApiUsageStateService;
 
+    /**
+     * Default Spring implementation for sms service (SMS provider abstraction and message sending).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -61,6 +67,12 @@ public class DefaultSmsService implements SmsService {
             this.smsSender.destroy();
         }
     }
+    /**
+     * Updates sms configuration.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateSmsConfiguration() {
@@ -79,6 +91,14 @@ public class DefaultSmsService implements SmsService {
             }
         }
     }
+    /**
+     * Send sms.
+     *
+     * @param numberTo number to ({@link String})
+     * @param message message ({@link String})
+     * @return the int result
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     protected int sendSms(String numberTo, String message) throws ThingsboardException {
         if (this.smsSender == null) {
@@ -86,6 +106,16 @@ public class DefaultSmsService implements SmsService {
         }
         return this.sendSms(this.smsSender, numberTo, message);
     }
+    /**
+     * Send sms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param numbersTo numbers to
+     * @param message message ({@link String})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendSms(TenantId tenantId, CustomerId customerId, String[] numbersTo, String message) throws ThingsboardException {
@@ -104,6 +134,13 @@ public class DefaultSmsService implements SmsService {
             throw new RuntimeException("SMS sending is disabled due to API limits!");
         }
     }
+    /**
+     * Send test sms.
+     *
+     * @param testSmsRequest test sms request ({@link TestSmsRequest})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void sendTestSms(TestSmsRequest testSmsRequest) throws ThingsboardException {
@@ -116,6 +153,13 @@ public class DefaultSmsService implements SmsService {
         this.sendSms(testSmsSender, testSmsRequest.getNumberTo(), testSmsRequest.getMessage());
         testSmsSender.destroy();
     }
+    /**
+     * Is configured.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the boolean result
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public boolean isConfigured(TenantId tenantId) {

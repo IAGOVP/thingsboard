@@ -15,4 +15,10 @@
  */
 package org.thingsboard.server.service.transport;
 
+/**
+
+ * Enumerates basic credentials validation result values used in tb-core to transport microservice messaging.
+
+ */
+
 enum BasicCredentialsValidationResult {HASH_MISMATCH, PASSWORD_MISMATCH, VALID}

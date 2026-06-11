@@ -68,6 +68,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+    /**
+     * Spring service component for device provision service impl (device claim and provisioning helpers).
+     */
+
 
 @Service
 @Slf4j
@@ -95,6 +99,14 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
         this.auditLogService = auditLogService;
         this.partitionService = partitionService;
     }
+    /**
+     * Provision device via x509chain.
+     *
+     * @param targetProfile target profile ({@link DeviceProfile})
+     * @param provisionRequest provision request ({@link ProvisionRequest})
+     * @return {@link ProvisionResponse}
+     * @throws ProvisionFailedException if provision failed exception is thrown during processing
+     */
 
     @Override
     public ProvisionResponse provisionDeviceViaX509Chain(DeviceProfile targetProfile, ProvisionRequest provisionRequest) throws ProvisionFailedException {
@@ -128,6 +140,13 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
             throw new ProvisionFailedException(ProvisionResponseStatus.FAILURE.name());
         }
     }
+    /**
+     * Provision device.
+     *
+     * @param provisionRequest provision request ({@link ProvisionRequest})
+     * @return {@link ProvisionResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ProvisionResponse provisionDevice(ProvisionRequest provisionRequest) {
@@ -286,6 +305,15 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
             log.warn("[{}] Failed to push device action to rule engine: {}", device.getId(), TbMsgType.ENTITY_CREATED.name(), e);
         }
     }
+    /**
+     * Send to rule engine.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void sendToRuleEngine(TenantId tenantId, TbMsg tbMsg, TbQueueCallback callback) {
         TopicPartitionInfo tpi = partitionService.resolve(ServiceType.TB_RULE_ENGINE, tenantId, tbMsg.getOriginator());
@@ -315,6 +343,15 @@ public class DeviceProvisionServiceImpl implements DeviceProvisionService {
             return null;
         }
     }
+    /**
+     * Extract device name from cnby reg ex.
+     *
+     * @param profile profile ({@link DeviceProfile})
+     * @param commonName common name ({@link String})
+     * @param regex regex ({@link String})
+     * @return {@link String}
+     * @throws ProvisionFailedException if provision failed exception is thrown during processing
+     */
 
     public String extractDeviceNameFromCNByRegEx(DeviceProfile profile, String commonName, String regex) throws ProvisionFailedException {
         try {

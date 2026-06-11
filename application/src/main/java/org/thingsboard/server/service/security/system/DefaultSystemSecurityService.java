@@ -65,6 +65,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+/**
+ * Service implementation for default system security in system-level security (password reset, activation).
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @Slf4j
@@ -78,6 +83,15 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
     private final AuditLogService auditLogService;
     private final SecuritySettingsService securitySettingsService;
 
+    /**
+     * Validates user credentials and invokes the callback with the result.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param userCredentials user credentials (UserCredentials)
+     * @param username username (String)
+     * @param password password (String)
+     * @throws AuthenticationException if the operation fails
+     */
     @Override
     public void validateUserCredentials(TenantId tenantId, UserCredentials userCredentials, String username, String password) throws AuthenticationException {
         if (!userCredentials.isEnabled()) {
@@ -109,6 +123,13 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         }
     }
 
+    /**
+     * Validates two fa verification and invokes the callback with the result.
+     *
+     * @param securityUser security user (SecurityUser)
+     * @param verificationSuccess verification success (boolean)
+     * @param twoFaSettings two fa settings (PlatformTwoFaSettings)
+     */
     @Override
     public void validateTwoFaVerification(SecurityUser securityUser, boolean verificationSuccess, PlatformTwoFaSettings twoFaSettings) {
         TenantId tenantId = securityUser.getTenantId();
@@ -143,6 +164,13 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         }
     }
 
+    /**
+     * Validates password and invokes the callback with the result.
+     *
+     * @param password password (String)
+     * @param userCredentials user credentials (UserCredentials)
+     * @throws DataValidationException if the operation fails
+     */
     @Override
     public void validatePassword(String password, UserCredentials userCredentials) throws DataValidationException {
         SecuritySettings securitySettings = securitySettingsService.getSecuritySettings();
@@ -165,6 +193,12 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         }
     }
 
+    /**
+     * Validates password by policy and invokes the callback with the result.
+     *
+     * @param password password (String)
+     * @param passwordPolicy password policy (UserPasswordPolicy)
+     */
     @Override
     public void validatePasswordByPolicy(String password, UserPasswordPolicy passwordPolicy) {
         List<Rule> passwordRules = new ArrayList<>();
@@ -197,7 +231,14 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
             throw new DataValidationException(message);
         }
     }
-
+    /**
+     * Returns base url.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param httpServletRequest http servlet request (HttpServletRequest)
+     * @return {@link String} result
+     */
     @Override
     public String getBaseUrl(TenantId tenantId, CustomerId customerId, HttpServletRequest httpServletRequest) {
         String baseUrl = null;
@@ -216,11 +257,28 @@ public class DefaultSystemSecurityService implements SystemSecurityService {
         return baseUrl;
     }
 
+    /**
+     * Log login action.
+     *
+     * @param user user (User)
+     * @param authenticationDetails authentication details (Object)
+     * @param actionType action type (ActionType)
+     * @param e e (Exception)
+     */
     @Override
     public void logLoginAction(User user, Object authenticationDetails, ActionType actionType, Exception e) {
         logLoginAction(user, authenticationDetails, actionType, null, e);
     }
 
+    /**
+     * Log login action.
+     *
+     * @param user user (User)
+     * @param authenticationDetails authentication details (Object)
+     * @param actionType action type (ActionType)
+     * @param provider provider (String)
+     * @param e e (Exception)
+     */
     @Override
     public void logLoginAction(User user, Object authenticationDetails, ActionType actionType, String provider, Exception e) {
         String clientAddress = "Unknown";

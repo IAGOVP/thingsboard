@@ -22,6 +22,9 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
+/**
+ * Git repository integration for pending request.
+ */
 
 @Getter
 public class PendingGitRequest<T> {
@@ -39,6 +42,12 @@ public class PendingGitRequest<T> {
         this.tenantId = tenantId;
         this.future = SettableFuture.create();
     }
+    /**
+     * Requires settings.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean requiresSettings() {
         return true;

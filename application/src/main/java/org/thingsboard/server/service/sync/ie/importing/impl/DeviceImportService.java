@@ -26,6 +26,11 @@ import org.thingsboard.server.dao.device.DeviceCredentialsService;
 import org.thingsboard.server.dao.device.DeviceService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports device entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -34,12 +39,32 @@ public class DeviceImportService extends BaseEntityImportService<DeviceId, Devic
 
     private final DeviceService deviceService;
     private final DeviceCredentialsService credentialsService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param device device ({@link Device})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, Device device, IdProvider idProvider) {
         device.setTenantId(tenantId);
         device.setCustomerId(idProvider.getInternalId(device.getCustomerId()));
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param device device ({@link Device})
+     * @param old old ({@link Device})
+     * @param exportData export data ({@link DeviceExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Device prepare(EntitiesImportCtx ctx, Device device, Device old, DeviceExportData exportData, IdProvider idProvider) {
@@ -48,11 +73,25 @@ public class DeviceImportService extends BaseEntityImportService<DeviceId, Devic
         device.setSoftwareId(idProvider.getInternalId(device.getSoftwareId()));
         return device;
     }
+    /**
+     * Deep copy.
+     *
+     * @param d d ({@link Device})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Device deepCopy(Device d) {
         return new Device(d);
     }
+    /**
+     * Cleanup for comparison.
+     *
+     * @param e e ({@link Device})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupForComparison(Device e) {
@@ -61,6 +100,17 @@ public class DeviceImportService extends BaseEntityImportService<DeviceId, Devic
             e.setCustomerId(null);
         }
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param device device ({@link Device})
+     * @param exportData export data ({@link DeviceExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Device saveOrUpdate(EntitiesImportCtx ctx, Device device, DeviceExportData exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -77,6 +127,16 @@ public class DeviceImportService extends BaseEntityImportService<DeviceId, Devic
         }
         return savedDevice;
     }
+    /**
+     * Updates related entities if unmodified.
+     *
+     * @param ctx calculated-field execution context
+     * @param prepared prepared ({@link Device})
+     * @param exportData export data ({@link DeviceExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean updateRelatedEntitiesIfUnmodified(EntitiesImportCtx ctx, Device prepared, DeviceExportData exportData, IdProvider idProvider) {
@@ -93,6 +153,12 @@ public class DeviceImportService extends BaseEntityImportService<DeviceId, Devic
         }
         return updated;
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

@@ -21,6 +21,12 @@ import org.thingsboard.server.common.data.notification.rule.trigger.config.Notif
 
 import java.util.List;
 
+/**
+
+ * notification rules cache contract for notification delivery, templates, targets, and rule-trigger processing.
+
+ */
+
 public interface NotificationRulesCache {
 
     List<NotificationRule> getEnabled(TenantId tenantId, NotificationRuleTriggerType triggerType);

@@ -17,6 +17,9 @@ package org.thingsboard.server.service.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+/**
+ * Validation result for platform security.
+ */
 
 @Data
 @AllArgsConstructor
@@ -26,21 +29,56 @@ public class ValidationResult<V> {
     private final String message;
     private final V v;
 
+    /**
+     * Ok.
+     *
+     * @param v v (V)
+     * @return {@link ValidationResult} result
+     */
+
     public static <V> ValidationResult<V> ok(V v) {
         return new ValidationResult<>(ValidationResultCode.OK, "Ok", v);
     }
+
+    /**
+     * Access denied.
+     *
+     * @param message message (String)
+     * @return {@link ValidationResult} result
+     */
 
     public static <V> ValidationResult<V> accessDenied(String message) {
         return new ValidationResult<>(ValidationResultCode.ACCESS_DENIED, message, null);
     }
 
+    /**
+     * Entity not found.
+     *
+     * @param message message (String)
+     * @return {@link ValidationResult} result
+     */
+
     public static <V> ValidationResult<V> entityNotFound(String message) {
         return new ValidationResult<>(ValidationResultCode.ENTITY_NOT_FOUND, message, null);
     }
 
+    /**
+     * Unauthorized.
+     *
+     * @param message message (String)
+     * @return {@link ValidationResult} result
+     */
+
     public static <V> ValidationResult<V> unauthorized(String message) {
         return new ValidationResult<>(ValidationResultCode.UNAUTHORIZED, message, null);
     }
+
+    /**
+     * Internal error.
+     *
+     * @param message message (String)
+     * @return {@link ValidationResult} result
+     */
 
     public static <V> ValidationResult<V> internalError(String message) {
         return new ValidationResult<>(ValidationResultCode.INTERNAL_ERROR, message, null);

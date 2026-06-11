@@ -15,6 +15,9 @@
  */
 package org.thingsboard.server.actors.service;
 
+/**
+ * Service API for starting and stopping the ThingsBoard actor system.
+ */
 public interface ActorService {
 
 

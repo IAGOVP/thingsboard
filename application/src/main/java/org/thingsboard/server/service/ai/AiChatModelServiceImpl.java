@@ -34,12 +34,24 @@ import org.thingsboard.server.common.data.ai.model.chat.Langchain4jChatModelConf
 import java.util.List;
 import java.util.stream.Collectors;
 
+    /**
+     * Spring service component for ai chat model service impl (AI model invocation for platform features).
+     */
+
 @Service
 @RequiredArgsConstructor
 class AiChatModelServiceImpl implements AiChatModelService {
 
     private final Langchain4jChatModelConfigurer chatModelConfigurer;
     private final AiRequestsExecutor aiRequestsExecutor;
+    /**
+     * Send chat request async.
+     *
+     * @param chatModelConfig chat model config ({@link AiChatModelConfig})
+     * @param chatRequest chat request ({@link ChatRequest})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <C extends AiChatModelConfig<C>> FluentFuture<ChatResponse> sendChatRequestAsync(AiChatModelConfig<C> chatModelConfig, ChatRequest chatRequest) {

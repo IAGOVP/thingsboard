@@ -28,6 +28,10 @@ import org.thingsboard.server.service.edge.rpc.fetch.EdgeEventFetcher;
 import java.io.Closeable;
 import java.util.List;
 
+/**
+ * Contract for edge session in edge gRPC session lifecycle.
+ */
+
 public interface EdgeSession extends Closeable {
 
     StreamObserver<RequestMsg> initInputStream();

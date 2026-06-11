@@ -26,6 +26,11 @@ import org.thingsboard.server.dao.customer.CustomerDao;
 import org.thingsboard.server.dao.customer.CustomerService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports customer entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -34,11 +39,31 @@ public class CustomerImportService extends BaseEntityImportService<CustomerId, C
 
     private final CustomerService customerService;
     private final CustomerDao customerDao;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customer customer ({@link Customer})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, Customer customer, IdProvider idProvider) {
         customer.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param customer customer ({@link Customer})
+     * @param old old ({@link Customer})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Customer prepare(EntitiesImportCtx ctx, Customer customer, Customer old, EntityExportData<Customer> exportData, IdProvider idProvider) {
@@ -50,6 +75,17 @@ public class CustomerImportService extends BaseEntityImportService<CustomerId, C
             return customer;
         }
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param customer customer ({@link Customer})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Customer saveOrUpdate(EntitiesImportCtx ctx, Customer customer, EntityExportData<Customer> exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -59,11 +95,24 @@ public class CustomerImportService extends BaseEntityImportService<CustomerId, C
             return customerDao.save(ctx.getTenantId(), customer);
         }
     }
+    /**
+     * Deep copy.
+     *
+     * @param customer customer ({@link Customer})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Customer deepCopy(Customer customer) {
         return new Customer(customer);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

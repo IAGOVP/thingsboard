@@ -32,6 +32,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+/**
+ * Edge session state for ThingsBoard Edge integration.
+ */
 
 @Getter
 public class EdgeSessionState {
@@ -51,6 +54,12 @@ public class EdgeSessionState {
     private TenantId tenantId;
     private Edge edge;
 
+    /**
+     * Set edge.
+     *
+     * @param edge edge (Edge)
+     */
+
     public void setEdge(Edge edge) {
         if (edge == null) {
             return;
@@ -59,25 +68,55 @@ public class EdgeSessionState {
         this.tenantId = edge.getTenantId();
     }
 
+    /**
+     * Returns edge id.
+     *
+     */
+
     public EdgeId getEdgeId() {
         return edge != null ? edge.getId() : null;
     }
+
+    /**
+     * Try start sync.
+     *
+     */
 
     public boolean tryStartSync() {
         return syncInProgress.compareAndSet(false, true);
     }
 
+    /**
+     * Finish sync.
+     *
+     */
+
     public void finishSync() {
         syncInProgress.set(false);
     }
+
+    /**
+     * Returns whether sync in progress.
+     *
+     */
 
     public boolean isSyncInProgress() {
         return syncInProgress.get();
     }
 
+    /**
+     * Lock sequence dependency.
+     *
+     */
+
     public void lockSequenceDependency() {
         sequenceDependencyLock.lock();
     }
+
+    /**
+     * Unlock sequence dependency.
+     *
+     */
 
     public void unlockSequenceDependency() {
         sequenceDependencyLock.unlock();

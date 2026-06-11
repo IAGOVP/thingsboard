@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.model.token;
 
 import org.thingsboard.server.common.data.security.model.JwtToken;
 
+/**
+ * Access jwt token for security DTOs and principals.
+ */
+
 public record AccessJwtToken(String token) implements JwtToken {
 
 }

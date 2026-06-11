@@ -33,6 +33,9 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+/**
+ * Tb msg pack processing context component in the ThingsBoard queue layer.
+ */
 
 @Slf4j
 public class TbMsgPackProcessingContext {
@@ -57,6 +60,13 @@ public class TbMsgPackProcessingContext {
 
     private volatile boolean canceled = false;
 
+    /**
+     * Constructs {@link TbMsgPackProcessingContext} with the supplied dependencies and configuration.
+     * @param queueName queue name
+     * @param submitStrategy submit strategy
+     * @param skipTimeoutMsgsPossible skip timeout msgs possible
+     */
+
     public TbMsgPackProcessingContext(String queueName, TbRuleEngineSubmitStrategy submitStrategy, boolean skipTimeoutMsgsPossible) {
         this.queueName = queueName;
         this.submitStrategy = submitStrategy;
@@ -66,6 +76,14 @@ public class TbMsgPackProcessingContext {
         this.pendingCount = new AtomicInteger(pendingMap.size());
     }
 
+    /**
+     * Waits until await.
+     * @param packProcessingTimeout pack processing timeout
+     * @param milliseconds milliseconds
+     * @return boolean result
+     * @throws InterruptedException if processing fails
+     */
+
     public boolean await(long packProcessingTimeout, TimeUnit milliseconds) throws InterruptedException {
         boolean success = processingTimeoutLatch.await(packProcessingTimeout, milliseconds);
         if (!success && profilerEnabled) {
@@ -73,6 +91,11 @@ public class TbMsgPackProcessingContext {
         }
         return success;
     }
+
+    /**
+     * Invoked when success occurs.
+     * @param id id
+     */
 
     public void onSuccess(UUID id) {
         TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg> msg;
@@ -87,6 +110,13 @@ public class TbMsgPackProcessingContext {
             processingTimeoutLatch.countDown();
         }
     }
+
+    /**
+     * Invoked when failure occurs.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param id id
+     * @param e e
+     */
 
     public void onFailure(TenantId tenantId, UUID id, RuleEngineException e) {
         TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg> msg;
@@ -105,6 +135,12 @@ public class TbMsgPackProcessingContext {
     private final ConcurrentHashMap<UUID, TbMsgProfilerInfo> msgProfilerMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, TbRuleNodeProfilerInfo> ruleNodeProfilerMap = new ConcurrentHashMap<>();
 
+    /**
+     * Invoked when processing start occurs.
+     * @param id id
+     * @param ruleNodeInfo rule node info
+     */
+
     public void onProcessingStart(UUID id, RuleNodeInfo ruleNodeInfo) {
         lastRuleNodeMap.put(id, ruleNodeInfo);
         if (profilerEnabled) {
@@ -112,6 +148,12 @@ public class TbMsgPackProcessingContext {
             ruleNodeProfilerMap.putIfAbsent(ruleNodeInfo.getRuleNodeId().getId(), new TbRuleNodeProfilerInfo(ruleNodeInfo));
         }
     }
+
+    /**
+     * Invoked when processing end occurs.
+     * @param id id
+     * @param ruleNodeId rule node identifier
+     */
 
     public void onProcessingEnd(UUID id, RuleNodeId ruleNodeId) {
         if (profilerEnabled) {
@@ -122,6 +164,11 @@ public class TbMsgPackProcessingContext {
         }
     }
 
+    /**
+     * Invoked when timeout occurs.
+     * @param profilerInfo profiler info
+     */
+
     public void onTimeout(TbMsgProfilerInfo profilerInfo) {
         Map.Entry<UUID, Long> ruleNodeInfo = profilerInfo.onTimeout();
         if (ruleNodeInfo != null) {
@@ -129,11 +176,21 @@ public class TbMsgPackProcessingContext {
         }
     }
 
+    /**
+     * Returns last visited rule node.
+     * @param id id
+     * @return {@link RuleNodeInfo}
+     */
+
     public RuleNodeInfo getLastVisitedRuleNode(UUID id) {
         return lastRuleNodeMap.get(id);
     }
 
-    public void printProfilerStats() {
+    /**
+     * Print profiler stats.
+     */
+
+public void printProfilerStats() {
         if (profilerEnabled) {
             log.debug("Top Rule Nodes by max execution time:");
             ruleNodeProfilerMap.values().stream()
@@ -152,12 +209,33 @@ public class TbMsgPackProcessingContext {
         }
     }
 
+    /**
+     * Cleans up cleanup.
+     */
+
+    /**
+     * Cleans up.
+     */
+
+    /**
+     * Cleans up.
+     */
+
+    /**
+     * Cleans up.
+     */
+
     public void cleanup() {
         canceled = true;
         pendingMap.clear();
         successMap.clear();
         failedMap.clear();
     }
+
+    /**
+     * Is canceled.
+     * @return {@code true} when the condition holds
+     */
 
     public boolean isCanceled() {
         return skipTimeoutMsgsPossible && canceled;

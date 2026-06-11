@@ -90,6 +90,12 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHO
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
 @Slf4j
+/**
+ * REST API for tenant and system resources.
+ * 
+ * <p>Base path: {@code /api}. Files such as LwM2M models, keystores, and JS modules.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -101,6 +107,15 @@ public class TbResourceController extends BaseController {
 
     public static final String RESOURCE_ID = "resourceId";
 
+    /**
+     * Download Resource.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/{resourceId}/download}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strResourceId str Resource Id
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Download Resource (downloadResource)", notes = "Download Resource based on the provided Resource Id." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/resource/{resourceId}/download")
@@ -119,6 +134,18 @@ public class TbResourceController extends BaseController {
                 .body(resource);
     }
 
+    /**
+     * Download resource.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/{resourceType}/{scope}/{key}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param resourceTypeStr resource Type Str
+     * @param scope scope
+     * @param key key
+     * @param etag etag
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Download resource (downloadResourceIfChanged)",
             notes = "Download resource with a given type and key for the given scope" + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -135,6 +162,16 @@ public class TbResourceController extends BaseController {
         return downloadResourceIfChanged(() -> checkResourceInfo(scope, resourceType, key, Operation.READ), etag);
     }
 
+    /**
+     * Download LWM2M Resource.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/lwm2m/{resourceId}/download}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strResourceId str Resource Id
+     * @param etag etag
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Download LWM2M Resource (downloadLwm2mResourceIfChanged)", notes = DOWNLOAD_RESOURCE_IF_NOT_CHANGED + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/resource/lwm2m/{resourceId}/download", produces = "application/xml")
@@ -144,6 +181,16 @@ public class TbResourceController extends BaseController {
         return downloadResourceIfChanged(strResourceId, etag);
     }
 
+    /**
+     * Download PKCS_12 Resource.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/pkcs12/{resourceId}/download}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strResourceId str Resource Id
+     * @param etag etag
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Download PKCS_12 Resource (downloadPkcs12ResourceIfChanged)", notes = DOWNLOAD_RESOURCE_IF_NOT_CHANGED + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @RequestMapping(value = "/resource/pkcs12/{resourceId}/download", method = RequestMethod.GET, produces = "application/x-pkcs12")
@@ -153,6 +200,16 @@ public class TbResourceController extends BaseController {
         return downloadResourceIfChanged(strResourceId, etag);
     }
 
+    /**
+     * Download JKS Resource.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/jks/{resourceId}/download}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strResourceId str Resource Id
+     * @param etag etag
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Download JKS Resource (downloadJksResourceIfChanged)",
             notes = DOWNLOAD_RESOURCE_IF_NOT_CHANGED + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -163,6 +220,16 @@ public class TbResourceController extends BaseController {
         return downloadResourceIfChanged(strResourceId, etag);
     }
 
+    /**
+     * Download JS Resource.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/js/{resourceId}/download}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param strResourceId str Resource Id
+     * @param etag etag
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Download JS Resource (downloadJsResourceIfChanged)", notes = DOWNLOAD_RESOURCE_IF_NOT_CHANGED + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/resource/js/{resourceId}/download", produces = "application/javascript")
@@ -172,6 +239,15 @@ public class TbResourceController extends BaseController {
         return downloadResourceIfChanged(strResourceId, etag);
     }
 
+    /**
+     * Get Resource Info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/info/{resourceId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strResourceId str Resource Id
+     * @return {@link TbResourceInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Resource Info (getResourceInfoById)",
             notes = "Fetch the Resource Info object based on the provided Resource Id. " +
                     RESOURCE_INFO_DESCRIPTION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -184,6 +260,17 @@ public class TbResourceController extends BaseController {
         return checkResourceInfoId(resourceId, Operation.READ);
     }
 
+    /**
+     * Get resource info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/{resourceType}/{scope}/{key}/info}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param resourceTypeStr resource Type Str
+     * @param scope scope
+     * @param key key
+     * @return {@link TbResourceInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get resource info (getResourceInfo)",
             notes = "Get info for the resource with the given type, scope and key. " +
                     RESOURCE_INFO_DESCRIPTION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -199,6 +286,15 @@ public class TbResourceController extends BaseController {
         return checkResourceInfo(scope, resourceType, key, Operation.READ);
     }
 
+    /**
+     * Get Resource.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/{resourceId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strResourceId str Resource Id
+     * @return {@link TbResource} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Resource (getResourceById)",
             notes = "Fetch the Resource object based on the provided Resource Id. " +
                     RESOURCE_DESCRIPTION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH, hidden = true)
@@ -212,6 +308,15 @@ public class TbResourceController extends BaseController {
         return checkResourceId(resourceId, Operation.READ);
     }
 
+    /**
+     * Create Or Update Resource.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/resource}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param resource resource
+     * @return {@link TbResourceInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create Or Update Resource (saveResource)",
             notes = "Create or update the Resource. When creating the Resource, platform generates Resource id as " + UUID_WIKI_LINK +
                     "The newly created Resource id will be present in the response. " +
@@ -230,6 +335,19 @@ public class TbResourceController extends BaseController {
         return tbResourceService.save(resource, getCurrentUser());
     }
 
+    /**
+     * Upload Resource via Multipart File.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/resource/upload}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param title title
+     * @param resourceTypeStr resource Type Str
+     * @param descriptor descriptor
+     * @param resourceSubTypeStr resource Sub Type Str
+     * @param file file
+     * @return {@link TbResourceInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Upload Resource via Multipart File (uploadResource)",
             notes = "Create the Resource using multipart file upload. " +
                     "\n\nResource combination of the title with the key is unique in the scope of tenant. " +
@@ -269,6 +387,16 @@ public class TbResourceController extends BaseController {
         return tbResourceService.save(resource, getCurrentUser());
     }
 
+    /**
+     * Update resource data.
+     * 
+     * <p><b>HTTP:</b> {@code PUT /api/resource/{id}/data}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @param file file
+     * @return {@link TbResourceInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @PutMapping(value = "/resource/{id}/data", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public TbResourceInfo updateResourceData(@Parameter(description = "Unique identifier of the Resource to update", required = true)
@@ -282,6 +410,16 @@ public class TbResourceController extends BaseController {
         return tbResourceService.save(resource, getCurrentUser());
     }
 
+    /**
+     * Update resource info.
+     * 
+     * <p><b>HTTP:</b> {@code PUT /api/resource/{id}/info}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @param resourceInfo resource Info
+     * @return {@link TbResourceInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @PutMapping("/resource/{id}/info")
     public TbResourceInfo updateResourceInfo(@Parameter(description = "Unique identifier of the Resource to update", required = true)
@@ -295,6 +433,21 @@ public class TbResourceController extends BaseController {
         return tbResourceService.save(resource, getCurrentUser());
     }
 
+    /**
+     * Get Resource Infos.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param resourceType resource Type
+     * @param resourceSubType resource Sub Type
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Resource Infos (getResources)",
             notes = "Returns a page of Resource Info objects owned by tenant or sysadmin. " +
                     PAGE_DATA_PARAMETERS + RESOURCE_INFO_DESCRIPTION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -337,6 +490,15 @@ public class TbResourceController extends BaseController {
         }
     }
 
+    /**
+     * Get system or tenant resources by ids v1.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param resourceUuids resource Uuids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/resource", params = {"resourceIds"})
@@ -350,6 +512,15 @@ public class TbResourceController extends BaseController {
         return resourceService.findSystemOrTenantResourcesByIds(user.getTenantId(), resourceIds);
     }
 
+    /**
+     * Get Resource Infos by ids.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/list}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param resourceUuids resource Uuids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Resource Infos by ids (getSystemOrTenantResourcesByIds)")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/resource/list")
@@ -359,6 +530,19 @@ public class TbResourceController extends BaseController {
         return getSystemOrTenantResourcesByIdsV1(resourceUuids);
     }
 
+    /**
+     * Get All Resource Infos.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/tenant}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get All Resource Infos (getTenantResources)",
             notes = "Returns a page of Resource Info objects owned by tenant. " +
                     PAGE_DATA_PARAMETERS + RESOURCE_INFO_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -382,6 +566,19 @@ public class TbResourceController extends BaseController {
         return checkNotNull(resourceService.findTenantResourcesByTenantId(filter, pageLink));
     }
 
+    /**
+     * Get LwM2M Objects.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/lwm2m/page}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get LwM2M Objects (getLwm2mListObjectsPage)",
             notes = "Returns a page of LwM2M objects parsed from Resources with type 'LWM2M_MODEL' owned by tenant or sysadmin. " +
                     PAGE_DATA_PARAMETERS + LWM2M_OBJECT_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -401,6 +598,17 @@ public class TbResourceController extends BaseController {
         return checkNotNull(tbResourceService.findLwM2mObjectPage(getTenantId(), sortProperty, sortOrder, pageLink));
     }
 
+    /**
+     * Get LwM2M Objects.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/resource/lwm2m}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param sortOrder sort Order
+     * @param sortProperty sort Property
+     * @param objectIds object Ids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get LwM2M Objects (getLwm2mListObjects)",
             notes = "Returns a page of LwM2M objects parsed from Resources with type 'LWM2M_MODEL' owned by tenant or sysadmin. " +
                     "You can specify parameters to filter the results. " + LWM2M_OBJECT_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -415,6 +623,16 @@ public class TbResourceController extends BaseController {
         return checkNotNull(tbResourceService.findLwM2mObject(getTenantId(), sortOrder, sortProperty, objectIds));
     }
 
+    /**
+     * Delete Resource.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/resource/{resourceId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strResourceId str Resource Id
+     * @param force force
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete Resource (deleteResource)",
             notes = "Deletes the Resource. Referencing non-existing Resource Id will cause an error." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")

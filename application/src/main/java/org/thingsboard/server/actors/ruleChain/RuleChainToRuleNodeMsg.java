@@ -23,8 +23,9 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Routes a {@link org.thingsboard.server.common.msg.TbMsg} from a rule chain actor to a specific rule node.
  */
+
 @EqualsAndHashCode(callSuper = true)
 @ToString
 final class RuleChainToRuleNodeMsg extends TbToRuleNodeActorMsg {
@@ -36,6 +37,14 @@ final class RuleChainToRuleNodeMsg extends TbToRuleNodeActorMsg {
         super(ctx, tbMsg);
         this.fromRelationType = fromRelationType;
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

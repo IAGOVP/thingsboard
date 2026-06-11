@@ -31,6 +31,12 @@ import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes notification rule edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ * <p><b>Key dependencies:</b> {@link #notificationRuleService}.
+ */
 
 @Slf4j
 @Component
@@ -39,7 +45,13 @@ public class NotificationRuleEdgeProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private NotificationRuleService notificationRuleService;
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         NotificationRuleId notificationRuleId = new NotificationRuleId(edgeEvent.getEntityId());
@@ -67,6 +79,10 @@ public class NotificationRuleEdgeProcessor extends BaseEdgeProcessor {
         return downlinkMsg;
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.NOTIFICATION_RULE;

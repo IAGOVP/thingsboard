@@ -19,6 +19,12 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.sync.vc.EntityVersion;
 
+/**
+
+ * Git repository integration for list versions request.
+
+ */
+
 public class ListVersionsGitRequest extends PendingGitRequest<PageData<EntityVersion>> {
 
     public ListVersionsGitRequest(TenantId tenantId) {

@@ -17,11 +17,23 @@ package org.thingsboard.server.service.sync.vc.data;
 
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+
+ * Git repository integration for clear repository request.
+
+ */
+
 public class ClearRepositoryGitRequest extends VoidGitRequest {
 
     public ClearRepositoryGitRequest(TenantId tenantId) {
         super(tenantId);
     }
+    /**
+     * Requires settings.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean requiresSettings() {
         return false;

@@ -17,6 +17,16 @@ package org.thingsboard.server.service.stats;
 
 import org.thingsboard.server.service.queue.TbRuleEngineConsumerStats;
 
+/**
+
+ * Service contract for rule engine statistics operations (queue and service statistics collection).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface RuleEngineStatisticsService {
 
     void reportQueueStats(long ts, TbRuleEngineConsumerStats stats);

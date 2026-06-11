@@ -150,11 +150,23 @@ public class DefaultTransportApiService implements TransportApiService {
     private static boolean checkIsMqttCredentials(DeviceCredentials credentials) {
         return credentials != null && DeviceCredentialsType.MQTT_BASIC.equals(credentials.getCredentialsType());
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
         handlerExecutor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newWorkStealingPool(maxCoreHandlerThreads, "transport-api-service-core-handler"));
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void destroy() {
@@ -162,6 +174,13 @@ public class DefaultTransportApiService implements TransportApiService {
             handlerExecutor.shutdownNow();
         }
     }
+    /**
+     * Handles the requested data.
+     *
+     * @param tbProtoQueueMsg tb proto queue msg ({@link TbProtoQueueMsg})
+     * @return future completing with {@link TbProtoQueueMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<TbProtoQueueMsg<TransportApiResponseMsg>> handle(TbProtoQueueMsg<TransportApiRequestMsg> tbProtoQueueMsg) {
@@ -251,6 +270,13 @@ public class DefaultTransportApiService implements TransportApiService {
             }
         }
     }
+    /**
+     * Validates or create device x509certificate.
+     *
+     * @param certificateChain certificate chain ({@link String})
+     * @return {@link TransportApiResponseMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TransportApiResponseMsg validateOrCreateDeviceX509Certificate(String certificateChain) {
         List<String> chain = X509_CERTIFICATE_TRIM_CHAIN_PATTERN.matcher(certificateChain).results().map(match ->

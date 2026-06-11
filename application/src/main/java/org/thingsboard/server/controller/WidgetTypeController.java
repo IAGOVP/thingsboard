@@ -72,6 +72,15 @@ import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LI
 import static org.thingsboard.server.controller.ControllerConstants.WIDGET_TYPE_ID_PARAM_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.WIDGET_TYPE_TEXT_SEARCH_DESCRIPTION;
 
+/**
+ * REST API for widget type definitions used by dashboards.
+ *
+ * <p>Base path: {@code /api/widgetType} and related list endpoints. Widget types belong to
+ * system or tenant scope; FQN is unique within that scope.
+ *
+ * @see WidgetsBundleController
+ * @see org.thingsboard.server.service.entitiy.widgets.type.TbWidgetTypeService
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -92,6 +101,17 @@ public class WidgetTypeController extends AutoCommitController {
     private static final String UPDATE_EXISTING_BY_FQN_PARAM_DESCRIPTION = "Optional boolean parameter indicating whether to update existing widget type by FQN if present instead of creating new one";
     private static final String WIDGET_TYPE_ARRAY_DESCRIPTION = "A list of string values separated by comma ',' representing one of the widget type value";
 
+    /**
+     * Returns full widget type details by id, optionally including exported resources.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetType/{widgetTypeId}?includeResources=true|false}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strWidgetTypeId widget type UUID
+     * @param includeResources when {@code true}, embeds related resource payloads
+     * @return {@link WidgetTypeDetails}
+     * @throws ThingsboardException if not found or access denied
+     */
     @ApiOperation(value = "Get Widget Type Details (getWidgetTypeById)",
             notes = "Get the Widget Type Details based on the provided Widget Type Id. " + WIDGET_TYPE_DETAILS_DESCRIPTION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -109,6 +129,16 @@ public class WidgetTypeController extends AutoCommitController {
         return widgetTypeDetails;
     }
 
+    /**
+     * Returns lightweight widget type info by id (no descriptor JSON).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypeInfo/{widgetTypeId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strWidgetTypeId widget type UUID
+     * @return {@link WidgetTypeInfo}
+     * @throws ThingsboardException if not found or access denied
+     */
     @ApiOperation(value = "Get Widget Type Info (getWidgetTypeInfoById)",
             notes = "Get the Widget Type Info based on the provided Widget Type Id. " + WIDGET_TYPE_DETAILS_DESCRIPTION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -121,6 +151,17 @@ public class WidgetTypeController extends AutoCommitController {
         return checkWidgetTypeInfoId(widgetTypeId, Operation.READ);
     }
 
+    /**
+     * Creates or updates a widget type; optionally upserts by FQN.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/widgetType?updateExistingByFqn=true|false}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param widgetTypeDetails widget type JSON body
+     * @param updateExistingByFqn when {@code true}, update existing type with same FQN
+     * @return saved {@link WidgetTypeDetails}
+     * @throws Exception on validation or permission errors
+     */
     @ApiOperation(value = "Create Or Update Widget Type (saveWidgetType)",
             notes = "Create or update the Widget Type. " + WIDGET_TYPE_DESCRIPTION + " " +
                     "When creating the Widget Type, platform generates Widget Type Id as " + UUID_WIKI_LINK +
@@ -149,6 +190,15 @@ public class WidgetTypeController extends AutoCommitController {
         return tbWidgetTypeService.save(widgetTypeDetails, updateExistingByFqn != null && updateExistingByFqn, currentUser);
     }
 
+    /**
+     * Deletes a widget type by id.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/widgetType/{widgetTypeId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strWidgetTypeId widget type UUID
+     * @throws Exception if not found or access denied
+     */
     @ApiOperation(value = "Delete widget type (deleteWidgetType)",
             notes = "Deletes the  Widget Type. Referencing non-existing Widget Type Id will cause an error." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -163,6 +213,25 @@ public class WidgetTypeController extends AutoCommitController {
         tbWidgetTypeService.delete(wtd, getCurrentUser());
     }
 
+    /**
+     * Returns a paginated list of widget types available to the caller.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypes?pageSize=&amp;page=&amp;...}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param pageSize page size
+     * @param page zero-based page index
+     * @param textSearch optional name/description filter
+     * @param sortProperty sort field
+     * @param sortOrder {@code ASC} or {@code DESC}
+     * @param tenantOnly when {@code true}, tenant-owned types only
+     * @param fullSearch search description as well as name
+     * @param deprecatedFilter {@code ALL}, {@code ACTUAL}, or {@code DEPRECATED}
+     * @param widgetTypeList optional widget category filters
+     * @param scadaFirst prioritize SCADA symbol widgets
+     * @return page of {@link WidgetTypeInfo}
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get Widget Types (getWidgetTypes)",
             notes = "Returns a page of Widget Type objects available for current user. " + WIDGET_TYPE_DESCRIPTION + " " +
                     PAGE_DATA_PARAMETERS + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
@@ -210,6 +279,18 @@ public class WidgetTypeController extends AutoCommitController {
         }
     }
 
+    /**
+     * Returns widget types for a bundle identified by alias (deprecated).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypes?isSystem=&amp;bundleAlias=}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param isSystem {@code true} for system bundle scope
+     * @param bundleAlias widgets bundle alias
+     * @return list of {@link WidgetType}
+     * @throws ThingsboardException if bundle not found
+     * @deprecated use {@link #getBundleWidgetTypes(String)}
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/widgetTypes", params = {"isSystem", "bundleAlias"})
@@ -229,6 +310,16 @@ public class WidgetTypeController extends AutoCommitController {
         return checkNotNull(widgetTypeService.findWidgetTypesByWidgetsBundleId(getTenantId(), widgetsBundle.getId()));
     }
 
+    /**
+     * Returns widget types for a bundle by id (legacy query-param API).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypes?widgetsBundleId=}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @return list of {@link WidgetType}
+     * @throws ThingsboardException if bundle not found
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/widgetTypes", params = {"widgetsBundleId"})
@@ -239,6 +330,16 @@ public class WidgetTypeController extends AutoCommitController {
         return checkNotNull(widgetTypeService.findWidgetTypesByWidgetsBundleId(getTenantId(), widgetsBundleId));
     }
 
+    /**
+     * Returns all widget types belonging to a widgets bundle.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetsBundle/{widgetsBundleId}/widgetTypes}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @return list of {@link WidgetType}
+     * @throws ThingsboardException if bundle not found
+     */
     @ApiOperation(value = "Get all Widget types for specified Bundle (getBundleWidgetTypes)",
             notes = "Returns an array of Widget Type objects that belong to specified Widget Bundle." + WIDGET_TYPE_DESCRIPTION + " " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -249,6 +350,18 @@ public class WidgetTypeController extends AutoCommitController {
         return getBundleWidgetTypesV1(strWidgetsBundleId);
     }
 
+    /**
+     * Returns widget type details for a bundle by alias (deprecated).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypesDetails?isSystem=&amp;bundleAlias=}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param isSystem {@code true} for system bundle scope
+     * @param bundleAlias widgets bundle alias
+     * @return list of {@link WidgetTypeDetails}
+     * @throws ThingsboardException if bundle not found
+     * @deprecated use {@link #getBundleWidgetTypesDetails(String, boolean)}
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/widgetTypesDetails", params = {"isSystem", "bundleAlias"})
@@ -268,6 +381,17 @@ public class WidgetTypeController extends AutoCommitController {
         return checkNotNull(widgetTypeService.findWidgetTypesDetailsByWidgetsBundleId(getTenantId(), widgetsBundle.getId()));
     }
 
+    /**
+     * Returns widget type details for a bundle by id.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypesDetails?widgetsBundleId=&amp;includeResources=}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @param includeResources when {@code true}, embeds related resource payloads
+     * @return list of {@link WidgetTypeDetails}
+     * @throws ThingsboardException if bundle not found
+     */
     @ApiOperation(value = "Get all Widget types details for specified Bundle (getBundleWidgetTypesDetails)",
             notes = "Returns an array of Widget Type Details objects that belong to specified Widget Bundle." + WIDGET_TYPE_DETAILS_DESCRIPTION + " " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -289,6 +413,16 @@ public class WidgetTypeController extends AutoCommitController {
         return result;
     }
 
+    /**
+     * Returns FQNs of widget types in a widgets bundle.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypeFqns?widgetsBundleId=}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @return ordered list of widget type FQN strings
+     * @throws ThingsboardException if bundle not found
+     */
     @ApiOperation(value = "Get all Widget type fqns for specified Bundle (getBundleWidgetTypeFqns)",
             notes = "Returns an array of Widget Type fqns that belong to specified Widget Bundle." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -300,6 +434,18 @@ public class WidgetTypeController extends AutoCommitController {
         return checkNotNull(widgetTypeService.findWidgetFqnsByWidgetsBundleId(getTenantId(), widgetsBundleId));
     }
 
+    /**
+     * Returns widget type info for a bundle by alias (deprecated).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypesInfos?isSystem=&amp;bundleAlias=}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param isSystem {@code true} for system bundle scope
+     * @param bundleAlias widgets bundle alias
+     * @return list of {@link WidgetTypeInfo}
+     * @throws ThingsboardException if bundle not found
+     * @deprecated use {@link #getBundleWidgetTypesInfos(String, int, int, String, String, String, Boolean, String, String[])}
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/widgetTypesInfos", params = {"isSystem", "bundleAlias"})
@@ -320,6 +466,24 @@ public class WidgetTypeController extends AutoCommitController {
                 null, new PageLink(1024))).getData();
     }
 
+    /**
+     * Returns a paginated list of widget type info objects for a widgets bundle.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetTypesInfos?widgetsBundleId=&amp;pageSize=&amp;page=&amp;...}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param strWidgetsBundleId widgets bundle UUID
+     * @param pageSize page size
+     * @param page zero-based page index
+     * @param textSearch optional filter
+     * @param sortProperty sort field
+     * @param sortOrder {@code ASC} or {@code DESC}
+     * @param fullSearch search description as well as name
+     * @param deprecatedFilter {@code ALL}, {@code ACTUAL}, or {@code DEPRECATED}
+     * @param widgetTypeList optional category filters
+     * @return page of {@link WidgetTypeInfo}
+     * @throws ThingsboardException if bundle not found
+     */
     @ApiOperation(value = "Get Widget Type Info objects (getBundleWidgetTypesInfos)",
             notes = "Get the Widget Type Info objects based on the provided parameters. " + WIDGET_TYPE_INFO_DESCRIPTION + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -351,6 +515,19 @@ public class WidgetTypeController extends AutoCommitController {
                 widgetTypeDeprecatedFilter, widgetTypes, pageLink));
     }
 
+    /**
+     * Returns a widget type by bundle and type alias (deprecated).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetType?isSystem=&amp;bundleAlias=&amp;alias=}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param isSystem {@code true} for system scope
+     * @param bundleAlias bundle alias segment
+     * @param alias widget type alias within bundle
+     * @return {@link WidgetType}
+     * @throws ThingsboardException if not found or access denied
+     * @deprecated use {@link #getWidgetType(String)} with FQN
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/widgetType", params = {"isSystem", "bundleAlias", "alias"})
@@ -374,6 +551,16 @@ public class WidgetTypeController extends AutoCommitController {
         return widgetType;
     }
 
+    /**
+     * Returns a widget type by fully qualified name ({@code system.*} or {@code tenant.*}).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/widgetType?fqn=}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param fqn widget type FQN with scope prefix
+     * @return {@link WidgetType}
+     * @throws ThingsboardException if FQN is invalid, not found, or access denied
+     */
     @ApiOperation(value = "Get Widget Type (getWidgetType)",
             notes = "Get the Widget Type by FQN. " + WIDGET_TYPE_DESCRIPTION + AVAILABLE_FOR_ANY_AUTHORIZED_USER, hidden = true)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")

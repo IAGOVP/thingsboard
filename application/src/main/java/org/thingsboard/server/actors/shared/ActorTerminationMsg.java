@@ -15,6 +15,12 @@
  */
 package org.thingsboard.server.actors.shared;
 
+/**
+
+ * Base message signaling that an actor or component should terminate.
+
+ */
+
 public abstract class ActorTerminationMsg<T> {
 
     private final T id;
@@ -23,6 +29,12 @@ public abstract class ActorTerminationMsg<T> {
         super();
         this.id = id;
     }
+    /**
+     * Returns id.
+     *
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public T getId() {
         return id;

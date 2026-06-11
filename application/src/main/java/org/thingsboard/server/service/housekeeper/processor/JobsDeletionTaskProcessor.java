@@ -22,18 +22,35 @@ import org.thingsboard.server.common.data.housekeeper.HousekeeperTask;
 import org.thingsboard.server.common.data.housekeeper.HousekeeperTaskType;
 import org.thingsboard.server.dao.job.JobService;
 
+    /**
+     * Spring service component for jobs deletion task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class JobsDeletionTaskProcessor extends HousekeeperTaskProcessor<HousekeeperTask> {
 
     private final JobService jobService;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link HousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(HousekeeperTask task) throws Exception {
         int deletedCount = jobService.deleteJobsByEntityId(task.getTenantId(), task.getEntityId());
         log.debug("[{}][{}][{}] Deleted {} jobs", task.getTenantId(), task.getEntityId().getEntityType(), task.getEntityId(), deletedCount);
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

@@ -36,11 +36,29 @@ import java.util.List;
 import static org.thingsboard.server.common.data.lwm2m.LwM2mConstants.LWM2M_SEPARATOR_KEY;
 import static org.thingsboard.server.common.data.lwm2m.LwM2mConstants.LWM2M_SEPARATOR_SEARCH_TEXT;
 
+/**
+ * Utility methods for parsing LwM2M Device Description Files (DDF) and populating
+ * {@link TbResource} and {@link LwM2mObject} domain objects.
+ *
+ * <p>Uses the Leshan {@link ObjectModel} parser via {@link TbDDFFileParser} to extract
+ * object metadata, resource keys, and searchable text from XML model definitions.
+ */
 @Slf4j
 public class LwM2mObjectModelUtils {
 
     private static final TbDDFFileParser ddfFileParser = new TbDDFFileParser();
 
+    /**
+     * Parses an LwM2M DDF resource and enriches the {@link TbResource} with key, title,
+     * and search text derived from the object model.
+     *
+     * <p>For {@link ResourceType#LWM2M_MODEL} resources, also validates that the XML
+     * can be converted to an {@link LwM2mObject}.
+     *
+     * @param resource the LwM2M model resource whose binary data contains DDF XML
+     * @throws ThingsboardException   if an I/O error occurs during parsing
+     * @throws DataValidationException if the DDF is invalid or yields no object models
+     */
     public static void toLwm2mResource(TbResource resource) throws ThingsboardException {
         try {
             List<ObjectModel> objectModels =
@@ -69,6 +87,13 @@ public class LwM2mObjectModelUtils {
         }
     }
 
+    /**
+     * Converts an LwM2M DDF {@link TbResource} into a structured {@link LwM2mObject}.
+     *
+     * @param resource the resource containing DDF XML binary data
+     * @param isSave   when {@code true}, includes all resources; when {@code false}, includes only readable resources
+     * @return parsed {@link LwM2mObject}, or {@code null} if parsing fails or no applicable resources exist
+     */
     public static LwM2mObject toLwM2mObject(TbResource resource, boolean isSave) {
         try {
             List<ObjectModel> objectModels =

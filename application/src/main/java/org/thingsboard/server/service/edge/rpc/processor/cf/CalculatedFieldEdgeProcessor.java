@@ -51,12 +51,24 @@ import java.util.UUID;
 
 import static org.thingsboard.server.common.data.cf.CalculatedFieldType.SCRIPT;
 import static org.thingsboard.server.common.data.cf.CalculatedFieldType.SIMPLE;
+/**
+ * Processes calculated field edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class CalculatedFieldEdgeProcessor extends BaseCalculatedFieldProcessor implements CalculatedFieldProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param calculatedFieldUpdateMsg calculated field update msg (CalculatedFieldUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processCalculatedFieldMsgFromEdge(TenantId tenantId, Edge edge, CalculatedFieldUpdateMsg calculatedFieldUpdateMsg) {
         CalculatedFieldId calculatedFieldId = new CalculatedFieldId(new UUID(calculatedFieldUpdateMsg.getIdMSB(), calculatedFieldUpdateMsg.getIdLSB()));
@@ -89,7 +101,13 @@ public class CalculatedFieldEdgeProcessor extends BaseCalculatedFieldProcessor i
             edgeSynchronizationManager.getEdgeId().remove();
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         CalculatedFieldId calculatedFieldId = new CalculatedFieldId(edgeEvent.getEntityId());
@@ -120,11 +138,21 @@ public class CalculatedFieldEdgeProcessor extends BaseCalculatedFieldProcessor i
         return EdgeVersionComparator.INSTANCE.compare(edgeVersion, EdgeVersion.V_4_3_0) >= 0 || (type == SIMPLE || type == SCRIPT);
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.CALCULATED_FIELD;
     }
-
+    /**
+     * Processes entity notification.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeNotificationMsg edge notification msg (EdgeNotificationMsgProto)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processEntityNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         EdgeEventType type = EdgeEventType.valueOf(edgeNotificationMsg.getType());

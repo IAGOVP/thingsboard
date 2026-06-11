@@ -31,12 +31,25 @@ import org.thingsboard.server.common.data.msg.TbMsgType;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.gen.edge.v1.EntityViewUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base entity view edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #entityViewValidator}.
+ */
 
 @Slf4j
 public abstract class BaseEntityViewProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<EntityView> entityViewValidator;
+
+    /**
+     * Creates or persists or update entity view.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param entityViewId entity view id (EntityViewId)
+     * @param entityViewUpdateMsg entity view update msg (EntityViewUpdateMsg)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateEntityView(TenantId tenantId, EntityViewId entityViewId, EntityViewUpdateMsg entityViewUpdateMsg) {
         boolean created = false;
@@ -74,11 +87,35 @@ public abstract class BaseEntityViewProcessor extends BaseEdgeProcessor {
         }).orElse(false);
     }
 
+    /**
+     * Set customer id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param entityView entity view (EntityView)
+     * @param entityViewUpdateMsg entity view update msg (EntityViewUpdateMsg)
+     */
+
     protected abstract void setCustomerId(TenantId tenantId, CustomerId customerId, EntityView entityView, EntityViewUpdateMsg entityViewUpdateMsg);
+
+    /**
+     * Removes entity view.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param entityViewId entity view id (EntityViewId)
+     */
 
     protected void deleteEntityView(TenantId tenantId, EntityViewId entityViewId) {
         deleteEntityView(tenantId, null, entityViewId);
     }
+
+    /**
+     * Removes entity view.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param entityViewId entity view id (EntityViewId)
+     */
 
     protected void deleteEntityView(TenantId tenantId, Edge edge, EntityViewId entityViewId) {
         EntityView entityViewById = edgeCtx.getEntityViewService().findEntityViewById(tenantId, entityViewId);

@@ -24,6 +24,10 @@ import org.thingsboard.server.common.data.query.AlarmData;
 import org.thingsboard.server.service.subscription.SubscriptionErrorCode;
 
 import java.util.List;
+/**
+ * Outbound WebSocket update payload for alarm data.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @ToString
 public class AlarmDataUpdate extends DataUpdate<AlarmData> {
@@ -33,15 +37,36 @@ public class AlarmDataUpdate extends DataUpdate<AlarmData> {
     @Getter
     private long totalEntities;
 
+    /**
+     * Constructs {@link AlarmDataUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param data data
+     * @param update subscription update payload
+     * @param allowedEntities allowed entities
+     * @param totalEntities total entities
+     */
+
     public AlarmDataUpdate(int cmdId, PageData<AlarmData> data, List<AlarmData> update, long allowedEntities, long totalEntities) {
         super(cmdId, data, update, SubscriptionErrorCode.NO_ERROR.getCode(), null);
         this.allowedEntities = allowedEntities;
         this.totalEntities = totalEntities;
     }
 
+    /**
+     * Constructs {@link AlarmDataUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     */
+
     public AlarmDataUpdate(int cmdId, int errorCode, String errorMsg) {
         super(cmdId, null, null, errorCode, errorMsg);
     }
+
+    /**
+     * Returns cmd update type.
+     * @return {@link CmdUpdateType}
+     */
 
     @Override
     public CmdUpdateType getCmdUpdateType() {

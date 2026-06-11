@@ -21,16 +21,32 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+    /**
+     * Spring service component for project info (database schema installation, upgrades, and demo data loading).
+     */
+
 @Component
 @RequiredArgsConstructor
 public class ProjectInfo {
 
     private final Optional<BuildProperties> buildProperties;
+    /**
+     * Returns project version.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getProjectVersion() {
         return buildProperties.orElseThrow(() -> new IllegalStateException("Build properties are missing. Please rebuild the project with maven"))
                 .getVersion().replaceAll("[^\\d.]", "");
     }
+    /**
+     * Returns product type.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getProductType() {
         return "CE";

@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.exception;
 
 import org.springframework.security.authentication.AuthenticationServiceException;
 
+/**
+ * Thrown when auth method not supported during security operations.
+ */
+
 public class AuthMethodNotSupportedException extends AuthenticationServiceException {
     private static final long serialVersionUID = 3705043083010304496L;
 

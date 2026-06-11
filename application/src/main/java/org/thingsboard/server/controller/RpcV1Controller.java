@@ -39,12 +39,28 @@ import java.util.UUID;
 import static org.thingsboard.server.controller.ControllerConstants.DEVICE_ID_PARAM_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for device RPC (legacy v1 API).
+ * 
+ * <p>Base path: {@code /api/plugins/rpc}. Deprecated one-way and two-way device RPC; prefer RpcV2Controller.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping(TbUrlConstants.RPC_V1_URL_PREFIX)
 @Slf4j
 public class RpcV1Controller extends AbstractRpcController {
 
+    /**
+     * Send one-way RPC request.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/plugins/rpc/oneway/{deviceId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param deviceIdStr device Id Str
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Send one-way RPC request (handleOneWayDeviceRPCRequestV1)", notes = "Deprecated. See 'Rpc V 2 Controller' instead." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/oneway/{deviceId}", method = RequestMethod.POST)
@@ -58,6 +74,16 @@ public class RpcV1Controller extends AbstractRpcController {
         return handleDeviceRPCRequest(true, new DeviceId(UUID.fromString(deviceIdStr)), requestBody, HttpStatus.REQUEST_TIMEOUT, HttpStatus.CONFLICT);
     }
 
+    /**
+     * Send two-way RPC request.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/plugins/rpc/twoway/{deviceId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param deviceIdStr device Id Str
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Send two-way RPC request (handleTwoWayDeviceRPCRequestV1)", notes = "Deprecated. See 'Rpc V 2 Controller' instead." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/twoway/{deviceId}", method = RequestMethod.POST)

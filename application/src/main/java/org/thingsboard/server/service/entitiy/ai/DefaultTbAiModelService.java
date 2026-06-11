@@ -26,6 +26,9 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 
 import static java.util.Objects.requireNonNullElseGet;
+/**
+ * Default implementation of {@link TbAiModelService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -33,6 +36,14 @@ import static java.util.Objects.requireNonNullElseGet;
 class DefaultTbAiModelService extends AbstractTbEntityService implements TbAiModelService {
 
     private final AiModelService aiModelService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param model model ({@link AiModel})
+     * @param user authenticated user performing the action
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AiModel save(AiModel model, User user) {
@@ -54,6 +65,14 @@ class DefaultTbAiModelService extends AbstractTbEntityService implements TbAiMod
 
         return savedModel;
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param model model ({@link AiModel})
+     * @param user authenticated user performing the action
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean delete(AiModel model, User user) {

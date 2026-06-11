@@ -35,11 +35,24 @@ public class MultipleTbCallback implements TbCallback {
         this.counter = new AtomicInteger(count);
         this.callback = callback;
     }
+    /**
+     * Handles success.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onSuccess() {
         onSuccess(1);
     }
+    /**
+     * Handles success.
+     *
+     * @param number number
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onSuccess(int number) {
         log.trace("[{}][{}] onSuccess({})", id, callback.getId(), number);
@@ -48,6 +61,13 @@ public class MultipleTbCallback implements TbCallback {
             callback.onSuccess();
         }
     }
+    /**
+     * Handles failure.
+     *
+     * @param t t ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onFailure(Throwable t) {

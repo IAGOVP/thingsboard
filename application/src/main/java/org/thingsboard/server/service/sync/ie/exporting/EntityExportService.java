@@ -21,7 +21,27 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 import org.thingsboard.server.service.sync.vc.data.EntitiesExportCtx;
 
+/**
+
+ * Exports entity entities to portable JSON.
+
+ *
+
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+
+ */
+
 public interface EntityExportService<I extends EntityId, E extends ExportableEntity<I>, D extends EntityExportData<E>> {
+/**
+ * Returns export data.
+ *
+ * @param ctx calculated-field execution context
+ * @param entityId target entity identifier
+ * @return {@link D}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     D getExportData(EntitiesExportCtx<?> ctx, I entityId) throws ThingsboardException;
 

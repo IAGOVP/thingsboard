@@ -34,7 +34,15 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * A size delimited Receive that consists of a 4 byte network-ordered size N followed by N bytes of content
+ * Kafka network receive buffer with ThingsBoard-specific size limits and error handling.
+ *
+ * <p>Vendor override of Apache Kafka's {@code NetworkReceive} (see KAFKA-4090 modification note
+ * in this file's header). Adds {@link #TB_MAX_REQUESTED_BUFFER_SIZE} and
+ * {@link #TB_LOG_REQUESTED_BUFFER_SIZE} caps so oversized broker requests fail fast with
+ * {@link ThingsboardKafkaClientError} instead of exhausting heap.
+ *
+ * <p>A size-delimited receive consists of a 4-byte network-ordered size {@code N} followed by
+ * {@code N} bytes of payload content read from a {@link ScatteringByteChannel}.
  */
 public class NetworkReceive implements Receive {
 

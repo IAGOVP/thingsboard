@@ -34,6 +34,11 @@ import org.thingsboard.server.queue.provider.TbQueueProducerProvider;
 
 import java.util.Optional;
 import java.util.UUID;
+/**
+ * Service implementation for kafka edge event in ThingsBoard Edge integration.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Slf4j
 @Service
@@ -44,7 +49,12 @@ public class KafkaEdgeEventService extends BaseEdgeEventService {
     private final TopicService topicService;
     private final TbQueueProducerProvider producerProvider;
     private final Optional<EdgeStatsCounterService> statsCounterService;
-
+    /**
+     * Creates or persists async.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> saveAsync(EdgeEvent edgeEvent) {
         validateEdgeEvent(edgeEvent);

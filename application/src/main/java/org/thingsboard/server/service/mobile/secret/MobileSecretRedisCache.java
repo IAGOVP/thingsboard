@@ -25,6 +25,10 @@ import org.thingsboard.server.cache.TbJsonRedisSerializer;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.security.model.JwtPair;
 
+    /**
+     * Spring service component for mobile secret redis cache (mobile app bundles, secrets, and deep-link support).
+     */
+
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("MobileSecretCache")
 public class MobileSecretRedisCache extends RedisTbTransactionalCache<String, JwtPair> {

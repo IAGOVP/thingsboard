@@ -88,6 +88,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+/**
+ * Git repository integration for default version control queue service.
+ */
 
 @TbCoreComponent
 @Service
@@ -118,6 +121,14 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         this.scheduler = scheduler;
         this.executor = executor;
     }
+    /**
+     * Prepare commit.
+     *
+     * @param user authenticated user performing the action
+     * @param request request payload with operation parameters
+     * @return future completing with {@link CommitGitRequest}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<CommitGitRequest> prepareCommit(User user, VersionCreateRequest request) {
@@ -128,6 +139,14 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         ).build());
         return Futures.transform(future, f -> commit, executor);
     }
+    /**
+     * Add to commit.
+     *
+     * @param commit commit ({@link CommitGitRequest})
+     * @param entityData entity data ({@link EntityExportData})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     @Override
@@ -158,6 +177,14 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
             return null;
         }, executor);
     }
+    /**
+     * Deletes all.
+     *
+     * @param commit commit ({@link CommitGitRequest})
+     * @param entityType entity type ({@link EntityType})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> deleteAll(CommitGitRequest commit, EntityType entityType) {
@@ -168,6 +195,13 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                         TransportProtos.DeleteMsg.newBuilder().setRelativePath(path)
                 )).build());
     }
+    /**
+     * Pushes the requested data.
+     *
+     * @param commit commit ({@link CommitGitRequest})
+     * @return future completing with {@link VersionCreationResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<VersionCreationResult> push(CommitGitRequest commit) {
@@ -176,6 +210,15 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                 buildCommitRequest(commit).setPushMsg(TransportProtos.PushMsg.getDefaultInstance())
         ));
     }
+    /**
+     * Lists versions.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param branch Git branch name
+     * @param pageLink pagination and sort parameters
+     * @return future completing with {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, PageLink pageLink) {
@@ -186,6 +229,16 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                         pageLink
                 ).build());
     }
+    /**
+     * Lists versions.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param branch Git branch name
+     * @param entityType entity type ({@link EntityType})
+     * @param pageLink pagination and sort parameters
+     * @return future completing with {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, EntityType entityType, PageLink pageLink) {
@@ -197,6 +250,16 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                         pageLink
                 ).build());
     }
+    /**
+     * Lists versions.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param branch Git branch name
+     * @param entityId target entity identifier
+     * @param pageLink pagination and sort parameters
+     * @return future completing with {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<PageData<EntityVersion>> listVersions(TenantId tenantId, String branch, EntityId entityId, PageLink pageLink) {
@@ -232,6 +295,15 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         ListVersionsGitRequest request = new ListVersionsGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setListVersionRequest(requestMsg));
     }
+    /**
+     * Lists entities at version.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param versionId entity version identifier in the repository
+     * @param entityType entity type ({@link EntityType})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<VersionedEntityInfo>> listEntitiesAtVersion(TenantId tenantId, String versionId, EntityType entityType) {
@@ -240,6 +312,14 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                 .setEntityType(entityType.name())
                 .build());
     }
+    /**
+     * Lists entities at version.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param versionId entity version identifier in the repository
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<VersionedEntityInfo>> listEntitiesAtVersion(TenantId tenantId, String versionId) {
@@ -252,12 +332,30 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         ListEntitiesGitRequest request = new ListEntitiesGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setListEntitiesRequest(requestMsg));
     }
+    /**
+     * Lists branches.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<BranchInfo>> listBranches(TenantId tenantId) {
         ListBranchesGitRequest request = new ListBranchesGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setListBranchesRequest(TransportProtos.ListBranchesRequestMsg.newBuilder().build()));
     }
+    /**
+     * Returns versions diff.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     * @param externalId external id ({@link EntityId})
+     * @param versionId1 version id1 ({@link String})
+     * @param versionId2 version id2 ({@link String})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<EntityVersionsDiff>> getVersionsDiff(TenantId tenantId, EntityType entityType, EntityId externalId, String versionId1, String versionId2) {
@@ -269,6 +367,15 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                 .setVersionId2(request.getVersionId2())
                 .build()));
     }
+    /**
+     * Returns entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param versionId entity version identifier in the repository
+     * @param entityId target entity identifier
+     * @return future completing with {@link EntityExportData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @SuppressWarnings("rawtypes")
@@ -297,10 +404,26 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
             log.trace("[{}][{}] PUSHING request: {}", request.getTenantId(), request.getRequestId(), requestBody);
             SettableFuture<Void> submitFuture = SettableFuture.create();
             clusterService.pushMsgToVersionControl(request.getTenantId(), requestBody, new TbQueueCallback() {
+                
+                /**
+                 * Handles success.
+                 *
+                 * @param metadata metadata ({@link TbQueueMsgMetadata})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
+
                 @Override
                 public void onSuccess(TbQueueMsgMetadata metadata) {
                     submitFuture.set(null);
                 }
+                /**
+                 * Handles failure.
+                 *
+                 * @param t t ({@link Throwable})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
 
                 @Override
                 public void onFailure(Throwable t) {
@@ -333,6 +456,17 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         }, settings);
         return Futures.transformAsync(submitFuture, input -> request.getFuture(), executor);
     }
+    /**
+     * Returns entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param versionId entity version identifier in the repository
+     * @param entityType entity type ({@link EntityType})
+     * @param offset offset
+     * @param limit limit
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @SuppressWarnings("rawtypes")
@@ -348,6 +482,14 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
                         .setLimit(limit)
         ).build());
     }
+    /**
+     * Init repository.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link RepositorySettings})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> initRepository(TenantId tenantId, RepositorySettings settings) {
@@ -355,6 +497,14 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         VoidGitRequest request = new VoidGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setInitRepositoryRequest(GenericRepositoryRequestMsg.getDefaultInstance()), settings);
     }
+    /**
+     * Test repository.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link RepositorySettings})
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> testRepository(TenantId tenantId, RepositorySettings settings) {
@@ -362,6 +512,13 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         VoidGitRequest request = new VoidGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setTestRepositoryRequest(GenericRepositoryRequestMsg.getDefaultInstance()), settings);
     }
+    /**
+     * Clear repository.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Void> clearRepository(TenantId tenantId) {
@@ -369,6 +526,13 @@ public class DefaultGitVersionControlQueueService implements GitVersionControlQu
         ClearRepositoryGitRequest request = new ClearRepositoryGitRequest(tenantId);
         return sendRequest(request, builder -> builder.setClearRepositoryRequest(GenericRepositoryRequestMsg.getDefaultInstance()));
     }
+    /**
+     * Processes response.
+     *
+     * @param vcResponseMsg vc response msg ({@link VersionControlResponseMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processResponse(VersionControlResponseMsg vcResponseMsg) {

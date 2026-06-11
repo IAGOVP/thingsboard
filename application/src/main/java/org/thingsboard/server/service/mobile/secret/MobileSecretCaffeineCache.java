@@ -22,6 +22,10 @@ import org.thingsboard.server.cache.CaffeineTbTransactionalCache;
 import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.security.model.JwtPair;
 
+    /**
+     * Spring service component for mobile secret caffeine cache (mobile app bundles, secrets, and deep-link support).
+     */
+
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "caffeine", matchIfMissing = true)
 @Service("MobileSecretCache")
 public class MobileSecretCaffeineCache extends CaffeineTbTransactionalCache<String, JwtPair> {

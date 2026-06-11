@@ -27,6 +27,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Minimal Spring Security configuration for standalone rule-engine microservice nodes.
+ *
+ * <p>Active only when {@code service.type=tb-rule-engine}. Unlike
+ * {@link ThingsboardSecurityConfiguration}, this profile exposes almost no public HTTP API:
+ * only {@code /actuator/prometheus} is permitted without authentication. All other requests
+ * require authentication (typically for internal health/metrics scraping in secured deployments).
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -37,6 +45,15 @@ public class TbRuleEngineSecurityConfiguration {
     @Autowired
     private HttpSecurityHeadersCustomizer httpSecurityHeadersCustomizer;
 
+    /**
+     * Builds the security filter chain for the rule-engine service.
+     *
+     * <p>Disables CSRF (stateless service), enables CORS defaults, applies configurable
+     * security headers, and requires authentication for all endpoints except Prometheus.
+     *
+     * @param http Spring Security HTTP builder
+     * @return configured {@link SecurityFilterChain}
+     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.headers(headers -> {

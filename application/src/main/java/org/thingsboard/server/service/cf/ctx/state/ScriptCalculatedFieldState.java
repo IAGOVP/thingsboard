@@ -29,6 +29,9 @@ import org.thingsboard.server.service.cf.CalculatedFieldResult;
 import org.thingsboard.server.service.cf.TelemetryCalculatedFieldResult;
 
 import java.util.Map;
+/**
+ * Runtime state for script calculated field calculated fields.
+ */
 
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
@@ -39,12 +42,28 @@ public class ScriptCalculatedFieldState extends BaseCalculatedFieldState {
     public ScriptCalculatedFieldState(EntityId entityId) {
         super(entityId);
     }
+    /**
+     * Set ctx.
+     *
+     * @param ctx calculated-field execution context
+     * @param actorCtx actor ctx ({@link TbActorRef})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setCtx(CalculatedFieldCtx ctx, TbActorRef actorCtx) {
         super.setCtx(ctx, actorCtx);
         this.tbelExpression = ctx.getTbelExpressions().get(ctx.getExpression());
     }
+    /**
+     * Perform calculation.
+     *
+     * @param updatedArgs updated args ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return future completing with {@link CalculatedFieldResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<CalculatedFieldResult> performCalculation(Map<String, ArgumentEntry> updatedArgs, CalculatedFieldCtx ctx) {
@@ -60,6 +79,12 @@ public class ScriptCalculatedFieldState extends BaseCalculatedFieldState {
                 MoreExecutors.directExecutor()
         );
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldType getType() {

@@ -42,6 +42,15 @@ public class CalculatedFieldManagerActor extends AbstractCalculatedFieldActor {
         super(systemContext, tenantId);
         this.processor = new CalculatedFieldManagerMessageProcessor(systemContext, tenantId);
     }
+    
+    /**
+     * Initializes the actor after creation (schedules ticks, loads metadata, creates child actors).
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
+
 
     @Override
     public void init(TbActorCtx ctx) throws TbActorException {
@@ -55,12 +64,29 @@ public class CalculatedFieldManagerActor extends AbstractCalculatedFieldActor {
             throw new TbActorException("Failed to initialize manager actor", e);
         }
     }
+    
+    /**
+     * Stops child actors and releases resources before the actor terminates.
+     *
+     * @param stopReason stop reason ({@link TbActorStopReason})
+     * @param cause cause ({@link Throwable})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
+
 
     @Override
     public void destroy(TbActorStopReason stopReason, Throwable cause) throws TbActorException {
         log.debug("[{}] Stopping CF manager actor.", processor.tenantId);
         processor.stop();
     }
+    /**
+     * Do process cf msg.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     @Override
     protected boolean doProcessCfMsg(ToCalculatedFieldSystemMsg msg) throws CalculatedFieldException {

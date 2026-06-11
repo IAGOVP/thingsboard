@@ -33,21 +33,106 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+
+ * Service API for calculated-field argument resolution and result processing.
+
+ *
+
+ * <p>Fetches telemetry, attributes, and relations; dispatches results to the rule engine and linked fields.
+
+ */
+
 public interface CalculatedFieldProcessingService {
+/**
+ * Fetches arguments.
+ *
+ * @param ctx calculated-field execution context
+ * @param entityId target entity identifier
+ * @return future completing with {@link Map}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     ListenableFuture<Map<String, ArgumentEntry>> fetchArguments(CalculatedFieldCtx ctx, EntityId entityId);
+/**
+ * Fetches dynamic args from db.
+ *
+ * @param ctx calculated-field execution context
+ * @param entityId target entity identifier
+ * @return {@link Map}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Map<String, ArgumentEntry> fetchDynamicArgsFromDb(CalculatedFieldCtx ctx, EntityId entityId);
+/**
+ * Fetches propagation argument from db.
+ *
+ * @param ctx calculated-field execution context
+ * @param entityId target entity identifier
+ * @return optional {@link PropagationArgumentEntry}, empty if not found
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Optional<PropagationArgumentEntry> fetchPropagationArgumentFromDb(CalculatedFieldCtx ctx, EntityId entityId);
+/**
+ * Fetches related entities.
+ *
+ * @param ctx calculated-field execution context
+ * @param entityId target entity identifier
+ * @return {@link List}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     List<EntityId> fetchRelatedEntities(CalculatedFieldCtx ctx, EntityId entityId);
+/**
+ * Fetches args from db.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param arguments arguments ({@link Map})
+ * @return {@link Map}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Map<String, ArgumentEntry> fetchArgsFromDb(TenantId tenantId, EntityId entityId, Map<String, Argument> arguments);
+/**
+ * Processes result.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param cfName cf name ({@link String})
+ * @param result result ({@link CalculatedFieldResult})
+ * @param cfIds cf ids ({@link List})
+ * @param callback queue callback invoked when processing completes
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void processResult(TenantId tenantId, EntityId entityId, String cfName, CalculatedFieldResult result, List<CalculatedFieldId> cfIds, TbCallback callback);
+/**
+ * Fetches metric during interval.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param argKey arg key ({@link String})
+ * @param metric metric ({@link AggMetric})
+ * @param interval interval ({@link AggIntervalEntry})
+ * @return {@link ArgumentEntry}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     ArgumentEntry fetchMetricDuringInterval(TenantId tenantId, EntityId entityId, String argKey, AggMetric metric, AggIntervalEntry interval);
+/**
+ * Pushes msg to links.
+ *
+ * @param msg msg ({@link CalculatedFieldTelemetryMsg})
+ * @param linkedCalculatedFields linked calculated fields ({@link List})
+ * @param callback queue callback invoked when processing completes
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void pushMsgToLinks(CalculatedFieldTelemetryMsg msg, List<CalculatedFieldEntityCtxId> linkedCalculatedFields, TbCallback callback);
 

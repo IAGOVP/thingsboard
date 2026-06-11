@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.service.ws;
 
+/**
+ * Discriminator for WebSocket command/update message types exchanged on {@code /api/ws}.
+ */
+
 public enum WsCmdType {
     AUTH,
 

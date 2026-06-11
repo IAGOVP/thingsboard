@@ -33,6 +33,11 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 
 import java.net.URI;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Custom oauth2client mapper for OAuth2 / social login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service(value = "customOAuth2ClientMapper")
 @Slf4j
@@ -42,7 +47,15 @@ public class CustomOAuth2ClientMapper extends AbstractOAuth2ClientMapper impleme
 
 
     private RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
-
+    /**
+     * Returns or create user by client principal.
+     *
+     * @param request request (HttpServletRequest)
+     * @param token token (OAuth2AuthenticationToken)
+     * @param providerAccessToken provider access token (String)
+     * @param auth2Client auth2client (OAuth2Client)
+     * @return {@link SecurityUser} result
+     */
     @Override
     public SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, OAuth2AuthenticationToken token, String providerAccessToken, OAuth2Client auth2Client) {
         OAuth2MapperConfig config = auth2Client.getMapperConfig();

@@ -108,6 +108,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
     void init(TbActorCtx ctx) {
         this.actorCtx = ctx;
     }
+    /**
+     * Stop.
+     *
+     * @param partitionChanged partition changed
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void stop(boolean partitionChanged) {
         log.info(partitionChanged ?
@@ -118,12 +125,26 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
         states.clear();
         actorCtx.stop(actorCtx.getSelf());
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void process(CalculatedFieldPartitionChangeMsg msg) {
         if (!systemContext.getPartitionService().resolve(ServiceType.TB_RULE_ENGINE, DataConstants.CF_QUEUE_NAME, tenantId, entityId).isMyPartition()) {
             stop(true);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void process(CalculatedFieldStateRestoreMsg msg) {
         CalculatedFieldId cfId = msg.getId().cfId();
@@ -138,6 +159,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
         }
         msg.getCallback().onSuccess();
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void process(CalculatedFieldStatePartitionRestoreMsg msg) {
         log.debug("Processing CF state partition restore msg: {}", msg);
@@ -147,6 +175,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
             }
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     public void process(EntityInitCalculatedFieldMsg msg) throws CalculatedFieldException {
         log.debug("[{}] Processing entity init CF msg: {}", msg.getCtx().getCfId(), msg);
@@ -185,6 +220,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
             throw CalculatedFieldException.builder().ctx(ctx).eventEntity(entityId).cause(e).build();
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     public void process(CalculatedFieldArgumentResetMsg msg) throws CalculatedFieldException {
         log.debug("[{}] Processing CF argument reset msg.", entityId);
@@ -202,6 +244,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
             throw CalculatedFieldException.builder().ctx(ctx).eventEntity(entityId).cause(e).build();
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     public void process(CalculatedFieldEntityDeleteMsg msg) throws CalculatedFieldException {
         log.debug("[{}] Processing CF entity delete msg.", msg.getEntityId());
@@ -223,6 +272,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
             }
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     public void process(CalculatedFieldRelationActionMsg msg) throws CalculatedFieldException {
         log.debug("[{}] Processing CF {} related entity msg.", msg.getRelatedEntityId(), msg.getAction());
@@ -308,6 +364,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
             throw CalculatedFieldException.builder().ctx(ctx).eventEntity(entityId).cause(e).build();
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     public void process(EntityCalculatedFieldTelemetryMsg msg) throws CalculatedFieldException {
         log.trace("[{}] Processing CF telemetry msg: {}", msg.getEntityId(), msg);
@@ -323,6 +386,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
             process(ctx, proto, cfIdSet, cfIdList, callback);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     public void process(EntityCalculatedFieldLinkedTelemetryMsg msg) throws CalculatedFieldException {
         log.trace("[{}] Processing CF link telemetry msg: {}", msg.getEntityId(), msg);
@@ -384,6 +454,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
             throw CalculatedFieldException.builder().ctx(ctx).eventEntity(entityId).cause(e).build();
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     public void process(CalculatedFieldReevaluateMsg msg) throws CalculatedFieldException {
         CalculatedFieldCtx ctx = msg.getCtx();
@@ -400,6 +477,13 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
             throw CalculatedFieldException.builder().ctx(ctx).eventEntity(entityId).errorMessage(ctx.getSizeExceedsLimitMessage()).build();
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void process(CalculatedFieldAlarmActionMsg msg) {
         log.debug("[{}] Processing alarm action event msg: {}", entityId, msg);
@@ -573,10 +657,23 @@ public class CalculatedFieldEntityMessageProcessor extends AbstractContextAwareM
     private void deleteStateAndRaiseSizeException(CalculatedFieldEntityCtxId ctxId, CalculatedFieldException ex, TbCallback callback) throws CalculatedFieldException {
         // We remove the state, but remember that it is over-sized in a local map.
         cfStateService.deleteState(ctxId, new TbCallback() {
+            /**
+             * Handles success.
+             *
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess() {
                 callback.onFailure(ex);
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {

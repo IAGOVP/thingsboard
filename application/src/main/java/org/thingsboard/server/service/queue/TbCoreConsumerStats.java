@@ -23,6 +23,9 @@ import org.thingsboard.server.gen.transport.TransportProtos;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Consumer statistics counters for tb core consumer stats.
+ */
 
 @Slf4j
 public class TbCoreConsumerStats {
@@ -80,6 +83,11 @@ public class TbCoreConsumerStats {
 
     private final List<StatsCounter> counters = new ArrayList<>(23);
 
+    /**
+     * Constructs {@link TbCoreConsumerStats} with the supplied dependencies and configuration.
+     * @param statsFactory stats factory
+     */
+
     public TbCoreConsumerStats(StatsFactory statsFactory) {
         String statsKey = StatsType.CORE.getName();
 
@@ -116,6 +124,11 @@ public class TbCoreConsumerStats {
         return counter;
     }
 
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
+
     public void log(TransportProtos.TransportToDeviceActorMsg msg) {
         totalCounter.increment();
         if (msg.hasSessionEvent()) {
@@ -141,40 +154,80 @@ public class TbCoreConsumerStats {
         }
     }
 
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
+
     public void log(TransportProtos.DeviceStateServiceMsgProto msg) {
         totalCounter.increment();
         deviceStateCounter.increment();
     }
+
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
 
     public void log(TransportProtos.DeviceConnectProto msg) {
         totalCounter.increment();
         deviceConnectsCounter.increment();
     }
 
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
+
     public void log(TransportProtos.DeviceActivityProto msg) {
         totalCounter.increment();
         deviceActivitiesCounter.increment();
     }
+
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
 
     public void log(TransportProtos.DeviceDisconnectProto msg) {
         totalCounter.increment();
         deviceDisconnectsCounter.increment();
     }
 
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
+
     public void log(TransportProtos.DeviceInactivityProto msg) {
         totalCounter.increment();
         deviceInactivitiesCounter.increment();
     }
+
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
 
     public void log(TransportProtos.DeviceInactivityTimeoutUpdateProto msg) {
         totalCounter.increment();
         deviceInactivityTimeoutUpdatesCounter.increment();
     }
 
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
+
     public void log(TransportProtos.SubscriptionMgrMsgProto msg) {
         totalCounter.increment();
         subscriptionMsgCounter.increment();
     }
+
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
 
     public void log(TransportProtos.ToCoreNotificationMsg msg) {
         totalCounter.increment();
@@ -199,7 +252,11 @@ public class TbCoreConsumerStats {
         }
     }
 
-    public void printStats() {
+    /**
+     * Print stats.
+     */
+
+public void printStats() {
         int total = totalCounter.get();
         if (total > 0) {
             StringBuilder stats = new StringBuilder();
@@ -208,6 +265,22 @@ public class TbCoreConsumerStats {
             log.info("Core Stats: {}", stats);
         }
     }
+
+    /**
+     * Resets reset.
+     */
+
+    /**
+     * Resets.
+     */
+
+    /**
+     * Resets.
+     */
+
+    /**
+     * Resets.
+     */
 
     public void reset() {
         counters.forEach(StatsCounter::clear);

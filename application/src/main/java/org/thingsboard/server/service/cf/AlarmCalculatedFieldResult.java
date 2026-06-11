@@ -28,6 +28,9 @@ import org.thingsboard.server.common.msg.TbMsg;
 import org.thingsboard.server.common.msg.TbMsgMetaData;
 
 import java.util.List;
+/**
+ * Result of calculated-field evaluation (alarm calculated field result).
+ */
 
 @Data
 @Builder
@@ -35,6 +38,15 @@ import java.util.List;
 public class AlarmCalculatedFieldResult implements CalculatedFieldResult {
 
     private final TbAlarmResult alarmResult;
+    /**
+     * To tb msg.
+     *
+     * @param entityId target entity identifier
+     * @param cfName cf name ({@link String})
+     * @param cfIds cf ids ({@link List})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg toTbMsg(EntityId entityId, String cfName, List<CalculatedFieldId> cfIds) {
@@ -68,11 +80,23 @@ public class AlarmCalculatedFieldResult implements CalculatedFieldResult {
                 .metaData(metaData)
                 .build();
     }
+    /**
+     * String value.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String stringValue() {
         return alarmResult != null ? JacksonUtil.toString(alarmResult) : null;
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isEmpty() {

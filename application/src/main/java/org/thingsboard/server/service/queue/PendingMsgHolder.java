@@ -18,6 +18,10 @@ package org.thingsboard.server.service.queue;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Thread-safe holder for a single in-flight queue message awaiting callback completion.
+ */
+
 public class PendingMsgHolder<T> {
     @Getter @Setter
     private volatile T msg;

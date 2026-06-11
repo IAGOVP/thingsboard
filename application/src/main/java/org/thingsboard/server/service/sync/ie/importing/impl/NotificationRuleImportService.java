@@ -49,6 +49,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+/**
+ * Imports notification rule entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -56,11 +61,31 @@ import java.util.stream.Collectors;
 public class NotificationRuleImportService extends BaseEntityImportService<NotificationRuleId, NotificationRule, EntityExportData<NotificationRule>> {
 
     private final NotificationRuleService notificationRuleService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationRule notification rule ({@link NotificationRule})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, NotificationRule notificationRule, IdProvider idProvider) {
         notificationRule.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param notificationRule notification rule ({@link NotificationRule})
+     * @param oldNotificationRule old notification rule ({@link NotificationRule})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link NotificationRule}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected NotificationRule prepare(EntitiesImportCtx ctx, NotificationRule notificationRule, NotificationRule oldNotificationRule, EntityExportData<NotificationRule> exportData, IdProvider idProvider) {
@@ -133,23 +158,56 @@ public class NotificationRuleImportService extends BaseEntityImportService<Notif
         }
         return notificationRule;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param notificationRule notification rule ({@link NotificationRule})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link NotificationRule}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected NotificationRule saveOrUpdate(EntitiesImportCtx ctx, NotificationRule notificationRule, EntityExportData<NotificationRule> exportData, IdProvider idProvider, CompareResult compareResult) {
         ConstraintValidator.validateFields(notificationRule);
         return notificationRuleService.saveNotificationRule(ctx.getTenantId(), notificationRule);
     }
+    /**
+     * Handles entity saved.
+     *
+     * @param user authenticated user performing the action
+     * @param savedEntity saved entity ({@link NotificationRule})
+     * @param oldEntity old entity ({@link NotificationRule})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onEntitySaved(User user, NotificationRule savedEntity, NotificationRule oldEntity) {
         entityActionService.logEntityAction(user, savedEntity.getId(), savedEntity, null,
                 oldEntity == null ? ActionType.ADDED : ActionType.UPDATED, null);
     }
+    /**
+     * Deep copy.
+     *
+     * @param notificationRule notification rule ({@link NotificationRule})
+     * @return {@link NotificationRule}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected NotificationRule deepCopy(NotificationRule notificationRule) {
         return new NotificationRule(notificationRule);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

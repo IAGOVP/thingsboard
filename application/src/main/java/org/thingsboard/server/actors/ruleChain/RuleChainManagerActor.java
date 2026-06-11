@@ -38,8 +38,11 @@ import org.thingsboard.server.dao.rule.RuleChainService;
 import java.util.function.Function;
 
 /**
- * Created by ashvayka on 15.03.18.
+ * Abstract tenant-scoped actor that owns rule-chain and rule-node child actors.
+ *
+ * <p>Creates and stops {@link org.thingsboard.server.actors.ruleChain.RuleChainActor} instances on lifecycle events and routes {@link org.thingsboard.server.common.msg.queue.QueueToRuleEngineMsg} to the target chain.
  */
+
 @Slf4j
 public abstract class RuleChainManagerActor extends ContextAwareActor {
 
@@ -57,6 +60,12 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
         this.tenantId = tenantId;
         this.ruleChainService = systemContext.getRuleChainService();
     }
+    /**
+     * Init rule chains.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void initRuleChains() {
         log.debug("[{}] Initializing rule chains", tenantId);
@@ -69,6 +78,12 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
         }
         ruleChainsInitialized = true;
     }
+    /**
+     * Destroy rule chains.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void destroyRuleChains() {
         log.debug("[{}] Destroying rule chains", tenantId);
@@ -77,6 +92,14 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
         }
         ruleChainsInitialized = false;
     }
+    /**
+     * Visit.
+     *
+     * @param entity entity ({@link RuleChain})
+     * @param actorRef actor ref ({@link TbActorRef})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void visit(RuleChain entity, TbActorRef actorRef) {
         if (entity != null && entity.isRoot() && entity.getType().equals(RuleChainType.CORE)) {
@@ -84,10 +107,25 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
             rootChainActor = actorRef;
         }
     }
+    /**
+     * Returns or create actor.
+     *
+     * @param ruleChainId target rule chain identifier
+     * @return {@link TbActorRef}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TbActorRef getOrCreateActor(RuleChainId ruleChainId) {
         return getOrCreateActor(ruleChainId, eId -> ruleChainService.findRuleChainById(TenantId.SYS_TENANT_ID, eId));
     }
+    /**
+     * Returns or create actor.
+     *
+     * @param ruleChainId target rule chain identifier
+     * @param provider provider ({@link Function})
+     * @return {@link TbActorRef}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TbActorRef getOrCreateActor(RuleChainId ruleChainId, Function<RuleChainId, RuleChain> provider) {
         return ctx.getOrCreateChildActor(new TbEntityActorId(ruleChainId),
@@ -103,6 +141,13 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
                 },
                 () -> true);
     }
+    /**
+     * Returns entity actor ref.
+     *
+     * @param entityId target entity identifier
+     * @return {@link TbActorRef}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TbActorRef getEntityActorRef(EntityId entityId) {
         TbActorRef target = null;
@@ -111,6 +156,13 @@ public abstract class RuleChainManagerActor extends ContextAwareActor {
         }
         return target;
     }
+    /**
+     * Broadcast.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void broadcast(TbActorMsg msg) {
         ctx.broadcastToChildren(msg, new TbEntityTypeActorIdPredicate(EntityType.RULE_CHAIN));

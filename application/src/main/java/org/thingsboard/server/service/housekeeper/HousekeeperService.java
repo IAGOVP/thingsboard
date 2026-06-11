@@ -47,6 +47,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
+    /**
+     * Spring service component for housekeeper service (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @TbCoreComponent
 @Service
 @Slf4j
@@ -82,6 +86,12 @@ public class HousekeeperService {
                 .build();
         this.taskProcessors = taskProcessors.stream().collect(Collectors.toMap(HousekeeperTaskProcessor::getTaskType, p -> p));
     }
+    /**
+     * After start up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void afterStartUp() {
@@ -103,6 +113,13 @@ public class HousekeeperService {
         }
         consumer.commit();
     }
+    /**
+     * Processes task.
+     *
+     * @param msg msg ({@link ToHousekeeperServiceMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     protected <T extends HousekeeperTask> void processTask(ToHousekeeperServiceMsg msg) throws Exception {

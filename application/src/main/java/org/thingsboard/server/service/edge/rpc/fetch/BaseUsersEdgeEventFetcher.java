@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.dao.user.UserService;
+/**
+ * Fetches base users entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @AllArgsConstructor
@@ -44,6 +49,14 @@ public abstract class BaseUsersEdgeEventFetcher extends BasePageableEdgeEventFet
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.USER,
                 EdgeEventActionType.ADDED, user.getId(), null);
     }
+
+    /**
+     * Loads users.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
 
     protected abstract PageData<User> findUsers(TenantId tenantId, PageLink pageLink);
 

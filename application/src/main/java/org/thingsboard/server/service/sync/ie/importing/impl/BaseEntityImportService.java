@@ -77,6 +77,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+/**
+ * Imports base entity entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Slf4j
 public abstract class BaseEntityImportService<I extends EntityId, E extends ExportableEntity<I>, D extends EntityExportData<E>> implements EntityImportService<I, E, D> {
@@ -98,6 +103,14 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
     protected TbClusterService clusterService;
     @Autowired
     protected TbLogEntityActionService logEntityActionService;
+    /**
+     * Imports entity.
+     *
+     * @param ctx calculated-field execution context
+     * @param exportData export data ({@link D})
+     * @return {@link EntityImportResult}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public EntityImportResult<E> importEntity(EntitiesImportCtx ctx, D exportData) throws ThingsboardException {
@@ -153,17 +166,63 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
         }
 
     }
+    /**
+     * Updates related entities if unmodified.
+     *
+     * @param ctx calculated-field execution context
+     * @param prepared prepared ({@link E})
+     * @param exportData export data ({@link D})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean updateRelatedEntitiesIfUnmodified(EntitiesImportCtx ctx, E prepared, D exportData, IdProvider idProvider) {
         return importCalculatedFields(ctx, prepared, exportData, idProvider);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public abstract EntityType getEntityType();
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entity entity ({@link E})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void setOwner(TenantId tenantId, E entity, IdProvider idProvider);
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param entity entity ({@link E})
+     * @param oldEntity old entity ({@link E})
+     * @param exportData export data ({@link D})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link E}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract E prepare(EntitiesImportCtx ctx, E entity, E oldEntity, D exportData, IdProvider idProvider);
+    /**
+     * Compares the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param exportData export data ({@link D})
+     * @param prepared prepared ({@link E})
+     * @param existing existing ({@link E})
+     * @return {@link CompareResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected CompareResult compare(EntitiesImportCtx ctx, D exportData, E prepared, E existing) {
         if (existing == null) {
@@ -186,12 +245,36 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
         }
         return new CompareResult(updateNeeded, externalIdChangedOnly);
     }
+    /**
+     * Is update needed.
+     *
+     * @param ctx calculated-field execution context
+     * @param exportData export data ({@link D})
+     * @param prepared prepared ({@link E})
+     * @param existing existing ({@link E})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean isUpdateNeeded(EntitiesImportCtx ctx, D exportData, E prepared, E existing) {
         return !prepared.equals(existing);
     }
+    /**
+     * Deep copy.
+     *
+     * @param e e ({@link E})
+     * @return {@link E}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract E deepCopy(E e);
+    /**
+     * Cleanup for comparison.
+     *
+     * @param e e ({@link E})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void cleanupForComparison(E e) {
         e.setTenantId(null);
@@ -200,12 +283,40 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
             hasVersion.setVersion(null);
         }
     }
+    /**
+     * Cleanup external id.
+     *
+     * @param e e ({@link E})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void cleanupExternalId(E e) {
         e.setExternalId(null);
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param entity entity ({@link E})
+     * @param exportData export data ({@link D})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link E}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     protected abstract E saveOrUpdate(EntitiesImportCtx ctx, E entity, D exportData, IdProvider idProvider, CompareResult compareResult);
+    /**
+     * Processes after saved.
+     *
+     * @param ctx calculated-field execution context
+     * @param importResult import result ({@link EntityImportResult})
+     * @param exportData export data ({@link D})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     protected void processAfterSaved(EntitiesImportCtx ctx, EntityImportResult<E> importResult, D exportData, IdProvider idProvider) throws ThingsboardException {
         E savedEntity = importResult.getSavedEntity();
@@ -300,9 +411,25 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
                         .scope(scope)
                         .entries(attributeKvEntries)
                         .callback(new FutureCallback<>() {
+                            
+                            /**
+                             * Handles success.
+                             *
+                             * @param unused unused ({@link Void})
+                             * @return nothing
+                             * @throws Exception if an unexpected error occurs during processing
+                             */
+
                             @Override
                             public void onSuccess(@Nullable Void unused) {
                             }
+                            /**
+                             * Handles failure.
+                             *
+                             * @param thr thr ({@link Throwable})
+                             * @return nothing
+                             * @throws Exception if an unexpected error occurs during processing
+                             */
 
                             @Override
                             public void onFailure(Throwable thr) {
@@ -313,6 +440,16 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
             });
         });
     }
+    /**
+     * Imports calculated fields.
+     *
+     * @param ctx calculated-field execution context
+     * @param savedEntity saved entity ({@link E})
+     * @param exportData export data ({@link D})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean importCalculatedFields(EntitiesImportCtx ctx, E savedEntity, D exportData, IdProvider idProvider) {
         if (exportData.getCalculatedFields() == null || !ctx.isSaveCalculatedFields()) {
@@ -378,11 +515,29 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
         newCopy.setCreatedTime(0);
         return oldCopy.equals(newCopy);
     }
+    /**
+     * Handles entity saved.
+     *
+     * @param user authenticated user performing the action
+     * @param savedEntity saved entity ({@link E})
+     * @param oldEntity old entity ({@link E})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     protected void onEntitySaved(User user, E savedEntity, E oldEntity) throws ThingsboardException {
         logEntityActionService.logEntityAction(user.getTenantId(), savedEntity.getId(), savedEntity, null,
                 oldEntity == null ? ActionType.ADDED : ActionType.UPDATED, user);
     }
+    /**
+     * Finds existing entity.
+     *
+     * @param ctx calculated-field execution context
+     * @param entity entity ({@link E})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link E}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     protected E findExistingEntity(EntitiesImportCtx ctx, E entity, IdProvider idProvider) {
@@ -419,10 +574,25 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
 
         private final EntitiesImportCtx ctx;
         private final EntityImportResult<E> importResult;
+        /**
+         * Returns internal id.
+         *
+         * @param externalId external id ({@link ID})
+         * @return {@link ID}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public <ID extends EntityId> ID getInternalId(ID externalId) {
             return getInternalId(externalId, true);
         }
+        /**
+         * Returns internal id.
+         *
+         * @param externalId external id ({@link ID})
+         * @param throwExceptionIfNotFound throw exception if not found
+         * @return {@link ID}
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public <ID extends EntityId> ID getInternalId(ID externalId, boolean throwExceptionIfNotFound) {
             if (externalId == null || externalId.isNullUid()) {
@@ -452,6 +622,15 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
             ctx.putInternalId(externalId, entity.getId());
             return entity.getId();
         }
+        /**
+         * Returns internal id by uuid.
+         *
+         * @param externalUuid external uuid ({@link UUID})
+         * @param fetchAllUUIDs fetch all uuids
+         * @param hints hints ({@link Set})
+         * @return optional {@link EntityId}, empty if not found
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public Optional<EntityId> getInternalIdByUuid(UUID externalUuid, boolean fetchAllUUIDs, Set<EntityType> hints) {
             if (externalUuid.equals(EntityId.NULL_UUID)) {
@@ -506,6 +685,18 @@ public abstract class BaseEntityImportService<I extends EntityId, E extends Expo
         }
 
     }
+    /**
+     * Replace ids recursively.
+     *
+     * @param ctx calculated-field execution context
+     * @param idProvider id provider ({@link IdProvider})
+     * @param json json ({@link JsonNode})
+     * @param skippedRootFields skipped root fields ({@link Set})
+     * @param includedFieldsPattern included fields pattern ({@link Pattern})
+     * @param hints hints ({@link LinkedHashSet})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void replaceIdsRecursively(EntitiesImportCtx ctx, IdProvider idProvider, JsonNode json,
                                          Set<String> skippedRootFields, Pattern includedFieldsPattern,

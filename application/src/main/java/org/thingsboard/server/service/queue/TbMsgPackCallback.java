@@ -27,6 +27,9 @@ import org.thingsboard.server.common.msg.queue.TbMsgCallback;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+/**
+ * Async callback invoked when tb msg pack completes.
+ */
 
 @Slf4j
 public class TbMsgPackCallback implements TbMsgCallback {
@@ -37,9 +40,25 @@ public class TbMsgPackCallback implements TbMsgCallback {
     private final Timer successfulMsgTimer;
     private final Timer failedMsgTimer;
 
+    /**
+     * Constructs {@link TbMsgPackCallback} with the supplied dependencies and configuration.
+     * @param id id
+     * @param tenantId tenant that owns the subscription or entity
+     * @param ctx ctx
+     */
+
     public TbMsgPackCallback(UUID id, TenantId tenantId, TbMsgPackProcessingContext ctx) {
         this(id, tenantId, ctx, null, null);
     }
+
+    /**
+     * Constructs {@link TbMsgPackCallback} with the supplied dependencies and configuration.
+     * @param id id
+     * @param tenantId tenant that owns the subscription or entity
+     * @param ctx ctx
+     * @param successfulMsgTimer successful msg timer
+     * @param failedMsgTimer failed msg timer
+     */
 
     public TbMsgPackCallback(UUID id, TenantId tenantId, TbMsgPackProcessingContext ctx, Timer successfulMsgTimer, Timer failedMsgTimer) {
         this.id = id;
@@ -50,6 +69,12 @@ public class TbMsgPackCallback implements TbMsgCallback {
         startMsgProcessing = System.currentTimeMillis();
     }
 
+    /**
+     * Invoked when success occurs.
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onSuccess() {
         log.trace("[{}] ON SUCCESS", id);
@@ -58,6 +83,13 @@ public class TbMsgPackCallback implements TbMsgCallback {
         }
         ctx.onSuccess(id);
     }
+
+    /**
+     * Invoked when rate limit occurs.
+     * @param e e
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onRateLimit(RuleEngineException e) {
@@ -68,6 +100,17 @@ public class TbMsgPackCallback implements TbMsgCallback {
         }
         ctx.onSuccess(id);
     }
+    
+    /**
+    
+     * Invoked when failure occurs.
+    
+     * @param e e
+    
+     * @return @Override
+    public void
+    
+     */
     
     @Override
     public void onFailure(RuleEngineException e) {
@@ -83,16 +126,39 @@ public class TbMsgPackCallback implements TbMsgCallback {
         ctx.onFailure(tenantId, id, e);
     }
 
+    /**
+     * Is msg valid.
+     * @return {@code true} when the condition holds
+     */
+
     @Override
     public boolean isMsgValid() {
         return !ctx.isCanceled();
     }
+
+    /**
+     * Invoked when processing start occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param ruleNodeInfo rule node info
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onProcessingStart(RuleNodeInfo ruleNodeInfo) {
         log.trace("[{}] ON PROCESSING START: {}", id, ruleNodeInfo);
         ctx.onProcessingStart(id, ruleNodeInfo);
     }
+
+    /**
+     * Invoked when processing end occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param ruleNodeId rule node identifier
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onProcessingEnd(RuleNodeId ruleNodeId) {

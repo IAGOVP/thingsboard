@@ -30,9 +30,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * CSV parsing and generation helpers built on Apache Commons CSV.
+ *
+ * <p>Supports configurable delimiters for import parsing and UTF-8 encoded output for export.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CsvUtils {
 
+    /**
+     * Parses CSV text content into a list of rows, each row being a list of cell values.
+     *
+     * @param content   raw CSV string to parse
+     * @param delimiter field separator character (comma uses {@link CSVFormat#DEFAULT})
+     * @return list of rows, where each row is an ordered list of string cell values
+     * @throws Exception if CSV parsing fails
+     */
     public static List<List<String>> parseCsv(String content, Character delimiter) throws Exception {
         CSVFormat csvFormat = delimiter.equals(',') ? CSVFormat.DEFAULT : CSVFormat.DEFAULT.withDelimiter(delimiter);
 
@@ -48,6 +61,12 @@ public class CsvUtils {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Generates UTF-8 encoded CSV bytes from a list of string rows.
+     *
+     * @param rows table data where each inner list represents one CSV record
+     * @return UTF-8 byte array containing the serialized CSV content
+     */
     @SneakyThrows
     public static byte[] generateCsv(List<List<String>> rows) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();

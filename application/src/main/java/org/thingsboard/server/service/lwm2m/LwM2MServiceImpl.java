@@ -28,6 +28,10 @@ import org.thingsboard.server.transport.lwm2m.config.LwM2MTransportServerConfig;
 
 import java.util.Optional;
 
+    /**
+     * Spring service component for lw m2mservice impl (LwM2M bootstrap and model integration).
+     */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -36,6 +40,13 @@ public class LwM2MServiceImpl implements LwM2MService {
 
     private final LwM2MTransportServerConfig serverConfig;
     private final Optional<LwM2MTransportBootstrapConfig> bootstrapConfig;
+    /**
+     * Returns server security info.
+     *
+     * @param bootstrapServer bootstrap server
+     * @return {@link LwM2MServerSecurityConfigDefault}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public LwM2MServerSecurityConfigDefault getServerSecurityInfo(boolean bootstrapServer) {

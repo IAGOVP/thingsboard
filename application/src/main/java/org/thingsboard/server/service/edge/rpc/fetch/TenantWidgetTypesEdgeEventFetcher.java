@@ -23,6 +23,11 @@ import org.thingsboard.server.common.data.widget.DeprecatedFilter;
 import org.thingsboard.server.common.data.widget.WidgetTypeFilter;
 import org.thingsboard.server.common.data.widget.WidgetTypeInfo;
 import org.thingsboard.server.dao.widget.WidgetTypeService;
+/**
+ * Fetches tenant widget types entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 public class TenantWidgetTypesEdgeEventFetcher extends BaseWidgetTypesEdgeEventFetcher {
@@ -30,6 +35,13 @@ public class TenantWidgetTypesEdgeEventFetcher extends BaseWidgetTypesEdgeEventF
     public TenantWidgetTypesEdgeEventFetcher(WidgetTypeService widgetTypeService) {
         super(widgetTypeService);
     }
+    /**
+     * Loads widget types.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
     @Override
     protected PageData<WidgetTypeInfo> findWidgetTypes(TenantId tenantId, PageLink pageLink) {
         return widgetTypeService.findTenantWidgetTypesByTenantIdAndPageLink(

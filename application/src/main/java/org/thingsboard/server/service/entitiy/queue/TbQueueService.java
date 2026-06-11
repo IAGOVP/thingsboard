@@ -22,13 +22,57 @@ import org.thingsboard.server.common.data.queue.Queue;
 
 import java.util.List;
 
+/**
+
+ * Application-layer service API for queue entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbQueueService {
+/**
+ * Saves or persists queue.
+ *
+ * @param queue queue ({@link Queue})
+ * @return {@link Queue}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     Queue saveQueue(Queue queue);
+/**
+ * Deletes queue.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param queueId queue id ({@link QueueId})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void deleteQueue(TenantId tenantId, QueueId queueId);
+/**
+ * Deletes queue by queue name.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param queueName queue name ({@link String})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void deleteQueueByQueueName(TenantId tenantId, String queueName);
+/**
+ * Updates queues by tenants.
+ *
+ * @param tenantIds tenant ids ({@link List})
+ * @param newTenantProfile new tenant profile ({@link TenantProfile})
+ * @param oldTenantProfile old tenant profile ({@link TenantProfile})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void updateQueuesByTenants(List<TenantId> tenantIds, TenantProfile newTenantProfile, TenantProfile oldTenantProfile);
 }

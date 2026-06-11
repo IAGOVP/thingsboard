@@ -23,6 +23,10 @@ import org.thingsboard.server.common.data.security.model.mfa.provider.TwoFaProvi
 import org.thingsboard.server.common.data.security.model.mfa.provider.TwoFaProviderType;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+ * Contract for two fa provider in two-factor authentication (MFA).
+ */
+
 public interface TwoFaProvider<C extends TwoFaProviderConfig, A extends TwoFaAccountConfig> {
 
     A generateNewAccountConfig(User user, C providerConfig);

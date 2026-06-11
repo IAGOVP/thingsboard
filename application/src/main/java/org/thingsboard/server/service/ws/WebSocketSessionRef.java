@@ -23,10 +23,10 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-
 /**
- * Created by ashvayka on 27.03.18.
+ * Lightweight handle to an open WebSocket session: session id, tenant, user, and outbound message sender.
  */
+
 @Builder
 @Data
 public class WebSocketSessionRef {
@@ -40,9 +40,20 @@ public class WebSocketSessionRef {
     private final WebSocketSessionType sessionType;
     private final AtomicInteger sessionSubIdSeq = new AtomicInteger();
 
+    /**
+     * Returns tenant id.
+     * @return {@link TenantId}
+     */
+
     public TenantId getTenantId() {
         return securityCtx != null ? securityCtx.getTenantId() : TenantId.SYS_TENANT_ID;
     }
+
+    /**
+     * Compares this object to another for equality.
+     * @param o o
+     * @return boolean result
+     */
 
     @Override
     public boolean equals(Object o) {
@@ -52,10 +63,22 @@ public class WebSocketSessionRef {
         return Objects.equals(sessionId, that.sessionId);
     }
 
+    /**
+     * Returns a hash code consistent with {@link #equals(Object)}.
+     * @return {@code true} when the condition holds
+     */
+
     @Override
     public int hashCode() {
         return Objects.hash(sessionId);
     }
+
+    /**
+     * To string.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return string value
+     */
 
     @Override
     public String toString() {

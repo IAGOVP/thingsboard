@@ -20,6 +20,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.thingsboard.server.common.data.id.NotificationRequestId;
+/**
+ * Outbound WebSocket update payload for notification request.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @Data
 @NoArgsConstructor

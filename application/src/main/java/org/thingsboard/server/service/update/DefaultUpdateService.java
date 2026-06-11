@@ -46,6 +46,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Default Spring implementation for update service (platform update checks and notifications).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @TbCoreComponent
 @Slf4j
@@ -83,6 +89,12 @@ public class DefaultUpdateService implements UpdateService {
     private String platform;
     private String version;
     private UUID instanceId = null;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void init() {
@@ -163,6 +175,12 @@ public class DefaultUpdateService implements UpdateService {
             log.trace(e.getMessage());
         }
     };
+    /**
+     * Checks updates.
+     *
+     * @return {@link UpdateMessage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UpdateMessage checkUpdates() {

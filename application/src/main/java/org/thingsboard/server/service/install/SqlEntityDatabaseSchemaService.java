@@ -19,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+    /**
+     * Spring service component for sql entity database schema service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Service
 @Profile("install")
 @Slf4j
@@ -33,6 +37,12 @@ public class SqlEntityDatabaseSchemaService extends SqlAbstractDatabaseSchemaSer
     public SqlEntityDatabaseSchemaService() {
         super(SCHEMA_ENTITIES_SQL, SCHEMA_ENTITIES_IDX_SQL);
     }
+    /**
+     * Creates database indexes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseIndexes() throws Exception {
@@ -40,6 +50,13 @@ public class SqlEntityDatabaseSchemaService extends SqlAbstractDatabaseSchemaSer
         log.info("Installing SQL DataBase schema PostgreSQL specific indexes part: " + SCHEMA_ENTITIES_IDX_PSQL_ADDON_SQL);
         executeQueryFromFile(SCHEMA_ENTITIES_IDX_PSQL_ADDON_SQL);
     }
+    /**
+     * Creates or update device info view.
+     *
+     * @param activityStateInTelemetry activity state in telemetry
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createOrUpdateDeviceInfoView(boolean activityStateInTelemetry) {
@@ -47,6 +64,12 @@ public class SqlEntityDatabaseSchemaService extends SqlAbstractDatabaseSchemaSer
         executeQuery("DROP VIEW IF EXISTS device_info_view CASCADE;");
         executeQuery("CREATE OR REPLACE VIEW device_info_view AS SELECT * FROM " + sourceViewName + ";");
     }
+    /**
+     * Creates or update views and functions.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createOrUpdateViewsAndFunctions() throws Exception {

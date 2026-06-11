@@ -24,6 +24,11 @@ import org.thingsboard.server.common.transport.auth.DeviceAuthService;
 import org.thingsboard.server.dao.device.DeviceCredentialsService;
 import org.thingsboard.server.dao.device.DeviceService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
+/**
+ * Service implementation for default device auth in device credential validation.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @TbCoreComponent
@@ -38,7 +43,12 @@ public class DefaultDeviceAuthService implements DeviceAuthService {
         this.deviceService = deviceService;
         this.deviceCredentialsService = deviceCredentialsService;
     }
-
+    /**
+     * Processes .
+     *
+     * @param credentialsFilter credentials filter (DeviceCredentialsFilter)
+     * @return {@link DeviceAuthResult} result
+     */
     @Override
     public DeviceAuthResult process(DeviceCredentialsFilter credentialsFilter) {
         log.trace("Lookup device credentials using filter {}", credentialsFilter);

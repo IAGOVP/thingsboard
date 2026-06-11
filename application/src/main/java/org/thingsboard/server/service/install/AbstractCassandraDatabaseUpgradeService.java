@@ -25,6 +25,10 @@ import org.thingsboard.server.service.install.cql.CQLStatementsParser;
 import java.nio.file.Path;
 import java.util.List;
 
+    /**
+     * Abstract cassandra database upgrade service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Slf4j
 public abstract class AbstractCassandraDatabaseUpgradeService {
     @Autowired
@@ -33,6 +37,13 @@ public abstract class AbstractCassandraDatabaseUpgradeService {
     @Autowired
     @Qualifier("CassandraInstallCluster")
     private CassandraInstallCluster installCluster;
+    /**
+     * Loads cql.
+     *
+     * @param cql cql ({@link Path})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void loadCql(Path cql) throws Exception {
         List<String> statements = new CQLStatementsParser(cql).getStatements();

@@ -21,6 +21,10 @@ import org.thingsboard.server.common.data.kv.Aggregation;
 import org.thingsboard.server.common.data.kv.IntervalType;
 
 import java.util.List;
+/**
+ * WebSocket command DTO for time series.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 public class TimeSeriesCmd implements GetTsCmd {
@@ -34,6 +38,11 @@ public class TimeSeriesCmd implements GetTsCmd {
     private int limit;
     private Aggregation agg;
     private boolean fetchLatestPreviousPoint;
+
+    /**
+     * Returns end ts.
+     * @return numeric result
+     */
 
     @JsonIgnore
     @Override

@@ -20,6 +20,12 @@ import org.thingsboard.server.common.data.sync.vc.VersionedEntityInfo;
 
 import java.util.List;
 
+/**
+
+ * Git repository integration for list entities request.
+
+ */
+
 public class ListEntitiesGitRequest extends PendingGitRequest<List<VersionedEntityInfo>> {
 
     public ListEntitiesGitRequest(TenantId tenantId) {

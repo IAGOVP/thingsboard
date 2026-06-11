@@ -19,11 +19,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.AbstractListeningExecutor;
 
+    /**
+     * Spring service component for sms executor service (SMS provider abstraction and message sending).
+     */
+
 @Component
 public class SmsExecutorService extends AbstractListeningExecutor {
 
     @Value("${actors.rule.sms_thread_pool_size}")
     private int smsExecutorThreadPoolSize;
+    /**
+     * Returns thread poll size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getThreadPollSize() {

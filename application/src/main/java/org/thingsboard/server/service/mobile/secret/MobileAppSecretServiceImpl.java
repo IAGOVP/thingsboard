@@ -31,6 +31,10 @@ import org.thingsboard.server.service.security.model.token.JwtTokenFactory;
 
 import static org.thingsboard.server.dao.settings.DefaultSecuritySettingsService.DEFAULT_MOBILE_SECRET_KEY_LENGTH;
 
+    /**
+     * Spring service component for mobile app secret service impl (mobile app bundles, secrets, and deep-link support).
+     */
+
 
 @Service
 @Slf4j
@@ -39,6 +43,13 @@ public class MobileAppSecretServiceImpl extends AbstractCachedService<String, Jw
 
     private final JwtTokenFactory tokenFactory;
     private final SecuritySettingsService securitySettingsService;
+    /**
+     * Generate mobile app secret.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String generateMobileAppSecret(SecurityUser securityUser) {
@@ -48,6 +59,13 @@ public class MobileAppSecretServiceImpl extends AbstractCachedService<String, Jw
         cache.put(secret, tokenFactory.createTokenPair(securityUser));
         return secret;
     }
+    /**
+     * Returns jwt pair.
+     *
+     * @param secret secret ({@link String})
+     * @return {@link JwtPair}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public JwtPair getJwtPair(String secret) throws ThingsboardException {
@@ -58,6 +76,13 @@ public class MobileAppSecretServiceImpl extends AbstractCachedService<String, Jw
             throw new ThingsboardException("Jwt token not found or expired!", ThingsboardErrorCode.JWT_TOKEN_EXPIRED);
         }
     }
+    /**
+     * Handles evict event.
+     *
+     * @param event event ({@link MobileSecretEvictEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(classes = MobileSecretEvictEvent.class)
     @Override

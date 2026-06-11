@@ -52,6 +52,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Edge sync cursor for ThingsBoard Edge integration.
+ */
+
 public class EdgeSyncCursor {
 
     private final List<EdgeEventFetcher> fetchers = new LinkedList<>();
@@ -100,9 +104,19 @@ public class EdgeSyncCursor {
         }
     }
 
+    /**
+     * Has next.
+     *
+     */
+
     public boolean hasNext() {
         return fetchers.size() > currentIdx;
     }
+
+    /**
+     * Returns next.
+     *
+     */
 
     public EdgeEventFetcher getNext() {
         if (!hasNext()) {

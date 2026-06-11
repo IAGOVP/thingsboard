@@ -43,10 +43,26 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+/**
+ * Exports notification rule entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
 public class NotificationRuleExportService<I extends EntityId, E extends ExportableEntity<I>, D extends EntityExportData<E>> extends BaseEntityExportService<NotificationRuleId, NotificationRule, EntityExportData<NotificationRule>> {
+    
+    /**
+     * Set related entities.
+     *
+     * @param ctx calculated-field execution context
+     * @param notificationRule notification rule ({@link NotificationRule})
+     * @param exportData export data ({@link EntityExportData})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected void setRelatedEntities(EntitiesExportCtx<?> ctx, NotificationRule notificationRule, EntityExportData<NotificationRule> exportData) {
@@ -107,6 +123,12 @@ public class NotificationRuleExportService<I extends EntityId, E extends Exporta
             }
         }
     }
+    /**
+     * Returns supported entity types.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<EntityType> getSupportedEntityTypes() {

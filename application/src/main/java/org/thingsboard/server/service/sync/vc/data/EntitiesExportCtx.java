@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+/**
+ * Data object for entities export ctx used during Git-based entity version control operations.
+ */
 
 @Slf4j
 @Data
@@ -55,14 +58,34 @@ public abstract class EntitiesExportCtx<R extends VersionCreateRequest> {
         this.futures = other.getFutures();
         this.externalIdMap = other.getExternalIdMap();
     }
+    /**
+     * Add.
+     *
+     * @param future future ({@link ListenableFuture})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void add(ListenableFuture<Void> future) {
         futures.add(future);
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TenantId getTenantId() {
         return user.getTenantId();
     }
+    /**
+     * Build export settings.
+     *
+     * @param config config ({@link VersionCreateConfig})
+     * @return {@link EntityExportSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected static EntityExportSettings buildExportSettings(VersionCreateConfig config) {
         return EntityExportSettings.builder()
@@ -72,8 +95,21 @@ public abstract class EntitiesExportCtx<R extends VersionCreateRequest> {
                 .exportCalculatedFields(config.isSaveCalculatedFields())
                 .build();
     }
+    /**
+     * Returns settings.
+     *
+     * @return {@link EntityExportSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract EntityExportSettings getSettings();
+    /**
+     * Returns external id.
+     *
+     * @param internalId internal id ({@link ID})
+     * @return {@link ID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SuppressWarnings("unchecked")
     public <ID extends EntityId> ID getExternalId(ID internalId) {
@@ -81,6 +117,14 @@ public abstract class EntitiesExportCtx<R extends VersionCreateRequest> {
         log.debug("[{}][{}] Local cache {} for id", internalId.getEntityType(), internalId.getId(), result != null ? "hit" : "miss");
         return (ID) result;
     }
+    /**
+     * Put external id.
+     *
+     * @param internalId internal id ({@link EntityId})
+     * @param externalId external id ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void putExternalId(EntityId internalId, EntityId externalId) {
         log.debug("[{}][{}] Local cache put: {}", internalId.getEntityType(), internalId.getId(), externalId);

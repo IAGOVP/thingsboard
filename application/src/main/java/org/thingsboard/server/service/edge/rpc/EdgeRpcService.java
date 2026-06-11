@@ -23,6 +23,10 @@ import org.thingsboard.server.common.msg.edge.FromEdgeSyncResponse;
 
 import java.util.function.Consumer;
 
+/**
+ * Service contract for ThingsBoard Edge integration.
+ */
+
 public interface EdgeRpcService {
 
     void onToEdgeSessionMsg(TenantId tenantId, EdgeSessionMsg msg);

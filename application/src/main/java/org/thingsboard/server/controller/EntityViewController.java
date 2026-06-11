@@ -90,6 +90,17 @@ import static org.thingsboard.server.controller.ControllerConstants.UNIQUIFY_SEP
 import static org.thingsboard.server.controller.ControllerConstants.UNIQUIFY_STRATEGY_DESC;
 import static org.thingsboard.server.controller.EdgeController.EDGE_ID;
 
+/**
+ * REST API for entity view CRUD, customer/edge assignment, and relation-based discovery.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code TENANT_ADMIN} for deletes; {@code TENANT_ADMIN} or {@code CUSTOMER_USER} for reads/writes.
+ *
+ * <p>Uses {@link org.thingsboard.server.service.entitiy.entityview.TbEntityViewService} and inherited {@code entityViewService}.
+ */
+
+
 @RestController
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -101,6 +112,7 @@ public class EntityViewController extends BaseController {
 
     public static final String ENTITY_VIEW_ID = "entityViewId";
 
+    /** GET {@code /api/entityView/{entityViewId}} — Fetch entity view by id. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException if not found. */
     @ApiOperation(value = "Get entity view (getEntityViewById)",
             notes = "Fetch the EntityView object based on the provided entity view id. "
                     + ENTITY_VIEW_DESCRIPTION + MODEL_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -113,6 +125,7 @@ public class EntityViewController extends BaseController {
         return checkEntityViewId(new EntityViewId(toUUID(strEntityViewId)), Operation.READ);
     }
 
+    /** GET {@code /api/entityView/info/{entityViewId}} — Fetch entity view info by id. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException if not found. */
     @ApiOperation(value = "Get Entity View info (getEntityViewInfoById)",
             notes = "Fetch the Entity View info object based on the provided Entity View Id. "
                     + ENTITY_VIEW_INFO_DESCRIPTION + MODEL_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -126,6 +139,7 @@ public class EntityViewController extends BaseController {
         return checkEntityViewInfoId(entityViewId, Operation.READ);
     }
 
+    /** POST {@code /api/entityView} — Create or update entity view with name conflict strategy. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws Exception on validation failure. */
     @ApiOperation(value = "Save or update entity view (saveEntityView)",
             notes = ENTITY_VIEW_DESCRIPTION + MODEL_DESCRIPTION +
                     "Remove 'id', 'tenantId' and optionally 'customerId' from the request body example (below) to create new Entity View entity." +
@@ -152,6 +166,7 @@ public class EntityViewController extends BaseController {
         return tbEntityViewService.save(entityView, existingEntityView, new NameConflictStrategy(nameConflictPolicy, uniquifySeparator, uniquifyStrategy), getCurrentUser());
     }
 
+    /** DELETE {@code /api/entityView/{entityViewId}} — Delete entity view. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if not found. */
     @ApiOperation(value = "Delete entity view (deleteEntityView)",
             notes = "Delete the EntityView object based on the provided entity view id. "
                     + TENANT_AUTHORITY_PARAGRAPH)
@@ -167,6 +182,7 @@ public class EntityViewController extends BaseController {
         tbEntityViewService.delete(entityView, getCurrentUser());
     }
 
+    /** GET {@code /api/tenant/entityViews?entityViewName=} — Hidden: fetch entity view by name. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if not found. */
     @Hidden
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/tenant/entityViews", params = {"entityViewName"})
@@ -176,6 +192,7 @@ public class EntityViewController extends BaseController {
         return checkNotNull(entityViewService.findEntityViewByTenantIdAndName(tenantId, entityViewName));
     }
 
+    /** GET {@code /api/tenant/entityView?entityViewName=} — Fetch tenant entity view by name. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if not found. */
     @ApiOperation(value = "Get Entity View by name (getTenantEntityViewByName)",
             notes = "Fetch the Entity View object based on the tenant id and entity view name. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -186,6 +203,7 @@ public class EntityViewController extends BaseController {
         return getTenantEntityView(entityViewName);
     }
 
+    /** POST {@code /api/customer/{customerId}/entityView/{entityViewId}} — Assign to customer. Requires {@code TENANT_ADMIN}. @throws ThingsboardException on failure. */
     @ApiOperation(value = "Assign Entity View to customer (assignEntityViewToCustomer)",
             notes = "Creates assignment of the Entity View to customer. Customer will be able to query Entity View afterwards." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -207,6 +225,7 @@ public class EntityViewController extends BaseController {
         return tbEntityViewService.assignEntityViewToCustomer(getTenantId(), entityViewId, customer, getCurrentUser());
     }
 
+    /** DELETE {@code /api/customer/entityView/{entityViewId}} — Unassign from customer. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if not assigned. */
     @ApiOperation(value = "Unassign Entity View from customer (unassignEntityViewFromCustomer)",
             notes = "Clears assignment of the Entity View to customer. Customer will not be able to query Entity View afterwards." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -226,6 +245,7 @@ public class EntityViewController extends BaseController {
         return tbEntityViewService.unassignEntityViewFromCustomer(getTenantId(), entityViewId, customer, getCurrentUser());
     }
 
+    /** GET {@code /api/customer/{customerId}/entityViews} — List customer entity views. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get Customer Entity Views (getCustomerEntityViews)",
             notes = "Returns a page of Entity View objects assigned to customer. " +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -258,6 +278,7 @@ public class EntityViewController extends BaseController {
         }
     }
 
+    /** GET {@code /api/customer/{customerId}/entityViewInfos} — List customer entity view infos. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get Customer Entity View info (getCustomerEntityViewInfos)",
             notes = "Returns a page of Entity View info objects assigned to customer. " + ENTITY_VIEW_DESCRIPTION +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -290,6 +311,7 @@ public class EntityViewController extends BaseController {
         }
     }
 
+    /** GET {@code /api/tenant/entityViews} — List tenant entity views. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get Tenant Entity Views (getTenantEntityViews)",
             notes = "Returns a page of entity views owned by tenant. " + ENTITY_VIEW_DESCRIPTION +
                     PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -318,6 +340,7 @@ public class EntityViewController extends BaseController {
         }
     }
 
+    /** GET {@code /api/tenant/entityViewInfos} — List tenant entity view infos. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get Tenant Entity Views (getTenantEntityViews)",
             notes = "Returns a page of entity views info owned by tenant. " + ENTITY_VIEW_DESCRIPTION +
                     PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -345,6 +368,7 @@ public class EntityViewController extends BaseController {
         }
     }
 
+    /** POST {@code /api/entityViews} — Find entity views by {@link org.thingsboard.server.common.data.entityview.EntityViewSearchQuery}. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException, ExecutionException, InterruptedException. */
     @ApiOperation(value = "Find related entity views (findEntityViewsByQuery)",
             notes = "Returns all entity views that are related to the specific entity. " +
                     "The entity id, relation type, entity view types, depth of the search, and other query parameters defined using complex 'EntityViewSearchQuery' object. " +
@@ -363,6 +387,7 @@ public class EntityViewController extends BaseController {
         return entityViews;
     }
 
+    /** GET {@code /api/entityView/types} — Distinct entity view types. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException, ExecutionException, InterruptedException. */
     @ApiOperation(value = "Get Entity View Types (getEntityViewTypes)",
             notes = "Returns a set of unique entity view types based on entity views that are either owned by the tenant or assigned to the customer which user is performing the request."
                     + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -375,6 +400,7 @@ public class EntityViewController extends BaseController {
         return checkNotNull(entityViewTypes.get());
     }
 
+    /** POST {@code /api/customer/public/entityView/{entityViewId}} — Assign to public customer. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Make entity view publicly available (assignEntityViewToPublicCustomer)",
             notes = "Entity View will be available for non-authorized (not logged-in) users. " +
                     "This is useful to create dashboards that you plan to share/embed on a publicly available website. " +
@@ -390,6 +416,7 @@ public class EntityViewController extends BaseController {
         return tbEntityViewService.assignEntityViewToPublicCustomer(getTenantId(), entityViewId, getCurrentUser());
     }
 
+    /** POST {@code /api/edge/{edgeId}/entityView/{entityViewId}} — Assign entity view to edge. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Assign entity view to edge (assignEntityViewToEdge)",
             notes = "Creates assignment of an existing entity view to an instance of The Edge. " +
                     EDGE_ASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -413,6 +440,7 @@ public class EntityViewController extends BaseController {
                 entityViewId, edge, getCurrentUser());
     }
 
+    /** DELETE {@code /api/edge/{edgeId}/entityView/{entityViewId}} — Unassign from edge. Requires {@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Unassign entity view from edge (unassignEntityViewFromEdge)",
             notes = "Clears assignment of the entity view to the edge. " +
                     EDGE_UNASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -436,6 +464,7 @@ public class EntityViewController extends BaseController {
                 edge, getCurrentUser());
     }
 
+    /** GET {@code /api/edge/{edgeId}/entityViews} — List entity views assigned to edge. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException if denied. */
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/edge/{edgeId}/entityViews")
     public PageData<EntityView> getEdgeEntityViews(
@@ -467,6 +496,7 @@ public class EntityViewController extends BaseController {
         return checkNotNull(filteredResult);
     }
 
+    /** GET {@code /api/entityViews?entityViewIds=} — Hidden: fetch entity views by ids. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException if denied. */
     @Hidden
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/entityViews", params = {"entityViewIds"})
@@ -481,6 +511,7 @@ public class EntityViewController extends BaseController {
         return filterEntityViewsByReadPermission(entityViews);
     }
 
+    /** GET {@code /api/entityViews/list} — Fetch entity views by id list. Requires {@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws ThingsboardException if denied. */
     @ApiOperation(value = "Get Entity Views By Ids (getEntityViewsByIds)",
             notes = "Requested entity views must be owned by tenant or assigned to customer which user is performing the request. ")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")

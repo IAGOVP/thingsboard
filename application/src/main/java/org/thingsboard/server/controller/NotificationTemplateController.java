@@ -65,6 +65,12 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.service.security.permission.Resource.NOTIFICATION;
 
+/**
+ * REST API for notification templates.
+ * 
+ * <p>Base path: {@code /api/notification}. Message templates per delivery method and notification type.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -75,6 +81,15 @@ public class NotificationTemplateController extends BaseController {
     private final NotificationSettingsService notificationSettingsService;
     private final SlackService slackService;
 
+    /**
+     * Save notification template.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/notification/template}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param notificationTemplate template payload; tenant id is taken from the authenticated user
+     * @return saved {@link NotificationTemplate}
+     * @throws Exception if validation, permission check, or persistence fails
+     */
     @ApiOperation(value = "Save notification template (saveNotificationTemplate)",
             notes = "Creates or updates notification template." + NEW_LINE +
                     "Here is an example of template to send notification via Web, SMS and Slack:\n" +
@@ -123,6 +138,15 @@ public class NotificationTemplateController extends BaseController {
         return doSaveAndLog(EntityType.NOTIFICATION_TEMPLATE, notificationTemplate, notificationTemplateService::saveNotificationTemplate);
     }
 
+    /**
+     * Get notification template by id.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/template/{id}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @return {@link NotificationTemplate} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get notification template by id (getNotificationTemplateById)",
             notes = "Fetches notification template by id." +
                     SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -133,6 +157,21 @@ public class NotificationTemplateController extends BaseController {
         return checkEntityId(notificationTemplateId, notificationTemplateService::findNotificationTemplateById, Operation.READ);
     }
 
+    /**
+     * Get notification templates.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/templates}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @param notificationTypes notification Types
+     * @param user user
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get notification templates (getNotificationTemplates)",
             notes = "Returns the page of notification templates owned by sysadmin or tenant." + NEW_LINE +
                     PAGE_DATA_PARAMETERS +
@@ -161,6 +200,15 @@ public class NotificationTemplateController extends BaseController {
                 List.of(notificationTypes), pageLink);
     }
 
+    /**
+     * Delete notification template by id.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/notification/template/{id}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete notification template by id (deleteNotificationTemplateById",
             notes = "Deletes notification template by its id." + NEW_LINE +
                     "This template cannot be referenced by existing scheduled notification requests or any notification rules." +
@@ -173,6 +221,17 @@ public class NotificationTemplateController extends BaseController {
         doDeleteAndLog(EntityType.NOTIFICATION_TEMPLATE, notificationTemplate, notificationTemplateService::deleteNotificationTemplateById);
     }
 
+    /**
+     * List Slack conversations.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/slack/conversations}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param type type
+     * @param token token
+     * @param user user
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "List Slack conversations (listSlackConversations)",
             notes = "List available Slack conversations by type." +
                     SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)

@@ -37,6 +37,11 @@ import org.thingsboard.server.service.security.permission.AccessControlService;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+/**
+ * Exports exportable entities service entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
@@ -48,6 +53,14 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
 
     private final EntityServiceRegistry entityServiceRegistry;
     private final AccessControlService accessControlService;
+    /**
+     * Finds entity by tenant id and external id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param externalId external id ({@link I})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends ExportableEntity<I>, I extends EntityId> E findEntityByTenantIdAndExternalId(TenantId tenantId, I externalId) {
@@ -66,6 +79,14 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
 
         return entity;
     }
+    /**
+     * Finds entity by tenant id and id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link I})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends HasId<I>, I extends EntityId> E findEntityByTenantIdAndId(TenantId tenantId, I id) {
@@ -76,6 +97,13 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         }
         return entity;
     }
+    /**
+     * Finds entity by id.
+     *
+     * @param id id ({@link I})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends HasId<I>, I extends EntityId> E findEntityById(I id) {
@@ -87,6 +115,15 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
 
         return dao.findById(TenantId.SYS_TENANT_ID, id.getId());
     }
+    /**
+     * Finds entity by tenant id and name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     * @param name name ({@link String})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends ExportableEntity<I>, I extends EntityId> E findEntityByTenantIdAndName(TenantId tenantId, EntityType entityType, String name) {
@@ -107,6 +144,14 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
 
         return entity;
     }
+    /**
+     * Finds default entity by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends ExportableEntity<I>, I extends EntityId> E findDefaultEntityByTenantId(TenantId tenantId, EntityType entityType) {
@@ -116,6 +161,15 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         }
         return dao.findDefaultEntityByTenantId(tenantId.getId());
     }
+    /**
+     * Finds entities by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     * @param pageLink pagination and sort parameters
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <E extends ExportableEntity<I>, I extends EntityId> PageData<E> findEntitiesByTenantId(TenantId tenantId, EntityType entityType, PageLink pageLink) {
@@ -125,6 +179,15 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         }
         return dao.findByTenantId(tenantId.getId(), pageLink);
     }
+    /**
+     * Finds entities ids by tenant id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityType entity type ({@link EntityType})
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <I extends EntityId> PageData<I> findEntitiesIdsByTenantId(TenantId tenantId, EntityType entityType, PageLink pageLink) {
@@ -134,6 +197,13 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
         }
         return dao.findIdsByTenantId(tenantId.getId(), pageLink);
     }
+    /**
+     * Returns external id by internal.
+     *
+     * @param internalId internal id ({@link I})
+     * @return {@link I}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public <I extends EntityId> I getExternalIdByInternal(I internalId) {
@@ -147,6 +217,14 @@ public class DefaultExportableEntitiesService implements ExportableEntitiesServi
     private boolean belongsToTenant(HasId<? extends EntityId> entity, TenantId tenantId) {
         return tenantId.equals(((HasTenantId) entity).getTenantId());
     }
+    /**
+     * Removes by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link I})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override

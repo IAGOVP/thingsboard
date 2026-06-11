@@ -21,13 +21,45 @@ import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.common.data.id.DeviceProfileId;
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+
+ * tb device profile cache contract for device and asset profile resolution.
+
+ */
+
 public interface TbDeviceProfileCache extends RuleEngineDeviceProfileCache {
 
     void evict(TenantId tenantId, DeviceProfileId id);
 
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link DeviceId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void evict(TenantId tenantId, DeviceId id);
 
+    /**
+     * Finds the requested data.
+     *
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     DeviceProfile find(DeviceProfileId deviceProfileId);
+
+    /**
+     * Finds or create device profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceType device type ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String deviceType);
 }

@@ -32,6 +32,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+
+ * Base api usage state (tenant API usage metering and rate-limit state).
+
+ */
+
 public abstract class BaseApiUsageState {
     private final Map<ApiUsageRecordKey, Long> currentCycleValues = new ConcurrentHashMap<>();
     private final Map<ApiUsageRecordKey, Long> currentHourValues = new ConcurrentHashMap<>();
@@ -58,6 +64,15 @@ public abstract class BaseApiUsageState {
         this.nextCycleTs = SchedulerUtils.getStartOfNextMonth();
         this.currentHourTs = SchedulerUtils.getStartOfCurrentHour();
     }
+    /**
+     * Calculate.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @param value value
+     * @param serviceId service id ({@link String})
+     * @return {@link StatsCalculationResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public StatsCalculationResult calculate(ApiUsageRecordKey key, long value, String serviceId) {
         long currentValue = get(key);
@@ -101,22 +116,59 @@ public abstract class BaseApiUsageState {
             return null;
         }
     }
+    /**
+     * Set.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @param value value ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void set(ApiUsageRecordKey key, Long value) {
         currentCycleValues.put(key, value);
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long get(ApiUsageRecordKey key) {
         return currentCycleValues.getOrDefault(key, 0L);
     }
+    /**
+     * Set hourly.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @param value value ({@link Long})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setHourly(ApiUsageRecordKey key, Long value) {
         currentHourValues.put(key, value);
     }
+    /**
+     * Returns hourly.
+     *
+     * @param key key ({@link ApiUsageRecordKey})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getHourly(ApiUsageRecordKey key) {
         return currentHourValues.getOrDefault(key, 0L);
     }
+    /**
+     * Set hour.
+     *
+     * @param currentHourTs current hour ts
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setHour(long currentHourTs) {
         this.currentHourTs = currentHourTs;
@@ -124,17 +176,38 @@ public abstract class BaseApiUsageState {
         lastGaugesByServiceId.clear();
         gaugesReportCycles.clear();
     }
+    /**
+     * Set cycles.
+     *
+     * @param currentCycleTs current cycle ts
+     * @param nextCycleTs next cycle ts
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setCycles(long currentCycleTs, long nextCycleTs) {
         this.currentCycleTs = currentCycleTs;
         this.nextCycleTs = nextCycleTs;
         currentCycleValues.clear();
     }
+    /**
+     * Handles repartition event.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onRepartitionEvent() {
         lastGaugesByServiceId.clear();
         gaugesReportCycles.clear();
     }
+    /**
+     * Returns feature value.
+     *
+     * @param feature feature ({@link ApiFeature})
+     * @return {@link ApiUsageStateValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ApiUsageStateValue getFeatureValue(ApiFeature feature) {
         switch (feature) {
@@ -158,6 +231,14 @@ public abstract class BaseApiUsageState {
                 return ApiUsageStateValue.ENABLED;
         }
     }
+    /**
+     * Set feature value.
+     *
+     * @param feature feature ({@link ApiFeature})
+     * @param value value ({@link ApiUsageStateValue})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean setFeatureValue(ApiFeature feature, ApiUsageStateValue value) {
         ApiUsageStateValue currentValue = getFeatureValue(feature);
@@ -189,12 +270,30 @@ public abstract class BaseApiUsageState {
         }
         return !currentValue.equals(value);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract EntityType getEntityType();
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TenantId getTenantId() {
         return getApiUsageState().getTenantId();
     }
+    /**
+     * Returns entity id.
+     *
+     * @return {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityId getEntityId() {
         return getApiUsageState().getEntityId();

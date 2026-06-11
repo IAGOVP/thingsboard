@@ -28,8 +28,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * RestTemplate firstly uses MappingJackson2XmlHttpMessageConverter converter instead of MappingJackson2HttpMessageConverter.
- * It produces error UnsupportedMediaType, so this converter had to be shadowed for read and write operations to use the correct converter
+ * Disabled shadow of Spring's XML Jackson HTTP message converter.
+ *
+ * <p>Spring's {@code RestTemplate} prefers {@code MappingJackson2XmlHttpMessageConverter} over
+ * {@code MappingJackson2HttpMessageConverter} for {@code application/json} in some setups,
+ * which causes {@code UnsupportedMediaType} errors. This class is registered in the same
+ * package as Spring's original to take precedence on the classpath while reporting
+ * {@code canRead=false} and {@code canWrite=false} so JSON handling falls through to the
+ * correct JSON converter.
  */
 public class MappingJackson2XmlHttpMessageConverter extends AbstractJackson2HttpMessageConverter {
     private static final List<MediaType> problemDetailMediaTypes;
@@ -56,11 +62,26 @@ public class MappingJackson2XmlHttpMessageConverter extends AbstractJackson2Http
         problemDetailMediaTypes = Collections.singletonList(MediaType.APPLICATION_PROBLEM_XML);
     }
 
+    /**
+     * Always returns false so RestTemplate does not use this converter for XML/JSON reads.
+     *
+     * @param type         target type (ignored)
+     * @param contextClass controller method context (ignored)
+     * @param mediaType    Content-Type (ignored)
+     * @return {@code false} — delegate to other message converters
+     */
     @Override
     public boolean canRead(Type type, Class<?> contextClass, MediaType mediaType) {
         return false;
     }
 
+    /**
+     * Always returns false so RestTemplate does not use this converter for XML/JSON writes.
+     *
+     * @param clazz     object type (ignored)
+     * @param mediaType Content-Type (ignored)
+     * @return {@code false} — delegate to other message converters
+     */
     @Override
     public boolean canWrite(Class<?> clazz, MediaType mediaType) {
         return false;

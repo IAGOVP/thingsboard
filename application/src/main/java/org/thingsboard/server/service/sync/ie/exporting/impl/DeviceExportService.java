@@ -26,6 +26,11 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesExportCtx;
 
 import java.util.Set;
+/**
+ * Exports device entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
@@ -33,6 +38,15 @@ import java.util.Set;
 public class DeviceExportService extends BaseEntityExportService<DeviceId, Device, DeviceExportData> {
 
     private final DeviceCredentialsService deviceCredentialsService;
+    /**
+     * Set related entities.
+     *
+     * @param ctx calculated-field execution context
+     * @param device device ({@link Device})
+     * @param exportData export data ({@link DeviceExportData})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setRelatedEntities(EntitiesExportCtx<?> ctx, Device device, DeviceExportData exportData) {
@@ -47,6 +61,12 @@ public class DeviceExportService extends BaseEntityExportService<DeviceId, Devic
             exportData.setCredentials(credentials);
         }
     }
+    /**
+     * Returns supported entity types.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<EntityType> getSupportedEntityTypes() {

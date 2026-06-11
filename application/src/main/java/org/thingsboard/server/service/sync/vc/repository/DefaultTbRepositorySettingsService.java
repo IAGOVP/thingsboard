@@ -23,6 +23,12 @@ import org.thingsboard.server.common.data.sync.vc.RepositorySettings;
 import org.thingsboard.server.dao.settings.AdminSettingsService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.TbAbstractVersionControlSettingsService;
+/**
+ * Default Spring implementation for tb repository settings service (Git-based entity version control (entity version control, Git repository sync, and import/export)).
+ *
+ * <p>Registered as a {@code @Service} or {@code @Component} bean.
+ */
+
 
 @Service
 @TbCoreComponent
@@ -33,6 +39,14 @@ public class DefaultTbRepositorySettingsService extends TbAbstractVersionControl
     public DefaultTbRepositorySettingsService(AdminSettingsService adminSettingsService, TbTransactionalCache<TenantId, RepositorySettings> cache) {
         super(adminSettingsService, cache, RepositorySettings.class, SETTINGS_KEY);
     }
+    /**
+     * Restore.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param settings settings ({@link RepositorySettings})
+     * @return {@link RepositorySettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RepositorySettings restore(TenantId tenantId, RepositorySettings settings) {
@@ -50,6 +64,13 @@ public class DefaultTbRepositorySettingsService extends TbAbstractVersionControl
         }
         return settings;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link RepositorySettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RepositorySettings get(TenantId tenantId) {

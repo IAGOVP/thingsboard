@@ -18,12 +18,23 @@ package org.thingsboard.server.service.security.permission;
 import java.util.HashMap;
 import java.util.Optional;
 
+/**
+ * Defines RBAC permission rules for abstract users.
+ *
+ * <p><b>Responsibilities:</b> Evaluates tenant/customer/system-admin scopes against Resource and Operation.
+ */
+
 public abstract class AbstractPermissions extends HashMap<Resource, PermissionChecker> implements Permissions {
 
     public AbstractPermissions() {
         super();
     }
-
+    /**
+     * Returns permission checker.
+     *
+     * @param resource resource (Resource)
+     * @return {@link Optional} result
+     */
     @Override
     public Optional<PermissionChecker> getPermissionChecker(Resource resource) {
         PermissionChecker permissionChecker = this.get(resource);

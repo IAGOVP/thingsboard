@@ -34,6 +34,11 @@ public class TbEntitySubEvent {
     private final TbSubscriptionsInfo info;
     private final int seqNumber;
 
+    /**
+     * Has ts or attr sub.
+     * @return {@code true} when the condition holds
+     */
+
     public boolean hasTsOrAttrSub() {
         return info != null && (info.tsAllKeys || info.attrAllKeys || info.tsKeys != null || info.attrKeys != null);
     }

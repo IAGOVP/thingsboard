@@ -19,6 +19,11 @@ package org.thingsboard.server.service.edge.rpc;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+/**
+ * Edge event storage settings for ThingsBoard Edge integration.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @Data

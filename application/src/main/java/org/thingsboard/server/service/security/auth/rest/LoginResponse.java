@@ -17,6 +17,9 @@ package org.thingsboard.server.service.security.auth.rest;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+/**
+ * DTO for username/password REST login: login response.
+ */
 
 @Schema
 @Data

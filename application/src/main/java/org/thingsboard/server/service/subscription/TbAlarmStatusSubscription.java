@@ -31,6 +31,12 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 
 
+/**
+ * Subscription state holder for tb alarm status.
+ * <p>Links a WebSocket session to entity keys and update processors.
+ */
+
+
 public class TbAlarmStatusSubscription extends TbSubscription<AlarmSubscriptionUpdate> {
 
     @Getter
@@ -43,6 +49,20 @@ public class TbAlarmStatusSubscription extends TbSubscription<AlarmSubscriptionU
     @Getter
     private final List<AlarmSeverity> severityList;
 
+    /**
+     * Constructs {@link TbAlarmStatusSubscription} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionId client command/subscription id
+     * @param tenantId tenant that owns the subscription or entity
+     * @param entityId target entity id
+     * @param updateProcessor update processor
+     * @param typeList type list
+     * @param severityList severity list
+     * @return @Builder
+    public
+     */
+
     @Builder
     public TbAlarmStatusSubscription(String serviceId, String sessionId, int subscriptionId, TenantId tenantId, EntityId entityId,
                                      BiConsumer<TbSubscription<AlarmSubscriptionUpdate>, AlarmSubscriptionUpdate> updateProcessor,
@@ -52,10 +72,21 @@ public class TbAlarmStatusSubscription extends TbSubscription<AlarmSubscriptionU
         this.severityList = severityList;
     }
 
+    /**
+     * Matches.
+     * @param alarm alarm
+     * @return boolean result
+     */
+
     public boolean matches(AlarmInfo alarm) {
         return !alarm.isCleared() && (this.typeList == null || this.typeList.contains(alarm.getType())) &&
                 (this.severityList == null || this.severityList.contains(alarm.getSeverity()));
     }
+
+    /**
+     * Has alarms.
+     * @return {@code true} when the condition holds
+     */
 
     public boolean hasAlarms() {
         return !alarmIds.isEmpty();

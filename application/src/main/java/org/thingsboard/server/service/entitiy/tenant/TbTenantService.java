@@ -17,9 +17,35 @@ package org.thingsboard.server.service.entitiy.tenant;
 
 import org.thingsboard.server.common.data.Tenant;
 
+/**
+
+ * Application-layer service API for tenant entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbTenantService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param tenant tenant ({@link Tenant})
+ * @return {@link Tenant}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     Tenant save(Tenant tenant) throws Exception;
+/**
+ * Deletes the requested data.
+ *
+ * @param tenant tenant ({@link Tenant})
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void delete(Tenant tenant) throws Exception;
 

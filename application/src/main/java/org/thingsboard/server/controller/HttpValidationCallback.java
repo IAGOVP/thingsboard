@@ -21,10 +21,20 @@ import org.springframework.web.context.request.async.DeferredResult;
 import org.thingsboard.server.service.security.ValidationCallback;
 
 /**
- * Created by ashvayka on 21.02.17.
+ * HTTP-specific {@link ValidationCallback} that bridges asynchronous security validation
+ * to a Spring {@link DeferredResult} carrying an {@link ResponseEntity}.
+ *
+ * <p>Used by REST controllers to complete deferred HTTP responses after token or credential
+ * validation finishes. Extends {@link org.thingsboard.server.service.security.ValidationCallback}.
  */
 public class HttpValidationCallback extends ValidationCallback<DeferredResult<ResponseEntity>> {
 
+    /**
+     * Creates a callback that invokes the given action when validation completes.
+     *
+     * @param response the deferred HTTP response to populate on success or failure
+     * @param action   future callback executed after validation with the same deferred result
+     */
     public HttpValidationCallback(DeferredResult<ResponseEntity> response, FutureCallback<DeferredResult<ResponseEntity>> action) {
        super(response, action);
     }

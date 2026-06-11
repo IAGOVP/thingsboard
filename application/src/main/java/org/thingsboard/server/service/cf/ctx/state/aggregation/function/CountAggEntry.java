@@ -19,19 +19,45 @@ import org.thingsboard.server.common.data.cf.configuration.aggregation.AggFuncti
 
 import java.util.Optional;
 
+/**
+
+ * Argument or aggregation entry for calculated-field state (count agg entry).
+
+ */
+
 public class CountAggEntry implements AggEntry {
 
     private long count = 0L;
+    /**
+     * Updates the requested data.
+     *
+     * @param value value ({@link Object})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void update(Object value) {
         count++;
     }
+    /**
+     * Result.
+     *
+     * @param precision precision ({@link Integer})
+     * @return optional {@link Object}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<Object> result(Integer precision) {
         return Optional.of(count);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link AggFunction}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AggFunction getType() {

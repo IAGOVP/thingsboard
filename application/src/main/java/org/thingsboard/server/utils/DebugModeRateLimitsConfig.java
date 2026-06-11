@@ -19,6 +19,13 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * Configuration holder for debug-mode rate limits on rule chains and calculated fields.
+ *
+ * <p>Values are injected from {@code actors.rule.chain.debug_mode_rate_limits_per_tenant.*}
+ * and {@code actors.calculated_fields.debug_mode_rate_limits_per_tenant.*} properties.
+ * Lombok {@code @Data} exposes public getters for each setting.
+ */
 @Component
 @Data
 public class DebugModeRateLimitsConfig {

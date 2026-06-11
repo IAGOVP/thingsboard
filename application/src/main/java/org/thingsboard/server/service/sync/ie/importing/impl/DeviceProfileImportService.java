@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 import org.thingsboard.server.dao.device.DeviceProfileService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports device profile entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -34,11 +39,31 @@ import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 public class DeviceProfileImportService extends BaseEntityImportService<DeviceProfileId, DeviceProfile, EntityExportData<DeviceProfile>> {
 
     private final DeviceProfileService deviceProfileService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, DeviceProfile deviceProfile, IdProvider idProvider) {
         deviceProfile.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param old old ({@link DeviceProfile})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected DeviceProfile prepare(EntitiesImportCtx ctx, DeviceProfile deviceProfile, DeviceProfile old, EntityExportData<DeviceProfile> exportData, IdProvider idProvider) {
@@ -49,6 +74,17 @@ public class DeviceProfileImportService extends BaseEntityImportService<DevicePr
         deviceProfile.setSoftwareId(idProvider.getInternalId(deviceProfile.getSoftwareId(), false));
         return deviceProfile;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected DeviceProfile saveOrUpdate(EntitiesImportCtx ctx, DeviceProfile deviceProfile, EntityExportData<DeviceProfile> exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -63,22 +99,51 @@ public class DeviceProfileImportService extends BaseEntityImportService<DevicePr
         }
         return saved;
     }
+    /**
+     * Handles entity saved.
+     *
+     * @param user authenticated user performing the action
+     * @param savedDeviceProfile saved device profile ({@link DeviceProfile})
+     * @param oldDeviceProfile old device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onEntitySaved(User user, DeviceProfile savedDeviceProfile, DeviceProfile oldDeviceProfile) {
         logEntityActionService.logEntityAction(savedDeviceProfile.getTenantId(), savedDeviceProfile.getId(), savedDeviceProfile,
                 null, oldDeviceProfile == null ? ActionType.ADDED : ActionType.UPDATED, user);
     }
+    /**
+     * Deep copy.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected DeviceProfile deepCopy(DeviceProfile deviceProfile) {
         return new DeviceProfile(deviceProfile);
     }
+    /**
+     * Cleanup for comparison.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupForComparison(DeviceProfile deviceProfile) {
         super.cleanupForComparison(deviceProfile);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

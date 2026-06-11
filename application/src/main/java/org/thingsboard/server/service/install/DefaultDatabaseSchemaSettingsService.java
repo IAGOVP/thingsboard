@@ -23,6 +23,12 @@ import org.thingsboard.server.service.install.update.DefaultDataUpdateService;
 
 import java.util.Map;
 
+    /**
+     * Default Spring implementation for database schema settings service (database schema installation, upgrades, and demo data loading).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -40,6 +46,12 @@ public class DefaultDatabaseSchemaSettingsService implements DatabaseSchemaSetti
 
     private String packageSchemaVersion;
     private String schemaVersionFromDb;
+    /**
+     * Validates schema settings.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void validateSchemaSettings() {
@@ -64,6 +76,12 @@ public class DefaultDatabaseSchemaSettingsService implements DatabaseSchemaSetti
             ));
         }
     }
+    /**
+     * Creates schema settings.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createSchemaSettings() {
@@ -72,11 +90,23 @@ public class DefaultDatabaseSchemaSettingsService implements DatabaseSchemaSetti
             jdbcTemplate.execute("INSERT INTO tb_schema_settings (schema_version, product) VALUES (" + getPackageSchemaVersionForDb() + ", '" + projectInfo.getProductType() + "')");
         }
     }
+    /**
+     * Updates schema version.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateSchemaVersion() {
         jdbcTemplate.execute("UPDATE tb_schema_settings SET schema_version = " + getPackageSchemaVersionForDb());
     }
+    /**
+     * Returns package schema version.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getPackageSchemaVersion() {
@@ -85,6 +115,12 @@ public class DefaultDatabaseSchemaSettingsService implements DatabaseSchemaSetti
         }
         return packageSchemaVersion;
     }
+    /**
+     * Returns db schema version.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getDbSchemaVersion() {

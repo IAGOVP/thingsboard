@@ -18,6 +18,16 @@ package org.thingsboard.server.service.notification;
 import org.thingsboard.server.common.data.id.NotificationRequestId;
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+
+ * Service contract for notification scheduler operations (notification delivery, templates, targets, and rule-trigger processing).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface NotificationSchedulerService {
 
     void scheduleNotificationRequest(TenantId tenantId, NotificationRequestId notificationRequestId, long requestTs);

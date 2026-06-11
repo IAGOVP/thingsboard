@@ -66,8 +66,19 @@ import java.util.Base64;
 
 import static java.util.Collections.singletonMap;
 
+    /**
+     * Spring service component for langchain4j chat model configurer impl (AI model invocation for platform features).
+     */
+
 @Component
 class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigurer {
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link OpenAiChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(OpenAiChatModelConfig chatModelConfig) {
@@ -85,6 +96,13 @@ class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigur
                 .maxRetries(chatModelConfig.maxRetries())
                 .build();
     }
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link AzureOpenAiChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(AzureOpenAiChatModelConfig chatModelConfig) {
@@ -104,6 +122,13 @@ class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigur
                 .maxRetries(chatModelConfig.maxRetries())
                 .build();
     }
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link GoogleAiGeminiChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(GoogleAiGeminiChatModelConfig chatModelConfig) {
@@ -120,6 +145,13 @@ class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigur
                 .maxRetries(chatModelConfig.maxRetries())
                 .build();
     }
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link GoogleVertexAiGeminiChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(GoogleVertexAiGeminiChatModelConfig chatModelConfig) {
@@ -202,6 +234,13 @@ class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigur
             throw new RuntimeException("Failed to create prediction service client", e);
         }
     }
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link MistralAiChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(MistralAiChatModelConfig chatModelConfig) {
@@ -217,6 +256,13 @@ class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigur
                 .maxRetries(chatModelConfig.maxRetries())
                 .build();
     }
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link AnthropicChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(AnthropicChatModelConfig chatModelConfig) {
@@ -231,6 +277,13 @@ class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigur
                 .maxRetries(chatModelConfig.maxRetries())
                 .build();
     }
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link AmazonBedrockChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(AmazonBedrockChatModelConfig chatModelConfig) {
@@ -259,6 +312,13 @@ class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigur
                 .maxRetries(chatModelConfig.maxRetries())
                 .build();
     }
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link GitHubModelsChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(GitHubModelsChatModelConfig chatModelConfig) {
@@ -274,6 +334,13 @@ class Langchain4jChatModelConfigurerImpl implements Langchain4jChatModelConfigur
                 .maxRetries(chatModelConfig.maxRetries())
                 .build();
     }
+    /**
+     * Configure chat model.
+     *
+     * @param chatModelConfig chat model config ({@link OllamaChatModelConfig})
+     * @return {@link ChatModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ChatModel configureChatModel(OllamaChatModelConfig chatModelConfig) {

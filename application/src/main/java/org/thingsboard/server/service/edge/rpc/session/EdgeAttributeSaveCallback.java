@@ -20,6 +20,9 @@ import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.server.common.data.id.EdgeId;
 import org.thingsboard.server.common.data.id.TenantId;
+/**
+ * Edge attribute save callback for edge gRPC session lifecycle.
+ */
 
 @Slf4j
 public class EdgeAttributeSaveCallback implements FutureCallback<Void> {
@@ -36,11 +39,21 @@ public class EdgeAttributeSaveCallback implements FutureCallback<Void> {
         this.value = value;
     }
 
+    /**
+     * On success.
+     *
+     * @param result result (@Nullable Void)
+     */
     @Override
     public void onSuccess(@Nullable Void result) {
         log.trace("[{}][{}] Successfully updated attribute [{}] with value [{}]", tenantId, edgeId, key, value);
     }
 
+    /**
+     * On failure.
+     *
+     * @param t t (Throwable)
+     */
     @Override
     public void onFailure(Throwable t) {
         log.warn("[{}][{}] Failed to update attribute [{}] with value [{}]", tenantId, edgeId, key, value, t);

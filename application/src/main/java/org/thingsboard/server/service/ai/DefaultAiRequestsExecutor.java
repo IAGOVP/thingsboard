@@ -37,6 +37,12 @@ import org.thingsboard.common.util.ThingsBoardThreadFactory;
 import java.time.Duration;
 import java.util.concurrent.Executors;
 
+    /**
+     * Default Spring implementation for ai requests executor (AI model invocation for platform features).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Lazy
 @Component
 @RequiredArgsConstructor
@@ -69,6 +75,14 @@ class DefaultAiRequestsExecutor implements AiRequestsExecutor {
                 Executors.newFixedThreadPool(properties.getPoolSize(), ThingsBoardThreadFactory.forName(properties.getPoolName()))
         );
     }
+    /**
+     * Send chat request async.
+     *
+     * @param chatModel chat model ({@link ChatModel})
+     * @param chatRequest chat request ({@link ChatRequest})
+     * @return {@link FluentFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FluentFuture<ChatResponse> sendChatRequestAsync(ChatModel chatModel, ChatRequest chatRequest) {

@@ -28,12 +28,23 @@ import org.thingsboard.server.dao.timeseries.TimeseriesService;
 
 import java.util.List;
 
+    /**
+     * Spring service component for telemetry deletion task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class TelemetryDeletionTaskProcessor extends HousekeeperTaskProcessor<HousekeeperTask> {
 
     private final TimeseriesService timeseriesService;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link HousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(HousekeeperTask task) throws Exception {
@@ -51,6 +62,12 @@ public class TelemetryDeletionTaskProcessor extends HousekeeperTaskProcessor<Hou
 
         log.trace("[{}][{}][{}] Submitted latest and ts history deletion tasks for {} keys", tenantId, entityId.getEntityType(), entityId, keys.size());
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

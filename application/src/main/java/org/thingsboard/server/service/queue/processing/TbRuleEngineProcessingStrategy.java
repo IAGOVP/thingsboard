@@ -15,9 +15,25 @@
  */
 package org.thingsboard.server.service.queue.processing;
 
+/**
+ * Rule-engine pack processing strategy: tb rule engine processing strategy.
+ * <p>Decides commit/ retry behavior after a pack is processed.
+ */
+
 public interface TbRuleEngineProcessingStrategy {
 
+    /**
+     * Is skip timeout msgs.
+     * @return {@code true} when the condition holds
+     */
+
     boolean isSkipTimeoutMsgs();
+
+    /**
+     * Analyze.
+     * @param result result
+     * @return {@link TbRuleEngineProcessingDecision}
+     */
 
     TbRuleEngineProcessingDecision analyze(TbRuleEngineProcessingResult result);
 

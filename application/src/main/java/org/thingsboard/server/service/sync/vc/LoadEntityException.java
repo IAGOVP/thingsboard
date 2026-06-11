@@ -17,6 +17,9 @@ package org.thingsboard.server.service.sync.vc;
 
 import lombok.Getter;
 import org.thingsboard.server.common.data.id.EntityId;
+/**
+ * Exception during Git-based entity version control: load entity exception.
+ */
 
 @SuppressWarnings("rawtypes")
 public class LoadEntityException extends RuntimeException {

@@ -18,6 +18,10 @@ package org.thingsboard.server.service.security.auth;
 import org.thingsboard.server.service.security.model.SecurityUser;
 import org.thingsboard.server.service.security.model.token.RawAccessJwtToken;
 
+/**
+ * Spring Security authentication token carrying platform security credentials or principal.
+ */
+
 public class RefreshAuthenticationToken extends AbstractJwtAuthenticationToken {
 
     private static final long serialVersionUID = -1311042791508924523L;

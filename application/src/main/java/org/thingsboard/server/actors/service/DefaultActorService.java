@@ -40,6 +40,11 @@ import org.thingsboard.server.queue.util.AfterStartUp;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+/**
+ * Default implementation that bootstraps the actor system on application start.
+ *
+ * <p>Creates the root {@link org.thingsboard.server.actors.app.AppActor}, registers partition-change listeners, and coordinates graceful shutdown.
+ */
 
 @Service
 @Slf4j
@@ -85,6 +90,12 @@ public class DefaultActorService extends TbApplicationEventListener<PartitionCha
 
     @Value("${actors.system.cfe_dispatcher_pool_size:8}")
     private int calculatedFieldEntityDispatcherSize;
+    /**
+     * Init actor system.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @PostConstruct
@@ -123,23 +134,50 @@ public class DefaultActorService extends TbApplicationEventListener<PartitionCha
             return ThingsBoardExecutors.newWorkStealingPool(poolSize, dispatcherName);
         }
     }
+    /**
+     * Handles application event.
+     *
+     * @param applicationReadyEvent application ready event ({@link ApplicationReadyEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.ACTOR_SYSTEM)
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         log.info("Received application ready event. Sending application init message to actor system");
         appActor.tellWithHighPriority(new AppInitMsg());
     }
+    /**
+     * Handles tb application event.
+     *
+     * @param event event ({@link PartitionChangeEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent event) {
         log.info("Received partition change event.");
         appActor.tellWithHighPriority(new PartitionChangeMsg(event.getServiceType()));
     }
+    /**
+     * Filter tb application event.
+     *
+     * @param event event ({@link PartitionChangeEvent})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean filterTbApplicationEvent(PartitionChangeEvent event) {
         return event.getServiceType() == ServiceType.TB_RULE_ENGINE || event.getServiceType() == ServiceType.TB_CORE;
     }
+    /**
+     * Stop actor system.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void stopActorSystem() {

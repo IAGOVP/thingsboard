@@ -22,8 +22,9 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Entry message delivering a {@link org.thingsboard.server.common.msg.TbMsg} into a rule chain actor.
  */
+
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public final class RuleChainInputMsg extends TbToRuleChainActorMsg {
@@ -31,6 +32,14 @@ public final class RuleChainInputMsg extends TbToRuleChainActorMsg {
     public RuleChainInputMsg(RuleChainId target, TbMsg tbMsg) {
         super(tbMsg, target);
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

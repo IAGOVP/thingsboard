@@ -30,8 +30,20 @@ import org.thingsboard.server.common.data.notification.rule.trigger.config.Notif
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.thingsboard.server.common.data.util.CollectionsUtil.emptyOrContains;
 
+    /**
+     * Spring service component for alarm assignment trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 public class AlarmAssignmentTriggerProcessor implements NotificationRuleTriggerProcessor<AlarmAssignmentTrigger, AlarmAssignmentNotificationRuleTriggerConfig> {
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link AlarmAssignmentTrigger})
+     * @param triggerConfig trigger config ({@link AlarmAssignmentNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(AlarmAssignmentTrigger trigger, AlarmAssignmentNotificationRuleTriggerConfig triggerConfig) {
@@ -44,6 +56,13 @@ public class AlarmAssignmentTriggerProcessor implements NotificationRuleTriggerP
                 emptyOrContains(triggerConfig.getAlarmSeverities(), alarmInfo.getSeverity()) &&
                 (isEmpty(triggerConfig.getAlarmStatuses()) || AlarmStatusFilter.from(triggerConfig.getAlarmStatuses()).matches(alarmInfo));
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link AlarmAssignmentTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(AlarmAssignmentTrigger trigger) {
@@ -69,6 +88,12 @@ public class AlarmAssignmentTriggerProcessor implements NotificationRuleTriggerP
                 .dashboardId(alarmInfo.getDashboardId())
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

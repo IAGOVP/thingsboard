@@ -26,8 +26,20 @@ import org.thingsboard.server.common.data.notification.rule.trigger.config.Notif
 
 import static org.thingsboard.server.common.data.util.CollectionsUtil.emptyOrContains;
 
+    /**
+     * Spring service component for entity action trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 public class EntityActionTriggerProcessor implements NotificationRuleTriggerProcessor<EntityActionTrigger, EntityActionNotificationRuleTriggerConfig> {
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link EntityActionTrigger})
+     * @param triggerConfig trigger config ({@link EntityActionNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(EntityActionTrigger trigger, EntityActionNotificationRuleTriggerConfig triggerConfig) {
@@ -36,6 +48,13 @@ public class EntityActionTriggerProcessor implements NotificationRuleTriggerProc
                 || (trigger.getActionType() == ActionType.DELETED && triggerConfig.isDeleted()))
                 && emptyOrContains(triggerConfig.getEntityTypes(), trigger.getEntityId().getEntityType());
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link EntityActionTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(EntityActionTrigger trigger) {
@@ -53,6 +72,12 @@ public class EntityActionTriggerProcessor implements NotificationRuleTriggerProc
                         trigger.getUser().getCustomerId())
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

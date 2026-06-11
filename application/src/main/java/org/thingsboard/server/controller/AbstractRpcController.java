@@ -50,7 +50,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Created by ashvayka on 22.03.18.
+ * Base REST controller for server-side device RPC operations.
+ *
+ * <p>Provides shared logic for processing two-way and one-way RPC requests from REST API
+ * endpoints. Subclasses (e.g. {@link RpcV1Controller}, {@link RpcV2Controller}) expose
+ * the concrete HTTP mappings.
+ *
+ * <p>Related services: {@link TbCoreDeviceRpcService}, {@link AccessValidator},
+ * {@link org.thingsboard.server.dao.audit.AuditLogService}.
  */
 @TbCoreComponent
 @Slf4j
@@ -68,6 +75,21 @@ public abstract class AbstractRpcController extends BaseController {
     @Value("${server.rest.server_side_rpc.default_timeout:10000}")
     protected long defaultTimeout;
 
+    /**
+     * Processes a server-side RPC request to a device and returns an async {@link DeferredResult}.
+     *
+     * <p>Validates {@link Operation#RPC_CALL} permission on the device, parses the JSON request body
+     * (method, params, timeout, expirationTime, persistent, retries, additionalInfo), and delegates
+     * to {@link TbCoreDeviceRpcService#processRestApiRpcRequest}.
+     *
+     * @param oneWay whether this is a one-way RPC (no response expected from device)
+     * @param deviceId target device identifier
+     * @param requestBody JSON RPC request body
+     * @param timeoutStatus HTTP status to return when the RPC times out
+     * @param noActiveConnectionStatus HTTP status when device has no active connection
+     * @return deferred HTTP response populated when the device replies or an error occurs
+     * @throws ThingsboardException if the request body is invalid
+     */
     protected DeferredResult<ResponseEntity> handleDeviceRPCRequest(boolean oneWay, DeviceId deviceId, String requestBody, HttpStatus timeoutStatus, HttpStatus noActiveConnectionStatus) throws ThingsboardException {
         try {
             JsonNode rpcRequestBody = JacksonUtil.toJsonNode(requestBody);
@@ -115,6 +137,14 @@ public abstract class AbstractRpcController extends BaseController {
         }
     }
 
+    /**
+     * Writes the device RPC response (or error) into the deferred REST response and logs the RPC call.
+     *
+     * @param rpcRequest metadata including the original request, user, and response writer
+     * @param response device RPC response from the transport layer
+     * @param timeoutStatus HTTP status to use when {@link RpcError#TIMEOUT} occurs
+     * @param noActiveConnectionStatus HTTP status to use when {@link RpcError#NO_ACTIVE_CONNECTION} occurs
+     */
     public void reply(LocalRequestMetaData rpcRequest, FromDeviceRpcResponse response, HttpStatus timeoutStatus, HttpStatus noActiveConnectionStatus) {
         Optional<RpcError> rpcError = response.getError();
         DeferredResult<ResponseEntity> responseWriter = rpcRequest.getResponseWriter();

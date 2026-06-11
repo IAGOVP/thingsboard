@@ -40,6 +40,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+/**
+ * Spring service component for dashboard sync service (REST-layer entity operations (application-layer entity CRUD with audit logging and version-control hooks)).
+ */
 
 @Service
 @TbCoreComponent
@@ -64,6 +67,12 @@ public class DashboardSyncService {
 
     private static final String REPO_KEY = "gateways-dashboard";
     private static final String GATEWAYS_DASHBOARD_KEY = "gateways_dashboard.json";
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void init() throws Exception {

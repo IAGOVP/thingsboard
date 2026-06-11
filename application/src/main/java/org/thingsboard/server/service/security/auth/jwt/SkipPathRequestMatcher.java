@@ -24,6 +24,10 @@ import org.springframework.util.Assert;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Skip path request matcher for JWT bearer-token authentication.
+ */
+
 public class SkipPathRequestMatcher implements RequestMatcher {
 
     private final OrRequestMatcher matchers;
@@ -35,7 +39,12 @@ public class SkipPathRequestMatcher implements RequestMatcher {
         matchers = new OrRequestMatcher(m);
         processingMatcher = new AntPathRequestMatcher(processingPath);
     }
-
+    /**
+     * Matches.
+     *
+     * @param request request (HttpServletRequest)
+     * @return boolean
+     */
     @Override
     public boolean matches(HttpServletRequest request) {
         if (matchers.matches(request)) {

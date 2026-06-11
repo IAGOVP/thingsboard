@@ -70,6 +70,10 @@ import java.util.concurrent.locks.ReentrantLock;
 import static org.eclipse.leshan.core.LwM2m.Version.V1_0;
 import static org.thingsboard.server.common.data.device.profile.lwm2m.TelemetryObserveStrategy.SINGLE;
 
+    /**
+     * Spring service component for device bulk import service (device claim and provisioning helpers).
+     */
+
 @Service
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -80,6 +84,14 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
     protected final DeviceProfileService deviceProfileService;
 
     private final Lock findOrCreateDeviceProfileLock = new ReentrantLock();
+    /**
+     * Set entity fields.
+     *
+     * @param device device ({@link Device})
+     * @param fields fields ({@link Map})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setEntityFields(Device device, Map<BulkImportColumnType, String> fields) {
@@ -106,6 +118,15 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
         });
         setUpDeviceConfiguration(device, fields);
     }
+    /**
+     * Saves or persists entity.
+     *
+     * @param user authenticated user performing the action
+     * @param device device ({@link Device})
+     * @param fields fields ({@link Map})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @SneakyThrows
@@ -130,12 +151,28 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
 
         return tbDeviceService.saveDeviceWithCredentials(device, deviceCredentials, user);
     }
+    /**
+     * Finds or create entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param name name ({@link String})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Device findOrCreateEntity(TenantId tenantId, String name) {
         return Optional.ofNullable(deviceService.findDeviceByTenantIdAndName(tenantId, name))
                 .orElseGet(Device::new);
     }
+    /**
+     * Set owners.
+     *
+     * @param entity entity ({@link Device})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwners(Device entity, SecurityUser user) {
@@ -285,6 +322,12 @@ public class DeviceBulkImportService extends AbstractBulkImportService<Device> {
             }
         }
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected EntityType getEntityType() {

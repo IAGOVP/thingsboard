@@ -59,6 +59,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+/**
+ * Tb rule engine queue consumer manager component in the ThingsBoard queue layer.
+ */
 
 @Slf4j
 public class TbRuleEngineQueueConsumerManager extends MainQueueConsumerManager<TbProtoQueueMsg<ToRuleEngineMsg>, Queue> {
@@ -70,6 +73,15 @@ public class TbRuleEngineQueueConsumerManager extends MainQueueConsumerManager<T
     private final TbRuleEngineConsumerStats stats;
     private final TbMsgPackProcessingContextFactory packProcessingContextFactory;
 
+    /**
+     * Constructs {@link TbRuleEngineQueueConsumerManager} with the supplied dependencies and configuration.
+     * @param ctx ctx
+     * @param queueKey queue key
+     * @param consumerExecutor consumer executor
+     * @param scheduler scheduler
+     * @param taskExecutor task executor
+     * @param packProcessingContextFactory pack processing context factory
+     */
     @Builder(builderMethodName = "create") // not to conflict with super.builder()
     public TbRuleEngineQueueConsumerManager(TbRuleEngineConsumerContext ctx,
                                             QueueKey queueKey,
@@ -88,9 +100,21 @@ public class TbRuleEngineQueueConsumerManager extends MainQueueConsumerManager<T
         this.packProcessingContextFactory = packProcessingContextFactory;
     }
 
-    public void delete(boolean drainQueue) {
+    /**
+     * Delete.
+     * @param drainQueue drain queue
+     */
+
+public void delete(boolean drainQueue) {
         addTask(new DeleteQueueTask(drainQueue));
     }
+
+    /**
+     * Processes task.
+     * @param task task
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void processTask(TbQueueConsumerManagerTask task) {
@@ -128,6 +152,17 @@ public class TbRuleEngineQueueConsumerManager extends MainQueueConsumerManager<T
             });
         });
     }
+
+    /**
+     * Processes msgs.
+     * @param msgs msgs
+     * @param consumer consumer
+     * @param consumerKey consumer key
+     * @param queue queue
+     * @return @Override
+    protected void
+     * @throws Exception if processing fails
+     */
 
     @Override
     protected void processMsgs(List<TbProtoQueueMsg<ToRuleEngineMsg>> msgs,
@@ -225,7 +260,12 @@ public class TbRuleEngineQueueConsumerManager extends MainQueueConsumerManager<T
         }
     }
 
-    public void printStats(long ts) {
+    /**
+     * Print stats.
+     * @param ts ts
+     */
+
+public void printStats(long ts) {
         stats.printStats();
         ctx.getStatisticsService().reportQueueStats(ts, stats);
         stats.reset();

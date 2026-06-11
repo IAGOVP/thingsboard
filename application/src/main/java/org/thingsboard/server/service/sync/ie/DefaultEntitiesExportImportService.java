@@ -50,6 +50,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+/**
+ * Exports entities export import service entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
@@ -72,6 +77,14 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
             EntityType.NOTIFICATION_TEMPLATE, EntityType.NOTIFICATION_TARGET, EntityType.NOTIFICATION_RULE,
             EntityType.AI_MODEL
     );
+    /**
+     * Exports entity.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @return the operation result
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public <E extends ExportableEntity<I>, I extends EntityId> EntityExportData<E> exportEntity(EntitiesExportCtx<?> ctx, I entityId) throws ThingsboardException {
@@ -84,6 +97,14 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
 
         return exportService.getExportData(ctx, entityId);
     }
+    /**
+     * Imports entity.
+     *
+     * @param ctx calculated-field execution context
+     * @param exportData export data ({@link EntityExportData})
+     * @return the operation result
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public <E extends ExportableEntity<I>, I extends EntityId> EntityImportResult<E> importEntity(EntitiesImportCtx ctx, EntityExportData<E> exportData) throws ThingsboardException {
@@ -108,6 +129,13 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
         }
         return importResult;
     }
+    /**
+     * Saves or persists references and relations.
+     *
+     * @param ctx calculated-field execution context
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void saveReferencesAndRelations(EntitiesImportCtx ctx) throws ThingsboardException {
@@ -128,6 +156,12 @@ public class DefaultEntitiesExportImportService implements EntitiesExportImportS
                     relation, ctx.getUser(), ActionType.RELATION_ADD_OR_UPDATE, null, relation);
         }
     }
+    /**
+     * Returns entity type comparator for import.
+     *
+     * @return {@link Comparator}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Comparator<EntityType> getEntityTypeComparatorForImport() {

@@ -15,5 +15,15 @@
  */
 package org.thingsboard.server.service.install;
 
+/**
+
+ * Service contract for ts database schema operations (database schema installation, upgrades, and demo data loading).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface TsDatabaseSchemaService extends DatabaseSchemaService {
 }

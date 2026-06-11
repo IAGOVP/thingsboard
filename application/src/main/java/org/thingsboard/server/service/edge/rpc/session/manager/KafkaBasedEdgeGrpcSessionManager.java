@@ -50,6 +50,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+/**
+ * Kafka based edge grpc session manager for edge gRPC session lifecycle.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @Slf4j
@@ -75,17 +80,33 @@ public class KafkaBasedEdgeGrpcSessionManager extends AbstractEdgeGrpcSessionMan
     private PostgresGeneralEdgeEventsDispatcher psqlGeneralEdgeEventsDispatcher;
     private ExecutorService consumerExecutor;
 
+    /**
+     * On edge connect.
+     *
+     */
     @Override
     public void onEdgeConnect() {
         scheduleMigrationAndProcessing();
     }
 
+    /**
+     * On edge event update.
+     *
+     */
     @Override
     public void onEdgeEventUpdate() {}
 
+    /**
+     * On edge disconnect.
+     *
+     */
     @Override
     public void onEdgeDisconnect() {}
 
+    /**
+     * On edge removal.
+     *
+     */
     @Override
     public void onEdgeRemoval() {
         EdgeSessionState state = getState();
@@ -96,6 +117,10 @@ public class KafkaBasedEdgeGrpcSessionManager extends AbstractEdgeGrpcSessionMan
         kafkaAdmin.deleteConsumerGroup(topic);
     }
 
+    /**
+     * Releases resources and shuts down background executors.
+     *
+     */
     @Override
     public boolean destroy() {
         cancelHighPriorityProcessing();

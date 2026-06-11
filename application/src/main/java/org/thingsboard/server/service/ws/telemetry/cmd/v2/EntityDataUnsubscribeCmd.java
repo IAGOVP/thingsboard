@@ -17,11 +17,20 @@ package org.thingsboard.server.service.ws.telemetry.cmd.v2;
 
 import lombok.Data;
 import org.thingsboard.server.service.ws.WsCmdType;
+/**
+ * WebSocket command DTO for entity data unsubscribe.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 public class EntityDataUnsubscribeCmd implements UnsubscribeCmd {
 
     private final int cmdId;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

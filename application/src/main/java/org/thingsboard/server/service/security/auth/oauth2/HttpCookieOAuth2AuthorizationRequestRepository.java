@@ -21,6 +21,11 @@ import org.springframework.security.oauth2.client.web.AuthorizationRequestReposi
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.queue.util.TbCoreComponent;
+/**
+ * Http cookie oauth2authorization request repository for OAuth2 / social login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @TbCoreComponent
@@ -29,7 +34,12 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
     public static final String PREV_URI_PARAMETER = "prevUri";
     public static final String PREV_URI_COOKIE_NAME = "prev_uri";
     private static final int cookieExpireSeconds = 180;
-
+    /**
+     * Load authorization request.
+     *
+     * @param request request (HttpServletRequest)
+     * @return {@link OAuth2AuthorizationRequest} result
+     */
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
         return CookieUtils.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
@@ -37,6 +47,13 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
                 .orElse(null);
     }
 
+    /**
+     * Creates or persists authorization request.
+     *
+     * @param authorizationRequest authorization request (OAuth2AuthorizationRequest)
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     */
     @Override
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
         if (authorizationRequest == null) {
@@ -48,11 +65,24 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
         }
         CookieUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtils.serialize(authorizationRequest), cookieExpireSeconds);
     }
-
+    /**
+     * Removes authorization request.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @return {@link OAuth2AuthorizationRequest} result
+     */
     @Override
     public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
         return this.loadAuthorizationRequest(request);
     }
+
+    /**
+     * Removes authorization request cookies.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     */
 
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);

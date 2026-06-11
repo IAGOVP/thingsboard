@@ -24,11 +24,22 @@ import org.thingsboard.server.dao.event.EventService;
 
 import java.util.Arrays;
 
+    /**
+     * Spring service component for events deletion task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 public class EventsDeletionTaskProcessor extends HousekeeperTaskProcessor<HousekeeperTask> {
 
     private final EventService eventService;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link HousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(HousekeeperTask task) throws Exception {
@@ -36,6 +47,12 @@ public class EventsDeletionTaskProcessor extends HousekeeperTaskProcessor<Housek
         EventType[] nonDebugEventTypes = Arrays.stream(EventType.values()).filter(eventType -> !eventType.isDebug()).toArray(EventType[]::new);
         eventService.removeEvents(task.getTenantId(), task.getEntityId(), 0L, System.currentTimeMillis(), nonDebugEventTypes);
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

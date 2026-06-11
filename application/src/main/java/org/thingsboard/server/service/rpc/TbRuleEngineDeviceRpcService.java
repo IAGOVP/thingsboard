@@ -23,10 +23,14 @@ import org.thingsboard.server.common.msg.rpc.FromDeviceRpcResponse;
  */
 public interface TbRuleEngineDeviceRpcService extends RuleEngineRpcService {
 
+    
     /**
-     * Handles the RPC response from the Device Actor (Transport).
+     * Processes rpc response from device.
      *
-     * @param response the RPC response
+     * @param response response ({@link FromDeviceRpcResponse})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void processRpcResponseFromDevice(FromDeviceRpcResponse response);
 }

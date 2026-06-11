@@ -69,6 +69,12 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for device RPC (v2 API).
+ * 
+ * <p>Base path: {@code /api/rpc}. One-way/two-way RPC and persistent RPC lifecycle.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping(TbUrlConstants.RPC_V2_URL_PREFIX)
@@ -122,6 +128,16 @@ public class RpcV2Controller extends AbstractRpcController {
             @ApiResponse(responseCode = "413", description = "Request payload is too large"),
             @ApiResponse(responseCode = "504", description = "Timeout to process the RPC call. Most likely, device is offline."),
     })
+    /**
+     * Handle one way device rpcrequest v2.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/rpc/oneway/{deviceId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param deviceIdStr device Id Str
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/oneway/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
@@ -142,6 +158,16 @@ public class RpcV2Controller extends AbstractRpcController {
             @ApiResponse(responseCode = "413", description = "Request payload is too large"),
             @ApiResponse(responseCode = "504", description = "Timeout to process the RPC call. Most likely, device is offline."),
     })
+    /**
+     * Handle two way device rpcrequest v2.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/rpc/twoway/{deviceId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param deviceIdStr device Id Str
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/twoway/{deviceId}", method = RequestMethod.POST)
     @ResponseBody
@@ -154,6 +180,15 @@ public class RpcV2Controller extends AbstractRpcController {
         return handleDeviceRPCRequest(false, new DeviceId(UUID.fromString(deviceIdStr)), requestBody, HttpStatus.GATEWAY_TIMEOUT, HttpStatus.GATEWAY_TIMEOUT);
     }
 
+    /**
+     * Get persistent RPC request.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/rpc/persistent/{rpcId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param strRpc str Rpc
+     * @return {@link Rpc} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get persistent RPC request", notes = "Get information about the status of the RPC call." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/persistent/{rpcId}", method = RequestMethod.GET)
@@ -166,6 +201,21 @@ public class RpcV2Controller extends AbstractRpcController {
         return checkRpcId(rpcId, Operation.READ);
     }
 
+    /**
+     * Get persistent RPC requests.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/rpc/persistent/device/{deviceId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param strDeviceId str Device Id
+     * @param pageSize page Size
+     * @param page page
+     * @param rpcStatus rpc Status
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get persistent RPC requests", notes = "Allows to query RPC calls for specific device using pagination." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/persistent/device/{deviceId}", method = RequestMethod.GET)
@@ -221,6 +271,15 @@ public class RpcV2Controller extends AbstractRpcController {
         return response;
     }
 
+    /**
+     * Delete persistent RPC.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/rpc/persistent/{rpcId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRpc str Rpc
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete persistent RPC", notes = "Deletes the persistent RPC request." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @RequestMapping(value = "/persistent/{rpcId}", method = RequestMethod.DELETE)

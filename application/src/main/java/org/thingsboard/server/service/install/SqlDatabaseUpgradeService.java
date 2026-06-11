@@ -32,6 +32,10 @@ import java.nio.file.Paths;
 import java.sql.SQLWarning;
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Spring service component for sql database upgrade service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Service
 @Profile("install")
 @Slf4j
@@ -49,6 +53,12 @@ public class SqlDatabaseUpgradeService implements DatabaseEntitiesUpgradeService
         this.transactionTemplate = new TransactionTemplate(transactionManager);
         this.transactionTemplate.setTimeout((int) TimeUnit.MINUTES.toSeconds(120));
     }
+    /**
+     * Upgrade database.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void upgradeDatabase() {

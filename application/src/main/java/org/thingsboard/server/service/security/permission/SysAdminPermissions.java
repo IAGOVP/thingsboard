@@ -24,6 +24,11 @@ import org.thingsboard.server.common.data.id.UserId;
 import org.thingsboard.server.common.data.pat.ApiKeyInfo;
 import org.thingsboard.server.common.data.security.Authority;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Defines RBAC permission rules for sys admin users.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Evaluates tenant/customer/system-admin scopes against Resource and Operation.
+ */
 
 @Component
 public class SysAdminPermissions extends AbstractPermissions {
@@ -51,7 +56,15 @@ public class SysAdminPermissions extends AbstractPermissions {
     }
 
     private static final PermissionChecker systemEntityPermissionChecker = new PermissionChecker() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param entityId entity id (EntityId)
+         * @param entity entity (HasTenantId)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, EntityId entityId, HasTenantId entity) {
 
@@ -63,7 +76,15 @@ public class SysAdminPermissions extends AbstractPermissions {
     };
 
     private static final PermissionChecker userPermissionChecker = new PermissionChecker<UserId, User>() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @param userId user id (UserId)
+         * @param userEntity user entity (User)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation, UserId userId, User userEntity) {
             if (Authority.CUSTOMER_USER.equals(userEntity.getAuthority())) {
@@ -75,7 +96,13 @@ public class SysAdminPermissions extends AbstractPermissions {
     };
 
     private static final PermissionChecker<ApiKeyId, ApiKeyInfo> apiKeysPermissionChecker = new PermissionChecker<>() {
-
+        /**
+         * Returns whether the user is allowed to perform the operation.
+         *
+         * @param user user (SecurityUser)
+         * @param operation operation (Operation)
+         * @return boolean
+         */
         @Override
         public boolean hasPermission(SecurityUser user, Operation operation) {
             return true;

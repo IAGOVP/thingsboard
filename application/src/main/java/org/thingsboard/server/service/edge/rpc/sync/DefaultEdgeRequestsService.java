@@ -78,6 +78,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+/**
+ * Service implementation for default edge requests in edge-to-cloud sync requests.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ * <p><b>Key dependencies:</b> {@link #edgeEventService}, {@link #attributesService}, {@link #timeseriesService}, {@link #relationService}, {@link #entityViewService}, {@link #widgetsBundleService}, {@link #widgetTypeService}, {@link #calculatedFieldService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -111,7 +117,14 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
 
     @Autowired
     private DbCallbackExecutorService dbCallbackExecutorService;
-
+    /**
+     * Processes rule chain metadata request msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param ruleChainMetadataRequestMsg rule chain metadata request msg (RuleChainMetadataRequestMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processRuleChainMetadataRequestMsg(TenantId tenantId, Edge edge, RuleChainMetadataRequestMsg ruleChainMetadataRequestMsg) {
         log.trace("[{}] processRuleChainMetadataRequestMsg [{}][{}]", tenantId, edge.getName(), ruleChainMetadataRequestMsg);
@@ -121,7 +134,14 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
         RuleChainId ruleChainId = new RuleChainId(new UUID(ruleChainMetadataRequestMsg.getRuleChainIdMSB(), ruleChainMetadataRequestMsg.getRuleChainIdLSB()));
         return saveEdgeEvent(tenantId, edge.getId(), EdgeEventType.RULE_CHAIN_METADATA, EdgeEventActionType.ADDED, ruleChainId, null);
     }
-
+    /**
+     * Processes attributes request msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param attributesRequestMsg attributes request msg (AttributesRequestMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processAttributesRequestMsg(TenantId tenantId, Edge edge, AttributesRequestMsg attributesRequestMsg) {
         log.trace("[{}] processAttributesRequestMsg [{}][{}]", tenantId, edge.getName(), attributesRequestMsg);
@@ -219,7 +239,14 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
             return Futures.transform(Futures.allAsList(futures), v -> null, dbCallbackExecutorService);
         }, dbCallbackExecutorService);
     }
-
+    /**
+     * Processes relation request msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param relationRequestMsg relation request msg (RelationRequestMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processRelationRequestMsg(TenantId tenantId, Edge edge, RelationRequestMsg relationRequestMsg) {
         log.trace("[{}] processRelationRequestMsg [{}][{}]", tenantId, edge.getName(), relationRequestMsg);
@@ -233,6 +260,11 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
         ListenableFuture<List<List<EntityRelation>>> relationsListFuture = Futures.allAsList(futures);
         SettableFuture<Void> futureToSet = SettableFuture.create();
         Futures.addCallback(relationsListFuture, new FutureCallback<>() {
+            /**
+             * On success.
+             *
+             * @param relationsList relations list (@Nullable List<List<EntityRelation>>)
+             */
             @Override
             public void onSuccess(@Nullable List<List<EntityRelation>> relationsList) {
                 try {
@@ -266,11 +298,21 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
                             futureToSet.set(null);
                         } else {
                             Futures.addCallback(Futures.allAsList(futures), new FutureCallback<>() {
+                                /**
+                                 * On success.
+                                 *
+                                 * @param voids voids (@Nullable List<Void>)
+                                 */
                                 @Override
                                 public void onSuccess(@Nullable List<Void> voids) {
                                     futureToSet.set(null);
                                 }
 
+                                /**
+                                 * On failure.
+                                 *
+                                 * @param throwable throwable (Throwable)
+                                 */
                                 @Override
                                 public void onFailure(Throwable throwable) {
                                     String errMsg = String.format("[%s][%s] Exception during saving edge events [%s]!", tenantId, edge.getId(), relationRequestMsg);
@@ -288,6 +330,11 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
                 }
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 String errMsg = String.format("[%s] Can't find relation by query. Entity id [%s]!", tenantId, entityId);
@@ -297,7 +344,14 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
         }, dbCallbackExecutorService);
         return futureToSet;
     }
-
+    /**
+     * Processes calculated field request msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param calculatedFieldRequestMsg calculated field request msg (CalculatedFieldRequestMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processCalculatedFieldRequestMsg(TenantId tenantId, Edge edge, CalculatedFieldRequestMsg calculatedFieldRequestMsg) {
         log.trace("[{}] processCalculatedFieldRequestMsg [{}][{}]", tenantId, edge.getName(), calculatedFieldRequestMsg);
@@ -341,7 +395,14 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
         query.setParameters(new RelationsSearchParameters(entityId, direction, 1, false));
         return relationService.findByQuery(tenantId, query);
     }
-
+    /**
+     * Processes device credentials request msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param deviceCredentialsRequestMsg device credentials request msg (DeviceCredentialsRequestMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processDeviceCredentialsRequestMsg(TenantId tenantId, Edge edge, DeviceCredentialsRequestMsg deviceCredentialsRequestMsg) {
         log.trace("[{}] processDeviceCredentialsRequestMsg [{}][{}]", tenantId, edge.getName(), deviceCredentialsRequestMsg);
@@ -352,7 +413,14 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
         return saveEdgeEvent(tenantId, edge.getId(), EdgeEventType.DEVICE,
                 EdgeEventActionType.CREDENTIALS_UPDATED, deviceId, null);
     }
-
+    /**
+     * Processes user credentials request msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param userCredentialsRequestMsg user credentials request msg (UserCredentialsRequestMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processUserCredentialsRequestMsg(TenantId tenantId, Edge edge, UserCredentialsRequestMsg userCredentialsRequestMsg) {
         log.trace("[{}] processUserCredentialsRequestMsg [{}][{}]", tenantId, edge.getName(), userCredentialsRequestMsg);
@@ -363,7 +431,14 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
         return saveEdgeEvent(tenantId, edge.getId(), EdgeEventType.USER,
                 EdgeEventActionType.CREDENTIALS_UPDATED, userId, null);
     }
-
+    /**
+     * Processes widget bundle types request msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param widgetBundleTypesRequestMsg widget bundle types request msg (WidgetBundleTypesRequestMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processWidgetBundleTypesRequestMsg(TenantId tenantId, Edge edge,
                                                                      WidgetBundleTypesRequestMsg widgetBundleTypesRequestMsg) {
@@ -382,7 +457,14 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
         }
         return Futures.transform(Futures.allAsList(futures), voids -> null, dbCallbackExecutorService);
     }
-
+    /**
+     * Processes entity views request msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param entityViewsRequestMsg entity views request msg (EntityViewsRequestMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processEntityViewsRequestMsg(TenantId tenantId, Edge edge, EntityViewsRequestMsg entityViewsRequestMsg) {
         log.trace("[{}] processEntityViewsRequestMsg [{}][{}]", tenantId, edge.getName(), entityViewsRequestMsg);
@@ -391,6 +473,11 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
                 new UUID(entityViewsRequestMsg.getEntityIdMSB(), entityViewsRequestMsg.getEntityIdLSB()));
         SettableFuture<Void> futureToSet = SettableFuture.create();
         Futures.addCallback(entityViewService.findEntityViewsByTenantIdAndEntityIdAsync(tenantId, entityId), new FutureCallback<>() {
+            /**
+             * On success.
+             *
+             * @param entityViews entity views (@Nullable List<EntityView>)
+             */
             @Override
             public void onSuccess(@Nullable List<EntityView> entityViews) {
                 if (entityViews == null || entityViews.isEmpty()) {
@@ -411,11 +498,21 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
                     }, dbCallbackExecutorService));
                 }
                 Futures.addCallback(Futures.allAsList(futures), new FutureCallback<>() {
+                    /**
+                     * On success.
+                     *
+                     * @param result result (@Nullable List<Void>)
+                     */
                     @Override
                     public void onSuccess(@Nullable List<Void> result) {
                         futureToSet.set(null);
                     }
 
+                    /**
+                     * On failure.
+                     *
+                     * @param t t (Throwable)
+                     */
                     @Override
                     public void onFailure(Throwable t) {
                         log.error("[{}] Exception during loading relation to edge on sync!", tenantId, t);
@@ -424,6 +521,11 @@ public class DefaultEdgeRequestsService implements EdgeRequestsService {
                 }, dbCallbackExecutorService);
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 log.error("[{}] Can't find entity views by entity id [{}]", tenantId, entityId, t);

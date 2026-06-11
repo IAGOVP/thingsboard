@@ -43,6 +43,15 @@ import static org.thingsboard.server.controller.ControllerConstants.PAGE_SIZE_DE
 import static org.thingsboard.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
 
+/**
+ * REST API for querying edge synchronization events stored on the platform.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code TENANT_ADMIN} only.
+ *
+ * <p>Uses {@link org.thingsboard.server.dao.edge.EdgeEventService} to retrieve paginated edge event history.
+ */
 @Slf4j
 @RestController
 @TbCoreComponent
@@ -54,6 +63,22 @@ public class EdgeEventController extends BaseController {
 
     public static final String EDGE_ID = "edgeId";
 
+    /**
+     * GET {@code /api/edge/{edgeId}/events} — Return a paginated list of events for the specified edge.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     *
+     * @param strEdgeId    string UUID of the edge
+     * @param pageSize     number of events per page
+     * @param page         zero-based page index
+     * @param textSearch   optional case-insensitive filter on event type name
+     * @param sortProperty optional sort field
+     * @param sortOrder    optional sort direction ({@code ASC} or {@code DESC})
+     * @param startTime    optional lower bound timestamp (events before this are excluded)
+     * @param endTime      optional upper bound timestamp (events after this are excluded)
+     * @return a page of {@link EdgeEvent} records
+     * @throws ThingsboardException if the edge id is invalid or access is denied
+     */
     @ApiOperation(value = "Get Edge Events (getEdgeEvents)",
             notes = "Returns a page of edge events for the requested edge. " +
                     PAGE_DATA_PARAMETERS)

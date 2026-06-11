@@ -17,16 +17,31 @@ package org.thingsboard.server.controller.plugin;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * UTF-8 text WebSocket message (typically JSON subscription data).
+ *
+ * @see TbWebSocketHandler#send(org.thingsboard.server.service.ws.WebSocketSessionRef, int, String)
+ */
 @RequiredArgsConstructor
 public class TbWebSocketTextMsg implements TbWebSocketMsg<String> {
 
     private final String value;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@link TbWebSocketMsgType#TEXT}
+     */
     @Override
     public TbWebSocketMsgType getType() {
         return TbWebSocketMsgType.TEXT;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return JSON text payload
+     */
     @Override
     public String getMsg() {
         return value;

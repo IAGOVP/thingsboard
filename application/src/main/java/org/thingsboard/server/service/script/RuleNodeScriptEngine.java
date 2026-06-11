@@ -33,6 +33,10 @@ import java.util.concurrent.ExecutionException;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 
+    /**
+     * Rule node script engine (TBEL/JS script invocation from services).
+     */
+
 @Slf4j
 public abstract class RuleNodeScriptEngine<T extends ScriptInvokeService, R> implements ScriptEngine {
 
@@ -57,42 +61,121 @@ public abstract class RuleNodeScriptEngine<T extends ScriptInvokeService, R> imp
             throw new RuntimeException("Unexpected error when creating script engine: " + t.getMessage(), t);
         }
     }
+    /**
+     * Prepare args.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return the Object[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract Object[] prepareArgs(TbMsg msg);
+    /**
+     * Executes update async.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<TbMsg>> executeUpdateAsync(TbMsg msg) {
         ListenableFuture<R> result = executeScriptAsync(msg);
         return Futures.transform(result, json -> executeUpdateTransform(msg, json), directExecutor());
     }
+    /**
+     * Executes update transform.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @param result result ({@link R})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract List<TbMsg> executeUpdateTransform(TbMsg msg, R result);
+    /**
+     * Executes generate async.
+     *
+     * @param prevMsg prev msg ({@link TbMsg})
+     * @return future completing with {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<TbMsg> executeGenerateAsync(TbMsg prevMsg) {
         return Futures.transform(executeScriptAsync(prevMsg), result -> executeGenerateTransform(prevMsg, result), directExecutor());
     }
+    /**
+     * Executes generate transform.
+     *
+     * @param prevMsg prev msg ({@link TbMsg})
+     * @param result result ({@link R})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract TbMsg executeGenerateTransform(TbMsg prevMsg, R result);
+    /**
+     * Executes filter async.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Boolean> executeFilterAsync(TbMsg msg) {
         return Futures.transform(executeScriptAsync(msg), this::executeFilterTransform, directExecutor());
     }
+    /**
+     * Executes filter transform.
+     *
+     * @param result result ({@link R})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract boolean executeFilterTransform(R result);
+    /**
+     * Executes switch async.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return future completing with {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<Set<String>> executeSwitchAsync(TbMsg msg) {
         return Futures.transform(executeScriptAsync(msg), this::executeSwitchTransform, directExecutor()); // usually runs on a callbackExecutor
     }
+    /**
+     * Executes switch transform.
+     *
+     * @param result result ({@link R})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract Set<String> executeSwitchTransform(R result);
+    /**
+     * Executes to string async.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return future completing with {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<String> executeToStringAsync(TbMsg msg) {
         return Futures.transform(executeScriptAsync(msg), this::executeToStringTransform, directExecutor());
     }
+    /**
+     * Executes to string transform.
+     *
+     * @param result result ({@link R})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String executeToStringTransform(R result);
 
@@ -105,10 +188,23 @@ public abstract class RuleNodeScriptEngine<T extends ScriptInvokeService, R> imp
     private ListenableFuture<R> executeScriptAsync(CustomerId customerId, Object... args) {
         return Futures.transform(scriptInvokeService.invokeScript(tenantId, customerId, scriptId, args), this::convertResult, directExecutor());
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void destroy() {
         scriptInvokeService.release(scriptId);
     }
+    /**
+     * Convert result.
+     *
+     * @param result result ({@link Object})
+     * @return {@link R}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract R convertResult(Object result);
 

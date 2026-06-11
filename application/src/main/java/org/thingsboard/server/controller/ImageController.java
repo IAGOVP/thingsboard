@@ -74,6 +74,18 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_ORDER_D
 import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
 import static org.thingsboard.server.dao.util.ImageUtils.mediaTypeToFileExtension;
 
+/**
+ * REST API for tenant and system image resource upload, download, preview, import/export, and deletion.
+ *
+ * <p>Base path: {@code /api/images} and {@code /api/image}.
+ *
+ * <p>Authorization: {@code SYS_ADMIN} or {@code TENANT_ADMIN} for management; {@code CUSTOMER_USER} for read;
+ * public images served without authentication.
+ *
+ * <p>Uses {@link org.thingsboard.server.dao.resource.ImageService} and {@link org.thingsboard.server.service.resource.TbImageService}.
+ */
+
+
 @Slf4j
 @RestController
 @TbCoreComponent
@@ -97,6 +109,7 @@ public class ImageController extends BaseController {
     private static final String IMAGE_TYPE_PARAM_ALLOWABLE_VALUES = "tenant, system";
     private static final String IMAGE_KEY_PARAM_DESCRIPTION = "Image resource key, for example thermostats_dashboard_background.jpeg";
 
+    /** POST {@code /api/image} — Upload a new image. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws Exception on validation failure. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @PostMapping(value = "/api/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public TbResourceInfo uploadImage(@RequestPart MultipartFile file,
@@ -130,6 +143,7 @@ public class ImageController extends BaseController {
         return tbImageService.save(image, user);
     }
 
+    /** PUT {@code /api/images/{type}/{key}} — Replace image binary content. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws Exception on failure. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @PutMapping(value = IMAGE_URL, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public TbResourceInfo updateImage(@Parameter(description = IMAGE_TYPE_PARAM_DESCRIPTION, schema = @Schema(allowableValues = {"tenant", "system"}), required = true)
@@ -150,6 +164,7 @@ public class ImageController extends BaseController {
         return tbImageService.save(image, getCurrentUser());
     }
 
+    /** PUT {@code /api/images/{type}/{key}/info} — Update image metadata (title). Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if not found. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @PutMapping(IMAGE_URL + "/info")
     public TbResourceInfo updateImageInfo(@Parameter(description = IMAGE_TYPE_PARAM_DESCRIPTION, schema = @Schema(allowableValues = {"tenant", "system"}), required = true)
@@ -163,6 +178,7 @@ public class ImageController extends BaseController {
         return tbImageService.save(newImageInfo, imageInfo, getCurrentUser());
     }
 
+    /** PUT {@code /api/images/{type}/{key}/public/{isPublic}} — Toggle image public flag. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if not found. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @PutMapping(IMAGE_URL + "/public/{isPublic}")
     public TbResourceInfo updateImagePublicStatus(@Parameter(description = IMAGE_TYPE_PARAM_DESCRIPTION, schema = @Schema(allowableValues = {"tenant", "system"}), required = true)
@@ -176,6 +192,7 @@ public class ImageController extends BaseController {
         return tbImageService.save(newImageInfo, imageInfo, getCurrentUser());
     }
 
+    /** GET {@code /api/images/{type}/{key}} — Download image with ETag caching. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws Exception on failure. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = IMAGE_URL, produces = "image/*")
     public ResponseEntity<ByteArrayResource> downloadImage(@Parameter(description = IMAGE_TYPE_PARAM_DESCRIPTION, schema = @Schema(allowableValues = {"tenant", "system"}), required = true)
@@ -187,6 +204,7 @@ public class ImageController extends BaseController {
         return downloadIfChanged(type, key, etag, acceptEncodingHeader, false);
     }
 
+    /** GET {@code /api/images/public/{publicResourceKey}} — Download public image (no auth). @throws Exception on failure. */
     @GetMapping(value = "/api/images/public/{publicResourceKey}", produces = "image/*")
     public ResponseEntity<ByteArrayResource> downloadPublicImage(@PathVariable String publicResourceKey,
                                                                  @RequestHeader(name = HttpHeaders.IF_NONE_MATCH, required = false) String etag,
@@ -195,6 +213,7 @@ public class ImageController extends BaseController {
         return downloadIfChanged(cacheKey, etag, acceptEncodingHeader, () -> imageService.getPublicImageInfoByKey(publicResourceKey));
     }
 
+    /** GET {@code /api/images/{type}/{key}/export} — Export image as {@link org.thingsboard.server.common.data.ResourceExportData}. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws Exception on failure. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = IMAGE_URL + "/export")
     public ResourceExportData exportImage(@Parameter(description = IMAGE_TYPE_PARAM_DESCRIPTION, schema = @Schema(allowableValues = {"tenant", "system"}), required = true)
@@ -205,6 +224,7 @@ public class ImageController extends BaseController {
         return imageService.exportImage(imageInfo);
     }
 
+    /** PUT {@code /api/image/import} — Import image from export data. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws Exception on failure. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @PutMapping("/api/image/import")
     public TbResourceInfo importImage(@RequestBody ResourceExportData imageData) throws Exception {
@@ -212,6 +232,7 @@ public class ImageController extends BaseController {
         return tbImageService.importImage(imageData, false, user);
     }
 
+    /** GET {@code /api/images/{type}/{key}/preview} — Download PNG preview. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}/{@code CUSTOMER_USER}. @throws Exception on failure. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = IMAGE_URL + "/preview", produces = "image/png")
     public ResponseEntity<ByteArrayResource> downloadImagePreview(@Parameter(description = IMAGE_TYPE_PARAM_DESCRIPTION, schema = @Schema(allowableValues = {"tenant", "system"}), required = true)
@@ -223,6 +244,7 @@ public class ImageController extends BaseController {
         return downloadIfChanged(type, key, etag, acceptEncodingHeader, true);
     }
 
+    /** GET {@code /api/images/{type}/{key}/info} — Fetch image metadata. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if not found. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(IMAGE_URL + "/info")
     public TbResourceInfo getImageInfo(@Parameter(description = IMAGE_TYPE_PARAM_DESCRIPTION, schema = @Schema(allowableValues = {"tenant", "system"}), required = true)
@@ -232,6 +254,7 @@ public class ImageController extends BaseController {
         return checkImageInfo(type, key, Operation.READ);
     }
 
+    /** GET {@code /api/images} — List images with pagination. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if denied. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping("/api/images")
     public PageData<TbResourceInfo> getImages(@Parameter(description = PAGE_SIZE_DESCRIPTION, required = true)
@@ -262,6 +285,7 @@ public class ImageController extends BaseController {
         }
     }
 
+    /** DELETE {@code /api/images/{type}/{key}} — Delete image. Requires {@code SYS_ADMIN}/{@code TENANT_ADMIN}. @throws ThingsboardException if referenced and not forced. */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @DeleteMapping(IMAGE_URL)
     public ResponseEntity<TbImageDeleteResult> deleteImage(@Parameter(description = IMAGE_TYPE_PARAM_DESCRIPTION, schema = @Schema(allowableValues = {"tenant", "system"}), required = true)

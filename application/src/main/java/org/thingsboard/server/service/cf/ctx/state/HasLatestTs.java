@@ -15,7 +15,21 @@
  */
 package org.thingsboard.server.service.cf.ctx.state;
 
+/**
+
+ * has latest ts contract for calculated fields (calculated-field argument resolution, runtime state, and result processing).
+
+ */
+
 public interface HasLatestTs {
+/**
+ * Returns latest ts.
+ *
+ * @return the long result
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     long getLatestTs();
 

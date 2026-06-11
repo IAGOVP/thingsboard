@@ -29,12 +29,23 @@ import org.thingsboard.server.dao.entity.EntityDaoRegistry;
 import java.util.List;
 import java.util.UUID;
 
+    /**
+     * Spring service component for tenant entities deletion task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class TenantEntitiesDeletionTaskProcessor extends HousekeeperTaskProcessor<TenantEntitiesDeletionHousekeeperTask> {
 
     private final EntityDaoRegistry entityDaoRegistry;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link TenantEntitiesDeletionHousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(TenantEntitiesDeletionHousekeeperTask task) throws Exception {
@@ -54,6 +65,12 @@ public class TenantEntitiesDeletionTaskProcessor extends HousekeeperTaskProcesso
             log.debug("[{}] Submitted task for deleting {} {}s", tenantId, entities.size(), entityType.getNormalName().toLowerCase());
         }
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

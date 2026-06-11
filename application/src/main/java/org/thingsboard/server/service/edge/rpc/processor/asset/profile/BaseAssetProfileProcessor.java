@@ -28,12 +28,25 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.gen.edge.v1.AssetProfileUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base asset profile edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #assetProfileValidator}.
+ */
 
 @Slf4j
 public abstract class BaseAssetProfileProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<AssetProfile> assetProfileValidator;
+
+    /**
+     * Creates or persists or update asset profile.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param assetProfileId asset profile id (AssetProfileId)
+     * @param assetProfileUpdateMsg asset profile update msg (AssetProfileUpdateMsg)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateAssetProfile(TenantId tenantId, AssetProfileId assetProfileId, AssetProfileUpdateMsg assetProfileUpdateMsg) {
         boolean created = false;
@@ -82,9 +95,34 @@ public abstract class BaseAssetProfileProcessor extends BaseEdgeProcessor {
         return Pair.of(created, assetProfileNameUpdated);
     }
 
+    /**
+     * Set default rule chain id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param assetProfile asset profile (AssetProfile)
+     * @param ruleChainId rule chain id (RuleChainId)
+     */
+
     protected abstract void setDefaultRuleChainId(TenantId tenantId, AssetProfile assetProfile, RuleChainId ruleChainId);
 
+    /**
+     * Set default edge rule chain id.
+     *
+     * @param assetProfile asset profile (AssetProfile)
+     * @param ruleChainId rule chain id (RuleChainId)
+     * @param assetProfileUpdateMsg asset profile update msg (AssetProfileUpdateMsg)
+     */
+
     protected abstract void setDefaultEdgeRuleChainId(AssetProfile assetProfile, RuleChainId ruleChainId, AssetProfileUpdateMsg assetProfileUpdateMsg);
+
+    /**
+     * Set default dashboard id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param dashboardId dashboard id (DashboardId)
+     * @param assetProfile asset profile (AssetProfile)
+     * @param assetProfileUpdateMsg asset profile update msg (AssetProfileUpdateMsg)
+     */
 
     protected abstract void setDefaultDashboardId(TenantId tenantId, DashboardId dashboardId, AssetProfile assetProfile, AssetProfileUpdateMsg assetProfileUpdateMsg);
 

@@ -48,6 +48,12 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_ORDER_D
 import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for queue statistics.
+ * 
+ * <p>Base path: {@code /api}. Per-service queue statistics entities for monitoring.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -56,6 +62,19 @@ public class QueueStatsController extends BaseController {
 
     private final QueueStatsService queueStatsService;
 
+    /**
+     * Get Queue Stats entities.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/queueStats}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Queue Stats entities (getTenantQueueStats)",
             notes = "Returns a page of queue stats objects that are designed to collect queue statistics for every service. " +
                     PAGE_DATA_PARAMETERS + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -75,6 +94,15 @@ public class QueueStatsController extends BaseController {
         return queueStatsService.findByTenantId(getTenantId(), pageLink);
     }
 
+    /**
+     * Get Queue stats entity by id.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/queueStats/{queueStatsId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param queueStatsIdStr queue Stats Id Str
+     * @return {@link QueueStats} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Queue stats entity by id (getQueueStatsById)",
             notes = "Fetch the Queue stats object based on the provided Queue stats id. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -86,6 +114,15 @@ public class QueueStatsController extends BaseController {
         return checkNotNull(queueStatsService.findQueueStatsById(getTenantId(), queueStatsId));
     }
 
+    /**
+     * Get queue stats by ids v1.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/queueStats}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strQueueStatsIds str Queue Stats Ids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/queueStats", params = {"queueStatsIds"})
@@ -99,6 +136,15 @@ public class QueueStatsController extends BaseController {
         return queueStatsService.findQueueStatsByIds(getTenantId(), queueStatsIds);
     }
 
+    /**
+     * Get QueueStats By Ids.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/queueStats/list}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strQueueStatsIds str Queue Stats Ids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get QueueStats By Ids (getQueueStatsByIds)",
             notes = "Fetch the Queue stats objects based on the provided ids. ")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")

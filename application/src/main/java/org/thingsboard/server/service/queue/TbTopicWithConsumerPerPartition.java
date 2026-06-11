@@ -30,6 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.ReentrantLock;
+/**
+ * Tb topic with consumer per partition component in the ThingsBoard queue layer.
+ */
 
 @RequiredArgsConstructor
 @Data

@@ -53,6 +53,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.thingsboard.server.common.data.notification.NotificationDeliveryMethod.WEB;
+/**
+ * Default {@link NotificationCommandsHandler} implementation.
+ */
 
 @Service
 @TbCoreComponent
@@ -66,6 +69,14 @@ public class DefaultNotificationCommandsHandler implements NotificationCommandsH
     private final TbServiceInfoProvider serviceInfoProvider;
     @Autowired @Lazy
     private WebSocketService wsService;
+
+    /**
+     * Handles unread notifications sub cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
 
     @Override
     public void handleUnreadNotificationsSubCmd(WebSocketSessionRef sessionRef, NotificationsSubCmd cmd) {
@@ -86,6 +97,14 @@ public class DefaultNotificationCommandsHandler implements NotificationCommandsH
         fetchUnreadNotifications(subscription);
         sendUpdate(sessionRef.getSessionId(), subscription.createFullUpdate());
     }
+
+    /**
+     * Handles unread notifications count sub cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
 
     @Override
     public void handleUnreadNotificationsCountSubCmd(WebSocketSessionRef sessionRef, NotificationsCountSubCmd cmd) {
@@ -231,6 +250,15 @@ public class DefaultNotificationCommandsHandler implements NotificationCommandsH
     }
 
 
+    /**
+     * Handles mark as read cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
+
+
     @Override
     public void handleMarkAsReadCmd(WebSocketSessionRef sessionRef, MarkNotificationsAsReadCmd cmd) {
         SecurityUser securityCtx = sessionRef.getSecurityCtx();
@@ -241,11 +269,27 @@ public class DefaultNotificationCommandsHandler implements NotificationCommandsH
                 });
     }
 
+    /**
+     * Handles mark all as read cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
+
     @Override
     public void handleMarkAllAsReadCmd(WebSocketSessionRef sessionRef, MarkAllNotificationsAsReadCmd cmd) {
         SecurityUser securityCtx = sessionRef.getSecurityCtx();
         notificationCenter.markAllNotificationsAsRead(securityCtx.getTenantId(), WEB, securityCtx.getId());
     }
+
+    /**
+     * Handles unsub cmd.
+     * @param sessionRef reference to the WebSocket session
+     * @param cmd cmd
+     * @return @Override
+    public void
+     */
 
     @Override
     public void handleUnsubCmd(WebSocketSessionRef sessionRef, UnsubscribeCmd cmd) {

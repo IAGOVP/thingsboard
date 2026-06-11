@@ -33,6 +33,11 @@ import org.thingsboard.server.service.security.system.SystemSecurityService;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+/**
+ * Handles failure responses for OAuth2 / social login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @TbCoreComponent
 @Component(value = "oauth2AuthenticationFailureHandler")
@@ -48,6 +53,15 @@ public class Oauth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
         this.systemSecurityService = systemSecurityService;
     }
 
+    /**
+     * On authentication failure.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param exception exception (AuthenticationException)
+     * @throws IOException if the operation fails
+     * @throws ServletException if the operation fails
+     */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response, AuthenticationException exception)

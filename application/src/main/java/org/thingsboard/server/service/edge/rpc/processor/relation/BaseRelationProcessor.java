@@ -23,9 +23,20 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.relation.EntityRelation;
 import org.thingsboard.server.gen.edge.v1.RelationUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base relation edge events for cloud↔edge synchronization.
+ */
 
 @Slf4j
 public abstract class BaseRelationProcessor extends BaseEdgeProcessor {
+
+    /**
+     * Processes relation msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param relationUpdateMsg relation update msg (RelationUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
 
     protected ListenableFuture<Void> processRelationMsg(TenantId tenantId, RelationUpdateMsg relationUpdateMsg) {
         log.trace("[{}] processRelationMsg [{}]", tenantId, relationUpdateMsg);

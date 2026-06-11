@@ -18,8 +18,22 @@ package org.thingsboard.server.actors.stats;
 import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.TbActorMsg;
 
+/**
+
+ * Periodic tick enum message triggering stats flush in {@link org.thingsboard.server.actors.stats.StatsActor}.
+
+ */
+
 public enum StatsPersistTick implements TbActorMsg {
     INSTANCE;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

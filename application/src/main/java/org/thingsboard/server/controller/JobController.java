@@ -46,6 +46,16 @@ import static org.thingsboard.server.controller.ControllerConstants.PAGE_SIZE_DE
 import static org.thingsboard.server.controller.ControllerConstants.SORT_ORDER_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
 
+/**
+ * REST API for monitoring and managing background jobs (cancel, reprocess, delete).
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code TENANT_ADMIN} only.
+ *
+ * <p>Uses {@link org.thingsboard.rule.engine.api.JobManager} for job lifecycle actions
+ * and inherited {@code jobService} from {@link BaseController} for queries and deletion.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -55,6 +65,15 @@ public class JobController extends BaseController {
 
     private final JobManager jobManager;
 
+    /**
+     * GET {@code /api/job/{id}} — Fetch a job by id.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     *
+     * @param id job UUID
+     * @return the {@link Job} entity
+     * @throws ThingsboardException if the job does not exist or access is denied
+     */
     @GetMapping("/job/{id}")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     public Job getJobById(@PathVariable UUID id) throws ThingsboardException {
@@ -62,6 +81,24 @@ public class JobController extends BaseController {
         return checkJobId(jobId, Operation.READ);
     }
 
+    /**
+     * GET {@code /api/jobs} — List jobs for the current tenant with optional filters.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     *
+     * @param pageSize   number of jobs per page
+     * @param page       zero-based page index
+     * @param textSearch optional case-insensitive filter on job description
+     * @param sortProperty optional sort field
+     * @param sortOrder  optional sort direction
+     * @param types      optional list of {@link JobType} values to include
+     * @param statuses   optional list of {@link JobStatus} values to include
+     * @param entities   optional list of related entity UUIDs
+     * @param startTime  optional creation time lower bound
+     * @param endTime    optional creation time upper bound
+     * @return a page of matching {@link Job} records
+     * @throws ThingsboardException if query parameters are invalid
+     */
     @GetMapping("/jobs")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     public PageData<Job> getJobs(@Parameter(description = PAGE_SIZE_DESCRIPTION, required = true)
@@ -90,6 +127,14 @@ public class JobController extends BaseController {
         return jobService.findJobsByFilter(getTenantId(), filter, pageLink);
     }
 
+    /**
+     * POST {@code /api/job/{id}/cancel} — Cancel a running or scheduled job.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     *
+     * @param id job UUID to cancel
+     * @throws ThingsboardException if the job does not exist or cannot be cancelled
+     */
     @PostMapping("/job/{id}/cancel")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     public void cancelJob(@PathVariable UUID id) throws ThingsboardException {
@@ -98,6 +143,14 @@ public class JobController extends BaseController {
         jobManager.cancelJob(getTenantId(), jobId);
     }
 
+    /**
+     * POST {@code /api/job/{id}/reprocess} — Re-queue a job for reprocessing.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     *
+     * @param id job UUID to reprocess
+     * @throws ThingsboardException if the job does not exist or reprocessing is not allowed
+     */
     @PostMapping("/job/{id}/reprocess")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     public void reprocessJob(@PathVariable UUID id) throws ThingsboardException {
@@ -106,6 +159,14 @@ public class JobController extends BaseController {
         jobManager.reprocessJob(getTenantId(), jobId);
     }
 
+    /**
+     * DELETE {@code /api/job/{id}} — Delete a job record.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}.
+     *
+     * @param id job UUID to delete
+     * @throws ThingsboardException if the job does not exist or deletion is denied
+     */
     @DeleteMapping("/job/{id}")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     public void deleteJob(@PathVariable UUID id) throws ThingsboardException {

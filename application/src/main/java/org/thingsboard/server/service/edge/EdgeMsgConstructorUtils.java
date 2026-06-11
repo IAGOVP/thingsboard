@@ -149,6 +149,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+/**
+ * Edge msg constructor utils for ThingsBoard Edge integration.
+ */
 
 @Slf4j
 public class EdgeMsgConstructorUtils {
@@ -201,6 +204,14 @@ public class EdgeMsgConstructorUtils {
         entity.setVersion(null);
     }
 
+    /**
+     * Construct alarm updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param alarm alarm (Alarm)
+     * @return {@link AlarmUpdateMsg} result
+     */
+
     public static AlarmUpdateMsg constructAlarmUpdatedMsg(UpdateMsgType msgType, Alarm alarm) {
         return AlarmUpdateMsg.newBuilder().setMsgType(msgType)
                 .setEntity(JacksonUtil.toString(alarm))
@@ -208,9 +219,25 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(alarm.getId().getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct alarm comment updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param alarmComment alarm comment (AlarmComment)
+     * @return {@link AlarmCommentUpdateMsg} result
+     */
+
     public static AlarmCommentUpdateMsg constructAlarmCommentUpdatedMsg(UpdateMsgType msgType, AlarmComment alarmComment) {
         return AlarmCommentUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(alarmComment)).build();
     }
+
+    /**
+     * Construct asset updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param asset asset (Asset)
+     * @return {@link AssetUpdateMsg} result
+     */
 
     public static AssetUpdateMsg constructAssetUpdatedMsg(UpdateMsgType msgType, Asset asset) {
         resetVersion(asset);
@@ -219,12 +246,27 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(asset.getUuidId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct asset delete msg.
+     *
+     * @param assetId asset id (AssetId)
+     * @return {@link AssetUpdateMsg} result
+     */
+
     public static AssetUpdateMsg constructAssetDeleteMsg(AssetId assetId) {
         return AssetUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(assetId.getId().getMostSignificantBits())
                 .setIdLSB(assetId.getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct asset profile updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param assetProfile asset profile (AssetProfile)
+     * @return {@link AssetProfileUpdateMsg} result
+     */
 
     public static AssetProfileUpdateMsg constructAssetProfileUpdatedMsg(UpdateMsgType msgType, AssetProfile assetProfile) {
         resetVersion(assetProfile);
@@ -233,12 +275,27 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(assetProfile.getId().getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct asset profile delete msg.
+     *
+     * @param assetProfileId asset profile id (AssetProfileId)
+     * @return {@link AssetProfileUpdateMsg} result
+     */
+
     public static AssetProfileUpdateMsg constructAssetProfileDeleteMsg(AssetProfileId assetProfileId) {
         return AssetProfileUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(assetProfileId.getId().getMostSignificantBits())
                 .setIdLSB(assetProfileId.getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct customer updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param customer customer (Customer)
+     * @return {@link CustomerUpdateMsg} result
+     */
 
     public static CustomerUpdateMsg constructCustomerUpdatedMsg(UpdateMsgType msgType, Customer customer) {
         resetVersion(customer);
@@ -247,12 +304,27 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(customer.getId().getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct customer delete msg.
+     *
+     * @param customerId customer id (CustomerId)
+     * @return {@link CustomerUpdateMsg} result
+     */
+
     public static CustomerUpdateMsg constructCustomerDeleteMsg(CustomerId customerId) {
         return CustomerUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(customerId.getId().getMostSignificantBits())
                 .setIdLSB(customerId.getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct dashboard updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param dashboard dashboard (Dashboard)
+     * @return {@link DashboardUpdateMsg} result
+     */
 
     public static DashboardUpdateMsg constructDashboardUpdatedMsg(UpdateMsgType msgType, Dashboard dashboard) {
         resetVersion(dashboard);
@@ -261,12 +333,27 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(dashboard.getId().getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct dashboard delete msg.
+     *
+     * @param dashboardId dashboard id (DashboardId)
+     * @return {@link DashboardUpdateMsg} result
+     */
+
     public static DashboardUpdateMsg constructDashboardDeleteMsg(DashboardId dashboardId) {
         return DashboardUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(dashboardId.getId().getMostSignificantBits())
                 .setIdLSB(dashboardId.getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct device updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param device device (Device)
+     * @return {@link DeviceUpdateMsg} result
+     */
 
     public static DeviceUpdateMsg constructDeviceUpdatedMsg(UpdateMsgType msgType, Device device) {
         resetVersion(device);
@@ -275,6 +362,13 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(device.getId().getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct device delete msg.
+     *
+     * @param deviceId device id (DeviceId)
+     * @return {@link DeviceUpdateMsg} result
+     */
+
     public static DeviceUpdateMsg constructDeviceDeleteMsg(DeviceId deviceId) {
         return DeviceUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
@@ -282,10 +376,26 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(deviceId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct device credentials updated msg.
+     *
+     * @param deviceCredentials device credentials (DeviceCredentials)
+     * @return {@link DeviceCredentialsUpdateMsg} result
+     */
+
     public static DeviceCredentialsUpdateMsg constructDeviceCredentialsUpdatedMsg(DeviceCredentials deviceCredentials) {
         resetVersion(deviceCredentials);
         return DeviceCredentialsUpdateMsg.newBuilder().setEntity(JacksonUtil.toString(deviceCredentials)).build();
     }
+
+    /**
+     * Construct device profile updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param deviceProfile device profile (DeviceProfile)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DeviceProfileUpdateMsg} result
+     */
 
     public static DeviceProfileUpdateMsg constructDeviceProfileUpdatedMsg(UpdateMsgType msgType, DeviceProfile deviceProfile, EdgeVersion edgeVersion) {
         resetVersion(deviceProfile);
@@ -294,6 +404,14 @@ public class EdgeMsgConstructorUtils {
                 .setIdMSB(deviceProfile.getId().getId().getMostSignificantBits())
                 .setIdLSB(deviceProfile.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Returns entity and fix lwm2m bootstrap short server id.
+     *
+     * @param deviceProfile device profile (DeviceProfile)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link String} result
+     */
 
     public static String getEntityAndFixLwm2mBootstrapShortServerId(DeviceProfile deviceProfile, EdgeVersion edgeVersion) {
         DeviceProfileTransportConfiguration transportConfiguration = deviceProfile.getProfileData().getTransportConfiguration();
@@ -322,12 +440,27 @@ public class EdgeMsgConstructorUtils {
         return JacksonUtil.toString(jsonNode);
     }
 
+    /**
+     * Construct device profile delete msg.
+     *
+     * @param deviceProfileId device profile id (DeviceProfileId)
+     * @return {@link DeviceProfileUpdateMsg} result
+     */
+
     public static DeviceProfileUpdateMsg constructDeviceProfileDeleteMsg(DeviceProfileId deviceProfileId) {
         return DeviceProfileUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(deviceProfileId.getId().getMostSignificantBits())
                 .setIdLSB(deviceProfileId.getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct device rpc call msg.
+     *
+     * @param deviceId device id (UUID)
+     * @param body body (JsonNode)
+     * @return {@link DeviceRpcCallMsg} result
+     */
 
     public static DeviceRpcCallMsg constructDeviceRpcCallMsg(UUID deviceId, JsonNode body) {
         DeviceRpcCallMsg.Builder builder = constructDeviceRpcMsg(deviceId, body);
@@ -382,6 +515,13 @@ public class EdgeMsgConstructorUtils {
         return builder;
     }
 
+    /**
+     * Construct edge configuration.
+     *
+     * @param edge edge (Edge)
+     * @return {@link EdgeConfiguration} result
+     */
+
     public static EdgeConfiguration constructEdgeConfiguration(Edge edge) {
         EdgeConfiguration.Builder builder = EdgeConfiguration.newBuilder()
                 .setEdgeIdMSB(edge.getId().getId().getMostSignificantBits())
@@ -401,12 +541,27 @@ public class EdgeMsgConstructorUtils {
         return builder.build();
     }
 
+    /**
+     * Construct entity view updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param entityView entity view (EntityView)
+     * @return {@link EntityViewUpdateMsg} result
+     */
+
     public static EntityViewUpdateMsg constructEntityViewUpdatedMsg(UpdateMsgType msgType, EntityView entityView) {
         resetVersion(entityView);
         return EntityViewUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(entityView))
                 .setIdMSB(entityView.getId().getId().getMostSignificantBits())
                 .setIdLSB(entityView.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct entity view delete msg.
+     *
+     * @param entityViewId entity view id (EntityViewId)
+     * @return {@link EntityViewUpdateMsg} result
+     */
 
     public static EntityViewUpdateMsg constructEntityViewDeleteMsg(EntityViewId entityViewId) {
         return EntityViewUpdateMsg.newBuilder()
@@ -415,9 +570,24 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(entityViewId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct notification rule update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param notificationRule notification rule (NotificationRule)
+     * @return {@link NotificationRuleUpdateMsg} result
+     */
+
     public static NotificationRuleUpdateMsg constructNotificationRuleUpdateMsg(UpdateMsgType msgType, NotificationRule notificationRule) {
         return NotificationRuleUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(notificationRule)).build();
     }
+
+    /**
+     * Construct notification rule delete msg.
+     *
+     * @param notificationRuleId notification rule id (NotificationRuleId)
+     * @return {@link NotificationRuleUpdateMsg} result
+     */
 
     public static NotificationRuleUpdateMsg constructNotificationRuleDeleteMsg(NotificationRuleId notificationRuleId) {
         return NotificationRuleUpdateMsg.newBuilder()
@@ -426,9 +596,24 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(notificationRuleId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct notification target update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param notificationTarget notification target (NotificationTarget)
+     * @return {@link NotificationTargetUpdateMsg} result
+     */
+
     public static NotificationTargetUpdateMsg constructNotificationTargetUpdateMsg(UpdateMsgType msgType, NotificationTarget notificationTarget) {
         return NotificationTargetUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(notificationTarget)).build();
     }
+
+    /**
+     * Construct notification target delete msg.
+     *
+     * @param notificationTargetId notification target id (NotificationTargetId)
+     * @return {@link NotificationTargetUpdateMsg} result
+     */
 
     public static NotificationTargetUpdateMsg constructNotificationTargetDeleteMsg(NotificationTargetId notificationTargetId) {
         return NotificationTargetUpdateMsg.newBuilder()
@@ -437,9 +622,24 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(notificationTargetId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct notification template update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param notificationTemplate notification template (NotificationTemplate)
+     * @return {@link NotificationTemplateUpdateMsg} result
+     */
+
     public static NotificationTemplateUpdateMsg constructNotificationTemplateUpdateMsg(UpdateMsgType msgType, NotificationTemplate notificationTemplate) {
         return NotificationTemplateUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(notificationTemplate)).build();
     }
+
+    /**
+     * Construct notification template delete msg.
+     *
+     * @param notificationTemplateId notification template id (NotificationTemplateId)
+     * @return {@link NotificationTemplateUpdateMsg} result
+     */
 
     public static NotificationTemplateUpdateMsg constructNotificationTemplateDeleteMsg(NotificationTemplateId notificationTemplateId) {
         return NotificationTemplateUpdateMsg.newBuilder()
@@ -448,11 +648,26 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(notificationTemplateId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct oauth2client update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param oAuth2Client o auth2client (OAuth2Client)
+     * @return {@link OAuth2ClientUpdateMsg} result
+     */
+
     public static OAuth2ClientUpdateMsg constructOAuth2ClientUpdateMsg(UpdateMsgType msgType, OAuth2Client oAuth2Client) {
         return OAuth2ClientUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(oAuth2Client))
                 .setIdMSB(oAuth2Client.getId().getId().getMostSignificantBits())
                 .setIdLSB(oAuth2Client.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct oauth2client delete msg.
+     *
+     * @param oAuth2ClientId o auth2client id (OAuth2ClientId)
+     * @return {@link OAuth2ClientUpdateMsg} result
+     */
 
     public static OAuth2ClientUpdateMsg constructOAuth2ClientDeleteMsg(OAuth2ClientId oAuth2ClientId) {
         return OAuth2ClientUpdateMsg.newBuilder()
@@ -461,11 +676,26 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(oAuth2ClientId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct oauth2domain update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param domainInfo domain info (DomainInfo)
+     * @return {@link OAuth2DomainUpdateMsg} result
+     */
+
     public static OAuth2DomainUpdateMsg constructOAuth2DomainUpdateMsg(UpdateMsgType msgType, DomainInfo domainInfo) {
         return OAuth2DomainUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(domainInfo))
                 .setIdMSB(domainInfo.getId().getId().getMostSignificantBits())
                 .setIdLSB(domainInfo.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct oauth2domain delete msg.
+     *
+     * @param domainId domain id (DomainId)
+     * @return {@link OAuth2DomainUpdateMsg} result
+     */
 
     public static OAuth2DomainUpdateMsg constructOAuth2DomainDeleteMsg(DomainId domainId) {
         return OAuth2DomainUpdateMsg.newBuilder()
@@ -475,11 +705,26 @@ public class EdgeMsgConstructorUtils {
                 .build();
     }
 
+    /**
+     * Construct ota package updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param otaPackage ota package (OtaPackage)
+     * @return {@link OtaPackageUpdateMsg} result
+     */
+
     public static OtaPackageUpdateMsg constructOtaPackageUpdatedMsg(UpdateMsgType msgType, OtaPackage otaPackage) {
         return OtaPackageUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(otaPackage))
                 .setIdMSB(otaPackage.getId().getId().getMostSignificantBits())
                 .setIdLSB(otaPackage.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct ota package delete msg.
+     *
+     * @param otaPackageId ota package id (OtaPackageId)
+     * @return {@link OtaPackageUpdateMsg} result
+     */
 
     public static OtaPackageUpdateMsg constructOtaPackageDeleteMsg(OtaPackageId otaPackageId) {
         return OtaPackageUpdateMsg.newBuilder()
@@ -488,11 +733,26 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(otaPackageId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct queue updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param queue queue (Queue)
+     * @return {@link QueueUpdateMsg} result
+     */
+
     public static QueueUpdateMsg constructQueueUpdatedMsg(UpdateMsgType msgType, Queue queue) {
         return QueueUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(queue))
                 .setIdMSB(queue.getId().getId().getMostSignificantBits())
                 .setIdLSB(queue.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct queue delete msg.
+     *
+     * @param queueId queue id (QueueId)
+     * @return {@link QueueUpdateMsg} result
+     */
 
     public static QueueUpdateMsg constructQueueDeleteMsg(QueueId queueId) {
         return QueueUpdateMsg.newBuilder()
@@ -501,10 +761,26 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(queueId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct relation updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param entityRelation entity relation (EntityRelation)
+     * @return {@link RelationUpdateMsg} result
+     */
+
     public static RelationUpdateMsg constructRelationUpdatedMsg(UpdateMsgType msgType, EntityRelation entityRelation) {
         resetVersion(entityRelation);
         return RelationUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(entityRelation)).build();
     }
+
+    /**
+     * Construct resource updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param tbResource tb resource (TbResource)
+     * @return {@link ResourceUpdateMsg} result
+     */
 
     public static ResourceUpdateMsg constructResourceUpdatedMsg(UpdateMsgType msgType, TbResource tbResource) {
         return ResourceUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(tbResource))
@@ -512,12 +788,28 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(tbResource.getId().getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct resource delete msg.
+     *
+     * @param tbResourceId tb resource id (TbResourceId)
+     * @return {@link ResourceUpdateMsg} result
+     */
+
     public static ResourceUpdateMsg constructResourceDeleteMsg(TbResourceId tbResourceId) {
         return ResourceUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(tbResourceId.getId().getMostSignificantBits())
                 .setIdLSB(tbResourceId.getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct rule chain updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param ruleChain rule chain (RuleChain)
+     * @param isRoot is root (boolean)
+     * @return {@link RuleChainUpdateMsg} result
+     */
 
     public static RuleChainUpdateMsg constructRuleChainUpdatedMsg(UpdateMsgType msgType, RuleChain ruleChain, boolean isRoot) {
         resetVersion(ruleChain);
@@ -530,12 +822,28 @@ public class EdgeMsgConstructorUtils {
         return result;
     }
 
+    /**
+     * Construct rule chain delete msg.
+     *
+     * @param ruleChainId rule chain id (RuleChainId)
+     * @return {@link RuleChainUpdateMsg} result
+     */
+
     public static RuleChainUpdateMsg constructRuleChainDeleteMsg(RuleChainId ruleChainId) {
         return RuleChainUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
                 .setIdMSB(ruleChainId.getId().getMostSignificantBits())
                 .setIdLSB(ruleChainId.getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct rule chain metadata updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param ruleChainMetaData rule chain meta data (RuleChainMetaData)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link RuleChainMetadataUpdateMsg} result
+     */
 
     public static RuleChainMetadataUpdateMsg constructRuleChainMetadataUpdatedMsg(UpdateMsgType msgType, RuleChainMetaData ruleChainMetaData, EdgeVersion edgeVersion) {
         resetVersion(ruleChainMetaData);
@@ -583,6 +891,16 @@ public class EdgeMsgConstructorUtils {
             }
         }
     }
+
+    /**
+     * Construct entity data msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param entityId entity id (EntityId)
+     * @param actionType action type (EdgeEventActionType)
+     * @param entityData entity data (JsonElement)
+     * @return {@link EntityDataProto} result
+     */
 
     public static EntityDataProto constructEntityDataMsg(TenantId tenantId, EntityId entityId, EdgeEventActionType actionType, JsonElement entityData) {
         EntityDataProto.Builder builder = EntityDataProto.newBuilder()
@@ -658,14 +976,38 @@ public class EdgeMsgConstructorUtils {
         return result;
     }
 
+    /**
+     * Construct tenant update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param tenant tenant (Tenant)
+     * @return {@link TenantUpdateMsg} result
+     */
+
     public static TenantUpdateMsg constructTenantUpdateMsg(UpdateMsgType msgType, Tenant tenant) {
         resetVersion(tenant);
         return TenantUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(tenant)).build();
     }
 
+    /**
+     * Construct tenant profile update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param tenantProfile tenant profile (TenantProfile)
+     * @return {@link TenantProfileUpdateMsg} result
+     */
+
     public static TenantProfileUpdateMsg constructTenantProfileUpdateMsg(UpdateMsgType msgType, TenantProfile tenantProfile) {
         return TenantProfileUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(tenantProfile)).build();
     }
+
+    /**
+     * Construct user updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param user user (User)
+     * @return {@link UserUpdateMsg} result
+     */
 
     public static UserUpdateMsg constructUserUpdatedMsg(UpdateMsgType msgType, User user) {
         resetVersion(user);
@@ -674,6 +1016,13 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(user.getId().getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct user delete msg.
+     *
+     * @param userId user id (UserId)
+     * @return {@link UserUpdateMsg} result
+     */
+
     public static UserUpdateMsg constructUserDeleteMsg(UserId userId) {
         return UserUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
@@ -681,9 +1030,25 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(userId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct user credentials updated msg.
+     *
+     * @param userCredentials user credentials (UserCredentials)
+     * @return {@link UserCredentialsUpdateMsg} result
+     */
+
     public static UserCredentialsUpdateMsg constructUserCredentialsUpdatedMsg(UserCredentials userCredentials) {
         return UserCredentialsUpdateMsg.newBuilder().setEntity(JacksonUtil.toString(userCredentials)).build();
     }
+
+    /**
+     * Construct widgets bundle update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param widgetsBundle widgets bundle (WidgetsBundle)
+     * @param widgets widgets (List<String>)
+     * @return {@link WidgetsBundleUpdateMsg} result
+     */
 
     public static WidgetsBundleUpdateMsg constructWidgetsBundleUpdateMsg(UpdateMsgType msgType, WidgetsBundle widgetsBundle, List<String> widgets) {
         resetVersion(widgetsBundle);
@@ -693,6 +1058,13 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(widgetsBundle.getId().getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct widgets bundle delete msg.
+     *
+     * @param widgetsBundleId widgets bundle id (WidgetsBundleId)
+     * @return {@link WidgetsBundleUpdateMsg} result
+     */
+
     public static WidgetsBundleUpdateMsg constructWidgetsBundleDeleteMsg(WidgetsBundleId widgetsBundleId) {
         return WidgetsBundleUpdateMsg.newBuilder()
                 .setMsgType(UpdateMsgType.ENTITY_DELETED_RPC_MESSAGE)
@@ -701,12 +1073,27 @@ public class EdgeMsgConstructorUtils {
                 .build();
     }
 
+    /**
+     * Construct widget type update msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param widgetTypeDetails widget type details (WidgetTypeDetails)
+     * @return {@link WidgetTypeUpdateMsg} result
+     */
+
     public static WidgetTypeUpdateMsg constructWidgetTypeUpdateMsg(UpdateMsgType msgType, WidgetTypeDetails widgetTypeDetails) {
         resetVersion(widgetTypeDetails);
         return WidgetTypeUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(widgetTypeDetails))
                 .setIdMSB(widgetTypeDetails.getId().getId().getMostSignificantBits())
                 .setIdLSB(widgetTypeDetails.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct widget type delete msg.
+     *
+     * @param widgetTypeId widget type id (WidgetTypeId)
+     * @return {@link WidgetTypeUpdateMsg} result
+     */
 
     public static WidgetTypeUpdateMsg constructWidgetTypeDeleteMsg(WidgetTypeId widgetTypeId) {
         return WidgetTypeUpdateMsg.newBuilder()
@@ -716,12 +1103,27 @@ public class EdgeMsgConstructorUtils {
                 .build();
     }
 
+    /**
+     * Construct calculated field updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param calculatedField calculated field (CalculatedField)
+     * @return {@link CalculatedFieldUpdateMsg} result
+     */
+
     public static CalculatedFieldUpdateMsg constructCalculatedFieldUpdatedMsg(UpdateMsgType msgType, CalculatedField calculatedField) {
         resetVersion(calculatedField);
         return CalculatedFieldUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(calculatedField))
                 .setIdMSB(calculatedField.getId().getId().getMostSignificantBits())
                 .setIdLSB(calculatedField.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct calculated field delete msg.
+     *
+     * @param calculatedFieldId calculated field id (CalculatedFieldId)
+     * @return {@link CalculatedFieldUpdateMsg} result
+     */
 
     public static CalculatedFieldUpdateMsg constructCalculatedFieldDeleteMsg(CalculatedFieldId calculatedFieldId) {
         return CalculatedFieldUpdateMsg.newBuilder()
@@ -730,12 +1132,27 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(calculatedFieldId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct ai model updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param aiModel ai model (AiModel)
+     * @return {@link AiModelUpdateMsg} result
+     */
+
     public static AiModelUpdateMsg constructAiModelUpdatedMsg(UpdateMsgType msgType, AiModel aiModel) {
         resetVersion(aiModel);
         return AiModelUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(aiModel))
                 .setIdMSB(aiModel.getId().getId().getMostSignificantBits())
                 .setIdLSB(aiModel.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct ai model delete msg.
+     *
+     * @param aiModelId ai model id (AiModelId)
+     * @return {@link AiModelUpdateMsg} result
+     */
 
     public static AiModelUpdateMsg constructAiModelDeleteMsg(AiModelId aiModelId) {
         return AiModelUpdateMsg.newBuilder()
@@ -744,11 +1161,26 @@ public class EdgeMsgConstructorUtils {
                 .setIdLSB(aiModelId.getId().getLeastSignificantBits()).build();
     }
 
+    /**
+     * Construct api key updated msg.
+     *
+     * @param msgType msg type (UpdateMsgType)
+     * @param apiKey api key (ApiKey)
+     * @return {@link ApiKeyUpdateMsg} result
+     */
+
     public static ApiKeyUpdateMsg constructApiKeyUpdatedMsg(UpdateMsgType msgType, ApiKey apiKey) {
         return ApiKeyUpdateMsg.newBuilder().setMsgType(msgType).setEntity(JacksonUtil.toString(apiKey))
                 .setIdMSB(apiKey.getId().getId().getMostSignificantBits())
                 .setIdLSB(apiKey.getId().getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Construct api key delete msg.
+     *
+     * @param apiKeyId api key id (ApiKeyId)
+     * @return {@link ApiKeyUpdateMsg} result
+     */
 
     public static ApiKeyUpdateMsg constructApiKeyDeleteMsg(ApiKeyId apiKeyId) {
         return ApiKeyUpdateMsg.newBuilder()
@@ -756,6 +1188,13 @@ public class EdgeMsgConstructorUtils {
                 .setIdMSB(apiKeyId.getId().getMostSignificantBits())
                 .setIdLSB(apiKeyId.getId().getLeastSignificantBits()).build();
     }
+
+    /**
+     * Merge and filter downlink duplicates.
+     *
+     * @param edgeEvents edge events (List<EdgeEvent>)
+     * @return {@link List} result
+     */
 
     public static List<EdgeEvent> mergeAndFilterDownlinkDuplicates(List<EdgeEvent> edgeEvents) {
         try {

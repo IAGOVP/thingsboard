@@ -35,6 +35,9 @@ import org.thingsboard.server.service.security.exception.AuthMethodNotSupportedE
 import org.thingsboard.server.service.security.model.UserPrincipal;
 
 import java.io.IOException;
+/**
+ * Servlet filter that handles username/password REST login login/token requests.
+ */
 
 @Slf4j
 public class RestPublicLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
@@ -49,7 +52,16 @@ public class RestPublicLoginProcessingFilter extends AbstractAuthenticationProce
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
     }
-
+    /**
+     * Attempt authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @return {@link Authentication} result
+     * @throws AuthenticationException if the operation fails
+     * @throws IOException if the operation fails
+     * @throws ServletException if the operation fails
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
@@ -78,12 +90,31 @@ public class RestPublicLoginProcessingFilter extends AbstractAuthenticationProce
         return this.getAuthenticationManager().authenticate(token);
     }
 
+    /**
+     * Successful authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param chain chain (FilterChain)
+     * @param authResult auth result (Authentication)
+     * @throws IOException if the operation fails
+     * @throws ServletException if the operation fails
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         successHandler.onAuthenticationSuccess(request, response, authResult);
     }
 
+    /**
+     * Unsuccessful authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param failed failed (AuthenticationException)
+     * @throws IOException if the operation fails
+     * @throws ServletException if the operation fails
+     */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {

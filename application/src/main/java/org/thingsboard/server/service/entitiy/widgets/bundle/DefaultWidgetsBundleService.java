@@ -32,6 +32,12 @@ import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
 import java.util.List;
+/**
+ * Default Spring implementation for widgets bundle service (REST-layer entity operations (application-layer entity CRUD with audit logging and version-control hooks)).
+ *
+ * <p>Registered as a {@code @Service} or {@code @Component} bean.
+ */
+
 
 @Service
 @TbCoreComponent
@@ -41,6 +47,14 @@ public class DefaultWidgetsBundleService extends AbstractTbEntityService impleme
 
     private final WidgetsBundleService widgetsBundleService;
     private final WidgetTypeService widgetTypeService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @param user authenticated user performing the action
+     * @return {@link WidgetsBundle}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundle save(WidgetsBundle widgetsBundle, SecurityUser user) throws Exception {
@@ -57,6 +71,14 @@ public class DefaultWidgetsBundleService extends AbstractTbEntityService impleme
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(WidgetsBundle widgetsBundle, User user) {
@@ -70,12 +92,30 @@ public class DefaultWidgetsBundleService extends AbstractTbEntityService impleme
             throw e;
         }
     }
+    /**
+     * Updates widgets bundle widget types.
+     *
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @param widgetTypeIds widget type ids ({@link List})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateWidgetsBundleWidgetTypes(WidgetsBundleId widgetsBundleId, List<WidgetTypeId> widgetTypeIds, User user) throws Exception {
         widgetTypeService.updateWidgetsBundleWidgetTypes(user.getTenantId(), widgetsBundleId, widgetTypeIds);
         autoCommit(user, widgetsBundleId);
     }
+    /**
+     * Updates widgets bundle widget fqns.
+     *
+     * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+     * @param widgetFqns widget fqns ({@link List})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateWidgetsBundleWidgetFqns(WidgetsBundleId widgetsBundleId, List<String> widgetFqns, User user) throws Exception {

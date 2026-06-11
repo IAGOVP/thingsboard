@@ -16,6 +16,9 @@
 package org.thingsboard.server.service.sync.ie.importing.csv;
 
 import lombok.Data;
+/**
+ * Imported entity info (entity import and export (entity version control, Git repository sync, and import/export)).
+ */
 
 @Data
 public class ImportedEntityInfo<E> {

@@ -94,6 +94,17 @@ import static org.thingsboard.server.controller.ControllerConstants.UNIQUIFY_STR
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 import static org.thingsboard.server.controller.EdgeController.EDGE_ID;
 
+/**
+ * REST controller for asset CRUD, assignment, edge sync, and bulk import.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN} (management), {@code CUSTOMER_USER} (read/limited write).
+ *
+ * <p>Related services: {@link org.thingsboard.server.service.entitiy.asset.TbAssetService},
+ * {@link org.thingsboard.server.service.asset.AssetBulkImportService},
+ * {@link org.thingsboard.server.dao.asset.AssetService}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -105,6 +116,14 @@ public class AssetController extends BaseController {
 
     public static final String ASSET_ID = "assetId";
 
+    /**
+     * Get Asset (getAssetById).
+     *
+     * <p>HTTP GET {@code /api/asset/{assetId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset (getAssetById)",
             notes = "Fetch the Asset object based on the provided Asset Id. " +
                     "If the user has the authority of 'Tenant Administrator', the server checks that the asset is owned by the same tenant. " +
@@ -120,6 +139,14 @@ public class AssetController extends BaseController {
         return checkAssetId(assetId, Operation.READ);
     }
 
+    /**
+     * Get Asset Info (getAssetInfoById).
+     *
+     * <p>HTTP GET {@code /api/asset/info/{assetId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset Info (getAssetInfoById)",
             notes = "Fetch the Asset Info object based on the provided Asset Id. " +
                     "If the user has the authority of 'Tenant Administrator', the server checks that the asset is owned by the same tenant. " +
@@ -135,6 +162,14 @@ public class AssetController extends BaseController {
         return checkAssetInfoId(assetId, Operation.READ);
     }
 
+    /**
+     * Create Or Update Asset (saveAsset).
+     *
+     * <p>HTTP POST {@code /api/asset}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create Or Update Asset (saveAsset)",
             notes = "Creates or Updates the Asset. When creating asset, platform generates Asset Id as " + UUID_WIKI_LINK +
                     "The newly created Asset id will be present in the response. " +
@@ -157,6 +192,14 @@ public class AssetController extends BaseController {
         return tbAssetService.save(asset, new NameConflictStrategy(nameConflictPolicy, uniquifySeparator, uniquifyStrategy), getCurrentUser());
     }
 
+    /**
+     * Delete asset (deleteAsset).
+     *
+     * <p>HTTP DELETE {@code /api/asset/{assetId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete asset (deleteAsset)",
             notes = "Deletes the asset and all the relations (from and to the asset). Referencing non-existing asset Id will cause an error." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -169,6 +212,14 @@ public class AssetController extends BaseController {
         tbAssetService.delete(asset, getCurrentUser());
     }
 
+    /**
+     * Assign asset to customer (assignAssetToCustomer).
+     *
+     * <p>HTTP POST {@code /api/customer/{customerId}/asset/{assetId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Assign asset to customer (assignAssetToCustomer)",
             notes = "Creates assignment of the asset to customer. Customer will be able to query asset afterwards." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -185,6 +236,14 @@ public class AssetController extends BaseController {
         return tbAssetService.assignAssetToCustomer(getTenantId(), assetId, customer, getCurrentUser());
     }
 
+    /**
+     * Unassign asset from customer (unassignAssetFromCustomer).
+     *
+     * <p>HTTP DELETE {@code /api/customer/asset/{assetId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Unassign asset from customer (unassignAssetFromCustomer)",
             notes = "Clears assignment of the asset to customer. Customer will not be able to query asset afterwards." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -201,6 +260,14 @@ public class AssetController extends BaseController {
         return tbAssetService.unassignAssetToCustomer(getTenantId(), assetId, customer, getCurrentUser());
     }
 
+    /**
+     * Make asset publicly available (assignAssetToPublicCustomer).
+     *
+     * <p>HTTP POST {@code /api/customer/public/asset/{assetId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Make asset publicly available (assignAssetToPublicCustomer)",
             notes = "Asset will be available for non-authorized (not logged-in) users. " +
                     "This is useful to create dashboards that you plan to share/embed on a publicly available website. " +
@@ -215,6 +282,14 @@ public class AssetController extends BaseController {
         return tbAssetService.assignAssetToPublicCustomer(getTenantId(), assetId, getCurrentUser());
     }
 
+    /**
+     * Get Tenant Assets (getTenantAssets).
+     *
+     * <p>HTTP GET {@code /api/tenant/assets}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Assets (getTenantAssets)",
             notes = "Returns a page of assets owned by tenant. " +
                     PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -242,6 +317,14 @@ public class AssetController extends BaseController {
         }
     }
 
+    /**
+     * Get Tenant Asset Infos (getTenantAssetInfos).
+     *
+     * <p>HTTP GET {@code /api/tenant/assetInfos}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Asset Infos (getTenantAssetInfos)",
             notes = "Returns a page of assets info objects owned by tenant. " +
                     PAGE_DATA_PARAMETERS + ASSET_INFO_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -277,11 +360,27 @@ public class AssetController extends BaseController {
     @Hidden
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/tenant/assets", params = {"assetName"})
+    /**
+     * getTenantAsset (internal/hidden endpoint).
+     *
+     * <p>HTTP GET {@code /api/tenant/assets}.
+     *
+     * <p>{@code @PreAuthorize}: hasAuthority('TENANT_ADMIN').
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     public Asset getTenantAsset(@RequestParam String assetName) throws ThingsboardException {
         TenantId tenantId = getCurrentUser().getTenantId();
         return checkNotNull(assetService.findAssetByTenantIdAndName(tenantId, assetName));
     }
 
+    /**
+     * Get Tenant Asset (getTenantAssetByName).
+     *
+     * <p>HTTP GET {@code /api/tenant/asset}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Asset (getTenantAssetByName)",
             notes = "Requested asset must be owned by tenant that the user belongs to. " +
                     "Asset name is an unique property of asset. So it can be used to identify the asset." + TENANT_AUTHORITY_PARAGRAPH)
@@ -293,6 +392,14 @@ public class AssetController extends BaseController {
         return getTenantAsset(assetName);
     }
 
+    /**
+     * Get Customer Assets (getCustomerAssets).
+     *
+     * <p>HTTP GET {@code /api/customer/{customerId}/assets}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Customer Assets (getCustomerAssets)",
             notes = "Returns a page of assets objects assigned to customer. " +
                     PAGE_DATA_PARAMETERS)
@@ -325,6 +432,14 @@ public class AssetController extends BaseController {
         }
     }
 
+    /**
+     * Get Customer Asset Infos (getCustomerAssetInfos).
+     *
+     * <p>HTTP GET {@code /api/customer/{customerId}/assetInfos}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Customer Asset Infos (getCustomerAssetInfos)",
             notes = "Returns a page of assets info objects assigned to customer. " +
                     PAGE_DATA_PARAMETERS + ASSET_INFO_DESCRIPTION)
@@ -362,6 +477,14 @@ public class AssetController extends BaseController {
         }
     }
 
+    /**
+     * Get Assets By Ids (getAssetsByIds).
+     *
+     * <p>HTTP GET {@code /api/assets}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Assets By Ids (getAssetsByIds)",
             notes = "Requested assets must be owned by tenant or assigned to customer which user is performing the request. ")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -386,6 +509,14 @@ public class AssetController extends BaseController {
         return checkNotNull(assets.get());
     }
 
+    /**
+     * Find related assets (findAssetsByQuery).
+     *
+     * <p>HTTP POST {@code /api/assets}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Find related assets (findAssetsByQuery)",
             notes = "Returns all assets that are related to the specific entity. " +
                     "The entity id, relation type, asset types, depth of the search, and other query parameters defined using complex 'AssetSearchQuery' object. " +
@@ -410,6 +541,14 @@ public class AssetController extends BaseController {
         return assets;
     }
 
+    /**
+     * Get Asset Types (getAssetTypes).
+     *
+     * <p>HTTP GET {@code /api/asset/types}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Asset Types (getAssetTypes)",
             notes = "Deprecated. See 'getAssetProfileNames' API from Asset Profile Controller instead." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -423,6 +562,14 @@ public class AssetController extends BaseController {
         return checkNotNull(assetTypes.get());
     }
 
+    /**
+     * Assign asset to edge (assignAssetToEdge).
+     *
+     * <p>HTTP POST {@code /api/edge/{edgeId}/asset/{assetId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Assign asset to edge (assignAssetToEdge)",
             notes = "Creates assignment of an existing asset to an instance of The Edge. " +
                     EDGE_ASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -446,6 +593,14 @@ public class AssetController extends BaseController {
         return tbAssetService.assignAssetToEdge(getTenantId(), assetId, edge, getCurrentUser());
     }
 
+    /**
+     * Unassign asset from edge (unassignAssetFromEdge).
+     *
+     * <p>HTTP DELETE {@code /api/edge/{edgeId}/asset/{assetId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Unassign asset from edge (unassignAssetFromEdge)",
             notes = "Clears assignment of the asset to the edge. " +
                     EDGE_UNASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -468,6 +623,14 @@ public class AssetController extends BaseController {
         return tbAssetService.unassignAssetFromEdge(getTenantId(), asset, edge, getCurrentUser());
     }
 
+    /**
+     * Get assets assigned to edge (getEdgeAssets).
+     *
+     * <p>HTTP GET {@code /api/edge/{edgeId}/assets}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get assets assigned to edge (getEdgeAssets)",
             notes = "Returns a page of assets assigned to edge. " +
                     PAGE_DATA_PARAMETERS)
@@ -518,6 +681,14 @@ public class AssetController extends BaseController {
         return checkNotNull(filteredResult);
     }
 
+    /**
+     * Import the bulk of assets (processAssetBulkImport).
+     *
+     * <p>HTTP POST {@code /api/asset/bulk_import}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Import the bulk of assets (processAssetBulkImport)",
             notes = "There's an ability to import the bulk of assets using the only .csv file.")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")

@@ -15,6 +15,16 @@
  */
 package org.thingsboard.server.service.install.update;
 
+/**
+
+ * Service contract for cache cleanup operations (database schema installation, upgrades, and demo data loading).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface CacheCleanupService {
 
     void clearCache() throws Exception;

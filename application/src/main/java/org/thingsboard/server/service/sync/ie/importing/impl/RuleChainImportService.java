@@ -43,6 +43,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+/**
+ * Imports rule chain entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Slf4j
 @Service
@@ -56,11 +61,29 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
     private final TbRuleChainService tbRuleChainService;
     private final RuleChainService ruleChainService;
     private final RuleNodeDao ruleNodeDao;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, RuleChain ruleChain, IdProvider idProvider) {
         ruleChain.setTenantId(tenantId);
     }
+    /**
+     * Finds existing entity.
+     *
+     * @param ctx calculated-field execution context
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleChain findExistingEntity(EntitiesImportCtx ctx, RuleChain ruleChain, IdProvider idProvider) {
@@ -70,6 +93,17 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
         }
         return existingRuleChain;
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param old old ({@link RuleChain})
+     * @param exportData export data ({@link RuleChainExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleChain prepare(EntitiesImportCtx ctx, RuleChain ruleChain, RuleChain old, RuleChainExportData exportData, IdProvider idProvider) {
@@ -103,6 +137,17 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
         }
         return ruleChain;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param exportData export data ({@link RuleChainExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleChain saveOrUpdate(EntitiesImportCtx ctx, RuleChain ruleChain, RuleChainExportData exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -115,6 +160,16 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
             return ruleChain;
         }
     }
+    /**
+     * Is update needed.
+     *
+     * @param ctx calculated-field execution context
+     * @param exportData export data ({@link RuleChainExportData})
+     * @param prepared prepared ({@link RuleChain})
+     * @param existing existing ({@link RuleChain})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean isUpdateNeeded(EntitiesImportCtx ctx, RuleChainExportData exportData, RuleChain prepared, RuleChain existing) {
@@ -127,17 +182,39 @@ public class RuleChainImportService extends BaseEntityImportService<RuleChainId,
         }
         return updateNeeded;
     }
+    /**
+     * Handles entity saved.
+     *
+     * @param user authenticated user performing the action
+     * @param savedRuleChain saved rule chain ({@link RuleChain})
+     * @param oldRuleChain old rule chain ({@link RuleChain})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onEntitySaved(User user, RuleChain savedRuleChain, RuleChain oldRuleChain) {
         entityActionService.logEntityAction(user, savedRuleChain.getId(), savedRuleChain, null,
                 oldRuleChain == null ? ActionType.ADDED : ActionType.UPDATED, null);
     }
+    /**
+     * Deep copy.
+     *
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleChain deepCopy(RuleChain ruleChain) {
         return new RuleChain(ruleChain);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

@@ -22,6 +22,10 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.Map;
 
+/**
+ * Service contract for edge upgrade instructions.
+ */
+
 public interface EdgeUpgradeInstructionsService {
 
     EdgeInstructions getUpgradeInstructions(String edgeVersion, String upgradeMethod);

@@ -20,6 +20,10 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.thingsboard.server.common.data.oauth2.OAuth2Client;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+ * Contract for oauth2client mapper in OAuth2 / social login.
+ */
+
 public interface OAuth2ClientMapper {
     SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, OAuth2AuthenticationToken token, String providerAccessToken, OAuth2Client oAuth2Client);
 }

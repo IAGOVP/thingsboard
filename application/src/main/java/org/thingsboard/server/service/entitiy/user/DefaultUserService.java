@@ -34,6 +34,12 @@ import org.thingsboard.server.dao.user.UserService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 import org.thingsboard.server.service.security.system.SystemSecurityService;
+/**
+ * Default Spring implementation for user service (REST-layer entity operations (application-layer entity CRUD with audit logging and version-control hooks)).
+ *
+ * <p>Registered as a {@code @Service} or {@code @Component} bean.
+ */
+
 
 @Service
 @TbCoreComponent
@@ -44,6 +50,18 @@ public class DefaultUserService extends AbstractTbEntityService implements TbUse
     private final UserService userService;
     private final MailService mailService;
     private final SystemSecurityService systemSecurityService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param tbUser tb user ({@link User})
+     * @param sendActivationMail send activation mail
+     * @param request request payload with operation parameters
+     * @param user authenticated user performing the action
+     * @return {@link User}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public User save(TenantId tenantId, CustomerId customerId, User tbUser, boolean sendActivationMail,
@@ -68,6 +86,16 @@ public class DefaultUserService extends AbstractTbEntityService implements TbUse
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param user authenticated user performing the action
+     * @param responsibleUser responsible user ({@link User})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void delete(TenantId tenantId, CustomerId customerId, User user, User responsibleUser) throws ThingsboardException {
@@ -83,6 +111,16 @@ public class DefaultUserService extends AbstractTbEntityService implements TbUse
             throw e;
         }
     }
+    /**
+     * Returns activation link.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param userId user id ({@link UserId})
+     * @param request request payload with operation parameters
+     * @return {@link UserActivationLink}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public UserActivationLink getActivationLink(TenantId tenantId, CustomerId customerId, UserId userId, HttpServletRequest request) throws ThingsboardException {

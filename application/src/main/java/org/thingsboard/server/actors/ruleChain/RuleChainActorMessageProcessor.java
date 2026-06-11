@@ -60,8 +60,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * @author Andrew Shvayka
+ * Processor for {@link org.thingsboard.server.actors.ruleChain.RuleChainActor}.
+ *
+ * <p>Loads chain metadata, manages rule-node actor children, and forwards messages along chain relations.
  */
+
 @Slf4j
 public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleChainId> {
 
@@ -88,11 +91,24 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
         this.service = systemContext.getRuleChainService();
         this.clusterService = systemContext.getClusterService();
     }
+    /**
+     * Returns component name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getComponentName() {
         return ruleChainName;
     }
+    /**
+     * Start.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void start(TbActorCtx context) {
@@ -114,6 +130,13 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
             onUpdate(context);
         }
     }
+    /**
+     * Handles update.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onUpdate(TbActorCtx context) {
@@ -146,6 +169,13 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
             initRoutes(ruleChain, ruleNodeList);
         }
     }
+    /**
+     * Stop.
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void stop(TbActorCtx ctx) {
@@ -155,6 +185,13 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
         nodeRoutes.clear();
         started = false;
     }
+    /**
+     * Handles partition change msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onPartitionChangeMsg(PartitionChangeMsg msg) {
@@ -237,6 +274,13 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
             msg.getCallback().onFailure(new RuleEngineException(e.getMessage(), e));
         }
     }
+    /**
+     * Handles rule chain input msg.
+     *
+     * @param envelope envelope ({@link RuleChainInputMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onRuleChainInputMsg(RuleChainInputMsg envelope) {
         var tbMsg = envelope.getMsg();
@@ -249,6 +293,13 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
             parent.tell(envelope);
         }
     }
+    /**
+     * Handles rule chain output msg.
+     *
+     * @param envelope envelope ({@link RuleChainOutputMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onRuleChainOutputMsg(RuleChainOutputMsg envelope) {
         var tbMsg = envelope.getMsg();
@@ -407,6 +458,12 @@ public class RuleChainActorMessageProcessor extends ComponentMsgProcessor<RuleCh
             msg.getCallback().onFailure(new RuleEngineException("Rule Node CTX is empty"));
         }
     }
+    /**
+     * Returns inactive exception.
+     *
+     * @return {@link RuleNodeException}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleNodeException getInactiveException() {

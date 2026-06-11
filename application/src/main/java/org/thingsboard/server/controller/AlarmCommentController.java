@@ -51,6 +51,16 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST controller for alarm comment management.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN}, {@code CUSTOMER_USER} (write);
+ * {@code SYS_ADMIN} allowed for read-only alarm comment listing.
+ *
+ * <p>Related service: {@link org.thingsboard.server.service.entitiy.alarm.TbAlarmCommentService}.
+ */
 @RestController
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -62,6 +72,14 @@ public class AlarmCommentController extends BaseController {
 
     private final TbAlarmCommentService tbAlarmCommentService;
 
+    /**
+     * Create or update Alarm Comment .
+     *
+     * <p>HTTP POST {@code /api/alarm/{alarmId}/comment}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create or update Alarm Comment ",
             notes = "Creates or Updates the Alarm Comment. " +
                     "When creating comment, platform generates Alarm Comment Id as " + UUID_WIKI_LINK +
@@ -82,6 +100,14 @@ public class AlarmCommentController extends BaseController {
         return tbAlarmCommentService.saveAlarmComment(alarm, alarmComment, getCurrentUser());
     }
 
+    /**
+     * Delete Alarm comment (deleteAlarmComment).
+     *
+     * <p>HTTP DELETE {@code /api/alarm/{alarmId}/comment/{commentId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete Alarm comment (deleteAlarmComment)",
             notes = "Deletes the Alarm comment. Referencing non-existing Alarm comment Id will cause an error." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -96,6 +122,14 @@ public class AlarmCommentController extends BaseController {
         tbAlarmCommentService.deleteAlarmComment(alarm, alarmComment, getCurrentUser());
     }
 
+    /**
+     * Get Alarm comments (getAlarmComments).
+     *
+     * <p>HTTP GET {@code /api/alarm/{alarmId}/comment}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Alarm comments (getAlarmComments)",
             notes = "Returns a page of alarm comments for specified alarm. " +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)

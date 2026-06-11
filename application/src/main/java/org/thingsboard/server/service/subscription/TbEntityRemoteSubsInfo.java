@@ -37,6 +37,13 @@ public class TbEntityRemoteSubsInfo {
     @Getter
     private final Map<String, TbSubscriptionsInfo> subs = new ConcurrentHashMap<>(); // By service ID
 
+    /**
+     * Updates and check is empty.
+     * @param serviceId service id
+     * @param event application or cluster event
+     * @return boolean result
+     */
+
     public boolean updateAndCheckIsEmpty(String serviceId, TbEntitySubEvent event) {
         var current = subs.get(serviceId);
         if (current != null && current.seqNumber > event.getSeqNumber()) {
@@ -64,6 +71,12 @@ public class TbEntityRemoteSubsInfo {
         return false;
     }
 
+    /**
+     * Removes and check is empty.
+     * @param serviceId service id
+     * @return boolean result
+     */
+
     public boolean removeAndCheckIsEmpty(String serviceId) {
         if (subs.remove(serviceId) != null) {
             return subs.isEmpty();
@@ -71,6 +84,11 @@ public class TbEntityRemoteSubsInfo {
             return false;
         }
     }
+
+    /**
+     * Is empty.
+     * @return {@code true} when the condition holds
+     */
 
     public boolean isEmpty() {
         return subs.isEmpty();

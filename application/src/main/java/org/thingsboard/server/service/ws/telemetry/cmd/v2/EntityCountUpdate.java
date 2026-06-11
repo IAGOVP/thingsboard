@@ -20,6 +20,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 import org.thingsboard.server.service.subscription.SubscriptionErrorCode;
+/**
+ * Outbound WebSocket update payload for entity count.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @ToString
 public class EntityCountUpdate extends CmdUpdate {
@@ -27,14 +31,32 @@ public class EntityCountUpdate extends CmdUpdate {
     @Getter
     private int count;
 
+    /**
+     * Constructs {@link EntityCountUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param count count
+     */
+
     public EntityCountUpdate(int cmdId, int count) {
         super(cmdId, SubscriptionErrorCode.NO_ERROR.getCode(), null);
         this.count = count;
     }
 
+    /**
+     * Constructs {@link EntityCountUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     */
+
     public EntityCountUpdate(int cmdId, int errorCode, String errorMsg) {
         super(cmdId, errorCode, errorMsg);
     }
+
+    /**
+     * Returns cmd update type.
+     * @return {@link CmdUpdateType}
+     */
 
     @Override
     public CmdUpdateType getCmdUpdateType() {

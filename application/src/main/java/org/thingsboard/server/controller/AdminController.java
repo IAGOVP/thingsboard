@@ -93,6 +93,22 @@ import java.util.Optional;
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST controller for system and tenant administration settings.
+ *
+ * <p>Base path: {@code /api/admin}.
+ *
+ * <p>Required auth roles: {@code SYS_ADMIN} for system-wide settings (mail, SMS, JWT, security);
+ * {@code TENANT_ADMIN} for tenant version-control and auto-commit settings.
+ *
+ * <p>Related services: {@link org.thingsboard.server.dao.settings.AdminSettingsService},
+ * {@link org.thingsboard.server.dao.settings.SecuritySettingsService},
+ * {@link org.thingsboard.server.service.security.auth.jwt.settings.JwtSettingsService},
+ * {@link org.thingsboard.server.service.sync.vc.EntitiesVersionControlService},
+ * {@link org.thingsboard.server.service.sync.vc.autocommit.TbAutoCommitSettingsService},
+ * {@link org.thingsboard.server.service.update.UpdateService},
+ * {@link org.thingsboard.server.service.system.SystemInfoService}.
+ */
 @RestController
 @TbCoreComponent
 @Slf4j
@@ -121,6 +137,14 @@ public class AdminController extends BaseController {
     @Value("${queue.vc.request-timeout:180000}")
     private int vcRequestTimeout;
 
+    /**
+     * Get the Administration Settings object using key (getAdminSettings).
+     *
+     * <p>HTTP GET {@code /api/admin/settings/{key}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get the Administration Settings object using key (getAdminSettings)",
             notes = "Get the Administration Settings object using specified string key. Referencing non-existing key will cause an error." + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -137,6 +161,14 @@ public class AdminController extends BaseController {
         return adminSettings;
     }
 
+    /**
+     * Creates or Updates the Administration Settings (saveAdminSettings).
+     *
+     * <p>HTTP POST {@code /api/admin/settings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Creates or Updates the Administration Settings (saveAdminSettings)",
             notes = "Creates or Updates the Administration Settings. Platform generates random Administration Settings Id during settings creation. " +
                     "The Administration Settings Id will be present in the response. Specify the Administration Settings Id when you would like to update the Administration Settings. " +
@@ -159,6 +191,14 @@ public class AdminController extends BaseController {
         return adminSettings;
     }
 
+    /**
+     * Get the Security Settings object (getSecuritySettings).
+     *
+     * <p>HTTP GET {@code /api/admin/securitySettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get the Security Settings object (getSecuritySettings)",
             notes = "Get the Security Settings object that contains password policy, etc." + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -168,6 +208,14 @@ public class AdminController extends BaseController {
         return checkNotNull(securitySettingsService.getSecuritySettings());
     }
 
+    /**
+     * Update Security Settings (saveSecuritySettings).
+     *
+     * <p>HTTP POST {@code /api/admin/securitySettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Update Security Settings (saveSecuritySettings)",
             notes = "Updates the Security Settings object that contains password policy, etc." + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -180,6 +228,14 @@ public class AdminController extends BaseController {
         return securitySettings;
     }
 
+    /**
+     * Get the JWT Settings object (getJwtSettings).
+     *
+     * <p>HTTP GET {@code /api/admin/jwtSettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get the JWT Settings object (getJwtSettings)",
             notes = "Get the JWT Settings object that contains JWT token policy, etc. " + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -189,6 +245,14 @@ public class AdminController extends BaseController {
         return checkNotNull(jwtSettingsService.getJwtSettings());
     }
 
+    /**
+     * Update JWT Settings (saveJwtSettings).
+     *
+     * <p>HTTP POST {@code /api/admin/jwtSettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Update JWT Settings (saveJwtSettings)",
             notes = "Updates the JWT Settings object that contains JWT token policy, etc. The tokenSigningKey field is a Base64 encoded string." + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -202,6 +266,14 @@ public class AdminController extends BaseController {
         return tokenFactory.createTokenPair(securityUser);
     }
 
+    /**
+     * Send test email (sendTestMail).
+     *
+     * <p>HTTP POST {@code /api/admin/settings/testMail}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Send test email (sendTestMail)",
             notes = "Attempts to send test email to the System Administrator User using Mail Settings provided as a parameter. " +
                     "You may change the 'To' email in the user profile of the System Administrator. " + SYSTEM_AUTHORITY_PARAGRAPH)
@@ -240,6 +312,14 @@ public class AdminController extends BaseController {
         }
     }
 
+    /**
+     * Send test sms (sendTestSms).
+     *
+     * <p>HTTP POST {@code /api/admin/settings/testSms}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Send test sms (sendTestSms)",
             notes = "Attempts to send test sms to the System Administrator User using SMS Settings and phone number provided as a parameters of the request. "
                     + SYSTEM_AUTHORITY_PARAGRAPH)
@@ -259,6 +339,14 @@ public class AdminController extends BaseController {
         }
     }
 
+    /**
+     * Get repository settings (getRepositorySettings).
+     *
+     * <p>HTTP GET {@code /api/admin/repositorySettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get repository settings (getRepositorySettings)",
             notes = "Get the repository settings object. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -272,6 +360,14 @@ public class AdminController extends BaseController {
         return versionControlSettings;
     }
 
+    /**
+     * Check repository settings exists (repositorySettingsExists).
+     *
+     * <p>HTTP GET {@code /api/admin/repositorySettings/exists}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Check repository settings exists (repositorySettingsExists)",
             notes = "Check whether the repository settings exists. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -283,6 +379,14 @@ public class AdminController extends BaseController {
 
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping("/repositorySettings/info")
+    /**
+     * getRepositorySettingsInfo (internal/hidden endpoint).
+     *
+     * <p>HTTP GET {@code /api/admin/repositorySettings/exists}.
+     *
+     * <p>{@code @PreAuthorize}: hasAuthority('TENANT_ADMIN').
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     public RepositorySettingsInfo getRepositorySettingsInfo() throws Exception {
         accessControlService.checkPermission(getCurrentUser(), Resource.VERSION_CONTROL, Operation.READ);
         RepositorySettings repositorySettings = versionControlService.getVersionControlSettings(getTenantId());
@@ -298,6 +402,14 @@ public class AdminController extends BaseController {
         }
     }
 
+    /**
+     * Creates or Updates the repository settings (saveRepositorySettings).
+     *
+     * <p>HTTP POST {@code /api/admin/repositorySettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Creates or Updates the repository settings (saveRepositorySettings)",
             notes = "Creates or Updates the repository settings object. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -314,6 +426,14 @@ public class AdminController extends BaseController {
         }, MoreExecutors.directExecutor()), vcRequestTimeout);
     }
 
+    /**
+     * Delete repository settings (deleteRepositorySettings).
+     *
+     * <p>HTTP DELETE {@code /api/admin/repositorySettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete repository settings (deleteRepositorySettings)",
             notes = "Deletes the repository settings."
                     + TENANT_AUTHORITY_PARAGRAPH)
@@ -325,6 +445,14 @@ public class AdminController extends BaseController {
         return wrapFuture(versionControlService.deleteVersionControlSettings(getTenantId()), vcRequestTimeout);
     }
 
+    /**
+     * Check repository access (checkRepositoryAccess).
+     *
+     * <p>HTTP POST {@code /api/admin/repositorySettings/checkAccess}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Check repository access (checkRepositoryAccess)",
             notes = "Attempts to check repository access. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -337,6 +465,14 @@ public class AdminController extends BaseController {
         return wrapFuture(versionControlService.checkVersionControlAccess(getTenantId(), settings), vcRequestTimeout);
     }
 
+    /**
+     * Get auto commit settings (getAutoCommitSettings).
+     *
+     * <p>HTTP GET {@code /api/admin/autoCommitSettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get auto commit settings (getAutoCommitSettings)",
             notes = "Get the auto commit settings object. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -346,6 +482,14 @@ public class AdminController extends BaseController {
         return checkNotNull(autoCommitSettingsService.get(getTenantId()));
     }
 
+    /**
+     * Check auto commit settings exists (autoCommitSettingsExists).
+     *
+     * <p>HTTP GET {@code /api/admin/autoCommitSettings/exists}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Check auto commit settings exists (autoCommitSettingsExists)",
             notes = "Check whether the auto commit settings exists. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -355,6 +499,14 @@ public class AdminController extends BaseController {
         return autoCommitSettingsService.get(getTenantId()) != null;
     }
 
+    /**
+     * Creates or Updates the auto commit settings (saveAutoCommitSettings).
+     *
+     * <p>HTTP POST {@code /api/admin/autoCommitSettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Creates or Updates the auto commit settings (saveAutoCommitSettings)",
             notes = "Creates or Updates the auto commit settings object. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -365,6 +517,14 @@ public class AdminController extends BaseController {
         return autoCommitSettingsService.save(getTenantId(), settings);
     }
 
+    /**
+     * Delete auto commit settings (deleteAutoCommitSettings).
+     *
+     * <p>HTTP DELETE {@code /api/admin/autoCommitSettings}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete auto commit settings (deleteAutoCommitSettings)",
             notes = "Deletes the auto commit settings."
                     + TENANT_AUTHORITY_PARAGRAPH)
@@ -376,6 +536,14 @@ public class AdminController extends BaseController {
         autoCommitSettingsService.delete(getTenantId());
     }
 
+    /**
+     * Check for new Platform Releases (checkUpdates).
+     *
+     * <p>HTTP GET {@code /api/admin/updates}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Check for new Platform Releases (checkUpdates)",
             notes = "Check notifications about new platform releases. "
                     + SYSTEM_AUTHORITY_PARAGRAPH)
@@ -385,6 +553,14 @@ public class AdminController extends BaseController {
         return updateService.checkUpdates();
     }
 
+    /**
+     * Get system info (getSystemInfo).
+     *
+     * <p>HTTP GET {@code /api/admin/systemInfo}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get system info (getSystemInfo)",
             notes = "Get main information about system. "
                     + SYSTEM_AUTHORITY_PARAGRAPH)
@@ -394,6 +570,14 @@ public class AdminController extends BaseController {
         return systemInfoService.getSystemInfo();
     }
 
+    /**
+     * Get features info (getFeaturesInfo).
+     *
+     * <p>HTTP GET {@code /api/admin/featuresInfo}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get features info (getFeaturesInfo)",
             notes = "Get information about enabled/disabled features. "
                     + SYSTEM_AUTHORITY_PARAGRAPH)
@@ -403,6 +587,14 @@ public class AdminController extends BaseController {
         return systemInfoService.getFeaturesInfo();
     }
 
+    /**
+     * Get OAuth2 log in processing URL (getMailProcessingUrl).
+     *
+     * <p>HTTP GET {@code /api/admin/mail/oauth2/loginProcessingUrl}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get OAuth2 log in processing URL (getMailProcessingUrl)", notes = "Returns the URL enclosed in " +
             "double quotes. After successful authentication with OAuth2 provider and user consent for requested scope, it makes a redirect to this path so that the platform can do " +
             "further log in processing and generating access tokens. " + SYSTEM_AUTHORITY_PARAGRAPH)
@@ -413,6 +605,14 @@ public class AdminController extends BaseController {
         return "\"/api/admin/mail/oauth2/code\"";
     }
 
+    /**
+     * Redirect user to mail provider login page. .
+     *
+     * <p>HTTP GET {@code /api/admin/mail/oauth2/authorize}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Redirect user to mail provider login page. ", notes = "After user logged in and provided access" +
             "provider sends authorization code to specified redirect uri.)")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -442,6 +642,12 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping(value = "/mail/oauth2/code", params = {"code", "state"})
+    /**
+     * handleMailOAuth2Callback (internal/hidden endpoint).
+     *
+     * <p>HTTP GET {@code /api/admin/mail/oauth2/code}.
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     public void handleMailOAuth2Callback(
             @RequestParam(value = "code") String code, @RequestParam(value = "state") String state,
             HttpServletRequest request, HttpServletResponse response) throws ThingsboardException, IOException {

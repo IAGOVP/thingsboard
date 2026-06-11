@@ -19,9 +19,27 @@ import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.common.data.security.model.JwtPair;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+
+ * Service contract for mobile app secret operations (mobile app bundles, secrets, and deep-link support).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface MobileAppSecretService {
 
     String generateMobileAppSecret(SecurityUser securityUser);
+
+    /**
+     * Returns jwt pair.
+     *
+     * @param secret secret ({@link String})
+     * @return {@link JwtPair}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     JwtPair getJwtPair(String secret) throws ThingsboardException;
 

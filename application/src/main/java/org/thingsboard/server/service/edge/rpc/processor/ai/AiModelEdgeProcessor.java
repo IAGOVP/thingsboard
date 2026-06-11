@@ -39,12 +39,24 @@ import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.Optional;
 import java.util.UUID;
+/**
+ * Processes ai model edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class AiModelEdgeProcessor extends BaseAiModelProcessor implements AiModelProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param aiModelUpdateMsg ai model update msg (AiModelUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processAiModelMsgFromEdge(TenantId tenantId, Edge edge, AiModelUpdateMsg aiModelUpdateMsg) {
         AiModelId aiModelId = new AiModelId(new UUID(aiModelUpdateMsg.getIdMSB(), aiModelUpdateMsg.getIdLSB()));
@@ -68,7 +80,13 @@ public class AiModelEdgeProcessor extends BaseAiModelProcessor implements AiMode
             edgeSynchronizationManager.getEdgeId().remove();
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         AiModelId aiModelId = new AiModelId(edgeEvent.getEntityId());
@@ -108,6 +126,10 @@ public class AiModelEdgeProcessor extends BaseAiModelProcessor implements AiMode
         }
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.AI_MODEL;

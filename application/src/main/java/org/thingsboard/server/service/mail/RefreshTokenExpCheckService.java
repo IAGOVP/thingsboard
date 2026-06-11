@@ -39,6 +39,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.thingsboard.server.common.data.mail.MailOauth2Provider.OFFICE_365;
 
+    /**
+     * Spring service component for refresh token exp check service (SMTP email sending and templating).
+     */
+
 @TbCoreComponent
 @Service
 @Slf4j
@@ -50,6 +54,12 @@ public class RefreshTokenExpCheckService {
     @Scheduled(initialDelayString = "#{T(org.apache.commons.lang3.RandomUtils).nextLong(0, ${mail.oauth2.refreshTokenCheckingInterval})}",
             fixedDelayString = "${mail.oauth2.refreshTokenCheckingInterval}",
             timeUnit = TimeUnit.SECONDS)
+    /**
+     * Checks the requested data.
+     *
+     * @return nothing
+     * @throws IOException if ioexception is thrown during processing
+     */
     public void check() throws IOException {
         AdminSettings settings = adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, "mail");
         if (settings != null && settings.getJsonValue().has("enableOauth2") && settings.getJsonValue().get("enableOauth2").asBoolean()) {

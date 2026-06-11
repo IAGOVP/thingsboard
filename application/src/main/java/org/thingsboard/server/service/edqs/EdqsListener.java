@@ -26,12 +26,23 @@ import org.thingsboard.server.dao.eventsourcing.DeleteEntityEvent;
 import org.thingsboard.server.dao.eventsourcing.RelationActionEvent;
 import org.thingsboard.server.dao.eventsourcing.SaveEntityEvent;
 
+    /**
+     * Spring service component for edqs listener (Entity Data Query Service integration from tb-core).
+     */
+
 @Service
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "queue.edqs.sync.enabled", havingValue = "true")
 public class EdqsListener {
 
     private final EdqsService edqsService;
+    /**
+     * Handles update.
+     *
+     * @param event event ({@link SaveEntityEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(fallbackExecution = true)
     public void onUpdate(SaveEntityEvent<?> event) {
@@ -40,6 +51,13 @@ public class EdqsListener {
         }
         edqsService.onUpdate(event.getTenantId(), event.getEntityId(), event.getEntity());
     }
+    /**
+     * Handles delete.
+     *
+     * @param event event ({@link DeleteEntityEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(fallbackExecution = true)
     public void onDelete(DeleteEntityEvent<?> event) {
@@ -48,6 +66,13 @@ public class EdqsListener {
         }
         edqsService.onDelete(event.getTenantId(), event.getEntityId());
     }
+    /**
+     * Handles event.
+     *
+     * @param relationEvent relation event ({@link RelationActionEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @TransactionalEventListener(fallbackExecution = true)
     public void handleEvent(RelationActionEvent relationEvent) {

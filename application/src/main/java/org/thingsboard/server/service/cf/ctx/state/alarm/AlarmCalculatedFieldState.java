@@ -76,6 +76,9 @@ import static org.thingsboard.server.service.cf.ctx.state.alarm.AlarmEvalResult.
 import static org.thingsboard.server.service.cf.ctx.state.alarm.AlarmEvalResult.Status.FALSE;
 import static org.thingsboard.server.service.cf.ctx.state.alarm.AlarmEvalResult.Status.NOT_YET_TRUE;
 import static org.thingsboard.server.service.cf.ctx.state.alarm.AlarmEvalResult.Status.TRUE;
+/**
+ * Runtime state for alarm calculated field calculated fields.
+ */
 
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
@@ -97,6 +100,14 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
     public AlarmCalculatedFieldState(EntityId entityId) {
         super(entityId);
     }
+    /**
+     * Set ctx.
+     *
+     * @param ctx calculated-field execution context
+     * @param actorCtx actor ctx ({@link TbActorRef})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setCtx(CalculatedFieldCtx ctx, TbActorRef actorCtx) {
@@ -121,6 +132,13 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
             initialFetchDone = false;
         }
     }
+    /**
+     * Init.
+     *
+     * @param restored restored
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(boolean restored) {
@@ -185,12 +203,24 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
         }
         return ruleState;
     }
+    /**
+     * Reset.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reset() {
         super.reset();
         configuration = null;
     }
+    /**
+     * Close.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void close() {
@@ -200,6 +230,14 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
         }
         clearState(clearRuleState);
     }
+    /**
+     * Perform calculation.
+     *
+     * @param updatedArgs updated args ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return future completing with {@link CalculatedFieldResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<CalculatedFieldResult> performCalculation(Map<String, ArgumentEntry> updatedArgs, CalculatedFieldCtx ctx) {
@@ -224,6 +262,15 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
                 .alarmResult(result)
                 .build());
     }
+    /**
+     * Updates entry.
+     *
+     * @param existingArgumentEntry existing argument entry ({@link ArgumentEntry})
+     * @param newArgumentEntry new argument entry ({@link ArgumentEntry})
+     * @param ctx calculated-field execution context
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean updateEntry(ArgumentEntry existingArgumentEntry, ArgumentEntry newArgumentEntry, CalculatedFieldCtx ctx) {
@@ -238,6 +285,14 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
         }
         return super.updateEntry(existingEntry, newEntry, ctx);
     }
+    /**
+     * Processes alarm action.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param action action ({@link ActionType})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void processAlarmAction(Alarm alarm, ActionType action) {
         switch (action) {
@@ -407,6 +462,14 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
 
         return alarmDetails;
     }
+    /**
+     * Eval.
+     *
+     * @param expression expression ({@link AlarmConditionExpression})
+     * @param ctx calculated-field execution context
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public boolean eval(AlarmConditionExpression expression, CalculatedFieldCtx ctx) {
@@ -546,6 +609,14 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
             return false;
         }
     }
+    /**
+     * Resolve value.
+     *
+     * @param conditionValue condition value ({@link AlarmConditionValue})
+     * @param mapper mapper ({@link Function})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected <T> T resolveValue(AlarmConditionValue<T> conditionValue, Function<KvEntry, T> mapper) {
         T value = conditionValue.getStaticValue();
@@ -559,6 +630,13 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
         }
         return value;
     }
+    /**
+     * Returns argument.
+     *
+     * @param key key ({@link String})
+     * @return {@link SingleValueArgumentEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected SingleValueArgumentEntry getArgument(String key) {
         SingleValueArgumentEntry entry = (SingleValueArgumentEntry) arguments.get(key);
@@ -571,6 +649,14 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
     private AlarmCalculatedFieldConfiguration getConfiguration(CalculatedFieldCtx ctx) {
         return (AlarmCalculatedFieldConfiguration) ctx.getCalculatedField().getConfiguration();
     }
+    /**
+     * Validates new entry.
+     *
+     * @param key key ({@link String})
+     * @param newEntry new entry ({@link ArgumentEntry})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void validateNewEntry(String key, ArgumentEntry newEntry) {
@@ -578,6 +664,12 @@ public class AlarmCalculatedFieldState extends BaseCalculatedFieldState {
             throw new IllegalArgumentException("Only single value arguments supported");
         }
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldType getType() {

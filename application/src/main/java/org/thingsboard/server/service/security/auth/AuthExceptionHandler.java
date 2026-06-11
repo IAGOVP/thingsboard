@@ -26,6 +26,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.thingsboard.server.exception.ThingsboardErrorResponseHandler;
+/**
+ * Auth exception handler for platform security.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @RequiredArgsConstructor
@@ -38,6 +43,13 @@ public class AuthExceptionHandler extends OncePerRequestFilter {
     @Getter
     private boolean logControllerErrorStackTrace;
 
+    /**
+     * Do filter internal.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param filterChain filter chain (FilterChain)
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {

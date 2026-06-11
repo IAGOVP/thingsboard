@@ -19,8 +19,9 @@ import lombok.Data;
 import org.thingsboard.server.gen.transport.TransportProtos.SessionType;
 
 /**
- * @author Andrew Shvayka
+ * Runtime metadata for an active device transport session (protocol, gateway, subscriptions).
  */
+
 @Data
 public class SessionInfo {
     private final SessionType type;

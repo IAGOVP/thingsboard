@@ -23,6 +23,10 @@ import org.thingsboard.server.common.data.edqs.EdqsState.EdqsSyncStatus;
 
 import java.util.Set;
 
+    /**
+     * Edqs sync state (Entity Data Query Service integration from tb-core).
+     */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

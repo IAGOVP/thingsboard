@@ -55,6 +55,17 @@ import static org.thingsboard.server.controller.ControllerConstants.ENTITY_COUNT
 import static org.thingsboard.server.controller.ControllerConstants.ENTITY_DATA_QUERY_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for dynamic entity, alarm, and key discovery queries plus EDQS admin endpoints.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: varies by endpoint — {@code SYS_ADMIN}, {@code TENANT_ADMIN}, and/or {@code CUSTOMER_USER}.
+ *
+ * <p>Uses {@link org.thingsboard.server.service.query.EntityQueryService} and {@link org.thingsboard.server.common.msg.edqs.EdqsService}.
+ */
+
+
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -66,6 +77,13 @@ public class EntityQueryController extends BaseController {
 
     private static final int MAX_PAGE_SIZE = 100;
 
+    /**
+     * POST {@code /api/entitiesQuery/count} — Count entities matching an {@link org.thingsboard.server.common.data.query.EntityCountQuery}.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query entity count query JSON
+     * @return number of matching entities
+     * @throws ThingsboardException if the query is invalid
+     */
     @ApiOperation(value = "Count Entities by Query", notes = ENTITY_COUNT_QUERY_DESCRIPTION)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping("/entitiesQuery/count")
@@ -77,6 +95,13 @@ public class EntityQueryController extends BaseController {
         return entityQueryService.countEntitiesByQuery(getCurrentUser(), query);
     }
 
+    /**
+     * POST {@code /api/entitiesQuery/find} — Find entity data matching an {@link org.thingsboard.server.common.data.query.EntityDataQuery}.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query entity data query JSON
+     * @return page of {@link org.thingsboard.server.common.data.query.EntityData}
+     * @throws ThingsboardException if the query is invalid
+     */
     @ApiOperation(value = "Find Entity Data by Query", notes = ENTITY_DATA_QUERY_DESCRIPTION)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping("/entitiesQuery/find")
@@ -88,6 +113,13 @@ public class EntityQueryController extends BaseController {
         return entityQueryService.findEntityDataByQuery(getCurrentUser(), query);
     }
 
+    /**
+     * POST {@code /api/alarmsQuery/find} — Find alarm data matching an {@link org.thingsboard.server.common.data.query.AlarmDataQuery}.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query alarm data query JSON
+     * @return page of {@link org.thingsboard.server.common.data.query.AlarmData}
+     * @throws ThingsboardException if assignee or query validation fails
+     */
     @ApiOperation(value = "Find Alarms by Query", notes = ALARM_DATA_QUERY_DESCRIPTION)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping("/alarmsQuery/find")
@@ -104,6 +136,13 @@ public class EntityQueryController extends BaseController {
         return entityQueryService.findAlarmDataByQuery(getCurrentUser(), query);
     }
 
+    /**
+     * POST {@code /api/alarmsQuery/count} — Count alarms matching an {@link org.thingsboard.server.common.data.query.AlarmCountQuery}.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query alarm count query JSON
+     * @return number of matching alarms
+     * @throws ThingsboardException if assignee validation fails
+     */
     @ApiOperation(value = "Count Alarms by Query (countAlarmsByQuery)", notes = "Returns the number of alarms that match the query definition.")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping("/alarmsQuery/count")
@@ -118,6 +157,17 @@ public class EntityQueryController extends BaseController {
         return entityQueryService.countAlarmsByQuery(getCurrentUser(), query);
     }
 
+    /**
+     * POST {@code /api/entitiesQuery/find/keys} — Deprecated: discover timeseries/attribute keys for entities matching a query.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query entity data query (page size capped at 100)
+     * @param includeTimeseries include timeseries key names
+     * @param includeAttributes include attribute key names
+     * @param scope optional attribute scope filter
+     * @return deferred {@link org.thingsboard.server.common.data.query.AvailableEntityKeys}
+     * @throws ThingsboardException if the query is invalid
+     * @deprecated use {@code POST /api/v2/entitiesQuery/find/keys} instead
+     */
     @Deprecated(forRemoval = true)
     @ApiOperation(
             value = "Find Available Entity Keys by Query (deprecated)",
@@ -157,6 +207,17 @@ public class EntityQueryController extends BaseController {
         return wrapFuture(entityQueryService.getKeysByQuery(getCurrentUser(), getTenantId(), query, includeTimeseries, includeAttributes, scope));
     }
 
+    /**
+     * POST {@code /api/v2/entitiesQuery/find/keys} — Discover timeseries/attribute keys with optional sample values.
+     * <p>Requires {@code @PreAuthorize}: {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param query entity data query (page size capped at 100)
+     * @param includeTimeseries include timeseries keys
+     * @param includeAttributes include attribute keys
+     * @param scopes optional attribute scope filters
+     * @param includeSamples include most recent value sample per key
+     * @return deferred {@link org.thingsboard.server.common.data.query.AvailableEntityKeysV2}
+     * @throws ThingsboardException if the query is invalid
+     */
     @ApiOperation(
             value = "Find Available Entity Keys By Query",
             notes = """
@@ -205,12 +266,22 @@ public class EntityQueryController extends BaseController {
                 includeTimeseries, includeAttributes, scopes, includeSamples));
     }
 
+    /**
+     * POST {@code /api/edqs/system/request} — Process a system-level EDQS request (system admin only).
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}.
+     * @param request EDQS request payload
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @PostMapping("/edqs/system/request")
     public void processSystemEdqsRequest(@RequestBody ToCoreEdqsRequest request) {
         edqsService.processSystemRequest(request);
     }
 
+    /**
+     * GET {@code /api/edqs/state} — Return current EDQS service state.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}.
+     * @return {@link org.thingsboard.server.common.data.edqs.EdqsState}
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @GetMapping("/edqs/state")
     public EdqsState getEdqsState() {

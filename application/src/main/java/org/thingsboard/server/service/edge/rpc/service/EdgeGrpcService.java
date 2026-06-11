@@ -75,6 +75,11 @@ import java.util.function.Consumer;
 import static org.thingsboard.server.service.state.DefaultDeviceStateService.ACTIVITY_STATE;
 import static org.thingsboard.server.service.state.DefaultDeviceStateService.LAST_CONNECT_TIME;
 import static org.thingsboard.server.service.state.DefaultDeviceStateService.LAST_DISCONNECT_TIME;
+/**
+ * Service implementation for edge grpc in edge gRPC RPC transport.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @Slf4j
@@ -104,6 +109,10 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
     private ScheduledExecutorService executorService;
     private ScheduledExecutorService sendDownlinkExecutorService;
 
+    /**
+     * On start up.
+     *
+     */
     @PostConstruct
     public void onStartUp() {
         this.executorService = ThingsBoardExecutors.newSingleThreadScheduledExecutor("edge-service");
@@ -116,13 +125,24 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
         shutdownExecutorSafely(sendDownlinkExecutorService);
         sessions.forEach(EdgeGrpcSessionManager::onEdgeDisconnect);
     }
-
+    /**
+     * Handles msgs.
+     *
+     * @param outputStream output stream (StreamObserver<ResponseMsg>)
+     * @return {@link StreamObserver} result
+     */
     @Override
     public StreamObserver<RequestMsg> handleMsgs(StreamObserver<ResponseMsg> outputStream) {
         EdgeGrpcSessionManager sessionManager = applicationContext.getBean(EdgeGrpcSessionManager.class);
         return sessionManager.initInputStream(outputStream, this::onEdgeConnect, this::onEdgeDisconnect, sendDownlinkExecutorService);
     }
 
+    /**
+     * On to edge session msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param msg msg (EdgeSessionMsg)
+     */
     @Override
     public void onToEdgeSessionMsg(TenantId tenantId, EdgeSessionMsg msg) {
         switch (msg.getMsgType()) {
@@ -149,6 +169,12 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
         }
     }
 
+    /**
+     * Updates edge.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     */
     @Override
     public void updateEdge(TenantId tenantId, Edge edge) {
         if (edge == null) {
@@ -164,6 +190,12 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
         }
     }
 
+    /**
+     * Removes edge.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeId edge id (EdgeId)
+     */
     @Override
     public void deleteEdge(TenantId tenantId, EdgeId edgeId) {
         EdgeGrpcSessionManager session = sessions.getByEdgeId(edgeId);
@@ -175,6 +207,13 @@ public class EdgeGrpcService extends EdgeRpcServiceGrpc.EdgeRpcServiceImplBase i
         }
     }
 
+    /**
+     * Processes sync request.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeId edge id (EdgeId)
+     * @param responseConsumer response consumer (Consumer<FromEdgeSyncResponse>)
+     */
     @Override
     public void processSyncRequest(TenantId tenantId, EdgeId edgeId, Consumer<FromEdgeSyncResponse> responseConsumer) {
         ToEdgeSyncRequest request = new ToEdgeSyncRequest(UUID.randomUUID(), tenantId, edgeId, serviceInfoProvider.getServiceId());

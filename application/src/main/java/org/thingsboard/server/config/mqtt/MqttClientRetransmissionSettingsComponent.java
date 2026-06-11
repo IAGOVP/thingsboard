@@ -21,16 +21,39 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * Binds MQTT client retransmission settings from application configuration.
+ *
+ * <p>These properties control how the rule-engine MQTT client retries failed publish
+ * operations. Values are loaded from the {@code mqtt.client.retransmission.*} prefix
+ * in {@code thingsboard.yml} (or environment variables) and consumed by
+ * {@link MqttClientSettingsComponent}.
+ *
+ * <p>Configuration keys:
+ * <ul>
+ *   <li>{@code mqtt.client.retransmission.max-attempts} — maximum retry count</li>
+ *   <li>{@code mqtt.client.retransmission.initial-delay-millis} — delay before first retry</li>
+ *   <li>{@code mqtt.client.retransmission.jitter-factor} — randomization factor to avoid thundering herd</li>
+ * </ul>
+ */
 @Data
 @Validated
 @Configuration
 @ConfigurationProperties(prefix = "mqtt.client.retransmission")
 public class MqttClientRetransmissionSettingsComponent {
 
+    /** Maximum number of retransmission attempts before giving up on an MQTT publish. */
     @PositiveOrZero
     private int maxAttempts;
+
+    /** Initial delay in milliseconds before the first retransmission attempt. */
     @PositiveOrZero
     private long initialDelayMillis;
+
+    /**
+     * Jitter factor applied to retry delays (0.0 = no jitter).
+     * Spreads retry timing to reduce synchronized retries across clients.
+     */
     @PositiveOrZero
     private double jitterFactor;
 

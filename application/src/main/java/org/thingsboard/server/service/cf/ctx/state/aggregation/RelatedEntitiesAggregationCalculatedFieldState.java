@@ -55,6 +55,9 @@ import java.util.stream.Collectors;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.thingsboard.server.service.cf.ctx.state.CalculatedFieldCtx.DISABLED_INTERVAL_VALUE;
 import static org.thingsboard.server.service.cf.ctx.state.CalculatedFieldState.ReadinessStatus.MISSING_AGGREGATION_ENTITIES_ERROR;
+/**
+ * Runtime state for related entities aggregation calculated field calculated fields.
+ */
 
 @Slf4j
 public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculatedFieldState implements ScheduledRefreshSupported {
@@ -76,6 +79,14 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
     public RelatedEntitiesAggregationCalculatedFieldState(EntityId entityId) {
         super(entityId);
     }
+    /**
+     * Set ctx.
+     *
+     * @param ctx calculated-field execution context
+     * @param actorCtx actor ctx ({@link TbActorRef})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setCtx(CalculatedFieldCtx ctx, TbActorRef actorCtx) {
@@ -85,6 +96,13 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
         deduplicationIntervalMs = SECONDS.toMillis(configuration.getDeduplicationIntervalInSec());
         entityService = ctx.getSystemContext().getEntityService();
     }
+    /**
+     * Init.
+     *
+     * @param restored restored
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(boolean restored) {
@@ -93,6 +111,12 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
             scheduleReevaluation();
         }
     }
+    /**
+     * Close.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void close() {
@@ -102,6 +126,12 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
             reevaluationFuture = null;
         }
     }
+    /**
+     * Reset.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reset() { // must reset everything dependent on arguments
@@ -111,32 +141,71 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
         lastMetricsEvalTs = DEFAULT_LAST_UPDATE_TS;
         metrics = null;
     }
+    /**
+     * Reset scheduled refresh ts.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void resetScheduledRefreshTs() {
         lastRelatedEntitiesRefreshTs = DEFAULT_LAST_UPDATE_TS;
     }
+    /**
+     * Returns last scheduled refresh ts.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getLastScheduledRefreshTs() {
         return lastRelatedEntitiesRefreshTs;
     }
+    /**
+     * Updates scheduled refresh ts.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateScheduledRefreshTs() {
         lastRelatedEntitiesRefreshTs = System.currentTimeMillis();
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldType getType() {
         return CalculatedFieldType.RELATED_ENTITIES_AGGREGATION;
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param argumentValues argument values ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Map<String, ArgumentEntry> update(Map<String, ArgumentEntry> argumentValues, CalculatedFieldCtx ctx) {
         lastArgsRefreshTs = System.currentTimeMillis();
         return super.update(argumentValues, ctx);
     }
+    /**
+     * Checks related entities.
+     *
+     * @param relatedEntities related entities ({@link List})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<EntityId> checkRelatedEntities(List<EntityId> relatedEntities) {
         Map<EntityId, Map<String, ArgumentEntry>> entityInputs = prepareInputs();
@@ -166,11 +235,25 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
         });
         return outdated;
     }
+    /**
+     * Updates entity data.
+     *
+     * @param fetchedArgs fetched args ({@link Map})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Map<String, ArgumentEntry> updateEntityData(Map<String, ArgumentEntry> fetchedArgs) {
         lastMetricsEvalTs = DEFAULT_LAST_UPDATE_TS;
         return update(fetchedArgs, ctx);
     }
+    /**
+     * Cleanup entity data.
+     *
+     * @param relatedEntityId related entity id ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void cleanupEntityData(EntityId relatedEntityId) {
         arguments.values().forEach(argEntry -> {
@@ -181,6 +264,12 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
         lastArgsRefreshTs = System.currentTimeMillis();
         readinessStatus = checkReadiness();
     }
+    /**
+     * Schedule reevaluation.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void scheduleReevaluation() {
         ScheduledFuture<?> future = ctx.scheduleReevaluation(getEnforcedDeduplicationIntervalMillis(), actorCtx);
@@ -188,6 +277,14 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
             reevaluationFuture = future;
         }
     }
+    /**
+     * Perform calculation.
+     *
+     * @param updatedArgs updated args ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return future completing with {@link CalculatedFieldResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<CalculatedFieldResult> performCalculation(Map<String, ArgumentEntry> updatedArgs, CalculatedFieldCtx ctx) throws Exception {
@@ -274,6 +371,12 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
             return entityInputs.get(inputKey).getValue();
         }
     }
+    /**
+     * Returns arguments json.
+     *
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JsonNode getArgumentsJson() {
@@ -294,6 +397,12 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
     record RelatedEntitiesArgument(ArgumentEntryType type, List<EntityArgument> entitiesArguments) {}
 
     record EntityArgument(EntityInfo entity, JsonNode entityArguments) {}
+    /**
+     * Checks readiness.
+     *
+     * @return {@link ReadinessStatus}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ReadinessStatus checkReadiness() {
@@ -315,6 +424,13 @@ public class RelatedEntitiesAggregationCalculatedFieldState extends BaseCalculat
         }
         return ReadinessStatus.READY;
     }
+    /**
+     * Checks constraint by direction.
+     *
+     * @param relatedEntitiesArgumentEntry related entities argument entry ({@link RelatedEntitiesArgumentEntry})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void checkConstraintByDirection(RelatedEntitiesArgumentEntry relatedEntitiesArgumentEntry) {
         if (ctx.getCalculatedField().getConfiguration() instanceof RelatedEntitiesAggregationCalculatedFieldConfiguration config) {

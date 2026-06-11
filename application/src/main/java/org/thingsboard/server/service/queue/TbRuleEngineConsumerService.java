@@ -18,6 +18,10 @@ package org.thingsboard.server.service.queue;
 import org.springframework.context.ApplicationListener;
 import org.thingsboard.server.queue.discovery.event.PartitionChangeEvent;
 
+/**
+ * Contract for the rule-engine queue consumer that processes {@code ToRuleEngineMsg} packs.
+ */
+
 public interface TbRuleEngineConsumerService extends ApplicationListener<PartitionChangeEvent> {
 
 }

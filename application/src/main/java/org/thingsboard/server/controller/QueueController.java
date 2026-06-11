@@ -55,6 +55,12 @@ import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_AUTHO
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST API for message queues.
+ * 
+ * <p>Base path: {@code /api}. Rule-engine queue registration and lookup by id or name.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -63,6 +69,20 @@ public class QueueController extends BaseController {
 
     private final TbQueueService tbQueueService;
 
+    /**
+     * Get Queues.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/queues}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param serviceType service Type
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Queues (getTenantQueuesByServiceType)",
             notes = "Returns a page of queues registered in the platform. " +
                     PAGE_DATA_PARAMETERS + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -91,6 +111,15 @@ public class QueueController extends BaseController {
         }
     }
 
+    /**
+     * Get Queue.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/queues/{queueId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param queueIdStr queue Id Str
+     * @return {@link Queue} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Queue (getQueueById)",
             notes = "Fetch the Queue object based on the provided Queue Id. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -104,6 +133,15 @@ public class QueueController extends BaseController {
         return checkNotNull(queueService.findQueueById(getTenantId(), queueId));
     }
 
+    /**
+     * Get Queue.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/queues/name/{queueName}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param queueName queue Name
+     * @return {@link Queue} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Queue (getQueueByName)",
             notes = "Fetch the Queue object based on the provided Queue name. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -115,6 +153,16 @@ public class QueueController extends BaseController {
         return checkNotNull(queueService.findQueueByTenantIdAndName(getTenantId(), queueName));
     }
 
+    /**
+     * Create Or Update Queue.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/queues}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param serviceType service Type
+     * @param queue queue
+     * @return {@link Queue} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create Or Update Queue (saveQueue)",
             notes = "Create or update the Queue. When creating queue, platform generates Queue Id as " + UUID_WIKI_LINK +
                     "Specify existing Queue id to update the queue. " +
@@ -145,6 +193,15 @@ public class QueueController extends BaseController {
         }
     }
 
+    /**
+     * Delete Queue.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/queues/{queueId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param queueIdStr queue Id Str
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete Queue (deleteQueue)", notes = "Deletes the Queue. " + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
     @RequestMapping(value = "/queues/{queueId}", method = RequestMethod.DELETE)

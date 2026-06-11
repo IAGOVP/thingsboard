@@ -16,6 +16,11 @@
 package org.thingsboard.server.service.security.permission;
 
 import org.springframework.stereotype.Component;
+/**
+ * Defines RBAC permission rules for mfa configuration users.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Evaluates tenant/customer/system-admin scopes against Resource and Operation.
+ */
 
 @Component
 public class MfaConfigurationPermissions extends AbstractPermissions {

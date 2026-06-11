@@ -50,6 +50,12 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.common.data.StringUtils.isNotEmpty;
 
+    /**
+     * Default Spring implementation for tb image service (tenant/system resource file management).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 @TbCoreComponent
@@ -72,16 +78,38 @@ public class DefaultTbImageService extends AbstractTbEntityService implements Tb
                 .maximumSize(cacheMaxSize)
                 .build();
     }
+    /**
+     * Returns etag.
+     *
+     * @param imageCacheKey image cache key ({@link ImageCacheKey})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getETag(ImageCacheKey imageCacheKey) {
         return etagCache.getIfPresent(imageCacheKey);
     }
+    /**
+     * Put etag.
+     *
+     * @param imageCacheKey image cache key ({@link ImageCacheKey})
+     * @param etag etag ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void putETag(ImageCacheKey imageCacheKey, String etag) {
         etagCache.put(imageCacheKey, etag);
     }
+    /**
+     * Evict etags.
+     *
+     * @param imageCacheKey image cache key ({@link ImageCacheKey})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evictETags(ImageCacheKey imageCacheKey) {
@@ -90,6 +118,14 @@ public class DefaultTbImageService extends AbstractTbEntityService implements Tb
             etagCache.invalidate(imageCacheKey.withPreview(true));
         }
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param image image ({@link TbResource})
+     * @param user authenticated user performing the action
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceInfo save(TbResource image, User user) throws Exception {
@@ -141,6 +177,15 @@ public class DefaultTbImageService extends AbstractTbEntityService implements Tb
         descriptor = descriptor != null ? descriptor.getPreviewDescriptor() : null;
         return Optional.ofNullable(descriptor != null ? descriptor.getEtag() : null);
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param imageInfo image info ({@link TbResourceInfo})
+     * @param oldImageInfo old image info ({@link TbResourceInfo})
+     * @param user authenticated user performing the action
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceInfo save(TbResourceInfo imageInfo, TbResourceInfo oldImageInfo, User user) {
@@ -159,6 +204,15 @@ public class DefaultTbImageService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param imageInfo image info ({@link TbResourceInfo})
+     * @param user authenticated user performing the action
+     * @param force force
+     * @return {@link TbImageDeleteResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbImageDeleteResult delete(TbResourceInfo imageInfo, User user, boolean force) {
@@ -182,6 +236,15 @@ public class DefaultTbImageService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Imports image.
+     *
+     * @param imageData image data ({@link ResourceExportData})
+     * @param checkExisting check existing
+     * @param user authenticated user performing the action
+     * @return {@link TbResourceInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceInfo importImage(ResourceExportData imageData, boolean checkExisting, SecurityUser user) throws Exception {

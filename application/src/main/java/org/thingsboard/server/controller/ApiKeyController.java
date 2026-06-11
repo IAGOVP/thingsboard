@@ -58,6 +58,15 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_ORDER_D
 import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.USER_ID_PARAM_DESCRIPTION;
 
+/**
+ * REST controller for personal API key (PAT) management.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}.
+ *
+ * <p>Related service: {@link org.thingsboard.server.dao.pat.ApiKeyService}.
+ */
 @RestController
 @TbCoreComponent
 @Slf4j
@@ -67,6 +76,14 @@ public class ApiKeyController extends BaseController {
 
     private final ApiKeyService apiKeyService;
 
+    /**
+     * Save API key for user (saveApiKey).
+     *
+     * <p>HTTP POST {@code /api/apiKey}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Save API key for user (saveApiKey)",
             notes = "Creates an API key for the given user and returns the token ONCE as 'ApiKey {value}'." + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN','TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -84,6 +101,14 @@ public class ApiKeyController extends BaseController {
         return savedApiKey;
     }
 
+    /**
+     * Get User Api Keys (getUserApiKeys).
+     *
+     * <p>HTTP GET {@code /api/apiKeys/{userId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get User Api Keys (getUserApiKeys)",
             notes = "Returns a page of api keys owned by user. " +
                     PAGE_DATA_PARAMETERS + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
@@ -110,6 +135,14 @@ public class ApiKeyController extends BaseController {
         return apiKeyService.findApiKeysByUserId(user.getTenantId(), userId, pageLink);
     }
 
+    /**
+     * Update API key Description.
+     *
+     * <p>HTTP PUT {@code /api/apiKey/{id}/description}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Update API key Description",
             notes = "Updates the description of the existing API key by apiKeyId. " +
                     "Only the description can be updated. " +
@@ -128,6 +161,14 @@ public class ApiKeyController extends BaseController {
         return new ApiKeyInfo(apiKeyService.saveApiKey(apiKey.getTenantId(), apiKey));
     }
 
+    /**
+     * Enable or disable API key (enableApiKey).
+     *
+     * <p>HTTP PUT {@code /api/apiKey/{id}/enabled/{enabledValue}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Enable or disable API key (enableApiKey)",
             notes = "Updates api key with enabled = true/false. " + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN','TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -144,6 +185,14 @@ public class ApiKeyController extends BaseController {
         return new ApiKeyInfo(apiKeyService.saveApiKey(apiKey.getTenantId(), apiKey));
     }
 
+    /**
+     * Delete API key by ID (deleteApiKey).
+     *
+     * <p>HTTP DELETE {@code /api/apiKey/{id}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete API key by ID (deleteApiKey)",
             notes = "Deletes the API key. Referencing non-existing ApiKey Id will cause an error." + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN','TENANT_ADMIN', 'CUSTOMER_USER')")

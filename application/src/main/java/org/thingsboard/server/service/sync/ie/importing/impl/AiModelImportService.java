@@ -25,6 +25,11 @@ import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 import org.thingsboard.server.dao.ai.AiModelService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports ai model entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -32,6 +37,15 @@ import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 class AiModelImportService extends BaseEntityImportService<AiModelId, AiModel, EntityExportData<AiModel>> {
 
     private final AiModelService aiModelService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param model model ({@link AiModel})
+     * @param idProvider id provider ({@link BaseEntityImportService})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(
@@ -41,6 +55,17 @@ class AiModelImportService extends BaseEntityImportService<AiModelId, AiModel, E
     ) {
         model.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param model model ({@link AiModel})
+     * @param oldModel old model ({@link AiModel})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link BaseEntityImportService})
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected AiModel prepare(
@@ -52,11 +77,29 @@ class AiModelImportService extends BaseEntityImportService<AiModelId, AiModel, E
     ) {
         return model;
     }
+    /**
+     * Deep copy.
+     *
+     * @param model model ({@link AiModel})
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected AiModel deepCopy(AiModel model) {
         return new AiModel(model);
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param model model ({@link AiModel})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link BaseEntityImportService})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link AiModel}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected AiModel saveOrUpdate(
@@ -68,6 +111,12 @@ class AiModelImportService extends BaseEntityImportService<AiModelId, AiModel, E
     ) {
         return aiModelService.save(model);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

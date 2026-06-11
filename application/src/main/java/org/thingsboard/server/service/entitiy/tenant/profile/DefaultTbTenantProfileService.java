@@ -36,6 +36,9 @@ import org.thingsboard.server.service.entitiy.queue.TbQueueService;
 import java.util.List;
 
 import static org.thingsboard.server.common.data.EntityType.TENANT_PROFILE;
+/**
+ * Default implementation of {@link TbTenantProfileService}.
+ */
 
 @Slf4j
 @Service
@@ -46,6 +49,16 @@ public class DefaultTbTenantProfileService extends AbstractTbEntityService imple
     private final TenantProfileService tenantProfileService;
     private final TenantService tenantService;
     private final TbTenantProfileCache tenantProfileCache;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @param oldTenantProfile old tenant profile ({@link TenantProfile})
+     * @param user authenticated user performing the action
+     * @return {@link TenantProfile}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public TenantProfile
@@ -76,6 +89,15 @@ public class DefaultTbTenantProfileService extends AbstractTbEntityService imple
         }
 
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void delete(TenantId tenantId, @NotNull TenantProfile tenantProfile, User user) throws ThingsboardException {
@@ -88,6 +110,15 @@ public class DefaultTbTenantProfileService extends AbstractTbEntityService imple
             throw e;
         }
     }
+    /**
+     * Set default tenant profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @param user authenticated user performing the action
+     * @return {@link TenantProfile}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public TenantProfile setDefaultTenantProfile(TenantId tenantId, @NotNull TenantProfile tenantProfile, User user) throws ThingsboardException {

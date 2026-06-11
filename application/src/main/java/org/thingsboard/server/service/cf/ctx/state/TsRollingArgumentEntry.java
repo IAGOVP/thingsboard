@@ -32,6 +32,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static org.thingsboard.server.service.cf.ctx.state.BaseCalculatedFieldState.DEFAULT_LAST_UPDATE_TS;
+/**
+ * Argument or aggregation entry for calculated-field state (ts rolling argument entry).
+ */
 
 @Data
 @NoArgsConstructor
@@ -68,27 +71,57 @@ public class TsRollingArgumentEntry implements ArgumentEntry, HasLatestTs {
         this.timeWindow = timeWindow;
         this.tsRecords = tsRecords;
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link ArgumentEntryType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ArgumentEntryType getType() {
         return ArgumentEntryType.TS_ROLLING;
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isEmpty() {
         return tsRecords.isEmpty();
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @JsonIgnore
     @Override
     public Object getValue() {
         return tsRecords;
     }
+    /**
+     * Returns latest ts.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getLatestTs() {
         var lastEntry = tsRecords.lastEntry();
         return (lastEntry != null) ? lastEntry.getKey() : DEFAULT_LAST_UPDATE_TS;
     }
+    /**
+     * To tbel cf arg.
+     *
+     * @return {@link TbelCfArg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbelCfArg toTbelCfArg() {
@@ -98,6 +131,14 @@ public class TsRollingArgumentEntry implements ArgumentEntry, HasLatestTs {
         }
         return new TbelCfTsRollingArg(timeWindow, values);
     }
+    /**
+     * Updates entry.
+     *
+     * @param entry entry ({@link ArgumentEntry})
+     * @param ctx calculated-field execution context
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean updateEntry(ArgumentEntry entry, CalculatedFieldCtx ctx) {
@@ -140,6 +181,13 @@ public class TsRollingArgumentEntry implements ArgumentEntry, HasLatestTs {
         }
         tsRecords.entrySet().removeIf(tsRecord -> tsRecord.getKey() < System.currentTimeMillis() - timeWindow);
     }
+    /**
+     * Returns value for ts record.
+     *
+     * @param value value ({@link KvEntry})
+     * @return {@link Double}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Double getValueForTsRecord(KvEntry value) {
         try {

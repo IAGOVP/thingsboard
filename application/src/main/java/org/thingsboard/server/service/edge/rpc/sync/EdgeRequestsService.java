@@ -27,6 +27,10 @@ import org.thingsboard.server.gen.edge.v1.RuleChainMetadataRequestMsg;
 import org.thingsboard.server.gen.edge.v1.UserCredentialsRequestMsg;
 import org.thingsboard.server.gen.edge.v1.WidgetBundleTypesRequestMsg;
 
+/**
+ * Service contract for edge-to-cloud sync requests.
+ */
+
 public interface EdgeRequestsService {
 
     @Deprecated(since = "3.9.1", forRemoval = true)

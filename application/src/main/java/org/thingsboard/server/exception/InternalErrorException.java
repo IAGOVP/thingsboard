@@ -18,12 +18,30 @@ package org.thingsboard.server.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * Checked exception indicating an unexpected internal server error.
+ *
+ * <p>When converted to an HTTP response via {@link ToErrorResponseEntity}, this exception
+ * maps to {@link HttpStatus#INTERNAL_SERVER_ERROR} (500).
+ *
+ * @see ToErrorResponseEntity
+ */
 public class InternalErrorException extends Exception implements ToErrorResponseEntity {
 
+    /**
+     * Creates an exception with the given internal-error description.
+     *
+     * @param message detail message describing the internal failure
+     */
     public InternalErrorException(String message) {
         super(message);
     }
 
+    /**
+     * Builds an HTTP 500 response containing the exception message as the response body.
+     *
+     * @return response entity with status {@link HttpStatus#INTERNAL_SERVER_ERROR} and plain-text body
+     */
     @Override
     public ResponseEntity<String> toErrorResponseEntity() {
         return new ResponseEntity<>(getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

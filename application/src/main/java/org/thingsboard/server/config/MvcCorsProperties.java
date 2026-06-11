@@ -23,23 +23,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by yyh on 2017/5/2.
- * CORS configuration
+ * Binds Cross-Origin Resource Sharing (CORS) settings from {@code spring.mvc.cors.*}.
+ *
+ * <p>Each key in {@link #mappings} is a URL pattern (e.g. {@code /api/**}) and the value
+ * is a Spring {@link CorsConfiguration} (allowed origins, methods, headers, credentials).
+ * When mappings are non-empty, {@link ThingsboardSecurityConfiguration#corsFilter} registers
+ * a {@link org.springframework.web.filter.CorsFilter} that applies them globally.
  */
 @Configuration
 @ConfigurationProperties(prefix = "spring.mvc.cors")
 public class MvcCorsProperties {
 
+    /**
+     * URL-pattern → CORS configuration map.
+     * Populated from YAML under {@code spring.mvc.cors.mappings}.
+     */
     private Map<String, CorsConfiguration> mappings = new HashMap<>();
 
     public MvcCorsProperties() {
         super();
     }
 
+    /** Returns the CORS mapping table keyed by request path pattern. */
     public Map<String, CorsConfiguration> getMappings() {
         return mappings;
     }
 
+    /** Sets the CORS mapping table (used by Spring Boot property binding). */
     public void setMappings(Map<String, CorsConfiguration> mappings) {
         this.mappings = mappings;
     }

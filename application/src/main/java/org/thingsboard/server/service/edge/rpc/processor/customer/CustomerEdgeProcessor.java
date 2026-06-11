@@ -42,12 +42,23 @@ import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+/**
+ * Processes customer edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class CustomerEdgeProcessor extends BaseEdgeProcessor {
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         CustomerId customerId = new CustomerId(edgeEvent.getEntityId());
@@ -73,7 +84,13 @@ public class CustomerEdgeProcessor extends BaseEdgeProcessor {
         }
         return null;
     }
-
+    /**
+     * Processes entity notification.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeNotificationMsg edge notification msg (EdgeNotificationMsgProto)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processEntityNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         EdgeEventActionType actionType = EdgeEventActionType.valueOf(edgeNotificationMsg.getAction());
@@ -99,6 +116,17 @@ public class CustomerEdgeProcessor extends BaseEdgeProcessor {
         }
     }
 
+    /**
+     * Loads edges and save edge events.
+     *
+     * @param edgeFetcher edge fetcher (FetchFunction<Edge>)
+     * @param tenantId tenant id (TenantId)
+     * @param type type (EdgeEventType)
+     * @param actionType action type (EdgeEventActionType)
+     * @param customerId customer id (CustomerId)
+     * @return {@link ListenableFuture} result
+     */
+
     public ListenableFuture<Void> findEdgesAndSaveEdgeEvents(PageDataIterable.FetchFunction<Edge> edgeFetcher, TenantId tenantId,
                                                              EdgeEventType type, EdgeEventActionType actionType, CustomerId customerId) {
         List<ListenableFuture<Void>> futures = new ArrayList<>();
@@ -109,6 +137,10 @@ public class CustomerEdgeProcessor extends BaseEdgeProcessor {
         return Futures.transform(Futures.allAsList(futures), voids -> null, dbCallbackExecutorService);
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.CUSTOMER;

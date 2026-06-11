@@ -114,6 +114,11 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+/**
+ * Message processor for {@link org.thingsboard.server.actors.device.DeviceActor}.
+ *
+ * <p>Manages transport sessions, server-side and client-side RPC state, attribute/credential/name updates, and session timeout checks.
+ */
 
 @Slf4j
 public class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcessor {
@@ -498,10 +503,24 @@ public class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcesso
         ListenableFuture<Void> registrationFuture = systemContext.getClaimDevicesService()
                 .registerClaimingInfo(tenantId, deviceId, msg.getSecretKey(), msg.getDurationMs());
         Futures.addCallback(registrationFuture, new FutureCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param result result ({@link Void})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(Void result) {
                 log.debug("[{}][{}] Successfully processed register claiming info request!", sessionId, deviceId);
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {
@@ -522,6 +541,13 @@ public class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcesso
         int requestId = request.getRequestId();
         if (request.getOnlyShared()) {
             Futures.addCallback(findAllAttributesByScope(AttributeScope.SHARED_SCOPE), new FutureCallback<>() {
+                /**
+                 * Handles success.
+                 *
+                 * @param result result ({@link List})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
                 @Override
                 public void onSuccess(@Nullable List<AttributeKvEntry> result) {
                     GetAttributeResponseMsg responseMsg = GetAttributeResponseMsg.newBuilder()
@@ -532,6 +558,13 @@ public class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcesso
                             .build();
                     sendToTransport(responseMsg, sessionInfo);
                 }
+                /**
+                 * Handles failure.
+                 *
+                 * @param t t ({@link Throwable})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
 
                 @Override
                 public void onFailure(Throwable t) {
@@ -544,6 +577,13 @@ public class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcesso
             }, MoreExecutors.directExecutor());
         } else {
             Futures.addCallback(getAttributesKvEntries(request), new FutureCallback<>() {
+                /**
+                 * Handles success.
+                 *
+                 * @param result result ({@link List})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
                 @Override
                 public void onSuccess(@Nullable List<List<AttributeKvEntry>> result) {
                     GetAttributeResponseMsg responseMsg = GetAttributeResponseMsg.newBuilder()
@@ -555,6 +595,13 @@ public class DeviceActorMessageProcessor extends AbstractContextAwareMsgProcesso
                             .build();
                     sendToTransport(responseMsg, sessionInfo);
                 }
+                /**
+                 * Handles failure.
+                 *
+                 * @param t t ({@link Throwable})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
 
                 @Override
                 public void onFailure(Throwable t) {

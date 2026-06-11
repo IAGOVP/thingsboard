@@ -32,6 +32,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.thingsboard.server.service.cf.ctx.state.BaseCalculatedFieldState.DEFAULT_LAST_UPDATE_TS;
+/**
+ * Argument or aggregation entry for calculated-field state (related entities argument entry).
+ */
 
 @Data
 @AllArgsConstructor
@@ -40,16 +43,34 @@ public class RelatedEntitiesArgumentEntry implements ArgumentEntry, HasLatestTs,
     private final Map<EntityId, ArgumentEntry> entityInputs;
 
     private boolean forceResetPrevious;
+    /**
+     * Returns type.
+     *
+     * @return {@link ArgumentEntryType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ArgumentEntryType getType() {
         return ArgumentEntryType.RELATED_ENTITIES;
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Object getValue() {
         return entityInputs;
     }
+    /**
+     * Returns latest ts.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getLatestTs() {
@@ -63,6 +84,14 @@ public class RelatedEntitiesArgumentEntry implements ArgumentEntry, HasLatestTs,
         }
         return latestTs;
     }
+    /**
+     * Updates entry.
+     *
+     * @param entry entry ({@link ArgumentEntry})
+     * @param ctx calculated-field execution context
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean updateEntry(ArgumentEntry entry, CalculatedFieldCtx ctx) {
@@ -87,11 +116,23 @@ public class RelatedEntitiesArgumentEntry implements ArgumentEntry, HasLatestTs,
         }
         return true;
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isEmpty() {
         return entityInputs.isEmpty();
     }
+    /**
+     * To tbel cf arg.
+     *
+     * @return {@link TbelCfArg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbelCfArg toTbelCfArg() {

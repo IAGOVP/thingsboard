@@ -36,6 +36,11 @@ import org.thingsboard.server.service.security.model.UserPrincipal;
 import org.thingsboard.server.service.user.cache.UserAuthDetailsCache;
 
 import java.util.UUID;
+/**
+ * Spring Security authentication provider for platform security.
+ *
+ * <p><b>Responsibilities:</b> Integrates with Spring Security filter chain.
+ */
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,6 +48,15 @@ public abstract class AbstractAuthenticationProvider implements AuthenticationPr
 
     private final CustomerService customerService;
     private final UserAuthDetailsCache userAuthDetailsCache;
+
+    /**
+     * Authenticate by public id.
+     *
+     * @param publicId public id (String)
+     * @param authContextName auth context name (String)
+     * @param userPrincipal user principal (UserPrincipal)
+     * @return {@link SecurityUser} result
+     */
 
     protected SecurityUser authenticateByPublicId(String publicId, String authContextName, UserPrincipal userPrincipal) {
         TenantId systemId = TenantId.SYS_TENANT_ID;
@@ -73,6 +87,14 @@ public abstract class AbstractAuthenticationProvider implements AuthenticationPr
 
         return new SecurityUser(user, true, principal);
     }
+
+    /**
+     * Authenticate by user id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param userId user id (UserId)
+     * @return {@link SecurityUser} result
+     */
 
     protected SecurityUser authenticateByUserId(TenantId tenantId, UserId userId) {
         UserAuthDetails userAuthDetails = userAuthDetailsCache.getUserAuthDetails(tenantId, userId);

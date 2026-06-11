@@ -19,6 +19,10 @@ import org.springframework.security.core.AuthenticationException;
 
 import java.io.Serial;
 
+/**
+ * Thrown when jwt expired token during security operations.
+ */
+
 public class JwtExpiredTokenException extends AuthenticationException {
 
     @Serial
@@ -34,6 +38,12 @@ public class JwtExpiredTokenException extends AuthenticationException {
         super(msg, t);
         this.token = token;
     }
+
+    /**
+     * Token.
+     *
+     * @return {@link String} result
+     */
 
     public String token() {
         return this.token;

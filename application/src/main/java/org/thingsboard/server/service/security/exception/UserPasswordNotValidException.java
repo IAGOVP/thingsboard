@@ -17,6 +17,10 @@ package org.thingsboard.server.service.security.exception;
 
 import org.springframework.security.authentication.AccountStatusException;
 
+/**
+ * Thrown when user password not valid during security operations.
+ */
+
 public class UserPasswordNotValidException extends AccountStatusException {
 
     public UserPasswordNotValidException(String msg) {

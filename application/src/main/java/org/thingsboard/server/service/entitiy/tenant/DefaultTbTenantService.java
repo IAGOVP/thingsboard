@@ -31,6 +31,9 @@ import org.thingsboard.server.service.sync.vc.EntitiesVersionControlService;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+/**
+ * Default implementation of {@link TbTenantService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -43,6 +46,13 @@ public class DefaultTbTenantService extends AbstractTbEntityService implements T
     private final TbQueueService tbQueueService;
     private final TenantProfileService tenantProfileService;
     private final EntitiesVersionControlService versionControlService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenant tenant ({@link Tenant})
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Tenant save(Tenant tenant) throws Exception {
@@ -63,6 +73,13 @@ public class DefaultTbTenantService extends AbstractTbEntityService implements T
         tbQueueService.updateQueuesByTenants(Collections.singletonList(savedTenant.getTenantId()), newTenantProfile, oldTenantProfile);
         return savedTenant;
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param tenant tenant ({@link Tenant})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(Tenant tenant) throws Exception {

@@ -18,6 +18,11 @@ package org.thingsboard.server.actors.tenant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.thingsboard.server.common.msg.tools.TbRateLimits;
+/**
+ * Per-tenant rate limiters for rule-chain and calculated-field debug event persistence.
+ *
+ * <p>Prevents debug-mode event storms from overwhelming the event store during rule or CF troubleshooting.
+ */
 
 @Data
 @AllArgsConstructor

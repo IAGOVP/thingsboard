@@ -18,6 +18,10 @@ package org.thingsboard.server.service.queue;
 import org.springframework.context.ApplicationListener;
 import org.thingsboard.server.queue.discovery.event.PartitionChangeEvent;
 
+/**
+ * tb-core queue consumer contract. Listens for {@link org.thingsboard.server.queue.discovery.event.PartitionChangeEvent} and drives consumption of {@code ToCoreMsg} from the core queue.
+ */
+
 public interface TbCoreConsumerService extends ApplicationListener<PartitionChangeEvent> {
 
 }

@@ -21,11 +21,51 @@ import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.User;
 
+/**
+
+ * Application-layer service API for tenant profile entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbTenantProfileService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param tenantProfile tenant profile ({@link TenantProfile})
+ * @param oldTenantProfile old tenant profile ({@link TenantProfile})
+ * @param user authenticated user performing the action
+ * @return {@link TenantProfile}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     TenantProfile save(TenantId tenantId, TenantProfile tenantProfile, TenantProfile oldTenantProfile, User user) throws ThingsboardException;
+/**
+ * Deletes the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param tenantProfile tenant profile ({@link TenantProfile})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     void delete(TenantId tenantId, @NotNull TenantProfile tenantProfile, User user) throws ThingsboardException;
+/**
+ * Set default tenant profile.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param tenantProfile tenant profile ({@link TenantProfile})
+ * @param user authenticated user performing the action
+ * @return {@link TenantProfile}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     TenantProfile setDefaultTenantProfile(TenantId tenantId, @NotNull TenantProfile tenantProfile, User user) throws ThingsboardException;
 }

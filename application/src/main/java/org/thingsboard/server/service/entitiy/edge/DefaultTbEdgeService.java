@@ -32,6 +32,9 @@ import org.thingsboard.server.common.data.rule.RuleChain;
 import org.thingsboard.server.dao.rule.RuleChainService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
+/**
+ * Default implementation of {@link TbEdgeService}.
+ */
 
 @AllArgsConstructor
 @TbCoreComponent
@@ -40,6 +43,15 @@ import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 public class DefaultTbEdgeService extends AbstractTbEntityService implements TbEdgeService {
 
     private final RuleChainService ruleChainService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param edge edge ({@link Edge})
+     * @param edgeTemplateRootRuleChain edge template root rule chain ({@link RuleChain})
+     * @param user authenticated user performing the action
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Edge save(Edge edge, RuleChain edgeTemplateRootRuleChain, User user) throws Exception {
@@ -66,6 +78,14 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(Edge edge, User user) {
@@ -81,6 +101,16 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
             throw e;
         }
     }
+    /**
+     * Assigns edge to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link Edge}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Edge assignEdgeToCustomer(TenantId tenantId, EdgeId edgeId, Customer customer, User user) throws ThingsboardException {
@@ -98,6 +128,15 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
             throw e;
         }
     }
+    /**
+     * Unassigns edge from customer.
+     *
+     * @param edge edge ({@link Edge})
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link Edge}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Edge unassignEdgeFromCustomer(Edge edge, Customer customer, User user) throws ThingsboardException {
@@ -116,6 +155,15 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
             throw e;
         }
     }
+    /**
+     * Assigns edge to public customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param edgeId edge id ({@link EdgeId})
+     * @param user authenticated user performing the action
+     * @return {@link Edge}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Edge assignEdgeToPublicCustomer(TenantId tenantId, EdgeId edgeId, User user) throws ThingsboardException {
@@ -135,6 +183,15 @@ public class DefaultTbEdgeService extends AbstractTbEntityService implements TbE
             throw e;
         }
     }
+    /**
+     * Set edge root rule chain.
+     *
+     * @param edge edge ({@link Edge})
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @param user authenticated user performing the action
+     * @return {@link Edge}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Edge setEdgeRootRuleChain(Edge edge, RuleChainId ruleChainId, User user) throws Exception {

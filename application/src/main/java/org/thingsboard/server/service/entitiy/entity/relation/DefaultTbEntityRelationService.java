@@ -28,6 +28,9 @@ import org.thingsboard.server.common.data.relation.EntityRelation;
 import org.thingsboard.server.dao.relation.RelationService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
+/**
+ * Default implementation of {@link TbEntityRelationService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -35,6 +38,16 @@ import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 public class DefaultTbEntityRelationService extends AbstractTbEntityService implements TbEntityRelationService {
 
     private final RelationService relationService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param relation relation ({@link EntityRelation})
+     * @param user authenticated user performing the action
+     * @return {@link EntityRelation}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public EntityRelation save(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user) throws ThingsboardException {
@@ -50,6 +63,16 @@ public class DefaultTbEntityRelationService extends AbstractTbEntityService impl
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param relation relation ({@link EntityRelation})
+     * @param user authenticated user performing the action
+     * @return {@link EntityRelation}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public EntityRelation delete(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user) throws ThingsboardException {
@@ -67,6 +90,16 @@ public class DefaultTbEntityRelationService extends AbstractTbEntityService impl
             throw e;
         }
     }
+    /**
+     * Deletes common relations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param customerId customer id ({@link CustomerId})
+     * @param entityId target entity identifier
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteCommonRelations(TenantId tenantId, CustomerId customerId, EntityId entityId, User user) {

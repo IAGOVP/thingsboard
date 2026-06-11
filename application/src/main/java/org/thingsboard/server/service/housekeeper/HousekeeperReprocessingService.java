@@ -41,6 +41,10 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+    /**
+     * Spring service component for housekeeper reprocessing service (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @TbCoreComponent
 @Service
 @Slf4j
@@ -69,6 +73,12 @@ public class HousekeeperReprocessingService {
         this.producer = queueFactory.createHousekeeperReprocessingMsgProducer();
         this.submitTpi = TopicPartitionInfo.builder().topic(producer.getDefaultTopic()).build();
     }
+    /**
+     * After start up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void afterStartUp() {
@@ -92,6 +102,14 @@ public class HousekeeperReprocessingService {
         }
         consumer.commit();
     }
+    /**
+     * Submit for reprocessing.
+     *
+     * @param msg msg ({@link ToHousekeeperServiceMsg})
+     * @param error error ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void submitForReprocessing(ToHousekeeperServiceMsg msg, Throwable error) {
         HousekeeperTaskProto task = msg.getTask();

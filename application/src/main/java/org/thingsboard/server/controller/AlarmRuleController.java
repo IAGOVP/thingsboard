@@ -73,6 +73,16 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST controller for alarm rule (calculated field) definitions.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN}.
+ *
+ * <p>Related services: {@link org.thingsboard.server.service.entitiy.cf.TbCalculatedFieldService},
+ * {@link org.thingsboard.server.dao.event.EventService}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -97,6 +107,14 @@ public class AlarmRuleController extends BaseController {
             + MARKDOWN_CODE_BLOCK_END
             + "\n\n Expected result JSON contains \"output\" and \"error\".";
 
+    /**
+     * Create Or Update Alarm Rule (saveAlarmRule).
+     *
+     * <p>HTTP POST {@code /api/alarm/rule}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create Or Update Alarm Rule (saveAlarmRule)",
             notes = "Creates or Updates the Alarm Rule. When creating alarm rule, platform generates Alarm Rule Id as " + UUID_WIKI_LINK +
                     "The newly created Alarm Rule Id will be present in the response. " +
@@ -119,6 +137,14 @@ public class AlarmRuleController extends BaseController {
         return AlarmRuleDefinition.fromCalculatedField(saved);
     }
 
+    /**
+     * Get Alarm Rule (getAlarmRuleById).
+     *
+     * <p>HTTP GET {@code /api/alarm/rule/{alarmRuleId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Alarm Rule (getAlarmRuleById)",
             notes = "Fetch the Alarm Rule object based on the provided Alarm Rule Id." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -131,6 +157,14 @@ public class AlarmRuleController extends BaseController {
         return AlarmRuleDefinition.fromCalculatedField(calculatedField);
     }
 
+    /**
+     * Get Alarm Rules by Entity Id (getAlarmRulesByEntityId).
+     *
+     * <p>HTTP GET {@code /api/alarm/rules/{entityType}/{entityId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Alarm Rules by Entity Id (getAlarmRulesByEntityId)",
             notes = "Fetch the Alarm Rules based on the provided Entity Id." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -151,6 +185,14 @@ public class AlarmRuleController extends BaseController {
         return result.mapData(AlarmRuleDefinition::fromCalculatedField);
     }
 
+    /**
+     * Get alarm rules (getAlarmRules).
+     *
+     * <p>HTTP GET {@code /api/alarm/rules}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get alarm rules (getAlarmRules)",
             notes = "Fetch tenant alarm rules based on the filter." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -191,6 +233,14 @@ public class AlarmRuleController extends BaseController {
         return result.mapData(AlarmRuleDefinitionInfo::fromCalculatedFieldInfo);
     }
 
+    /**
+     * Get alarm rule names (getAlarmRuleNames).
+     *
+     * <p>HTTP GET {@code /api/alarm/rules/names}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get alarm rule names (getAlarmRuleNames)",
             notes = "Fetch the list of alarm rule names." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -207,6 +257,14 @@ public class AlarmRuleController extends BaseController {
         return calculatedFieldService.findCalculatedFieldNamesByTenantIdAndType(getTenantId(), CalculatedFieldType.ALARM, pageLink);
     }
 
+    /**
+     * Delete Alarm Rule (deleteAlarmRule).
+     *
+     * <p>HTTP DELETE {@code /api/alarm/rule/{alarmRuleId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete Alarm Rule (deleteAlarmRule)",
             notes = "Deletes the alarm rule. Referencing non-existing Alarm Rule Id will cause an error." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -220,6 +278,14 @@ public class AlarmRuleController extends BaseController {
         tbCalculatedFieldService.delete(calculatedField, getCurrentUser());
     }
 
+    /**
+     * Get latest alarm rule debug event (getLatestAlarmRuleDebugEvent).
+     *
+     * <p>HTTP GET {@code /api/alarm/rule/{alarmRuleId}/debug}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get latest alarm rule debug event (getLatestAlarmRuleDebugEvent)",
             notes = "Gets latest alarm rule debug event for specified alarm rule id. " +
                     "Referencing non-existing alarm rule id will cause an error. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -236,6 +302,14 @@ public class AlarmRuleController extends BaseController {
                 .orElse(null);
     }
 
+    /**
+     * Test alarm rule TBEL expression (testAlarmRuleScript).
+     *
+     * <p>HTTP POST {@code /api/alarm/rule/testScript}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Test alarm rule TBEL expression (testAlarmRuleScript)",
             notes = TEST_SCRIPT_EXPRESSION + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")

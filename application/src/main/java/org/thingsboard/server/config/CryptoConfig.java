@@ -19,9 +19,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * Spring configuration for cryptographic primitives used across the ThingsBoard server.
+ *
+ * <p>Registers a {@link BCryptPasswordEncoder} bean for hashing and verifying user passwords
+ * during authentication. BCrypt is used because it is adaptive (work factor) and resistant
+ * to rainbow-table attacks. The encoder is injected wherever password comparison or hashing
+ * is required (e.g. REST login, user registration, password reset flows).
+ */
 @Configuration
 public class CryptoConfig {
 
+    /**
+     * Creates the application-wide password encoder bean.
+     *
+     * <p>Uses the default BCrypt strength (10 rounds). All stored user passwords are
+     * expected to be BCrypt hashes; plaintext passwords are never persisted.
+     *
+     * @return a {@link BCryptPasswordEncoder} shared by authentication providers
+     */
     @Bean
     protected BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

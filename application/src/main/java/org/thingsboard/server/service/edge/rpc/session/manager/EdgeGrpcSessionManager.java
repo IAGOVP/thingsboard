@@ -27,6 +27,10 @@ import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.BiConsumer;
 
+/**
+ * Contract for edge grpc session manager in edge gRPC session lifecycle.
+ */
+
 public interface EdgeGrpcSessionManager {
 
     StreamObserver<RequestMsg> initInputStream(StreamObserver<ResponseMsg> outputStream,

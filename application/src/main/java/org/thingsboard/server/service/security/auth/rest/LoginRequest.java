@@ -18,6 +18,9 @@ package org.thingsboard.server.service.security.auth.rest;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+/**
+ * DTO for username/password REST login: login request.
+ */
 
 @Schema
 public class LoginRequest {
@@ -32,11 +35,19 @@ public class LoginRequest {
         this.password = password;
     }
 
+    /**
+     * Returns username.
+     *
+     */
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "User email", example = "tenant@thingsboard.org")
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Returns password.
+     *
+     */
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "User password", example = "tenant")
     public String getPassword() {
         return password;

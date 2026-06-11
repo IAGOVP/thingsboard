@@ -21,6 +21,11 @@ import org.thingsboard.server.service.subscription.SubscriptionErrorCode;
 
 import java.util.List;
 
+/**
+ * Outbound WebSocket update payload for data.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
+
 public abstract class DataUpdate<T> extends CmdUpdate {
 
     @Getter
@@ -28,15 +33,38 @@ public abstract class DataUpdate<T> extends CmdUpdate {
     @Getter
     private final List<T> update;
 
+    /**
+     * Constructs {@link DataUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param data data
+     * @param update subscription update payload
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     */
+
     public DataUpdate(int cmdId, PageData<T> data, List<T> update, int errorCode, String errorMsg) {
         super(cmdId, errorCode, errorMsg);
         this.data = data;
         this.update = update;
     }
 
+    /**
+     * Constructs {@link DataUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param data data
+     * @param update subscription update payload
+     */
+
     public DataUpdate(int cmdId, PageData<T> data, List<T> update) {
         this(cmdId, data, update, SubscriptionErrorCode.NO_ERROR.getCode(), null);
     }
+
+    /**
+     * Constructs {@link DataUpdate} with the supplied dependencies and configuration.
+     * @param cmdId client command id
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     */
 
     public DataUpdate(int cmdId, int errorCode, String errorMsg) {
         this(cmdId, null, null, errorCode, errorMsg);

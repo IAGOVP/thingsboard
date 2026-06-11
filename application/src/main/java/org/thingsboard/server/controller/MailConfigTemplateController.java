@@ -34,6 +34,15 @@ import java.io.IOException;
 
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST API for retrieving predefined SMTP mail server configuration templates.
+ *
+ * <p>Base path: {@code /api/mail/config/template}.
+ *
+ * <p>Authorization: {@code SYS_ADMIN} or {@code TENANT_ADMIN} with {@code ADMIN_SETTINGS} read permission.
+ *
+ * <p>Uses {@link org.thingsboard.server.service.mail.TbMailConfigTemplateService} to load template definitions.
+ */
 @RestController
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -43,6 +52,16 @@ public class MailConfigTemplateController extends BaseController {
     private static final String MAIL_CONFIG_TEMPLATE_DEFINITION = "Mail configuration template is set of default smtp settings for mail server that specific provider supports";
     private final TbMailConfigTemplateService mailConfigTemplateService;
 
+    /**
+     * GET {@code /api/mail/config/template} — Return all predefined mail server configuration templates.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * with {@code ADMIN_SETTINGS} read permission.
+     *
+     * @return JSON array of mail configuration templates grouped by provider
+     * @throws ThingsboardException if the caller lacks admin settings read permission
+     * @throws IOException if template resources cannot be read
+     */
     @ApiOperation(value = "Get the list of all OAuth2 client registration templates (getMailConfigTemplates)" + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH,
             notes = MAIL_CONFIG_TEMPLATE_DEFINITION)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")

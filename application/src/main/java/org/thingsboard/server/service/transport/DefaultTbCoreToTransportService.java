@@ -33,6 +33,12 @@ import java.util.function.Consumer;
 
 import static org.thingsboard.server.dao.model.ModelConstants.NULL_UUID;
 
+    /**
+     * Default Spring implementation for tb core to transport service (tb-core to transport microservice messaging).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 @TbCoreComponent
@@ -45,11 +51,29 @@ public class DefaultTbCoreToTransportService implements TbCoreToTransportService
         this.topicService = topicService;
         this.tbTransportProducer = tbQueueProducerProvider.getTransportNotificationsMsgProducer();
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param nodeId node id ({@link String})
+     * @param msg msg ({@link ToTransportMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(String nodeId, ToTransportMsg msg) {
         process(nodeId, msg, null, null);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param nodeId node id ({@link String})
+     * @param msg msg ({@link ToTransportMsg})
+     * @param onSuccess on success ({@link Runnable})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(String nodeId, ToTransportMsg msg, Runnable onSuccess, Consumer<Throwable> onFailure) {
@@ -75,6 +99,13 @@ public class DefaultTbCoreToTransportService implements TbCoreToTransportService
             this.onSuccess = onSuccess;
             this.onFailure = onFailure;
         }
+        /**
+         * Handles success.
+         *
+         * @param metadata metadata ({@link TbQueueMsgMetadata})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onSuccess(TbQueueMsgMetadata metadata) {
@@ -82,6 +113,13 @@ public class DefaultTbCoreToTransportService implements TbCoreToTransportService
                 onSuccess.run();
             }
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {

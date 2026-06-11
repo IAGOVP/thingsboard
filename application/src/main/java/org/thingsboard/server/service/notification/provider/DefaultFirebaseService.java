@@ -40,6 +40,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Default Spring implementation for firebase service (notification delivery, templates, targets, and rule-trigger processing).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 public class DefaultFirebaseService implements FirebaseService {
@@ -52,6 +58,19 @@ public class DefaultFirebaseService implements FirebaseService {
                 }
             })
             .build();
+    /**
+     * Send message.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param credentials credentials ({@link String})
+     * @param fcmToken fcm token ({@link String})
+     * @param title title ({@link String})
+     * @param body body ({@link String})
+     * @param data data ({@link Map})
+     * @param badge badge ({@link Integer})
+     * @return nothing
+     * @throws FirebaseMessagingException if firebase messaging exception is thrown during processing
+     */
 
     @Override
     public void sendMessage(TenantId tenantId, String credentials, String fcmToken, String title, String body,
@@ -128,6 +147,13 @@ public class DefaultFirebaseService implements FirebaseService {
             }
             log.debug("[{}] Initialized new FirebaseContext", key);
         }
+        /**
+         * Checks the requested data.
+         *
+         * @param credentials credentials ({@link String})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public void check(String credentials) {
             if (!this.credentials.equals(credentials)) {
@@ -138,6 +164,12 @@ public class DefaultFirebaseService implements FirebaseService {
                 throw new IllegalStateException("Firebase app couldn't be initialized");
             }
         }
+        /**
+         * Destroy.
+         *
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         public void destroy() {
             if (app != null) {

@@ -24,7 +24,10 @@ import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldCtx;
 
-/** Relation create/delete affecting CF linked-entity arguments. */
+/**
+ * Entity relation change that may affect calculated-field argument resolution.
+ */
+
 @Data
 public class CalculatedFieldRelationActionMsg implements ToCalculatedFieldSystemMsg {
 
@@ -44,6 +47,14 @@ public class CalculatedFieldRelationActionMsg implements ToCalculatedFieldSystem
         this.calculatedField = calculatedField;
         this.callback = callback;
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

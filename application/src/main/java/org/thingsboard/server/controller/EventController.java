@@ -66,6 +66,17 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_ID;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_ID_PARAM_DESCRIPTION;
 
+/**
+ * REST API for querying and clearing platform events (errors, lifecycle, statistics, debug).
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER} with entity read/write checks.
+ *
+ * <p>Uses {@link org.thingsboard.server.dao.event.EventService}.
+ */
+
+
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -114,6 +125,23 @@ public class EventController extends BaseController {
     @Autowired
     private EventService eventService;
 
+    /**
+     * GET {@code /api/events/{entityType}/{entityId}/{eventType}} — List events of a given type for an entity.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strEntityType entity type string
+     * @param strEntityId entity UUID string
+     * @param eventType event type name
+     * @param strTenantId tenant UUID string
+     * @param pageSize items per page
+     * @param page zero-based page index
+     * @param textSearch optional text filter
+     * @param sortProperty optional sort field ({@code ts} or {@code id})
+     * @param sortOrder optional sort direction
+     * @param startTime optional start timestamp filter
+     * @param endTime optional end timestamp filter
+     * @return page of {@link org.thingsboard.server.common.data.EventInfo}
+     * @throws ThingsboardException if entity or event type is invalid
+     */
     @ApiOperation(value = "Get Events by type (getEventsByType)",
             notes = "Returns a page of events for specified entity by specifying event type. " +
                     PAGE_DATA_PARAMETERS)
@@ -154,6 +182,23 @@ public class EventController extends BaseController {
     }
 
 
+    /**
+     * GET {@code /api/events/{entityType}/{entityId}} — Deprecated lifecycle-events-only listing (hidden API).
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strEntityType entity type string
+     * @param strEntityId entity UUID string
+     * @param strTenantId tenant UUID string
+     * @param pageSize items per page
+     * @param page zero-based page index
+     * @param textSearch optional text filter
+     * @param sortProperty optional sort field
+     * @param sortOrder optional sort direction
+     * @param startTime optional start timestamp
+     * @param endTime optional end timestamp
+     * @return page of lifecycle {@link org.thingsboard.server.common.data.EventInfo}
+     * @throws ThingsboardException if entity access is denied
+     * @deprecated use typed or filter-based endpoints instead
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/events/{entityType}/{entityId}", method = RequestMethod.GET)
@@ -191,6 +236,23 @@ public class EventController extends BaseController {
         return checkNotNull(eventService.findEvents(tenantId, entityId, EventType.LC_EVENT, pageLink));
     }
 
+    /**
+     * POST {@code /api/events/{entityType}/{entityId}} — List events matching an {@link org.thingsboard.server.common.data.event.EventFilter}.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strEntityType entity type string
+     * @param strEntityId entity UUID string
+     * @param strTenantId tenant UUID string
+     * @param pageSize items per page
+     * @param page zero-based page index
+     * @param eventFilter JSON event filter body
+     * @param textSearch optional text filter
+     * @param sortProperty optional sort field
+     * @param sortOrder optional sort direction
+     * @param startTime optional start timestamp
+     * @param endTime optional end timestamp
+     * @return page of {@link org.thingsboard.server.common.data.EventInfo}
+     * @throws ThingsboardException if entity access is denied
+     */
     @ApiOperation(value = "Get Events by event filter (getEventsByFilter)",
             notes = "Returns a page of events for the chosen entity by specifying the event filter. " +
                     PAGE_DATA_PARAMETERS + NEW_LINE +
@@ -232,6 +294,16 @@ public class EventController extends BaseController {
         return checkNotNull(eventService.findEventsByFilter(tenantId, entityId, eventFilter, pageLink));
     }
 
+    /**
+     * POST {@code /api/events/{entityType}/{entityId}/clear} — Delete events matching filter and time range.
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}.
+     * @param strEntityType entity type string
+     * @param strEntityId entity UUID string
+     * @param startTime optional start timestamp
+     * @param endTime optional end timestamp
+     * @param eventFilter JSON event filter body
+     * @throws ThingsboardException if entity write access is denied
+     */
     @ApiOperation(value = "Clear Events (clearEvents)", notes = "Clears events by filter for specified entity.")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @RequestMapping(value = "/events/{entityType}/{entityId}/clear", method = RequestMethod.POST)

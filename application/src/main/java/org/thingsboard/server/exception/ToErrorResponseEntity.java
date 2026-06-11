@@ -19,8 +19,22 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.Serializable;
 
+/**
+ * Contract for domain exceptions that can be converted into Spring HTTP error responses.
+ *
+ * <p>Implementations are used by controllers and services to map checked API exceptions
+ * (such as {@link EntityNotFoundException} and {@link AccessDeniedException}) to appropriate
+ * HTTP status codes and response bodies.
+ *
+ * @see UncheckedApiException
+ */
 public interface ToErrorResponseEntity extends Serializable {
 
+    /**
+     * Converts this exception into a Spring {@link ResponseEntity} suitable for REST API clients.
+     *
+     * @return response entity with HTTP status and plain-text or structured body
+     */
     ResponseEntity<String> toErrorResponseEntity();
 
 }

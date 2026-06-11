@@ -109,6 +109,15 @@ import static org.thingsboard.server.controller.ControllerConstants.USER_TEXT_SE
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 import static org.thingsboard.server.dao.entity.BaseEntityService.NULL_CUSTOMER_ID;
 
+/**
+ * REST API for user lifecycle, credentials, impersonation tokens, preferences, and mobile sessions.
+ *
+ * <p>Base path: {@code /api/user} (and related {@code /api/users} list endpoints). Most operations
+ * require JWT authentication; scope checks depend on authority ({@code SYS_ADMIN}, {@code TENANT_ADMIN},
+ * {@code CUSTOMER_USER}).
+ *
+ * @see org.thingsboard.server.service.entitiy.user.TbUserService
+ */
 @RequiredArgsConstructor
 @RestController
 @TbCoreComponent
@@ -130,6 +139,16 @@ public class UserController extends BaseController {
     private final EntityQueryService entityQueryService;
     private final EntityService entityService;
 
+    /**
+     * Fetches a user by id with authority-scoped access checks.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/{userId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param strUserId string UUID of the user
+     * @return {@link User} entity
+     * @throws ThingsboardException if the user is not found or access is denied
+     */
     @ApiOperation(value = "Get User (getUserById)",
             notes = "Fetch the User object based on the provided User Id. " +
                     "If the user has the authority of 'SYS_ADMIN', the server does not perform additional checks. " +
@@ -147,6 +166,14 @@ public class UserController extends BaseController {
         return user;
     }
 
+    /**
+     * Reports whether administrator user-token impersonation is enabled in server config.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/tokenAccessEnabled}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @return {@code true} when {@code security.user_token_access_enabled} is enabled
+     */
     @ApiOperation(value = "Check Token Access Enabled (isUserTokenAccessEnabled)",
             notes = "Checks that the system is configured to allow administrators to impersonate themself as other users. " +
                     "If the user who performs the request has the authority of 'SYS_ADMIN', it is possible to login as any tenant administrator. " +
@@ -157,6 +184,16 @@ public class UserController extends BaseController {
         return userTokenAccessEnabled;
     }
 
+    /**
+     * Issues a JWT pair for another user (admin impersonation) when token access is enabled.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/{userId}/token}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} (tenant admins) or {@code TENANT_ADMIN} (customer users)
+     *
+     * @param strUserId target user UUID
+     * @return JWT access/refresh pair for the target user
+     * @throws ThingsboardException if impersonation is disabled or access is denied
+     */
     @ApiOperation(value = "Get User Token (getUserToken)",
             notes = "Returns the token of the User based on the provided User Id. " +
                     "If the user who performs the request has the authority of 'SYS_ADMIN', it is possible to get the token of any tenant administrator. " +
@@ -180,6 +217,18 @@ public class UserController extends BaseController {
         return tokenFactory.createTokenPair(securityUser);
     }
 
+    /**
+     * Creates or updates a user; optionally sends an activation email.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/user?sendActivationMail=true|false}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param user user JSON body (omit {@code id} to create)
+     * @param sendActivationMail whether to email an activation link
+     * @param request HTTP request for activation link generation
+     * @return saved {@link User}
+     * @throws ThingsboardException on validation or permission errors
+     */
     @ApiOperation(value = "Save Or update User (saveUser)",
             notes = "Create or update the User. When creating user, platform generates User Id as " + UUID_WIKI_LINK +
                     "The newly created User Id will be present in the response. " +
@@ -202,6 +251,16 @@ public class UserController extends BaseController {
         return tbUserService.save(getTenantId(), getCurrentUser().getCustomerId(), user, sendActivationMail, request, getCurrentUser());
     }
 
+    /**
+     * Sends or re-sends the account activation email for a user identified by email address.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/user/sendActivationMail?email=&lt;address&gt;}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param email user email address
+     * @param request HTTP request for activation link generation
+     * @throws ThingsboardException if the user is not found or mail delivery fails
+     */
     @ApiOperation(value = "Send or re-send the activation email",
             notes = "Force send the activation email to the user. Useful to resend the email if user has accidentally deleted it. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -223,6 +282,17 @@ public class UserController extends BaseController {
         }
     }
 
+    /**
+     * Returns the plain-text activation URL for a user.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/{userId}/activationLink}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strUserId user UUID
+     * @param request HTTP request for link base URL resolution
+     * @return activation link string ({@code text/plain})
+     * @throws ThingsboardException if the user is not found or access is denied
+     */
     @ApiOperation(value = "Get activation link (getActivationLink)",
             notes = "Get the activation link for the user. " +
                     "The base url for activation link is configurable in the general settings of system administrator. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -234,6 +304,17 @@ public class UserController extends BaseController {
         return getActivationLinkInfo(strUserId, request).value();
     }
 
+    /**
+     * Returns activation link metadata including TTL for a user.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/{userId}/activationLinkInfo}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strUserId user UUID
+     * @param request HTTP request for link base URL resolution
+     * @return {@link UserActivationLink} with URL and expiration
+     * @throws ThingsboardException if the user is not found or access is denied
+     */
     @ApiOperation(value = "Get activation link info (getActivationLinkInfo)",
             notes = "Get the activation link info for the user. " +
                     "The base url for activation link is configurable in the general settings of system administrator. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -249,6 +330,15 @@ public class UserController extends BaseController {
         return tbUserService.getActivationLink(securityUser.getTenantId(), securityUser.getCustomerId(), userId, request);
     }
 
+    /**
+     * Deletes a user and associated credentials and relations.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/user/{userId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strUserId user UUID to delete
+     * @throws ThingsboardException if self-delete, last tenant admin, or permission errors occur
+     */
     @ApiOperation(value = "Delete User (deleteUser)",
             notes = "Deletes the User, it's credentials and all the relations (from and to the User). " +
                     "Referencing non-existing User Id will cause an error. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -270,6 +360,20 @@ public class UserController extends BaseController {
         tbUserService.delete(getTenantId(), getCurrentUser().getCustomerId(), user, getCurrentUser());
     }
 
+    /**
+     * Returns a paginated list of users in the caller's tenant or customer scope.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/users?pageSize=&amp;page=&amp;textSearch=&amp;sortProperty=&amp;sortOrder=}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @param pageSize page size
+     * @param page zero-based page index
+     * @param textSearch optional filter on name/email
+     * @param sortProperty sort field
+     * @param sortOrder {@code ASC} or {@code DESC}
+     * @return page of {@link User} entities
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get Users (getUsers)",
             notes = "Returns a page of users owned by tenant or customer. The scope depends on authority of the user that performs the request." +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -295,6 +399,20 @@ public class UserController extends BaseController {
         }
     }
 
+    /**
+     * Searches users by email, first name, and last name via entity query.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/users/info?pageSize=&amp;page=&amp;...}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @param pageSize page size
+     * @param page zero-based page index
+     * @param textSearch optional search text
+     * @param sortProperty sort field
+     * @param sortOrder {@code ASC} or {@code DESC}
+     * @return page of lightweight {@link UserEmailInfo} records
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Find users by query (findUsersByQuery)",
             notes = "Returns page of user data objects. Search is been executed by email, firstName and " +
                     "lastName fields. " + PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -332,6 +450,21 @@ public class UserController extends BaseController {
         });
     }
 
+    /**
+     * Lists tenant administrator users for a given tenant (system administrator only).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/tenant/{tenantId}/users?pageSize=&amp;page=&amp;...}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     *
+     * @param strTenantId tenant UUID
+     * @param pageSize page size
+     * @param page zero-based page index
+     * @param textSearch optional filter
+     * @param sortProperty sort field
+     * @param sortOrder {@code ASC} or {@code DESC}
+     * @return page of tenant admin {@link User} records
+     * @throws ThingsboardException if tenant id is invalid
+     */
     @ApiOperation(value = "Get Tenant Users (getTenantAdmins)",
             notes = "Returns a page of users owned by tenant. " + PAGE_DATA_PARAMETERS + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -355,6 +488,21 @@ public class UserController extends BaseController {
         return checkNotNull(userService.findTenantAdmins(tenantId, pageLink));
     }
 
+    /**
+     * Lists customer users for a given customer (tenant administrator only).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/customer/{customerId}/users?pageSize=&amp;page=&amp;...}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strCustomerId customer UUID
+     * @param pageSize page size
+     * @param page zero-based page index
+     * @param textSearch optional filter
+     * @param sortProperty sort field
+     * @param sortOrder {@code ASC} or {@code DESC}
+     * @return page of customer {@link User} records
+     * @throws ThingsboardException if customer access is denied
+     */
     @ApiOperation(value = "Get Customer Users (getCustomerUsers)",
             notes = "Returns a page of users owned by customer. " + PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -380,6 +528,16 @@ public class UserController extends BaseController {
         return checkNotNull(userService.findCustomerUsers(tenantId, customerId, pageLink));
     }
 
+    /**
+     * Enables or disables a user's login credentials without deleting the account.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/user/{userId}/userCredentialsEnabled?userCredentialsEnabled=true|false}
+     * <p><b>Auth:</b> {@code SYS_ADMIN} or {@code TENANT_ADMIN}
+     *
+     * @param strUserId user UUID
+     * @param userCredentialsEnabled {@code true} to enable, {@code false} to disable
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Enable/Disable User credentials (setUserCredentialsEnabled)",
             notes = "Enables or Disables user credentials. Useful when you would like to block user account without deleting it. " + PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -400,6 +558,21 @@ public class UserController extends BaseController {
         }
     }
 
+    /**
+     * Returns users eligible for assignment to the given alarm.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/users/assign/{alarmId}?pageSize=&amp;page=&amp;...}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @param strAlarmId alarm UUID
+     * @param pageSize page size
+     * @param page zero-based page index
+     * @param textSearch optional filter
+     * @param sortProperty sort field
+     * @param sortOrder {@code ASC} or {@code DESC}
+     * @return page of {@link UserEmailInfo} candidates
+     * @throws ThingsboardException if the alarm is not accessible
+     */
     @ApiOperation(value = "Get usersForAssign (getUsersForAssign)",
             notes = "Returns page of user data objects that can be assigned to provided alarmId. " +
                     "Search is been executed by email, firstName and lastName fields. " +
@@ -443,6 +616,16 @@ public class UserController extends BaseController {
         return pageData.mapData(user -> new UserEmailInfo(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName()));
     }
 
+    /**
+     * Replaces the caller's general user settings JSON document.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/user/settings}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param settings JSON settings object
+     * @return saved settings JSON
+     * @throws ThingsboardException on persistence errors
+     */
     @ApiOperation(value = "Save user settings (saveUserSettings)",
             notes = "Save user settings represented in json format for authorized user. ")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -457,6 +640,15 @@ public class UserController extends BaseController {
         return userSettingsService.saveUserSettings(currentUser.getTenantId(), userSettings).getSettings();
     }
 
+    /**
+     * Merges partial updates into the caller's general user settings (legacy path).
+     *
+     * <p><b>HTTP:</b> {@code PUT /api/user/settings}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param settings JSON fragment to merge
+     * @throws ThingsboardException on persistence errors
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PutMapping(value = "/user/settings")
@@ -465,6 +657,15 @@ public class UserController extends BaseController {
         userSettingsService.updateUserSettings(currentUser.getTenantId(), currentUser.getId(), UserSettingsType.GENERAL, settings);
     }
 
+    /**
+     * Merges partial updates into the caller's general user settings.
+     *
+     * <p><b>HTTP:</b> {@code PUT /api/user/settings/general}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param settings JSON fragment to merge (supports nested xpath-style keys)
+     * @throws ThingsboardException on persistence errors
+     */
     @ApiOperation(value = "Update user settings (putGeneralUserSettings)",
             notes = "Update user settings for authorized user. Only specified json elements will be updated." +
                     "Example: you have such settings: {A:5, B:{C:10, D:20}}. Updating it with {B:{C:10, D:30}} will result in" +
@@ -475,6 +676,15 @@ public class UserController extends BaseController {
         putUserSettings(settings);
     }
 
+    /**
+     * Returns the caller's general user settings (legacy path).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/settings}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @return settings JSON or empty object if none saved
+     * @throws ThingsboardException on load errors
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/user/settings")
@@ -485,6 +695,15 @@ public class UserController extends BaseController {
         return userSettings == null ? JacksonUtil.newObjectNode() : userSettings.getSettings();
     }
 
+    /**
+     * Returns the caller's general user settings.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/settings/general}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @return settings JSON or empty object if none saved
+     * @throws ThingsboardException on load errors
+     */
     @ApiOperation(value = "Get user settings (getGeneralUserSettings)",
             notes = "Fetch the User settings based on authorized user. ")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -493,6 +712,15 @@ public class UserController extends BaseController {
         return getUserSettings();
     }
 
+    /**
+     * Deletes selected JSON paths from the caller's general user settings.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/user/settings/{paths}} (comma-separated xpaths)
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param paths comma-separated JSON element paths to remove
+     * @throws ThingsboardException on validation or persistence errors
+     */
     @ApiOperation(value = "Delete user settings (deleteGeneralUserSettings)",
             notes = "Delete user settings by specifying list of json element xpaths. \n " +
                     "Example: to delete B and C element in { \"A\": {\"B\": 5}, \"C\": 15} send A.B,C in jsonPaths request parameter")
@@ -506,6 +734,16 @@ public class UserController extends BaseController {
         userSettingsService.deleteUserSettings(currentUser.getTenantId(), currentUser.getId(), UserSettingsType.GENERAL, Arrays.asList(paths.split(",")));
     }
 
+    /**
+     * Merges partial updates into typed user settings ({@code quick_links}, {@code doc_links}, etc.).
+     *
+     * <p><b>HTTP:</b> {@code PUT /api/user/settings/{type}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param strType settings type name (case insensitive)
+     * @param settings JSON fragment to merge
+     * @throws ThingsboardException if type is reserved or invalid
+     */
     @ApiOperation(value = "Update user settings (putUserSettings)",
             notes = "Update user settings for authorized user. Only specified json elements will be updated." +
                     "Example: you have such settings: {A:5, B:{C:10, D:20}}. Updating it with {B:{C:10, D:30}} will result in" +
@@ -520,6 +758,16 @@ public class UserController extends BaseController {
         userSettingsService.updateUserSettings(currentUser.getTenantId(), currentUser.getId(), type, settings);
     }
 
+    /**
+     * Returns typed user settings for the authenticated user.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/settings/{type}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param strType settings type name (case insensitive)
+     * @return settings JSON or empty object if none saved
+     * @throws ThingsboardException if type is reserved or invalid
+     */
     @ApiOperation(value = "Get user settings (getUserSettings)",
             notes = "Fetch the User settings based on authorized user. ")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -533,6 +781,16 @@ public class UserController extends BaseController {
         return userSettings == null ? JacksonUtil.newObjectNode() : userSettings.getSettings();
     }
 
+    /**
+     * Deletes selected JSON paths from typed user settings.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/user/settings/{type}/{paths}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param paths comma-separated JSON element paths to remove
+     * @param strType settings type name
+     * @throws ThingsboardException if type is reserved or invalid
+     */
     @ApiOperation(value = "Delete user settings by type (deleteUserSettingsByType)",
             notes = "Delete user settings by specifying list of json element xpaths. \n " +
                     "Example: to delete B and C element in { \"A\": {\"B\": 5}, \"C\": 15} send A.B,C in jsonPaths request parameter")
@@ -549,6 +807,15 @@ public class UserController extends BaseController {
         userSettingsService.deleteUserSettings(currentUser.getTenantId(), currentUser.getId(), type, Arrays.asList(paths.split(",")));
     }
 
+    /**
+     * Returns last visited and starred dashboard lists (legacy path).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/dashboards}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @return {@link UserDashboardsInfo} with up to 10 entries per list
+     * @throws ThingsboardException on load errors
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/user/dashboards")
@@ -557,6 +824,15 @@ public class UserController extends BaseController {
         return userSettingsService.findUserDashboardsInfo(currentUser.getTenantId(), currentUser.getId());
     }
 
+    /**
+     * Returns last visited and starred dashboard lists for the authenticated user.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/lastVisitedDashboards}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @return {@link UserDashboardsInfo} with up to 10 entries per list
+     * @throws ThingsboardException on load errors
+     */
     @ApiOperation(value = "Get information about last visited and starred dashboards (getLastVisitedDashboards)",
             notes = "Fetch the list of last visited and starred dashboards. Both lists are limited to 10 items." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -565,6 +841,17 @@ public class UserController extends BaseController {
         return getUserDashboardsInfo();
     }
 
+    /**
+     * Records a dashboard visit, star, or unstar action for the authenticated user.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/dashboards/{dashboardId}/{action}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @param strDashboardId dashboard UUID
+     * @param strAction one of {@code visit}, {@code star}, {@code unstar}
+     * @return updated {@link UserDashboardsInfo}
+     * @throws ThingsboardException if dashboard access is denied
+     */
     @ApiOperation(value = "Report action of User over the dashboard (reportUserDashboardAction)",
             notes = "Report action of User over the dashboard. " + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -583,6 +870,17 @@ public class UserController extends BaseController {
         return userSettingsService.reportUserDashboardAction(currentUser.getTenantId(), currentUser.getId(), dashboardId, action);
     }
 
+    /**
+     * Loads a mobile app session by device token header.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/user/mobile/session}
+     * <p><b>Header:</b> {@code X-Mobile-Token}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param mobileToken mobile device token from {@link #MOBILE_TOKEN_HEADER}
+     * @param user authenticated user
+     * @return {@link MobileSessionInfo} or {@code null} if not found
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping("/user/mobile/session")
     public MobileSessionInfo getMobileSession(@RequestHeader(MOBILE_TOKEN_HEADER) String mobileToken,
@@ -590,6 +888,17 @@ public class UserController extends BaseController {
         return userService.findMobileSession(user.getTenantId(), user.getId(), mobileToken);
     }
 
+    /**
+     * Creates or updates a mobile app session for the authenticated user.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/user/mobile/session}
+     * <p><b>Header:</b> {@code X-Mobile-Token}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param sessionInfo mobile session metadata JSON body
+     * @param mobileToken mobile device token
+     * @param user authenticated user
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @PostMapping("/user/mobile/session")
     public void saveMobileSession(@RequestBody MobileSessionInfo sessionInfo,
@@ -598,6 +907,16 @@ public class UserController extends BaseController {
         userService.saveMobileSession(user.getTenantId(), user.getId(), mobileToken, sessionInfo);
     }
 
+    /**
+     * Removes a mobile app session identified by device token.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/user/mobile/session}
+     * <p><b>Header:</b> {@code X-Mobile-Token}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param mobileToken mobile device token to invalidate
+     * @param user authenticated user
+     */
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
     @DeleteMapping("/user/mobile/session")
     public void removeMobileSession(@RequestHeader(MOBILE_TOKEN_HEADER) String mobileToken,
@@ -605,6 +924,16 @@ public class UserController extends BaseController {
         userService.removeMobileSession(user.getTenantId(), mobileToken);
     }
 
+    /**
+     * Returns users by id list with read-permission filtering (legacy query param API).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/users?userIds=&lt;uuid&gt;,&lt;uuid&gt;}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @param userUUIDs set of user UUIDs
+     * @return list of accessible {@link User} entities
+     * @throws ThingsboardException on authorization failure
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/users", params = {"userIds"})
@@ -619,6 +948,16 @@ public class UserController extends BaseController {
         return filterUsersByReadPermission(users);
     }
 
+    /**
+     * Returns users by id list with read-permission filtering.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/users/list?userIds=&lt;uuid&gt;,&lt;uuid&gt;}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN} or {@code CUSTOMER_USER}
+     *
+     * @param userUUIDs set of user UUIDs
+     * @return list of accessible {@link User} entities
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get Users By Ids (getUsersByIds)",
             notes = "Requested users must be owned by tenant or assigned to customer which user is performing the request. ")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")

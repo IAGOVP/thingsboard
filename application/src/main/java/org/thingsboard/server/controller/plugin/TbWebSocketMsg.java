@@ -15,10 +15,25 @@
  */
 package org.thingsboard.server.controller.plugin;
 
+/**
+ * Typed outbound WebSocket message queued by {@link TbWebSocketHandler.SessionMetaData}.
+ *
+ * @param <T> payload type ({@link String} for text, {@link java.nio.ByteBuffer} for ping)
+ */
 public interface TbWebSocketMsg<T> {
 
+    /**
+     * Returns the wire format discriminator for this message.
+     *
+     * @return {@link TbWebSocketMsgType#TEXT} or {@link TbWebSocketMsgType#PING}
+     */
     TbWebSocketMsgType getType();
 
+    /**
+     * Returns the message payload to send on the wire.
+     *
+     * @return text JSON or empty ping buffer
+     */
     T getMsg();
 
 }

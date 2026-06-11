@@ -34,6 +34,11 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+/**
+ * Grpc server for ThingsBoard Edge integration.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @Slf4j
@@ -65,6 +70,10 @@ public class GrpcServer {
 
     private Server server;
 
+    /**
+     * On start up.
+     *
+     */
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void onStartUp() {
         log.info("Initializing Edge RPC server!");
@@ -122,6 +131,10 @@ public class GrpcServer {
         }
     }
 
+    /**
+     * Releases resources and shuts down background executors.
+     *
+     */
     @PreDestroy
     public void destroy() {
         if (server != null) {

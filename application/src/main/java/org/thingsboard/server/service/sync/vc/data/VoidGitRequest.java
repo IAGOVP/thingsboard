@@ -17,6 +17,12 @@ package org.thingsboard.server.service.sync.vc.data;
 
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+
+ * Git repository integration for void request.
+
+ */
+
 public class VoidGitRequest extends PendingGitRequest<Void> {
 
     public VoidGitRequest(TenantId tenantId) {

@@ -52,6 +52,16 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.controller.ControllerConstants.NEW_LINE;
 
+/**
+ * REST API for the second-factor authentication step during login.
+ *
+ * <p>Base path: {@code /api/auth/2fa}. Endpoints operate on short-lived tokens issued after
+ * primary authentication when 2FA is enabled ({@code PRE_VERIFICATION_TOKEN} or
+ * {@code MFA_CONFIGURATION_TOKEN}), not regular user JWTs.
+ *
+ * @see TwoFactorAuthConfigController
+ * @see org.thingsboard.server.service.security.auth.mfa.TwoFactorAuthService
+ */
 @RestController
 @RequestMapping("/api/auth/2fa")
 @TbCoreComponent
@@ -64,6 +74,16 @@ public class TwoFactorAuthController extends BaseController {
     private final SystemSecurityService systemSecurityService;
     private final UserService userService;
 
+    /**
+     * Sends a 2FA verification code for the selected provider.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/auth/2fa/verification/send?providerType=&lt;type&gt;}
+     * <p><b>Auth:</b> {@code PRE_VERIFICATION_TOKEN} (issued after username/password login when 2FA is required)
+     * <p>Rate-limited per {@link org.thingsboard.server.common.data.security.model.mfa.PlatformTwoFaSettings}.
+     *
+     * @param providerType 2FA provider ({@code EMAIL}, {@code SMS}, {@code TOTP}, etc.)
+     * @throws Exception if the provider is not configured or rate limits are exceeded
+     */
     @ApiOperation(value = "Request 2FA verification code (requestTwoFaVerificationCode)",
             notes = "Request 2FA verification code." + NEW_LINE +
                     "To make a request to this endpoint, you need an access token with the scope of PRE_VERIFICATION_TOKEN, " +
@@ -78,6 +98,19 @@ public class TwoFactorAuthController extends BaseController {
         twoFactorAuthService.prepareVerificationCode(user, providerType, true);
     }
 
+    /**
+     * Validates a 2FA verification code and returns a full JWT pair on success.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/auth/2fa/verification/check?providerType=&lt;type&gt;&amp;verificationCode=&lt;code&gt;}
+     * <p><b>Auth:</b> {@code PRE_VERIFICATION_TOKEN}
+     * <p>Rate-limited; repeated failures may lock the user per platform 2FA settings.
+     *
+     * @param providerType 2FA provider used to send or generate the code
+     * @param verificationCode user-supplied verification code
+     * @param servletRequest HTTP request used for login audit logging
+     * @return access and refresh token pair when verification succeeds
+     * @throws Exception if verification fails, provider is invalid, or limits are exceeded
+     */
     @ApiOperation(value = "Check 2FA verification code (checkTwoFaVerificationCode)",
             notes = "Checks 2FA verification code, and if it is correct the method returns a regular access and refresh token pair." + NEW_LINE +
                     "The API method is rate limited (using rate limit config from TwoFactorAuthSettings), and also will block a user " +
@@ -100,6 +133,15 @@ public class TwoFactorAuthController extends BaseController {
         }
     }
 
+    /**
+     * Lists 2FA providers configured for the current user with obfuscated contact hints.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/auth/2fa/providers}
+     * <p><b>Auth:</b> {@code PRE_VERIFICATION_TOKEN}
+     *
+     * @return list of {@link TwoFaProviderInfo} entries (type, default flag, masked contact)
+     * @throws ThingsboardException if platform 2FA settings cannot be loaded
+     */
     @ApiOperation(value = "Get available 2FA providers (getAvailableTwoFaProviderInfos)", notes =
             "Get the list of 2FA provider infos available for user to use. Example:\n" +
             "```\n[\n" +
@@ -136,6 +178,16 @@ public class TwoFactorAuthController extends BaseController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Completes login after mandatory 2FA setup using an MFA configuration token.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/auth/2fa/login}
+     * <p><b>Auth:</b> {@code MFA_CONFIGURATION_TOKEN} (issued when 2FA must be configured before full access)
+     *
+     * @param servletRequest HTTP request used for login audit logging
+     * @return access and refresh token pair when 2FA is configured for the account
+     * @throws ThingsboardException if 2FA is not yet configured
+     */
     @ApiOperation(value = "Get regular token pair after successfully configuring 2FA",
             notes = "Checks 2FA is configured, returning token pair on success.")
     @PostMapping("/login")
@@ -162,6 +214,11 @@ public class TwoFactorAuthController extends BaseController {
         systemSecurityService.logLoginAction(user, new RestAuthenticationDetails(servletRequest), ActionType.LOGIN, error);
     }
 
+    /**
+     * JSON view of an available 2FA provider during the login verification flow.
+     *
+     * <p>Contact values are obfuscated for email and SMS providers.
+     */
     @Data
     @AllArgsConstructor
     @Builder

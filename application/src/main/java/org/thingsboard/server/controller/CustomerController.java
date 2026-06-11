@@ -70,6 +70,15 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CU
 import static org.thingsboard.server.controller.ControllerConstants.UNIQUIFY_STRATEGY_DESC;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST controller for customer CRUD and lookup.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN} (management), {@code CUSTOMER_USER} (read own customer).
+ *
+ * <p>Related service: {@link org.thingsboard.server.service.entitiy.customer.TbCustomerService}.
+ */
 @RestController
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -82,6 +91,14 @@ public class CustomerController extends BaseController {
     public static final String CUSTOMER_SECURITY_CHECK = "If the user has the authority of 'Tenant Administrator', the server checks that the customer is owned by the same tenant. " +
             "If the user has the authority of 'Customer User', the server checks that the user belongs to the customer.";
 
+    /**
+     * Get Customer (getCustomerById).
+     *
+     * <p>HTTP GET {@code /api/customer/{customerId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Customer (getCustomerById)",
             notes = "Get the Customer object based on the provided Customer Id. "
                     + CUSTOMER_SECURITY_CHECK + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -99,6 +116,14 @@ public class CustomerController extends BaseController {
     }
 
 
+    /**
+     * Get short Customer info (getShortCustomerInfoById).
+     *
+     * <p>HTTP GET {@code /api/customer/{customerId}/shortInfo}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get short Customer info (getShortCustomerInfoById)",
             notes = "Get the short customer object that contains only the title and 'isPublic' flag. "
                     + CUSTOMER_SECURITY_CHECK + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -117,6 +142,14 @@ public class CustomerController extends BaseController {
         return infoObject;
     }
 
+    /**
+     * Get Customer Title (getCustomerTitleById).
+     *
+     * <p>HTTP GET {@code /api/customer/{customerId}/title}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Customer Title (getCustomerTitleById)",
             notes = "Get the title of the customer. "
                     + CUSTOMER_SECURITY_CHECK + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -132,6 +165,14 @@ public class CustomerController extends BaseController {
         return customer.getTitle();
     }
 
+    /**
+     * Create or update Customer (saveCustomer).
+     *
+     * <p>HTTP POST {@code /api/customer}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create or update Customer (saveCustomer)",
             notes = "Creates or Updates the Customer. When creating customer, platform generates Customer Id as " + UUID_WIKI_LINK +
                     "The newly created Customer Id will be present in the response. " +
@@ -154,6 +195,14 @@ public class CustomerController extends BaseController {
         return tbCustomerService.save(customer, new NameConflictStrategy(nameConflictPolicy, uniquifySeparator, uniquifyStrategy), getCurrentUser());
     }
 
+    /**
+     * Delete Customer (deleteCustomer).
+     *
+     * <p>HTTP DELETE {@code /api/customer/{customerId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete Customer (deleteCustomer)",
             notes = "Deletes the Customer and all customer Users. " +
                     "All assigned Dashboards, Assets, Devices, etc. will be unassigned but not deleted. " +
@@ -169,6 +218,14 @@ public class CustomerController extends BaseController {
         tbCustomerService.delete(customer, getCurrentUser());
     }
 
+    /**
+     * Get Tenant Customers (getCustomers).
+     *
+     * <p>HTTP GET {@code /api/customers}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Customers (getCustomers)",
             notes = "Returns a page of customers owned by tenant. " +
                     PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -190,6 +247,14 @@ public class CustomerController extends BaseController {
         return checkNotNull(customerService.findCustomersByTenantId(tenantId, pageLink));
     }
 
+    /**
+     * Get Tenant Customer by Customer title (getTenantCustomer).
+     *
+     * <p>HTTP GET {@code /api/tenant/customers}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Customer by Customer title (getTenantCustomer)",
             notes = "Get the Customer using Customer Title. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -204,6 +269,14 @@ public class CustomerController extends BaseController {
     @Hidden
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/customers", params = {"customerIds"})
+    /**
+     * getCustomersByIdsV1 (internal/hidden endpoint).
+     *
+     * <p>HTTP GET {@code /api/customers}.
+     *
+     * <p>{@code @PreAuthorize}: hasAnyAuthority('TENANT_ADMIN').
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     public List<Customer> getCustomersByIdsV1(
             @Parameter(description = "A list of customer ids, separated by comma ','", array = @ArraySchema(schema = @Schema(type = "string")), required = true)
             @RequestParam("customerIds") Set<UUID> customerUUIDs) throws ThingsboardException {
@@ -215,6 +288,14 @@ public class CustomerController extends BaseController {
         return customerService.findCustomersByTenantIdAndIds(tenantId, customerIds);
     }
 
+    /**
+     * Get customers by Customer Ids (getCustomersByIds).
+     *
+     * <p>HTTP GET {@code /api/customers/list}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get customers by Customer Ids (getCustomersByIds)",
             notes = "Returns a list of Customer objects based on the provided ids." +
                     TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)

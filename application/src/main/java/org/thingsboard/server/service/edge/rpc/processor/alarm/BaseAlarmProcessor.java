@@ -42,12 +42,24 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.thingsboard.server.dao.edge.BaseRelatedEdgesService.RELATED_EDGES_CACHE_ITEMS;
+/**
+ * Processes base alarm edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #alarmCommentDao}.
+ */
 
 @Slf4j
 public abstract class BaseAlarmProcessor extends BaseEdgeProcessor {
 
     @Autowired
     protected AlarmCommentDao alarmCommentDao;
+
+    /**
+     * Processes alarm msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param alarmUpdateMsg alarm update msg (AlarmUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
 
     public ListenableFuture<Void> processAlarmMsg(TenantId tenantId, AlarmUpdateMsg alarmUpdateMsg) {
         log.trace("[{}] processAlarmMsg [{}]", tenantId, alarmUpdateMsg);
@@ -97,6 +109,14 @@ public abstract class BaseAlarmProcessor extends BaseEdgeProcessor {
         return Futures.immediateFuture(null);
     }
 
+    /**
+     * Processes alarm comment msg.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param alarmCommentUpdateMsg alarm comment update msg (AlarmCommentUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
+
     public ListenableFuture<Void> processAlarmCommentMsg(TenantId tenantId, AlarmCommentUpdateMsg alarmCommentUpdateMsg) {
         log.trace("[{}] processAlarmCommentMsg [{}]", tenantId, alarmCommentUpdateMsg);
         AlarmComment alarmComment = JacksonUtil.fromString(alarmCommentUpdateMsg.getEntity(), AlarmComment.class, true);
@@ -131,6 +151,19 @@ public abstract class BaseAlarmProcessor extends BaseEdgeProcessor {
         }
         return Futures.immediateFuture(null);
     }
+
+    /**
+     * Push event to all related edges.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param originatorId originator id (EntityId)
+     * @param alarmId alarm id (AlarmId)
+     * @param actionType action type (EdgeEventActionType)
+     * @param body body (JsonNode)
+     * @param sourceEdgeId source edge id (EdgeId)
+     * @param edgeEventType edge event type (EdgeEventType)
+     * @return {@link List} result
+     */
 
     protected List<ListenableFuture<Void>> pushEventToAllRelatedEdges(TenantId tenantId, EntityId originatorId, AlarmId alarmId,
                                                                       EdgeEventActionType actionType, JsonNode body, EdgeId sourceEdgeId,

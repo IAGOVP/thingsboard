@@ -50,6 +50,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for slack service (notification delivery, templates, targets, and rule-trigger processing).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @RequiredArgsConstructor
 public class DefaultSlackService implements SlackService {
@@ -62,11 +68,32 @@ public class DefaultSlackService implements SlackService {
             .maximumSize(100)
             .build();
     private static final int CONVERSATIONS_LOAD_LIMIT = 1000;
+    /**
+     * Send message.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param token token ({@link String})
+     * @param conversationId conversation id ({@link String})
+     * @param message message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendMessage(TenantId tenantId, String token, String conversationId, String message) {
         sendMessage(tenantId, token, conversationId, message, null);
     }
+    /**
+     * Send message.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param token token ({@link String})
+     * @param conversationId conversation id ({@link String})
+     * @param message message ({@link String})
+     * @param files files ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendMessage(TenantId tenantId, String token, String conversationId, String message, List<SlackFile> files) {
@@ -100,6 +127,15 @@ public class DefaultSlackService implements SlackService {
             sendRequest(token, request, MethodsClient::chatPostMessage);
         }
     }
+    /**
+     * Lists conversations.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param token token ({@link String})
+     * @param conversationType conversation type ({@link SlackConversationType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<SlackConversation> listConversations(TenantId tenantId, String token, SlackConversationType conversationType) {
@@ -146,6 +182,13 @@ public class DefaultSlackService implements SlackService {
             }
         });
     }
+    /**
+     * Returns token.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getToken(TenantId tenantId) {

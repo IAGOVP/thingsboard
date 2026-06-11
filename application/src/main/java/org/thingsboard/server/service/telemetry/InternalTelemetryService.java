@@ -29,11 +29,43 @@ import org.thingsboard.server.common.data.kv.TimeseriesSaveResult;
  */
 public interface InternalTelemetryService extends RuleEngineTelemetryService {
 
+    /**
+     * Saves or persists timeseries internal.
+     *
+     * @param request request payload with operation parameters
+     * @return future completing with {@link TimeseriesSaveResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     ListenableFuture<TimeseriesSaveResult> saveTimeseriesInternal(TimeseriesSaveRequest request);
+
+    /**
+     * Saves or persists attributes internal.
+     *
+     * @param request request payload with operation parameters
+     * @return future completing with {@link AttributesSaveResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<AttributesSaveResult> saveAttributesInternal(AttributesSaveRequest request);
 
+    /**
+     * Deletes timeseries internal.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void deleteTimeseriesInternal(TimeseriesDeleteRequest request);
+
+    /**
+     * Deletes attributes internal.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteAttributesInternal(AttributesDeleteRequest request);
 

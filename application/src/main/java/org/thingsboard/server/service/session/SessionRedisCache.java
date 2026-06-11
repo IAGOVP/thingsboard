@@ -28,16 +28,35 @@ import org.thingsboard.server.common.data.CacheConstants;
 import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.gen.transport.TransportProtos;
 
+    /**
+     * Spring service component for session redis cache (device session and connectivity state).
+     */
+
 @ConditionalOnProperty(prefix = "cache", value = "type", havingValue = "redis")
 @Service("SessionCache")
 public class SessionRedisCache extends RedisTbTransactionalCache<DeviceId, TransportProtos.DeviceSessionsCacheEntry> {
 
     public SessionRedisCache(TBRedisCacheConfiguration configuration, CacheSpecsMap cacheSpecsMap, RedisConnectionFactory connectionFactory) {
         super(CacheConstants.SESSIONS_CACHE, cacheSpecsMap, connectionFactory, configuration, new TbRedisSerializer<>() {
+            /**
+             * Serialize.
+             *
+             * @param deviceSessionsCacheEntry device sessions cache entry
+             * @return the byte[] value
+             * @throws SerializationException if serialization exception is thrown during processing
+             */
             @Override
             public byte[] serialize(TransportProtos.DeviceSessionsCacheEntry deviceSessionsCacheEntry) throws SerializationException {
                 return deviceSessionsCacheEntry.toByteArray();
             }
+            /**
+             * Deserialize.
+             *
+             * @param key key ({@link DeviceId})
+             * @param bytes bytes
+             * @return the TransportProtos.DeviceSessionsCacheEntry value
+             * @throws SerializationException if serialization exception is thrown during processing
+             */
 
             @Override
             public TransportProtos.DeviceSessionsCacheEntry deserialize(DeviceId key, byte[] bytes) throws SerializationException {

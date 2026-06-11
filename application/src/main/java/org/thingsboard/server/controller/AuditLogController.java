@@ -53,6 +53,15 @@ import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TE
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.USER_ID_PARAM_DESCRIPTION;
 
+/**
+ * REST controller for querying audit log entries.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN}; {@code SYS_ADMIN} for tenant-wide and entity audit logs.
+ *
+ * <p>Related service: {@link org.thingsboard.server.dao.audit.AuditLogService}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -68,6 +77,14 @@ public class AuditLogController extends BaseController {
             "Note: entityType sort property is not defined in the AuditLog class, however, it can be used to sort audit logs by types of entities that were logged.";
 
 
+    /**
+     * Get audit logs by customer id (getAuditLogsByCustomerId).
+     *
+     * <p>HTTP GET {@code /api/audit/logs/customer/{customerId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get audit logs by customer id (getAuditLogsByCustomerId)",
             notes = "Returns a page of audit logs related to the targeted customer entities (devices, assets, etc.), " +
                     "and users actions (login, logout, etc.) that belong to this customer. " +
@@ -100,6 +117,14 @@ public class AuditLogController extends BaseController {
         return checkNotNull(auditLogService.findAuditLogsByTenantIdAndCustomerId(tenantId, new CustomerId(UUID.fromString(strCustomerId)), actionTypes, pageLink));
     }
 
+    /**
+     * Get audit logs by user id (getAuditLogsByUserId).
+     *
+     * <p>HTTP GET {@code /api/audit/logs/user/{userId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get audit logs by user id (getAuditLogsByUserId)",
             notes = "Returns a page of audit logs related to the actions of targeted user. " +
                     "For example, RPC call to a particular device, or alarm acknowledgment for a specific device, etc. " +
@@ -132,6 +157,14 @@ public class AuditLogController extends BaseController {
         return checkNotNull(auditLogService.findAuditLogsByTenantIdAndUserId(tenantId, new UserId(UUID.fromString(strUserId)), actionTypes, pageLink));
     }
 
+    /**
+     * Get audit logs by entity id (getAuditLogsByEntityId).
+     *
+     * <p>HTTP GET {@code /api/audit/logs/entity/{entityType}/{entityId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get audit logs by entity id (getAuditLogsByEntityId)",
             notes = "Returns a page of audit logs related to the actions on the targeted entity. " +
                     "Basically, this API call is used to get the full lifecycle of some specific entity. " +
@@ -168,6 +201,14 @@ public class AuditLogController extends BaseController {
         return checkNotNull(auditLogService.findAuditLogsByTenantIdAndEntityId(tenantId, EntityIdFactory.getByTypeAndId(strEntityType, strEntityId), actionTypes, pageLink));
     }
 
+    /**
+     * Get all audit logs (getAuditLogs).
+     *
+     * <p>HTTP GET {@code /api/audit/logs}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get all audit logs (getAuditLogs)",
             notes = "Returns a page of audit logs related to all entities in the scope of the current user's Tenant. " +
                     PAGE_DATA_PARAMETERS + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)

@@ -48,6 +48,9 @@ import static org.thingsboard.server.common.data.cf.configuration.geofencing.Ent
 import static org.thingsboard.server.common.data.cf.configuration.geofencing.EntityCoordinates.ENTITY_ID_LONGITUDE_ARGUMENT_KEY;
 import static org.thingsboard.server.common.data.cf.configuration.geofencing.GeofencingPresenceStatus.INSIDE;
 import static org.thingsboard.server.common.data.cf.configuration.geofencing.GeofencingPresenceStatus.OUTSIDE;
+/**
+ * Runtime state for geofencing calculated field calculated fields.
+ */
 
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
@@ -58,11 +61,25 @@ public class GeofencingCalculatedFieldState extends BaseCalculatedFieldState imp
     public GeofencingCalculatedFieldState(EntityId entityId) {
         super(entityId);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldType getType() {
         return CalculatedFieldType.GEOFENCING;
     }
+    /**
+     * Validates new entry.
+     *
+     * @param key key ({@link String})
+     * @param newEntry new entry ({@link ArgumentEntry})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void validateNewEntry(String key, ArgumentEntry newEntry) {
@@ -81,6 +98,14 @@ public class GeofencingCalculatedFieldState extends BaseCalculatedFieldState imp
             }
         }
     }
+    /**
+     * Perform calculation.
+     *
+     * @param updatedArgs updated args ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return future completing with {@link CalculatedFieldResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<CalculatedFieldResult> performCalculation(Map<String, ArgumentEntry> updatedArgs, CalculatedFieldCtx ctx) {
@@ -142,22 +167,46 @@ public class GeofencingCalculatedFieldState extends BaseCalculatedFieldState imp
         }
         return Futures.whenAllComplete(relationFutures).call(() -> result, MoreExecutors.directExecutor());
     }
+    /**
+     * Reset.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reset() {
         super.reset();
         resetScheduledRefreshTs();
     }
+    /**
+     * Reset scheduled refresh ts.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void resetScheduledRefreshTs() {
         lastDynamicArgumentsRefreshTs = DEFAULT_LAST_UPDATE_TS;
     }
+    /**
+     * Returns last scheduled refresh ts.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getLastScheduledRefreshTs() {
         return lastDynamicArgumentsRefreshTs;
     }
+    /**
+     * Updates scheduled refresh ts.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateScheduledRefreshTs() {

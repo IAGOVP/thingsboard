@@ -30,6 +30,11 @@ import org.thingsboard.server.service.security.model.UserPrincipal;
 import org.thingsboard.server.service.security.model.token.JwtTokenFactory;
 import org.thingsboard.server.service.security.model.token.RawAccessJwtToken;
 import org.thingsboard.server.service.user.cache.UserAuthDetailsCache;
+/**
+ * Spring Security authentication provider for JWT bearer-token authentication.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Integrates with Spring Security filter chain.
+ */
 
 @Component
 public class RefreshTokenAuthenticationProvider extends AbstractAuthenticationProvider {
@@ -43,7 +48,13 @@ public class RefreshTokenAuthenticationProvider extends AbstractAuthenticationPr
         this.tokenFactory = jwtTokenFactory;
         this.tokenOutdatingService = tokenOutdatingService;
     }
-
+    /**
+     * Authenticates credentials and returns a populated security principal.
+     *
+     * @param authentication authentication (Authentication)
+     * @return {@link Authentication} result
+     * @throws AuthenticationException if the operation fails
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.notNull(authentication, "No authentication data provided");
@@ -68,7 +79,12 @@ public class RefreshTokenAuthenticationProvider extends AbstractAuthenticationPr
     private SecurityUser authenticateByPublicId(String publicId) {
         return super.authenticateByPublicId(publicId, "Refresh token", null);
     }
-
+    /**
+     * Indicates whether this provider can authenticate the given authentication token type.
+     *
+     * @param authentication authentication (Class<?>)
+     * @return boolean
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return (RefreshAuthenticationToken.class.isAssignableFrom(authentication));

@@ -20,10 +20,20 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.common.data.StringUtils;
 import org.thingsboard.server.config.ThingsboardSecurityConfiguration;
+/**
+ * Extracts bearer/API tokens from HTTP requests for HTTP token extraction for security filters.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component(value = "jwtQueryTokenExtractor")
 public class JwtQueryTokenExtractor implements TokenExtractor {
-
+    /**
+     * Extract.
+     *
+     * @param request request (HttpServletRequest)
+     * @return {@link String} result
+     */
     @Override
     public String extract(HttpServletRequest request) {
         String token = null;

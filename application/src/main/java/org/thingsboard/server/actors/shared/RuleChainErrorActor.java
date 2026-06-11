@@ -27,6 +27,9 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.TbActorMsg;
 import org.thingsboard.server.common.msg.aware.RuleChainAwareMsg;
 import org.thingsboard.server.common.msg.queue.RuleEngineException;
+/**
+ * Fallback actor that logs and acknowledges rule-engine messages when target chain/node actors are missing.
+ */
 
 @Slf4j
 public class RuleChainErrorActor extends ContextAwareActor {
@@ -39,6 +42,15 @@ public class RuleChainErrorActor extends ContextAwareActor {
         this.tenantId = tenantId;
         this.error = error;
     }
+    
+    /**
+     * Handles one incoming actor message; returns {@code true} if the message type was recognized.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected boolean doProcess(TbActorMsg msg) {
@@ -50,6 +62,12 @@ public class RuleChainErrorActor extends ContextAwareActor {
             return false;
         }
     }
+
+    /**
+
+     * Factory for creating instances of the enclosing actor type.
+
+     */
 
     public static class ActorCreator extends ContextBasedCreator {
 
@@ -63,11 +81,27 @@ public class RuleChainErrorActor extends ContextAwareActor {
             this.ruleChainId = ruleChainId;
             this.error = error;
         }
+        
+        /**
+         * Builds the {@link org.thingsboard.server.actors.TbActorId} used to register the actor.
+         *
+         * @return {@link TbActorId}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActorId createActorId() {
             return new TbEntityActorId(ruleChainId);
         }
+        
+        /**
+         * Creates a new actor instance for the given actor id and context.
+         *
+         * @return {@link TbActor}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActor createActor() {

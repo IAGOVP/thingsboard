@@ -17,6 +17,10 @@ package org.thingsboard.server.service.install.migrate;
 
 import lombok.Data;
 
+    /**
+     * Cassandra to sql column data (database schema installation, upgrades, and demo data loading).
+     */
+
 @Data
 public class CassandraToSqlColumnData {
 
@@ -28,10 +32,23 @@ public class CassandraToSqlColumnData {
         this.value = value;
         this.originalValue = value;
     }
+    /**
+     * Next contraint counter.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public int nextContraintCounter() {
         return ++constraintCounter;
     }
+    /**
+     * Returns next constraint string value.
+     *
+     * @param column column ({@link CassandraToSqlColumn})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getNextConstraintStringValue(CassandraToSqlColumn column) {
         int counter = this.nextContraintCounter();
@@ -42,6 +59,13 @@ public class CassandraToSqlColumnData {
         }
         return newValue;
     }
+    /**
+     * Returns next constraint email value.
+     *
+     * @param column column ({@link CassandraToSqlColumn})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getNextConstraintEmailValue(CassandraToSqlColumn column) {
         int counter = this.nextContraintCounter();
@@ -53,6 +77,12 @@ public class CassandraToSqlColumnData {
         }
         return newValue;
     }
+    /**
+     * Returns log value.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getLogValue() {
         if (this.value != null && this.value.length() > 255) {

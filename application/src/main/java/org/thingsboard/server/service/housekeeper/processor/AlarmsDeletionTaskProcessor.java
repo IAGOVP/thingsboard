@@ -30,12 +30,23 @@ import org.thingsboard.server.dao.alarm.AlarmService;
 import java.util.List;
 import java.util.UUID;
 
+    /**
+     * Spring service component for alarms deletion task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class AlarmsDeletionTaskProcessor extends HousekeeperTaskProcessor<AlarmsDeletionHousekeeperTask> {
 
     private final AlarmService alarmService;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link AlarmsDeletionHousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(AlarmsDeletionHousekeeperTask task) throws Exception {
@@ -68,6 +79,12 @@ public class AlarmsDeletionTaskProcessor extends HousekeeperTaskProcessor<Alarms
             log.debug("[{}][{}][{}] Deleted {} alarms", tenantId, entityType, entityId, task.getAlarms().size());
         }
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

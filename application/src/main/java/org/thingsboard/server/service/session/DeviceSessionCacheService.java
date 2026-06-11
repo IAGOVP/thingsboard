@@ -25,6 +25,15 @@ public interface DeviceSessionCacheService {
 
     DeviceSessionsCacheEntry get(DeviceId deviceId);
 
+    /**
+     * Put.
+     *
+     * @param deviceId target device identifier
+     * @param sessions sessions ({@link DeviceSessionsCacheEntry})
+     * @return {@link DeviceSessionsCacheEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     DeviceSessionsCacheEntry put(DeviceId deviceId, DeviceSessionsCacheEntry sessions);
 
 }

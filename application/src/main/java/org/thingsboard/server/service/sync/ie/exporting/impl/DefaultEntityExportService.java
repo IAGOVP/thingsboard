@@ -52,6 +52,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+/**
+ * Exports entity entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
@@ -67,6 +72,14 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
     private AttributesService attributesService;
     @Autowired
     private CalculatedFieldService calculatedFieldService;
+    /**
+     * Returns export data.
+     *
+     * @param ctx calculated-field execution context
+     * @param entityId target entity identifier
+     * @return {@link D}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public final D getExportData(EntitiesExportCtx<?> ctx, I entityId) throws ThingsboardException {
@@ -91,6 +104,15 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
 
         return exportData;
     }
+    /**
+     * Set additional export data.
+     *
+     * @param ctx calculated-field execution context
+     * @param entity entity ({@link E})
+     * @param exportData export data ({@link D})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     protected void setAdditionalExportData(EntitiesExportCtx<?> ctx, E entity, D exportData) throws ThingsboardException {
         var exportSettings = ctx.getSettings();
@@ -182,6 +204,14 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
         });
         return calculatedFields;
     }
+    /**
+     * Returns external id or else internal.
+     *
+     * @param ctx calculated-field execution context
+     * @param internalId internal id ({@link ID})
+     * @return {@link ID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected <ID extends EntityId> ID getExternalIdOrElseInternal(EntitiesExportCtx<?> ctx, ID internalId) {
         if (internalId == null || internalId.isNullUid()) return internalId;
@@ -193,6 +223,14 @@ public class DefaultEntityExportService<I extends EntityId, E extends Exportable
         }
         return result;
     }
+    /**
+     * Returns external id or else internal by uuid.
+     *
+     * @param ctx calculated-field execution context
+     * @param internalUuid internal uuid ({@link UUID})
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected UUID getExternalIdOrElseInternalByUuid(EntitiesExportCtx<?> ctx, UUID internalUuid) {
         for (EntityType entityType : EntityType.values()) {

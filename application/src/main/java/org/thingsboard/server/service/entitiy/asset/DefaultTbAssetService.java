@@ -32,17 +32,37 @@ import org.thingsboard.server.common.data.id.EdgeId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.dao.asset.AssetService;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
+/**
+ * Default implementation of {@link TbAssetService}.
+ */
 
 @Service
 @AllArgsConstructor
 public class DefaultTbAssetService extends AbstractTbEntityService implements TbAssetService {
 
     private final AssetService assetService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param asset asset ({@link Asset})
+     * @param user authenticated user performing the action
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Asset save(Asset asset, User user) throws Exception {
         return save(asset, NameConflictStrategy.DEFAULT, user);
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param asset asset ({@link Asset})
+     * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+     * @param user authenticated user performing the action
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Asset save(Asset asset, NameConflictStrategy nameConflictStrategy, User user) throws Exception {
@@ -59,6 +79,14 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param asset asset ({@link Asset})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Transactional
@@ -75,6 +103,16 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Assigns asset to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link Asset}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Asset assignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws ThingsboardException {
@@ -92,6 +130,16 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Unassigns asset to customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link Asset}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Asset unassignAssetToCustomer(TenantId tenantId, AssetId assetId, Customer customer, User user) throws ThingsboardException {
@@ -108,6 +156,15 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Assigns asset to public customer.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @param user authenticated user performing the action
+     * @return {@link Asset}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Asset assignAssetToPublicCustomer(TenantId tenantId, AssetId assetId, User user) throws ThingsboardException {
@@ -125,6 +182,16 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Assigns asset to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetId asset id ({@link AssetId})
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return {@link Asset}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Asset assignAssetToEdge(TenantId tenantId, AssetId assetId, Edge edge, User user) throws ThingsboardException {
@@ -141,6 +208,16 @@ public class DefaultTbAssetService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Unassigns asset from edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param asset asset ({@link Asset})
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return {@link Asset}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Asset unassignAssetFromEdge(TenantId tenantId, Asset asset, Edge edge, User user) throws ThingsboardException {

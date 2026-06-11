@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.service.subscription;
 
+/**
+ * Kind of local subscription: time-series, attributes, alarms, notifications, etc.
+ */
+
 public enum TbSubscriptionType {
     TIMESERIES, ATTRIBUTES, ALARMS, NOTIFICATIONS, NOTIFICATIONS_COUNT
 }

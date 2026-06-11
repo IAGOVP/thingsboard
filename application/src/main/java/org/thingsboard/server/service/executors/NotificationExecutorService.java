@@ -19,11 +19,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.AbstractListeningExecutor;
 
+    /**
+     * Spring service component for notification executor service (shared thread-pool executors for async service work).
+     */
+
 @Component
 public class NotificationExecutorService extends AbstractListeningExecutor {
 
     @Value("${notification_system.thread_pool_size:10}")
     private int threadPoolSize;
+    /**
+     * Returns thread poll size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getThreadPollSize() {

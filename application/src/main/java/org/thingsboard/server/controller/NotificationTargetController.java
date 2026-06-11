@@ -73,6 +73,12 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.service.security.permission.Resource.NOTIFICATION;
 
+/**
+ * REST API for notification targets.
+ * 
+ * <p>Base path: {@code /api/notification}. Recipients and delivery channels (platform users, Slack, etc.) for notification rules.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api/notification")
@@ -82,6 +88,16 @@ public class NotificationTargetController extends BaseController {
 
     private final NotificationTargetService notificationTargetService;
 
+    /**
+     * Save notification target.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/notification/target}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param notificationTarget target payload; tenant id is taken from the authenticated user
+     * @param user authenticated system or tenant administrator
+     * @return saved {@link NotificationTarget}
+     * @throws Exception if validation, permission check, or persistence fails
+     */
     @ApiOperation(value = "Save notification target (saveNotificationTarget)",
             notes = "Creates or updates notification target." + NEW_LINE +
                     "Available `configuration` types are `PLATFORM_USERS` and `SLACK`.\n" +
@@ -121,6 +137,15 @@ public class NotificationTargetController extends BaseController {
         return doSaveAndLog(EntityType.NOTIFICATION_TARGET, notificationTarget, notificationTargetService::saveNotificationTarget);
     }
 
+    /**
+     * Get notification target by id.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/target/{id}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @return {@link NotificationTarget} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get notification target by id (getNotificationTargetById)",
             notes = "Fetches notification target by id." +
                     SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -131,6 +156,18 @@ public class NotificationTargetController extends BaseController {
         return checkNotificationTargetId(notificationTargetId, Operation.READ);
     }
 
+    /**
+     * Get recipients for notification target config.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/notification/target/recipients}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param user user
+     * @param notificationTarget notification Target
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get recipients for notification target config (getRecipientsForNotificationTargetConfig)",
             notes = "Returns the page of recipients for such notification target configuration." +
                     SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -154,6 +191,16 @@ public class NotificationTargetController extends BaseController {
         return notificationTargetService.findRecipientsForNotificationTargetConfig(user.getTenantId(), (PlatformUsersNotificationTargetConfig) notificationTarget.getConfiguration(), pageLink);
     }
 
+    /**
+     * Get notification targets by ids v1.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/targets}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param ids ids
+     * @param user user
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @GetMapping(value = "/targets", params = {"ids"})
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -165,6 +212,16 @@ public class NotificationTargetController extends BaseController {
         return notificationTargetService.findNotificationTargetsByTenantIdAndIds(user.getTenantId(), targetsIds);
     }
 
+    /**
+     * Get notification targets by ids.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/targets/list}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param ids ids
+     * @param user user
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get notification targets by ids (getNotificationTargetsByIds)",
             notes = "Returns the list of notification targets found by provided ids." +
                     SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -176,6 +233,20 @@ public class NotificationTargetController extends BaseController {
         return getNotificationTargetsByIdsV1(ids, user);
     }
 
+    /**
+     * Get notification targets.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/targets}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @param user user
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get notification targets (getNotificationTargets)",
             notes = "Returns the page of notification targets owned by sysadmin or tenant." + NEW_LINE +
                     PAGE_DATA_PARAMETERS +
@@ -198,6 +269,21 @@ public class NotificationTargetController extends BaseController {
         return notificationTargetService.findNotificationTargetsByTenantId(user.getTenantId(), pageLink);
     }
 
+    /**
+     * Get notification targets by supported notification type v1.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/targets}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @param notificationType notification Type
+     * @param user user
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @GetMapping(value = "/targets", params = "notificationType")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -213,6 +299,21 @@ public class NotificationTargetController extends BaseController {
         return notificationTargetService.findNotificationTargetsByTenantIdAndSupportedNotificationType(user.getTenantId(), notificationType, pageLink);
     }
 
+    /**
+     * Get notification targets by supported notification type.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/notification/targets/notificationType/{notificationType}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param notificationType notification Type
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @param user user
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get notification targets by supported notification type (getNotificationTargetsBySupportedNotificationType)",
             notes = "Returns the page of notification targets filtered by notification type that they can be used for." + NEW_LINE +
                     PAGE_DATA_PARAMETERS +
@@ -229,6 +330,15 @@ public class NotificationTargetController extends BaseController {
         return getNotificationTargetsBySupportedNotificationTypeV1(pageSize, page, textSearch, sortProperty, sortOrder, notificationType, user);
     }
 
+    /**
+     * Delete notification target by id.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/notification/target/{id}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param id id
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete notification target by id (deleteNotificationTargetById)",
             notes = "Deletes notification target by its id." + NEW_LINE +
                     "This target cannot be referenced by existing scheduled notification requests or any notification rules." +

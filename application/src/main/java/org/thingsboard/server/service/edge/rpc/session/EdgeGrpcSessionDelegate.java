@@ -18,15 +18,34 @@ package org.thingsboard.server.service.edge.rpc.session;
 import org.thingsboard.server.common.data.edge.EdgeEvent;
 import org.thingsboard.server.service.edge.rpc.session.manager.EdgeGrpcSessionManager;
 
+/**
+ * Edge grpc session delegate for edge gRPC session lifecycle.
+ */
+
 public abstract class EdgeGrpcSessionDelegate implements EdgeGrpcSessionManager {
+
+    /**
+     * Returns session.
+     *
+     */
 
     protected abstract EdgeSession getSession();
 
+    /**
+     * Add event to high priority queue.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     */
     @Override
     public void addEventToHighPriorityQueue(EdgeEvent edgeEvent) {
         getSession().addHighPriorityEvent(edgeEvent);
     }
 
+    /**
+     * Start sync process.
+     *
+     * @param fullSync full sync (boolean)
+     */
     @Override
     public void startSyncProcess(boolean fullSync) {
         getSession().startSyncProcess(fullSync);

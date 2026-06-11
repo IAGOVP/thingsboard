@@ -34,6 +34,9 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 
 import java.nio.ByteBuffer;
+/**
+ * Default implementation of {@link TbOtaPackageService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -42,6 +45,14 @@ import java.nio.ByteBuffer;
 public class DefaultTbOtaPackageService extends AbstractTbEntityService implements TbOtaPackageService {
 
     private final OtaPackageService otaPackageService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param saveOtaPackageInfoRequest save ota package info request ({@link SaveOtaPackageInfoRequest})
+     * @param user authenticated user performing the action
+     * @return {@link OtaPackageInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public OtaPackageInfo save(SaveOtaPackageInfoRequest saveOtaPackageInfoRequest, User user) throws ThingsboardException {
@@ -60,6 +71,19 @@ public class DefaultTbOtaPackageService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Saves or persists ota package data.
+     *
+     * @param otaPackageInfo ota package info ({@link OtaPackageInfo})
+     * @param checksum checksum ({@link String})
+     * @param checksumAlgorithm checksum algorithm ({@link ChecksumAlgorithm})
+     * @param data data
+     * @param filename filename ({@link String})
+     * @param contentType content type ({@link String})
+     * @param user authenticated user performing the action
+     * @return {@link OtaPackageInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public OtaPackageInfo saveOtaPackageData(OtaPackageInfo otaPackageInfo, String checksum, ChecksumAlgorithm checksumAlgorithm,
@@ -94,6 +118,14 @@ public class DefaultTbOtaPackageService extends AbstractTbEntityService implemen
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param otaPackageInfo ota package info ({@link OtaPackageInfo})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public void delete(OtaPackageInfo otaPackageInfo, User user) throws ThingsboardException {

@@ -25,11 +25,24 @@ import org.thingsboard.server.common.data.notification.NotificationDeliveryMetho
 import org.thingsboard.server.common.data.notification.template.SmsDeliveryMethodNotificationTemplate;
 import org.thingsboard.server.service.notification.NotificationProcessingContext;
 
+    /**
+     * Spring service component for sms notification channel (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Component
 @RequiredArgsConstructor
 public class SmsNotificationChannel implements NotificationChannel<User, SmsDeliveryMethodNotificationTemplate> {
 
     private final SmsService smsService;
+    /**
+     * Send notification.
+     *
+     * @param recipient recipient ({@link User})
+     * @param processedTemplate processed template ({@link SmsDeliveryMethodNotificationTemplate})
+     * @param ctx calculated-field execution context
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendNotification(User recipient, SmsDeliveryMethodNotificationTemplate processedTemplate, NotificationProcessingContext ctx) throws Exception {
@@ -40,6 +53,13 @@ public class SmsNotificationChannel implements NotificationChannel<User, SmsDeli
 
         smsService.sendSms(ctx.getTenantId(), null, new String[]{phone}, processedTemplate.getBody());
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void check(TenantId tenantId) throws Exception {
@@ -47,6 +67,12 @@ public class SmsNotificationChannel implements NotificationChannel<User, SmsDeli
             throw new RuntimeException("SMS provider is not configured");
         }
     }
+    /**
+     * Returns delivery method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationDeliveryMethod getDeliveryMethod() {

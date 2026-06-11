@@ -20,6 +20,12 @@ import org.thingsboard.server.common.data.sync.vc.BranchInfo;
 
 import java.util.List;
 
+/**
+
+ * Git repository integration for list branches request.
+
+ */
+
 public class ListBranchesGitRequest extends PendingGitRequest<List<BranchInfo>> {
 
     public ListBranchesGitRequest(TenantId tenantId) {

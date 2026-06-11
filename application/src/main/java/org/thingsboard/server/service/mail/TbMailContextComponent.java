@@ -21,6 +21,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.dao.settings.AdminSettingsService;
 
+    /**
+     * Spring service component for tb mail context component (SMTP email sending and templating).
+     */
+
 @Component
 @Data
 @Lazy

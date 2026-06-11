@@ -54,10 +54,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Custom OAuth2 authorization request resolver for ThingsBoard login flows.
+ *
+ * <p>Extends Spring Security's default resolver to support:
+ * <ul>
+ *   <li>Mobile app OAuth2 login via {@code pkg}, {@code platform}, and {@code appToken} query params</li>
+ *   <li>PKCE for public OAuth2 clients ({@link ClientAuthenticationMethod#NONE})</li>
+ *   <li>OpenID Connect nonce parameters when {@code openid} scope is requested</li>
+ *   <li>Dynamic redirect URI construction based on the incoming request host/scheme</li>
+ * </ul>
+ *
+ * <p>Entry points: {@code GET /oauth2/authorization/{registrationId}} (browser login) and
+ * programmatic resolution via {@link #resolve(HttpServletRequest, String)}.
+ */
 @TbCoreComponent
 @Service
 @Slf4j
 public class CustomOAuth2AuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
+    /** Default Spring Security OAuth2 authorization redirect base path. */
     private static final String DEFAULT_AUTHORIZATION_REQUEST_BASE_URI = "/oauth2/authorization";
     private static final String DEFAULT_LOGIN_PROCESSING_URI = "/login/oauth2/code/";
     private static final String REGISTRATION_ID_URI_VARIABLE_NAME = "registrationId";
@@ -81,6 +96,15 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
     private OAuth2Configuration oauth2Configuration;
 
 
+    /**
+     * Resolves an authorization request from the incoming servlet request URI.
+     *
+     * <p>Extracts {@code registrationId} from {@code /oauth2/authorization/{registrationId}}
+     * and reads optional {@code action}, {@code pkg}, {@code platform}, {@code appToken} params.
+     *
+     * @param request current HTTP request
+     * @return built authorization request, or {@code null} if registration ID cannot be resolved
+     */
     @Override
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
         String registrationId = this.resolveRegistrationId(request);
@@ -91,6 +115,13 @@ public class CustomOAuth2AuthorizationRequestResolver implements OAuth2Authoriza
         return resolve(request, registrationId, redirectUriAction, appPackage, platform, appToken);
     }
 
+    /**
+     * Resolves an authorization request for an explicit OAuth2 client registration ID.
+     *
+     * @param request        current HTTP request (host, query params)
+     * @param registrationId OAuth2 client registration ID (UUID string)
+     * @return built authorization request, or {@code null} if {@code registrationId} is null
+     */
     @Override
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request, String registrationId) {
         if (registrationId == null) {

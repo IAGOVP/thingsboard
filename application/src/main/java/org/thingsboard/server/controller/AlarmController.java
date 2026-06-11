@@ -76,6 +76,17 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST controller for alarm lifecycle management and queries.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN}, {@code CUSTOMER_USER};
+ * {@code SYS_ADMIN} for entity-scoped alarm listing.
+ *
+ * <p>Related services: {@link org.thingsboard.server.service.entitiy.alarm.TbAlarmService},
+ * {@link org.thingsboard.server.service.telemetry.AlarmSubscriptionService}.
+ */
 @RestController
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -101,6 +112,14 @@ public class AlarmController extends BaseController {
     private static final String ALARM_QUERY_FETCH_ORIGINATOR_DESCRIPTION = "A boolean value to specify if the alarm originator name will be " +
             "filled in the AlarmInfo object  field: 'originatorName' or will returns as null.";
 
+    /**
+     * Get Alarm (getAlarmById).
+     *
+     * <p>HTTP GET {@code /api/alarm/{alarmId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Alarm (getAlarmById)",
             notes = "Fetch the Alarm object based on the provided Alarm Id. " + ALARM_SECURITY_CHECK)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -112,6 +131,14 @@ public class AlarmController extends BaseController {
         return checkAlarmId(alarmId, Operation.READ);
     }
 
+    /**
+     * Get Alarm Info (getAlarmInfoById).
+     *
+     * <p>HTTP GET {@code /api/alarm/info/{alarmId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Alarm Info (getAlarmInfoById)",
             notes = "Fetch the Alarm Info object based on the provided Alarm Id. " +
                     ALARM_SECURITY_CHECK + ALARM_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -124,6 +151,14 @@ public class AlarmController extends BaseController {
         return checkAlarmInfoId(alarmId, Operation.READ);
     }
 
+    /**
+     * Create or Update Alarm (saveAlarm).
+     *
+     * <p>HTTP POST {@code /api/alarm}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create or Update Alarm (saveAlarm)",
             notes = "Creates or Updates the Alarm. " +
                     "When creating alarm, platform generates Alarm Id as " + UUID_WIKI_LINK +
@@ -148,6 +183,14 @@ public class AlarmController extends BaseController {
         return tbAlarmService.save(alarm, getCurrentUser());
     }
 
+    /**
+     * Delete Alarm (deleteAlarm).
+     *
+     * <p>HTTP DELETE {@code /api/alarm/{alarmId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete Alarm (deleteAlarm)",
             notes = "Deletes the Alarm. Referencing non-existing Alarm Id will cause an error." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -159,6 +202,14 @@ public class AlarmController extends BaseController {
         return tbAlarmService.delete(alarm, getCurrentUser());
     }
 
+    /**
+     * Acknowledge Alarm (ackAlarm).
+     *
+     * <p>HTTP POST {@code /api/alarm/{alarmId}/ack}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Acknowledge Alarm (ackAlarm)",
             notes = "Acknowledge the Alarm. " +
                     "Once acknowledged, the 'ack_ts' field will be set to current timestamp and special rule chain event 'ALARM_ACK' will be generated. " +
@@ -174,6 +225,14 @@ public class AlarmController extends BaseController {
         return tbAlarmService.ack(alarm, getCurrentUser());
     }
 
+    /**
+     * Clear Alarm (clearAlarm).
+     *
+     * <p>HTTP POST {@code /api/alarm/{alarmId}/clear}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Clear Alarm (clearAlarm)",
             notes = "Clear the Alarm. " +
                     "Once cleared, the 'clear_ts' field will be set to current timestamp and special rule chain event 'ALARM_CLEAR' will be generated. " +
@@ -189,6 +248,14 @@ public class AlarmController extends BaseController {
         return tbAlarmService.clear(alarm, getCurrentUser());
     }
 
+    /**
+     * Assign/Reassign Alarm (assignAlarm).
+     *
+     * <p>HTTP POST {@code /api/alarm/{alarmId}/assign/{assigneeId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Assign/Reassign Alarm (assignAlarm)",
             notes = "Assign the Alarm. " +
                     "Once assigned, the 'assign_ts' field will be set to current timestamp and special rule chain event 'ALARM_ASSIGNED' " +
@@ -211,6 +278,14 @@ public class AlarmController extends BaseController {
         return tbAlarmService.assign(alarm, assigneeId, System.currentTimeMillis(), getCurrentUser());
     }
 
+    /**
+     * Unassign Alarm (unassignAlarm).
+     *
+     * <p>HTTP DELETE {@code /api/alarm/{alarmId}/assign}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Unassign Alarm (unassignAlarm)",
             notes = "Unassign the Alarm. " +
                     "Once unassigned, the 'assign_ts' field will be set to current timestamp and special rule chain event 'ALARM_UNASSIGNED' will be generated. " +
@@ -227,6 +302,14 @@ public class AlarmController extends BaseController {
         return tbAlarmService.unassign(alarm, System.currentTimeMillis(), getCurrentUser());
     }
 
+    /**
+     * Get Alarms (getAlarmsByEntity).
+     *
+     * <p>HTTP GET {@code /api/alarm/{entityType}/{entityId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Alarms (getAlarmsByEntity)",
             notes = "Returns a page of alarms for the selected entity. Specifying both parameters 'searchStatus' and 'status' at the same time will cause an error. " +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -279,6 +362,14 @@ public class AlarmController extends BaseController {
         return checkNotNull(alarmService.findAlarms(getCurrentUser().getTenantId(), new AlarmQuery(entityId, pageLink, alarmSearchStatus, alarmStatus, assigneeUserId, fetchOriginator)));
     }
 
+    /**
+     * Get All Alarms (getAllAlarms).
+     *
+     * <p>HTTP GET {@code /api/alarms}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get All Alarms (getAllAlarms)",
             notes = "Returns a page of alarms that belongs to the current user owner. " +
                     "If the user has the authority of 'Tenant Administrator', the server returns alarms that belongs to the tenant of current user. " +
@@ -330,6 +421,14 @@ public class AlarmController extends BaseController {
         }
     }
 
+    /**
+     * Get Alarms (getAlarmsV2).
+     *
+     * <p>HTTP GET {@code /api/v2/alarm/{entityType}/{entityId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Alarms (getAlarmsV2)",
             notes = "Returns a page of alarms for the selected entity. " +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -393,6 +492,14 @@ public class AlarmController extends BaseController {
         return checkNotNull(alarmService.findAlarmsV2(getCurrentUser().getTenantId(), new AlarmQueryV2(entityId, pageLink, alarmTypeList, alarmStatusList, alarmSeverityList, assigneeUserId)));
     }
 
+    /**
+     * Get All Alarms (getAllAlarmsV2).
+     *
+     * <p>HTTP GET {@code /api/v2/alarms}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get All Alarms (getAllAlarmsV2)",
             notes = "Returns a page of alarms that belongs to the current user owner. " +
                     "If the user has the authority of 'Tenant Administrator', the server returns alarms that belongs to the tenant of current user. " +
@@ -454,6 +561,14 @@ public class AlarmController extends BaseController {
         }
     }
 
+    /**
+     * Get Highest Alarm Severity (getHighestAlarmSeverity).
+     *
+     * <p>HTTP GET {@code /api/alarm/highestSeverity/{entityType}/{entityId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Highest Alarm Severity (getHighestAlarmSeverity)",
             notes = "Search the alarms by originator ('entityType' and entityId') and optional 'status' or 'searchStatus' filters and returns the highest AlarmSeverity(CRITICAL, MAJOR, MINOR, WARNING or INDETERMINATE). " +
                     "Specifying both parameters 'searchStatus' and 'status' at the same time will cause an error." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -485,6 +600,14 @@ public class AlarmController extends BaseController {
                 alarmStatus, assigneeId);
     }
 
+    /**
+     * Get Alarm Types (getAlarmTypes).
+     *
+     * <p>HTTP GET {@code /api/alarm/types}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Alarm Types (getAlarmTypes)",
             notes = "Returns a set of unique alarm types based on alarms that are either owned by the tenant or assigned to the customer which user is performing the request.")
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")

@@ -54,6 +54,10 @@ import static org.thingsboard.server.service.install.migrate.CassandraToSqlColum
 import static org.thingsboard.server.service.install.migrate.CassandraToSqlColumn.jsonColumn;
 import static org.thingsboard.server.service.install.migrate.CassandraToSqlColumn.stringColumn;
 
+    /**
+     * Spring service component for cassandra ts latest to sql migrate service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Service
 @Profile("install")
 @NoSqlTsDao
@@ -90,6 +94,12 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
     private final ConcurrentMap<String, Integer> tsKvDictionaryMap = new ConcurrentHashMap<>();
 
     protected static final ReentrantLock tsCreationLock = new ReentrantLock();
+    /**
+     * Migrate.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void migrate() throws Exception {
@@ -117,12 +127,27 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
                     bigintColumn("long_v"),
                     doubleColumn("dbl_v"),
                     jsonColumn("json_v")) {
+                /**
+                 * Batch insert.
+                 *
+                 * @param batchData batch data ({@link List})
+                 * @param conn conn ({@link Connection})
+                 * @return nothing
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
 
                 @Override
                 protected void batchInsert(List<CassandraToSqlColumnData[]> batchData, Connection conn) {
                     insertLatestTsRepository
                             .saveOrUpdate(batchData.stream().map(data -> getTsKvLatestEntity(data)).collect(Collectors.toList()));
                 }
+                /**
+                 * Validates column data.
+                 *
+                 * @param data data
+                 * @return the CassandraToSqlColumnData[] value
+                 * @throws Exception if an unexpected error occurs during processing
+                 */
 
                 @Override
                 protected CassandraToSqlColumnData[] validateColumnData(CassandraToSqlColumnData[] data) {
@@ -183,6 +208,13 @@ public class CassandraTsLatestToSqlMigrateService implements TsLatestMigrateServ
         }
         return latestEntity;
     }
+    /**
+     * Returns or save key id.
+     *
+     * @param strKey str key ({@link String})
+     * @return {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Integer getOrSaveKeyId(String strKey) {
         if (strKey.length() > MAX_KEY_LENGTH) {

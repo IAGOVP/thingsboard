@@ -32,6 +32,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static org.thingsboard.server.service.security.model.token.JwtTokenFactory.KEY_LENGTH;
+/**
+ * Service implementation for default jwt settings in JWT bearer-token authentication.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +49,12 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
     private final Optional<JwtTokenFactory> jwtTokenFactory;
 
     private volatile JwtSettings jwtSettings = null; //lazy init
-
+    /**
+     * Creates or persists jwt settings.
+     *
+     * @param jwtSettings jwt settings (JwtSettings)
+     * @return {@link JwtSettings} result
+     */
     @Override
     public JwtSettings saveJwtSettings(JwtSettings jwtSettings) {
         jwtSettingsValidator.validate(jwtSettings);
@@ -61,6 +71,10 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
         return reloadJwtSettings();
     }
 
+    /**
+     * Reload jwt settings.
+     *
+     */
     @Override
     public JwtSettings reloadJwtSettings() {
         log.trace("Executing reloadJwtSettings");
@@ -69,11 +83,22 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
         return settings;
     }
 
+    /**
+     * Returns jwt settings.
+     *
+     */
     @Override
     public JwtSettings getJwtSettings() {
         log.trace("Executing getJwtSettings");
         return getJwtSettings(false);
     }
+
+    /**
+     * Returns jwt settings.
+     *
+     * @param forceReload force reload (boolean)
+     * @return {@link JwtSettings} result
+     */
 
     public JwtSettings getJwtSettings(boolean forceReload) {
         if (this.jwtSettings == null || forceReload) {
@@ -105,9 +130,23 @@ public class DefaultJwtSettingsService implements JwtSettingsService {
         return adminJwtSettings;
     }
 
+    /**
+     * Returns whether signing key default.
+     *
+     * @param settings settings (JwtSettings)
+     * @return boolean
+     */
+
     public static boolean isSigningKeyDefault(JwtSettings settings) {
         return TOKEN_SIGNING_KEY_DEFAULT.equals(settings.getTokenSigningKey());
     }
+
+    /**
+     * Validates key length and invokes the callback with the result.
+     *
+     * @param key key (String)
+     * @return boolean
+     */
 
     public static boolean validateKeyLength(String key) {
         return Base64.getDecoder().decode(key).length * Byte.SIZE >= KEY_LENGTH;

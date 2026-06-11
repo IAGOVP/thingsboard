@@ -31,22 +31,77 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+
+ * Exports base entity entities to portable JSON.
+
+ *
+
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+
+ */
+
 public abstract class BaseEntityExportService<I extends EntityId, E extends ExportableEntity<I>, D extends EntityExportData<E>> extends DefaultEntityExportService<I, E, D> {
+    
+    /**
+     * Set additional export data.
+     *
+     * @param ctx calculated-field execution context
+     * @param entity entity ({@link E})
+     * @param exportData export data ({@link D})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
+
 
     @Override
     protected void setAdditionalExportData(EntitiesExportCtx<?> ctx, E entity, D exportData) throws ThingsboardException {
         setRelatedEntities(ctx, entity, (D) exportData);
         super.setAdditionalExportData(ctx, entity, exportData);
     }
+    /**
+     * Set related entities.
+     *
+     * @param ctx calculated-field execution context
+     * @param mainEntity main entity ({@link E})
+     * @param exportData export data ({@link D})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void setRelatedEntities(EntitiesExportCtx<?> ctx, E mainEntity, D exportData) {
     }
+    /**
+     * Returns supported entity types.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract Set<EntityType> getSupportedEntityTypes();
+    /**
+     * Replace uuids recursively.
+     *
+     * @param ctx calculated-field execution context
+     * @param node node ({@link JsonNode})
+     * @param skippedRootFields skipped root fields ({@link Set})
+     * @param includedFieldsPattern included fields pattern ({@link Pattern})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void replaceUuidsRecursively(EntitiesExportCtx<?> ctx, JsonNode node, Set<String> skippedRootFields, Pattern includedFieldsPattern) {
         JacksonUtil.replaceUuidsRecursively(node, skippedRootFields, includedFieldsPattern, uuid -> getExternalIdOrElseInternalByUuid(ctx, uuid), true);
     }
+    /**
+     * To external ids.
+     *
+     * @param internalIds internal ids ({@link Collection})
+     * @param entityIdCreator entity id creator ({@link Function})
+     * @param ctx calculated-field execution context
+     * @return {@link Stream}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Stream<UUID> toExternalIds(Collection<UUID> internalIds, Function<UUID, EntityId> entityIdCreator,
                                          EntitiesExportCtx<?> ctx) {

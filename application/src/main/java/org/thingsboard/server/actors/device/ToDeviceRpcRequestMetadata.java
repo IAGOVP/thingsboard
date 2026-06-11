@@ -19,8 +19,9 @@ import lombok.Data;
 import org.thingsboard.server.common.msg.rpc.ToDeviceRpcRequestActorMsg;
 
 /**
- * @author Andrew Shvayka
+ * Tracks pending to-device RPC requests (request id, expiration, retry policy).
  */
+
 @Data
 public class ToDeviceRpcRequestMetadata {
     private final ToDeviceRpcRequestActorMsg msg;

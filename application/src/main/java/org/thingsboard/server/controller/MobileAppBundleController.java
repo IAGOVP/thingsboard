@@ -54,6 +54,16 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERT
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST API for mobile application bundles that pair Android/iOS apps with OAuth2, layout, and registration settings.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Authorization: {@code SYS_ADMIN} or {@code TENANT_ADMIN}.
+ *
+ * <p>Delegates mutations to {@link org.thingsboard.server.service.entitiy.mobile.TbMobileAppBundleService}
+ * and reads bundle data via inherited {@code mobileAppBundleService} from {@link BaseController}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -63,6 +73,16 @@ public class MobileAppBundleController extends BaseController {
 
     private final TbMobileAppBundleService tbMobileAppBundleService;
 
+    /**
+     * POST {@code /api/mobile/bundle} — Create or update a mobile app bundle with optional OAuth2 client links.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param mobileAppBundle JSON body with bundle configuration
+     * @param ids             optional OAuth2 client UUIDs to associate
+     * @return the saved {@link org.thingsboard.server.common.data.mobile.bundle.MobileAppBundle}
+     * @throws Exception if validation fails or referenced entities are missing
+     */
     @ApiOperation(value = "Save Or update Mobile app bundle (saveMobileAppBundle)",
             notes = "Create or update the Mobile app bundle that represents tha pair of ANDROID and IOS app and " +
                     "mobile settings like oauth2 clients, self-registration and layout configuration." +
@@ -81,6 +101,15 @@ public class MobileAppBundleController extends BaseController {
         return tbMobileAppBundleService.save(mobileAppBundle, getOAuth2ClientIds(ids), getCurrentUser());
     }
 
+    /**
+     * PUT {@code /api/mobile/bundle/{id}/oauth2Clients} — Replace OAuth2 clients for a mobile app bundle.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param id        bundle UUID
+     * @param clientIds OAuth2 client UUIDs to assign
+     * @throws ThingsboardException if the bundle does not exist or access is denied
+     */
     @ApiOperation(value = "Update oauth2 clients (updateMobileAppBundleOauth2Clients)",
             notes = "Update oauth2 clients of the specified mobile app bundle." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -93,6 +122,19 @@ public class MobileAppBundleController extends BaseController {
         tbMobileAppBundleService.updateOauth2Clients(mobileAppBundle, oAuth2ClientIds, getCurrentUser());
     }
 
+    /**
+     * GET {@code /api/mobile/bundle/infos} — List mobile app bundle info objects with pagination.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param pageSize     items per page
+     * @param page         zero-based page index
+     * @param textSearch   optional name substring filter
+     * @param sortProperty optional sort field
+     * @param sortOrder    optional sort direction
+     * @return a page of {@link org.thingsboard.server.common.data.mobile.bundle.MobileAppBundleInfo}
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Get mobile app bundle infos (getTenantMobileAppBundleInfos)", notes = SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/mobile/bundle/infos")
@@ -110,6 +152,15 @@ public class MobileAppBundleController extends BaseController {
         return mobileAppBundleService.findMobileAppBundleInfosByTenantId(getTenantId(), pageLink);
     }
 
+    /**
+     * GET {@code /api/mobile/bundle/info/{id}} — Fetch a mobile app bundle info by id.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param id bundle UUID
+     * @return the {@link org.thingsboard.server.common.data.mobile.bundle.MobileAppBundleInfo}
+     * @throws ThingsboardException if the bundle does not exist
+     */
     @ApiOperation(value = "Get mobile app bundle info by id (getMobileAppBundleInfoById)", notes = SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/mobile/bundle/info/{id}")
@@ -118,6 +169,14 @@ public class MobileAppBundleController extends BaseController {
         return checkEntityId(mobileAppBundleId, mobileAppBundleService::findMobileAppBundleInfoById, Operation.READ);
     }
 
+    /**
+     * DELETE {@code /api/mobile/bundle/{id}} — Delete a mobile app bundle by id.
+     *
+     * <p>Requires {@code @PreAuthorize}: {@code SYS_ADMIN}, {@code TENANT_ADMIN}.
+     *
+     * @param id bundle UUID
+     * @throws Exception if the bundle does not exist or deletion fails
+     */
     @ApiOperation(value = "Delete Mobile App Bundle by ID (deleteMobileAppBundle)",
             notes = "Deletes Mobile App Bundle by ID. Referencing non-existing mobile app bundle Id will cause an error." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")

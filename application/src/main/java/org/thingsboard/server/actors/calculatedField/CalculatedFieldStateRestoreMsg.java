@@ -25,7 +25,10 @@ import org.thingsboard.server.service.cf.ctx.CalculatedFieldEntityCtxId;
 import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldCtx;
 import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldState;
 
-/** Restores persisted CF argument state from RocksDB after restart. */
+/**
+ * Restores persisted calculated-field state after partition reassignment.
+ */
+
 @Data
 public class CalculatedFieldStateRestoreMsg implements ToCalculatedFieldSystemMsg {
 
@@ -34,11 +37,25 @@ public class CalculatedFieldStateRestoreMsg implements ToCalculatedFieldSystemMs
     private final TopicPartitionInfo partition;
     private final TbCallback callback;
     private CalculatedFieldCtx ctx;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {
         return MsgType.CF_STATE_RESTORE_MSG;
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantId getTenantId() {

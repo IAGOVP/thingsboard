@@ -29,6 +29,10 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Otp based two fa provider for two-factor authentication (MFA).
+ */
+
 public abstract class OtpBasedTwoFaProvider<C extends OtpBasedTwoFaProviderConfig, A extends OtpBasedTwoFaAccountConfig> implements TwoFaProvider<C, A> {
 
     private final Cache verificationCodesCache;
@@ -38,6 +42,14 @@ public abstract class OtpBasedTwoFaProvider<C extends OtpBasedTwoFaProviderConfi
     }
 
 
+    /**
+     * Prepare verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param providerConfig provider config (C)
+     * @param accountConfig account config (A)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public final void prepareVerificationCode(SecurityUser user, C providerConfig, A accountConfig) throws ThingsboardException {
         String verificationCode = StringUtils.randomNumeric(6);
@@ -45,9 +57,26 @@ public abstract class OtpBasedTwoFaProvider<C extends OtpBasedTwoFaProviderConfi
         verificationCodesCache.put(user.getId(), new Otp(System.currentTimeMillis(), verificationCode, accountConfig));
     }
 
+    /**
+     * Send verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param verificationCode verification code (String)
+     * @param providerConfig provider config (C)
+     * @param accountConfig account config (A)
+     * @throws ThingsboardException if the operation fails
+     */
+
     protected abstract void sendVerificationCode(SecurityUser user, String verificationCode, C providerConfig, A accountConfig) throws ThingsboardException;
-
-
+    /**
+     * Check verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param code code (String)
+     * @param providerConfig provider config (C)
+     * @param accountConfig account config (A)
+     * @return boolean
+     */
     @Override
     public final boolean checkVerificationCode(SecurityUser user, String code, C providerConfig, A accountConfig) {
         Otp correctVerificationCode = verificationCodesCache.get(user.getId(), Otp.class);

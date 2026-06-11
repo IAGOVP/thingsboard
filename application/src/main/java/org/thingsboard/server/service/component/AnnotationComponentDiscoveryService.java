@@ -54,6 +54,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+    /**
+     * Spring service component for annotation component discovery service (rule-engine component descriptor registry).
+     */
+
 @Service
 @Slf4j
 public class AnnotationComponentDiscoveryService implements ComponentDiscoveryService {
@@ -80,6 +84,12 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
     private boolean isInstall() {
         return environment.acceptsProfiles(Profiles.of("install"));
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
@@ -107,11 +117,24 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
         return defs;
     }
+    /**
+     * Returns rule node info.
+     *
+     * @param clazz clazz ({@link String})
+     * @return optional {@link RuleNodeClassInfo}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<RuleNodeClassInfo> getRuleNodeInfo(String clazz) {
         return Optional.ofNullable(ruleNodeClasses.get(clazz));
     }
+    /**
+     * Returns versioned nodes.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<RuleNodeClassInfo> getVersionedNodes() {
@@ -252,12 +275,26 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
         }
         return relationTypes.toArray(new String[relationTypes.size()]);
     }
+    /**
+     * Discover components.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void discoverComponents() {
         registerRuleNodeComponents();
         log.debug("Found following definitions: {}", components.values());
     }
+    /**
+     * Returns components.
+     *
+     * @param type type ({@link ComponentType})
+     * @param ruleChainType rule chain type ({@link RuleChainType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<ComponentDescriptor> getComponents(ComponentType type, RuleChainType ruleChainType) {
@@ -278,6 +315,14 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
             throw new RuntimeException("Unsupported rule chain type " + ruleChainType);
         }
     }
+    /**
+     * Returns components.
+     *
+     * @param types types ({@link Set})
+     * @param ruleChainType rule chain type ({@link RuleChainType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<ComponentDescriptor> getComponents(Set<ComponentType> types, RuleChainType ruleChainType) {
@@ -290,6 +335,13 @@ public class AnnotationComponentDiscoveryService implements ComponentDiscoverySe
             throw new RuntimeException("Unsupported rule chain type " + ruleChainType);
         }
     }
+    /**
+     * Returns component.
+     *
+     * @param clazz clazz ({@link String})
+     * @return optional {@link ComponentDescriptor}, empty if not found
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Optional<ComponentDescriptor> getComponent(String clazz) {

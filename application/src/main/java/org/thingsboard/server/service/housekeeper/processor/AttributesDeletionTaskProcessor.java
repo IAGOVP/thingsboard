@@ -22,18 +22,35 @@ import org.thingsboard.server.common.data.housekeeper.HousekeeperTask;
 import org.thingsboard.server.common.data.housekeeper.HousekeeperTaskType;
 import org.thingsboard.server.dao.attributes.AttributesService;
 
+    /**
+     * Spring service component for attributes deletion task processor (background housekeeping tasks (alarm unassign, job cleanup, etc.)).
+     */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class AttributesDeletionTaskProcessor extends HousekeeperTaskProcessor<HousekeeperTask> {
 
     private final AttributesService attributesService;
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link HousekeeperTask})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(HousekeeperTask task) throws Exception {
         int deletedCount = attributesService.removeAllByEntityId(task.getTenantId(), task.getEntityId());
         log.debug("[{}][{}][{}] Deleted {} attributes", task.getTenantId(), task.getEntityId().getEntityType(), task.getEntityId(), deletedCount);
     }
+    /**
+     * Returns task type.
+     *
+     * @return {@link HousekeeperTaskType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public HousekeeperTaskType getTaskType() {

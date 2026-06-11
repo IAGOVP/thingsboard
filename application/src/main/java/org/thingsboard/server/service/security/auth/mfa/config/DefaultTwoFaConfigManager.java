@@ -40,6 +40,11 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+/**
+ * Default implementation of two fa config manager for two-factor authentication (MFA).
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +57,13 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
     private final TwoFactorAuthService twoFactorAuthService;
 
     protected static final String TWO_FACTOR_AUTH_SETTINGS_KEY = "twoFaSettings";
-
+    /**
+     * Returns account two fa settings.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param user user (User)
+     * @return {@link Optional} result
+     */
     @Override
     public Optional<AccountTwoFaSettings> getAccountTwoFaSettings(TenantId tenantId, User user) {
         PlatformTwoFaSettings platformTwoFaSettings = getPlatformTwoFaSettings(tenantId, true).orElse(null);
@@ -84,6 +95,15 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
                 });
     }
 
+    /**
+     * Creates or persists account two fa settings.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param user user (User)
+     * @param settings settings (AccountTwoFaSettings)
+     * @return {@link AccountTwoFaSettings} result
+     */
+
     protected AccountTwoFaSettings saveAccountTwoFaSettings(TenantId tenantId, User user, AccountTwoFaSettings settings) {
         UserAuthSettings userAuthSettings = Optional.ofNullable(userAuthSettingsDao.findByUserId(user.getId()))
                 .orElseGet(() -> {
@@ -97,14 +117,28 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
         settings.getConfigs().values().forEach(accountConfig -> accountConfig.setSerializeHiddenFields(false));
         return settings;
     }
-
+    /**
+     * Returns two fa account config.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param user user (User)
+     * @param providerType provider type (TwoFaProviderType)
+     * @return {@link Optional} result
+     */
     @Override
     public Optional<TwoFaAccountConfig> getTwoFaAccountConfig(TenantId tenantId, User user, TwoFaProviderType providerType) {
         return getAccountTwoFaSettings(tenantId, user)
                 .map(AccountTwoFaSettings::getConfigs)
                 .flatMap(configs -> Optional.ofNullable(configs.get(providerType)));
     }
-
+    /**
+     * Creates or persists two fa account config.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param user user (User)
+     * @param accountConfig account config (TwoFaAccountConfig)
+     * @return {@link AccountTwoFaSettings} result
+     */
     @Override
     public AccountTwoFaSettings saveTwoFaAccountConfig(TenantId tenantId, User user, TwoFaAccountConfig accountConfig) {
         getTwoFaProviderConfig(tenantId, accountConfig.getProviderType())
@@ -129,7 +163,14 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
         checkAccountTwoFaSettings(tenantId, user, settings);
         return saveAccountTwoFaSettings(tenantId, user, settings);
     }
-
+    /**
+     * Removes two fa account config.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param user user (User)
+     * @param providerType provider type (TwoFaProviderType)
+     * @return {@link AccountTwoFaSettings} result
+     */
     @Override
     public AccountTwoFaSettings deleteTwoFaAccountConfig(TenantId tenantId, User user, TwoFaProviderType providerType) {
         AccountTwoFaSettings settings = getAccountTwoFaSettings(tenantId, user)
@@ -153,13 +194,26 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
         return getPlatformTwoFaSettings(tenantId, true)
                 .flatMap(twoFaSettings -> twoFaSettings.getProviderConfig(providerType));
     }
-
+    /**
+     * Returns platform two fa settings.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param sysadminSettingsAsDefault sysadmin settings as default (boolean)
+     * @return {@link Optional} result
+     */
     @Override
     public Optional<PlatformTwoFaSettings> getPlatformTwoFaSettings(TenantId tenantId, boolean sysadminSettingsAsDefault) {
         return Optional.ofNullable(adminSettingsService.findAdminSettingsByKey(TenantId.SYS_TENANT_ID, TWO_FACTOR_AUTH_SETTINGS_KEY))
                 .map(adminSettings -> JacksonUtil.treeToValue(adminSettings.getJsonValue(), PlatformTwoFaSettings.class));
     }
-
+    /**
+     * Creates or persists platform two fa settings.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param twoFactorAuthSettings two factor auth settings (PlatformTwoFaSettings)
+     * @return {@link PlatformTwoFaSettings} result
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public PlatformTwoFaSettings savePlatformTwoFaSettings(TenantId tenantId, PlatformTwoFaSettings twoFactorAuthSettings) throws ThingsboardException {
         ConstraintValidator.validateFields(twoFactorAuthSettings);
@@ -191,6 +245,11 @@ public class DefaultTwoFaConfigManager implements TwoFaConfigManager {
         return twoFactorAuthSettings;
     }
 
+    /**
+     * Removes platform two fa settings.
+     *
+     * @param tenantId tenant id (TenantId)
+     */
     @Override
     public void deletePlatformTwoFaSettings(TenantId tenantId) {
         Optional.ofNullable(adminSettingsService.findAdminSettingsByKey(tenantId, TWO_FACTOR_AUTH_SETTINGS_KEY))

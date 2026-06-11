@@ -27,9 +27,26 @@ import org.thingsboard.server.service.component.RuleNodeClassInfo;
 
 import static org.thingsboard.server.common.data.DataConstants.QUEUE_NAME;
 
+/**
+ * Utility for upgrading rule node configuration JSON when node component versions change.
+ *
+ * <p>Delegates version-specific migration to {@link TbNode} implementations and falls back
+ * to default configuration when the stored JSON is invalid or migration fails.
+ */
 @Slf4j
 public class TbNodeUpgradeUtils {
 
+    /**
+     * Upgrades a {@link RuleNode}'s configuration to the current component version.
+     *
+     * <p>If the stored configuration is null or not a JSON object, or if migration throws,
+     * replaces the configuration with the node type's default. Preserves the queue name
+     * when the node annotation declares {@code hasQueueName}. Always sets
+     * {@link RuleNode#setConfigurationVersion(int)} to the current version.
+     *
+     * @param node     the rule node whose configuration should be migrated in place
+     * @param nodeInfo component metadata including current version and config class
+     */
     public static void upgradeConfigurationAndVersion(RuleNode node, RuleNodeClassInfo nodeInfo) {
         JsonNode oldConfiguration = node.getConfiguration();
         int configurationVersion = node.getConfigurationVersion();

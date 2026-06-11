@@ -21,13 +21,45 @@ import org.thingsboard.server.common.data.id.AssetId;
 import org.thingsboard.server.common.data.id.AssetProfileId;
 import org.thingsboard.server.common.data.id.TenantId;
 
+/**
+
+ * tb asset profile cache contract for device and asset profile resolution.
+
+ */
+
 public interface TbAssetProfileCache extends RuleEngineAssetProfileCache {
 
     void evict(TenantId tenantId, AssetProfileId id);
 
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link AssetId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void evict(TenantId tenantId, AssetId id);
 
+    /**
+     * Finds the requested data.
+     *
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     AssetProfile find(AssetProfileId assetProfileId);
+
+    /**
+     * Finds or create asset profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param assetType asset type ({@link String})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfile findOrCreateAssetProfile(TenantId tenantId, String assetType);
 }

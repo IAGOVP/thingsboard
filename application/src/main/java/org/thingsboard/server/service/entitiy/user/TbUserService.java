@@ -23,11 +23,55 @@ import org.thingsboard.server.common.data.id.CustomerId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.id.UserId;
 
+/**
+
+ * Application-layer service API for user entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbUserService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param customerId customer id ({@link CustomerId})
+ * @param tbUser tb user ({@link User})
+ * @param sendActivationMail send activation mail
+ * @param request request payload with operation parameters
+ * @param user authenticated user performing the action
+ * @return {@link User}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     User save(TenantId tenantId, CustomerId customerId, User tbUser, boolean sendActivationMail, HttpServletRequest request, User user) throws ThingsboardException;
+/**
+ * Deletes the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param customerId customer id ({@link CustomerId})
+ * @param user authenticated user performing the action
+ * @param responsibleUser responsible user ({@link User})
+ * @return nothing
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     void delete(TenantId tenantId, CustomerId customerId, User user, User responsibleUser) throws ThingsboardException;
+/**
+ * Returns activation link.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param customerId customer id ({@link CustomerId})
+ * @param userId user id ({@link UserId})
+ * @param request request payload with operation parameters
+ * @return {@link UserActivationLink}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
 
     UserActivationLink getActivationLink(TenantId tenantId, CustomerId customerId, UserId userId, HttpServletRequest request) throws ThingsboardException;
 

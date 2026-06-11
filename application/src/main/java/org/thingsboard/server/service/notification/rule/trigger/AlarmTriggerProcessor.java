@@ -36,8 +36,20 @@ import java.util.Map;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.thingsboard.server.common.data.util.CollectionsUtil.emptyOrContains;
 
+    /**
+     * Spring service component for alarm trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 public class AlarmTriggerProcessor implements NotificationRuleTriggerProcessor<AlarmTrigger, AlarmNotificationRuleTriggerConfig> {
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link AlarmTrigger})
+     * @param triggerConfig trigger config ({@link AlarmNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(AlarmTrigger trigger, AlarmNotificationRuleTriggerConfig triggerConfig) {
@@ -69,6 +81,14 @@ public class AlarmTriggerProcessor implements NotificationRuleTriggerProcessor<A
         }
         return false;
     }
+    /**
+     * Matches clear rule.
+     *
+     * @param trigger trigger ({@link AlarmTrigger})
+     * @param triggerConfig trigger config ({@link AlarmNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesClearRule(AlarmTrigger trigger, AlarmNotificationRuleTriggerConfig triggerConfig) {
@@ -96,6 +116,13 @@ public class AlarmTriggerProcessor implements NotificationRuleTriggerProcessor<A
     private boolean typeMatches(Alarm alarm, AlarmNotificationRuleTriggerConfig triggerConfig) {
         return emptyOrContains(triggerConfig.getAlarmTypes(), alarm.getType());
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link AlarmTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(AlarmTrigger trigger) {
@@ -131,6 +158,12 @@ public class AlarmTriggerProcessor implements NotificationRuleTriggerProcessor<A
         }
         return result;
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

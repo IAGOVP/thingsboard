@@ -54,6 +54,12 @@ import static org.thingsboard.server.controller.ControllerConstants.AVAILABLE_FO
 import static org.thingsboard.server.controller.ControllerConstants.SYSTEM_AUTHORITY_PARAGRAPH;
 
 @RequiredArgsConstructor
+/**
+ * REST API for mobile QR code and deep-link settings.
+ * 
+ * <p>Base path: {@code mixed (see method paths)}. Mobile app association files, QR settings, deep links, and token exchange for mobile login.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 public class QrCodeSettingsController extends BaseController {
@@ -93,6 +99,14 @@ public class QrCodeSettingsController extends BaseController {
     private final MobileAppSecretService mobileAppSecretService;
     private final QrCodeSettingService qrCodeSettingService;
 
+    /**
+     * Get associated android applications.
+     * 
+     * <p><b>HTTP:</b> {@code GET /.well-known/assetlinks.json}
+     * <p><b>Auth:</b> None (public / noauth endpoint)
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get associated android applications (getAssetLinks)")
     @GetMapping(value = "/.well-known/assetlinks.json")
     public ResponseEntity<JsonNode> getAssetLinks() {
@@ -105,6 +119,14 @@ public class QrCodeSettingsController extends BaseController {
         }
     }
 
+    /**
+     * Get associated ios applications.
+     * 
+     * <p><b>HTTP:</b> {@code GET /.well-known/apple-app-site-association}
+     * <p><b>Auth:</b> None (public / noauth endpoint)
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get associated ios applications (getAppleAppSiteAssociation)")
     @GetMapping(value = "/.well-known/apple-app-site-association")
     public ResponseEntity<JsonNode> getAppleAppSiteAssociation() {
@@ -117,6 +139,15 @@ public class QrCodeSettingsController extends BaseController {
         }
     }
 
+    /**
+     * Create Or Update the Mobile application settings.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/mobile/qr/settings}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param qrCodeSettings qr Code Settings
+     * @return {@link QrCodeSettings} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create Or Update the Mobile application settings (saveMobileAppSettings)",
             notes = "The request payload contains configuration for android/iOS applications and platform qr code widget settings." + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
@@ -129,6 +160,14 @@ public class QrCodeSettingsController extends BaseController {
         return qrCodeSettingService.saveQrCodeSettings(currentUser.getTenantId(), qrCodeSettings);
     }
 
+    /**
+     * Get Mobile application settings.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/mobile/qr/settings}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @return {@link QrCodeSettings} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Mobile application settings (getQrCodeSettings)",
             notes = "The response payload contains configuration for android/iOS applications and platform qr code widget settings." + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -139,6 +178,14 @@ public class QrCodeSettingsController extends BaseController {
         return qrCodeSettingService.findQrCodeSettings(TenantId.SYS_TENANT_ID);
     }
 
+    /**
+     * Get the deep link to the associated mobile application.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/mobile/qr/deepLink}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @return {@link String} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get the deep link to the associated mobile application (getMobileAppDeepLink)",
             notes = "Fetch the url that takes user to linked mobile application " + AVAILABLE_FOR_ANY_AUTHORIZED_USER)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -156,6 +203,15 @@ public class QrCodeSettingsController extends BaseController {
         return "\"" + deepLink + "\"";
     }
 
+    /**
+     * Get User Token.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/noauth/qr/{secret}}
+     * <p><b>Auth:</b> None (public / noauth endpoint)
+     * @param secret secret
+     * @return {@link JwtPair} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get User Token (getUserTokenByMobileSecret)",
             notes = "Returns the token of the User based on the provided secret key.")
     @GetMapping(value = "/api/noauth/qr/{secret}")
@@ -165,6 +221,15 @@ public class QrCodeSettingsController extends BaseController {
         return mobileAppSecretService.getJwtPair(secret);
     }
 
+    /**
+     * Get application redirect.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/noauth/qr}
+     * <p><b>Auth:</b> None (public / noauth endpoint)
+     * @param userAgent user Agent
+     * @return {@link ResponseEntity} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @GetMapping(value = "/api/noauth/qr")
     public ResponseEntity<?> getApplicationRedirect(@RequestHeader(value = "User-Agent") String userAgent) {
         QrCodeSettings qrCodeSettings = qrCodeSettingService.findQrCodeSettings(TenantId.SYS_TENANT_ID);

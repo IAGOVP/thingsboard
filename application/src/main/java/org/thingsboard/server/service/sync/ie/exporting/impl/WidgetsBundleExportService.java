@@ -27,6 +27,11 @@ import org.thingsboard.server.service.sync.vc.data.EntitiesExportCtx;
 
 import java.util.List;
 import java.util.Set;
+/**
+ * Exports widgets bundle entities to portable JSON.
+ *
+ * <p>Used by version control and tenant migration to serialize entity graphs with dependencies.
+ */
 
 @Service
 @TbCoreComponent
@@ -34,6 +39,15 @@ import java.util.Set;
 public class WidgetsBundleExportService extends BaseEntityExportService<WidgetsBundleId, WidgetsBundle, WidgetsBundleExportData> {
 
     private final WidgetTypeService widgetTypeService;
+    /**
+     * Set related entities.
+     *
+     * @param ctx calculated-field execution context
+     * @param widgetsBundle widgets bundle ({@link WidgetsBundle})
+     * @param exportData export data ({@link WidgetsBundleExportData})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setRelatedEntities(EntitiesExportCtx<?> ctx, WidgetsBundle widgetsBundle, WidgetsBundleExportData exportData) {
@@ -44,6 +58,12 @@ public class WidgetsBundleExportService extends BaseEntityExportService<WidgetsB
         List<String> fqns = widgetTypeService.findWidgetFqnsByWidgetsBundleId(ctx.getTenantId(), widgetsBundle.getId());
         exportData.setFqns(fqns);
     }
+    /**
+     * Returns supported entity types.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<EntityType> getSupportedEntityTypes() {

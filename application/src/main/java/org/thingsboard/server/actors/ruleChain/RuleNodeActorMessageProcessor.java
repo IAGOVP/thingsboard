@@ -38,8 +38,11 @@ import org.thingsboard.server.common.stats.TbApiUsageReportClient;
 import org.thingsboard.server.gen.transport.TransportProtos;
 
 /**
- * @author Andrew Shvayka
+ * Processor for {@link org.thingsboard.server.actors.ruleChain.RuleNodeActor}.
+ *
+ * <p>Initializes the rule-engine component, applies debug/rate limits, and routes output to next nodes.
  */
+
 @Slf4j
 public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNodeId> {
 
@@ -60,6 +63,13 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
         this.defaultCtx = new DefaultTbContext(systemContext, ruleChainName, new RuleNodeCtx(tenantId, selfActor, ruleNode));
         this.info = new RuleNodeInfo(ruleNodeId, ruleChainName, getName(ruleNode));
     }
+    /**
+     * Start.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void start(TbActorCtx context) throws Exception {
@@ -71,6 +81,13 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
             }
         }
     }
+    /**
+     * Handles update.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onUpdate(TbActorCtx context) throws Exception {
@@ -97,6 +114,13 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
             tbNode = null;
         }
     }
+    /**
+     * Stop.
+     *
+     * @param context context ({@link TbActorCtx})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void stop(TbActorCtx context) {
@@ -106,6 +130,13 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
             state = ComponentLifecycleState.SUSPENDED;
         }
     }
+    /**
+     * Handles partition change msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onPartitionChangeMsg(PartitionChangeMsg msg) throws Exception {
@@ -121,6 +152,13 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
             start(null);
         }
     }
+    /**
+     * Handles rule to self msg.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onRuleToSelfMsg(RuleNodeToSelfMsg msg) throws Exception {
         checkComponentStateActive(msg.getMsg());
@@ -164,6 +202,12 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
             }
         }
     }
+    /**
+     * Returns component name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getComponentName() {
@@ -183,6 +227,12 @@ public class RuleNodeActorMessageProcessor extends ComponentMsgProcessor<RuleNod
         }
         return tbNode;
     }
+    /**
+     * Returns inactive exception.
+     *
+     * @return {@link RuleNodeException}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected RuleNodeException getInactiveException() {

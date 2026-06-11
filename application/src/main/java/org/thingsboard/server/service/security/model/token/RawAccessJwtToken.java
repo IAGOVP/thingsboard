@@ -19,6 +19,10 @@ import org.thingsboard.server.common.data.security.model.JwtToken;
 
 import java.io.Serializable;
 
+/**
+ * Raw access jwt token for security DTOs and principals.
+ */
+
 public record RawAccessJwtToken(String token) implements JwtToken, Serializable {
 
 }

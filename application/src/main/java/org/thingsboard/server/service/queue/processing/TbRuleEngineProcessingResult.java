@@ -25,6 +25,10 @@ import org.thingsboard.server.service.queue.TbMsgPackProcessingContext;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * Tb rule engine processing result component in the ThingsBoard queue layer.
+ */
+
 public class TbRuleEngineProcessingResult {
 
     @Getter
@@ -36,6 +40,13 @@ public class TbRuleEngineProcessingResult {
     @Getter
     private final TbMsgPackProcessingContext ctx;
 
+    /**
+     * Constructs {@link TbRuleEngineProcessingResult} with the supplied dependencies and configuration.
+     * @param queueName queue name
+     * @param timeout timeout
+     * @param ctx ctx
+     */
+
     public TbRuleEngineProcessingResult(String queueName, boolean timeout, TbMsgPackProcessingContext ctx) {
         this.queueName = queueName;
         this.timeout = timeout;
@@ -43,17 +54,37 @@ public class TbRuleEngineProcessingResult {
         this.success = !timeout && ctx.getPendingMap().isEmpty() && ctx.getFailedMap().isEmpty();
     }
 
+    /**
+     * Returns pending map.
+     * @return {@link ConcurrentMap}
+     */
+
     public ConcurrentMap<UUID, TbProtoQueueMsg<ToRuleEngineMsg>> getPendingMap() {
         return ctx.getPendingMap();
     }
+
+    /**
+     * Returns success map.
+     * @return {@link ConcurrentMap}
+     */
 
     public ConcurrentMap<UUID, TbProtoQueueMsg<ToRuleEngineMsg>> getSuccessMap() {
         return ctx.getSuccessMap();
     }
 
+    /**
+     * Returns failed map.
+     * @return {@link ConcurrentMap}
+     */
+
     public ConcurrentMap<UUID, TbProtoQueueMsg<ToRuleEngineMsg>> getFailedMap() {
         return ctx.getFailedMap();
     }
+
+    /**
+     * Returns exceptions map.
+     * @return {@link ConcurrentMap}
+     */
 
     public ConcurrentMap<TenantId, RuleEngineException> getExceptionsMap() {
         return ctx.getExceptionsMap();

@@ -29,6 +29,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+/**
+ * Argument or aggregation entry for calculated-field state (propagation argument entry).
+ */
 
 @Data
 public class PropagationArgumentEntry implements ArgumentEntry, HasEntityLimit {
@@ -49,16 +52,36 @@ public class PropagationArgumentEntry implements ArgumentEntry, HasEntityLimit {
     public PropagationArgumentEntry(List<EntityId> entityIds) {
         this.entityIds = new HashSet<>(entityIds);
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link ArgumentEntryType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ArgumentEntryType getType() {
         return ArgumentEntryType.PROPAGATION;
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Object getValue() {
         return entityIds;
     }
+    /**
+     * Updates entry.
+     *
+     * @param entry entry ({@link ArgumentEntry})
+     * @param ctx calculated-field execution context
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean updateEntry(ArgumentEntry entry, CalculatedFieldCtx ctx) {
@@ -104,11 +127,23 @@ public class PropagationArgumentEntry implements ArgumentEntry, HasEntityLimit {
         }
         return added != null && !added.isEmpty();
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isEmpty() {
         return entityIds.isEmpty();
     }
+    /**
+     * To tbel cf arg.
+     *
+     * @return {@link TbelCfArg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbelCfArg toTbelCfArg() {

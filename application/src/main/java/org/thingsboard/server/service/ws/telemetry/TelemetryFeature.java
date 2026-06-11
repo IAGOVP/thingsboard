@@ -16,11 +16,18 @@
 package org.thingsboard.server.service.ws.telemetry;
 
 /**
- * Created by ashvayka on 08.05.17.
+ * Enumeration of telemetry feature values used by the WebSocket layer.
  */
+
 public enum TelemetryFeature {
 
     ATTRIBUTES, TIMESERIES;
+
+    /**
+     * For name.
+     * @param name name
+     * @return {@link TelemetryFeature}
+     */
 
     public static TelemetryFeature forName(String name) {
         return TelemetryFeature.valueOf(name.toUpperCase());

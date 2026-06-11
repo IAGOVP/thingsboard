@@ -55,6 +55,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+/**
+ * Subscription context for tb abstract WebSocket commands.
+ * <p>Maintains query state, caches, and pending updates for one command id.
+ */
 
 @Slf4j
 @Data
@@ -72,6 +76,16 @@ public abstract class TbAbstractSubCtx {
     @Getter
     protected long createdTime;
 
+    /**
+     * Constructs {@link TbAbstractSubCtx} with the supplied dependencies and configuration.
+     * @param serviceId service id
+     * @param wsService ws service
+     * @param localSubscriptionService local subscription service
+     * @param stats stats
+     * @param sessionRef reference to the WebSocket session
+     * @param cmdId client command id
+     */
+
     public TbAbstractSubCtx(String serviceId, WebSocketService wsService,
                             TbLocalSubscriptionService localSubscriptionService,
                             SubscriptionServiceStatistics stats,
@@ -85,32 +99,83 @@ public abstract class TbAbstractSubCtx {
         this.cmdId = cmdId;
     }
 
+    /**
+     * Is dynamic.
+     * @return {@code true} when the condition holds
+     */
+
     public abstract boolean isDynamic();
+
+    /**
+     * Stops stop.
+     */
+
+    /**
+     * Stops.
+     */
+
+    /**
+     * Stops.
+     */
+
+    /**
+     * Stops.
+     */
 
     public void stop() {
         stopped = true;
     }
 
+    /**
+     * Returns session id.
+     * @return string value
+     */
+
     public String getSessionId() {
         return sessionRef.getSessionId();
     }
+
+    /**
+     * Returns tenant id.
+     * @return {@link TenantId}
+     */
 
     public TenantId getTenantId() {
         return sessionRef.getSecurityCtx().getTenantId();
     }
 
+    /**
+     * Returns customer id.
+     * @return {@link CustomerId}
+     */
+
     public CustomerId getCustomerId() {
         return sessionRef.getSecurityCtx().getCustomerId();
     }
 
-    public UserId getUserId() {
+    /**
+     * Returns user id.
+     * @return {@link UserId}
+     */
+
+public UserId getUserId() {
         return sessionRef.getSecurityCtx().getId();
     }
+
+    /**
+     * Returns owner id.
+     * @return {@link EntityId}
+     */
 
     public EntityId getOwnerId() {
         var customerId = getCustomerId();
         return customerId != null && !customerId.isNullUid() ? customerId : getTenantId();
     }
+
+    /**
+     * Sends ws msg.
+     * @param update subscription update payload
+     */
 
     public void sendWsMsg(CmdUpdate update) {
         wsLock.lock();

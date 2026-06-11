@@ -28,12 +28,25 @@ import org.thingsboard.server.common.data.msg.TbMsgType;
 import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.gen.edge.v1.AssetUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base asset edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #assetValidator}.
+ */
 
 @Slf4j
 public abstract class BaseAssetProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<Asset> assetValidator;
+
+    /**
+     * Creates or persists or update asset.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param assetId asset id (AssetId)
+     * @param assetUpdateMsg asset update msg (AssetUpdateMsg)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateAsset(TenantId tenantId, AssetId assetId, AssetUpdateMsg assetUpdateMsg) {
         boolean created = false;
@@ -78,11 +91,35 @@ public abstract class BaseAssetProcessor extends BaseEdgeProcessor {
         }).orElse(false);
     }
 
+    /**
+     * Set customer id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param asset asset (Asset)
+     * @param assetUpdateMsg asset update msg (AssetUpdateMsg)
+     */
+
     protected abstract void setCustomerId(TenantId tenantId, CustomerId customerId, Asset asset, AssetUpdateMsg assetUpdateMsg);
+
+    /**
+     * Removes asset.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param assetId asset id (AssetId)
+     */
 
     protected void deleteAsset(TenantId tenantId, AssetId assetId) {
         deleteAsset(tenantId, null, assetId);
     }
+
+    /**
+     * Removes asset.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param assetId asset id (AssetId)
+     */
 
     protected void deleteAsset(TenantId tenantId, Edge edge, AssetId assetId) {
         Asset assetById = edgeCtx.getAssetService().findAssetById(tenantId, assetId);

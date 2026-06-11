@@ -25,12 +25,23 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.mobile.app.MobileApp;
 import org.thingsboard.server.dao.mobile.MobileAppService;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
+/**
+ * Default implementation of {@link TbMobileAppService}.
+ */
 
 @Service
 @AllArgsConstructor
 public class DefaultTbMobileAppService extends AbstractTbEntityService implements TbMobileAppService {
 
     private final MobileAppService mobileAppService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param mobileApp mobile app ({@link MobileApp})
+     * @param user authenticated user performing the action
+     * @return {@link MobileApp}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileApp save(MobileApp mobileApp, User user) throws Exception {
@@ -45,6 +56,14 @@ public class DefaultTbMobileAppService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param mobileApp mobile app ({@link MobileApp})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override

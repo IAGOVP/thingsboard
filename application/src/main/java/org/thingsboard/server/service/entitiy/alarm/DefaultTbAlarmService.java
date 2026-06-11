@@ -50,6 +50,9 @@ import static org.thingsboard.server.common.data.alarm.AlarmCommentSubType.ASSIG
 import static org.thingsboard.server.common.data.alarm.AlarmCommentSubType.CLEARED_BY_USER;
 import static org.thingsboard.server.common.data.alarm.AlarmCommentSubType.UNASSIGNED_BY_USER;
 import static org.thingsboard.server.common.data.alarm.AlarmCommentSubType.UNASSIGNED_FROM_DELETED_USER;
+/**
+ * Default implementation of {@link TbAlarmService}.
+ */
 
 @Service
 @AllArgsConstructor
@@ -58,6 +61,14 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
 
     @Autowired
     protected TbAlarmCommentService alarmCommentService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param user authenticated user performing the action
+     * @return {@link Alarm}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public Alarm save(Alarm alarm, User user) throws ThingsboardException {
@@ -97,11 +108,28 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
             throw e;
         }
     }
+    /**
+     * Ack.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param user authenticated user performing the action
+     * @return {@link AlarmInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public AlarmInfo ack(Alarm alarm, User user) throws ThingsboardException {
         return ack(alarm, System.currentTimeMillis(), user);
     }
+    /**
+     * Ack.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param ackTs ack ts
+     * @param user authenticated user performing the action
+     * @return {@link AlarmInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public AlarmInfo ack(Alarm alarm, long ackTs, User user) throws ThingsboardException {
@@ -119,11 +147,28 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
         }
         return alarmInfo;
     }
+    /**
+     * Clear.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param user authenticated user performing the action
+     * @return {@link AlarmInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public AlarmInfo clear(Alarm alarm, User user) throws ThingsboardException {
         return clear(alarm, System.currentTimeMillis(), user);
     }
+    /**
+     * Clear.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param clearTs clear ts
+     * @param user authenticated user performing the action
+     * @return {@link AlarmInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public AlarmInfo clear(Alarm alarm, long clearTs, User user) throws ThingsboardException {
@@ -141,6 +186,16 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
         }
         return alarmInfo;
     }
+    /**
+     * Assigns the requested data.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param assigneeId assignee id ({@link UserId})
+     * @param assignTs assign ts
+     * @param user authenticated user performing the action
+     * @return {@link AlarmInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public AlarmInfo assign(Alarm alarm, UserId assigneeId, long assignTs, User user) throws ThingsboardException {
@@ -159,6 +214,15 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
         }
         return alarmInfo;
     }
+    /**
+     * Unassigns the requested data.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param unassignTs unassign ts
+     * @param user authenticated user performing the action
+     * @return {@link AlarmInfo}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public AlarmInfo unassign(Alarm alarm, long unassignTs, User user) throws ThingsboardException {
@@ -176,6 +240,17 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
         }
         return alarmInfo;
     }
+    /**
+     * Unassigns deleted user alarms.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param userTitle user title ({@link String})
+     * @param alarms alarms ({@link List})
+     * @param unassignTs unassign ts
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void unassignDeletedUserAlarms(TenantId tenantId, UserId userId, String userTitle, List<UUID> alarms, long unassignTs) {
@@ -192,6 +267,14 @@ public class DefaultTbAlarmService extends AbstractTbEntityService implements Tb
             }
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param user authenticated user performing the action
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean delete(Alarm alarm, User user) {

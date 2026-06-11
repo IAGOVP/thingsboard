@@ -18,9 +18,26 @@ package org.thingsboard.server.service.system;
 import org.thingsboard.server.common.data.FeaturesInfo;
 import org.thingsboard.server.common.data.SystemInfo;
 
+/**
+
+ * Service contract for system info operations (system-level configuration and info services).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface SystemInfoService {
 
     SystemInfo getSystemInfo();
+
+    /**
+     * Returns features info.
+     *
+     * @return {@link FeaturesInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     FeaturesInfo getFeaturesInfo();
 

@@ -52,6 +52,11 @@ import static org.thingsboard.server.dao.edge.stats.EdgeStatsKey.DOWNLINK_MSGS_L
 import static org.thingsboard.server.dao.edge.stats.EdgeStatsKey.DOWNLINK_MSGS_PERMANENTLY_FAILED;
 import static org.thingsboard.server.dao.edge.stats.EdgeStatsKey.DOWNLINK_MSGS_PUSHED;
 import static org.thingsboard.server.dao.edge.stats.EdgeStatsKey.DOWNLINK_MSGS_TMP_FAILED;
+/**
+ * Service implementation for edge stats in ThingsBoard Edge integration.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @TbCoreComponent
 @ConditionalOnProperty(prefix = "edges.stats", name = "enabled", havingValue = "true")
@@ -74,6 +79,10 @@ public class EdgeStatsService {
             fixedDelayString = "${edges.stats.report-interval-millis:600000}",
             initialDelayString = "${edges.stats.report-interval-millis:600000}"
     )
+    /**
+     * Report stats.
+     *
+     */
     public void reportStats() {
         log.debug("Reporting Edge communication stats...");
         long now = System.currentTimeMillis();
@@ -127,11 +136,21 @@ public class EdgeStatsService {
             );
 
             Futures.addCallback(future, new FutureCallback<>() {
+                /**
+                 * On success.
+                 *
+                 * @param result result (TimeseriesSaveResult)
+                 */
                 @Override
                 public void onSuccess(TimeseriesSaveResult result) {
                     log.debug("Successfully saved edge time-series stats: {} for edge: {}", statsEntries, edgeId);
                 }
 
+                /**
+                 * On failure.
+                 *
+                 * @param t t (Throwable)
+                 */
                 @Override
                 public void onFailure(Throwable t) {
                     log.warn("Failed to save edge time-series stats for edge: {}", edgeId, t);

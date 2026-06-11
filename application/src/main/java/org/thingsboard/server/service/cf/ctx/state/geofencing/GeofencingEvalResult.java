@@ -19,6 +19,12 @@ import jakarta.annotation.Nullable;
 import org.thingsboard.server.common.data.cf.configuration.geofencing.GeofencingPresenceStatus;
 import org.thingsboard.server.common.data.cf.configuration.geofencing.GeofencingTransitionEvent;
 
+/**
+
+ * Result of calculated-field evaluation (geofencing eval result).
+
+ */
+
 public record GeofencingEvalResult(@Nullable GeofencingTransitionEvent transition,
                                    GeofencingPresenceStatus status) {
 }

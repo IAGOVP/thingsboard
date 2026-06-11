@@ -67,6 +67,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+/**
+ * Processes calculated-field lifecycle and recalculation messages from the queue.
+ */
 
 @Service
 @TbRuleEngineComponent
@@ -79,6 +82,21 @@ public class DefaultTbCalculatedFieldConsumerService extends AbstractPartitionBa
 
     private final TbRuleEngineQueueFactory queueFactory;
     private final CalculatedFieldStateService stateService;
+
+    /**
+     * Constructs {@link DefaultTbCalculatedFieldConsumerService} with the supplied dependencies and configuration.
+     * @param tbQueueFactory tb queue factory
+     * @param actorContext actor context
+     * @param deviceProfileCache device profile cache
+     * @param assetProfileCache asset profile cache
+     * @param tbResourceDataCache tb resource data cache
+     * @param tenantProfileCache tenant profile cache
+     * @param apiUsageStateService api usage state service
+     * @param partitionService partition service
+     * @param eventPublisher event publisher
+     * @param jwtSettingsService jwt settings service
+     * @param stateService state service
+     */
 
     public DefaultTbCalculatedFieldConsumerService(TbRuleEngineQueueFactory tbQueueFactory,
                                                    ActorSystemContext actorContext,
@@ -97,6 +115,12 @@ public class DefaultTbCalculatedFieldConsumerService extends AbstractPartitionBa
         this.stateService = stateService;
     }
 
+    /**
+     * Invoked when start up occurs.
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void onStartUp() {
         var queueKey = new QueueKey(ServiceType.TB_RULE_ENGINE, DataConstants.CF_QUEUE_NAME);
@@ -114,15 +138,36 @@ public class DefaultTbCalculatedFieldConsumerService extends AbstractPartitionBa
         stateService.init(eventConsumer);
     }
 
+    /**
+     * Shuts down destroy.
+     * @return @PreDestroy
+    public void
+     */
+
     @PreDestroy
     public void destroy() {
         super.destroy();
     }
 
+    /**
+     * Starts consumers.
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void startConsumers() {
         super.startConsumers();
     }
+
+    /**
+     * Invoked when partition change event occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param event application or cluster event
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void onPartitionChangeEvent(PartitionChangeEvent event) {
@@ -188,35 +233,84 @@ public class DefaultTbCalculatedFieldConsumerService extends AbstractPartitionBa
         }
     }
 
+    /**
+     * Returns service type.
+     * @return {@link ServiceType}
+     */
+
     @Override
     protected ServiceType getServiceType() {
         return ServiceType.TB_RULE_ENGINE;
     }
+
+    /**
+     * Returns prefix.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return string value
+     */
 
     @Override
     protected String getPrefix() {
         return "tb-cf";
     }
 
+    /**
+     * Returns notification poll duration.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
+
     @Override
     protected long getNotificationPollDuration() {
         return pollInterval;
     }
+
+    /**
+     * Returns notification pack processing timeout.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
 
     @Override
     protected long getNotificationPackProcessingTimeout() {
         return packProcessingTimeout;
     }
 
+    /**
+     * Returns mgmt thread pool size.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
+
     @Override
     protected int getMgmtThreadPoolSize() {
         return Math.max(Runtime.getRuntime().availableProcessors(), 4);
     }
 
+    /**
+     * Creates notifications consumer.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@link TbQueueConsumer}
+     */
+
     @Override
     protected TbQueueConsumer<TbProtoQueueMsg<ToCalculatedFieldNotificationMsg>> createNotificationsConsumer() {
         return queueFactory.createToCalculatedFieldNotificationMsgConsumer();
     }
+
+    /**
+     * Handles notification.
+     * @param id id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void handleNotification(UUID id, TbProtoQueueMsg<ToCalculatedFieldNotificationMsg> msg, TbCallback callback) {
@@ -225,6 +319,13 @@ public class DefaultTbCalculatedFieldConsumerService extends AbstractPartitionBa
             forwardToActorSystem(toCfNotification.getLinkedTelemetryMsg(), callback);
         }
     }
+
+    /**
+     * Handles component lifecycle event.
+     * @param event application or cluster event
+     * @return @EventListener
+    public void
+     */
 
     @EventListener
     public void handleComponentLifecycleEvent(ComponentLifecycleMsg event) {
@@ -257,6 +358,12 @@ public class DefaultTbCalculatedFieldConsumerService extends AbstractPartitionBa
     private TenantId toTenantId(long tenantIdMSB, long tenantIdLSB) {
         return TenantId.fromUUID(new UUID(tenantIdMSB, tenantIdLSB));
     }
+
+    /**
+     * Stops consumers.
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void stopConsumers() {

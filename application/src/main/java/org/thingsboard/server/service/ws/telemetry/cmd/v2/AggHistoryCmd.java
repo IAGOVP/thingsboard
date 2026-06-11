@@ -18,6 +18,10 @@ package org.thingsboard.server.service.ws.telemetry.cmd.v2;
 import lombok.Data;
 
 import java.util.List;
+/**
+ * WebSocket command DTO for agg history.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 public class AggHistoryCmd {

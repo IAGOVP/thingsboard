@@ -36,6 +36,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Default Spring implementation for gateway notifications service (gateway child-device session management).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -47,6 +53,14 @@ public class DefaultGatewayNotificationsService implements GatewayNotificationsS
     @Lazy
     @Autowired
     private TbCoreDeviceRpcService deviceRpcService;
+    /**
+     * Handles device updated.
+     *
+     * @param device device ({@link Device})
+     * @param oldDevice old device ({@link Device})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceUpdated(Device device, Device oldDevice) {
@@ -61,6 +75,13 @@ public class DefaultGatewayNotificationsService implements GatewayNotificationsS
             }, null);
         }
     }
+    /**
+     * Handles device deleted.
+     *
+     * @param device device ({@link Device})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDeviceDeleted(Device device) {

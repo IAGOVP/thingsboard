@@ -18,6 +18,10 @@ package org.thingsboard.server.service.security.auth.rest;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * DTO for username/password REST login: public login request.
+ */
+
 public class PublicLoginRequest {
 
     private String publicId;
@@ -26,6 +30,11 @@ public class PublicLoginRequest {
     public PublicLoginRequest(@JsonProperty("publicId") String publicId) {
         this.publicId = publicId;
    }
+
+    /**
+     * Returns public id.
+     *
+     */
 
     public String getPublicId() {
         return publicId;

@@ -29,12 +29,24 @@ import org.thingsboard.server.dao.domain.DomainService;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 
 import java.util.List;
+/**
+ * Default implementation of {@link TbDomainService}.
+ */
 
 @Service
 @AllArgsConstructor
 public class DefaultTbDomainService extends AbstractTbEntityService implements TbDomainService {
 
     private final DomainService domainService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param domain domain ({@link Domain})
+     * @param oAuth2Clients o auth2clients ({@link List})
+     * @param user authenticated user performing the action
+     * @return {@link Domain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Domain save(Domain domain, List<OAuth2ClientId> oAuth2Clients, User user) throws Exception {
@@ -52,6 +64,15 @@ public class DefaultTbDomainService extends AbstractTbEntityService implements T
             throw e;
         }
     }
+    /**
+     * Updates oauth2clients.
+     *
+     * @param domain domain ({@link Domain})
+     * @param oAuth2ClientIds o auth2client ids ({@link List})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateOauth2Clients(Domain domain, List<OAuth2ClientId> oAuth2ClientIds, User user) {
@@ -66,6 +87,14 @@ public class DefaultTbDomainService extends AbstractTbEntityService implements T
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param domain domain ({@link Domain})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(Domain domain, User user) {

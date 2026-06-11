@@ -60,6 +60,12 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+/**
+ * Default Spring implementation for calculated field cache (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ *
+ * <p>Registered as a {@code @Service} or {@code @Component} bean.
+ */
+
 
 @Service
 @Slf4j
@@ -87,6 +93,12 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
     @Value("${queue.calculated_fields.init_fetch_pack_size:50000}")
     @Getter
     private int initFetchPackSize;
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.CF_READ_CF_SERVICE)
     public void init() {
@@ -107,21 +119,49 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
                         entityIdCalculatedFieldLinks.computeIfAbsent(link.entityId(), id -> new CopyOnWriteArrayList<>()).add(link)
                 );
     }
+    /**
+     * Returns calculated field.
+     *
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedField getCalculatedField(CalculatedFieldId calculatedFieldId) {
         return calculatedFields.get(calculatedFieldId);
     }
+    /**
+     * Returns calculated fields by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<CalculatedField> getCalculatedFieldsByEntityId(EntityId entityId) {
         return entityIdCalculatedFields.getOrDefault(entityId, Collections.emptyList());
     }
+    /**
+     * Returns calculated field links by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<CalculatedFieldLink> getCalculatedFieldLinksByEntityId(EntityId entityId) {
         return entityIdCalculatedFieldLinks.getOrDefault(entityId, Collections.emptyList());
     }
+    /**
+     * Returns calculated field ctx.
+     *
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @return {@link CalculatedFieldCtx}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldCtx getCalculatedFieldCtx(CalculatedFieldId calculatedFieldId) {
@@ -146,6 +186,13 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
         log.trace("[{}] Found calculated field ctx in cache: {}", calculatedFieldId, ctx);
         return ctx;
     }
+    /**
+     * Returns calculated field ctxs by entity id.
+     *
+     * @param entityId target entity identifier
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<CalculatedFieldCtx> getCalculatedFieldCtxsByEntityId(EntityId entityId) {
@@ -156,6 +203,14 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
                 .map(cf -> getCalculatedFieldCtx(cf.getId()))
                 .toList();
     }
+    /**
+     * Returns calculated field ctxs by type.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param cfType cf type ({@link CalculatedFieldType})
+     * @return {@link Stream}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Stream<CalculatedFieldCtx> getCalculatedFieldCtxsByType(TenantId tenantId, CalculatedFieldType cfType) {
@@ -163,6 +218,15 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
                 .filter(cf -> cf.getTenantId().equals(tenantId) && cfType.equals(cf.getType()))
                 .map(cf -> getCalculatedFieldCtx(cf.getId()));
     }
+    /**
+     * Has calculated fields.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param filter filter ({@link Predicate})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean hasCalculatedFields(TenantId tenantId, EntityId entityId, Predicate<CalculatedFieldCtx> filter) {
@@ -175,6 +239,15 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
 
         return hasCalculatedFieldsByProfile(tenantId, entityId, filter);
     }
+    /**
+     * Has calculated fields by profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param filter filter ({@link Predicate})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean hasCalculatedFieldsByProfile(TenantId tenantId, EntityId entityId, Predicate<CalculatedFieldCtx> filter) {
         EntityId profileId = getProfileId(tenantId, entityId);
@@ -188,6 +261,14 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
         }
         return false;
     }
+    /**
+     * Add calculated field.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addCalculatedField(TenantId tenantId, CalculatedFieldId calculatedFieldId) {
@@ -217,12 +298,27 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
             lock.unlock();
         }
     }
+    /**
+     * Updates calculated field.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateCalculatedField(TenantId tenantId, CalculatedFieldId calculatedFieldId) {
         evict(calculatedFieldId);
         addCalculatedField(tenantId, calculatedFieldId);
     }
+    /**
+     * Evict.
+     *
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evict(CalculatedFieldId calculatedFieldId) {
@@ -237,6 +333,13 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
         entityIdCalculatedFieldLinks.forEach((entityId, calculatedFieldLinks) -> calculatedFieldLinks.removeIf(link -> link.calculatedFieldId().equals(calculatedFieldId)));
         log.debug("[{}] evict calculated field links from cached links by entity id: {}", calculatedFieldId, oldCalculatedField);
     }
+    /**
+     * Handles tenant profile update.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void handleTenantProfileUpdate(TenantProfileId tenantProfileId) {
@@ -247,6 +350,14 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
                 })
                 .forEach(CalculatedFieldCtx::setTenantProfileProperties);
     }
+    /**
+     * Returns profile id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityId getProfileId(TenantId tenantId, EntityId entityId) {
@@ -257,6 +368,14 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
         };
         return profile != null ? profile.getId() : null;
     }
+    /**
+     * Returns dynamic entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<EntityId> getDynamicEntities(TenantId tenantId, EntityId entityId) {
@@ -265,23 +384,53 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
         }
         return Collections.emptySet();
     }
+    /**
+     * Add owner entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addOwnerEntity(TenantId tenantId, EntityId entityId) {
         EntityId owner = ownerService.getOwner(tenantId, entityId);
         getOwnedEntities(tenantId, owner).add(entityId);
     }
+    /**
+     * Updates owner entity.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateOwnerEntity(TenantId tenantId, EntityId entityId) {
         evictOwnerEntity(entityId);
         addOwnerEntity(tenantId, entityId);
     }
+    /**
+     * Evict owner entity.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evictOwnerEntity(EntityId entityId) {
         ownerEntities.values().forEach(entities -> entities.remove(entityId));
     }
+    /**
+     * Evict owner.
+     *
+     * @param owner owner ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evictOwner(EntityId owner) {
@@ -302,6 +451,13 @@ public class DefaultCalculatedFieldCache implements CalculatedFieldCache {
             return entities;
         });
     }
+    /**
+     * Handles component lifecycle event.
+     *
+     * @param event event ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @EventListener(ComponentLifecycleMsg.class)
     public void onComponentLifecycleEvent(ComponentLifecycleMsg event) {

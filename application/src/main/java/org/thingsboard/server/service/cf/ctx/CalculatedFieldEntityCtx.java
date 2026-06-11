@@ -18,6 +18,9 @@ package org.thingsboard.server.service.cf.ctx;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldState;
+/**
+ * Calculated field entity ctx (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ */
 
 @Data
 @NoArgsConstructor

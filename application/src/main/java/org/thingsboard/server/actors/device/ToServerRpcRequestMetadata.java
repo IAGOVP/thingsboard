@@ -21,8 +21,11 @@ import org.thingsboard.server.gen.transport.TransportProtos;
 import java.util.UUID;
 
 /**
- * @author Andrew Shvayka
+ * Tracks pending to-server (client-side) RPC requests from the device.
  */
+
+
+
 @Data
 public class ToServerRpcRequestMetadata {
     private final UUID sessionId;

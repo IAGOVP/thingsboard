@@ -17,11 +17,18 @@ package org.thingsboard.server.service.ws;
 
 
 /**
- * Created by ashvayka on 27.03.18.
+ * Per-session metadata tracked by {@link DefaultWebSocketService} (auth state, ping counters, command ids).
  */
+
+
 public class WsSessionMetaData {
     private WebSocketSessionRef sessionRef;
     private long lastActivityTime;
+
+    /**
+     * Constructs {@link WsSessionMetaData} with the supplied dependencies and configuration.
+     * @param sessionRef reference to the WebSocket session
+     */
 
     public WsSessionMetaData(WebSocketSessionRef sessionRef) {
         super();
@@ -29,21 +36,46 @@ public class WsSessionMetaData {
         this.lastActivityTime = System.currentTimeMillis();
     }
 
+    /**
+     * Returns session ref.
+     * @return {@link WebSocketSessionRef}
+     */
+
     public WebSocketSessionRef getSessionRef() {
         return sessionRef;
     }
+
+    /**
+     * Sets session ref.
+     * @param sessionRef reference to the WebSocket session
+     */
 
     public void setSessionRef(WebSocketSessionRef sessionRef) {
         this.sessionRef = sessionRef;
     }
 
+    /**
+     * Returns last activity time.
+     * @return numeric result
+     */
+
     public long getLastActivityTime() {
         return lastActivityTime;
     }
 
+    /**
+     * Sets last activity time.
+     * @param lastActivityTime last activity time
+     */
+
     public void setLastActivityTime(long lastActivityTime) {
         this.lastActivityTime = lastActivityTime;
     }
+
+    /**
+     * To string.
+     * @return string value
+     */
 
     @Override
     public String toString() {

@@ -27,6 +27,10 @@ import org.thingsboard.server.common.data.security.model.mfa.PlatformTwoFaSettin
 import org.thingsboard.server.exception.DataValidationException;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
+/**
+ * Service contract for system-level security (password reset, activation).
+ */
+
 public interface SystemSecurityService {
 
     void validatePasswordByPolicy(String password, UserPasswordPolicy passwordPolicy);

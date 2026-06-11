@@ -21,13 +21,29 @@ import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
 import java.util.UUID;
 import java.util.function.BiConsumer;
+/**
+ * Rule-engine message submit strategy: burst tb rule engine submit strategy.
+ * <p>Controls parallelism and ordering when a pack of {@code TbMsg} is handed to actors.
+ */
 
 @Slf4j
 public class BurstTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSubmitStrategy {
 
+    /**
+     * Constructs {@link BurstTbRuleEngineSubmitStrategy} with the supplied dependencies and configuration.
+     * @param queueName queue name
+     */
+
     public BurstTbRuleEngineSubmitStrategy(String queueName) {
         super(queueName);
     }
+
+    /**
+     * Submits attempt.
+     * @param msgConsumer msg consumer
+     * @return @Override
+    public void
+     */
 
     @Override
     public void submitAttempt(BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer) {
@@ -36,6 +52,13 @@ public class BurstTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSubmitS
         }
         orderedMsgList.forEach(pair -> msgConsumer.accept(pair.uuid(), pair.msg()));
     }
+
+    /**
+     * Do on success.
+     * @param id id
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void doOnSuccess(UUID id) {

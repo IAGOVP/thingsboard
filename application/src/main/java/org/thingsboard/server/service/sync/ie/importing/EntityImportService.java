@@ -23,9 +23,35 @@ import org.thingsboard.server.common.data.sync.ie.EntityExportData;
 import org.thingsboard.server.common.data.sync.ie.EntityImportResult;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 
+/**
+
+ * Imports entity entities from export JSON.
+
+ *
+
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+
+ */
+
 public interface EntityImportService<I extends EntityId, E extends ExportableEntity<I>, D extends EntityExportData<E>> {
+/**
+ * Imports entity.
+ *
+ * @param ctx calculated-field execution context
+ * @param exportData export data ({@link D})
+ * @return {@link EntityImportResult}
+ * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+ */
+
+
 
     EntityImportResult<E> importEntity(EntitiesImportCtx ctx, D exportData) throws ThingsboardException;
+/**
+ * Returns entity type.
+ *
+ * @return {@link EntityType}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     EntityType getEntityType();
 

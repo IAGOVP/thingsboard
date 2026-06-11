@@ -23,6 +23,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
+/**
+ * Rule-engine message submit strategy: sequential tb rule engine submit strategy.
+ * <p>Controls parallelism and ordering when a pack of {@code TbMsg} is handed to actors.
+ */
 
 @Slf4j
 public class SequentialTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSubmitStrategy {
@@ -31,9 +35,21 @@ public class SequentialTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSu
     private volatile BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer;
     private volatile UUID expectedMsgId;
 
+    /**
+     * Constructs {@link SequentialTbRuleEngineSubmitStrategy} with the supplied dependencies and configuration.
+     * @param queueName queue name
+     */
+
     public SequentialTbRuleEngineSubmitStrategy(String queueName) {
         super(queueName);
     }
+
+    /**
+     * Submits attempt.
+     * @param msgConsumer msg consumer
+     * @return @Override
+    public void
+     */
 
     @Override
     public void submitAttempt(BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer) {
@@ -42,10 +58,26 @@ public class SequentialTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSu
         submitNext();
     }
 
+    /**
+     * Updates update.
+     * @param reprocessMap reprocess map
+     * @return @Override
+    public void
+     */
+
     @Override
     public void update(ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> reprocessMap) {
         super.update(reprocessMap);
     }
+
+    /**
+     * Do on success.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param id id
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void doOnSuccess(UUID id) {

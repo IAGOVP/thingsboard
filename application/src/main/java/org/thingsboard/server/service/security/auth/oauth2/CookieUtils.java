@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
+/**
+ * Cookie utils for OAuth2 / social login.
+ */
 
 @Slf4j
 public class CookieUtils {
@@ -38,6 +41,14 @@ public class CookieUtils {
         OBJECT_MAPPER = new ObjectMapper();
         OBJECT_MAPPER.registerModules(SecurityJackson2Modules.getModules(loader));
     }
+
+    /**
+     * Returns cookie.
+     *
+     * @param request request (HttpServletRequest)
+     * @param name name (String)
+     * @return {@link Optional} result
+     */
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
@@ -53,6 +64,15 @@ public class CookieUtils {
         return Optional.empty();
     }
 
+    /**
+     * Add cookie.
+     *
+     * @param response response (HttpServletResponse)
+     * @param name name (String)
+     * @param value value (String)
+     * @param maxAge max age (int)
+     */
+
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
@@ -60,6 +80,14 @@ public class CookieUtils {
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
     }
+
+    /**
+     * Removes cookie.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param name name (String)
+     */
 
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
@@ -75,6 +103,13 @@ public class CookieUtils {
         }
     }
 
+    /**
+     * Serialize.
+     *
+     * @param object object (Object)
+     * @return {@link String} result
+     */
+
     public static String serialize(Object object) {
         try {
             return Base64.getUrlEncoder()
@@ -84,6 +119,14 @@ public class CookieUtils {
                     + object + " cannot be transformed to a String", e);
         }
     }
+
+    /**
+     * Deserialize.
+     *
+     * @param cookie cookie (Cookie)
+     * @param cls cls (Class<T>)
+     * @return {@link T} result
+     */
 
     public static <T> T deserialize(Cookie cookie, Class<T> cls) {
         byte[] decodedBytes = Base64.getUrlDecoder().decode(cookie.getValue());

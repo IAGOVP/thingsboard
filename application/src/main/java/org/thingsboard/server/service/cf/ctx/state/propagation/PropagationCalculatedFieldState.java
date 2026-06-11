@@ -40,6 +40,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.thingsboard.server.common.data.cf.configuration.PropagationCalculatedFieldConfiguration.PROPAGATION_CONFIG_ARGUMENT;
+/**
+ * Runtime state for propagation calculated field calculated fields.
+ */
 
 @Slf4j
 public class PropagationCalculatedFieldState extends ScriptCalculatedFieldState {
@@ -49,6 +52,14 @@ public class PropagationCalculatedFieldState extends ScriptCalculatedFieldState 
     public PropagationCalculatedFieldState(EntityId entityId) {
         super(entityId);
     }
+    /**
+     * Set ctx.
+     *
+     * @param ctx calculated-field execution context
+     * @param actorCtx actor ctx ({@link TbActorRef})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void setCtx(CalculatedFieldCtx ctx, TbActorRef actorCtx) {
@@ -62,6 +73,13 @@ public class PropagationCalculatedFieldState extends ScriptCalculatedFieldState 
             this.tbelExpression = ctx.getTbelExpressions().get(ctx.getExpression());
         }
     }
+    /**
+     * Init.
+     *
+     * @param restored restored
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(boolean restored) {
@@ -82,11 +100,25 @@ public class PropagationCalculatedFieldState extends ScriptCalculatedFieldState 
             });
         }
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CalculatedFieldType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldType getType() {
         return CalculatedFieldType.PROPAGATION;
     }
+    /**
+     * Perform calculation.
+     *
+     * @param updatedArgs updated args ({@link Map})
+     * @param ctx calculated-field execution context
+     * @return future completing with {@link CalculatedFieldResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<CalculatedFieldResult> performCalculation(Map<String, ArgumentEntry> updatedArgs, CalculatedFieldCtx ctx) {
@@ -121,6 +153,12 @@ public class PropagationCalculatedFieldState extends ScriptCalculatedFieldState 
                 .result(toTelemetryResult(ctx, updatedArgs))
                 .build());
     }
+    /**
+     * Checks readiness.
+     *
+     * @return {@link ReadinessStatus}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ReadinessStatus checkReadiness() {

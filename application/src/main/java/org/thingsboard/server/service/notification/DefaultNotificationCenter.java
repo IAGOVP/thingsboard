@@ -87,6 +87,12 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.common.data.notification.NotificationDeliveryMethod.WEB;
 
+    /**
+     * Default Spring implementation for notification center (notification delivery, templates, targets, and rule-trigger processing).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -104,6 +110,15 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
     private final RateLimitService rateLimitService;
 
     private Map<NotificationDeliveryMethod, NotificationChannel> channels;
+    /**
+     * Processes notification request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param request request payload with operation parameters
+     * @param callback queue callback invoked when processing completes
+     * @return {@link NotificationRequest}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRequest processNotificationRequest(TenantId tenantId, NotificationRequest request, FutureCallback<NotificationRequestStats> callback) {
@@ -189,6 +204,16 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
         processNotificationRequestAsync(ctx, targets, callback);
         return request;
     }
+    /**
+     * Send general web notification.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipients recipients ({@link UsersFilter})
+     * @param template template ({@link NotificationTemplate})
+     * @param info info ({@link GeneralNotificationInfo})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendGeneralWebNotification(TenantId tenantId, UsersFilter recipients, NotificationTemplate template, GeneralNotificationInfo info) {
@@ -219,6 +244,16 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
             log.error("Failed to process notification request for recipients {} for template '{}'", recipients, template.getName(), e);
         }
     }
+    /**
+     * Send system notification.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param targetId target id ({@link NotificationTargetId})
+     * @param type type ({@link NotificationType})
+     * @param info info ({@link NotificationInfo})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendSystemNotification(TenantId tenantId, NotificationTargetId targetId, NotificationType type, NotificationInfo info) {
@@ -343,6 +378,15 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
         log.trace("[{}] Sending {} notification for recipient {}", ctx.getRequest().getId(), deliveryMethod, recipient);
         notificationChannel.sendNotification(recipient, processedTemplate, ctx);
     }
+    /**
+     * Send notification.
+     *
+     * @param recipient recipient ({@link User})
+     * @param processedTemplate processed template ({@link WebDeliveryMethodNotificationTemplate})
+     * @param ctx calculated-field execution context
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendNotification(User recipient, WebDeliveryMethodNotificationTemplate processedTemplate, NotificationProcessingContext ctx) throws Exception {
@@ -371,6 +415,15 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
                 .build();
         onNotificationUpdate(recipient.getTenantId(), recipient.getId(), update);
     }
+    /**
+     * Mark notification as read.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void markNotificationAsRead(TenantId tenantId, UserId recipientId, NotificationId notificationId) {
@@ -389,6 +442,15 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
             }
         }
     }
+    /**
+     * Mark all notifications as read.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void markAllNotificationsAsRead(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId) {
@@ -403,6 +465,15 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
             onNotificationUpdate(tenantId, recipientId, update);
         }
     }
+    /**
+     * Deletes notification.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteNotification(TenantId tenantId, UserId recipientId, NotificationId notificationId) {
@@ -416,6 +487,13 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
             onNotificationUpdate(tenantId, recipientId, update);
         }
     }
+    /**
+     * Returns available delivery methods.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<NotificationDeliveryMethod> getAvailableDeliveryMethods(TenantId tenantId) {
@@ -431,10 +509,25 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
                 .map(NotificationChannel::getDeliveryMethod)
                 .sorted().toList();
     }
+    /**
+     * Checks the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void check(TenantId tenantId) throws Exception {
     }
+    /**
+     * Deletes notification request.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationRequestId notification request id ({@link NotificationRequestId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteNotificationRequest(TenantId tenantId, NotificationRequestId notificationRequestId) {
@@ -482,16 +575,36 @@ public class DefaultNotificationCenter extends AbstractSubscriptionService imple
             }
         });
     }
+    /**
+     * Returns delivery method.
+     *
+     * @return {@link NotificationDeliveryMethod}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationDeliveryMethod getDeliveryMethod() {
         return WEB;
     }
+    /**
+     * Returns executor prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getExecutorPrefix() {
         return "notification";
     }
+    /**
+     * Set channels.
+     *
+     * @param channels channels ({@link List})
+     * @param webNotificationChannel web notification channel ({@link NotificationCenter})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Autowired
     public void setChannels(List<NotificationChannel> channels, NotificationCenter webNotificationChannel) {

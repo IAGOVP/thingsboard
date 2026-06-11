@@ -35,6 +35,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+/**
+ * Default implementation of {@link TbQueueService}.
+ */
 
 @Slf4j
 @Service
@@ -45,6 +48,13 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
     private final QueueService queueService;
     private final TbClusterService tbClusterService;
     private final TbQueueAdmin tbQueueAdmin;
+    /**
+     * Saves or persists queue.
+     *
+     * @param queue queue ({@link Queue})
+     * @return {@link Queue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Queue saveQueue(Queue queue) {
@@ -61,6 +71,14 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
         tbClusterService.onQueuesUpdate(List.of(savedQueue));
         return savedQueue;
     }
+    /**
+     * Deletes queue.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueId queue id ({@link QueueId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteQueue(TenantId tenantId, QueueId queueId) {
@@ -68,6 +86,14 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
         queueService.deleteQueue(tenantId, queueId);
         tbClusterService.onQueuesDelete(List.of(queue));
     }
+    /**
+     * Deletes queue by queue name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param queueName queue name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteQueueByQueueName(TenantId tenantId, String queueName) {
@@ -75,6 +101,15 @@ public class DefaultTbQueueService extends AbstractTbEntityService implements Tb
         queueService.deleteQueue(tenantId, queue.getId());
         tbClusterService.onQueuesDelete(List.of(queue));
     }
+    /**
+     * Updates queues by tenants.
+     *
+     * @param tenantIds tenant ids ({@link List})
+     * @param newTenantProfile new tenant profile ({@link TenantProfile})
+     * @param oldTenantProfile old tenant profile ({@link TenantProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateQueuesByTenants(List<TenantId> tenantIds, TenantProfile newTenantProfile, TenantProfile

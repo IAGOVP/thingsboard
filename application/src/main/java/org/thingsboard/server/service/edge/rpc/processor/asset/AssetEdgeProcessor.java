@@ -42,12 +42,24 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.UUID;
+/**
+ * Processes asset edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class AssetEdgeProcessor extends BaseAssetProcessor implements AssetProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param assetUpdateMsg asset update msg (AssetUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processAssetMsgFromEdge(TenantId tenantId, Edge edge, AssetUpdateMsg assetUpdateMsg) {
         log.trace("[{}] executing processAssetMsgFromEdge [{}] from edge [{}]", tenantId, assetUpdateMsg, edge.getId());
@@ -96,7 +108,13 @@ public class AssetEdgeProcessor extends BaseAssetProcessor implements AssetProce
         Asset asset = edgeCtx.getAssetService().findAssetById(tenantId, assetId);
         pushEntityEventToRuleEngine(tenantId, edge, asset, TbMsgType.ENTITY_CREATED);
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         AssetId assetId = new AssetId(edgeEvent.getEntityId());
@@ -127,12 +145,24 @@ public class AssetEdgeProcessor extends BaseAssetProcessor implements AssetProce
         return null;
     }
 
+    /**
+     * Set customer id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param asset asset (Asset)
+     * @param assetUpdateMsg asset update msg (AssetUpdateMsg)
+     */
     @Override
     protected void setCustomerId(TenantId tenantId, CustomerId customerId, Asset asset, AssetUpdateMsg assetUpdateMsg) {
         CustomerId customerUUID = asset.getCustomerId() != null ? asset.getCustomerId() : customerId;
         asset.setCustomerId(customerUUID);
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.ASSET;

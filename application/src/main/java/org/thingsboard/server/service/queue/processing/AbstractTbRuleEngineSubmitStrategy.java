@@ -25,27 +25,61 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
+/**
+ * Rule-engine message submit strategy: abstract tb rule engine submit strategy.
+ * <p>Controls parallelism and ordering when a pack of {@code TbMsg} is handed to actors.
+ */
+
 public abstract class AbstractTbRuleEngineSubmitStrategy implements TbRuleEngineSubmitStrategy {
 
     protected final String queueName;
     protected List<IdMsgPair<TransportProtos.ToRuleEngineMsg>> orderedMsgList;
     private volatile boolean stopped;
 
+    /**
+     * Constructs {@link AbstractTbRuleEngineSubmitStrategy} with the supplied dependencies and configuration.
+     * @param queueName queue name
+     */
+
     public AbstractTbRuleEngineSubmitStrategy(String queueName) {
         this.queueName = queueName;
     }
 
+    /**
+     * Do on success.
+     * @param id id
+     */
+
     protected abstract void doOnSuccess(UUID id);
+
+    /**
+     * Initializes init.
+     * @param msgs msgs
+     * @return @Override
+    public void
+     */
 
     @Override
     public void init(List<TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgs) {
         orderedMsgList = msgs.stream().map(msg -> new IdMsgPair<>(UUID.randomUUID(), msg)).collect(Collectors.toList());
     }
 
+    /**
+     * Returns pending map.
+     * @return {@link ConcurrentMap}
+     */
+
     @Override
     public ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> getPendingMap() {
         return orderedMsgList.stream().collect(Collectors.toConcurrentMap(pair -> pair.uuid(), pair -> pair.msg()));
     }
+
+    /**
+     * Updates update.
+     * @param reprocessMap reprocess map
+     * @return @Override
+    public void
+     */
 
     @Override
     public void update(ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> reprocessMap) {
@@ -67,12 +101,27 @@ public abstract class AbstractTbRuleEngineSubmitStrategy implements TbRuleEngine
         orderedMsgList = newOrderedMsgList;
     }
 
+    /**
+     * Invoked when success occurs.
+     * @param id id
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onSuccess(UUID id) {
         if (!stopped) {
             doOnSuccess(id);
         }
     }
+
+    /**
+     * Stops stop.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return @Override
+    public void
+     */
 
     @Override
     public void stop() {

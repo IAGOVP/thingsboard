@@ -93,6 +93,16 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/**
+ * OpenAPI 3.1 / Swagger UI configuration for the ThingsBoard REST API.
+ *
+ * <p>Active on monolith and tb-core nodes when {@code springdoc.api-docs.enabled=true}.
+ * Customizes schema generation (property ordering, discriminator examples, duplicate removal),
+ * adds login/refresh-token operations, applies default error responses, and configures
+ * JWT + API key security schemes on protected endpoints.
+ *
+ * @see org.thingsboard.server.config.annotations.ApiOperation controller operation annotations
+ */
 @Slf4j
 @Configuration
 @ConditionalOnExpression("('${service.type:null}'=='monolith' || '${service.type:null}'=='tb-core') && '${springdoc.api-docs.enabled:true}'=='true'")

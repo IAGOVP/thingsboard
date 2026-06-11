@@ -23,9 +23,39 @@ import org.thingsboard.server.service.entitiy.SimpleTbEntityService;
 
 import java.util.List;
 
+/**
+
+ * Application-layer service API for widgets bundle entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbWidgetsBundleService extends SimpleTbEntityService<WidgetsBundle> {
+/**
+ * Updates widgets bundle widget types.
+ *
+ * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+ * @param widgetTypeIds widget type ids ({@link List})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     void updateWidgetsBundleWidgetTypes(WidgetsBundleId widgetsBundleId, List<WidgetTypeId> widgetTypeIds, User user) throws Exception;
+/**
+ * Updates widgets bundle widget fqns.
+ *
+ * @param widgetsBundleId widgets bundle id ({@link WidgetsBundleId})
+ * @param widgetFqns widget fqns ({@link List})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void updateWidgetsBundleWidgetFqns(WidgetsBundleId widgetsBundleId, List<String> widgetFqns, User user) throws Exception;
 

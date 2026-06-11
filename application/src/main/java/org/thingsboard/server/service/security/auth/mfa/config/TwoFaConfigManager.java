@@ -25,6 +25,10 @@ import org.thingsboard.server.common.data.security.model.mfa.provider.TwoFaProvi
 
 import java.util.Optional;
 
+/**
+ * Contract for two fa config manager in two-factor authentication (MFA).
+ */
+
 public interface TwoFaConfigManager {
 
     Optional<AccountTwoFaSettings> getAccountTwoFaSettings(TenantId tenantId, User user);

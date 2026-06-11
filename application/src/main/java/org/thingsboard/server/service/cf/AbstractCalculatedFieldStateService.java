@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.utils.CalculatedFieldUtils.fromProto;
 import static org.thingsboard.server.utils.CalculatedFieldUtils.toProto;
+/**
+ * Abstract calculated field state service (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ */
 
 @Slf4j
 public abstract class AbstractCalculatedFieldStateService implements CalculatedFieldStateService {
@@ -50,6 +53,15 @@ public abstract class AbstractCalculatedFieldStateService implements CalculatedF
     private ActorSystemContext actorSystemContext;
 
     protected QueueStateService<TbProtoQueueMsg<ToCalculatedFieldMsg>, TbProtoQueueMsg<CalculatedFieldStateProto>> stateService;
+    /**
+     * Persist state.
+     *
+     * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+     * @param state state ({@link CalculatedFieldState})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public final void persistState(CalculatedFieldEntityCtxId stateId, CalculatedFieldState state, TbCallback callback) {
@@ -58,15 +70,49 @@ public abstract class AbstractCalculatedFieldStateService implements CalculatedF
         }
         doPersist(stateId, toProto(stateId, state), callback);
     }
+    /**
+     * Do persist.
+     *
+     * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+     * @param stateMsgProto state msg proto ({@link CalculatedFieldStateProto})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void doPersist(CalculatedFieldEntityCtxId stateId, CalculatedFieldStateProto stateMsgProto, TbCallback callback);
+    /**
+     * Deletes state.
+     *
+     * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public final void deleteState(CalculatedFieldEntityCtxId stateId, TbCallback callback) {
         doRemove(stateId, callback);
     }
+    /**
+     * Do remove.
+     *
+     * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void doRemove(CalculatedFieldEntityCtxId stateId, TbCallback callback);
+    /**
+     * Processes restored state.
+     *
+     * @param stateMsg state msg ({@link CalculatedFieldStateProto})
+     * @param partition partition ({@link TopicPartitionInfo})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void processRestoredState(CalculatedFieldStateProto stateMsg, TopicPartitionInfo partition, TbCallback callback) {
         var id = fromProto(stateMsg.getId());
@@ -81,18 +127,51 @@ public abstract class AbstractCalculatedFieldStateService implements CalculatedF
         var state = fromProto(id, stateMsg);
         processRestoredState(id, state, partition, callback);
     }
+    /**
+     * Processes restored state.
+     *
+     * @param id id ({@link CalculatedFieldEntityCtxId})
+     * @param state state ({@link CalculatedFieldState})
+     * @param partition partition ({@link TopicPartitionInfo})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void processRestoredState(CalculatedFieldEntityCtxId id, CalculatedFieldState state, TopicPartitionInfo partition, TbCallback callback) {
         partition = partition.withTopic(DataConstants.CF_STATES_QUEUE_NAME);
         actorSystemContext.tellWithHighPriority(new CalculatedFieldStateRestoreMsg(id, state, partition, callback));
     }
+    /**
+     * Restore.
+     *
+     * @param queueKey queue key ({@link QueueKey})
+     * @param partitions partitions ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void restore(QueueKey queueKey, Set<TopicPartitionInfo> partitions) {
         stateService.update(queueKey, partitions, new QueueStateService.RestoreCallback() {
+            
+            /**
+             * Handles all partitions restored.
+             *
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
+
             @Override
             public void onAllPartitionsRestored() {
             }
+            /**
+             * Handles partition restored.
+             *
+             * @param partition partition ({@link TopicPartitionInfo})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onPartitionRestored(TopicPartitionInfo partition) {
@@ -101,16 +180,35 @@ public abstract class AbstractCalculatedFieldStateService implements CalculatedF
             }
         });
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param partitions partitions ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(Set<TopicPartitionInfo> partitions) {
         stateService.delete(partitions);
     }
+    /**
+     * Returns partitions.
+     *
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<TopicPartitionInfo> getPartitions() {
         return stateService.getPartitions().values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void stop() {

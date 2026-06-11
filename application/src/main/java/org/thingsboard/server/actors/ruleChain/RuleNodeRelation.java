@@ -19,8 +19,9 @@ import lombok.Data;
 import org.thingsboard.server.common.data.id.EntityId;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Lightweight relation descriptor (type and target node id) used when telling next in a rule chain.
  */
+
 
 @Data
 final class RuleNodeRelation {

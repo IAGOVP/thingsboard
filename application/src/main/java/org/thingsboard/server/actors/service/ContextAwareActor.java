@@ -20,6 +20,9 @@ import org.thingsboard.server.actors.AbstractTbActor;
 import org.thingsboard.server.actors.ActorSystemContext;
 import org.thingsboard.server.actors.ProcessFailureStrategy;
 import org.thingsboard.server.common.msg.TbActorMsg;
+/**
+ * Base {@link org.thingsboard.server.actors.TbActor} with access to {@link ActorSystemContext}.
+ */
 
 @Slf4j
 public abstract class ContextAwareActor extends AbstractTbActor {
@@ -32,6 +35,13 @@ public abstract class ContextAwareActor extends AbstractTbActor {
         super();
         this.systemContext = systemContext;
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean process(TbActorMsg msg) {
@@ -43,14 +53,40 @@ public abstract class ContextAwareActor extends AbstractTbActor {
         }
         return false;
     }
+    
+    /**
+     * Handles one incoming actor message; returns {@code true} if the message type was recognized.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     protected abstract boolean doProcess(TbActorMsg msg);
+    
+    /**
+     * Strategy invoked when message processing fails inside the actor.
+     *
+     * @param msg actor message to process
+     * @param t t ({@link Throwable})
+     * @return {@link ProcessFailureStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public ProcessFailureStrategy onProcessFailure(TbActorMsg msg, Throwable t) {
         log.debug("[{}] Processing failure for msg {}", getActorRef().getActorId(), msg, t);
         return doProcessFailure(t);
     }
+    /**
+     * Do process failure.
+     *
+     * @param t t ({@link Throwable})
+     * @return {@link ProcessFailureStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ProcessFailureStrategy doProcessFailure(Throwable t) {
         if (t instanceof Error) {

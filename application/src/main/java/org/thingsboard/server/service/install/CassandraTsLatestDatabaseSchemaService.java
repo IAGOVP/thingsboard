@@ -19,6 +19,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.thingsboard.server.dao.util.NoSqlTsLatestDao;
 
+    /**
+     * Spring service component for cassandra ts latest database schema service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Service
 @NoSqlTsLatestDao
 @Profile("install")

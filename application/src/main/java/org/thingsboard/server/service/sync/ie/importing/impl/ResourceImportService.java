@@ -29,6 +29,11 @@ import org.thingsboard.server.dao.resource.ImageService;
 import org.thingsboard.server.dao.resource.ResourceService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports resource entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -37,16 +42,45 @@ public class ResourceImportService extends BaseEntityImportService<TbResourceId,
 
     private final ResourceService resourceService;
     private final ImageService imageService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param resource resource ({@link TbResource})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, TbResource resource, IdProvider idProvider) {
         resource.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param resource resource ({@link TbResource})
+     * @param oldResource old resource ({@link TbResource})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbResource prepare(EntitiesImportCtx ctx, TbResource resource, TbResource oldResource, EntityExportData<TbResource> exportData, IdProvider idProvider) {
         return resource;
     }
+    /**
+     * Finds existing entity.
+     *
+     * @param ctx calculated-field execution context
+     * @param resource resource ({@link TbResource})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbResource findExistingEntity(EntitiesImportCtx ctx, TbResource resource, IdProvider idProvider) {
@@ -56,11 +90,25 @@ public class ResourceImportService extends BaseEntityImportService<TbResourceId,
         }
         return existingResource;
     }
+    /**
+     * Deep copy.
+     *
+     * @param resource resource ({@link TbResource})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbResource deepCopy(TbResource resource) {
         return new TbResource(resource);
     }
+    /**
+     * Cleanup for comparison.
+     *
+     * @param resource resource ({@link TbResource})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupForComparison(TbResource resource) {
@@ -70,6 +118,17 @@ public class ResourceImportService extends BaseEntityImportService<TbResourceId,
             resource.setDescriptor(null);
         }
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param resource resource ({@link TbResource})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link TbResource}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbResource saveOrUpdate(EntitiesImportCtx ctx, TbResource resource, EntityExportData<TbResource> exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -86,12 +145,27 @@ public class ResourceImportService extends BaseEntityImportService<TbResourceId,
             return resource;
         }
     }
+    /**
+     * Handles entity saved.
+     *
+     * @param user authenticated user performing the action
+     * @param savedResource saved resource ({@link TbResource})
+     * @param oldResource old resource ({@link TbResource})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     protected void onEntitySaved(User user, TbResource savedResource, TbResource oldResource) throws ThingsboardException {
         super.onEntitySaved(user, savedResource, oldResource);
         clusterService.onResourceChange(savedResource, null);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

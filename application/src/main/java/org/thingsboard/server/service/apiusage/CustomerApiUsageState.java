@@ -18,10 +18,22 @@ package org.thingsboard.server.service.apiusage;
 import org.thingsboard.server.common.data.ApiUsageState;
 import org.thingsboard.server.common.data.EntityType;
 
+/**
+
+ * Customer api usage state (tenant API usage metering and rate-limit state).
+
+ */
+
 public class CustomerApiUsageState extends BaseApiUsageState {
     public CustomerApiUsageState(ApiUsageState apiUsageState) {
         super(apiUsageState);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

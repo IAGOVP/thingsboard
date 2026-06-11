@@ -18,9 +18,37 @@ package org.thingsboard.server.service.entitiy.oauth2client;
 import org.thingsboard.server.common.data.User;
 import org.thingsboard.server.common.data.oauth2.OAuth2Client;
 
+/**
+
+ * Application-layer service API for oauth2client entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbOauth2ClientService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param oAuth2Client o auth2client ({@link OAuth2Client})
+ * @param user authenticated user performing the action
+ * @return {@link OAuth2Client}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     OAuth2Client save(OAuth2Client oAuth2Client, User user) throws Exception;
+/**
+ * Deletes the requested data.
+ *
+ * @param oAuth2Client o auth2client ({@link OAuth2Client})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void delete(OAuth2Client oAuth2Client, User user);
 

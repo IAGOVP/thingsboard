@@ -15,9 +15,26 @@
  */
 package org.thingsboard.server.service.install.update;
 
+/**
+
+ * Service contract for data update operations (database schema installation, upgrades, and demo data loading).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface DataUpdateService {
 
     void updateData() throws Exception;
+
+    /**
+     * Upgrade rule nodes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void upgradeRuleNodes();
 }

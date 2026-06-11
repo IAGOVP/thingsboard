@@ -19,6 +19,10 @@ import lombok.Data;
 import org.thingsboard.server.common.data.query.EntityKey;
 
 import java.util.List;
+/**
+ * WebSocket command DTO for latest value.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 public class LatestValueCmd {

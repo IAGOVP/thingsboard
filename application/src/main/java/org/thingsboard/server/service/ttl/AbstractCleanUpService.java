@@ -21,16 +21,33 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.msg.queue.ServiceType;
 import org.thingsboard.server.queue.discovery.PartitionService;
 
+    /**
+     * Abstract clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractCleanUpService {
 
     private final PartitionService partitionService;
+    /**
+     * Is system tenant partition mine.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean isSystemTenantPartitionMine() {
         return partitionService.resolve(ServiceType.TB_CORE, TenantId.SYS_TENANT_ID, TenantId.SYS_TENANT_ID).isMyPartition();
     }
+    /**
+     * Is tenant partition mine.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean isTenantPartitionMine(TenantId tenantId) {
         return partitionService.resolve(ServiceType.TB_CORE, tenantId, tenantId).isMyPartition();

@@ -128,6 +128,17 @@ import static org.thingsboard.server.controller.ControllerConstants.UNIQUIFY_STR
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 import static org.thingsboard.server.controller.EdgeController.EDGE_ID;
 
+/**
+ * REST controller for device CRUD, credentials, assignment, claiming, edge sync, and bulk import.
+ *
+ * <p>Base path: {@code /api}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN} (management), {@code CUSTOMER_USER} (read/claim).
+ *
+ * <p>Related services: {@link org.thingsboard.server.service.entitiy.device.TbDeviceService},
+ * {@link org.thingsboard.server.service.device.DeviceBulkImportService},
+ * {@link org.thingsboard.server.dao.device.DeviceService}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -141,6 +152,14 @@ public class DeviceController extends BaseController {
 
     private final TbDeviceService tbDeviceService;
 
+    /**
+     * Get Device (getDeviceById).
+     *
+     * <p>HTTP GET {@code /api/device/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Device (getDeviceById)",
             notes = "Fetch the Device object based on the provided Device Id. " +
                     "If the user has the authority of 'TENANT_ADMIN', the server checks that the device is owned by the same tenant. " +
@@ -156,6 +175,14 @@ public class DeviceController extends BaseController {
         return checkDeviceId(deviceId, Operation.READ);
     }
 
+    /**
+     * Get Device Info (getDeviceInfoById).
+     *
+     * <p>HTTP GET {@code /api/device/info/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Device Info (getDeviceInfoById)",
             notes = "Fetch the Device Info object based on the provided Device Id. " +
                     "If the user has the authority of 'Tenant Administrator', the server checks that the device is owned by the same tenant. " +
@@ -171,6 +198,14 @@ public class DeviceController extends BaseController {
         return checkDeviceInfoId(deviceId, Operation.READ);
     }
 
+    /**
+     * Create Or Update Device (saveDevice).
+     *
+     * <p>HTTP POST {@code /api/device}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create Or Update Device (saveDevice)",
             notes = "Create or update the Device. When creating device, platform generates Device Id as " + UUID_WIKI_LINK +
                     "Device credentials are also generated if not provided in the 'accessToken' request parameter. " +
@@ -202,6 +237,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.save(device, accessToken, new NameConflictStrategy(nameConflictPolicy, uniquifySeparator, uniquifyStrategy), getCurrentUser());
     }
 
+    /**
+     * Create Device (saveDevice) with credentials .
+     *
+     * <p>HTTP POST {@code /api/device-with-credentials}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Create Device (saveDevice) with credentials ",
             notes = "Create or update the Device. When creating device, platform generates Device Id as " + UUID_WIKI_LINK +
                     "Requires to provide the Device Credentials object as well as an existing device profile ID or use \"default\".\n" +
@@ -238,6 +281,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.saveDeviceWithCredentials(device, credentials, new NameConflictStrategy(nameConflictPolicy, uniquifySeparator, uniquifyStrategy), getCurrentUser());
     }
 
+    /**
+     * Delete device (deleteDevice).
+     *
+     * <p>HTTP DELETE {@code /api/device/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Delete device (deleteDevice)",
             notes = "Deletes the device, it's credentials and all the relations (from and to the device). Referencing non-existing device Id will cause an error." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -251,6 +302,14 @@ public class DeviceController extends BaseController {
         tbDeviceService.delete(device, getCurrentUser());
     }
 
+    /**
+     * Assign device to customer (assignDeviceToCustomer).
+     *
+     * <p>HTTP POST {@code /api/customer/{customerId}/device/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Assign device to customer (assignDeviceToCustomer)",
             notes = "Creates assignment of the device to customer. Customer will be able to query device afterwards." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -269,6 +328,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.assignDeviceToCustomer(getTenantId(), deviceId, customer, getCurrentUser());
     }
 
+    /**
+     * Unassign device from customer (unassignDeviceFromCustomer).
+     *
+     * <p>HTTP DELETE {@code /api/customer/device/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Unassign device from customer (unassignDeviceFromCustomer)",
             notes = "Clears assignment of the device to customer. Customer will not be able to query device afterwards." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -288,6 +355,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.unassignDeviceFromCustomer(device, customer, getCurrentUser());
     }
 
+    /**
+     * Make device publicly available (assignDeviceToPublicCustomer).
+     *
+     * <p>HTTP POST {@code /api/customer/public/device/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Make device publicly available (assignDeviceToPublicCustomer)",
             notes = "Device will be available for non-authorized (not logged-in) users. " +
                     "This is useful to create dashboards that you plan to share/embed on a publicly available website. " +
@@ -303,6 +378,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.assignDeviceToPublicCustomer(getTenantId(), deviceId, getCurrentUser());
     }
 
+    /**
+     * Get Device Credentials (getDeviceCredentialsByDeviceId).
+     *
+     * <p>HTTP GET {@code /api/device/{deviceId}/credentials}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Device Credentials (getDeviceCredentialsByDeviceId)",
             notes = "If during device creation there wasn't specified any credentials, platform generates random 'ACCESS_TOKEN' credentials." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -316,6 +399,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.getDeviceCredentialsByDeviceId(device, getCurrentUser());
     }
 
+    /**
+     * Update device credentials (updateDeviceCredentials).
+     *
+     * <p>HTTP POST {@code /api/device/credentials}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Update device credentials (updateDeviceCredentials)",
             notes = "During device creation, platform generates random 'ACCESS_TOKEN' credentials. \" +\n" +
                     "Use this method to update the device credentials. First use 'getDeviceCredentialsByDeviceId' to get the credentials id and value.\n" +
@@ -348,6 +439,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.updateDeviceCredentials(device, deviceCredentials, getCurrentUser());
     }
 
+    /**
+     * Get Tenant Devices (getTenantDevices).
+     *
+     * <p>HTTP GET {@code /api/tenant/devices}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Devices (getTenantDevices)",
             notes = "Returns a page of devices owned by tenant. " +
                     PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -375,6 +474,14 @@ public class DeviceController extends BaseController {
         }
     }
 
+    /**
+     * Get Tenant Device Infos (getTenantDeviceInfos).
+     *
+     * <p>HTTP GET {@code /api/tenant/deviceInfos}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Device Infos (getTenantDeviceInfos)",
             notes = "Returns a page of devices info objects owned by tenant. " +
                     PAGE_DATA_PARAMETERS + DEVICE_INFO_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -414,12 +521,28 @@ public class DeviceController extends BaseController {
     @Hidden
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/tenant/devices", params = {"deviceName"})
+    /**
+     * getTenantDevice (internal/hidden endpoint).
+     *
+     * <p>HTTP GET {@code /api/tenant/devices}.
+     *
+     * <p>{@code @PreAuthorize}: hasAuthority('TENANT_ADMIN').
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     public Device getTenantDevice(
             @RequestParam String deviceName) throws ThingsboardException {
         TenantId tenantId = getCurrentUser().getTenantId();
         return checkNotNull(deviceService.findDeviceByTenantIdAndName(tenantId, deviceName));
     }
 
+    /**
+     * Get Tenant Device (getTenantDeviceByName).
+     *
+     * <p>HTTP GET {@code /api/tenant/device}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Device (getTenantDeviceByName)",
             notes = "Requested device must be owned by tenant that the user belongs to. " +
                     "Device name is an unique property of device. So it can be used to identify the device." + TENANT_AUTHORITY_PARAGRAPH)
@@ -431,6 +554,14 @@ public class DeviceController extends BaseController {
         return getTenantDevice(deviceName);
     }
 
+    /**
+     * Get Customer Devices (getCustomerDevices).
+     *
+     * <p>HTTP GET {@code /api/customer/{customerId}/devices}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Customer Devices (getCustomerDevices)",
             notes = "Returns a page of devices objects assigned to customer. " +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -463,6 +594,14 @@ public class DeviceController extends BaseController {
         }
     }
 
+    /**
+     * Get Customer Device Infos (getCustomerDeviceInfos).
+     *
+     * <p>HTTP GET {@code /api/customer/{customerId}/deviceInfos}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Customer Device Infos (getCustomerDeviceInfos)",
             notes = "Returns a page of devices info objects assigned to customer. " +
                     PAGE_DATA_PARAMETERS + DEVICE_INFO_DESCRIPTION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -504,6 +643,14 @@ public class DeviceController extends BaseController {
         return checkNotNull(deviceService.findDeviceInfosByFilter(filter.build(), pageLink));
     }
 
+    /**
+     * Get Devices By Ids (getDevicesByIds).
+     *
+     * <p>HTTP GET {@code /api/devices}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Devices By Ids (getDevicesByIds)",
             notes = "Requested devices must be owned by tenant or assigned to customer which user is performing the request. " + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -528,6 +675,14 @@ public class DeviceController extends BaseController {
         return checkNotNull(devices.get());
     }
 
+    /**
+     * Find related devices (findDevicesByQuery).
+     *
+     * <p>HTTP POST {@code /api/devices}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Find related devices (findDevicesByQuery)",
             notes = "Returns all devices that are related to the specific entity. " +
                     "The entity id, relation type, device types, depth of the search, and other query parameters defined using complex 'DeviceSearchQuery' object. " +
@@ -554,6 +709,14 @@ public class DeviceController extends BaseController {
         return devices;
     }
 
+    /**
+     * Get Device Types (getDeviceTypes).
+     *
+     * <p>HTTP GET {@code /api/device/types}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get Device Types (getDeviceTypes)",
             notes = "Deprecated. See 'getDeviceProfileNames' API from Device Profile Controller instead." + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -567,6 +730,14 @@ public class DeviceController extends BaseController {
         return checkNotNull(deviceTypes.get());
     }
 
+    /**
+     * Claim device (claimDevice).
+     *
+     * <p>HTTP POST {@code /api/customer/device/{deviceName}/claim}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Claim device (claimDevice)",
             notes = "Claiming makes it possible to assign a device to the specific customer using device/server side claiming data (in the form of secret key)." +
                     "To make this happen you have to provide unique device name and optional claiming data (it is needed only for device-side claiming)." +
@@ -620,6 +791,14 @@ public class DeviceController extends BaseController {
         return deferredResult;
     }
 
+    /**
+     * Reclaim device (reClaimDevice).
+     *
+     * <p>HTTP DELETE {@code /api/customer/device/{deviceName}/claim}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Reclaim device (reClaimDevice)",
             notes = "Reclaiming means the device will be unassigned from the customer and the device will be available for claiming again."
                     + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -661,6 +840,14 @@ public class DeviceController extends BaseController {
         return DataConstants.DEFAULT_SECRET_KEY;
     }
 
+    /**
+     * Assign device to tenant (assignDeviceToTenant).
+     *
+     * <p>HTTP POST {@code /api/tenant/{tenantId}/device/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Assign device to tenant (assignDeviceToTenant)",
             notes = "Creates assignment of the device to tenant. Thereafter tenant will be able to reassign the device to a customer." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -683,6 +870,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.assignDeviceToTenant(device, newTenant, getCurrentUser());
     }
 
+    /**
+     * Assign device to edge (assignDeviceToEdge).
+     *
+     * <p>HTTP POST {@code /api/edge/{edgeId}/device/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Assign device to edge (assignDeviceToEdge)",
             notes = "Creates assignment of an existing device to an instance of The Edge. " +
                     EDGE_ASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -707,6 +902,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.assignDeviceToEdge(getTenantId(), deviceId, edge, getCurrentUser());
     }
 
+    /**
+     * Unassign device from edge (unassignDeviceFromEdge).
+     *
+     * <p>HTTP DELETE {@code /api/edge/{edgeId}/device/{deviceId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Unassign device from edge (unassignDeviceFromEdge)",
             notes = "Clears assignment of the device to the edge. " +
                     EDGE_UNASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -730,6 +933,14 @@ public class DeviceController extends BaseController {
         return tbDeviceService.unassignDeviceFromEdge(device, edge, getCurrentUser());
     }
 
+    /**
+     * Get devices assigned to edge (getEdgeDevices).
+     *
+     * <p>HTTP GET {@code /api/edge/{edgeId}/devices}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get devices assigned to edge (getEdgeDevices)",
             notes = "Returns a page of devices assigned to edge. " +
                     PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -775,6 +986,14 @@ public class DeviceController extends BaseController {
         return checkNotNull(deviceService.findDeviceInfosByFilter(filter.build(), pageLink));
     }
 
+    /**
+     * Count devices by device profile  (countByDeviceProfileAndEmptyOtaPackage).
+     *
+     * <p>HTTP GET {@code /api/devices/count/{otaPackageType}/{deviceProfileId}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Count devices by device profile  (countByDeviceProfileAndEmptyOtaPackage)",
             notes = "The platform gives an ability to load OTA (over-the-air) packages to devices. " +
                     "It can be done in two different ways: device scope or device profile scope." +
@@ -796,6 +1015,14 @@ public class DeviceController extends BaseController {
                 OtaPackageType.valueOf(otaPackageType));
     }
 
+    /**
+     * Import the bulk of devices (processDevicesBulkImport).
+     *
+     * <p>HTTP POST {@code /api/device/bulk_import}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Import the bulk of devices (processDevicesBulkImport)",
             notes = "There's an ability to import the bulk of devices using the only .csv file." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN')")

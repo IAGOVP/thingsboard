@@ -40,6 +40,11 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 
 import java.util.List;
+/**
+ * Imports notification target entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -47,11 +52,31 @@ import java.util.List;
 public class NotificationTargetImportService extends BaseEntityImportService<NotificationTargetId, NotificationTarget, EntityExportData<NotificationTarget>> {
 
     private final NotificationTargetService notificationTargetService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param notificationTarget notification target ({@link NotificationTarget})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, NotificationTarget notificationTarget, IdProvider idProvider) {
         notificationTarget.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param notificationTarget notification target ({@link NotificationTarget})
+     * @param oldNotificationTarget old notification target ({@link NotificationTarget})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link NotificationTarget}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected NotificationTarget prepare(EntitiesImportCtx ctx, NotificationTarget notificationTarget, NotificationTarget oldNotificationTarget, EntityExportData<NotificationTarget> exportData, IdProvider idProvider) {
@@ -78,23 +103,56 @@ public class NotificationTargetImportService extends BaseEntityImportService<Not
         }
         return notificationTarget;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param notificationTarget notification target ({@link NotificationTarget})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link NotificationTarget}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected NotificationTarget saveOrUpdate(EntitiesImportCtx ctx, NotificationTarget notificationTarget, EntityExportData<NotificationTarget> exportData, IdProvider idProvider, CompareResult compareResult) {
         ConstraintValidator.validateFields(notificationTarget);
         return notificationTargetService.saveNotificationTarget(ctx.getTenantId(), notificationTarget);
     }
+    /**
+     * Handles entity saved.
+     *
+     * @param user authenticated user performing the action
+     * @param savedEntity saved entity ({@link NotificationTarget})
+     * @param oldEntity old entity ({@link NotificationTarget})
+     * @return nothing
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     protected void onEntitySaved(User user, NotificationTarget savedEntity, NotificationTarget oldEntity) throws ThingsboardException {
         entityActionService.logEntityAction(user, savedEntity.getId(), savedEntity, null,
                 oldEntity == null ? ActionType.ADDED : ActionType.UPDATED, null);
     }
+    /**
+     * Deep copy.
+     *
+     * @param notificationTarget notification target ({@link NotificationTarget})
+     * @return {@link NotificationTarget}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected NotificationTarget deepCopy(NotificationTarget notificationTarget) {
         return new NotificationTarget(notificationTarget);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

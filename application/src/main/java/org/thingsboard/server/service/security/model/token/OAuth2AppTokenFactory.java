@@ -30,6 +30,11 @@ import org.thingsboard.server.common.data.StringUtils;
 import java.util.Base64;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+/**
+ * Oauth2app token factory for security DTOs and principals.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @Slf4j
@@ -38,6 +43,15 @@ public class OAuth2AppTokenFactory {
     private static final String CALLBACK_URL_SCHEME = "callbackUrlScheme";
 
     private static final long MAX_EXPIRATION_TIME_DIFF_MS = TimeUnit.MINUTES.toMillis(5);
+
+    /**
+     * Validates token and get callback url scheme and invokes the callback with the result.
+     *
+     * @param appPackage app package (String)
+     * @param appToken app token (String)
+     * @param appSecret app secret (String)
+     * @return {@link String} result
+     */
 
     public String validateTokenAndGetCallbackUrlScheme(String appPackage, String appToken, String appSecret) {
         Jws<Claims> jwsClaims;

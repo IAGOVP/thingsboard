@@ -20,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 
 import java.util.UUID;
+/**
+ * Async callback invoked when tb pack completes.
+ */
 
 @Slf4j
 public class TbPackCallback<T> implements TbCallback {
@@ -27,17 +30,38 @@ public class TbPackCallback<T> implements TbCallback {
     @Getter
     private final UUID id;
 
+    /**
+     * Constructs {@link TbPackCallback} with the supplied dependencies and configuration.
+     * @param id id
+     * @param ctx ctx
+     */
+
     public TbPackCallback(UUID id, TbPackProcessingContext<T> ctx) {
         log.trace("[{}] CALLBACK CREATED", id);
         this.id = id;
         this.ctx = ctx;
     }
 
+    /**
+     * Invoked when success occurs.
+     * @return @Override
+    public void
+     */
+
     @Override
     public void onSuccess() {
         log.trace("[{}] ON SUCCESS", id);
         ctx.onSuccess(id);
     }
+
+    /**
+     * Invoked when failure occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param t t
+     * @return @Override
+    public void
+     */
 
     @Override
     public void onFailure(Throwable t) {

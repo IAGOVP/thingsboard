@@ -29,11 +29,21 @@ import java.util.concurrent.TimeUnit;
 
 import static org.thingsboard.server.service.security.auth.jwt.settings.DefaultJwtSettingsService.isSigningKeyDefault;
 import static org.thingsboard.server.service.security.model.token.JwtTokenFactory.KEY_LENGTH;
+/**
+ * Default implementation of jwt settings validator for JWT bearer-token authentication.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @RequiredArgsConstructor
 public class DefaultJwtSettingsValidator implements JwtSettingsValidator {
 
+    /**
+     * Validates the request and invokes the callback with the result.
+     *
+     * @param jwtSettings jwt settings (JwtSettings)
+     */
     @Override
     public void validate(JwtSettings jwtSettings) {
         if (StringUtils.isEmpty(jwtSettings.getTokenIssuer())) {

@@ -24,14 +24,33 @@ import org.thingsboard.server.common.data.notification.rule.trigger.NewPlatformV
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NewPlatformVersionNotificationRuleTriggerConfig;
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NotificationRuleTriggerType;
 
+    /**
+     * Spring service component for new platform version trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 @RequiredArgsConstructor
 public class NewPlatformVersionTriggerProcessor implements NotificationRuleTriggerProcessor<NewPlatformVersionTrigger, NewPlatformVersionNotificationRuleTriggerConfig> {
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link NewPlatformVersionTrigger})
+     * @param triggerConfig trigger config ({@link NewPlatformVersionNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(NewPlatformVersionTrigger trigger, NewPlatformVersionNotificationRuleTriggerConfig triggerConfig) {
         return trigger.getUpdateInfo().isUpdateAvailable();
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link NewPlatformVersionTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(NewPlatformVersionTrigger trigger) {
@@ -44,6 +63,12 @@ public class NewPlatformVersionTriggerProcessor implements NotificationRuleTrigg
                 .currentVersionReleaseNotesUrl(updateInfo.getCurrentVersionReleaseNotesUrl())
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

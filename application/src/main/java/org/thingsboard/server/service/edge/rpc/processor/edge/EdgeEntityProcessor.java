@@ -41,12 +41,23 @@ import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+/**
+ * Processes edge entity edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class EdgeEntityProcessor extends BaseEdgeProcessor {
-
+    /**
+     * Processes entity notification.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeNotificationMsg edge notification msg (EdgeNotificationMsgProto)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processEntityNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         try {
@@ -100,7 +111,13 @@ public class EdgeEntityProcessor extends BaseEdgeProcessor {
             return Futures.immediateFailedFuture(e);
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         EdgeId edgeId = new EdgeId(edgeEvent.getEntityId());
@@ -118,6 +135,10 @@ public class EdgeEntityProcessor extends BaseEdgeProcessor {
         return null;
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.EDGE;

@@ -38,12 +38,24 @@ import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.List;
 import java.util.UUID;
+/**
+ * Processes alarm edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class AlarmEdgeProcessor extends BaseAlarmProcessor implements AlarmProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeId edge id (EdgeId)
+     * @param alarmUpdateMsg alarm update msg (AlarmUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processAlarmMsgFromEdge(TenantId tenantId, EdgeId edgeId, AlarmUpdateMsg alarmUpdateMsg) {
         log.trace("[{}] processAlarmMsgFromEdge [{}]", tenantId, alarmUpdateMsg);
@@ -54,7 +66,13 @@ public class AlarmEdgeProcessor extends BaseAlarmProcessor implements AlarmProce
             edgeSynchronizationManager.getEdgeId().remove();
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         AlarmUpdateMsg alarmUpdateMsg = convertAlarmEventToAlarmMsg(edgeEvent);
@@ -66,7 +84,13 @@ public class AlarmEdgeProcessor extends BaseAlarmProcessor implements AlarmProce
         }
         return null;
     }
-
+    /**
+     * Processes entity notification.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeNotificationMsg edge notification msg (EdgeNotificationMsgProto)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processEntityNotification(TenantId tenantId, TransportProtos.EdgeNotificationMsgProto edgeNotificationMsg) {
         EdgeEventActionType actionType = EdgeEventActionType.valueOf(edgeNotificationMsg.getAction());
@@ -116,6 +140,10 @@ public class AlarmEdgeProcessor extends BaseAlarmProcessor implements AlarmProce
         return null;
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.ALARM;

@@ -29,6 +29,10 @@ import org.thingsboard.server.dao.tenant.TenantService;
 
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
+    /**
+     * Spring service component for entities limit trigger processor (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @Service
 @RequiredArgsConstructor
 public class EntitiesLimitTriggerProcessor implements NotificationRuleTriggerProcessor<EntitiesLimitTrigger, EntitiesLimitNotificationRuleTriggerConfig> {
@@ -36,6 +40,14 @@ public class EntitiesLimitTriggerProcessor implements NotificationRuleTriggerPro
     private final EntityCountService entityCountService;
     private final TbTenantProfileCache tenantProfileCache;
     private final TenantService tenantService;
+    /**
+     * Matches filter.
+     *
+     * @param trigger trigger ({@link EntitiesLimitTrigger})
+     * @param triggerConfig trigger config ({@link EntitiesLimitNotificationRuleTriggerConfig})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean matchesFilter(EntitiesLimitTrigger trigger, EntitiesLimitNotificationRuleTriggerConfig triggerConfig) {
@@ -55,6 +67,13 @@ public class EntitiesLimitTriggerProcessor implements NotificationRuleTriggerPro
         trigger.setCurrentCount(currentCount);
         return (int) (limit * triggerConfig.getThreshold()) == currentCount; // strict comparing not to send notification on each new entity
     }
+    /**
+     * Construct notification info.
+     *
+     * @param trigger trigger ({@link EntitiesLimitTrigger})
+     * @return {@link RuleOriginatedNotificationInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleOriginatedNotificationInfo constructNotificationInfo(EntitiesLimitTrigger trigger) {
@@ -67,6 +86,12 @@ public class EntitiesLimitTriggerProcessor implements NotificationRuleTriggerPro
                 .tenantName(tenantService.findTenantById(trigger.getTenantId()).getName())
                 .build();
     }
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleTriggerType getTriggerType() {

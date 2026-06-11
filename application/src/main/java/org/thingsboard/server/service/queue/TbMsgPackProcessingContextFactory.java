@@ -18,15 +18,44 @@ package org.thingsboard.server.service.queue;
 import org.springframework.stereotype.Component;
 import org.thingsboard.server.service.queue.processing.TbRuleEngineSubmitStrategy;
 
+/**
+ * Factory that selects or builds tb msg pack processing context implementations.
+ */
+
 public interface TbMsgPackProcessingContextFactory {
+
+    /**
+     * Creates create.
+     * @param queueName queue name
+     * @param submitStrategy submit strategy
+     * @param skipTimeouts skip timeouts
+     * @return {@link TbMsgPackProcessingContext}
+     */
 
     TbMsgPackProcessingContext create(String queueName, TbRuleEngineSubmitStrategy submitStrategy, boolean skipTimeouts);
 
     @Component
     class DefaultTbMsgPackProcessingContextFactory implements TbMsgPackProcessingContextFactory {
 
+        /**
+         * Creates create.
+         * @param queueName queue name
+         * @param submitStrategy submit strategy
+         * @param skipTimeouts skip timeouts
+         * @return {@link TbMsgPackProcessingContext}
+         */
+
         @Override
         public TbMsgPackProcessingContext create(String queueName, TbRuleEngineSubmitStrategy submitStrategy, boolean skipTimeouts) {
+            /**
+             * Tb msg pack processing context.
+             *
+             * <p>Default implementation inherited from the supertype.
+             * @param queueName queue name
+             * @param submitStrategy submit strategy
+             * @param skipTimeouts skip timeouts
+             * @return return new
+             */
             return new TbMsgPackProcessingContext(queueName, submitStrategy, skipTimeouts);
         }
 

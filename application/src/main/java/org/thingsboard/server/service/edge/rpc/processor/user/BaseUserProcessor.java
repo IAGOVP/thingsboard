@@ -32,12 +32,25 @@ import org.thingsboard.server.dao.service.DataValidator;
 import org.thingsboard.server.gen.edge.v1.UserCredentialsUpdateMsg;
 import org.thingsboard.server.gen.edge.v1.UserUpdateMsg;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes base user edge events for cloud↔edge synchronization.
+ * <p><b>Key dependencies:</b> {@link #userValidator}.
+ */
 
 @Slf4j
 public abstract class BaseUserProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DataValidator<User> userValidator;
+
+    /**
+     * Creates or persists or update user.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param userId user id (UserId)
+     * @param userUpdateMsg user update msg (UserUpdateMsg)
+     * @return {@link Pair} result
+     */
 
     protected Pair<Boolean, Boolean> saveOrUpdateUser(TenantId tenantId, UserId userId, UserUpdateMsg userUpdateMsg) {
         boolean isCreated = false;
@@ -90,9 +103,24 @@ public abstract class BaseUserProcessor extends BaseEdgeProcessor {
         return false;
     }
 
+    /**
+     * Removes user and push entity deleted event to rule engine.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param userId user id (UserId)
+     */
+
     protected void deleteUserAndPushEntityDeletedEventToRuleEngine(TenantId tenantId, UserId userId) {
         deleteUserAndPushEntityDeletedEventToRuleEngine(tenantId, userId, null);
     }
+
+    /**
+     * Removes user and push entity deleted event to rule engine.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param userId user id (UserId)
+     * @param edge edge (Edge)
+     */
 
     protected void deleteUserAndPushEntityDeletedEventToRuleEngine(TenantId tenantId, UserId userId, Edge edge) {
         User removedUser = deleteUser(tenantId, userId);
@@ -115,6 +143,13 @@ public abstract class BaseUserProcessor extends BaseEdgeProcessor {
         edgeCtx.getUserService().deleteUser(tenantId, userById);
         return userById;
     }
+
+    /**
+     * Updates user credentials.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param updateMsg update msg (UserCredentialsUpdateMsg)
+     */
 
     protected void updateUserCredentials(TenantId tenantId, UserCredentialsUpdateMsg updateMsg) {
         UserCredentials userCredentials = JacksonUtil.fromString(updateMsg.getEntity(), UserCredentials.class, true);
@@ -153,6 +188,15 @@ public abstract class BaseUserProcessor extends BaseEdgeProcessor {
             metaData.putValue("userLastName", removedUser.getLastName());
         }
     }
+
+    /**
+     * Set customer id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param user user (User)
+     * @param userUpdateMsg user update msg (UserUpdateMsg)
+     */
 
     protected abstract void setCustomerId(TenantId tenantId, CustomerId customerId, User user, UserUpdateMsg userUpdateMsg);
 

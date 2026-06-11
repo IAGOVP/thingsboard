@@ -33,6 +33,12 @@ import org.thingsboard.server.gen.edge.v1.UpdateMsgType;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 import org.thingsboard.server.service.edge.rpc.processor.BaseEdgeProcessor;
+/**
+ * Processes domain edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ * <p><b>Key dependencies:</b> {@link #domainService}.
+ */
 
 @Slf4j
 @Component
@@ -41,7 +47,13 @@ public class DomainEdgeProcessor extends BaseEdgeProcessor {
 
     @Autowired
     private DomainService domainService;
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         DomainId domainId = new DomainId(edgeEvent.getEntityId());
@@ -73,6 +85,10 @@ public class DomainEdgeProcessor extends BaseEdgeProcessor {
         return null;
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.DOMAIN;

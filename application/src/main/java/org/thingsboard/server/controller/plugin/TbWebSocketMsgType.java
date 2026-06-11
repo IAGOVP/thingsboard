@@ -15,7 +15,14 @@
  */
 package org.thingsboard.server.controller.plugin;
 
+/**
+ * Discriminator for outbound WebSocket frames handled by {@link TbWebSocketHandler}.
+ */
 public enum TbWebSocketMsgType {
 
-    PING, TEXT
+    /** WebSocket ping control frame (keep-alive). */
+    PING,
+
+    /** UTF-8 text JSON subscription update. */
+    TEXT
 }

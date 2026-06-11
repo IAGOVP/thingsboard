@@ -57,12 +57,24 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.UUID;
+/**
+ * Processes device edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class DeviceEdgeProcessor extends BaseDeviceProcessor implements DeviceProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param deviceUpdateMsg device update msg (DeviceUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processDeviceMsgFromEdge(TenantId tenantId, Edge edge, DeviceUpdateMsg deviceUpdateMsg) {
         log.trace("[{}] executing processDeviceMsgFromEdge [{}] from edge [{}]", tenantId, deviceUpdateMsg, edge.getId());
@@ -93,7 +105,14 @@ public class DeviceEdgeProcessor extends BaseDeviceProcessor implements DevicePr
             edgeSynchronizationManager.getEdgeId().remove();
         }
     }
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edgeId edge id (EdgeId)
+     * @param deviceCredentialsUpdateMsg device credentials update msg (DeviceCredentialsUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processDeviceCredentialsMsgFromEdge(TenantId tenantId, EdgeId edgeId, DeviceCredentialsUpdateMsg deviceCredentialsUpdateMsg) {
         log.debug("[{}] Executing processDeviceCredentialsMsgFromEdge, deviceCredentialsUpdateMsg [{}]", tenantId, deviceCredentialsUpdateMsg);
@@ -125,7 +144,14 @@ public class DeviceEdgeProcessor extends BaseDeviceProcessor implements DevicePr
         Device device = edgeCtx.getDeviceService().findDeviceById(tenantId, deviceId);
         pushEntityEventToRuleEngine(tenantId, edge, device, TbMsgType.ENTITY_CREATED);
     }
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param deviceRpcCallMsg device rpc call msg (DeviceRpcCallMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processDeviceRpcCallFromEdge(TenantId tenantId, Edge edge, DeviceRpcCallMsg deviceRpcCallMsg) {
         log.trace("[{}] processDeviceRpcCallFromEdge [{}]", tenantId, deviceRpcCallMsg);
@@ -149,11 +175,21 @@ public class DeviceEdgeProcessor extends BaseDeviceProcessor implements DevicePr
             response = new FromDeviceRpcResponse(requestUuid, deviceRpcCallMsg.getResponseMsg().getResponse(), null);
         }
         TbQueueCallback callback = new TbQueueCallback() {
+            /**
+             * On success.
+             *
+             * @param metadata metadata (TbQueueMsgMetadata)
+             */
             @Override
             public void onSuccess(TbQueueMsgMetadata metadata) {
                 futureToSet.set(null);
             }
 
+            /**
+             * On failure.
+             *
+             * @param t t (Throwable)
+             */
             @Override
             public void onFailure(Throwable t) {
                 log.error("[{}] Can't process push notification to core [{}]", tenantId, deviceRpcCallMsg, t);
@@ -194,12 +230,22 @@ public class DeviceEdgeProcessor extends BaseDeviceProcessor implements DevicePr
                     .data(JacksonUtil.toString(data))
                     .build();
             edgeCtx.getClusterService().pushMsgToRuleEngine(tenantId, deviceId, tbMsg, new TbQueueCallback() {
+                /**
+                 * On success.
+                 *
+                 * @param metadata metadata (TbQueueMsgMetadata)
+                 */
                 @Override
                 public void onSuccess(TbQueueMsgMetadata metadata) {
                     log.debug("[{}] Successfully send TO_SERVER_RPC_REQUEST to rule engine [{}], deviceRpcCallMsg {}",
                             tenantId, device, deviceRpcCallMsg);
                 }
 
+                /**
+                 * On failure.
+                 *
+                 * @param t t (Throwable)
+                 */
                 @Override
                 public void onFailure(Throwable t) {
                     log.debug("[{}] Failed to send TO_SERVER_RPC_REQUEST to rule engine [{}], deviceRpcCallMsg {}",
@@ -212,7 +258,13 @@ public class DeviceEdgeProcessor extends BaseDeviceProcessor implements DevicePr
 
         return Futures.immediateFuture(null);
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         DeviceId deviceId = new DeviceId(edgeEvent.getEntityId());
@@ -266,12 +318,24 @@ public class DeviceEdgeProcessor extends BaseDeviceProcessor implements DevicePr
         return null;
     }
 
+    /**
+     * Set customer id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param device device (Device)
+     * @param deviceUpdateMsg device update msg (DeviceUpdateMsg)
+     */
     @Override
     protected void setCustomerId(TenantId tenantId, CustomerId customerId, Device device, DeviceUpdateMsg deviceUpdateMsg) {
         CustomerId customerUUID = device.getCustomerId() != null ? device.getCustomerId() : customerId;
         device.setCustomerId(customerUUID);
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.DEVICE;

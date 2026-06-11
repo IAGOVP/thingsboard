@@ -33,11 +33,27 @@ public class CalculatedFieldManagerActorCreator extends ContextBasedCreator {
         super(context);
         this.tenantId = tenantId;
     }
+    
+    /**
+     * Builds the {@link org.thingsboard.server.actors.TbActorId} used to register the actor.
+     *
+     * @return {@link TbActorId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public TbActorId createActorId() {
         return new TbStringActorId("CFM|" + tenantId);
     }
+    
+    /**
+     * Creates a new actor instance for the given actor id and context.
+     *
+     * @return {@link TbActor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public TbActor createActor() {

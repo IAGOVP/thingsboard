@@ -77,6 +77,12 @@ import static org.thingsboard.server.common.data.ota.OtaPackageUtil.getAttribute
 import static org.thingsboard.server.common.data.ota.OtaPackageUtil.getTargetTelemetryKey;
 import static org.thingsboard.server.common.data.ota.OtaPackageUtil.getTelemetryKey;
 
+    /**
+     * Default Spring implementation for ota package state service (over-the-air firmware/software package handling).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 public class DefaultOtaPackageStateService implements OtaPackageStateService {
@@ -106,6 +112,14 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
             this.otaPackageStateMsgProducer = reQueueFactory.get().createToOtaPackageStateServiceMsgProducer();
         }
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param device device ({@link Device})
+     * @param oldDevice old device ({@link Device})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void update(Device device, Device oldDevice) {
@@ -166,6 +180,15 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
             send(device.getTenantId(), device.getId(), newSoftwareId, System.currentTimeMillis(), SOFTWARE);
         }
     }
+    /**
+     * Updates the requested data.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param isFirmwareChanged is firmware changed
+     * @param isSoftwareChanged is software changed
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void update(DeviceProfile deviceProfile, boolean isFirmwareChanged, boolean isSoftwareChanged) {
@@ -201,6 +224,13 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
             }
         } while (pageData.hasNext());
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msg msg ({@link ToOtaPackageStateServiceMsg})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean process(ToOtaPackageStateServiceMsg msg) {
@@ -268,10 +298,24 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
                 .entityId(deviceId)
                 .entries(telemetry)
                 .callback(new FutureCallback<Void>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param tmp tmp ({@link Void})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
                     @Override
                     public void onSuccess(@Nullable Void tmp) {
                         log.trace("[{}] Success save firmware status!", deviceId);
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -294,11 +338,25 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
                 .entityId(deviceId)
                 .entry(status)
                 .callback(new FutureCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param tmp tmp ({@link Void})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
                     @Override
                     public void onSuccess(@Nullable Void tmp) {
                         log.trace("[{}] Success save telemetry with target {} for device!", deviceId, otaPackage);
                         updateAttributes(device, otaPackage, ts, tenantId, deviceId, otaPackageType);
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -354,10 +412,24 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
                 .scope(AttributeScope.SHARED_SCOPE)
                 .entries(attributes)
                 .callback(new FutureCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param tmp tmp ({@link Void})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
                     @Override
                     public void onSuccess(@Nullable Void tmp) {
                         log.trace("[{}] Success save attributes with target firmware!", deviceId);
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {
@@ -378,11 +450,25 @@ public class DefaultOtaPackageStateService implements OtaPackageStateService {
                 .scope(AttributeScope.SHARED_SCOPE)
                 .keys(attributesKeys)
                 .callback(new FutureCallback<>() {
+                    /**
+                     * Handles success.
+                     *
+                     * @param tmp tmp ({@link Void})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
                     @Override
                     public void onSuccess(@Nullable Void tmp) {
                         log.trace("[{}] Success remove target {} attributes!", device.getId(), otaPackageType);
                         tbClusterService.pushMsgToCore(DeviceAttributesEventNotificationMsg.onDelete(device.getTenantId(), device.getId(), DataConstants.SHARED_SCOPE, attributesKeys), null);
                     }
+                    /**
+                     * Handles failure.
+                     *
+                     * @param t t ({@link Throwable})
+                     * @return nothing
+                     * @throws Exception if an unexpected error occurs during processing
+                     */
 
                     @Override
                     public void onFailure(Throwable t) {

@@ -21,6 +21,9 @@ import org.thingsboard.server.queue.common.TbProtoQueueMsg;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
+/**
+ * Tb rule engine processing decision component in the ThingsBoard queue layer.
+ */
 
 @Data
 public class TbRuleEngineProcessingDecision {

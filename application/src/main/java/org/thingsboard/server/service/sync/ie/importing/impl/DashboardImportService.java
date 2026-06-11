@@ -38,6 +38,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+/**
+ * Imports dashboard entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -48,11 +53,29 @@ public class DashboardImportService extends BaseEntityImportService<DashboardId,
     public static final Pattern WIDGET_CONFIG_PROCESSED_FIELDS_PATTERN = Pattern.compile(".*Id.*");
 
     private final DashboardService dashboardService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, Dashboard dashboard, IdProvider idProvider) {
         dashboard.setTenantId(tenantId);
     }
+    /**
+     * Finds existing entity.
+     *
+     * @param ctx calculated-field execution context
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Dashboard findExistingEntity(EntitiesImportCtx ctx, Dashboard dashboard, IdProvider idProvider) {
@@ -62,6 +85,17 @@ public class DashboardImportService extends BaseEntityImportService<DashboardId,
         }
         return existingDashboard;
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param old old ({@link Dashboard})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Dashboard prepare(EntitiesImportCtx ctx, Dashboard dashboard, Dashboard old, EntityExportData<Dashboard> exportData, IdProvider idProvider) {
@@ -73,6 +107,17 @@ public class DashboardImportService extends BaseEntityImportService<DashboardId,
         }
         return dashboard;
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param dashboard dashboard ({@link Dashboard})
+     * @param exportData export data ({@link EntityExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Dashboard saveOrUpdate(EntitiesImportCtx ctx, Dashboard dashboard, EntityExportData<Dashboard> exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -109,16 +154,39 @@ public class DashboardImportService extends BaseEntityImportService<DashboardId,
         }
         return dashboard;
     }
+    /**
+     * Deep copy.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Dashboard deepCopy(Dashboard dashboard) {
         return new Dashboard(dashboard);
     }
+    /**
+     * Is update needed.
+     *
+     * @param ctx calculated-field execution context
+     * @param exportData export data ({@link EntityExportData})
+     * @param prepared prepared ({@link Dashboard})
+     * @param existing existing ({@link Dashboard})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean isUpdateNeeded(EntitiesImportCtx ctx, EntityExportData<Dashboard> exportData, Dashboard prepared, Dashboard existing) {
         return super.isUpdateNeeded(ctx, exportData, prepared, existing) || !prepared.getConfiguration().equals(existing.getConfiguration());
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

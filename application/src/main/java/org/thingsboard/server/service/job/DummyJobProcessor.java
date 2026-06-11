@@ -30,9 +30,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+    /**
+     * Spring service component for dummy job processor (background job scheduling and execution).
+     */
+
 @Component
 @RequiredArgsConstructor
 public class DummyJobProcessor implements JobProcessor {
+    /**
+     * Processes the requested data.
+     *
+     * @param job job ({@link Job})
+     * @param taskConsumer task consumer ({@link Consumer})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int process(Job job, Consumer<Task<?>> taskConsumer) throws Exception {
@@ -62,6 +74,15 @@ public class DummyJobProcessor implements JobProcessor {
         }
         return configuration.getSuccessfulTasksCount() + configuration.getFailedTasksCount() + configuration.getPermanentlyFailedTasksCount();
     }
+    /**
+     * Reprocess.
+     *
+     * @param job job ({@link Job})
+     * @param taskFailures task failures ({@link List})
+     * @param taskConsumer task consumer ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void reprocess(Job job, List<TaskResult> taskFailures, Consumer<Task<?>> taskConsumer) throws Exception {
@@ -85,6 +106,12 @@ public class DummyJobProcessor implements JobProcessor {
                 .processingTimeoutMs(configuration.getTaskProcessingTimeoutMs())
                 .build();
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link JobType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JobType getType() {

@@ -95,6 +95,13 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_ID_PA
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST API for dashboards.
+ *
+ * <p>Base path: {@code /api}. CRUD for dashboard entities, customer and edge assignments,
+ * home-dashboard configuration, and UI helper endpoints (server time, datapoint limits).
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequiredArgsConstructor
@@ -114,6 +121,14 @@ public class DashboardController extends BaseController {
     @Value("${ui.dashboard.max_datapoints_limit}")
     private long maxDatapointsLimit;
 
+    /**
+     * Get server time.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/dashboard/serverTime}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @return current server time in milliseconds since January 1, 1970 UTC
+     */
     @ApiOperation(value = "Get server time (getServerTime)",
             notes = "Get the server time (milliseconds since January 1, 1970 UTC). " +
                     "Used to adjust view of the dashboards according to the difference between browser and server time.")
@@ -124,6 +139,14 @@ public class DashboardController extends BaseController {
         return System.currentTimeMillis();
     }
 
+    /**
+     * Get max data points limit.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/dashboard/maxDatapointsLimit}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @return maximum number of data points a dashboard may request per subscription command
+     */
     @ApiOperation(value = "Get max data points limit (getMaxDatapointsLimit)",
             notes = "Get the maximum number of data points that dashboard may request from the server per in a single subscription command. " +
                     "This value impacts the time window behavior. It impacts 'Max values' parameter in case user selects 'None' as 'Data aggregation function'. " +
@@ -136,6 +159,16 @@ public class DashboardController extends BaseController {
         return maxDatapointsLimit;
     }
 
+    /**
+     * Get Dashboard Info.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/dashboard/info/{dashboardId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @param strDashboardId string representation of the dashboard id
+     * @return lightweight {@link DashboardInfo} without configuration JSON
+     * @throws ThingsboardException if the dashboard id is invalid or access is denied
+     */
     @ApiOperation(value = "Get Dashboard Info (getDashboardInfoById)",
             notes = "Get the information about the dashboard based on 'dashboardId' parameter. " + DASHBOARD_INFO_DEFINITION)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -148,6 +181,19 @@ public class DashboardController extends BaseController {
         return checkDashboardInfoId(dashboardId, Operation.READ);
     }
 
+    /**
+     * Get Dashboard.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/dashboard/{dashboardId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @param strDashboardId string representation of the dashboard id
+     * @param includeResources when {@code true}, embeds related resources in the response
+     * @param acceptEncodingHeader optional {@code Accept-Encoding} header for gzip compression
+     * @param response HTTP servlet response used to write the JSON payload
+     * @return empty response body; {@link Dashboard} JSON is written to {@code response}
+     * @throws Exception if the dashboard id is invalid, access is denied, or serialization fails
+     */
     @ApiOperation(value = "Get Dashboard (getDashboardById)",
             notes = "Get the dashboard based on 'dashboardId' parameter. " + DASHBOARD_DEFINITION + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH
     )
@@ -171,6 +217,18 @@ public class DashboardController extends BaseController {
         compressResponseWithGzipIFAccepted(acceptEncodingHeader, response, JacksonUtil.writeValueAsBytes(dashboard));
     }
 
+    /**
+     * Create Or Update Dashboard.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/dashboard}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param dashboard dashboard entity to create or update; tenant id is set from the authenticated user
+     * @param acceptEncodingHeader optional {@code Accept-Encoding} header for gzip compression
+     * @param response HTTP servlet response used to write the saved dashboard JSON
+     * @return empty response body; saved {@link Dashboard} JSON is written to {@code response}
+     * @throws Exception if validation, permission check, or persistence fails
+     */
     @ApiOperation(value = "Create Or Update Dashboard (saveDashboard)",
             notes = "Create or update the Dashboard. When creating dashboard, platform generates Dashboard Id as " + UUID_WIKI_LINK +
                     "The newly created Dashboard id will be present in the response. " +
@@ -193,6 +251,16 @@ public class DashboardController extends BaseController {
         compressResponseWithGzipIFAccepted(acceptEncodingHeader, response, JacksonUtil.writeValueAsBytes(savedDashboard));
     }
 
+    /**
+     * Delete the Dashboard.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/dashboard/{dashboardId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strDashboardId string representation of the dashboard id
+     * @return empty response body
+     * @throws ThingsboardException if the dashboard id is invalid or access is denied
+     */
     @ApiOperation(value = "Delete the Dashboard (deleteDashboard)",
             notes = "Delete the Dashboard." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -205,6 +273,17 @@ public class DashboardController extends BaseController {
         tbDashboardService.delete(dashboard, getCurrentUser());
     }
 
+    /**
+     * Assign the Dashboard.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/customer/{customerId}/dashboard/{dashboardId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strCustomerId string representation of the customer id
+     * @param strDashboardId string representation of the dashboard id
+     * @return updated {@link Dashboard} after assignment (no-op if already assigned)
+     * @throws ThingsboardException if ids are invalid or access is denied
+     */
     @ApiOperation(value = "Assign the Dashboard (assignDashboardToCustomer)",
             notes = "Assign the Dashboard to specified Customer or do nothing if the Dashboard is already assigned to that Customer. " +
                     "Returns the Dashboard object." + TENANT_AUTHORITY_PARAGRAPH)
@@ -226,6 +305,17 @@ public class DashboardController extends BaseController {
         return tbDashboardService.assignDashboardToCustomer(dashboard, customer, getCurrentUser());
     }
 
+    /**
+     * Unassign the Dashboard.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/customer/{customerId}/dashboard/{dashboardId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strCustomerId string representation of the customer id
+     * @param strDashboardId string representation of the dashboard id
+     * @return updated {@link Dashboard} after unassignment (no-op if not assigned)
+     * @throws ThingsboardException if ids are invalid or access is denied
+     */
     @ApiOperation(value = "Unassign the Dashboard (unassignDashboardFromCustomer)",
             notes = "Unassign the Dashboard from specified Customer or do nothing if the Dashboard is already assigned to that Customer. " +
                     "Returns the Dashboard object." + TENANT_AUTHORITY_PARAGRAPH)
@@ -245,6 +335,17 @@ public class DashboardController extends BaseController {
         return tbDashboardService.unassignDashboardFromCustomer(dashboard, customer, getCurrentUser());
     }
 
+    /**
+     * Update the Dashboard Customers.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/dashboard/{dashboardId}/customers}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strDashboardId string representation of the dashboard id
+     * @param strCustomerIds JSON array of customer ids; empty or null removes all assignments
+     * @return updated {@link Dashboard} with the new customer assignment list
+     * @throws ThingsboardException if the dashboard id is invalid or access is denied
+     */
     @ApiOperation(value = "Update the Dashboard Customers (updateDashboardCustomers)",
             notes = "Updates the list of Customers that this Dashboard is assigned to. Removes previous assignments to customers that are not in the provided list. " +
                     "Returns the Dashboard object. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -263,6 +364,17 @@ public class DashboardController extends BaseController {
         return tbDashboardService.updateDashboardCustomers(dashboard, customerIds, getCurrentUser());
     }
 
+    /**
+     * Adds the Dashboard Customers.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/dashboard/{dashboardId}/customers/add}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strDashboardId string representation of the dashboard id
+     * @param strCustomerIds JSON array of customer ids to add to existing assignments
+     * @return updated {@link Dashboard} including previous and newly added customers
+     * @throws ThingsboardException if the dashboard id is invalid or access is denied
+     */
     @ApiOperation(value = "Adds the Dashboard Customers (addDashboardCustomers)",
             notes = "Adds the list of Customers to the existing list of assignments for the Dashboard. Keeps previous assignments to customers that are not in the provided list. " +
                     "Returns the Dashboard object." + TENANT_AUTHORITY_PARAGRAPH)
@@ -280,6 +392,17 @@ public class DashboardController extends BaseController {
         return tbDashboardService.addDashboardCustomers(dashboard, customerIds, getCurrentUser());
     }
 
+    /**
+     * Remove the Dashboard Customers.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/dashboard/{dashboardId}/customers/remove}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strDashboardId string representation of the dashboard id
+     * @param strCustomerIds JSON array of customer ids to remove from existing assignments
+     * @return updated {@link Dashboard} with specified customers removed
+     * @throws ThingsboardException if the dashboard id is invalid or access is denied
+     */
     @ApiOperation(value = "Remove the Dashboard Customers (removeDashboardCustomers)",
             notes = "Removes the list of Customers from the existing list of assignments for the Dashboard. Keeps other assignments to customers that are not in the provided list. " +
                     "Returns the Dashboard object." + TENANT_AUTHORITY_PARAGRAPH)
@@ -297,6 +420,16 @@ public class DashboardController extends BaseController {
         return tbDashboardService.removeDashboardCustomers(dashboard, customerIds, getCurrentUser());
     }
 
+    /**
+     * Assign the Dashboard to Public Customer.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/customer/public/dashboard/{dashboardId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strDashboardId string representation of the dashboard id
+     * @return updated {@link Dashboard} assigned to the auto-generated public customer
+     * @throws ThingsboardException if the dashboard id is invalid or access is denied
+     */
     @ApiOperation(value = "Assign the Dashboard to Public Customer (assignDashboardToPublicCustomer)",
             notes = "Assigns the dashboard to a special, auto-generated 'Public' Customer. Once assigned, unauthenticated users may browse the dashboard. " +
                     "This method is useful if you like to embed the dashboard on public web pages to be available for users that are not logged in. " +
@@ -315,6 +448,16 @@ public class DashboardController extends BaseController {
         return tbDashboardService.assignDashboardToPublicCustomer(dashboard, getCurrentUser());
     }
 
+    /**
+     * Unassign the Dashboard from Public Customer.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/customer/public/dashboard/{dashboardId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strDashboardId string representation of the dashboard id
+     * @return updated {@link Dashboard} after removal from the public customer
+     * @throws ThingsboardException if the dashboard id is invalid or access is denied
+     */
     @ApiOperation(value = "Unassign the Dashboard from Public Customer (unassignDashboardFromPublicCustomer)",
             notes = "Unassigns the dashboard from a special, auto-generated 'Public' Customer. Once unassigned, unauthenticated users may no longer browse the dashboard. " +
                     "Returns the Dashboard object." + TENANT_AUTHORITY_PARAGRAPH)
@@ -329,6 +472,21 @@ public class DashboardController extends BaseController {
         return tbDashboardService.unassignDashboardFromPublicCustomer(dashboard, getCurrentUser());
     }
 
+    /**
+     * Get Tenant Dashboards by System Administrator.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/tenant/{tenantId}/dashboards}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     *
+     * @param strTenantId string representation of the tenant id
+     * @param pageSize maximum number of items per page
+     * @param page zero-based page index
+     * @param textSearch optional case-insensitive substring filter on dashboard title
+     * @param sortProperty optional sort field ({@code createdTime} or {@code title})
+     * @param sortOrder optional sort direction ({@code ASC} or {@code DESC})
+     * @return paginated {@link PageData} of {@link DashboardInfo} objects owned by the tenant
+     * @throws ThingsboardException if the tenant id is invalid or access is denied
+     */
     @ApiOperation(value = "Get Tenant Dashboards by System Administrator (getTenantDashboardsByTenantId)",
             notes = "Returns a page of dashboard info objects owned by tenant. " + DASHBOARD_INFO_DEFINITION + " " + PAGE_DATA_PARAMETERS +
                     SYSTEM_AUTHORITY_PARAGRAPH)
@@ -353,6 +511,21 @@ public class DashboardController extends BaseController {
         return checkNotNull(dashboardService.findDashboardsByTenantId(tenantId, pageLink));
     }
 
+    /**
+     * Get Tenant Dashboards.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/tenant/dashboards}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param pageSize maximum number of items per page
+     * @param page zero-based page index
+     * @param mobile when {@code true}, return only dashboards not hidden for mobile
+     * @param textSearch optional case-insensitive substring filter on dashboard title
+     * @param sortProperty optional sort field ({@code createdTime} or {@code title})
+     * @param sortOrder optional sort direction ({@code ASC} or {@code DESC})
+     * @return paginated {@link PageData} of {@link DashboardInfo} for the current tenant
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Get Tenant Dashboards (getTenantDashboards)",
             notes = "Returns a page of dashboard info objects owned by the tenant of a current user. "
                     + DASHBOARD_INFO_DEFINITION + " " + PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
@@ -380,6 +553,22 @@ public class DashboardController extends BaseController {
         }
     }
 
+    /**
+     * Get Customer Dashboards.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/customer/{customerId}/dashboards}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @param strCustomerId string representation of the customer id
+     * @param pageSize maximum number of items per page
+     * @param page zero-based page index
+     * @param mobile when {@code true}, return only dashboards not hidden for mobile
+     * @param textSearch optional case-insensitive substring filter on dashboard title
+     * @param sortProperty optional sort field ({@code createdTime} or {@code title})
+     * @param sortOrder optional sort direction ({@code ASC} or {@code DESC})
+     * @return paginated {@link PageData} of {@link DashboardInfo} assigned to the customer
+     * @throws ThingsboardException if the customer id is invalid or access is denied
+     */
     @ApiOperation(value = "Get Customer Dashboards (getCustomerDashboards)",
             notes = "Returns a page of dashboard info objects owned by the specified customer. "
                     + DASHBOARD_INFO_DEFINITION + " " + PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -412,6 +601,17 @@ public class DashboardController extends BaseController {
         }
     }
 
+    /**
+     * Get Home Dashboard.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/dashboard/home}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @param acceptEncodingHeader optional {@code Accept-Encoding} header for gzip compression
+     * @param response HTTP servlet response used to write the home dashboard JSON
+     * @return empty response body; {@link HomeDashboard} JSON is written to {@code response} when configured
+     * @throws Exception if dashboard resolution or serialization fails
+     */
     @ApiOperation(value = "Get Home Dashboard (getHomeDashboard)",
             notes = "Returns the home dashboard object that is configured as 'homeDashboardId' parameter in the 'additionalInfo' of the User. " +
                     "If 'homeDashboardId' parameter is not set on the User level and the User has authority 'CUSTOMER_USER', check the same parameter for the corresponding Customer. " +
@@ -449,6 +649,15 @@ public class DashboardController extends BaseController {
         }
     }
 
+    /**
+     * Get Home Dashboard Info.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/dashboard/home/info}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @return {@link HomeDashboardInfo} resolved from user, customer, or tenant {@code additionalInfo}; {@code null} for system admin
+     * @throws ThingsboardException if dashboard resolution fails
+     */
     @ApiOperation(value = "Get Home Dashboard Info (getHomeDashboardInfo)",
             notes = "Returns the home dashboard info object that is configured as 'homeDashboardId' parameter in the 'additionalInfo' of the User. " +
                     "If 'homeDashboardId' parameter is not set on the User level and the User has authority 'CUSTOMER_USER', check the same parameter for the corresponding Customer. " +
@@ -466,6 +675,15 @@ public class DashboardController extends BaseController {
         return getHomeDashboardInfo(securityUser, additionalInfo);
     }
 
+    /**
+     * Get Tenant Home Dashboard Info.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/tenant/dashboard/home/info}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @return {@link HomeDashboardInfo} from the current tenant's {@code additionalInfo}
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Get Tenant Home Dashboard Info (getTenantHomeDashboardInfo)",
             notes = "Returns the home dashboard info object that is configured as 'homeDashboardId' parameter in the 'additionalInfo' of the corresponding tenant. " +
                     TENANT_AUTHORITY_PARAGRAPH)
@@ -486,6 +704,16 @@ public class DashboardController extends BaseController {
         return new HomeDashboardInfo(dashboardId, hideDashboardToolbar);
     }
 
+    /**
+     * Update Tenant Home Dashboard Info.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/tenant/dashboard/home/info}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param homeDashboardInfo home dashboard id and toolbar visibility; {@code null} dashboard id clears the assignment
+     * @return empty response body
+     * @throws ThingsboardException if the referenced dashboard is invalid or access is denied
+     */
     @ApiOperation(value = "Update Tenant Home Dashboard Info (getTenantHomeDashboardInfo)",
             notes = "Update the home dashboard assignment for the current tenant. " +
                     TENANT_AUTHORITY_PARAGRAPH)
@@ -531,6 +759,17 @@ public class DashboardController extends BaseController {
         return null;
     }
 
+    /**
+     * Assign dashboard to edge.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/edge/{edgeId}/dashboard/{dashboardId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strEdgeId string representation of the edge id
+     * @param strDashboardId string representation of the dashboard id
+     * @return {@link Dashboard} after edge assignment is initiated
+     * @throws ThingsboardException if ids are invalid or access is denied
+     */
     @ApiOperation(value = "Assign dashboard to edge (assignDashboardToEdge)",
             notes = "Creates assignment of an existing dashboard to an instance of The Edge. " +
                     EDGE_ASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -553,6 +792,17 @@ public class DashboardController extends BaseController {
         return tbDashboardService.asignDashboardToEdge(getTenantId(), dashboardId, edge, getCurrentUser());
     }
 
+    /**
+     * Unassign dashboard from edge.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/edge/{edgeId}/dashboard/{dashboardId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @param strEdgeId string representation of the edge id
+     * @param strDashboardId string representation of the dashboard id
+     * @return {@link Dashboard} after edge unassignment is initiated
+     * @throws ThingsboardException if ids are invalid or access is denied
+     */
     @ApiOperation(value = "Unassign dashboard from edge (unassignDashboardFromEdge)",
             notes = "Clears assignment of the dashboard to the edge. " +
                     EDGE_UNASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -576,6 +826,21 @@ public class DashboardController extends BaseController {
         return tbDashboardService.unassignDashboardFromEdge(dashboard, edge, getCurrentUser());
     }
 
+    /**
+     * Get Edge Dashboards.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/edge/{edgeId}/dashboards}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @param strEdgeId string representation of the edge id
+     * @param pageSize maximum number of items per page
+     * @param page zero-based page index
+     * @param textSearch optional case-insensitive substring filter on dashboard title
+     * @param sortProperty optional sort field ({@code createdTime} or {@code title})
+     * @param sortOrder optional sort direction ({@code ASC} or {@code DESC})
+     * @return paginated {@link PageData} of {@link DashboardInfo} assigned to the edge, filtered by read permission
+     * @throws ThingsboardException if the edge id is invalid or access is denied
+     */
     @ApiOperation(value = "Get Edge Dashboards (getEdgeDashboards)",
             notes = "Returns a page of dashboard info objects assigned to the specified edge. "
                     + DASHBOARD_INFO_DEFINITION + " " + PAGE_DATA_PARAMETERS + TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)
@@ -608,6 +873,16 @@ public class DashboardController extends BaseController {
         return checkNotNull(filteredResult);
     }
 
+    /**
+     * Get dashboards by ids (internal/hidden endpoint).
+     *
+     * <p><b>HTTP:</b> {@code GET /api/dashboards?dashboardIds=...}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @param dashboardUUIDs set of dashboard UUIDs to fetch
+     * @return list of {@link DashboardInfo} objects the caller may read
+     * @throws ThingsboardException if access is denied
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('TENANT_ADMIN', 'CUSTOMER_USER')")
     @GetMapping(value = "/dashboards", params = {"dashboardIds"})
@@ -621,6 +896,16 @@ public class DashboardController extends BaseController {
         return filterDashboardsByReadPermission(dashboards);
     }
 
+    /**
+     * Get dashboards by Dashboard Ids.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/dashboards/list?dashboardIds=...}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     *
+     * @param dashboardUUIDs set of dashboard UUIDs to fetch
+     * @return list of {@link DashboardInfo} objects the caller may read
+     * @throws ThingsboardException if access is denied
+     */
     @ApiOperation(value = "Get dashboards by Dashboard Ids (getDashboardsByIds)",
             notes = "Returns a list of DashboardInfo objects based on the provided ids. " +
                     TENANT_OR_CUSTOMER_AUTHORITY_PARAGRAPH)

@@ -16,12 +16,20 @@
 package org.thingsboard.server.service.subscription;
 
 import lombok.AllArgsConstructor;
+/**
+ * Tb entity updates info component in the ThingsBoard subscription layer.
+ */
 
 @AllArgsConstructor
 public class TbEntityUpdatesInfo {
 
     volatile long attributesUpdateTs;
     volatile long timeSeriesUpdateTs;
+
+    /**
+     * Constructs {@link TbEntityUpdatesInfo} with the supplied dependencies and configuration.
+     * @param ts ts
+     */
 
     public TbEntityUpdatesInfo(long ts) {
         this.attributesUpdateTs = ts;

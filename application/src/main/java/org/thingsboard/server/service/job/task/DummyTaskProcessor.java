@@ -25,7 +25,20 @@ import org.thingsboard.server.queue.task.TaskProcessor;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+/**
+
+ * Dummy task processor (background job scheduling and execution).
+
+ */
+
 public class DummyTaskProcessor extends TaskProcessor<DummyTask, DummyTaskResult> {
+    /**
+     * Processes the requested data.
+     *
+     * @param task task ({@link DummyTask})
+     * @return {@link DummyTaskResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DummyTaskResult process(DummyTask task) throws Exception {
@@ -41,15 +54,34 @@ public class DummyTaskProcessor extends TaskProcessor<DummyTask, DummyTaskResult
         }
         return DummyTaskResult.success(task);
     }
+    /**
+     * Returns processing timeout.
+     *
+     * @param task task ({@link DummyTask})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public long getProcessingTimeout(DummyTask task) {
         return task.getProcessingTimeoutMs() > 0 ? task.getProcessingTimeoutMs() : 2000;
     }
+    /**
+     * Returns current tasks.
+     *
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Map<Object, Pair<Task<DummyTaskResult>, Future<DummyTaskResult>>> getCurrentTasks() {
         return currentTasks;
     }
+    /**
+     * Returns job type.
+     *
+     * @return {@link JobType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JobType getJobType() {

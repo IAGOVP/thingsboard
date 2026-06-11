@@ -63,6 +63,12 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_ID_PA
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_TEXT_SEARCH_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST API for tenants.
+ * 
+ * <p>Base path: {@code /api}. Tenant CRUD and paginated listings for system administrators.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -75,6 +81,15 @@ public class TenantController extends BaseController {
     private final TenantService tenantService;
     private final TbTenantService tbTenantService;
 
+    /**
+     * Get Tenant.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenant/{tenantId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strTenantId str Tenant Id
+     * @return {@link Tenant} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenant (getTenantById)",
             notes = "Fetch the Tenant object based on the provided Tenant Id. " + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -89,6 +104,15 @@ public class TenantController extends BaseController {
         return tenant;
     }
 
+    /**
+     * Get Tenant Info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenant/info/{tenantId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strTenantId str Tenant Id
+     * @return {@link TenantInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenant Info (getTenantInfoById)",
             notes = "Fetch the Tenant Info object based on the provided Tenant Id. " +
                     TENANT_INFO_DESCRIPTION + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
@@ -102,6 +126,15 @@ public class TenantController extends BaseController {
         return checkTenantInfoId(tenantId, Operation.READ);
     }
 
+    /**
+     * Create Or update Tenant.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/tenant}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param tenant tenant
+     * @return {@link Tenant} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create Or update Tenant (saveTenant)",
             notes = "Create or update the Tenant. When creating tenant, platform generates Tenant Id as " + UUID_WIKI_LINK +
                     "Default Rule Chain and Device profile are also generated for the new tenants automatically. " +
@@ -118,6 +151,15 @@ public class TenantController extends BaseController {
         return tbTenantService.save(tenant);
     }
 
+    /**
+     * Delete Tenant.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/tenant/{tenantId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param strTenantId str Tenant Id
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete Tenant (deleteTenant)",
             notes = "Deletes the tenant, it's customers, rule chains, devices and all other related entities. Referencing non-existing tenant Id will cause an error." + SYSTEM_OR_TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
@@ -131,6 +173,19 @@ public class TenantController extends BaseController {
         tbTenantService.delete(tenant);
     }
 
+    /**
+     * Get Tenants.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenants}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenants (getTenants)", notes = "Returns a page of tenants registered in the platform. " + PAGE_DATA_PARAMETERS + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @GetMapping(value = "/tenants")
@@ -149,6 +204,19 @@ public class TenantController extends BaseController {
         return checkNotNull(tenantService.findTenants(pageLink));
     }
 
+    /**
+     * Get Tenants Info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenantInfos}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenants Info (getTenants)", notes = "Returns a page of tenant info objects registered in the platform. "
             + TENANT_INFO_DESCRIPTION + PAGE_DATA_PARAMETERS + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -169,6 +237,15 @@ public class TenantController extends BaseController {
         return checkNotNull(tenantService.findTenantInfos(pageLink));
     }
 
+    /**
+     * Get tenants by ids v1.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenants}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param tenantUUIDs tenant UUIDs
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/tenants", params = {"tenantIds"})
@@ -184,6 +261,15 @@ public class TenantController extends BaseController {
         return filterTenantsByReadPermission(tenants);
     }
 
+    /**
+     * Get Tenants list.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenants/list}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}
+     * @param tenantUUIDs tenant UUIDs
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenants list (getTenantsByIds)")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN')")
     @GetMapping(value = "/tenants/list")

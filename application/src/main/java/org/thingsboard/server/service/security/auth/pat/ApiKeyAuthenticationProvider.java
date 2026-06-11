@@ -28,6 +28,11 @@ import org.thingsboard.server.service.security.auth.AbstractAuthenticationProvid
 import org.thingsboard.server.service.security.model.SecurityUser;
 import org.thingsboard.server.service.security.model.token.ApiKeyAuthRequest;
 import org.thingsboard.server.service.user.cache.UserAuthDetailsCache;
+/**
+ * Spring Security authentication provider for personal access token (API key) authentication.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Integrates with Spring Security filter chain.
+ */
 
 @Component
 public class ApiKeyAuthenticationProvider extends AbstractAuthenticationProvider {
@@ -38,13 +43,26 @@ public class ApiKeyAuthenticationProvider extends AbstractAuthenticationProvider
         super(null, userAuthDetailsCache);
         this.apiKeyService = apiKeyService;
     }
-
+    /**
+     * Authenticates credentials and returns a populated security principal.
+     *
+     * @param authentication authentication (Authentication)
+     * @return {@link Authentication} result
+     * @throws AuthenticationException if the operation fails
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         ApiKeyAuthRequest apiKeyAuthRequest = (ApiKeyAuthRequest) authentication.getCredentials();
         SecurityUser securityUser = authenticate(apiKeyAuthRequest.apiKey());
         return new ApiKeyAuthenticationToken(securityUser);
     }
+
+    /**
+     * Authenticates credentials and returns a populated security principal.
+     *
+     * @param key key (String)
+     * @return {@link SecurityUser} result
+     */
 
     public SecurityUser authenticate(String key) {
         if (StringUtils.isEmpty(key)) {
@@ -62,7 +80,12 @@ public class ApiKeyAuthenticationProvider extends AbstractAuthenticationProvider
         }
         return super.authenticateByUserId(apiKey.getTenantId(), apiKey.getUserId());
     }
-
+    /**
+     * Indicates whether this provider can authenticate the given authentication token type.
+     *
+     * @param authentication authentication (Class<?>)
+     * @return boolean
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return ApiKeyAuthenticationToken.class.isAssignableFrom(authentication);

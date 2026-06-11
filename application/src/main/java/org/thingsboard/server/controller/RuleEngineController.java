@@ -58,6 +58,12 @@ import java.util.concurrent.TimeoutException;
 import static org.thingsboard.server.controller.ControllerConstants.ENTITY_ID_PARAM_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.ENTITY_TYPE_PARAM_DESCRIPTION;
 
+/**
+ * REST API for rule engine REST injection.
+ * 
+ * <p>Base path: {@code /api/rule-engine/}. Push REST payloads into the rule engine as TbMsg for custom processing.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping(TbUrlConstants.RULE_ENGINE_URL_PREFIX)
@@ -79,6 +85,15 @@ public class RuleEngineController extends BaseController {
     @Autowired
     private AccessValidator accessValidator;
 
+    /**
+     * Push user message to the rule engine.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/rule-engine}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Push user message to the rule engine (handleRuleEngineRequestForUser)",
             notes = MSG_DESCRIPTION_PREFIX +
                     "Uses current User Id ( the one which credentials is used to perform the request) as the Rule Engine message originator. " +
@@ -95,6 +110,17 @@ public class RuleEngineController extends BaseController {
         return handleRuleEngineRequestForEntityWithQueueAndTimeout(null, null, null, defaultResponseTimeout, requestBody);
     }
 
+    /**
+     * Push entity message to the rule engine.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/rule-engine/{entityType}/{entityId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Push entity message to the rule engine (handleRuleEngineRequestForEntity)",
             notes = MSG_DESCRIPTION_PREFIX +
                     "Uses specified Entity Id as the Rule Engine message originator. " +
@@ -115,6 +141,18 @@ public class RuleEngineController extends BaseController {
         return handleRuleEngineRequestForEntityWithQueueAndTimeout(entityType, entityIdStr, null, defaultResponseTimeout, requestBody);
     }
 
+    /**
+     * Push entity message with timeout to the rule engine.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/rule-engine/{entityType}/{entityId}/{timeout}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param timeout timeout
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Push entity message with timeout to the rule engine (handleRuleEngineRequestForEntityWithTimeout)",
             notes = MSG_DESCRIPTION_PREFIX +
                     "Uses specified Entity Id as the Rule Engine message originator. " +
@@ -137,6 +175,19 @@ public class RuleEngineController extends BaseController {
         return handleRuleEngineRequestForEntityWithQueueAndTimeout(entityType, entityIdStr, null, timeout, requestBody);
     }
 
+    /**
+     * Push entity message with timeout and specified queue to the rule engine.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/rule-engine/{entityType}/{entityId}/{queueName}/{timeout}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}
+     * @param entityType entity Type
+     * @param entityIdStr entity Id Str
+     * @param queueName queue Name
+     * @param timeout timeout
+     * @param requestBody request Body
+     * @return {@link DeferredResult} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Push entity message with timeout and specified queue to the rule engine (handleRuleEngineRequestForEntityWithQueueAndTimeout)",
             notes = MSG_DESCRIPTION_PREFIX +
                     "Uses specified Entity Id as the Rule Engine message originator. " +

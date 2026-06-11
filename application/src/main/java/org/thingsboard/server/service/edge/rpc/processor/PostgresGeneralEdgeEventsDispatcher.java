@@ -42,6 +42,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+/**
+ * Postgres general edge events dispatcher for edge downlink/uplink entity synchronization.
+ */
 
 @Slf4j
 @RequiredArgsConstructor
@@ -57,7 +60,12 @@ public class PostgresGeneralEdgeEventsDispatcher implements EdgeEventsDispatcher
     private Long previousStartTs;
     private Long newStartSeqId;
     private Long previousStartSeqId;
-
+    /**
+     * Processes new events.
+     *
+     * @return {@link ListenableFuture} result
+     * @throws Exception if the operation fails
+     */
     @Override
     public ListenableFuture<Boolean> processNewEvents() throws Exception {
         EdgeSessionState state = session.getState();
@@ -73,10 +81,20 @@ public class PostgresGeneralEdgeEventsDispatcher implements EdgeEventsDispatcher
                     tenantId, edgeId, previousStartTs, previousStartSeqId);
 
             Futures.addCallback(session.fetchAndSendEdgeEvents(fetcher), new FutureCallback<>() {
+                /**
+                 * On success.
+                 *
+                 * @param newStartTsAndSeqId new start ts and seq id (@Nullable Pair<Long, Long>)
+                 */
                 @Override
                 public void onSuccess(@Nullable Pair<Long, Long> newStartTsAndSeqId) {
                     if (newStartTsAndSeqId != null) {
                         Futures.addCallback(updateQueueStartTsAndSeqId(tenantId, edgeId, newStartTsAndSeqId), new FutureCallback<>() {
+                            /**
+                             * On success.
+                             *
+                             * @param saveResult save result (@Nullable AttributesSaveResult)
+                             */
                             @Override
                             public void onSuccess(@Nullable AttributesSaveResult saveResult) {
                                 log.debug("[{}][{}] queue offset was updated [{}]", tenantId, edgeId, newStartTsAndSeqId);
@@ -92,6 +110,11 @@ public class PostgresGeneralEdgeEventsDispatcher implements EdgeEventsDispatcher
                                 result.set(newEventsAvailable);
                             }
 
+                            /**
+                             * On failure.
+                             *
+                             * @param t t (Throwable)
+                             */
                             @Override
                             public void onFailure(Throwable t) {
                                 log.error("[{}][{}] Failed to update queue offset [{}]", tenantId, edgeId, newStartTsAndSeqId, t);
@@ -104,6 +127,11 @@ public class PostgresGeneralEdgeEventsDispatcher implements EdgeEventsDispatcher
                     }
                 }
 
+                /**
+                 * On failure.
+                 *
+                 * @param t t (Throwable)
+                 */
                 @Override
                 public void onFailure(Throwable t) {
                     log.error("[{}][{}] Failed to process events", tenantId, edgeId, t);

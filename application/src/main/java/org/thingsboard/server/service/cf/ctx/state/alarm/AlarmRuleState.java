@@ -44,6 +44,9 @@ import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 
 import static org.thingsboard.server.service.cf.ctx.state.alarm.AlarmEvalResult.Status.TRUE;
+/**
+ * Runtime state for alarm rule calculated fields.
+ */
 
 @Data
 @Slf4j
@@ -69,6 +72,14 @@ public class AlarmRuleState {
         }
         this.state = state;
     }
+    /**
+     * Eval.
+     *
+     * @param newEvent new event
+     * @param ctx calculated-field execution context
+     * @return {@link AlarmEvalResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public AlarmEvalResult eval(boolean newEvent, CalculatedFieldCtx ctx) { // on event or config change
         long ts = newEvent ? state.getLatestTimestamp() : System.currentTimeMillis();
@@ -78,6 +89,14 @@ public class AlarmRuleState {
         }
         return doEval(newEvent, ctx);
     }
+    /**
+     * Reeval.
+     *
+     * @param ts ts
+     * @param ctx calculated-field execution context
+     * @return {@link AlarmEvalResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public AlarmEvalResult reeval(long ts, CalculatedFieldCtx ctx) { // on scheduled duration check or periodic re-eval for rules with schedule
         boolean active = isActive(ts);
@@ -124,6 +143,14 @@ public class AlarmRuleState {
         }
         return AlarmEvalResult.EMPTY;
     }
+    /**
+     * Do eval.
+     *
+     * @param newEvent new event
+     * @param ctx calculated-field execution context
+     * @return {@link AlarmEvalResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public AlarmEvalResult doEval(boolean newEvent, CalculatedFieldCtx ctx) {
         return switch (condition.getType()) {
@@ -242,6 +269,12 @@ public class AlarmRuleState {
             return startsOn < msFromStartOfDay || (0 < msFromStartOfDay && msFromStartOfDay < endsOn);
         }
     }
+    /**
+     * Clear.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void clear() {
         clearRepeatingConditionState();
@@ -258,6 +291,13 @@ public class AlarmRuleState {
         duration = 0L;
         cancelDurationCheckFuture();
     }
+    /**
+     * Set duration check future.
+     *
+     * @param durationCheckFuture duration check future ({@link ScheduledFuture})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setDurationCheckFuture(ScheduledFuture<?> durationCheckFuture) {
         if (this.durationCheckFuture != null) {
@@ -266,6 +306,12 @@ public class AlarmRuleState {
         }
         this.durationCheckFuture = durationCheckFuture;
     }
+    /**
+     * Cancel duration check future.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void cancelDurationCheckFuture() {
         if (durationCheckFuture != null) {
@@ -273,6 +319,12 @@ public class AlarmRuleState {
             durationCheckFuture = null;
         }
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isEmpty() {
         return eventCount == 0L && firstEventTs == 0L && lastCheckTs == 0L && durationCheckFuture == null;
@@ -312,6 +364,13 @@ public class AlarmRuleState {
     private boolean eval(AlarmConditionExpression expression, CalculatedFieldCtx ctx) {
         return state.eval(expression, ctx);
     }
+    /**
+     * Set alarm rule.
+     *
+     * @param alarmRule alarm rule ({@link AlarmRule})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setAlarmRule(AlarmRule alarmRule) {
         this.alarmRule = alarmRule;
@@ -331,6 +390,12 @@ public class AlarmRuleState {
             }
         }
     }
+    /**
+     * Returns state info.
+     *
+     * @return {@link StateInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public StateInfo getStateInfo() {
         if (condition.getType() == AlarmConditionType.REPEATING) {
@@ -354,6 +419,14 @@ public class AlarmRuleState {
                ", durationCheckFuture=" + durationCheckFuture +
                '}';
     }
+    /**
+     * State info.
+     *
+     * @param eventCount event count ({@link Long})
+     * @param duration duration ({@link Long})
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public record StateInfo(Long eventCount, Long duration) {
 

@@ -25,12 +25,23 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.oauth2.OAuth2Client;
 import org.thingsboard.server.dao.oauth2.OAuth2ClientService;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
+/**
+ * Default implementation of {@link TbOauth2ClientService}.
+ */
 
 @Service
 @AllArgsConstructor
 public class DefaultTbOauth2ClientService extends AbstractTbEntityService implements TbOauth2ClientService {
 
     private final OAuth2ClientService oAuth2ClientService;
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param oAuth2Client o auth2client ({@link OAuth2Client})
+     * @param user authenticated user performing the action
+     * @return {@link OAuth2Client}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public OAuth2Client save(OAuth2Client oAuth2Client, User user) throws Exception {
@@ -45,6 +56,14 @@ public class DefaultTbOauth2ClientService extends AbstractTbEntityService implem
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param oAuth2Client o auth2client ({@link OAuth2Client})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(OAuth2Client oAuth2Client, User user) {

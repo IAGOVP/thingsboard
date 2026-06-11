@@ -17,6 +17,12 @@ package org.thingsboard.server.service.security.permission;
 
 import java.util.Optional;
 
+/**
+ * Defines RBAC permission rules for  users.
+ *
+ * <p><b>Responsibilities:</b> Evaluates tenant/customer/system-admin scopes against Resource and Operation.
+ */
+
 public interface Permissions {
 
     Optional<PermissionChecker> getPermissionChecker(Resource resource);

@@ -34,6 +34,9 @@ import org.thingsboard.server.dao.device.DeviceService;
 
 import java.util.HashSet;
 import java.util.Set;
+/**
+ * Spring service component for owner service (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +45,14 @@ public class OwnerService {
     private final DeviceService deviceService;
     private final AssetService assetService;
     private final CustomerService customerService;
+    /**
+     * Returns owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityId getOwner(TenantId tenantId, EntityId entityId) {
         return switch (entityId.getEntityType()) {
@@ -51,6 +62,14 @@ public class OwnerService {
             default -> throw new UnsupportedOperationException();
         };
     }
+    /**
+     * Returns owned entities.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ownerId owner id ({@link EntityId})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Set<EntityId> getOwnedEntities(TenantId tenantId, EntityId ownerId) {
         Set<EntityId> ownedEntities = new HashSet<>();

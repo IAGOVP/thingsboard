@@ -63,6 +63,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+/**
+ * Handles edge sync, RPC, and event messages delivered via the core queue.
+ */
 
 @Service
 @TbCoreComponent
@@ -85,6 +88,14 @@ public class DefaultTbEdgeConsumerService extends AbstractConsumerService<ToEdge
 
     private MainQueueConsumerManager<TbProtoQueueMsg<ToEdgeMsg>, QueueConfig> mainConsumer;
 
+    /**
+     * Constructs {@link DefaultTbEdgeConsumerService} with the supplied dependencies and configuration.
+     * @param tbCoreQueueFactory tb core queue factory
+     * @param actorContext actor context
+     * @param statsFactory stats factory
+     * @param edgeCtx edge ctx
+     */
+
     public DefaultTbEdgeConsumerService(TbCoreQueueFactory tbCoreQueueFactory, ActorSystemContext actorContext,
                                         StatsFactory statsFactory, EdgeContextComponent edgeCtx) {
         super(actorContext, null, null, null, null, null, null, null, null);
@@ -92,6 +103,12 @@ public class DefaultTbEdgeConsumerService extends AbstractConsumerService<ToEdge
         this.stats = new EdgeConsumerStats(statsFactory);
         this.queueFactory = tbCoreQueueFactory;
     }
+
+    /**
+     * Initializes init.
+     * @return @PostConstruct
+    public void
+     */
 
     @PostConstruct
     public void init() {
@@ -108,15 +125,36 @@ public class DefaultTbEdgeConsumerService extends AbstractConsumerService<ToEdge
                 .build();
     }
 
+    /**
+     * Shuts down destroy.
+     * @return @PreDestroy
+    public void
+     */
+
     @PreDestroy
     public void destroy() {
         super.destroy();
     }
 
+    /**
+     * Starts consumers.
+     * @return @Override
+    protected void
+     */
+
     @Override
     protected void startConsumers() {
         super.startConsumers();
     }
+
+    /**
+     * Invoked when tb application event occurs.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param event application or cluster event
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent event) {
@@ -163,30 +201,74 @@ public class DefaultTbEdgeConsumerService extends AbstractConsumerService<ToEdge
         consumer.commit();
     }
 
+    /**
+     * Returns service type.
+     * @return {@link ServiceType}
+     */
+
     @Override
     protected ServiceType getServiceType() {
         return ServiceType.TB_CORE;
     }
+
+    /**
+     * Returns notification poll duration.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
 
     @Override
     protected long getNotificationPollDuration() {
         return pollInterval;
     }
 
+    /**
+     * Returns notification pack processing timeout.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
+
     @Override
     protected long getNotificationPackProcessingTimeout() {
         return packProcessingTimeout;
     }
+
+    /**
+     * Returns mgmt thread pool size.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return numeric result
+     */
 
     @Override
     protected int getMgmtThreadPoolSize() {
         return Math.max(Runtime.getRuntime().availableProcessors(), 4);
     }
 
+    /**
+     * Creates notifications consumer.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @return {@link TbQueueConsumer}
+     */
+
     @Override
     protected TbQueueConsumer<TbProtoQueueMsg<ToEdgeNotificationMsg>> createNotificationsConsumer() {
         return queueFactory.createToEdgeNotificationsMsgConsumer();
     }
+
+    /**
+     * Handles notification.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param id id
+     * @param msg queue or transport message
+     * @param callback queue callback to ack or retry the message
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void handleNotification(UUID id, TbProtoQueueMsg<ToEdgeNotificationMsg> msg, TbCallback callback) {
@@ -243,10 +325,25 @@ public class DefaultTbEdgeConsumerService extends AbstractConsumerService<ToEdge
             EdgeEventType type = EdgeEventType.valueOf(edgeNotificationMsg.getType());
             ListenableFuture<Void> future = edgeCtx.getProcessor(type).processEntityNotification(tenantId, edgeNotificationMsg);
             Futures.addCallback(future, new FutureCallback<>() {
+                /**
+                 * Invoked when success occurs.
+                 * @param unused unused
+                 * @return @Override
+                public void
+                 */
                 @Override
                 public void onSuccess(@Nullable Void unused) {
                     callback.onSuccess();
                 }
+
+                /**
+                 * Invoked when failure occurs.
+                 *
+                 * <p>Default implementation inherited from the supertype.
+                 * @param throwable throwable
+                 * @return @Override
+                public void
+                 */
 
                 @Override
                 public void onFailure(@NotNull Throwable throwable) {
@@ -273,13 +370,23 @@ public class DefaultTbEdgeConsumerService extends AbstractConsumerService<ToEdge
         callback.onFailure(throwable);
     }
 
-    @Scheduled(fixedDelayString = "${queue.edge.stats.print-interval-ms}")
+    /**
+     * Print stats.
+     */
+
+@Scheduled(fixedDelayString = "${queue.edge.stats.print-interval-ms}")
     public void printStats() {
         if (statsEnabled) {
             stats.printStats();
             stats.reset();
         }
     }
+
+    /**
+     * Stops consumers.
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void stopConsumers() {

@@ -24,23 +24,108 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.relation.EntityRelation;
 
+/**
+
+ * Records entity audit log entries for user actions.
+
+ */
+
 public interface TbLogEntityActionService {
+/**
+ * Log entity action.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param actionType action type ({@link ActionType})
+ * @param user authenticated user performing the action
+ * @param e e ({@link Exception})
+ * @param additionalInfo additional info
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     <I extends EntityId> void logEntityAction(TenantId tenantId, I entityId, ActionType actionType, User user,
                                               Exception e, Object... additionalInfo);
+/**
+ * Log entity action.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param entity entity ({@link E})
+ * @param actionType action type ({@link ActionType})
+ * @param user authenticated user performing the action
+ * @param additionalInfo additional info
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends HasName, I extends EntityId> void logEntityAction(TenantId tenantId, I entityId, E entity, ActionType actionType,
                                                                  User user, Object... additionalInfo);
+/**
+ * Log entity action.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param entity entity ({@link E})
+ * @param actionType action type ({@link ActionType})
+ * @param user authenticated user performing the action
+ * @param e e ({@link Exception})
+ * @param additionalInfo additional info
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends HasName, I extends EntityId> void logEntityAction(TenantId tenantId, I entityId, E entity, ActionType actionType,
                                                                  User user, Exception e, Object... additionalInfo);
+/**
+ * Log entity action.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param entity entity ({@link E})
+ * @param customerId customer id ({@link CustomerId})
+ * @param actionType action type ({@link ActionType})
+ * @param user authenticated user performing the action
+ * @param additionalInfo additional info
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends HasName, I extends EntityId> void logEntityAction(TenantId tenantId, I entityId, E entity, CustomerId customerId,
                                                                  ActionType actionType, User user, Object... additionalInfo);
+/**
+ * Log entity action.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param entityId target entity identifier
+ * @param entity entity ({@link E})
+ * @param customerId customer id ({@link CustomerId})
+ * @param actionType action type ({@link ActionType})
+ * @param user authenticated user performing the action
+ * @param e e ({@link Exception})
+ * @param additionalInfo additional info
+ * @return the operation result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     <E extends HasName, I extends EntityId> void logEntityAction(TenantId tenantId, @NotNull I entityId, E entity, CustomerId customerId,
                                                                  ActionType actionType, User user, Exception e,
                                                                  Object... additionalInfo);
+/**
+ * Log entity relation action.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param customerId customer id ({@link CustomerId})
+ * @param relation relation ({@link EntityRelation})
+ * @param user authenticated user performing the action
+ * @param actionType action type ({@link ActionType})
+ * @param e e ({@link Exception})
+ * @param additionalInfo additional info
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void logEntityRelationAction(TenantId tenantId, CustomerId customerId, EntityRelation relation, User user,
                                  ActionType actionType, Exception e, Object... additionalInfo);

@@ -21,6 +21,15 @@ import lombok.ToString;
 import org.springframework.context.annotation.Configuration;
 import org.thingsboard.rule.engine.api.MqttClientSettings;
 
+/**
+ * Bridges Spring configuration properties to the rule-engine MQTT client API.
+ *
+ * <p>Implements {@link MqttClientSettings} so rule nodes that publish via MQTT
+ * (e.g. external MQTT integration nodes) can read retransmission policy from
+ * the server's YAML configuration rather than hard-coded defaults.
+ *
+ * @see MqttClientRetransmissionSettingsComponent for the underlying property bindings
+ */
 @ToString
 @EqualsAndHashCode
 @Configuration
@@ -29,16 +38,19 @@ public class MqttClientSettingsComponent implements MqttClientSettings {
 
     private final MqttClientRetransmissionSettingsComponent retransmissionSettingsComponent;
 
+    /** {@inheritDoc} */
     @Override
     public int getRetransmissionMaxAttempts() {
         return retransmissionSettingsComponent.getMaxAttempts();
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getRetransmissionInitialDelayMillis() {
         return retransmissionSettingsComponent.getInitialDelayMillis();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRetransmissionJitterFactor() {
         return retransmissionSettingsComponent.getJitterFactor();

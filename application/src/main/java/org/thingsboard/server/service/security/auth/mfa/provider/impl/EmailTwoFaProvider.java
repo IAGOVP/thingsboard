@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.security.model.mfa.provider.EmailTwoFa
 import org.thingsboard.server.common.data.security.model.mfa.provider.TwoFaProviderType;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Email two fa provider for two-factor authentication (MFA).
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @TbCoreComponent
@@ -38,14 +43,25 @@ public class EmailTwoFaProvider extends OtpBasedTwoFaProvider<EmailTwoFaProvider
         super(cacheManager);
         this.mailService = mailService;
     }
-
+    /**
+     * Generate new account config.
+     *
+     * @param user user (User)
+     * @param providerConfig provider config (EmailTwoFaProviderConfig)
+     * @return {@link EmailTwoFaAccountConfig} result
+     */
     @Override
     public EmailTwoFaAccountConfig generateNewAccountConfig(User user, EmailTwoFaProviderConfig providerConfig) {
         EmailTwoFaAccountConfig config = new EmailTwoFaAccountConfig();
         config.setEmail(user.getEmail());
         return config;
     }
-
+    /**
+     * Check.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public void check(TenantId tenantId) throws ThingsboardException {
         try {
@@ -55,6 +71,15 @@ public class EmailTwoFaProvider extends OtpBasedTwoFaProvider<EmailTwoFaProvider
         }
     }
 
+    /**
+     * Send verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param verificationCode verification code (String)
+     * @param providerConfig provider config (EmailTwoFaProviderConfig)
+     * @param accountConfig account config (EmailTwoFaAccountConfig)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     protected void sendVerificationCode(SecurityUser user, String verificationCode, EmailTwoFaProviderConfig providerConfig, EmailTwoFaAccountConfig accountConfig) throws ThingsboardException {
         try {
@@ -64,6 +89,10 @@ public class EmailTwoFaProvider extends OtpBasedTwoFaProvider<EmailTwoFaProvider
         }
     }
 
+    /**
+     * Returns type.
+     *
+     */
     @Override
     public TwoFaProviderType getType() {
         return TwoFaProviderType.EMAIL;

@@ -37,6 +37,10 @@ import static org.thingsboard.server.config.ThingsboardSecurityConfiguration.AUT
 import static org.thingsboard.server.config.ThingsboardSecurityConfiguration.AUTHORIZATION_HEADER_V2;
 import static org.thingsboard.server.config.ThingsboardSecurityConfiguration.BEARER_HEADER_PREFIX;
 
+/**
+ * Servlet filter that handles JWT bearer-token authentication login/token requests.
+ */
+
 public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
     private final AuthenticationFailureHandler failureHandler;
@@ -49,13 +53,30 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
         this.failureHandler = failureHandler;
         this.tokenExtractor = tokenExtractor;
     }
-
+    /**
+     * Attempt authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @return {@link Authentication} result
+     * @throws AuthenticationException if the operation fails
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         RawAccessJwtToken token = new RawAccessJwtToken(tokenExtractor.extract(request));
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(token));
     }
 
+    /**
+     * Successful authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param chain chain (FilterChain)
+     * @param authResult auth result (Authentication)
+     * @throws IOException if the operation fails
+     * @throws ServletException if the operation fails
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
@@ -64,7 +85,13 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
         SecurityContextHolder.setContext(context);
         chain.doFilter(request, response);
     }
-
+    /**
+     * Requires authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @return boolean
+     */
     @Override
     protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
         if (!super.requiresAuthentication(request, response)) {
@@ -81,6 +108,15 @@ public class JwtTokenAuthenticationProcessingFilter extends AbstractAuthenticati
         return header.startsWith(BEARER_HEADER_PREFIX);
     }
 
+    /**
+     * Unsuccessful authentication.
+     *
+     * @param request request (HttpServletRequest)
+     * @param response response (HttpServletResponse)
+     * @param failed failed (AuthenticationException)
+     * @throws IOException if the operation fails
+     * @throws ServletException if the operation fails
+     */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {

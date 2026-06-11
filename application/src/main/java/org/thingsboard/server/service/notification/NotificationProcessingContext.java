@@ -37,6 +37,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+    /**
+     * Notification processing context (notification delivery, templates, targets, and rule-trigger processing).
+     */
+
 @SuppressWarnings("unchecked")
 public class NotificationProcessingContext {
 
@@ -81,6 +85,13 @@ public class NotificationProcessingContext {
             }
         });
     }
+    /**
+     * Returns delivery method config.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @return {@link C}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public <C extends NotificationDeliveryMethodConfig> C getDeliveryMethodConfig(NotificationDeliveryMethod deliveryMethod) {
         NotificationSettings settings;
@@ -91,6 +102,14 @@ public class NotificationProcessingContext {
         }
         return (C) settings.getDeliveryMethodsConfigs().get(deliveryMethod);
     }
+    /**
+     * Returns processed template.
+     *
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipient recipient ({@link NotificationRecipient})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public <T extends DeliveryMethodNotificationTemplate> T getProcessedTemplate(NotificationDeliveryMethod deliveryMethod, NotificationRecipient recipient) {
         T template = (T) templates.get(deliveryMethod);

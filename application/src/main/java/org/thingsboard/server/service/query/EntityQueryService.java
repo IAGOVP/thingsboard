@@ -31,18 +31,81 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 
 import java.util.Set;
 
+/**
+
+ * Service contract for entity query operations (entity query helpers for core services).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface EntityQueryService {
 
     long countEntitiesByQuery(SecurityUser securityUser, EntityCountQuery query);
 
+    /**
+     * Finds entity data by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link EntityDataQuery})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     PageData<EntityData> findEntityDataByQuery(SecurityUser securityUser, EntityDataQuery query);
+
+    /**
+     * Finds alarm data by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link AlarmDataQuery})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     PageData<AlarmData> findAlarmDataByQuery(SecurityUser securityUser, AlarmDataQuery query);
 
+    /**
+     * Counts alarms by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link AlarmCountQuery})
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     long countAlarmsByQuery(SecurityUser securityUser, AlarmCountQuery query);
+
+    /**
+     * Returns keys by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param tenantId tenant that owns the entity or operation
+     * @param query query ({@link EntityDataQuery})
+     * @param isTimeseries is timeseries
+     * @param isAttributes is attributes
+     * @param scope scope ({@link AttributeScope})
+     * @return future completing with {@link AvailableEntityKeys}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<AvailableEntityKeys> getKeysByQuery(SecurityUser securityUser, TenantId tenantId, EntityDataQuery query,
                                                          boolean isTimeseries, boolean isAttributes, AttributeScope scope);
+
+    /**
+     * Finds available entity keys by query.
+     *
+     * @param securityUser security user ({@link SecurityUser})
+     * @param query query ({@link EntityDataQuery})
+     * @param includeTimeseries include timeseries
+     * @param includeAttributes include attributes
+     * @param scopes scopes ({@link Set})
+     * @param includeSamples include samples
+     * @return future completing with {@link AvailableEntityKeysV2}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<AvailableEntityKeysV2> findAvailableEntityKeysByQuery(SecurityUser securityUser, EntityDataQuery query,
                                                                            boolean includeTimeseries, boolean includeAttributes,

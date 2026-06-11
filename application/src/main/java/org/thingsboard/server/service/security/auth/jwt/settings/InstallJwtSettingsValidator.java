@@ -30,6 +30,11 @@ import org.thingsboard.server.common.data.security.model.JwtSettings;
 @RequiredArgsConstructor
 public class InstallJwtSettingsValidator implements JwtSettingsValidator {
 
+    /**
+     * Validates the request and invokes the callback with the result.
+     *
+     * @param jwtSettings jwt settings (JwtSettings)
+     */
     @Override
     public void validate(JwtSettings jwtSettings) {
 

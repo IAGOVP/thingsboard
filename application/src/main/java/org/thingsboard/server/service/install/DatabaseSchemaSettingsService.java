@@ -15,15 +15,53 @@
  */
 package org.thingsboard.server.service.install;
 
+/**
+
+ * Service contract for database schema settings operations (database schema installation, upgrades, and demo data loading).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface DatabaseSchemaSettingsService {
 
     void validateSchemaSettings();
 
+    /**
+     * Creates schema settings.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void createSchemaSettings();
+
+    /**
+     * Updates schema version.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void updateSchemaVersion();
 
+    /**
+     * Returns package schema version.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     String getPackageSchemaVersion();
+
+    /**
+     * Returns db schema version.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String getDbSchemaVersion();
 

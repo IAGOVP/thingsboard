@@ -20,15 +20,44 @@ import org.thingsboard.server.common.data.notification.rule.trigger.Notification
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NotificationRuleTriggerConfig;
 import org.thingsboard.server.common.data.notification.rule.trigger.config.NotificationRuleTriggerType;
 
+/**
+
+ * notification rule trigger processor contract for notification delivery, templates, targets, and rule-trigger processing.
+
+ */
+
 public interface NotificationRuleTriggerProcessor<T extends NotificationRuleTrigger, C extends NotificationRuleTriggerConfig> {
 
     boolean matchesFilter(T trigger, C triggerConfig);
 
+    /**
+     * Matches clear rule.
+     *
+     * @param trigger trigger ({@link T})
+     * @param triggerConfig trigger config ({@link C})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     default boolean matchesClearRule(T trigger, C triggerConfig) {
         return false;
     }
+/**
+ * Construct notification info.
+ *
+ * @param trigger trigger ({@link T})
+ * @return {@link RuleOriginatedNotificationInfo}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     RuleOriginatedNotificationInfo constructNotificationInfo(T trigger);
+
+    /**
+     * Returns trigger type.
+     *
+     * @return {@link NotificationRuleTriggerType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     NotificationRuleTriggerType getTriggerType();
 

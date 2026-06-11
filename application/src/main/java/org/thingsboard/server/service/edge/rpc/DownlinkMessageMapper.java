@@ -30,6 +30,11 @@ import org.thingsboard.server.service.edge.rpc.utils.EdgeVersionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Downlink message mapper for ThingsBoard Edge integration.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Component
 @Slf4j
@@ -39,6 +44,14 @@ import java.util.List;
 public class DownlinkMessageMapper {
 
     private final EdgeContextComponent ctx;
+
+    /**
+     * Converts to downlink msgs pack.
+     *
+     * @param state state (EdgeSessionState)
+     * @param edgeEvents edge events (List<EdgeEvent>)
+     * @return {@link List} result
+     */
 
     public List<DownlinkMsg> convertToDownlinkMsgsPack(EdgeSessionState state, List<EdgeEvent> edgeEvents) {
         List<DownlinkMsg> result = new ArrayList<>();
@@ -72,6 +85,14 @@ public class DownlinkMessageMapper {
         }
         return result;
     }
+
+    /**
+     * Converts entity event to downlink.
+     *
+     * @param state state (EdgeSessionState)
+     * @param edgeEvent edge event (EdgeEvent)
+     * @return {@link DownlinkMsg} result
+     */
 
     protected DownlinkMsg convertEntityEventToDownlink(EdgeSessionState state, EdgeEvent edgeEvent) {
         log.trace("[{}] Executing convertEntityEventToDownlink, edgeEvent [{}], action [{}]", edgeEvent.getTenantId(), edgeEvent, edgeEvent.getAction());

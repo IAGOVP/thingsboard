@@ -18,6 +18,12 @@ package org.thingsboard.server.service.sync.ie.importing.impl;
 import lombok.Getter;
 import org.thingsboard.server.common.data.id.EntityId;
 
+/**
+
+ * Exception during entity import and export: missing entity exception.
+
+ */
+
 public class MissingEntityException extends ImportServiceException {
 
     private static final long serialVersionUID = 3669135386955906022L;

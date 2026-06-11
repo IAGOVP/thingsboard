@@ -18,11 +18,41 @@ package org.thingsboard.server.service.sync.vc.autocommit;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.sync.vc.AutoCommitSettings;
 
+/**
+
+ * Manages automatic version commits when entities change.
+
+ */
+
 public interface TbAutoCommitSettingsService {
+/**
+ * Returns the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @return {@link AutoCommitSettings}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     AutoCommitSettings get(TenantId tenantId);
+/**
+ * Saves or persists the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @param settings settings ({@link AutoCommitSettings})
+ * @return {@link AutoCommitSettings}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     AutoCommitSettings save(TenantId tenantId, AutoCommitSettings settings);
+/**
+ * Deletes the requested data.
+ *
+ * @param tenantId tenant that owns the entity or operation
+ * @return the boolean result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     boolean delete(TenantId tenantId);
 

@@ -28,6 +28,15 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 import org.thingsboard.server.controller.plugin.TbWebSocketHandler;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 
+/**
+ * Registers the ThingsBoard WebSocket API used for real-time telemetry, alarms, and notifications.
+ *
+ * <p>Clients connect to {@link #WS_API_ENDPOINT} ({@code /api/ws}) and exchange JSON commands
+ * defined in {@code org.thingsboard.server.service.ws}. Message buffer sizes are configurable
+ * via {@code server.ws.max_text_message_buffer_size} and {@code server.ws.max_binary_message_buffer_size}.
+ *
+ * <p>Only active on tb-core / monolith nodes ({@link TbCoreComponent}).
+ */
 @Configuration
 @TbCoreComponent
 @EnableWebSocket
@@ -35,17 +44,30 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 @Slf4j
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
+    /** Primary WebSocket endpoint path prefix. */
     public static final String WS_API_ENDPOINT = "/api/ws";
+
+    /** Legacy plugins WebSocket path (referenced by security skip lists). */
     public static final String WS_PLUGINS_ENDPOINT = "/api/ws/plugins/";
+
     private static final String WS_API_MAPPING = "/api/ws/**";
 
+    /** Must be a {@link org.thingsboard.server.controller.plugin.TbWebSocketHandler} instance. */
     private final WebSocketHandler wsHandler;
 
+    /** Max size in bytes for inbound text WebSocket frames (default 32 KB). */
     @Value("${server.ws.max_text_message_buffer_size:32768}")
     private int maxTextMessageBufferSize;
+
+    /** Max size in bytes for inbound binary WebSocket frames (default 32 KB). */
     @Value("${server.ws.max_binary_message_buffer_size:32768}")
     private int maxBinaryMessageBufferSize;
 
+    /**
+     * Configures the servlet container's WebSocket buffer limits.
+     *
+     * @return factory bean applied to the embedded servlet container
+     */
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
@@ -54,6 +76,12 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
         return container;
     }
 
+    /**
+     * Registers {@link TbWebSocketHandler} on {@code /api/ws/**} with permissive CORS
+     * (all origin patterns). Authentication is handled inside the handler via JWT.
+     *
+     * @param registry Spring WebSocket handler registry
+     */
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         if (!(wsHandler instanceof TbWebSocketHandler)) {

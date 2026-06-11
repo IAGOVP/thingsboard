@@ -34,11 +34,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+
+ * Rule node js script engine (TBEL/JS script invocation from services).
+
+ */
+
 public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService, JsonNode> {
 
     public RuleNodeJsScriptEngine(TenantId tenantId, JsInvokeService scriptInvokeService, String script, String... argNames) {
         super(tenantId, scriptInvokeService, script, argNames);
     }
+    /**
+     * Prepare args.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return the Object[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Object[] prepareArgs(TbMsg msg) {
@@ -52,6 +65,14 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         args[2] = msg.getType();
         return args;
     }
+    /**
+     * Executes update transform.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @param json json ({@link JsonNode})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected List<TbMsg> executeUpdateTransform(TbMsg msg, JsonNode json) {
@@ -64,6 +85,14 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         }
         throw wrongResultType(json);
     }
+    /**
+     * Executes generate transform.
+     *
+     * @param prevMsg prev msg ({@link TbMsg})
+     * @param result result ({@link JsonNode})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbMsg executeGenerateTransform(TbMsg prevMsg, JsonNode result) {
@@ -72,6 +101,13 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         }
         return unbindMsg(result, prevMsg);
     }
+    /**
+     * Executes filter transform.
+     *
+     * @param json json ({@link JsonNode})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean executeFilterTransform(JsonNode json) {
@@ -80,6 +116,13 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         }
         throw wrongResultType(json);
     }
+    /**
+     * Executes switch transform.
+     *
+     * @param result result ({@link JsonNode})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Set<String> executeSwitchTransform(JsonNode result) {
@@ -99,11 +142,25 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         }
         throw wrongResultType(result);
     }
+    /**
+     * Executes json async.
+     *
+     * @param msg msg ({@link TbMsg})
+     * @return future completing with {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<JsonNode> executeJsonAsync(TbMsg msg) {
         return executeScriptAsync(msg);
     }
+    /**
+     * Executes to string transform.
+     *
+     * @param result result ({@link JsonNode})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String executeToStringTransform(JsonNode result) {
@@ -112,6 +169,13 @@ public class RuleNodeJsScriptEngine extends RuleNodeScriptEngine<JsInvokeService
         }
         throw wrongResultType(result);
     }
+    /**
+     * Convert result.
+     *
+     * @param result result ({@link Object})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected JsonNode convertResult(Object result) {

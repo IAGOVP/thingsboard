@@ -17,7 +17,17 @@ package org.thingsboard.server.service.ws.telemetry.cmd.v2;
 
 import org.thingsboard.server.service.ws.WsCmd;
 
+/**
+ * WebSocket command that cancels an active WebSocket subscription by command id.
+ * <p>Sent by the UI when a widget or dashboard unsubscribes from live updates.
+ */
+
 public interface UnsubscribeCmd extends WsCmd {
+
+    /**
+     * Returns cmd id.
+     * @return numeric result
+     */
 
     int getCmdId();
 

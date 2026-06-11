@@ -107,6 +107,12 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHO
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
 @Slf4j
+/**
+ * REST API for rule chains.
+ * 
+ * <p>Base path: {@code /api}. Rule chain CRUD, metadata, import/export, edge assignment, and script testing.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -159,6 +165,15 @@ public class RuleChainController extends BaseController {
     @Value("${tbel.enabled:true}")
     private boolean tbelEnabled;
 
+    /**
+     * Get Rule Chain.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChain/{ruleChainId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Rule Chain (getRuleChainById)",
             notes = "Fetch the Rule Chain object based on the provided Rule Chain Id. " + RULE_CHAIN_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -171,6 +186,15 @@ public class RuleChainController extends BaseController {
         return checkRuleChain(ruleChainId, Operation.READ);
     }
 
+    /**
+     * Get Rule Chain output labels.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChain/{ruleChainId}/output/labels}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link Set} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Rule Chain output labels (getRuleChainOutputLabels)",
             notes = "Fetch the unique labels for the \"output\" Rule Nodes that belong to the Rule Chain based on the provided Rule Chain Id. "
                     + RULE_CHAIN_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -185,6 +209,15 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.getRuleChainOutputLabels(getTenantId(), ruleChainId);
     }
 
+    /**
+     * Get output labels usage.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChain/{ruleChainId}/output/labels/usage}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get output labels usage (getRuleChainOutputLabelsUsage)",
             notes = "Fetch the list of rule chains and the relation types (labels) they use to process output of the current rule chain based on the provided Rule Chain Id. "
                     + RULE_CHAIN_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
@@ -199,6 +232,15 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.getOutputLabelUsage(getCurrentUser().getTenantId(), ruleChainId);
     }
 
+    /**
+     * Get Rule Chain.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChain/{ruleChainId}/metadata}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link RuleChainMetaData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Rule Chain (getRuleChainById)",
             notes = "Fetch the Rule Chain Metadata object based on the provided Rule Chain Id. " + RULE_CHAIN_METADATA_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -212,6 +254,15 @@ public class RuleChainController extends BaseController {
         return ruleChainService.loadRuleChainMetaData(getTenantId(), ruleChainId);
     }
 
+    /**
+     * Create Or Update Rule Chain.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/ruleChain}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param ruleChain rule Chain
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create Or Update Rule Chain (saveRuleChain)",
             notes = "Create or update the Rule Chain. When creating Rule Chain, platform generates Rule Chain Id as " + UUID_WIKI_LINK +
                     "The newly created Rule Chain Id will be present in the response. " +
@@ -230,6 +281,15 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.save(ruleChain, getCurrentUser());
     }
 
+    /**
+     * Create Default Rule Chain.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/ruleChain/device/default}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param request request
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create Default Rule Chain (setDeviceDefaultRuleChain)",
             notes = "Create rule chain from template, based on the specified name in the request. " +
                     "Creates the rule chain based on the template that is used to create root rule chain. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -243,6 +303,15 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.saveDefaultByName(getTenantId(), request, getCurrentUser());
     }
 
+    /**
+     * Set Root Rule Chain.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/ruleChain/{ruleChainId}/root}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Set Root Rule Chain (setRootRuleChain)",
             notes = "Makes the rule chain to be root rule chain. Updates previous root rule chain as well. " + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -256,6 +325,16 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.setRootRuleChain(getTenantId(), ruleChain, getCurrentUser());
     }
 
+    /**
+     * Update Rule Chain Metadata.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/ruleChain/metadata}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param updateRelated update Related
+     * @param ruleChainMetaData rule Chain Meta Data
+     * @return {@link RuleChainMetaData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Update Rule Chain Metadata",
             notes = "Updates the rule chain metadata. " + RULE_CHAIN_METADATA_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -279,6 +358,20 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.saveRuleChainMetaData(tenantId, ruleChain, ruleChainMetaData, updateRelated, getCurrentUser());
     }
 
+    /**
+     * Get Rule Chains.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChains}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param typeStr type Str
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Rule Chains (getRuleChains)",
             notes = "Returns a page of Rule Chains owned by tenant. " + RULE_CHAIN_DESCRIPTION + PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -305,6 +398,15 @@ public class RuleChainController extends BaseController {
         return checkNotNull(ruleChainService.findTenantRuleChainsByType(tenantId, type, pageLink));
     }
 
+    /**
+     * Delete rule chain.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/ruleChain/{ruleChainId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete rule chain (deleteRuleChain)",
             notes = "Deletes the rule chain. Referencing non-existing rule chain Id will cause an error. " +
                     "Referencing rule chain that is used in the device profiles will cause an error." + TENANT_AUTHORITY_PARAGRAPH)
@@ -320,6 +422,15 @@ public class RuleChainController extends BaseController {
         tbRuleChainService.delete(ruleChain, getCurrentUser());
     }
 
+    /**
+     * Get latest input message.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleNode/{ruleNodeId}/debugIn}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleNodeId str Rule Node Id
+     * @return {@link JsonNode} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get latest input message (getLatestRuleNodeDebugInput)",
             notes = "Gets the input message from the debug events for specified Rule Chain Id. " +
                     "Referencing non-existing rule chain Id will cause an error. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -336,6 +447,14 @@ public class RuleChainController extends BaseController {
                 .map(EventInfo::getBody).orElse(null);
     }
 
+    /**
+     * Is TBEL script executor enabled.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChain/tbelEnabled}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @return {@link Boolean} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Is TBEL script executor enabled",
             notes = "Returns 'True' if the TBEL script execution is enabled" + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -344,6 +463,16 @@ public class RuleChainController extends BaseController {
         return tbelEnabled;
     }
 
+    /**
+     * Test Script function.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/ruleChain/testScript}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param scriptLang script Lang
+     * @param inputParams input Params
+     * @return {@link JsonNode} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Test Script function",
             notes = TEST_SCRIPT_FUNCTION + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -408,6 +537,15 @@ public class RuleChainController extends BaseController {
                 .put("error", errorText);
     }
 
+    /**
+     * Export Rule Chains.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChains/export}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param limit limit
+     * @return {@link RuleChainData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Export Rule Chains", notes = "Exports all tenant rule chains as one JSON." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/ruleChains/export")
@@ -419,6 +557,16 @@ public class RuleChainController extends BaseController {
         return checkNotNull(ruleChainService.exportTenantRuleChains(tenantId, pageLink));
     }
 
+    /**
+     * Import Rule Chains.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/ruleChains/import}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param overwrite overwrite
+     * @param ruleChainData rule Chain Data
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Import Rule Chains", notes = "Imports all tenant rule chains as one JSON." + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @PostMapping("/ruleChains/import")
@@ -461,6 +609,16 @@ public class RuleChainController extends BaseController {
         return msgData;
     }
 
+    /**
+     * Assign rule chain to edge.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/edge/{edgeId}/ruleChain/{ruleChainId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strEdgeId str Edge Id
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Assign rule chain to edge (assignRuleChainToEdge)",
             notes = "Creates assignment of an existing rule chain to an instance of The Edge. " +
                     EDGE_ASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -483,6 +641,16 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.assignRuleChainToEdge(getTenantId(), ruleChain, edge, getCurrentUser());
     }
 
+    /**
+     * Unassign rule chain from edge.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/edge/{edgeId}/ruleChain/{ruleChainId}}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strEdgeId str Edge Id
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Unassign rule chain from edge (unassignRuleChainFromEdge)",
             notes = "Clears assignment of the rule chain to the edge. " +
                     EDGE_UNASSIGN_ASYNC_FIRST_STEP_DESCRIPTION +
@@ -503,6 +671,20 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.unassignRuleChainFromEdge(getTenantId(), ruleChain, edge, getCurrentUser());
     }
 
+    /**
+     * Get Edge Rule Chains.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/edge/{edgeId}/ruleChains}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strEdgeId str Edge Id
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Edge Rule Chains (getEdgeRuleChains)",
             notes = "Returns a page of Rule Chains assigned to the specified edge. " + RULE_CHAIN_DESCRIPTION + PAGE_DATA_PARAMETERS + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -528,6 +710,15 @@ public class RuleChainController extends BaseController {
         return checkNotNull(ruleChainService.findRuleChainsByTenantIdAndEdgeId(tenantId, edgeId, pageLink));
     }
 
+    /**
+     * Set Edge Template Root Rule Chain.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/ruleChain/{ruleChainId}/edgeTemplateRoot}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Set Edge Template Root Rule Chain (setEdgeTemplateRootRuleChain)",
             notes = "Makes the rule chain to be root rule chain for any new edge that will be created. " +
                     "Does not update root rule chain for already created edges. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -541,6 +732,15 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.setEdgeTemplateRootRuleChain(getTenantId(), ruleChain, getCurrentUser());
     }
 
+    /**
+     * Set Auto Assign To Edge Rule Chain.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/ruleChain/{ruleChainId}/autoAssignToEdge}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Set Auto Assign To Edge Rule Chain (setAutoAssignToEdgeRuleChain)",
             notes = "Makes the rule chain to be automatically assigned for any new edge that will be created. " +
                     "Does not assign this rule chain for already created edges. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -554,6 +754,15 @@ public class RuleChainController extends BaseController {
         return tbRuleChainService.setAutoAssignToEdgeRuleChain(getTenantId(), ruleChain, getCurrentUser());
     }
 
+    /**
+     * Unset Auto Assign To Edge Rule Chain.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/ruleChain/{ruleChainId}/autoAssignToEdge}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param strRuleChainId str Rule Chain Id
+     * @return {@link RuleChain} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Unset Auto Assign To Edge Rule Chain (unsetAutoAssignToEdgeRuleChain)",
             notes = "Removes the rule chain from the list of rule chains that are going to be automatically assigned for any new edge that will be created. " +
                     "Does not unassign this rule chain for already assigned edges. " + TENANT_AUTHORITY_PARAGRAPH)
@@ -568,6 +777,14 @@ public class RuleChainController extends BaseController {
     }
 
     // TODO: @voba refactor this - add new config to edge rule chain to set it as auto-assign
+    /**
+     * Get Auto Assign To Edge Rule Chains.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChain/autoAssignToEdgeRuleChains}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Auto Assign To Edge Rule Chains (getAutoAssignToEdgeRuleChains)",
             notes = "Returns a list of Rule Chains that will be assigned to a newly created edge. " + RULE_CHAIN_DESCRIPTION + TENANT_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
@@ -583,6 +800,15 @@ public class RuleChainController extends BaseController {
         return checkNotNull(result);
     }
 
+    /**
+     * Get rule chains by ids v1.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChains}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param ruleChainUUIDs rule Chain UUIDs
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/ruleChains", params = {"ruleChainIds"})
@@ -595,6 +821,15 @@ public class RuleChainController extends BaseController {
         return ruleChainService.findRuleChainsByIds(tenantId, ruleChainIds);
     }
 
+    /**
+     * Get Rule Chains By Ids.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/ruleChains/list}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     * @param ruleChainUUIDs rule Chain UUIDs
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Rule Chains By Ids (getRuleChainsByIds)",
             notes = "Requested rule chains must be owned by tenant which is performing the request. " +
                     NEW_LINE)

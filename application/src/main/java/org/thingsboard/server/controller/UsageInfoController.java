@@ -26,6 +26,12 @@ import org.thingsboard.server.common.data.exception.ThingsboardException;
 import org.thingsboard.server.dao.usage.UsageInfoService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 
+/**
+ * REST API for tenant license and platform usage statistics.
+ *
+ * <p>Base path: {@code /api/usage}. Intended for tenant administrators monitoring
+ * subscription limits and consumption.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -35,6 +41,15 @@ public class UsageInfoController extends BaseController {
     @Autowired
     private UsageInfoService usageInfoService;
 
+    /**
+     * Returns usage and license information for the caller's tenant.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/usage}
+     * <p><b>Auth:</b> {@code TENANT_ADMIN}
+     *
+     * @return tenant {@link org.thingsboard.server.common.data.UsageInfo}
+     * @throws ThingsboardException if usage info is unavailable
+     */
     @PreAuthorize("hasAuthority('TENANT_ADMIN')")
     @GetMapping(value = "/usage")
     public UsageInfo getTenantUsageInfo() throws ThingsboardException {

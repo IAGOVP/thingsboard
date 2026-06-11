@@ -26,15 +26,37 @@ import org.thingsboard.server.common.data.id.CustomerId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.service.entitiy.AbstractTbEntityService;
 import org.thingsboard.server.service.security.model.SecurityUser;
+/**
+ * Default implementation of {@link TbCustomerService}.
+ */
 
 @Service
 @AllArgsConstructor
 public class DefaultTbCustomerService extends AbstractTbEntityService implements TbCustomerService {
+    
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public Customer save(Customer customer, SecurityUser user) throws Exception {
         return save(customer, NameConflictStrategy.DEFAULT, user);
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param customer customer ({@link Customer})
+     * @param nameConflictStrategy name conflict strategy ({@link NameConflictStrategy})
+     * @param user authenticated user performing the action
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Customer save(Customer customer, NameConflictStrategy nameConflictStrategy, SecurityUser user) throws Exception {
@@ -50,6 +72,14 @@ public class DefaultTbCustomerService extends AbstractTbEntityService implements
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param customer customer ({@link Customer})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(Customer customer, User user) {

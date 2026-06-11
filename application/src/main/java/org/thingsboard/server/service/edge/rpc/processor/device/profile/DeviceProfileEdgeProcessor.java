@@ -42,12 +42,24 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.UUID;
+/**
+ * Processes device profile edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class DeviceProfileEdgeProcessor extends BaseDeviceProfileProcessor implements DeviceProfileProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param deviceProfileUpdateMsg device profile update msg (DeviceProfileUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processDeviceProfileMsgFromEdge(TenantId tenantId, Edge edge, DeviceProfileUpdateMsg deviceProfileUpdateMsg) {
         log.trace("[{}] executing processDeviceProfileMsgFromEdge [{}] from edge [{}]", tenantId, deviceProfileUpdateMsg, edge.getId());
@@ -93,7 +105,13 @@ public class DeviceProfileEdgeProcessor extends BaseDeviceProfileProcessor imple
             log.warn("[{}][{}] Failed to push device profile action to rule engine: {}", tenantId, deviceProfileId, TbMsgType.ENTITY_CREATED.name(), e);
         }
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         DeviceProfileId deviceProfileId = new DeviceProfileId(edgeEvent.getEntityId());
@@ -120,23 +138,49 @@ public class DeviceProfileEdgeProcessor extends BaseDeviceProfileProcessor imple
         return null;
     }
 
+    /**
+     * Set default rule chain id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param deviceProfile device profile (DeviceProfile)
+     * @param ruleChainId rule chain id (RuleChainId)
+     */
     @Override
     protected void setDefaultRuleChainId(TenantId tenantId, DeviceProfile deviceProfile, RuleChainId ruleChainId) {
         deviceProfile.setDefaultRuleChainId(ruleChainId);
     }
 
+    /**
+     * Set default edge rule chain id.
+     *
+     * @param deviceProfile device profile (DeviceProfile)
+     * @param ruleChainId rule chain id (RuleChainId)
+     * @param deviceProfileUpdateMsg device profile update msg (DeviceProfileUpdateMsg)
+     */
     @Override
     protected void setDefaultEdgeRuleChainId(DeviceProfile deviceProfile, RuleChainId ruleChainId, DeviceProfileUpdateMsg deviceProfileUpdateMsg) {
         UUID defaultEdgeRuleChainUUID = ruleChainId != null ? ruleChainId.getId() : null;
         deviceProfile.setDefaultEdgeRuleChainId(defaultEdgeRuleChainUUID != null ? new RuleChainId(defaultEdgeRuleChainUUID) : null);
     }
 
+    /**
+     * Set default dashboard id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param dashboardId dashboard id (DashboardId)
+     * @param deviceProfile device profile (DeviceProfile)
+     * @param deviceProfileUpdateMsg device profile update msg (DeviceProfileUpdateMsg)
+     */
     @Override
     protected void setDefaultDashboardId(TenantId tenantId, DashboardId dashboardId, DeviceProfile deviceProfile, DeviceProfileUpdateMsg deviceProfileUpdateMsg) {
         UUID defaultDashboardUUID = deviceProfile.getDefaultDashboardId() != null ? deviceProfile.getDefaultDashboardId().getId() : (dashboardId != null ? dashboardId.getId() : null);
         deviceProfile.setDefaultDashboardId(defaultDashboardUUID != null ? new DashboardId(defaultDashboardUUID) : null);
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.DEVICE_PROFILE;

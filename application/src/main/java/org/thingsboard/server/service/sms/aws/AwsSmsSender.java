@@ -32,6 +32,10 @@ import org.thingsboard.server.service.sms.AbstractSmsSender;
 import java.util.HashMap;
 import java.util.Map;
 
+    /**
+     * Aws sms sender (SMS provider abstraction and message sending).
+     */
+
 @Slf4j
 public class AwsSmsSender extends AbstractSmsSender {
 
@@ -56,6 +60,14 @@ public class AwsSmsSender extends AbstractSmsSender {
                 .withRegion(config.getRegion())
                 .build();
     }
+    /**
+     * Send sms.
+     *
+     * @param numberTo number to ({@link String})
+     * @param message message ({@link String})
+     * @return the int result
+     * @throws SmsException if sms exception is thrown during processing
+     */
 
     @Override
     public int sendSms(String numberTo, String message) throws SmsException {
@@ -72,6 +84,12 @@ public class AwsSmsSender extends AbstractSmsSender {
             throw new SmsSendException("Failed to send SMS message - " + e.getMessage(), e);
         }
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {

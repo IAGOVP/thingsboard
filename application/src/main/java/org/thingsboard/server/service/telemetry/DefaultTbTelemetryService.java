@@ -39,6 +39,12 @@ import org.thingsboard.server.service.security.permission.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for tb telemetry service (telemetry subscription and WebSocket push to clients).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -46,6 +52,24 @@ public class DefaultTbTelemetryService implements TbTelemetryService {
 
     private final TimeseriesService tsService;
     private final AccessValidator accessValidator;
+    /**
+     * Returns timeseries.
+     *
+     * @param entityId target entity identifier
+     * @param keys keys ({@link List})
+     * @param startTs start ts ({@link Long})
+     * @param endTs end ts ({@link Long})
+     * @param intervalType interval type ({@link IntervalType})
+     * @param interval interval ({@link Long})
+     * @param timeZone time zone ({@link String})
+     * @param limit limit ({@link Integer})
+     * @param agg agg ({@link Aggregation})
+     * @param orderBy order by ({@link String})
+     * @param useStrictDataTypes use strict data types ({@link Boolean})
+     * @param currentUser current user ({@link SecurityUser})
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<List<TsKvEntry>> getTimeseries(EntityId entityId, List<String> keys, Long startTs, Long endTs, IntervalType intervalType,
@@ -53,6 +77,13 @@ public class DefaultTbTelemetryService implements TbTelemetryService {
                                                            Boolean useStrictDataTypes, SecurityUser currentUser) {
         SettableFuture<List<TsKvEntry>> future = SettableFuture.create();
         accessValidator.validate(currentUser, Operation.READ_TELEMETRY, entityId, new FutureCallback<>() {
+            /**
+             * Handles success.
+             *
+             * @param validationResult validation result ({@link ValidationResult})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
             @Override
             public void onSuccess(ValidationResult validationResult) {
                 try {
@@ -66,10 +97,24 @@ public class DefaultTbTelemetryService implements TbTelemetryService {
                     }
                     List<ReadTsKvQuery> queries = keys.stream().map(key -> new BaseReadTsKvQuery(key, startTs, endTs, params, limit, orderBy)).collect(Collectors.toList());
                     Futures.addCallback(tsService.findAll(currentUser.getTenantId(), entityId, queries), new FutureCallback<>() {
+                        /**
+                         * Handles success.
+                         *
+                         * @param result result ({@link List})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
                         @Override
                         public void onSuccess(List<TsKvEntry> result) {
                             future.set(result);
                         }
+                        /**
+                         * Handles failure.
+                         *
+                         * @param t t ({@link Throwable})
+                         * @return nothing
+                         * @throws Exception if an unexpected error occurs during processing
+                         */
 
                         @Override
                         public void onFailure(Throwable t) {
@@ -80,6 +125,13 @@ public class DefaultTbTelemetryService implements TbTelemetryService {
                     onFailure(e);
                 }
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {

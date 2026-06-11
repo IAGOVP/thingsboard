@@ -42,6 +42,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
+/**
+ * Base class for edge grpc session manager implementations in edge gRPC session lifecycle.
+ * <p><b>Key dependencies:</b> {@link #zombieSessionCleanupService}, {@link #downlinkMessageMapper}, {@link #uplinkMessageDispatcher}.
+ */
 
 @Slf4j
 public abstract class AbstractEdgeGrpcSessionManager extends EdgeGrpcSessionDelegate implements EdgeGrpcSessionManager {
@@ -69,7 +73,15 @@ public abstract class AbstractEdgeGrpcSessionManager extends EdgeGrpcSessionDele
     protected EdgeSession session;
 
     private final Lock initLock = new ReentrantLock();
-
+    /**
+     * Initializes resources required by this component.
+     *
+     * @param outputStream output stream (StreamObserver<ResponseMsg>)
+     * @param sessionOpenListener session open listener (BiConsumer<EdgeId, EdgeGrpcSessionManager>)
+     * @param sessionCloseListener session close listener (BiConsumer<Edge, UUID>)
+     * @param sendDownlinkExecutorService send downlink executor service (ScheduledExecutorService)
+     * @return {@link StreamObserver} result
+     */
     @Override
     public StreamObserver<RequestMsg> initInputStream(StreamObserver<ResponseMsg> outputStream,
                                                       BiConsumer<EdgeId, EdgeGrpcSessionManager> sessionOpenListener,
@@ -90,6 +102,10 @@ public abstract class AbstractEdgeGrpcSessionManager extends EdgeGrpcSessionDele
         }
     }
 
+    /**
+     * Returns state.
+     *
+     */
     @Override
     public EdgeSessionState getState() {
         if (session == null) {
@@ -98,6 +114,11 @@ public abstract class AbstractEdgeGrpcSessionManager extends EdgeGrpcSessionDele
         return session.getState();
     }
 
+    /**
+     * On configuration update.
+     *
+     * @param edge edge (Edge)
+     */
     @Override
     public void onConfigurationUpdate(Edge edge) {
         EdgeSessionState state = getState();
@@ -122,6 +143,10 @@ public abstract class AbstractEdgeGrpcSessionManager extends EdgeGrpcSessionDele
         session.sendDownlinkMsg(edgeConfigMsg);
     }
 
+    /**
+     * Destroy and mark as zombie if failed.
+     *
+     */
     @Override
     public void destroyAndMarkAsZombieIfFailed() {
         EdgeSessionState state = getState();

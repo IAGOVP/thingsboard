@@ -26,19 +26,57 @@ import org.thingsboard.server.common.data.kv.TimeseriesSaveResult;
 
 import java.util.List;
 
+/**
+
+ * Kafka queue integration for calculated-field telemetry and lifecycle messages.
+
+ */
+
 public interface CalculatedFieldQueueService extends RuleEngineCalculatedFieldQueueService {
 
+        
     /**
-     * Filter CFs based on the request entity. Push to the queue if any matching CF exist;
+     * Pushes request to queue.
      *
-     * @param request - telemetry save request;
-     * @param callback
+     * @param request request payload with operation parameters
+     * @param result result ({@link TimeseriesSaveResult})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void pushRequestToQueue(TimeseriesSaveRequest request, TimeseriesSaveResult result, FutureCallback<Void> callback);
+/**
+ * Pushes request to queue.
+ *
+ * @param request request payload with operation parameters
+ * @param result result ({@link AttributesSaveResult})
+ * @param callback queue callback invoked when processing completes
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void pushRequestToQueue(AttributesSaveRequest request, AttributesSaveResult result, FutureCallback<Void> callback);
+/**
+ * Pushes request to queue.
+ *
+ * @param request request payload with operation parameters
+ * @param result result ({@link List})
+ * @param callback queue callback invoked when processing completes
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void pushRequestToQueue(AttributesDeleteRequest request, List<String> result, FutureCallback<Void> callback);
+/**
+ * Pushes request to queue.
+ *
+ * @param request request payload with operation parameters
+ * @param result result ({@link List})
+ * @param callback queue callback invoked when processing completes
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void pushRequestToQueue(TimeseriesDeleteRequest request, List<String> result, FutureCallback<Void> callback);
 

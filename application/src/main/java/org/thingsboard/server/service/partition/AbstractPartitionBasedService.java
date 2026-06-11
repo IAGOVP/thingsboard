@@ -41,6 +41,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
+    /**
+     * Abstract partition based service (Kafka partition resolution for tenants and queues).
+     */
+
 @Slf4j
 public abstract class AbstractPartitionBasedService<T extends EntityId> extends TbApplicationEventListener<PartitionChangeEvent> {
 
@@ -59,19 +63,44 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
     abstract protected Map<TopicPartitionInfo, List<ListenableFuture<?>>> onAddedPartitions(Set<TopicPartitionInfo> addedPartitions);
 
     abstract protected void cleanupEntityOnPartitionRemoval(T entityId);
+    /**
+     * Returns partitioned entities.
+     *
+     * @param tpi tpi ({@link TopicPartitionInfo})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Set<T> getPartitionedEntities(TopicPartitionInfo tpi) {
         return partitionedEntities.get(tpi);
     }
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void init() {
         // Should be always single threaded due to absence of locks.
         scheduledExecutor = MoreExecutors.listeningDecorator(ThingsBoardExecutors.newSingleThreadScheduledExecutor(getSchedulerExecutorName()));
     }
+    /**
+     * Returns service type.
+     *
+     * @return {@link ServiceType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ServiceType getServiceType() {
         return ServiceType.TB_CORE;
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void stop() {
         if (scheduledExecutor != null) {
@@ -79,24 +108,39 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
         }
     }
 
+    
     /**
-     * DiscoveryService will call this event from the single thread (one-by-one).
-     * Events order is guaranteed by DiscoveryService.
-     * The only concurrency is expected from the [main] thread on Application started.
-     * Async implementation. Locks is not allowed by design.
-     * Any locks or delays in this module will affect DiscoveryService and entire system
+     * Handles tb application event.
+     *
+     * @param partitionChangeEvent partition change event ({@link PartitionChangeEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent partitionChangeEvent) {
         log.debug("onTbApplicationEvent, processing event: {}", partitionChangeEvent);
         subscribeQueue.add(partitionChangeEvent.getCorePartitions());
         scheduledExecutor.submit(this::pollInitStateFromDB);
     }
+    /**
+     * Filter tb application event.
+     *
+     * @param event event ({@link PartitionChangeEvent})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean filterTbApplicationEvent(PartitionChangeEvent event) {
         return event.getServiceType() == getServiceType();
     }
+    /**
+     * Poll init state from db.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void pollInitStateFromDB() {
         final Set<TopicPartitionInfo> partitions = getLatestPartitions();
@@ -174,6 +218,12 @@ public abstract class AbstractPartitionBasedService<T extends EntityId> extends 
             log.info("[{}][{}]: {} entities", getServiceName(), tpi.getFullTopicName(), entities.size());
         });
     }
+    /**
+     * Handles repartition event.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void onRepartitionEvent() {
     }

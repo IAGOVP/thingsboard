@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+/**
+ * Consumer statistics counters for tb rule engine consumer stats.
+ */
 
 @Slf4j
 public class TbRuleEngineConsumerStats {
@@ -67,6 +70,12 @@ public class TbRuleEngineConsumerStats {
     private final String queueName;
     private final TenantId tenantId;
 
+    /**
+     * Constructs {@link TbRuleEngineConsumerStats} with the supplied dependencies and configuration.
+     * @param queueKey queue key
+     * @param statsFactory stats factory
+     */
+
     public TbRuleEngineConsumerStats(QueueKey queueKey, StatsFactory statsFactory) {
         this.queueName = queueKey.getQueueName();
         this.tenantId = queueKey.getTenantId();
@@ -94,6 +103,13 @@ public class TbRuleEngineConsumerStats {
         counters.add(failedIterationsCounter);
     }
 
+    /**
+     * Returns timer.
+     * @param tenantId tenant that owns the subscription or entity
+     * @param status WebSocket close status
+     * @return {@link Timer}
+     */
+
     public Timer getTimer(TenantId tenantId, String status) {
         return tenantMsgProcessTimers.computeIfAbsent(tenantId,
                 id -> statsFactory.createTimer(StatsType.RULE_ENGINE.getName() + "." + queueName,
@@ -101,6 +117,12 @@ public class TbRuleEngineConsumerStats {
                         "status", status
                 ));
     }
+
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     * @param finalIterationForPack final iteration for pack
+     */
 
     public void log(TbRuleEngineProcessingResult msg, boolean finalIterationForPack) {
         int success = msg.getSuccessMap().size();
@@ -142,19 +164,38 @@ public class TbRuleEngineConsumerStats {
         return tenantStats.computeIfAbsent(new UUID(reMsg.getTenantIdMSB(), reMsg.getTenantIdLSB()), TbTenantRuleEngineStats::new);
     }
 
+    /**
+     * Returns tenant stats.
+     * @return {@link ConcurrentMap}
+     */
+
     public ConcurrentMap<UUID, TbTenantRuleEngineStats> getTenantStats() {
         return tenantStats;
     }
+
+    /**
+     * Returns queue name.
+     * @return string value
+     */
 
     public String getQueueName() {
         return queueName;
     }
 
+    /**
+     * Returns tenant exceptions.
+     * @return {@link ConcurrentMap}
+     */
+
     public ConcurrentMap<TenantId, RuleEngineException> getTenantExceptions() {
         return tenantExceptions;
     }
 
-    public void printStats() {
+    /**
+     * Print stats.
+     */
+
+public void printStats() {
         int total = totalMsgCounter.get();
         if (total > 0) {
             StringBuilder stats = new StringBuilder();
@@ -168,6 +209,22 @@ public class TbRuleEngineConsumerStats {
             }
         }
     }
+
+    /**
+     * Resets reset.
+     */
+
+    /**
+     * Resets.
+     */
+
+    /**
+     * Resets.
+     */
+
+    /**
+     * Resets.
+     */
 
     public void reset() {
         counters.forEach(StatsCounter::clear);

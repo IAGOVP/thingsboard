@@ -27,6 +27,11 @@ import org.thingsboard.server.common.data.page.PageData;
 import org.thingsboard.server.common.data.page.PageLink;
 import org.thingsboard.server.common.data.widget.WidgetTypeInfo;
 import org.thingsboard.server.dao.widget.WidgetTypeService;
+/**
+ * Fetches base widget types entities for edge initial synchronization.
+ *
+ * <p><b>Responsibilities:</b> Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @AllArgsConstructor
@@ -44,6 +49,14 @@ public abstract class BaseWidgetTypesEdgeEventFetcher extends BasePageableEdgeEv
         return EdgeUtils.constructEdgeEvent(tenantId, edge.getId(), EdgeEventType.WIDGET_TYPE,
                 EdgeEventActionType.ADDED, widgetTypeInfo.getId(), null);
     }
+
+    /**
+     * Loads widget types.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param pageLink page link (PageLink)
+     * @return {@link PageData} result
+     */
 
     protected abstract PageData<WidgetTypeInfo> findWidgetTypes(TenantId tenantId, PageLink pageLink);
 

@@ -26,7 +26,10 @@ import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldCtx;
 
 import java.util.List;
 
-/** Entity-level telemetry update triggering CF re-evaluation. */
+/**
+ * Telemetry update delivered directly to a calculated-field entity actor.
+ */
+
 @Data
 public class EntityCalculatedFieldTelemetryMsg implements ToCalculatedFieldSystemMsg {
 
@@ -49,6 +52,14 @@ public class EntityCalculatedFieldTelemetryMsg implements ToCalculatedFieldSyste
         this.profileIdFields = profileIdFields;
         this.callback = callback;
     }
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

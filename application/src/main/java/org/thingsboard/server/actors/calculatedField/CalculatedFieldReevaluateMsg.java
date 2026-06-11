@@ -21,12 +21,25 @@ import org.thingsboard.server.common.msg.MsgType;
 import org.thingsboard.server.common.msg.ToCalculatedFieldSystemMsg;
 import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldCtx;
 
-/** Forces re-run of calculated fields (e.g. after config change). */
+/**
+ * Forces re-evaluation of calculated fields on an entity actor.
+ */
+
+
+
 @Data
 public class CalculatedFieldReevaluateMsg implements ToCalculatedFieldSystemMsg {
 
     private final TenantId tenantId;
     private final CalculatedFieldCtx ctx;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

@@ -20,16 +20,35 @@ import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.id.EntityId;
 
 import java.util.function.Predicate;
+/**
+ * Predicate that matches {@link org.thingsboard.server.actors.TbActorId} instances by {@link org.thingsboard.server.common.data.EntityType}.
+ *
+ * <p>Used when broadcasting actor messages to children of a specific entity type (for example, all tenant actors under the root {@link org.thingsboard.server.actors.app.AppActor}).
+ */
 
 @RequiredArgsConstructor
 public class TbEntityTypeActorIdPredicate implements Predicate<TbActorId> {
 
     private final EntityType entityType;
+    /**
+     * Test.
+     *
+     * @param actorId actor id ({@link TbActorId})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean test(TbActorId actorId) {
         return actorId instanceof TbEntityActorId && testEntityId(((TbEntityActorId) actorId).getEntityId());
     }
+    /**
+     * Test entity id.
+     *
+     * @param entityId target entity identifier
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean testEntityId(EntityId entityId) {
         return entityId.getEntityType().equals(entityType);

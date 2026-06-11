@@ -41,12 +41,24 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.edge.EdgeMsgConstructorUtils;
 
 import java.util.UUID;
+/**
+ * Processes entity view edge events for cloud↔edge synchronization.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component. Uses EdgeContextComponent and DAO services to persist and propagate changes.
+ */
 
 @Slf4j
 @Component
 @TbCoreComponent
 public class EntityViewEdgeProcessor extends BaseEntityViewProcessor implements EntityViewProcessor {
-
+    /**
+     * Processes an edge-originated message and applies changes on the cloud.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param edge edge (Edge)
+     * @param entityViewUpdateMsg entity view update msg (EntityViewUpdateMsg)
+     * @return {@link ListenableFuture} result
+     */
     @Override
     public ListenableFuture<Void> processEntityViewMsgFromEdge(TenantId tenantId, Edge edge, EntityViewUpdateMsg entityViewUpdateMsg) {
         log.trace("[{}] executing processEntityViewMsgFromEdge [{}] from edge [{}]", tenantId, entityViewUpdateMsg, edge.getId());
@@ -95,7 +107,13 @@ public class EntityViewEdgeProcessor extends BaseEntityViewProcessor implements 
         EntityView entityView = edgeCtx.getEntityViewService().findEntityViewById(tenantId, entityViewId);
         pushEntityEventToRuleEngine(tenantId, edge, entityView, TbMsgType.ENTITY_CREATED);
     }
-
+    /**
+     * Converts edge event to downlink.
+     *
+     * @param edgeEvent edge event (EdgeEvent)
+     * @param edgeVersion edge version (EdgeVersion)
+     * @return {@link DownlinkMsg} result
+     */
     @Override
     public DownlinkMsg convertEdgeEventToDownlink(EdgeEvent edgeEvent, EdgeVersion edgeVersion) {
         EntityViewId entityViewId = new EntityViewId(edgeEvent.getEntityId());
@@ -122,12 +140,24 @@ public class EntityViewEdgeProcessor extends BaseEntityViewProcessor implements 
         return null;
     }
 
+    /**
+     * Set customer id.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param customerId customer id (CustomerId)
+     * @param entityView entity view (EntityView)
+     * @param entityViewUpdateMsg entity view update msg (EntityViewUpdateMsg)
+     */
     @Override
     protected void setCustomerId(TenantId tenantId, CustomerId customerId, EntityView entityView, EntityViewUpdateMsg entityViewUpdateMsg) {
         CustomerId customerUUID = entityView.getCustomerId() != null ? entityView.getCustomerId() : customerId;
         entityView.setCustomerId(customerUUID);
     }
 
+    /**
+     * Returns edge event type.
+     *
+     */
     @Override
     public EdgeEventType getEdgeEventType() {
         return EdgeEventType.ENTITY_VIEW;

@@ -28,6 +28,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.thingsboard.server.dao.model.ModelConstants.AUDIT_LOG_TABLE_NAME;
 
+    /**
+     * Spring service component for audit logs clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @Service
 @ConditionalOnExpression("${sql.ttl.audit_logs.enabled:true} && ${sql.ttl.audit_logs.ttl:0} > 0")
 @Slf4j
@@ -49,6 +53,12 @@ public class AuditLogsCleanUpService extends AbstractCleanUpService {
 
     @Scheduled(initialDelayString = "#{T(org.apache.commons.lang3.RandomUtils).nextLong(0, ${sql.ttl.audit_logs.checking_interval_ms})}",
             fixedDelayString = "${sql.ttl.audit_logs.checking_interval_ms}")
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void cleanUp() {
         long auditLogsExpTime = getCurrentTimeMillis() - TimeUnit.SECONDS.toMillis(ttlInSec);
         log.debug("cleanup {}", auditLogsExpTime);
@@ -58,6 +68,12 @@ public class AuditLogsCleanUpService extends AbstractCleanUpService {
             partitioningRepository.cleanupPartitionsCache(AUDIT_LOG_TABLE_NAME, auditLogsExpTime, TimeUnit.HOURS.toMillis(partitionSizeInHours));
         }
     }
+    /**
+     * Returns current time millis.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getCurrentTimeMillis() {
         return System.currentTimeMillis();

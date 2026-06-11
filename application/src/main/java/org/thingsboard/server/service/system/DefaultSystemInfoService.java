@@ -69,6 +69,12 @@ import static org.thingsboard.common.util.SystemUtil.getMemoryUsage;
 import static org.thingsboard.common.util.SystemUtil.getTotalDiscSpace;
 import static org.thingsboard.common.util.SystemUtil.getTotalMemory;
 
+    /**
+     * Default Spring implementation for system info service (system-level configuration and info services).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @TbCoreComponent
 @Service
 @RequiredArgsConstructor
@@ -76,9 +82,23 @@ import static org.thingsboard.common.util.SystemUtil.getTotalMemory;
 public class DefaultSystemInfoService extends TbApplicationEventListener<PartitionChangeEvent> implements SystemInfoService {
 
     public static final FutureCallback<Void> CALLBACK = new FutureCallback<>() {
+        /**
+         * Handles success.
+         *
+         * @param result result ({@link Void})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
         @Override
         public void onSuccess(@Nullable Void result) {
         }
+        /**
+         * Handles failure.
+         *
+         * @param t t ({@link Throwable})
+         * @return nothing
+         * @throws Exception if an unexpected error occurs during processing
+         */
 
         @Override
         public void onFailure(Throwable t) {
@@ -102,6 +122,13 @@ public class DefaultSystemInfoService extends TbApplicationEventListener<Partiti
     private int systemInfoPersistFrequencySeconds;
     @Value("#{${metrics.system_info.ttl:7} * 86400}")
     private int systemInfoTtlSeconds;
+    /**
+     * Handles tb application event.
+     *
+     * @param partitionChangeEvent partition change event ({@link PartitionChangeEvent})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onTbApplicationEvent(PartitionChangeEvent partitionChangeEvent) {
@@ -119,6 +146,12 @@ public class DefaultSystemInfoService extends TbApplicationEventListener<Partiti
             }
         }
     }
+    /**
+     * Returns system info.
+     *
+     * @return {@link SystemInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public SystemInfo getSystemInfo() {
@@ -133,6 +166,12 @@ public class DefaultSystemInfoService extends TbApplicationEventListener<Partiti
 
         return systemInfo;
     }
+    /**
+     * Saves or persists current system info.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void saveCurrentSystemInfo() {
         if (discoveryService.isMonolith()) {
@@ -141,6 +180,12 @@ public class DefaultSystemInfoService extends TbApplicationEventListener<Partiti
             saveCurrentClusterSystemInfo();
         }
     }
+    /**
+     * Returns features info.
+     *
+     * @return {@link FeaturesInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public FeaturesInfo getFeaturesInfo() {

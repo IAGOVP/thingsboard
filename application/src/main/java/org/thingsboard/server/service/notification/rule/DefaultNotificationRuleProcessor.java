@@ -56,6 +56,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+    /**
+     * Default Spring implementation for notification rule processor (notification delivery, templates, targets, and rule-trigger processing).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -72,6 +78,13 @@ public class DefaultNotificationRuleProcessor implements NotificationRuleProcess
     private final NotificationExecutorService notificationExecutor;
 
     private final Map<NotificationRuleTriggerType, NotificationRuleTriggerProcessor> triggerProcessors = new EnumMap<>(NotificationRuleTriggerType.class);
+    /**
+     * Processes the requested data.
+     *
+     * @param trigger trigger ({@link NotificationRuleTrigger})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(NotificationRuleTrigger trigger) {
@@ -173,6 +186,13 @@ public class DefaultNotificationRuleProcessor implements NotificationRuleProcess
     private NotificationInfo constructNotificationInfo(NotificationRuleTrigger trigger, NotificationRuleTriggerConfig triggerConfig) {
         return triggerProcessors.get(triggerConfig.getTriggerType()).constructNotificationInfo(trigger);
     }
+    /**
+     * Handles notification rule deleted.
+     *
+     * @param componentLifecycleMsg component lifecycle msg ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @EventListener(ComponentLifecycleMsg.class)
     public void onNotificationRuleDeleted(ComponentLifecycleMsg componentLifecycleMsg) {
@@ -192,6 +212,13 @@ public class DefaultNotificationRuleProcessor implements NotificationRuleProcess
             });
         }
     }
+    /**
+     * Set trigger processors.
+     *
+     * @param processors processors ({@link Collection})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Autowired
     public void setTriggerProcessors(Collection<NotificationRuleTriggerProcessor> processors) {

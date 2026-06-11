@@ -18,6 +18,10 @@ package org.thingsboard.server.service.queue;
 import org.springframework.context.ApplicationListener;
 import org.thingsboard.server.queue.discovery.event.PartitionChangeEvent;
 
+/**
+ * Contract for consuming calculated-field queue messages on tb-core.
+ */
+
 public interface TbCalculatedFieldConsumerService extends ApplicationListener<PartitionChangeEvent> {
 
 }

@@ -19,9 +19,30 @@ import org.thingsboard.server.gen.transport.TransportProtos.ToTransportMsg;
 
 import java.util.function.Consumer;
 
+/**
+
+ * Service contract for tb core to transport operations (tb-core to transport microservice messaging).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface TbCoreToTransportService {
 
     void process(String nodeId, ToTransportMsg msg);
+
+    /**
+     * Processes the requested data.
+     *
+     * @param nodeId node id ({@link String})
+     * @param msg msg ({@link ToTransportMsg})
+     * @param onSuccess on success ({@link Runnable})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void process(String nodeId, ToTransportMsg msg, Runnable onSuccess, Consumer<Throwable> onFailure);
 

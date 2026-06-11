@@ -17,6 +17,9 @@ package org.thingsboard.server.service.sync.vc.data;
 
 import lombok.Getter;
 import org.thingsboard.server.common.data.id.TenantId;
+/**
+ * Git repository integration for contents diff request.
+ */
 
 @Getter
 public class ContentsDiffGitRequest extends PendingGitRequest<String> {

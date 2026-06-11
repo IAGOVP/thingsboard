@@ -28,35 +28,59 @@ import java.util.function.Consumer;
  */
 public interface TbCoreDeviceRpcService {
 
+    
     /**
-     * Handles REST API calls that contain RPC requests to Device and pushes them to Rule Engine.
-     * Schedules the timeout for the RPC call based on the {@link ToDeviceRpcRequest}
-     *  @param request          the RPC request
-     * @param responseConsumer the consumer of the RPC response
-     * @param currentUser
+     * Processes rest api rpc request.
+     *
+     * @param request request payload with operation parameters
+     * @param responseConsumer response consumer ({@link Consumer})
+     * @param currentUser current user ({@link SecurityUser})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void processRestApiRpcRequest(ToDeviceRpcRequest request, Consumer<FromDeviceRpcResponse> responseConsumer, SecurityUser currentUser);
 
+    
     /**
-     * Handles the RPC response from the Rule Engine.
+     * Processes rpc response from rule engine.
      *
-     * @param response the RPC response
+     * @param response response ({@link FromDeviceRpcResponse})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void processRpcResponseFromRuleEngine(FromDeviceRpcResponse response);
 
+    
     /**
-     * Forwards the RPC request from Rule Engine to Device Actor
+     * Forward rpc request to device actor.
      *
-     * @param request the RPC request message
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void forwardRpcRequestToDeviceActor(ToDeviceRpcRequestActorMsg request);
 
+    
     /**
-     * Handles the RPC response from the Device Actor (Transport).
+     * Processes rpc response from device actor.
      *
-     * @param response the RPC response
+     * @param response response ({@link FromDeviceRpcResponse})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void processRpcResponseFromDeviceActor(FromDeviceRpcResponse response);
+
+    /**
+     * Processes remove rpc.
+     *
+     * @param removeRpcMsg remove rpc msg ({@link RemoveRpcActorMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void processRemoveRpc(RemoveRpcActorMsg removeRpcMsg);
 

@@ -78,6 +78,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Default Spring implementation for edqs service (Entity Data Query Service integration from tb-core).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -122,6 +128,12 @@ public class DefaultEdqsService implements EdqsService {
         syncLock = distributedLockService.getLock("edqs_sync");
         state = new EdqsState();
     }
+    /**
+     * Handles start up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void onStartUp() {
@@ -172,6 +184,13 @@ public class DefaultEdqsService implements EdqsService {
                     .build());
         }
     }
+    /**
+     * Processes system request.
+     *
+     * @param request request payload with operation parameters
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processSystemRequest(ToCoreEdqsRequest request) {
@@ -184,6 +203,13 @@ public class DefaultEdqsService implements EdqsService {
                 .apiEnabled(request.getApiEnabled())
                 .build());
     }
+    /**
+     * Processes system msg.
+     *
+     * @param msg msg ({@link ToCoreEdqsMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void processSystemMsg(ToCoreEdqsMsg msg) {
@@ -285,11 +311,26 @@ public class DefaultEdqsService implements EdqsService {
             }
         }
     }
+    /**
+     * Is api enabled.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isApiEnabled() {
         return state.isApiEnabled();
     }
+    /**
+     * Handles update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @param entity entity ({@link Object})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onUpdate(TenantId tenantId, EntityId entityId, Object entity) {
@@ -301,11 +342,28 @@ public class DefaultEdqsService implements EdqsService {
         }
         onUpdate(tenantId, objectType, DefaultEdqsMapper.toEntity(entityType, entity));
     }
+    /**
+     * Handles update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param objectType object type ({@link ObjectType})
+     * @param object object ({@link EdqsObject})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onUpdate(TenantId tenantId, ObjectType objectType, EdqsObject object) {
         processEvent(tenantId, objectType, EdqsEventType.UPDATED, object);
     }
+    /**
+     * Handles delete.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDelete(TenantId tenantId, EntityId entityId) {
@@ -317,11 +375,30 @@ public class DefaultEdqsService implements EdqsService {
         }
         onDelete(tenantId, objectType, new Entity(entityType, entityId.getId(), Long.MAX_VALUE));
     }
+    /**
+     * Handles delete.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param objectType object type ({@link ObjectType})
+     * @param object object ({@link EdqsObject})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onDelete(TenantId tenantId, ObjectType objectType, EdqsObject object) {
         processEvent(tenantId, objectType, EdqsEventType.DELETED, object);
     }
+    /**
+     * Processes event.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param objectType object type ({@link ObjectType})
+     * @param eventType event type ({@link EdqsEventType})
+     * @param object object ({@link EdqsObject})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void processEvent(TenantId tenantId, ObjectType objectType, EdqsEventType eventType, EdqsObject object) {
         executor.submit(() -> {

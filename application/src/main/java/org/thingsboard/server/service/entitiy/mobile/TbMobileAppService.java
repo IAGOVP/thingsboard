@@ -18,9 +18,37 @@ package org.thingsboard.server.service.entitiy.mobile;
 import org.thingsboard.server.common.data.User;
 import org.thingsboard.server.common.data.mobile.app.MobileApp;
 
+/**
+
+ * Application-layer service API for mobile app entity operations.
+
+ *
+
+ * <p>Wraps DAO services with audit logging, validation, and optional version-control auto-commit.
+
+ */
+
 public interface TbMobileAppService {
+/**
+ * Saves or persists the requested data.
+ *
+ * @param mobileApp mobile app ({@link MobileApp})
+ * @param user authenticated user performing the action
+ * @return {@link MobileApp}
+ * @throws Exception if an unexpected error occurs during processing
+ */
+
+
 
     MobileApp save(MobileApp mobileApp, User user) throws Exception;
+/**
+ * Deletes the requested data.
+ *
+ * @param mobileApp mobile app ({@link MobileApp})
+ * @param user authenticated user performing the action
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void delete(MobileApp mobileApp, User user);
 

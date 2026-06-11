@@ -19,6 +19,10 @@ import lombok.Getter;
 import lombok.ToString;
 import org.thingsboard.server.common.data.alarm.AlarmInfo;
 import org.thingsboard.server.service.subscription.SubscriptionErrorCode;
+/**
+ * Outbound WebSocket update payload for alarm subscription.
+ * <p>Serialized to JSON and pushed to the client session that owns the subscription.
+ */
 
 @ToString
 public class AlarmSubscriptionUpdate {
@@ -32,9 +36,20 @@ public class AlarmSubscriptionUpdate {
     @Getter
     private boolean alarmDeleted;
 
+    /**
+     * Constructs {@link AlarmSubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param alarm alarm
+     */
+
     public AlarmSubscriptionUpdate(AlarmInfo alarm) {
         this(alarm, false);
     }
+
+    /**
+     * Constructs {@link AlarmSubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param alarm alarm
+     * @param alarmDeleted alarm deleted
+     */
 
     public AlarmSubscriptionUpdate(AlarmInfo alarm, boolean alarmDeleted) {
         super();
@@ -42,9 +57,20 @@ public class AlarmSubscriptionUpdate {
         this.alarmDeleted = alarmDeleted;
     }
 
+    /**
+     * Constructs {@link AlarmSubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param errorCode subscription error code
+     */
+
     public AlarmSubscriptionUpdate(SubscriptionErrorCode errorCode) {
         this(errorCode, null);
     }
+
+    /**
+     * Constructs {@link AlarmSubscriptionUpdate} with the supplied dependencies and configuration.
+     * @param errorCode subscription error code
+     * @param errorMsg human-readable error detail
+     */
 
     public AlarmSubscriptionUpdate(SubscriptionErrorCode errorCode, String errorMsg) {
         super();

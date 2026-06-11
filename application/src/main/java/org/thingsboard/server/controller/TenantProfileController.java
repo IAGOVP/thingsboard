@@ -61,6 +61,12 @@ import static org.thingsboard.server.controller.ControllerConstants.TENANT_PROFI
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_PROFILE_TEXT_SEARCH_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.UUID_WIKI_LINK;
 
+/**
+ * REST API for tenant profiles.
+ * 
+ * <p>Base path: {@code /api}. Tenant profile CRUD, defaults, and API/rate-limit configuration.
+ * Clients authenticate with a JWT ({@code Authorization: Bearer <token>}) unless noted as public.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -72,6 +78,15 @@ public class TenantProfileController extends BaseController {
 
     private final TbTenantProfileService tbTenantProfileService;
 
+    /**
+     * Get Tenant Profile.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenantProfile/{tenantProfileId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param strTenantProfileId str Tenant Profile Id
+     * @return {@link TenantProfile} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenant Profile (getTenantProfileById)",
             notes = "Fetch the Tenant Profile object based on the provided Tenant Profile Id. " + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
@@ -84,6 +99,15 @@ public class TenantProfileController extends BaseController {
         return checkTenantProfileId(tenantProfileId, Operation.READ);
     }
 
+    /**
+     * Get Tenant Profile Info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenantProfileInfo/{tenantProfileId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param strTenantProfileId str Tenant Profile Id
+     * @return {@link EntityInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenant Profile Info (getTenantProfileInfoById)",
             notes = "Fetch the Tenant Profile Info object based on the provided Tenant Profile Id. " + TENANT_PROFILE_INFO_DESCRIPTION + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
@@ -96,6 +120,14 @@ public class TenantProfileController extends BaseController {
         return checkNotNull(tenantProfileService.findTenantProfileInfoById(getTenantId(), tenantProfileId));
     }
 
+    /**
+     * Get default Tenant Profile Info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenantProfileInfo/default}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @return {@link EntityInfo} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get default Tenant Profile Info (getDefaultTenantProfileInfo)",
             notes = "Fetch the default Tenant Profile Info object based. " + TENANT_PROFILE_INFO_DESCRIPTION + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
@@ -104,6 +136,15 @@ public class TenantProfileController extends BaseController {
         return checkNotNull(tenantProfileService.findDefaultTenantProfileInfo(getTenantId()));
     }
 
+    /**
+     * Create Or update Tenant Profile.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/tenantProfile}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param tenantProfile tenant Profile
+     * @return {@link TenantProfile} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Create Or update Tenant Profile (saveTenantProfile)",
             notes = "Create or update the Tenant Profile. When creating tenant profile, platform generates Tenant Profile Id as " + UUID_WIKI_LINK +
                     "The newly created Tenant Profile Id will be present in the response. " +
@@ -195,6 +236,15 @@ public class TenantProfileController extends BaseController {
         return tbTenantProfileService.save(getTenantId(), tenantProfile, oldProfile, getCurrentUser());
     }
 
+    /**
+     * Delete Tenant Profile.
+     * 
+     * <p><b>HTTP:</b> {@code DELETE /api/tenantProfile/{tenantProfileId}}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param strTenantProfileId str Tenant Profile Id
+     * @return empty response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Delete Tenant Profile (deleteTenantProfile)",
             notes = "Deletes the tenant profile. Referencing non-existing tenant profile Id will cause an error. Referencing profile that is used by the tenants will cause an error. " + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -208,6 +258,15 @@ public class TenantProfileController extends BaseController {
         tbTenantProfileService.delete(getTenantId(), profile, getCurrentUser());
     }
 
+    /**
+     * Make tenant profile default.
+     * 
+     * <p><b>HTTP:</b> {@code POST /api/tenantProfile/{tenantProfileId}/default}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param strTenantProfileId str Tenant Profile Id
+     * @return {@link TenantProfile} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Make tenant profile default (setDefaultTenantProfile)",
             notes = "Makes specified tenant profile to be default. Referencing non-existing tenant profile Id will cause an error. " + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN')")
@@ -222,6 +281,19 @@ public class TenantProfileController extends BaseController {
         return tenantProfile;
     }
 
+    /**
+     * Get Tenant Profiles.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenantProfiles}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenant Profiles (getTenantProfiles)", notes = "Returns a page of tenant profiles registered in the platform. " + PAGE_DATA_PARAMETERS + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     @GetMapping(value = "/tenantProfiles", params = {"pageSize", "page"})
@@ -240,6 +312,19 @@ public class TenantProfileController extends BaseController {
         return checkNotNull(tenantProfileService.findTenantProfiles(getTenantId(), pageLink));
     }
 
+    /**
+     * Get Tenant Profiles Info.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenantProfileInfos}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param pageSize page Size
+     * @param page page
+     * @param textSearch text Search
+     * @param sortProperty sort Property
+     * @param sortOrder sort Order
+     * @return {@link PageData} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenant Profiles Info (getTenantProfileInfos)", notes = "Returns a page of tenant profile info objects registered in the platform. "
             + TENANT_PROFILE_INFO_DESCRIPTION + PAGE_DATA_PARAMETERS + SYSTEM_AUTHORITY_PARAGRAPH)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -259,6 +344,15 @@ public class TenantProfileController extends BaseController {
         return checkNotNull(tenantProfileService.findTenantProfileInfos(getTenantId(), pageLink));
     }
 
+    /**
+     * Get tenant profiles by ids.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenantProfiles}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param ids ids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Hidden
     @GetMapping(value = "/tenantProfiles", params = {"ids"})
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -266,6 +360,15 @@ public class TenantProfileController extends BaseController {
         return tenantProfileService.findTenantProfilesByIds(TenantId.SYS_TENANT_ID, ids);
     }
 
+    /**
+     * Get Tenant Profile list.
+     * 
+     * <p><b>HTTP:</b> {@code GET /api/tenantProfiles/list}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     * @param ids ids
+     * @return {@link List} response body
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @ApiOperation(value = "Get Tenant Profile list (getTenantProfileList)")
     @GetMapping(value = "/tenantProfiles/list")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")

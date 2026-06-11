@@ -31,6 +31,9 @@ import java.util.List;
 
 import static org.thingsboard.server.common.data.DataConstants.CF_NAME_METADATA_KEY;
 import static org.thingsboard.server.common.data.DataConstants.SCOPE;
+/**
+ * Result of calculated-field evaluation (telemetry calculated field result).
+ */
 
 @Data
 @Builder
@@ -42,6 +45,15 @@ public final class TelemetryCalculatedFieldResult implements CalculatedFieldResu
     private final JsonNode result;
 
     public static final TelemetryCalculatedFieldResult EMPTY = TelemetryCalculatedFieldResult.builder().result(null).build();
+    /**
+     * To tb msg.
+     *
+     * @param entityId target entity identifier
+     * @param cfName cf name ({@link String})
+     * @param cfIds cf ids ({@link List})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg toTbMsg(EntityId entityId, String cfName, List<CalculatedFieldId> cfIds) {
@@ -62,11 +74,23 @@ public final class TelemetryCalculatedFieldResult implements CalculatedFieldResu
                 .metaData(metaData)
                 .build();
     }
+    /**
+     * String value.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String stringValue() {
         return result == null ? null : result.toString();
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isEmpty() {

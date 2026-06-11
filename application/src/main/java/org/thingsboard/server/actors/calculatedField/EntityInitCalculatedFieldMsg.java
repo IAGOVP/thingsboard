@@ -32,11 +32,25 @@ public class EntityInitCalculatedFieldMsg implements ToCalculatedFieldSystemMsg 
     private final StateAction stateAction;
     private final CalculatedFieldEventType eventType;
     private final TbCallback callback;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {
         return MsgType.CF_ENTITY_INIT_CF_MSG;
     }
+
+    /**
+
+     * Enumerates state action values used in the calculated-field manager and per-entity evaluation actors.
+
+     */
 
     public enum StateAction {
         INIT,

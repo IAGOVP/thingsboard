@@ -31,6 +31,14 @@ public class CalculatedFieldLinkedTelemetryMsg implements ToCalculatedFieldSyste
     private final EntityId entityId;
     private final CalculatedFieldLinkedTelemetryMsgProto proto;
     private final TbCallback callback;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

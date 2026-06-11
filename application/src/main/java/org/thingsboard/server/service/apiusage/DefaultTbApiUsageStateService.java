@@ -86,6 +86,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for tb api usage state service (tenant API usage metering and rate-limit state).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -124,6 +130,12 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
     private long gaugeReportInterval;
 
     private final Lock updateLock = new ReentrantLock();
+    /**
+     * Init.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PostConstruct
     public void init() {
@@ -134,16 +146,36 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
             log.info("Started api usage service.");
         }
     }
+    /**
+     * Returns service name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getServiceName() {
         return "API Usage";
     }
+    /**
+     * Returns scheduler executor name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getSchedulerExecutorName() {
         return "api-usage-scheduled";
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param msgPack msg pack ({@link TbProtoQueueMsg})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void process(TbProtoQueueMsg<ToUsageStatsServiceMsg> msgPack, TbCallback callback) {
@@ -245,6 +277,13 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
             persistAndNotify(usageState, result);
         }
     }
+    /**
+     * Returns api usage state.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState getApiUsageState(TenantId tenantId) {
@@ -271,11 +310,25 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
             }
         }
     }
+    /**
+     * Handles api usage state update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onApiUsageStateUpdate(TenantId tenantId) {
         otherUsageStates.remove(tenantId);
     }
+    /**
+     * Handles tenant profile update.
+     *
+     * @param tenantProfileId tenant profile id ({@link TenantProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onTenantProfileUpdate(TenantProfileId tenantProfileId) {
@@ -295,6 +348,13 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
             updateLock.unlock();
         }
     }
+    /**
+     * Handles tenant update.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onTenantUpdate(TenantId tenantId) {
@@ -354,18 +414,39 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
                     .build());
         }
     }
+    /**
+     * Handles tenant delete.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onTenantDelete(TenantId tenantId) {
         deletedEntities.add(tenantId);
         myUsageStates.remove(tenantId);
         otherUsageStates.remove(tenantId);
     }
+    /**
+     * Handles customer delete.
+     *
+     * @param customerId customer id ({@link CustomerId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onCustomerDelete(CustomerId customerId) {
         deletedEntities.add(customerId);
         myUsageStates.remove(customerId);
     }
+    /**
+     * Cleanup entity on partition removal.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void cleanupEntityOnPartitionRemoval(EntityId entityId) {
@@ -432,6 +513,14 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
             return (t, wt, v) -> t > 0 && v >= t;
         }
     }
+    /**
+     * Finds api usage state by id.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link ApiUsageStateId})
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiUsageState findApiUsageStateById(TenantId tenantId, ApiUsageStateId id) {
@@ -441,6 +530,12 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
     private interface StateChecker {
         boolean check(long threshold, long warnThreshold, long value);
     }
+    /**
+     * Checks start of next cycle.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void checkStartOfNextCycle() {
         updateLock.lock();
@@ -545,6 +640,12 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
 
         return state;
     }
+    /**
+     * Handles repartition event.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onRepartitionEvent() {
@@ -557,6 +658,13 @@ public class DefaultTbApiUsageStateService extends AbstractPartitionBasedService
             updateLock.unlock();
         }
     }
+    /**
+     * Handles added partitions.
+     *
+     * @param addedPartitions added partitions ({@link Set})
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Map<TopicPartitionInfo, List<ListenableFuture<?>>> onAddedPartitions(Set<TopicPartitionInfo> addedPartitions) {

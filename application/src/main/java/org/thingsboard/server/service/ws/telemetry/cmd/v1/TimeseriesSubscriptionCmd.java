@@ -20,10 +20,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.thingsboard.server.service.ws.WsCmdType;
-
 /**
- * @author Andrew Shvayka
+ * WebSocket command DTO for timeseries subscription.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
  */
+
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -35,6 +37,11 @@ public class TimeseriesSubscriptionCmd extends SubscriptionCmd {
     private long interval;
     private int limit;
     private String agg;
+
+    /**
+     * Returns type.
+     * @return {@link WsCmdType}
+     */
 
     @Override
     public WsCmdType getType() {

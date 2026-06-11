@@ -25,6 +25,16 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 
 import java.util.List;
 
+/**
+
+ * Service contract for tb telemetry operations (telemetry subscription and WebSocket push to clients).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface TbTelemetryService {
 
     ListenableFuture<List<TsKvEntry>> getTimeseries(EntityId entityId,

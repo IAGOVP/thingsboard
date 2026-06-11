@@ -48,6 +48,11 @@ import org.thingsboard.server.dao.tenant.TenantService;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+/**
+ * Root actor of the ThingsBoard actor system (singleton per tb-core node).
+ *
+ * <p>Bootstraps {@link org.thingsboard.server.actors.tenant.TenantActor} children on {@link org.thingsboard.server.actors.app.AppInitMsg}, routes transport and lifecycle messages to the correct tenant, and broadcasts partition-change and session-timeout ticks to tenant actors.
+ */
 
 @Slf4j
 public class AppActor extends ContextAwareActor {
@@ -61,6 +66,15 @@ public class AppActor extends ContextAwareActor {
         this.tenantService = systemContext.getTenantService();
         this.deletedTenants = new HashSet<>();
     }
+    
+    /**
+     * Initializes the actor after creation (schedules ticks, loads metadata, creates child actors).
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
+
 
     @Override
     public void init(TbActorCtx ctx) throws TbActorException {
@@ -70,6 +84,15 @@ public class AppActor extends ContextAwareActor {
                     systemContext.getSessionReportTimeout(), systemContext.getSessionReportTimeout());
         }
     }
+    
+    /**
+     * Handles one incoming actor message; returns {@code true} if the message type was recognized.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     protected boolean doProcess(TbActorMsg msg) {
@@ -224,6 +247,16 @@ public class AppActor extends ContextAwareActor {
                 () -> new TenantActor.ActorCreator(systemContext, tenantId),
                 () -> true));
     }
+    
+    /**
+     * Strategy invoked when message processing fails inside the actor.
+     *
+     * @param msg actor message to process
+     * @param t t ({@link Throwable})
+     * @return {@link ProcessFailureStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public ProcessFailureStrategy onProcessFailure(TbActorMsg msg, Throwable t) {
@@ -231,16 +264,38 @@ public class AppActor extends ContextAwareActor {
         return doProcessFailure(t);
     }
 
+    /**
+
+     * Factory for creating instances of the enclosing actor type.
+
+     */
+
     public static class ActorCreator extends ContextBasedCreator {
 
         public ActorCreator(ActorSystemContext context) {
             super(context);
         }
+        
+        /**
+         * Builds the {@link org.thingsboard.server.actors.TbActorId} used to register the actor.
+         *
+         * @return {@link TbActorId}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActorId createActorId() {
             return new TbEntityActorId(TenantId.SYS_TENANT_ID);
         }
+        
+        /**
+         * Creates a new actor instance for the given actor id and context.
+         *
+         * @return {@link TbActor}
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
 
         @Override
         public TbActor createActor() {

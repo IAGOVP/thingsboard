@@ -24,6 +24,9 @@ import org.thingsboard.server.common.msg.TbMsg;
 import org.thingsboard.server.common.msg.TbRuleEngineActorMsg;
 import org.thingsboard.server.common.msg.aware.RuleChainAwareMsg;
 import org.thingsboard.server.common.msg.queue.RuleEngineException;
+/**
+ * Base class for messages addressed to a {@link org.thingsboard.server.actors.ruleChain.RuleChainActor}.
+ */
 
 @EqualsAndHashCode(callSuper = true)
 @ToString
@@ -36,11 +39,24 @@ public abstract class TbToRuleChainActorMsg extends TbRuleEngineActorMsg impleme
         super(msg);
         this.target = target;
     }
+    /**
+     * Returns rule chain id.
+     *
+     * @return {@link RuleChainId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChainId getRuleChainId() {
         return target;
     }
+    /**
+     * Handles tb actor stopped.
+     *
+     * @param reason reason ({@link TbActorStopReason})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onTbActorStopped(TbActorStopReason reason) {

@@ -35,6 +35,13 @@ public class DefaultDeviceSessionCacheService implements DeviceSessionCacheServi
 
     @Autowired
     protected TbTransactionalCache<DeviceId, DeviceSessionsCacheEntry> cache;
+    /**
+     * Returns the requested data.
+     *
+     * @param deviceId target device identifier
+     * @return {@link DeviceSessionsCacheEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceSessionsCacheEntry get(DeviceId deviceId) {
@@ -42,6 +49,14 @@ public class DefaultDeviceSessionCacheService implements DeviceSessionCacheServi
         return cache.getAndPutInTransaction(deviceId, () ->
                 DeviceSessionsCacheEntry.newBuilder().addAllSessions(Collections.emptyList()).build(), false);
     }
+    /**
+     * Put.
+     *
+     * @param deviceId target device identifier
+     * @param sessions sessions ({@link DeviceSessionsCacheEntry})
+     * @return {@link DeviceSessionsCacheEntry}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceSessionsCacheEntry put(DeviceId deviceId, DeviceSessionsCacheEntry sessions) {

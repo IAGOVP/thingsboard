@@ -18,6 +18,10 @@ package org.thingsboard.server.service.security.auth.jwt;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * DTO for JWT bearer-token authentication: refresh token request.
+ */
+
 public record RefreshTokenRequest(String refreshToken) {
 
     @JsonCreator

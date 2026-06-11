@@ -62,6 +62,12 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for tb rule chain service (rule chain metadata and helpers).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @RequiredArgsConstructor
 @Service
 @TbCoreComponent
@@ -72,6 +78,14 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
     private final RelationService relationService;
     private final InstallScripts installScripts;
     private final ComponentDiscoveryService componentDiscoveryService;
+    /**
+     * Returns rule chain output labels.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return {@link Set}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public Set<String> getRuleChainOutputLabels(TenantId tenantId, RuleChainId ruleChainId) {
@@ -84,6 +98,14 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         }
         return outputLabels;
     }
+    /**
+     * Returns output label usage.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<RuleChainOutputLabelsUsage> getOutputLabelUsage(TenantId tenantId, RuleChainId ruleChainId) {
@@ -124,6 +146,15 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
                         .thenComparing(RuleChainOutputLabelsUsage::getRuleNodeName))
                 .collect(Collectors.toList());
     }
+    /**
+     * Updates related rule chains.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @param result result ({@link RuleChainUpdateResult})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<RuleChain> updateRelatedRuleChains(TenantId tenantId, RuleChainId ruleChainId, RuleChainUpdateResult result) {
@@ -169,6 +200,14 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
         }
         return ruleChainIds.stream().map(id -> ruleChainService.findRuleChainById(tenantId, id)).collect(Collectors.toList());
     }
+    /**
+     * Saves or persists the requested data.
+     *
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param user authenticated user performing the action
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChain save(RuleChain ruleChain, SecurityUser user) throws Exception {
@@ -184,6 +223,14 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void delete(RuleChain ruleChain, User user) {
@@ -198,6 +245,15 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Saves or persists default by name.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param request request payload with operation parameters
+     * @param user authenticated user performing the action
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChain saveDefaultByName(TenantId tenantId, DefaultRuleChainCreateRequest request, User user) throws Exception {
@@ -214,6 +270,15 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Set root rule chain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param user authenticated user performing the action
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChain setRootRuleChain(TenantId tenantId, RuleChain ruleChain, User user) {
@@ -236,6 +301,17 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Saves or persists rule chain meta data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param ruleChainMetaData rule chain meta data ({@link RuleChainMetaData})
+     * @param updateRelated update related
+     * @param user authenticated user performing the action
+     * @return {@link RuleChainMetaData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChainMetaData saveRuleChainMetaData(TenantId tenantId, RuleChain ruleChain, RuleChainMetaData ruleChainMetaData,
@@ -285,6 +361,16 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Assigns rule chain to edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return {@link RuleChain}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public RuleChain assignRuleChainToEdge(TenantId tenantId, RuleChain ruleChain, Edge edge, User user) throws ThingsboardException {
@@ -302,6 +388,16 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Unassigns rule chain from edge.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param edge edge ({@link Edge})
+     * @param user authenticated user performing the action
+     * @return {@link RuleChain}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public RuleChain unassignRuleChainFromEdge(TenantId tenantId, RuleChain ruleChain, Edge edge, User user) throws ThingsboardException {
@@ -319,6 +415,15 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Set edge template root rule chain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param user authenticated user performing the action
+     * @return {@link RuleChain}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public RuleChain setEdgeTemplateRootRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws ThingsboardException {
@@ -333,6 +438,15 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Set auto assign to edge rule chain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param user authenticated user performing the action
+     * @return {@link RuleChain}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public RuleChain setAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws ThingsboardException {
@@ -347,6 +461,15 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Unset auto assign to edge rule chain.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @param user authenticated user performing the action
+     * @return {@link RuleChain}
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     @Override
     public RuleChain unsetAutoAssignToEdgeRuleChain(TenantId tenantId, RuleChain ruleChain, User user) throws ThingsboardException {
@@ -361,6 +484,13 @@ public class DefaultTbRuleChainService extends AbstractTbEntityService implement
             throw e;
         }
     }
+    /**
+     * Updates rule node configuration.
+     *
+     * @param node node ({@link RuleNode})
+     * @return {@link RuleNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNode updateRuleNodeConfiguration(RuleNode node) {

@@ -26,6 +26,11 @@ import org.thingsboard.server.common.data.sync.ie.OtaPackageExportData;
 import org.thingsboard.server.dao.ota.OtaPackageService;
 import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
+/**
+ * Imports ota package entities from export JSON.
+ *
+ * <p>Resolves references, applies conflict strategy, and persists through DAO services.
+ */
 
 @Service
 @TbCoreComponent
@@ -33,17 +38,46 @@ import org.thingsboard.server.service.sync.vc.data.EntitiesImportCtx;
 public class OtaPackageImportService extends BaseEntityImportService<OtaPackageId, OtaPackage, OtaPackageExportData> {
 
     private final OtaPackageService otaPackageService;
+    /**
+     * Set owner.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void setOwner(TenantId tenantId, OtaPackage otaPackage, IdProvider idProvider) {
         otaPackage.setTenantId(tenantId);
     }
+    /**
+     * Prepare.
+     *
+     * @param ctx calculated-field execution context
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @param oldOtaPackage old ota package ({@link OtaPackage})
+     * @param exportData export data ({@link OtaPackageExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected OtaPackage prepare(EntitiesImportCtx ctx, OtaPackage otaPackage, OtaPackage oldOtaPackage, OtaPackageExportData exportData, IdProvider idProvider) {
         otaPackage.setDeviceProfileId(idProvider.getInternalId(otaPackage.getDeviceProfileId()));
         return otaPackage;
     }
+    /**
+     * Finds existing entity.
+     *
+     * @param ctx calculated-field execution context
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @param idProvider id provider ({@link IdProvider})
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected OtaPackage findExistingEntity(EntitiesImportCtx ctx, OtaPackage otaPackage, IdProvider idProvider) {
@@ -53,11 +87,29 @@ public class OtaPackageImportService extends BaseEntityImportService<OtaPackageI
         }
         return existingOtaPackage;
     }
+    /**
+     * Deep copy.
+     *
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected OtaPackage deepCopy(OtaPackage otaPackage) {
         return new OtaPackage(otaPackage);
     }
+    /**
+     * Saves or updates the requested data.
+     *
+     * @param ctx calculated-field execution context
+     * @param otaPackage ota package ({@link OtaPackage})
+     * @param exportData export data ({@link OtaPackageExportData})
+     * @param idProvider id provider ({@link IdProvider})
+     * @param compareResult compare result ({@link CompareResult})
+     * @return {@link OtaPackage}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected OtaPackage saveOrUpdate(EntitiesImportCtx ctx, OtaPackage otaPackage, OtaPackageExportData exportData, IdProvider idProvider, CompareResult compareResult) {
@@ -67,6 +119,12 @@ public class OtaPackageImportService extends BaseEntityImportService<OtaPackageI
         }
         return otaPackageService.saveOtaPackage(otaPackage);
     }
+    /**
+     * Returns entity type.
+     *
+     * @return {@link EntityType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityType getEntityType() {

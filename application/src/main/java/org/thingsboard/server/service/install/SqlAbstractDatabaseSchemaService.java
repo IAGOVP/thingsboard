@@ -27,6 +27,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+    /**
+     * Sql abstract database schema service (database schema installation, upgrades, and demo data loading).
+     */
+
 @Slf4j
 public abstract class SqlAbstractDatabaseSchemaService implements DatabaseSchemaService {
 
@@ -51,11 +55,24 @@ public abstract class SqlAbstractDatabaseSchemaService implements DatabaseSchema
         this.schemaSql = schemaSql;
         this.schemaIdxSql = schemaIdxSql;
     }
+    /**
+     * Creates database schema.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseSchema() throws Exception {
         this.createDatabaseSchema(true);
     }
+    /**
+     * Creates database schema.
+     *
+     * @param createIndexes create indexes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseSchema(boolean createIndexes) throws Exception {
@@ -66,6 +83,12 @@ public abstract class SqlAbstractDatabaseSchemaService implements DatabaseSchema
             this.createDatabaseIndexes();
         }
     }
+    /**
+     * Creates database indexes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void createDatabaseIndexes() throws Exception {
@@ -82,10 +105,25 @@ public abstract class SqlAbstractDatabaseSchemaService implements DatabaseSchema
             conn.createStatement().execute(sql); //NOSONAR, ignoring because method used to load initial thingsboard database schema
         }
     }
+    /**
+     * Executes query.
+     *
+     * @param query query ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void executeQuery(String query) {
         executeQuery(query, null);
     }
+    /**
+     * Executes query.
+     *
+     * @param query query ({@link String})
+     * @param logQuery log query ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void executeQuery(String query, String logQuery) {
         logQuery = logQuery != null ? logQuery : query;

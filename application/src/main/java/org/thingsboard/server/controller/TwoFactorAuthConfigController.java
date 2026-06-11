@@ -51,6 +51,15 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.server.controller.ControllerConstants.NEW_LINE;
 
+/**
+ * REST API for per-account and platform-wide two-factor authentication configuration.
+ *
+ * <p>Base path: {@code /api/2fa}. Account endpoints accept any authorized user JWT or
+ * {@code MFA_CONFIGURATION_TOKEN}; platform settings require {@code SYS_ADMIN}.
+ *
+ * @see TwoFactorAuthController
+ * @see org.thingsboard.server.service.security.auth.mfa.config.TwoFaConfigManager
+ */
 @RestController
 @RequestMapping("/api/2fa")
 @TbCoreComponent
@@ -60,6 +69,15 @@ public class TwoFactorAuthConfigController extends BaseController {
     private final TwoFaConfigManager twoFaConfigManager;
     private final TwoFactorAuthService twoFactorAuthService;
 
+    /**
+     * Returns the caller's account-level 2FA configuration.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/2fa/account/settings}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}, or {@code MFA_CONFIGURATION_TOKEN}
+     *
+     * @return {@link AccountTwoFaSettings} or {@code null} if not configured
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get account 2FA settings (getAccountTwoFaSettings)",
             notes = "Get user's account 2FA configuration. Configuration contains configs for different 2FA providers." + NEW_LINE +
                     "Example:\n" +
@@ -76,6 +94,16 @@ public class TwoFactorAuthConfigController extends BaseController {
         return twoFaConfigManager.getAccountTwoFaSettings(user.getTenantId(), user).orElse(null);
     }
 
+    /**
+     * Generates a new account config template for the given 2FA provider (e.g. TOTP auth URL).
+     *
+     * <p><b>HTTP:</b> {@code POST /api/2fa/account/config/generate?providerType=&lt;type&gt;}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}, or {@code MFA_CONFIGURATION_TOKEN}
+     *
+     * @param providerType provider to generate a config for
+     * @return new {@link TwoFaAccountConfig} template (not yet saved)
+     * @throws Exception if the provider is not enabled on the platform
+     */
     @ApiOperation(value = "Generate 2FA account config (generateTwoFaAccountConfig)",
             notes = "Generate new 2FA account config template for specified provider type. " + NEW_LINE +
                     "For TOTP, this will return a corresponding account config template " +
@@ -108,6 +136,15 @@ public class TwoFactorAuthConfigController extends BaseController {
         return twoFactorAuthService.generateNewAccountConfig(user, providerType);
     }
 
+    /**
+     * Submits an account config and triggers verification (e.g. sends email/SMS code).
+     *
+     * <p><b>HTTP:</b> {@code POST /api/2fa/account/config/submit}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}, or {@code MFA_CONFIGURATION_TOKEN}
+     *
+     * @param accountConfig provider-specific account configuration JSON body
+     * @throws Exception if the config is invalid or the provider is not available
+     */
     @ApiOperation(value = "Submit 2FA account config (submitTwoFaAccountConfig)",
             notes = "Submit 2FA account config to prepare for a future verification. " +
                     "Basically, this method will send a verification code for a given account config, if this has " +
@@ -135,6 +172,17 @@ public class TwoFactorAuthConfigController extends BaseController {
         twoFactorAuthService.prepareVerificationCode(user, accountConfig, false);
     }
 
+    /**
+     * Verifies and persists a new account 2FA provider configuration.
+     *
+     * <p><b>HTTP:</b> {@code POST /api/2fa/account/config?verificationCode=&lt;code&gt;}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}, or {@code MFA_CONFIGURATION_TOKEN}
+     *
+     * @param accountConfig provider config to save after successful verification
+     * @param verificationCode optional code (required for EMAIL/SMS; omitted for TOTP/BACKUP_CODE)
+     * @return updated full account 2FA settings
+     * @throws Exception if verification fails or the provider is already configured
+     */
     @ApiOperation(value = "Verify and save 2FA account config (verifyAndSaveTwoFaAccountConfig)",
             notes = "Checks the verification code for submitted config, and if it is correct, saves the provided account config. " + NEW_LINE +
                     "Returns whole account's 2FA settings object.\n" +
@@ -162,6 +210,17 @@ public class TwoFactorAuthConfigController extends BaseController {
         }
     }
 
+    /**
+     * Updates an existing account 2FA provider config (currently {@code useByDefault} only).
+     *
+     * <p><b>HTTP:</b> {@code PUT /api/2fa/account/config?providerType=&lt;type&gt;}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param providerType provider whose config is updated
+     * @param updateRequest partial update (default-provider flag)
+     * @return updated full account 2FA settings
+     * @throws ThingsboardException if the provider config does not exist
+     */
     @ApiOperation(value = "Update 2FA account config (updateTwoFaAccountConfig)", notes =
             "Update config for a given provider type. \n" +
             "Update request example:\n" +
@@ -180,6 +239,16 @@ public class TwoFactorAuthConfigController extends BaseController {
         return twoFaConfigManager.saveTwoFaAccountConfig(user.getTenantId(), user, accountConfig);
     }
 
+    /**
+     * Removes a 2FA provider configuration from the caller's account.
+     *
+     * <p><b>HTTP:</b> {@code DELETE /api/2fa/account/config?providerType=&lt;type&gt;}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, or {@code CUSTOMER_USER}
+     *
+     * @param providerType provider to remove
+     * @return updated full account 2FA settings
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Delete 2FA account config (deleteTwoFaAccountConfig)", notes =
             "Delete 2FA config for a given 2FA provider type. \n" +
             "Returns whole account's 2FA settings object.\n" +
@@ -191,6 +260,15 @@ public class TwoFactorAuthConfigController extends BaseController {
         return twoFaConfigManager.deleteTwoFaAccountConfig(user.getTenantId(), user, providerType);
     }
 
+    /**
+     * Lists 2FA provider types enabled by the platform for the caller's tenant.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/2fa/providers}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}, {@code TENANT_ADMIN}, {@code CUSTOMER_USER}, or {@code MFA_CONFIGURATION_TOKEN}
+     *
+     * @return list of {@link TwoFaProviderType} values
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get available 2FA providers (getAvailableTwoFaProviderTypes)", notes =
             "Get the list of provider types available for user to use (the ones configured by tenant or sysadmin).\n" +
             "Example of response:\n" +
@@ -206,6 +284,15 @@ public class TwoFactorAuthConfigController extends BaseController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns platform-wide 2FA settings for the system tenant.
+     *
+     * <p><b>HTTP:</b> {@code GET /api/2fa/settings}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     *
+     * @return {@link PlatformTwoFaSettings} or {@code null} if not configured
+     * @throws ThingsboardException on authorization failure
+     */
     @ApiOperation(value = "Get platform 2FA settings (getPlatformTwoFaSettings)",
             notes = "Get platform settings for 2FA. The settings are described for savePlatformTwoFaSettings API method. " +
                     "If 2FA is not configured, then an empty response will be returned." +
@@ -216,6 +303,16 @@ public class TwoFactorAuthConfigController extends BaseController {
         return twoFaConfigManager.getPlatformTwoFaSettings(getTenantId(), false).orElse(null);
     }
 
+    /**
+     * Saves platform-wide 2FA settings (providers, rate limits, lockout policy).
+     *
+     * <p><b>HTTP:</b> {@code POST /api/2fa/settings}
+     * <p><b>Auth:</b> {@code SYS_ADMIN}
+     *
+     * @param twoFaSettings platform 2FA configuration JSON body
+     * @return saved settings
+     * @throws ThingsboardException on validation or authorization failure
+     */
     @ApiOperation(value = "Save platform 2FA settings (savePlatformTwoFaSettings)",
             notes = "Save 2FA settings for platform. The settings have following properties:\n" +
                     "- `providers` - the list of 2FA providers' configs. Users will only be allowed to use 2FA providers from this list. \n\n" +
@@ -264,6 +361,7 @@ public class TwoFactorAuthConfigController extends BaseController {
         return twoFaConfigManager.savePlatformTwoFaSettings(getTenantId(), twoFaSettings);
     }
 
+    /** Request body for updating {@code useByDefault} on an existing account 2FA provider. */
     @Data
     @Schema
     public static class TwoFaAccountConfigUpdateRequest {

@@ -45,6 +45,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+/**
+ * Default implementation of {@link TbUserSettingsService}.
+ */
 
 @Service
 @TbCoreComponent
@@ -57,26 +60,71 @@ public class DefaultTbUserSettingsService implements TbUserSettingsService {
 
     private final UserSettingsService settingsService;
     private final DashboardService dashboardService;
+    /**
+     * Saves or persists user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userSettings user settings ({@link UserSettings})
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserSettings saveUserSettings(TenantId tenantId, UserSettings userSettings) {
         return settingsService.saveUserSettings(tenantId, userSettings);
     }
+    /**
+     * Updates user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param type type ({@link UserSettingsType})
+     * @param settings settings ({@link JsonNode})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateUserSettings(TenantId tenantId, UserId userId, UserSettingsType type, JsonNode settings) {
         settingsService.updateUserSettings(tenantId, userId, type, settings);
     }
+    /**
+     * Finds user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param type type ({@link UserSettingsType})
+     * @return {@link UserSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserSettings findUserSettings(TenantId tenantId, UserId userId, UserSettingsType type) {
         return settingsService.findUserSettings(tenantId, userId, type);
     }
+    /**
+     * Deletes user settings.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param userId user id ({@link UserId})
+     * @param type type ({@link UserSettingsType})
+     * @param jsonPaths json paths ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void deleteUserSettings(TenantId tenantId, UserId userId, UserSettingsType type, List<String> jsonPaths) {
         settingsService.deleteUserSettings(tenantId, userId, type, jsonPaths);
     }
+    /**
+     * Finds user dashboards info.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link UserId})
+     * @return {@link UserDashboardsInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserDashboardsInfo findUserDashboardsInfo(TenantId tenantId, UserId id) {
@@ -87,6 +135,16 @@ public class DefaultTbUserSettingsService implements TbUserSettingsService {
         UserDashboardsInfo stored = JacksonUtil.convertValue(us.getSettings(), UserDashboardsInfo.class);
         return refreshDashboardTitles(tenantId, stored);
     }
+    /**
+     * Report user dashboard action.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param id id ({@link UserId})
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @param action action ({@link UserDashboardAction})
+     * @return {@link UserDashboardsInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserDashboardsInfo reportUserDashboardAction(TenantId tenantId, UserId id, DashboardId dashboardId, UserDashboardAction action) {

@@ -27,6 +27,12 @@ import org.thingsboard.server.service.sms.AbstractSmsSender;
 
 import java.util.regex.Pattern;
 
+/**
+
+ * Twilio sms sender (SMS provider abstraction and message sending).
+
+ */
+
 public class TwilioSmsSender extends AbstractSmsSender {
 
     private static final Pattern PHONE_NUMBERS_SID_MESSAGE_SERVICE_SID = Pattern.compile("^(PN|MG).*$");
@@ -49,6 +55,14 @@ public class TwilioSmsSender extends AbstractSmsSender {
         this.numberFrom = this.validatePhoneTwilioNumber(config.getNumberFrom());
         this.twilioRestClient = new TwilioRestClient.Builder(config.getAccountSid(), config.getAccountToken()).build();
     }
+    /**
+     * Send sms.
+     *
+     * @param numberTo number to ({@link String})
+     * @param message message ({@link String})
+     * @return the int result
+     * @throws SmsException if sms exception is thrown during processing
+     */
 
     @Override
     public int sendSms(String numberTo, String message) throws SmsException {
@@ -61,6 +75,12 @@ public class TwilioSmsSender extends AbstractSmsSender {
             throw new SmsSendException("Failed to send SMS message - " + e.getMessage(), e);
         }
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {

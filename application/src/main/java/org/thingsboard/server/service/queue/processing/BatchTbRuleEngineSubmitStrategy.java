@@ -25,6 +25,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
+/**
+ * Rule-engine message submit strategy: batch tb rule engine submit strategy.
+ * <p>Controls parallelism and ordering when a pack of {@code TbMsg} is handed to actors.
+ */
 
 @Slf4j
 public class BatchTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSubmitStrategy {
@@ -34,10 +38,23 @@ public class BatchTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSubmitS
     private final Map<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> pendingPack = new LinkedHashMap<>();
     private volatile BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer;
 
+    /**
+     * Constructs {@link BatchTbRuleEngineSubmitStrategy} with the supplied dependencies and configuration.
+     * @param queueName queue name
+     * @param batchSize batch size
+     */
+
     public BatchTbRuleEngineSubmitStrategy(String queueName, int batchSize) {
         super(queueName);
         this.batchSize = batchSize;
     }
+
+    /**
+     * Submits attempt.
+     * @param msgConsumer msg consumer
+     * @return @Override
+    public void
+     */
 
     @Override
     public void submitAttempt(BiConsumer<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> msgConsumer) {
@@ -45,11 +62,29 @@ public class BatchTbRuleEngineSubmitStrategy extends AbstractTbRuleEngineSubmitS
         submitNext();
     }
 
+    /**
+     * Updates update.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param reprocessMap reprocess map
+     * @return @Override
+    public void
+     */
+
     @Override
     public void update(ConcurrentMap<UUID, TbProtoQueueMsg<TransportProtos.ToRuleEngineMsg>> reprocessMap) {
         super.update(reprocessMap);
         packIdx.set(0);
     }
+
+    /**
+     * Do on success.
+     *
+     * <p>Default implementation inherited from the supertype.
+     * @param id id
+     * @return @Override
+    protected void
+     */
 
     @Override
     protected void doOnSuccess(UUID id) {

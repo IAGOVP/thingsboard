@@ -32,6 +32,11 @@ import org.thingsboard.server.queue.util.TbCoreComponent;
 import org.thingsboard.server.service.security.model.SecurityUser;
 
 import java.util.Map;
+/**
+ * Sms two fa provider for two-factor authentication (MFA).
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @TbCoreComponent
@@ -45,13 +50,27 @@ public class SmsTwoFaProvider extends OtpBasedTwoFaProvider<SmsTwoFaProviderConf
         this.smsService = smsService;
         this.auditLogService = auditLogService;
     }
-
-
+    /**
+     * Generate new account config.
+     *
+     * @param user user (User)
+     * @param providerConfig provider config (SmsTwoFaProviderConfig)
+     * @return {@link SmsTwoFaAccountConfig} result
+     */
     @Override
     public SmsTwoFaAccountConfig generateNewAccountConfig(User user, SmsTwoFaProviderConfig providerConfig) {
         return new SmsTwoFaAccountConfig();
     }
 
+    /**
+     * Send verification code.
+     *
+     * @param user user (SecurityUser)
+     * @param verificationCode verification code (String)
+     * @param providerConfig provider config (SmsTwoFaProviderConfig)
+     * @param accountConfig account config (SmsTwoFaAccountConfig)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     protected void sendVerificationCode(SecurityUser user, String verificationCode, SmsTwoFaProviderConfig providerConfig, SmsTwoFaAccountConfig accountConfig) throws ThingsboardException {
         Map<String, String> messageData = Map.of(
@@ -68,7 +87,12 @@ public class SmsTwoFaProvider extends OtpBasedTwoFaProvider<SmsTwoFaProviderConf
             throw e;
         }
     }
-
+    /**
+     * Check.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @throws ThingsboardException if the operation fails
+     */
     @Override
     public void check(TenantId tenantId) throws ThingsboardException {
         if (!smsService.isConfigured(tenantId)) {
@@ -77,6 +101,10 @@ public class SmsTwoFaProvider extends OtpBasedTwoFaProvider<SmsTwoFaProviderConf
     }
 
 
+    /**
+     * Returns type.
+     *
+     */
     @Override
     public TwoFaProviderType getType() {
         return TwoFaProviderType.SMS;

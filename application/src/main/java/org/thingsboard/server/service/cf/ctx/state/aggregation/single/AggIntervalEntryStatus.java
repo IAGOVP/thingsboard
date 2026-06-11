@@ -19,6 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+/**
+ * Agg interval entry status (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ */
 
 @Data
 @NoArgsConstructor
@@ -32,10 +35,23 @@ public class AggIntervalEntryStatus {
     public AggIntervalEntryStatus(long lastArgsRefreshTs) {
         this.lastArgsRefreshTs = lastArgsRefreshTs;
     }
+    /**
+     * Interval passed.
+     *
+     * @param checkInterval check interval
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean intervalPassed(long checkInterval) {
         return lastMetricsEvalTs <= System.currentTimeMillis() - checkInterval;
     }
+    /**
+     * Args updated.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @JsonIgnore
     public boolean argsUpdated() {

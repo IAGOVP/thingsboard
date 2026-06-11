@@ -21,6 +21,10 @@ import org.thingsboard.rule.engine.api.sms.exception.SmsParseException;
 
 import java.util.regex.Pattern;
 
+    /**
+     * Abstract sms sender (SMS provider abstraction and message sending).
+     */
+
 @Slf4j
 public abstract class AbstractSmsSender implements SmsSender {
 
@@ -28,6 +32,13 @@ public abstract class AbstractSmsSender implements SmsSender {
 
     private static final int MAX_SMS_MESSAGE_LENGTH = 1600;
     private static final int MAX_SMS_SEGMENT_LENGTH = 70;
+    /**
+     * Validates phone number.
+     *
+     * @param phoneNumber phone number ({@link String})
+     * @return {@link String}
+     * @throws SmsParseException if sms parse exception is thrown during processing
+     */
 
     protected String validatePhoneNumber(String phoneNumber) throws SmsParseException {
         phoneNumber = phoneNumber.trim();
@@ -36,6 +47,13 @@ public abstract class AbstractSmsSender implements SmsSender {
         }
         return phoneNumber;
     }
+    /**
+     * Prepare message.
+     *
+     * @param message message ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected String prepareMessage(String message) {
         message = message.replaceAll("^\"|\"$", "").replaceAll("\\\\n", "\n");
@@ -45,6 +63,13 @@ public abstract class AbstractSmsSender implements SmsSender {
         }
         return message;
     }
+    /**
+     * Counts message segments.
+     *
+     * @param message message ({@link String})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected int countMessageSegments(String message) {
         return (int)Math.ceil((double) message.length() / (double) MAX_SMS_SEGMENT_LENGTH);

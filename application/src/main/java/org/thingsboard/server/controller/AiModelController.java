@@ -58,6 +58,17 @@ import static org.thingsboard.server.controller.ControllerConstants.SORT_ORDER_D
 import static org.thingsboard.server.controller.ControllerConstants.SORT_PROPERTY_DESCRIPTION;
 import static org.thingsboard.server.controller.ControllerConstants.TENANT_AUTHORITY_PARAGRAPH;
 
+/**
+ * REST controller for AI model configuration and chat requests.
+ *
+ * <p>Base path: {@code /api/ai/model}.
+ *
+ * <p>Required auth roles: {@code TENANT_ADMIN}.
+ *
+ * <p>Related services: {@link org.thingsboard.server.service.ai.AiChatModelService},
+ * {@link org.thingsboard.server.service.entitiy.ai.TbAiModelService},
+ * {@link org.thingsboard.server.dao.ai.AiModelService}.
+ */
 @Validated
 @RestController
 @TbCoreComponent
@@ -67,6 +78,16 @@ class AiModelController extends BaseController {
 
     private final AiChatModelService aiChatModelService;
 
+    /**
+     * Create or update AI model (saveAiModel).
+     *
+     * <p>HTTP POST {@code /api/ai/model}.
+     *
+     * <p>{@code @PreAuthorize}: hasAuthority('TENANT_ADMIN').
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(
             value = "Create or update AI model (saveAiModel)",
             notes = "Creates or updates an AI model record.\n\n" +
@@ -84,6 +105,14 @@ class AiModelController extends BaseController {
         return tbAiModelService.save(model, user);
     }
 
+    /**
+     * Get AI model by ID (getAiModelById).
+     *
+     * <p>HTTP GET {@code /api/ai/model/{modelUuid}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(
             value = "Get AI model by ID (getAiModelById)",
             notes = "Fetches an AI model record by its `id`." +
@@ -102,6 +131,16 @@ class AiModelController extends BaseController {
         return checkAiModelId(new AiModelId(modelUuid), Operation.READ);
     }
 
+    /**
+     * Get AI models (getAiModels).
+     *
+     * <p>HTTP GET {@code /api/ai/model}.
+     *
+     * <p>{@code @PreAuthorize}: hasAuthority('TENANT_ADMIN').
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(
             value = "Get AI models (getAiModels)",
             notes = "Returns a page of AI models. " +
@@ -127,6 +166,14 @@ class AiModelController extends BaseController {
         return aiModelService.findAiModelsByTenantId(user.getTenantId(), pageLink);
     }
 
+    /**
+     * Delete AI model by ID (deleteAiModelById).
+     *
+     * <p>HTTP DELETE {@code /api/ai/model/{modelUuid}}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(
             value = "Delete AI model by ID (deleteAiModelById)",
             notes = "Deletes the AI model record by its `id`. " +
@@ -155,6 +202,14 @@ class AiModelController extends BaseController {
         return tbAiModelService.delete(toDelete.get(), user);
     }
 
+    /**
+     * Send request to AI chat model (sendChatRequest).
+     *
+     * <p>HTTP POST {@code /api/ai/model/chat}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(
             value = "Send request to AI chat model (sendChatRequest)",
             notes = "Submits a single prompt - made up of an optional system message and a required user message - to the specified AI chat model " +

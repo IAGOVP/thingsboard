@@ -51,6 +51,9 @@ import static org.thingsboard.server.queue.common.AbstractTbQueueTemplate.bytesT
 import static org.thingsboard.server.queue.common.AbstractTbQueueTemplate.bytesToUuid;
 import static org.thingsboard.server.queue.common.AbstractTbQueueTemplate.stringToBytes;
 import static org.thingsboard.server.queue.common.AbstractTbQueueTemplate.uuidToBytes;
+/**
+ * Spring service component for kafka calculated field state service (calculated fields (calculated-field argument resolution, runtime state, and result processing)).
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +72,13 @@ public class KafkaCalculatedFieldStateService extends AbstractCalculatedFieldSta
     private TbKafkaProducerTemplate<TbProtoQueueMsg<CalculatedFieldStateProto>> stateProducer;
 
     private final AtomicInteger counter = new AtomicInteger();
+    /**
+     * Init.
+     *
+     * @param eventConsumer event consumer ({@link PartitionedQueueConsumerManager})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void init(PartitionedQueueConsumerManager<TbProtoQueueMsg<ToCalculatedFieldMsg>> eventConsumer) {
@@ -81,6 +91,14 @@ public class KafkaCalculatedFieldStateService extends AbstractCalculatedFieldSta
                     CountDownLatch completionLatch = new CountDownLatch(msgs.size());
                     for (TbProtoQueueMsg<CalculatedFieldStateProto> msg : msgs) {
                         TbCallback callback = new TbCallback() {
+                            
+                            /**
+                             * Handles success.
+                             *
+                             * @return nothing
+                             * @throws Exception if an unexpected error occurs during processing
+                             */
+
                             @Override
                             public void onSuccess() {
                                 int processedMsgCount = counter.incrementAndGet();
@@ -89,6 +107,13 @@ public class KafkaCalculatedFieldStateService extends AbstractCalculatedFieldSta
                                 }
                                 completionLatch.countDown();
                             }
+                            /**
+                             * Handles failure.
+                             *
+                             * @param t t ({@link Throwable})
+                             * @return nothing
+                             * @throws Exception if an unexpected error occurs during processing
+                             */
 
                             @Override
                             public void onFailure(Throwable t) {
@@ -125,6 +150,15 @@ public class KafkaCalculatedFieldStateService extends AbstractCalculatedFieldSta
                 .build();
         this.stateProducer = (TbKafkaProducerTemplate<TbProtoQueueMsg<CalculatedFieldStateProto>>) queueFactory.createCalculatedFieldStateProducer();
     }
+    /**
+     * Do persist.
+     *
+     * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+     * @param stateMsgProto state msg proto ({@link CalculatedFieldStateProto})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void doPersist(CalculatedFieldEntityCtxId stateId, CalculatedFieldStateProto stateMsgProto, TbCallback callback) {
@@ -134,9 +168,25 @@ public class KafkaCalculatedFieldStateService extends AbstractCalculatedFieldSta
             putStateId(msg.getHeaders(), stateId);
         }
         stateProducer.send(tpi, stateId.toKey(), msg, new TbQueueCallback() {
+            
+            /**
+             * Handles success.
+             *
+             * @param metadata metadata ({@link TbQueueMsgMetadata})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
+
             @Override
             public void onSuccess(TbQueueMsgMetadata metadata) {
             }
+            /**
+             * Handles failure.
+             *
+             * @param t t ({@link Throwable})
+             * @return nothing
+             * @throws Exception if an unexpected error occurs during processing
+             */
 
             @Override
             public void onFailure(Throwable t) {
@@ -145,6 +195,14 @@ public class KafkaCalculatedFieldStateService extends AbstractCalculatedFieldSta
         });
         callback.onSuccess();
     }
+    /**
+     * Do remove.
+     *
+     * @param stateId state id ({@link CalculatedFieldEntityCtxId})
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void doRemove(CalculatedFieldEntityCtxId stateId, TbCallback callback) {
@@ -164,6 +222,12 @@ public class KafkaCalculatedFieldStateService extends AbstractCalculatedFieldSta
         EntityId entityId = EntityIdFactory.getByTypeAndUuid(bytesToString(headers.get("entityType")), bytesToUuid(headers.get("entityId")));
         return new CalculatedFieldEntityCtxId(tenantId, cfId, entityId);
     }
+    /**
+     * Stop.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void stop() {

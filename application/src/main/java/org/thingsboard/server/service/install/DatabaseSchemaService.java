@@ -15,11 +15,36 @@
  */
 package org.thingsboard.server.service.install;
 
+/**
+
+ * Service contract for database schema operations (database schema installation, upgrades, and demo data loading).
+
+ *
+
+ * <p>Implemented by the corresponding {@code Default*} class in this package.
+
+ */
+
 public interface DatabaseSchemaService {
 
     void createDatabaseSchema() throws Exception;
 
+    /**
+     * Creates database schema.
+     *
+     * @param createIndexes create indexes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     void createDatabaseSchema(boolean createIndexes) throws Exception;
+
+    /**
+     * Creates database indexes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void createDatabaseIndexes() throws Exception;
 

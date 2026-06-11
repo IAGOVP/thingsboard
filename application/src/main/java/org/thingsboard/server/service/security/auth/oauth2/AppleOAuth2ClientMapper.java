@@ -32,6 +32,11 @@ import org.thingsboard.server.service.security.model.SecurityUser;
 
 import java.util.HashMap;
 import java.util.Map;
+/**
+ * Apple oauth2client mapper for OAuth2 / social login.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service(value = "appleOAuth2ClientMapper")
 @Slf4j
@@ -43,7 +48,15 @@ public class AppleOAuth2ClientMapper extends AbstractOAuth2ClientMapper implemen
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
     private static final String EMAIL = "email";
-
+    /**
+     * Returns or create user by client principal.
+     *
+     * @param request request (HttpServletRequest)
+     * @param token token (OAuth2AuthenticationToken)
+     * @param providerAccessToken provider access token (String)
+     * @param oAuth2Client o auth2client (OAuth2Client)
+     * @return {@link SecurityUser} result
+     */
     @Override
     public SecurityUser getOrCreateUserByClientPrincipal(HttpServletRequest request, OAuth2AuthenticationToken token, String providerAccessToken, OAuth2Client oAuth2Client) {
         OAuth2MapperConfig config = oAuth2Client.getMapperConfig();

@@ -17,6 +17,10 @@ package org.thingsboard.server.service.telemetry;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+    /**
+     * Attribute data (telemetry subscription and WebSocket push to clients).
+     */
+
 @Schema
 public class AttributeData implements Comparable<AttributeData>{
 
@@ -30,21 +34,46 @@ public class AttributeData implements Comparable<AttributeData>{
         this.key = key;
         this.value = value;
     }
+    /**
+     * Returns last update ts.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Schema(description = "Timestamp last updated attribute, in milliseconds", example = "1609459200000", accessMode = Schema.AccessMode.READ_ONLY)
     public long getLastUpdateTs() {
         return lastUpdateTs;
     }
+    /**
+     * Returns key.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Schema(description = "String representing attribute key", example = "active", accessMode = Schema.AccessMode.READ_ONLY)
     public String getKey() {
         return key;
     }
+    /**
+     * Returns value.
+     *
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Schema(description = "Object representing value of attribute key", example = "false", accessMode = Schema.AccessMode.READ_ONLY)
     public Object getValue() {
         return value;
     }
+    /**
+     * Compares to.
+     *
+     * @param o o ({@link AttributeData})
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public int compareTo(AttributeData o) {

@@ -38,6 +38,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+    /**
+     * Default Spring implementation for tb device profile cache (device and asset profile resolution).
+     *
+     * <p>Registered as a {@code @Service} or {@code @Component} bean.
+     */
+
 @Service
 @Slf4j
 public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
@@ -55,6 +61,14 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
         this.deviceProfileService = deviceProfileService;
         this.deviceService = deviceService;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceProfile get(TenantId tenantId, DeviceProfileId deviceProfileId) {
@@ -77,6 +91,14 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
         log.trace("[{}] Found device profile in cache: {}", deviceProfileId, profile);
         return profile;
     }
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceProfile get(TenantId tenantId, DeviceId deviceId) {
@@ -92,6 +114,14 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
         }
         return get(tenantId, profileId);
     }
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileId profile id ({@link DeviceProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evict(TenantId tenantId, DeviceProfileId profileId) {
@@ -102,6 +132,14 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
             notifyProfileListeners(newProfile);
         }
     }
+    /**
+     * Evict.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param deviceId target device identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void evict(TenantId tenantId, DeviceId deviceId) {
@@ -113,6 +151,16 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
             }
         }
     }
+    /**
+     * Add listener.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param listenerId listener id ({@link EntityId})
+     * @param profileListener profile listener ({@link Consumer})
+     * @param deviceListener device listener ({@link BiConsumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addListener(TenantId tenantId, EntityId listenerId,
@@ -125,16 +173,39 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
             deviceProfileListeners.computeIfAbsent(tenantId, id -> new ConcurrentHashMap<>()).put(listenerId, deviceListener);
         }
     }
+    /**
+     * Finds the requested data.
+     *
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceProfile find(DeviceProfileId deviceProfileId) {
         return deviceProfileService.findDeviceProfileById(TenantId.SYS_TENANT_ID, deviceProfileId);
     }
+    /**
+     * Finds or create device profile.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param profileName profile name ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceProfile findOrCreateDeviceProfile(TenantId tenantId, String profileName) {
         return deviceProfileService.findOrCreateDeviceProfile(tenantId, profileName);
     }
+    /**
+     * Removes listener.
+     *
+     * @param tenantId tenant that owns the entity or operation
+     * @param listenerId listener id ({@link EntityId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeListener(TenantId tenantId, EntityId listenerId) {
@@ -147,6 +218,13 @@ public class DefaultTbDeviceProfileCache implements TbDeviceProfileCache {
             deviceListeners.remove(listenerId);
         }
     }
+    /**
+     * Handles component lifecycle event.
+     *
+     * @param event event ({@link ComponentLifecycleMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @EventListener(ComponentLifecycleMsg.class)
     public void onComponentLifecycleEvent(ComponentLifecycleMsg event) {

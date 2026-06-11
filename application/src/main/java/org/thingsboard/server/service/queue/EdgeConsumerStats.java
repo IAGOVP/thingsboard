@@ -24,6 +24,9 @@ import org.thingsboard.server.gen.transport.TransportProtos.ToEdgeNotificationMs
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * Consumer statistics counters for edge consumer stats.
+ */
 
 @Slf4j
 public class EdgeConsumerStats {
@@ -46,6 +49,11 @@ public class EdgeConsumerStats {
 
     private final List<StatsCounter> counters = new ArrayList<>(7);
 
+    /**
+     * Constructs {@link EdgeConsumerStats} with the supplied dependencies and configuration.
+     * @param statsFactory stats factory
+     */
+
     public EdgeConsumerStats(StatsFactory statsFactory) {
         String statsKey = StatsType.EDGE.getName();
 
@@ -63,6 +71,11 @@ public class EdgeConsumerStats {
         return counter;
     }
 
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
+
     public void log(ToEdgeNotificationMsg msg) {
         totalCounter.increment();
         if (msg.hasEdgeHighPriority()) {
@@ -78,12 +91,21 @@ public class EdgeConsumerStats {
         }
     }
 
+    /**
+     * Logs log.
+     * @param msg queue or transport message
+     */
+
     public void log(ToEdgeMsg msg) {
         totalCounter.increment();
         edgeNotificationsCounter.increment();
     }
 
-    public void printStats() {
+    /**
+     * Print stats.
+     */
+
+public void printStats() {
         int total = totalCounter.get();
         if (total > 0) {
             StringBuilder stats = new StringBuilder();
@@ -91,6 +113,22 @@ public class EdgeConsumerStats {
             log.info("Edge Stats: {}", stats);
         }
     }
+
+    /**
+     * Resets reset.
+     */
+
+    /**
+     * Resets.
+     */
+
+    /**
+     * Resets.
+     */
+
+    /**
+     * Resets.
+     */
 
     public void reset() {
         counters.forEach(StatsCounter::clear);

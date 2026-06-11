@@ -15,6 +15,10 @@
  */
 package org.thingsboard.server.service.subscription;
 
+/**
+ * Error codes returned to WebSocket clients when a subscription command fails.
+ */
+
 public enum SubscriptionErrorCode {
 
     NO_ERROR(0), INTERNAL_ERROR(1, "Internal Server error!"), BAD_REQUEST(2, "Bad request"), UNAUTHORIZED(3, "Unauthorized");
@@ -31,6 +35,12 @@ public enum SubscriptionErrorCode {
         this.defaultMsg = defaultMsg;
     }
 
+    /**
+     * For code.
+     * @param code code
+     * @return {@link SubscriptionErrorCode}
+     */
+
     public static SubscriptionErrorCode forCode(int code) {
         for (SubscriptionErrorCode errorCode : SubscriptionErrorCode.values()) {
             if (errorCode.getCode() == code) {
@@ -40,9 +50,19 @@ public enum SubscriptionErrorCode {
         throw new IllegalArgumentException("Invalid error code: " + code);
     }
 
-    public int getCode() {
+    /**
+     * Returns code.
+     * @return numeric result
+     */
+
+public int getCode() {
         return code;
     }
+
+    /**
+     * Returns default msg.
+     * @return string value
+     */
 
     public String getDefaultMsg() {
         return defaultMsg;

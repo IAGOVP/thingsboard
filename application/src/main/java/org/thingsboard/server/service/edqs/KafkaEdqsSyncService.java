@@ -25,6 +25,10 @@ import org.thingsboard.server.queue.kafka.KafkaAdmin;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+    /**
+     * Spring service component for kafka edqs sync service (Entity Data Query Service integration from tb-core).
+     */
+
 @Service
 @ConditionalOnExpression("'${queue.edqs.sync.enabled:true}' == 'true' && '${queue.type:null}' == 'kafka'")
 public class KafkaEdqsSyncService extends EdqsSyncService {
@@ -39,6 +43,12 @@ public class KafkaEdqsSyncService extends EdqsSyncService {
                         .build().getFullTopicName())
                 .collect(Collectors.toSet()));
     }
+    /**
+     * Is sync needed.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isSyncNeeded() {

@@ -141,8 +141,11 @@ import static org.thingsboard.server.common.data.msg.TbMsgType.ATTRIBUTES_UPDATE
 import static org.thingsboard.server.common.data.msg.TbMsgType.ENTITY_CREATED;
 
 /**
- * Created by ashvayka on 19.03.18.
+ * Default {@link org.thingsboard.rule.engine.api.TbContext} implementation passed to rule-engine components.
+ *
+ * <p>Provides enqueue, tell-next, alarm, attribute, and external service calls from within a rule node actor.
  */
+
 @Slf4j
 public class DefaultTbContext implements TbContext {
 
@@ -155,16 +158,39 @@ public class DefaultTbContext implements TbContext {
         this.ruleChainName = ruleChainName;
         this.nodeCtx = nodeCtx;
     }
+    /**
+     * Tell success.
+     *
+     * @param msg actor message to process
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void tellSuccess(TbMsg msg) {
         tellNext(msg, Collections.singleton(TbNodeConnectionType.SUCCESS));
     }
+    /**
+     * Tell next.
+     *
+     * @param msg actor message to process
+     * @param relationType relation type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void tellNext(TbMsg msg, String relationType) {
         tellNext(msg, Collections.singleton(relationType));
     }
+    /**
+     * Tell next.
+     *
+     * @param msg actor message to process
+     * @param relationTypes relation types ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void tellNext(TbMsg msg, Set<String> relationTypes) {
@@ -173,12 +199,28 @@ public class DefaultTbContext implements TbContext {
         msg.getCallback().onProcessingEnd(ruleNode.getId());
         nodeCtx.getChainActor().tell(new RuleNodeToRuleChainTellNextMsg(ruleNode.getRuleChainId(), ruleNode.getId(), relationTypes, msg, null));
     }
+    /**
+     * Tell self.
+     *
+     * @param msg actor message to process
+     * @param delayMs delay ms
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void tellSelf(TbMsg msg, long delayMs) {
         //TODO: add persistence layer
         scheduleMsgWithDelay(new RuleNodeToSelfMsg(this, msg), delayMs, nodeCtx.getSelfActor());
     }
+    /**
+     * Input.
+     *
+     * @param msg actor message to process
+     * @param ruleChainId target rule chain identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void input(TbMsg msg, RuleChainId ruleChainId) {
@@ -206,6 +248,14 @@ public class DefaultTbContext implements TbContext {
         TopicPartitionInfo tpi = resolvePartition(msg);
         doEnqueue(tpi, tbMsg, new SimpleTbQueueCallback(md -> ack(msg), t -> tellFailure(msg, t)));
     }
+    /**
+     * Output.
+     *
+     * @param msg actor message to process
+     * @param relationType relation type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void output(TbMsg msg, String relationType) {
@@ -217,11 +267,30 @@ public class DefaultTbContext implements TbContext {
             nodeCtx.getChainActor().tell(new RuleChainOutputMsg(item.getRuleChainId(), item.getRuleNodeId(), relationType, msg));
         }
     }
+    /**
+     * Enqueue.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param onSuccess on success ({@link Runnable})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueue(TbMsg tbMsg, Runnable onSuccess, Consumer<Throwable> onFailure) {
         enqueue(tbMsg, tbMsg.getQueueName(), onSuccess, onFailure);
     }
+    /**
+     * Enqueue.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param queueName queue name ({@link String})
+     * @param onSuccess on success ({@link Runnable})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueue(TbMsg tbMsg, String queueName, Runnable onSuccess, Consumer<Throwable> onFailure) {
@@ -261,48 +330,122 @@ public class DefaultTbContext implements TbContext {
                 .build();
         mainCtx.getClusterService().pushMsgToRuleEngine(tpi, tbMsg.getId(), msg, callback);
     }
+    /**
+     * Enqueue for tell failure.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param failureMessage failure message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueueForTellFailure(TbMsg tbMsg, String failureMessage) {
         TopicPartitionInfo tpi = resolvePartition(tbMsg);
         enqueueForTellNext(tpi, tbMsg, Collections.singleton(TbNodeConnectionType.FAILURE), failureMessage, null, null);
     }
+    /**
+     * Enqueue for tell failure.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param th th ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueueForTellFailure(TbMsg tbMsg, Throwable th) {
         TopicPartitionInfo tpi = resolvePartition(tbMsg);
         enqueueForTellNext(tpi, tbMsg, Collections.singleton(TbNodeConnectionType.FAILURE), getFailureMessage(th), null, null);
     }
+    /**
+     * Enqueue for tell next.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationType relation type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueueForTellNext(TbMsg tbMsg, String relationType) {
         TopicPartitionInfo tpi = resolvePartition(tbMsg);
         enqueueForTellNext(tpi, tbMsg, Collections.singleton(relationType), null, null, null);
     }
+    /**
+     * Enqueue for tell next.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationTypes relation types ({@link Set})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueueForTellNext(TbMsg tbMsg, Set<String> relationTypes) {
         TopicPartitionInfo tpi = resolvePartition(tbMsg);
         enqueueForTellNext(tpi, tbMsg, relationTypes, null, null, null);
     }
+    /**
+     * Enqueue for tell next.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationType relation type ({@link String})
+     * @param onSuccess on success ({@link Runnable})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueueForTellNext(TbMsg tbMsg, String relationType, Runnable onSuccess, Consumer<Throwable> onFailure) {
         TopicPartitionInfo tpi = resolvePartition(tbMsg);
         enqueueForTellNext(tpi, tbMsg, Collections.singleton(relationType), null, onSuccess, onFailure);
     }
+    /**
+     * Enqueue for tell next.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param relationTypes relation types ({@link Set})
+     * @param onSuccess on success ({@link Runnable})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueueForTellNext(TbMsg tbMsg, Set<String> relationTypes, Runnable onSuccess, Consumer<Throwable> onFailure) {
         TopicPartitionInfo tpi = resolvePartition(tbMsg);
         enqueueForTellNext(tpi, tbMsg, relationTypes, null, onSuccess, onFailure);
     }
+    /**
+     * Enqueue for tell next.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param queueName queue name ({@link String})
+     * @param relationType relation type ({@link String})
+     * @param onSuccess on success ({@link Runnable})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueueForTellNext(TbMsg tbMsg, String queueName, String relationType, Runnable onSuccess, Consumer<Throwable> onFailure) {
         TopicPartitionInfo tpi = resolvePartition(tbMsg, queueName);
         enqueueForTellNext(tpi, queueName, tbMsg, Collections.singleton(relationType), null, onSuccess, onFailure);
     }
+    /**
+     * Enqueue for tell next.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @param queueName queue name ({@link String})
+     * @param relationTypes relation types ({@link Set})
+     * @param onSuccess on success ({@link Runnable})
+     * @param onFailure on failure ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void enqueueForTellNext(TbMsg tbMsg, String queueName, Set<String> relationTypes, Runnable onSuccess, Consumer<Throwable> onFailure) {
@@ -357,6 +500,13 @@ public class DefaultTbContext implements TbContext {
                     }
                 }));
     }
+    /**
+     * Ack.
+     *
+     * @param tbMsg tb msg ({@link TbMsg})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void ack(TbMsg tbMsg) {
@@ -365,6 +515,13 @@ public class DefaultTbContext implements TbContext {
         tbMsg.getCallback().onProcessingEnd(ruleNode.getId());
         tbMsg.getCallback().onSuccess();
     }
+    /**
+     * Is local entity.
+     *
+     * @param entityId target entity identifier
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isLocalEntity(EntityId entityId) {
@@ -374,6 +531,14 @@ public class DefaultTbContext implements TbContext {
     private void scheduleMsgWithDelay(TbActorMsg msg, long delayInMs, TbActorRef target) {
         mainCtx.scheduleMsgWithDelay(target, msg, delayInMs);
     }
+    /**
+     * Tell failure.
+     *
+     * @param msg actor message to process
+     * @param th th ({@link Throwable})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void tellFailure(TbMsg msg, Throwable th) {
@@ -384,10 +549,29 @@ public class DefaultTbContext implements TbContext {
                 ruleNode.getId(), Collections.singleton(TbNodeConnectionType.FAILURE),
                 msg, failureMessage));
     }
+    /**
+     * Updates self.
+     *
+     * @param self self ({@link RuleNode})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateSelf(RuleNode self) {
         nodeCtx.setSelf(self);
     }
+    /**
+     * New msg.
+     *
+     * @param queueName queue name ({@link String})
+     * @param type type ({@link String})
+     * @param originator originator ({@link EntityId})
+     * @param customerId customer id ({@link CustomerId})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg newMsg(String queueName, String type, EntityId originator, CustomerId customerId, TbMsgMetaData metaData, String data) {
@@ -402,6 +586,17 @@ public class DefaultTbContext implements TbContext {
                 .ruleNodeId(nodeCtx.getSelf().getId())
                 .build();
     }
+    /**
+     * Transform msg.
+     *
+     * @param origMsg orig msg ({@link TbMsg})
+     * @param type type ({@link String})
+     * @param originator originator ({@link EntityId})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg transformMsg(TbMsg origMsg, String type, EntityId originator, TbMsgMetaData metaData, String data) {
@@ -412,11 +607,34 @@ public class DefaultTbContext implements TbContext {
                 .data(data)
                 .build();
     }
+    /**
+     * New msg.
+     *
+     * @param queueName queue name ({@link String})
+     * @param type type ({@link TbMsgType})
+     * @param originator originator ({@link EntityId})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg newMsg(String queueName, TbMsgType type, EntityId originator, TbMsgMetaData metaData, String data) {
         return newMsg(queueName, type, originator, null, metaData, data);
     }
+    /**
+     * New msg.
+     *
+     * @param queueName queue name ({@link String})
+     * @param type type ({@link TbMsgType})
+     * @param originator originator ({@link EntityId})
+     * @param customerId customer id ({@link CustomerId})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg newMsg(String queueName, TbMsgType type, EntityId originator, CustomerId customerId, TbMsgMetaData metaData, String data) {
@@ -431,6 +649,17 @@ public class DefaultTbContext implements TbContext {
                 .ruleNodeId(nodeCtx.getSelf().getId())
                 .build();
     }
+    /**
+     * Transform msg.
+     *
+     * @param origMsg orig msg ({@link TbMsg})
+     * @param type type ({@link TbMsgType})
+     * @param originator originator ({@link EntityId})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg transformMsg(TbMsg origMsg, TbMsgType type, EntityId originator, TbMsgMetaData metaData, String data) {
@@ -441,6 +670,15 @@ public class DefaultTbContext implements TbContext {
                 .data(data)
                 .build();
     }
+    /**
+     * Transform msg.
+     *
+     * @param origMsg orig msg ({@link TbMsg})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg transformMsg(TbMsg origMsg, TbMsgMetaData metaData, String data) {
@@ -449,6 +687,14 @@ public class DefaultTbContext implements TbContext {
                 .data(data)
                 .build();
     }
+    /**
+     * Transform msg originator.
+     *
+     * @param origMsg orig msg ({@link TbMsg})
+     * @param originator originator ({@link EntityId})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg transformMsgOriginator(TbMsg origMsg, EntityId originator) {
@@ -456,11 +702,27 @@ public class DefaultTbContext implements TbContext {
                 .originator(originator)
                 .build();
     }
+    /**
+     * Customer created msg.
+     *
+     * @param customer customer ({@link Customer})
+     * @param ruleNodeId target rule node identifier
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg customerCreatedMsg(Customer customer, RuleNodeId ruleNodeId) {
         return entityActionMsg(customer, customer.getId(), ruleNodeId, ENTITY_CREATED);
     }
+    /**
+     * Device created msg.
+     *
+     * @param device device ({@link Device})
+     * @param ruleNodeId target rule node identifier
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg deviceCreatedMsg(Device device, RuleNodeId ruleNodeId) {
@@ -470,6 +732,14 @@ public class DefaultTbContext implements TbContext {
         }
         return entityActionMsg(device, device.getId(), ruleNodeId, ENTITY_CREATED, deviceProfile);
     }
+    /**
+     * Asset created msg.
+     *
+     * @param asset asset ({@link Asset})
+     * @param ruleNodeId target rule node identifier
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg assetCreatedMsg(Asset asset, RuleNodeId ruleNodeId) {
@@ -479,6 +749,15 @@ public class DefaultTbContext implements TbContext {
         }
         return entityActionMsg(asset, asset.getId(), ruleNodeId, ENTITY_CREATED, assetProfile);
     }
+    /**
+     * Alarm action msg.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param ruleNodeId target rule node identifier
+     * @param action action ({@link String})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg alarmActionMsg(Alarm alarm, RuleNodeId ruleNodeId, String action) {
@@ -486,6 +765,15 @@ public class DefaultTbContext implements TbContext {
         HasRuleEngineProfile profile = getRuleEngineProfile(originator);
         return entityActionMsg(alarm, originator, ruleNodeId, action, profile);
     }
+    /**
+     * Alarm action msg.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @param ruleNodeId target rule node identifier
+     * @param actionMsgType action msg type ({@link TbMsgType})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg alarmActionMsg(Alarm alarm, RuleNodeId ruleNodeId, TbMsgType actionMsgType) {
@@ -505,6 +793,16 @@ public class DefaultTbContext implements TbContext {
         }
         return profile;
     }
+    /**
+     * Attributes updated action msg.
+     *
+     * @param originator originator ({@link EntityId})
+     * @param ruleNodeId target rule node identifier
+     * @param scope scope ({@link String})
+     * @param attributes attributes ({@link List})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg attributesUpdatedActionMsg(EntityId originator, RuleNodeId ruleNodeId, String scope, List<AttributeKvEntry> attributes) {
@@ -514,6 +812,16 @@ public class DefaultTbContext implements TbContext {
         }
         return attributesActionMsg(originator, ruleNodeId, scope, ATTRIBUTES_UPDATED, JacksonUtil.toString(entityNode));
     }
+    /**
+     * Attributes deleted action msg.
+     *
+     * @param originator originator ({@link EntityId})
+     * @param ruleNodeId target rule node identifier
+     * @param scope scope ({@link String})
+     * @param keys keys ({@link List})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsg attributesDeletedActionMsg(EntityId originator, RuleNodeId ruleNodeId, String scope, List<String> keys) {
@@ -531,10 +839,31 @@ public class DefaultTbContext implements TbContext {
         HasRuleEngineProfile profile = getRuleEngineProfile(originator);
         return entityActionMsg(originator, tbMsgMetaData, msgData, actionMsgType, profile);
     }
+    /**
+     * Entity action msg.
+     *
+     * @param entity entity ({@link E})
+     * @param id id ({@link I})
+     * @param ruleNodeId target rule node identifier
+     * @param actionMsgType action msg type ({@link TbMsgType})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public <E, I extends EntityId> TbMsg entityActionMsg(E entity, I id, RuleNodeId ruleNodeId, TbMsgType actionMsgType) {
         return entityActionMsg(entity, id, ruleNodeId, actionMsgType, null);
     }
+    /**
+     * Entity action msg.
+     *
+     * @param entity entity ({@link E})
+     * @param id id ({@link I})
+     * @param ruleNodeId target rule node identifier
+     * @param action action ({@link String})
+     * @param profile profile ({@link K})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Deprecated(since = "3.6.0", forRemoval = true)
     public <E, I extends EntityId, K extends HasRuleEngineProfile> TbMsg entityActionMsg(E entity, I id, RuleNodeId ruleNodeId, String action, K profile) {
@@ -562,6 +891,17 @@ public class DefaultTbContext implements TbContext {
                 .ruleChainId(defaultRuleChainId)
                 .build();
     }
+    /**
+     * Entity action msg.
+     *
+     * @param entity entity ({@link E})
+     * @param id id ({@link I})
+     * @param ruleNodeId target rule node identifier
+     * @param actionMsgType action msg type ({@link TbMsgType})
+     * @param profile profile ({@link K})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public <E, I extends EntityId, K extends HasRuleEngineProfile> TbMsg entityActionMsg(E entity, I id, RuleNodeId ruleNodeId, TbMsgType actionMsgType, K profile) {
         try {
@@ -587,61 +927,135 @@ public class DefaultTbContext implements TbContext {
                 .ruleChainId(defaultRuleChainId)
                 .build();
     }
+    /**
+     * Returns self id.
+     *
+     * @return {@link RuleNodeId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNodeId getSelfId() {
         return nodeCtx.getSelf().getId();
     }
+    /**
+     * Returns self.
+     *
+     * @return {@link RuleNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNode getSelf() {
         return nodeCtx.getSelf();
     }
+    /**
+     * Returns rule chain name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getRuleChainName() {
         return ruleChainName;
     }
+    /**
+     * Returns queue name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getQueueName() {
         return getSelf().getQueueName();
     }
+    /**
+     * Returns tenant id.
+     *
+     * @return {@link TenantId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantId getTenantId() {
         return nodeCtx.getTenantId();
     }
+    /**
+     * Returns mail executor.
+     *
+     * @return {@link ListeningExecutor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListeningExecutor getMailExecutor() {
         return mainCtx.getMailExecutor();
     }
+    /**
+     * Returns sms executor.
+     *
+     * @return {@link ListeningExecutor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListeningExecutor getSmsExecutor() {
         return mainCtx.getSmsExecutor();
     }
+    /**
+     * Returns db callback executor.
+     *
+     * @return {@link ListeningExecutor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListeningExecutor getDbCallbackExecutor() {
         return mainCtx.getDbCallbackExecutor();
     }
+    /**
+     * Returns external call executor.
+     *
+     * @return {@link ListeningExecutor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListeningExecutor getExternalCallExecutor() {
         return mainCtx.getExternalCallExecutorService();
     }
+    /**
+     * Returns notification executor.
+     *
+     * @return {@link ListeningExecutor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListeningExecutor getNotificationExecutor() {
         return mainCtx.getNotificationExecutor();
     }
+    /**
+     * Returns pub sub rule node executor provider.
+     *
+     * @return {@link PubSubRuleNodeExecutorProvider}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PubSubRuleNodeExecutorProvider getPubSubRuleNodeExecutorProvider() {
         return mainCtx.getPubSubRuleNodeExecutorProvider();
     }
+    /**
+     * Creates js script engine.
+     *
+     * @param script script ({@link String})
+     * @param argNames arg names
+     * @return {@link ScriptEngine}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     @Deprecated
@@ -655,6 +1069,15 @@ public class DefaultTbContext implements TbContext {
         }
         return new RuleNodeTbelScriptEngine(getTenantId(), mainCtx.getTbelInvokeService(), script, argNames);
     }
+    /**
+     * Creates script engine.
+     *
+     * @param scriptLang script lang ({@link ScriptLanguage})
+     * @param script script ({@link String})
+     * @param argNames arg names
+     * @return {@link ScriptEngine}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ScriptEngine createScriptEngine(ScriptLanguage scriptLang, String script, String... argNames) {
@@ -677,161 +1100,354 @@ public class DefaultTbContext implements TbContext {
                 throw new RuntimeException("Unsupported script language: " + scriptLang.name());
         }
     }
+    /**
+     * Returns service id.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getServiceId() {
         return mainCtx.getServiceInfoProvider().getServiceId();
     }
+    /**
+     * Returns attributes service.
+     *
+     * @return {@link AttributesService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AttributesService getAttributesService() {
         return mainCtx.getAttributesService();
     }
+    /**
+     * Returns customer service.
+     *
+     * @return {@link CustomerService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CustomerService getCustomerService() {
         return mainCtx.getCustomerService();
     }
+    /**
+     * Returns tenant service.
+     *
+     * @return {@link TenantService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantService getTenantService() {
         return mainCtx.getTenantService();
     }
+    /**
+     * Returns user service.
+     *
+     * @return {@link UserService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UserService getUserService() {
         return mainCtx.getUserService();
     }
+    /**
+     * Returns asset service.
+     *
+     * @return {@link AssetService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetService getAssetService() {
         return mainCtx.getAssetService();
     }
+    /**
+     * Returns device service.
+     *
+     * @return {@link DeviceService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceService getDeviceService() {
         return mainCtx.getDeviceService();
     }
+    /**
+     * Returns device profile service.
+     *
+     * @return {@link DeviceProfileService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceProfileService getDeviceProfileService() {
         return mainCtx.getDeviceProfileService();
     }
+    /**
+     * Returns asset profile service.
+     *
+     * @return {@link AssetProfileService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AssetProfileService getAssetProfileService() {
         return mainCtx.getAssetProfileService();
     }
+    /**
+     * Returns device credentials service.
+     *
+     * @return {@link DeviceCredentialsService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceCredentialsService getDeviceCredentialsService() {
         return mainCtx.getDeviceCredentialsService();
     }
+    /**
+     * Returns device state manager.
+     *
+     * @return {@link DeviceStateManager}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DeviceStateManager getDeviceStateManager() {
         return mainCtx.getDeviceStateManager();
     }
+    /**
+     * Returns device state node rate limit config.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getDeviceStateNodeRateLimitConfig() {
         return mainCtx.getDeviceStateNodeRateLimitConfig();
     }
+    /**
+     * Returns cluster service.
+     *
+     * @return {@link TbClusterService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbClusterService getClusterService() {
         return mainCtx.getClusterService();
     }
+    /**
+     * Returns dashboard service.
+     *
+     * @return {@link DashboardService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DashboardService getDashboardService() {
         return mainCtx.getDashboardService();
     }
+    /**
+     * Returns alarm service.
+     *
+     * @return {@link RuleEngineAlarmService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleEngineAlarmService getAlarmService() {
         return mainCtx.getAlarmService();
     }
+    /**
+     * Returns alarm comment service.
+     *
+     * @return {@link AlarmCommentService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AlarmCommentService getAlarmCommentService() {
         return mainCtx.getAlarmCommentService();
     }
+    /**
+     * Returns rule chain service.
+     *
+     * @return {@link RuleChainService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleChainService getRuleChainService() {
         return mainCtx.getRuleChainService();
     }
+    /**
+     * Returns timeseries service.
+     *
+     * @return {@link TimeseriesService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TimeseriesService getTimeseriesService() {
         return mainCtx.getTsService();
     }
+    /**
+     * Returns telemetry service.
+     *
+     * @return {@link RuleEngineTelemetryService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleEngineTelemetryService getTelemetryService() {
         return mainCtx.getTsSubService();
     }
+    /**
+     * Returns relation service.
+     *
+     * @return {@link RelationService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RelationService getRelationService() {
         return mainCtx.getRelationService();
     }
+    /**
+     * Returns entity view service.
+     *
+     * @return {@link EntityViewService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityViewService getEntityViewService() {
         return mainCtx.getEntityViewService();
     }
+    /**
+     * Returns resource service.
+     *
+     * @return {@link ResourceService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ResourceService getResourceService() {
         return mainCtx.getResourceService();
     }
+    /**
+     * Returns tb resource data cache.
+     *
+     * @return {@link TbResourceDataCache}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResourceDataCache getTbResourceDataCache() {
         return mainCtx.getResourceDataCache();
     }
+    /**
+     * Returns ota package service.
+     *
+     * @return {@link OtaPackageService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public OtaPackageService getOtaPackageService() {
         return mainCtx.getOtaPackageService();
     }
+    /**
+     * Returns device profile cache.
+     *
+     * @return {@link RuleEngineDeviceProfileCache}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleEngineDeviceProfileCache getDeviceProfileCache() {
         return mainCtx.getDeviceProfileCache();
     }
+    /**
+     * Returns asset profile cache.
+     *
+     * @return {@link RuleEngineAssetProfileCache}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleEngineAssetProfileCache getAssetProfileCache() {
         return mainCtx.getAssetProfileCache();
     }
+    /**
+     * Returns edge service.
+     *
+     * @return {@link EdgeService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EdgeService getEdgeService() {
         return mainCtx.getEdgeService();
     }
+    /**
+     * Returns edge event service.
+     *
+     * @return {@link EdgeEventService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EdgeEventService getEdgeEventService() {
         return mainCtx.getEdgeEventService();
     }
+    /**
+     * Returns queue service.
+     *
+     * @return {@link QueueService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public QueueService getQueueService() {
         return mainCtx.getQueueService();
     }
+    /**
+     * Returns queue stats service.
+     *
+     * @return {@link QueueStatsService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public QueueStatsService getQueueStatsService() {
         return mainCtx.getQueueStatsService();
     }
+    /**
+     * Returns shared event loop.
+     *
+     * @return {@link EventLoopGroup}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EventLoopGroup getSharedEventLoop() {
         return mainCtx.getSharedEventLoopGroupService().getSharedEventLoopGroup();
     }
+    /**
+     * Returns mail service.
+     *
+     * @param isSystem is system
+     * @return {@link MailService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MailService getMailService(boolean isSystem) {
@@ -841,6 +1457,12 @@ public class DefaultTbContext implements TbContext {
             throw new RuntimeException("Access to System Mail Service is forbidden!");
         }
     }
+    /**
+     * Returns sms service.
+     *
+     * @return {@link SmsService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public SmsService getSmsService() {
@@ -850,111 +1472,246 @@ public class DefaultTbContext implements TbContext {
             throw new RuntimeException("Access to System SMS Service is forbidden!");
         }
     }
+    /**
+     * Returns sms sender factory.
+     *
+     * @return {@link SmsSenderFactory}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public SmsSenderFactory getSmsSenderFactory() {
         return mainCtx.getSmsSenderFactory();
     }
+    /**
+     * Returns notification center.
+     *
+     * @return {@link NotificationCenter}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationCenter getNotificationCenter() {
         return mainCtx.getNotificationCenter();
     }
+    /**
+     * Returns notification target service.
+     *
+     * @return {@link NotificationTargetService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationTargetService getNotificationTargetService() {
         return mainCtx.getNotificationTargetService();
     }
+    /**
+     * Returns notification template service.
+     *
+     * @return {@link NotificationTemplateService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationTemplateService getNotificationTemplateService() {
         return mainCtx.getNotificationTemplateService();
     }
+    /**
+     * Returns notification request service.
+     *
+     * @return {@link NotificationRequestService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRequestService getNotificationRequestService() {
         return mainCtx.getNotificationRequestService();
     }
+    /**
+     * Returns notification rule service.
+     *
+     * @return {@link NotificationRuleService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NotificationRuleService getNotificationRuleService() {
         return mainCtx.getNotificationRuleService();
     }
+    /**
+     * Returns oauth2client service.
+     *
+     * @return {@link OAuth2ClientService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public OAuth2ClientService getOAuth2ClientService() {
         return mainCtx.getOAuth2ClientService();
     }
+    /**
+     * Returns domain service.
+     *
+     * @return {@link DomainService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public DomainService getDomainService() {
         return mainCtx.getDomainService();
     }
+    /**
+     * Returns mobile app service.
+     *
+     * @return {@link MobileAppService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileAppService getMobileAppService() {
         return mainCtx.getMobileAppService();
     }
+    /**
+     * Returns mobile app bundle service.
+     *
+     * @return {@link MobileAppBundleService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MobileAppBundleService getMobileAppBundleService() {
         return mainCtx.getMobileAppBundleService();
     }
+    /**
+     * Returns slack service.
+     *
+     * @return {@link SlackService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public SlackService getSlackService() {
         return mainCtx.getSlackService();
     }
+    /**
+     * Returns calculated field service.
+     *
+     * @return {@link CalculatedFieldService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculatedFieldService getCalculatedFieldService() {
         return mainCtx.getCalculatedFieldService();
     }
+    /**
+     * Returns calculated field queue service.
+     *
+     * @return {@link RuleEngineCalculatedFieldQueueService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleEngineCalculatedFieldQueueService getCalculatedFieldQueueService() {
         return mainCtx.getCalculatedFieldQueueService();
     }
+    /**
+     * Returns job service.
+     *
+     * @return {@link JobService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JobService getJobService() {
         return mainCtx.getJobService();
     }
+    /**
+     * Returns job manager.
+     *
+     * @return {@link JobManager}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public JobManager getJobManager() {
         return mainCtx.getJobManager();
     }
+    /**
+     * Returns api key service.
+     *
+     * @return {@link ApiKeyService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ApiKeyService getApiKeyService() {
         return mainCtx.getApiKeyService();
     }
+    /**
+     * Is external node force ack.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isExternalNodeForceAck() {
         return mainCtx.isExternalNodeForceAck();
     }
+    /**
+     * Returns rpc service.
+     *
+     * @return {@link RuleEngineRpcService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleEngineRpcService getRpcService() {
         return mainCtx.getTbRuleEngineDeviceRpcService();
     }
+    /**
+     * Returns cassandra cluster.
+     *
+     * @return {@link CassandraCluster}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CassandraCluster getCassandraCluster() {
         return mainCtx.getCassandraCluster();
     }
+    /**
+     * Submit cassandra read task.
+     *
+     * @param task task ({@link CassandraStatementTask})
+     * @return {@link TbResultSetFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResultSetFuture submitCassandraReadTask(CassandraStatementTask task) {
         return mainCtx.getCassandraBufferedRateReadExecutor().submit(task);
     }
+    /**
+     * Submit cassandra write task.
+     *
+     * @param task task ({@link CassandraStatementTask})
+     * @return {@link TbResultSetFuture}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbResultSetFuture submitCassandraWriteTask(CassandraStatementTask task) {
         return mainCtx.getCassandraBufferedRateWriteExecutor().submit(task);
     }
+    /**
+     * Finds rule node states.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public PageData<RuleNodeState> findRuleNodeStates(PageLink pageLink) {
@@ -963,6 +1720,13 @@ public class DefaultTbContext implements TbContext {
         }
         return mainCtx.getRuleNodeStateService().findByRuleNodeId(getTenantId(), getSelfId(), pageLink);
     }
+    /**
+     * Finds rule node state for entity.
+     *
+     * @param entityId target entity identifier
+     * @return {@link RuleNodeState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNodeState findRuleNodeStateForEntity(EntityId entityId) {
@@ -971,6 +1735,13 @@ public class DefaultTbContext implements TbContext {
         }
         return mainCtx.getRuleNodeStateService().findByRuleNodeIdAndEntityId(getTenantId(), getSelfId(), entityId);
     }
+    /**
+     * Saves or persists rule node state.
+     *
+     * @param state state ({@link RuleNodeState})
+     * @return {@link RuleNodeState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleNodeState saveRuleNodeState(RuleNodeState state) {
@@ -980,6 +1751,12 @@ public class DefaultTbContext implements TbContext {
         state.setRuleNodeId(getSelfId());
         return mainCtx.getRuleNodeStateService().save(getTenantId(), state);
     }
+    /**
+     * Clear rule node states.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void clearRuleNodeStates() {
@@ -988,6 +1765,13 @@ public class DefaultTbContext implements TbContext {
         }
         mainCtx.getRuleNodeStateService().removeByRuleNodeId(getTenantId(), getSelfId());
     }
+    /**
+     * Removes rule node state for entity.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeRuleNodeStateForEntity(EntityId entityId) {
@@ -996,21 +1780,50 @@ public class DefaultTbContext implements TbContext {
         }
         mainCtx.getRuleNodeStateService().removeByRuleNodeIdAndEntityId(getTenantId(), getSelfId(), entityId);
     }
+    /**
+     * Add tenant profile listener.
+     *
+     * @param listener listener ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addTenantProfileListener(Consumer<TenantProfile> listener) {
         mainCtx.getTenantProfileCache().addListener(getTenantId(), getSelfId(), listener);
     }
+    /**
+     * Add device profile listeners.
+     *
+     * @param profileListener profile listener ({@link Consumer})
+     * @param deviceListener device listener ({@link BiConsumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addDeviceProfileListeners(Consumer<DeviceProfile> profileListener, BiConsumer<DeviceId, DeviceProfile> deviceListener) {
         mainCtx.getDeviceProfileCache().addListener(getTenantId(), getSelfId(), profileListener, deviceListener);
     }
+    /**
+     * Add asset profile listeners.
+     *
+     * @param profileListener profile listener ({@link Consumer})
+     * @param assetListener asset listener ({@link BiConsumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void addAssetProfileListeners(Consumer<AssetProfile> profileListener, BiConsumer<AssetId, AssetProfile> assetListener) {
         mainCtx.getAssetProfileCache().addListener(getTenantId(), getSelfId(), profileListener, assetListener);
     }
+    /**
+     * Removes listeners.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void removeListeners() {
@@ -1018,56 +1831,122 @@ public class DefaultTbContext implements TbContext {
         mainCtx.getAssetProfileCache().removeListener(getTenantId(), getSelfId());
         mainCtx.getTenantProfileCache().removeListener(getTenantId(), getSelfId());
     }
+    /**
+     * Returns tenant profile.
+     *
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TenantProfile getTenantProfile() {
         return mainCtx.getTenantProfileCache().get(getTenantId());
     }
+    /**
+     * Returns widget bundle service.
+     *
+     * @return {@link WidgetsBundleService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetsBundleService getWidgetBundleService() {
         return mainCtx.getWidgetsBundleService();
     }
+    /**
+     * Returns widget type service.
+     *
+     * @return {@link WidgetTypeService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WidgetTypeService getWidgetTypeService() {
         return mainCtx.getWidgetTypeService();
     }
+    /**
+     * Returns rule engine api usage state service.
+     *
+     * @return {@link RuleEngineApiUsageStateService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleEngineApiUsageStateService getRuleEngineApiUsageStateService() {
         return mainCtx.getApiUsageStateService();
     }
+    /**
+     * Returns entity service.
+     *
+     * @return {@link EntityService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityService getEntityService() {
         return mainCtx.getEntityService();
     }
+    /**
+     * Returns event service.
+     *
+     * @return {@link EventService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EventService getEventService() {
         return mainCtx.getEventService();
     }
+    /**
+     * Returns audit log service.
+     *
+     * @return {@link AuditLogService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AuditLogService getAuditLogService() {
         return mainCtx.getAuditLogService();
     }
+    /**
+     * Returns ai chat model service.
+     *
+     * @return {@link RuleEngineAiChatModelService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public RuleEngineAiChatModelService getAiChatModelService() {
         return mainCtx.getAiChatModelService();
     }
+    /**
+     * Returns ai model service.
+     *
+     * @return {@link AiModelService}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public AiModelService getAiModelService() {
         return mainCtx.getAiModelService();
     }
+    /**
+     * Returns mqtt client settings.
+     *
+     * @return {@link MqttClientSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public MqttClientSettings getMqttClientSettings() {
         return mainCtx.getMqttClientSettings();
     }
+    /**
+     * Returns tb http client settings.
+     *
+     * @return {@link TbHttpClientSettings}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbHttpClientSettings getTbHttpClientSettings() {
@@ -1079,11 +1958,27 @@ public class DefaultTbContext implements TbContext {
         metaData.putValue("ruleNodeId", ruleNodeId.toString());
         return metaData;
     }
+    /**
+     * Schedule.
+     *
+     * @param runnable runnable ({@link Runnable})
+     * @param delay delay
+     * @param timeUnit time unit ({@link TimeUnit})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void schedule(Runnable runnable, long delay, TimeUnit timeUnit) {
         mainCtx.getScheduler().schedule(runnable, delay, timeUnit);
     }
+    /**
+     * Checks tenant entity.
+     *
+     * @param entityId target entity identifier
+     * @return nothing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void checkTenantEntity(EntityId entityId) throws TbNodeException {

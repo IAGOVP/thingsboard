@@ -26,7 +26,10 @@ import org.thingsboard.server.service.cf.ctx.state.CalculatedFieldCtx;
 
 import java.util.List;
 
-/** Entity actor: linked-entity telemetry for CF arguments. */
+/**
+ * Linked-entity telemetry delivered to a calculated-field entity actor.
+ */
+
 @Data
 public class EntityCalculatedFieldLinkedTelemetryMsg implements ToCalculatedFieldSystemMsg {
 
@@ -35,6 +38,14 @@ public class EntityCalculatedFieldLinkedTelemetryMsg implements ToCalculatedFiel
     private final CalculatedFieldTelemetryMsgProto proto;
     private final CalculatedFieldCtx ctx;
     private final TbCallback callback;
+    
+    /**
+     * Returns the {@link org.thingsboard.server.common.msg.MsgType} discriminator for this message.
+     *
+     * @return {@link MsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @Override
     public MsgType getMsgType() {

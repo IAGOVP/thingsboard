@@ -36,6 +36,9 @@ import java.util.Map;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type"
+/**
+ * Argument or aggregation entry for calculated-field state (argument entry).
+ */
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = SingleValueArgumentEntry.class, name = "SINGLE_VALUE"),
@@ -46,47 +49,193 @@ import java.util.Map;
         @JsonSubTypes.Type(value = EntityAggregationArgumentEntry.class, name = "ENTITY_AGGREGATION")
 })
 public interface ArgumentEntry {
+    
+    /**
+     * Returns type.
+     *
+     * @return {@link ArgumentEntryType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     @JsonIgnore
     ArgumentEntryType getType();
+/**
+ * Returns value.
+ *
+ * @return {@link Object}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     Object getValue();
+/**
+ * Updates entry.
+ *
+ * @param entry entry ({@link ArgumentEntry})
+ * @param ctx calculated-field execution context
+ * @return the boolean result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     boolean updateEntry(ArgumentEntry entry, CalculatedFieldCtx ctx);
+/**
+ * Is empty.
+ *
+ * @return the boolean result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     boolean isEmpty();
+/**
+ * Json value.
+ *
+ * @return {@link JsonNode}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     default JsonNode jsonValue() {
         return JacksonUtil.valueToTree(toTbelCfArg());
     }
+/**
+ * To tbel cf arg.
+ *
+ * @return {@link TbelCfArg}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     TbelCfArg toTbelCfArg();
+/**
+ * Is force reset previous.
+ *
+ * @return the boolean result
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     boolean isForceResetPrevious();
+/**
+ * Set force reset previous.
+ *
+ * @param forceResetPrevious force reset previous
+ * @return nothing
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     void setForceResetPrevious(boolean forceResetPrevious);
+/**
+ * Creates single value argument.
+ *
+ * @param kvEntry kv entry ({@link KvEntry})
+ * @return {@link ArgumentEntry}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     static ArgumentEntry createSingleValueArgument(KvEntry kvEntry) {
+        
+        /**
+         * Single value argument entry.
+         *
+         * @return the return new value
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
         return new SingleValueArgumentEntry(kvEntry);
     }
+/**
+ * Creates single value argument.
+ *
+ * @param entityId target entity identifier
+ * @param argumentEntry argument entry ({@link ArgumentEntry})
+ * @return {@link ArgumentEntry}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     static ArgumentEntry createSingleValueArgument(EntityId entityId, ArgumentEntry argumentEntry) {
+        
+        /**
+         * Single value argument entry.
+         *
+         * @return the return new value
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
         return new SingleValueArgumentEntry(entityId, argumentEntry);
     }
+/**
+ * Creates ts rolling argument.
+ *
+ * @param kvEntries kv entries ({@link List})
+ * @param limit limit
+ * @param timeWindow time window
+ * @return {@link ArgumentEntry}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     static ArgumentEntry createTsRollingArgument(List<TsKvEntry> kvEntries, int limit, long timeWindow) {
+        
+        /**
+         * Ts rolling argument entry.
+         *
+         * @return the return new value
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
         return new TsRollingArgumentEntry(kvEntries, limit, timeWindow);
     }
+/**
+ * Creates geofencing value argument.
+ *
+ * @param entityIdkvEntryMap entity idkv entry map ({@link Map})
+ * @return {@link ArgumentEntry}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     static ArgumentEntry createGeofencingValueArgument(Map<EntityId, KvEntry> entityIdkvEntryMap) {
+        
+        /**
+         * Geofencing argument entry.
+         *
+         * @return the return new value
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
         return new GeofencingArgumentEntry(entityIdkvEntryMap);
     }
+/**
+ * Creates propagation argument.
+ *
+ * @param entityIds entity ids ({@link List})
+ * @return {@link ArgumentEntry}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     static ArgumentEntry createPropagationArgument(List<EntityId> entityIds) {
+        
+        /**
+         * Propagation argument entry.
+         *
+         * @return the return new value
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
         return new PropagationArgumentEntry(entityIds);
     }
+/**
+ * Creates agg argument.
+ *
+ * @param entityIdkvEntryMap entity idkv entry map ({@link Map})
+ * @return {@link ArgumentEntry}
+ * @throws Exception if an unexpected error occurs during processing
+ */
 
     static ArgumentEntry createAggArgument(Map<EntityId, ArgumentEntry> entityIdkvEntryMap) {
+        
+        /**
+         * Related entities argument entry.
+         *
+         * @return the return new value
+         * @throws Exception if an unexpected error occurs during processing
+         */
+
         return new RelatedEntitiesArgumentEntry(entityIdkvEntryMap, false);
     }
 

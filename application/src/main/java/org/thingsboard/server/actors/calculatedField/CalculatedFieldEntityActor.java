@@ -41,6 +41,15 @@ public class CalculatedFieldEntityActor extends AbstractCalculatedFieldActor {
         super(systemContext, tenantId);
         this.processor = new CalculatedFieldEntityMessageProcessor(systemContext, tenantId, entityId);
     }
+    
+    /**
+     * Initializes the actor after creation (schedules ticks, loads metadata, creates child actors).
+     *
+     * @param ctx actor context ({@link org.thingsboard.server.actors.TbActorCtx})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
+
 
     @Override
     public void init(TbActorCtx ctx) throws TbActorException {
@@ -54,12 +63,29 @@ public class CalculatedFieldEntityActor extends AbstractCalculatedFieldActor {
             throw new TbActorException("Failed to initialize CF entity actor", e);
         }
     }
+    
+    /**
+     * Stops child actors and releases resources before the actor terminates.
+     *
+     * @param stopReason stop reason ({@link TbActorStopReason})
+     * @param cause cause ({@link Throwable})
+     * @return nothing
+     * @throws TbActorException if tb actor exception is thrown during processing
+     */
+
 
     @Override
     public void destroy(TbActorStopReason stopReason, Throwable cause) throws TbActorException {
         log.debug("[{}] Stopping CF entity actor.", processor.tenantId);
         processor.stop(false);
     }
+    /**
+     * Do process cf msg.
+     *
+     * @param msg actor message to process
+     * @return the boolean result
+     * @throws CalculatedFieldException if calculated field exception is thrown during processing
+     */
 
     @Override
     protected boolean doProcessCfMsg(ToCalculatedFieldSystemMsg msg) throws CalculatedFieldException {

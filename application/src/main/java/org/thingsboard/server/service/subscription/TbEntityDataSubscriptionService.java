@@ -23,19 +23,64 @@ import org.thingsboard.server.service.ws.telemetry.cmd.v2.EntityCountCmd;
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.EntityDataCmd;
 import org.thingsboard.server.service.ws.telemetry.cmd.v2.UnsubscribeCmd;
 
+/**
+ * Complex entity-data WebSocket subscriptions (v2 API): entity queries, alarm data, counts, and aggregated time-series.
+ */
+
 public interface TbEntityDataSubscriptionService {
+
+    /**
+     * Handles cmd.
+     * @param sessionId WebSocket session identifier
+     * @param cmd cmd
+     */
 
     void handleCmd(WebSocketSessionRef sessionId, EntityDataCmd cmd);
 
+    /**
+     * Handles cmd.
+     * @param sessionId WebSocket session identifier
+     * @param cmd cmd
+     */
+
     void handleCmd(WebSocketSessionRef sessionId, EntityCountCmd cmd);
+
+    /**
+     * Handles cmd.
+     * @param sessionId WebSocket session identifier
+     * @param cmd cmd
+     */
 
     void handleCmd(WebSocketSessionRef sessionId, AlarmDataCmd cmd);
 
+    /**
+     * Handles cmd.
+     * @param sessionId WebSocket session identifier
+     * @param cmd cmd
+     */
+
     void handleCmd(WebSocketSessionRef sessionId, AlarmCountCmd cmd);
+
+    /**
+     * Handles cmd.
+     * @param session session
+     * @param cmd cmd
+     */
 
     void handleCmd(WebSocketSessionRef session, AlarmStatusCmd cmd);
 
+    /**
+     * Cancels subscription.
+     * @param sessionId WebSocket session identifier
+     * @param subscriptionId client command/subscription id
+     */
+
     void cancelSubscription(String sessionId, UnsubscribeCmd subscriptionId);
+
+    /**
+     * Cancels all session subscriptions.
+     * @param sessionId WebSocket session identifier
+     */
 
     void cancelAllSessionSubscriptions(String sessionId);
 

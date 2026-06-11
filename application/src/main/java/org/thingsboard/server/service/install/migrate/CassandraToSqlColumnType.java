@@ -15,6 +15,12 @@
  */
 package org.thingsboard.server.service.install.migrate;
 
+/**
+
+ * Enumerates cassandra to sql column type values used in database schema installation, upgrades, and demo data loading.
+
+ */
+
 public enum CassandraToSqlColumnType {
     ID,
     DOUBLE,

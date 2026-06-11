@@ -40,6 +40,11 @@ public class NotificationCmdsWrapper {
 
     private NotificationsUnsubCmd unsubCmd;
 
+    /**
+     * To common cmds wrapper.
+     * @return {@link WsCommandsWrapper}
+     */
+
     @JsonIgnore
     public WsCommandsWrapper toCommonCmdsWrapper() {
         return new WsCommandsWrapper(null, Stream.of(

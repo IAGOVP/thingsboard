@@ -61,6 +61,18 @@ import org.thingsboard.server.service.security.model.UserPrincipal;
 import org.thingsboard.server.service.security.model.token.JwtTokenFactory;
 import org.thingsboard.server.service.security.system.SystemSecurityService;
 
+/**
+ * REST controller for authentication, password management, and current user info.
+ *
+ * <p>Base path: {@code /api} (authenticated) and {@code /api/noauth} (public endpoints).
+ *
+ * <p>Required auth roles: authenticated endpoints require any of {@code SYS_ADMIN},
+ * {@code TENANT_ADMIN}, {@code CUSTOMER_USER}; password policy and activation endpoints are public.
+ *
+ * <p>Related services: {@link org.thingsboard.server.service.security.system.SystemSecurityService},
+ * {@link org.thingsboard.server.service.security.model.token.JwtTokenFactory},
+ * {@link org.thingsboard.server.dao.settings.SecuritySettingsService}.
+ */
 @RestController
 @TbCoreComponent
 @RequestMapping("/api")
@@ -80,6 +92,14 @@ public class AuthController extends BaseController {
     private final TwoFactorAuthService twoFactorAuthService;
     private final RestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
 
+    /**
+     * Get current User (getUser).
+     *
+     * <p>HTTP GET {@code /api/auth/user}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get current User (getUser)",
             notes = "Get the information about the User which credentials are used to perform this REST API call.")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -91,6 +111,14 @@ public class AuthController extends BaseController {
         return user;
     }
 
+    /**
+     * Logout (logout).
+     *
+     * <p>HTTP POST {@code /api/auth/logout}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Logout (logout)",
             notes = "Special API call to record the 'logout' of the user to the Audit Logs. Since platform uses [JWT](https://jwt.io/), the actual logout is the procedure of clearing the [JWT](https://jwt.io/) token on the client side. ")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -99,6 +127,14 @@ public class AuthController extends BaseController {
         logLogoutAction(request);
     }
 
+    /**
+     * Change password for current User (changePassword).
+     *
+     * <p>HTTP POST {@code /api/auth/changePassword}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Change password for current User (changePassword)",
             notes = "Change the password for the User which credentials are used to perform this REST API call. Be aware that previously generated [JWT](https://jwt.io/) tokens will be still valid until they expire.")
     @PreAuthorize("hasAnyAuthority('SYS_ADMIN', 'TENANT_ADMIN', 'CUSTOMER_USER')")
@@ -123,6 +159,14 @@ public class AuthController extends BaseController {
         return tokenFactory.createTokenPair(securityUser);
     }
 
+    /**
+     * Get the current User password policy (getUserPasswordPolicy).
+     *
+     * <p>HTTP GET {@code /api/noauth/userPasswordPolicy}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Get the current User password policy (getUserPasswordPolicy)",
             notes = "API call to get the password policy for the password validation form(s).")
     @GetMapping(value = "/noauth/userPasswordPolicy")
@@ -131,6 +175,14 @@ public class AuthController extends BaseController {
         return securitySettings.getPasswordPolicy();
     }
 
+    /**
+     * Check Activate User Token (checkActivateToken).
+     *
+     * <p>HTTP GET {@code /api/noauth/activate}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Check Activate User Token (checkActivateToken)",
             notes = "Checks the activation token and forwards user to 'Create Password' page. " +
                     "If token is valid, returns '303 See Other' (redirect) response code with the correct address of 'Create Password' page and same 'activateToken' specified in the URL parameters. " +
@@ -149,6 +201,14 @@ public class AuthController extends BaseController {
         return redirectTo("/login/createPassword?activateToken=" + activateToken);
     }
 
+    /**
+     * Request reset password email (requestResetPasswordByEmail).
+     *
+     * <p>HTTP POST {@code /api/noauth/resetPasswordByEmail}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Request reset password email (requestResetPasswordByEmail)",
             notes = "Request to send the reset password email if the user with specified email address is present in the database. " +
                     "Always return '200 OK' status for security purposes.")
@@ -171,6 +231,14 @@ public class AuthController extends BaseController {
         }
     }
 
+    /**
+     * Check password reset token (checkResetToken).
+     *
+     * <p>HTTP GET {@code /api/noauth/resetPassword}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Check password reset token (checkResetToken)",
             notes = "Checks the password reset token and forwards user to 'Reset Password' page. " +
                     "If token is valid, returns '303 See Other' (redirect) response code with the correct address of 'Reset Password' page and same 'resetToken' specified in the URL parameters. " +
@@ -192,6 +260,14 @@ public class AuthController extends BaseController {
         return redirectTo("/login/resetPassword?resetToken=" + resetToken);
     }
 
+    /**
+     * Activate User.
+     *
+     * <p>HTTP POST {@code /api/noauth/activate}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Activate User",
             notes = "Checks the activation token and updates corresponding user password in the database. " +
                     "Now the user may start using his password to login. " +
@@ -236,6 +312,14 @@ public class AuthController extends BaseController {
         return tokenPair;
     }
 
+    /**
+     * Reset password (resetPassword).
+     *
+     * <p>HTTP POST {@code /api/noauth/resetPassword}.
+     *
+     * @return response body as documented in Swagger annotations
+     * @throws ThingsboardException if the request is invalid or access is denied
+     */
     @ApiOperation(value = "Reset password (resetPassword)",
             notes = "Checks the password reset token and updates the password. " +
                     "If token is not valid, returns '400 Bad Request'.")

@@ -34,6 +34,10 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+    /**
+     * Spring service component for rpc clean up service (time-to-live cleanup for alarms, events, and telemetry).
+     */
+
 @Slf4j
 @Service
 @TbCoreComponent
@@ -53,6 +57,12 @@ public class RpcCleanUpService extends AbstractCleanUpService {
         this.tenantProfileCache = tenantProfileCache;
         this.rpcDao = rpcDao;
     }
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Scheduled(initialDelayString = "#{T(org.apache.commons.lang3.RandomUtils).nextLong(0, ${sql.ttl.rpc.checking_interval})}", fixedDelayString = "${sql.ttl.rpc.checking_interval}")
     public void cleanUp() {

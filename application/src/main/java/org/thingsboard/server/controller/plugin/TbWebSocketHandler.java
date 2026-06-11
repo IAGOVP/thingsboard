@@ -84,6 +84,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static org.thingsboard.server.service.ws.DefaultWebSocketService.NUMBER_OF_PING_ATTEMPTS;
 
+/**
+ * Spring WebSocket handler for ThingsBoard real-time subscriptions (telemetry, notifications, general).
+ *
+ * <p>Registered on {@code /api/ws/**} by {@link org.thingsboard.server.config.WebSocketConfiguration}.
+ * Clients authenticate via JWT query parameter ({@code ?token=}) or an {@code auth} command in the
+ * first message; enforces tenant profile session and update rate limits.
+ *
+ * @see org.thingsboard.server.service.ws.WebSocketMsgEndpoint
+ * @see org.thingsboard.server.service.ws.WebSocketService
+ */
 @Service
 @TbCoreComponent
 @Slf4j
@@ -143,6 +153,15 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         internalSessionMap.clear();
     }
 
+    /**
+     * Handles inbound text WebSocket frames from a client.
+     *
+     * <p><b>Endpoint:</b> {@code /api/ws/**} (text message)
+     * <p><b>Auth:</b> JWT in query string or {@code auth} command in first payload
+     *
+     * @param session Spring WebSocket session
+     * @param message text frame payload (JSON command wrapper)
+     */
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         try {
@@ -214,6 +233,13 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         }
     }
 
+    /**
+     * Handles inbound WebSocket pong frames (keep-alive response).
+     *
+     * @param session Spring WebSocket session
+     * @param message pong frame from client
+     * @throws Exception if the session cannot be resolved or closed
+     */
     @Override
     protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
         try {
@@ -230,6 +256,12 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         }
     }
 
+    /**
+     * Called when a WebSocket connection is opened; establishes session metadata and optional JWT auth.
+     *
+     * @param session newly opened WebSocket session
+     * @throws Exception on invalid session type, expired token, or limit violations
+     */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
@@ -281,6 +313,13 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         }
     }
 
+    /**
+     * Propagates transport errors to {@link org.thingsboard.server.service.ws.WebSocketService}.
+     *
+     * @param session affected WebSocket session
+     * @param tError transport error
+     * @throws Exception from parent handler
+     */
     @Override
     public void handleTransportError(WebSocketSession session, Throwable tError) throws Exception {
         super.handleTransportError(session, tError);
@@ -293,6 +332,13 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         log.trace("[{}] Session transport error", session.getId(), tError);
     }
 
+    /**
+     * Cleans up session state and notifies {@link org.thingsboard.server.service.ws.WebSocketService} on close.
+     *
+     * @param session closed WebSocket session
+     * @param closeStatus close reason from client or server
+     * @throws Exception from parent handler
+     */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         super.afterConnectionClosed(session, closeStatus);
@@ -368,6 +414,9 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         return sessionMd;
     }
 
+    /**
+     * Per-session outbound queue, ping tracking, and async send coordination.
+     */
     class SessionMetaData implements SendHandler {
         private final WebSocketSession session;
         private final RemoteEndpoint.Async asyncRemote;
@@ -455,6 +504,11 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
             }
         }
 
+        /**
+         * Async send completion callback; drains the outbound queue on success.
+         *
+         * @param result Jakarta WebSocket send result
+         */
         @Override
         public void onResult(SendResult result) {
             if (!result.isOK()) {
@@ -480,6 +534,12 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
             }
         }
 
+        /**
+         * Enqueues an inbound text message for serialized processing.
+         *
+         * @param msg raw JSON text from the client
+         * @throws IOException if inbound queue processing fails
+         */
         public void onMsg(String msg) throws IOException {
             inboundMsgQueue.add(msg);
             tryProcessInboundMsgs();
@@ -504,6 +564,16 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
 
     }
 
+    /**
+     * Sends a subscription update text message to a connected WebSocket client.
+     *
+     * <p>Subject to per-session update rate limits from tenant profile configuration.
+     *
+     * @param sessionRef external session reference
+     * @param subscriptionId subscription id for error responses
+     * @param msg JSON payload to send
+     * @throws IOException if the session is missing or send fails
+     */
     @Override
     public void send(WebSocketSessionRef sessionRef, int subscriptionId, String msg) throws IOException {
         log.debug("{} Sending {}", sessionRef, msg);
@@ -532,6 +602,13 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         }
     }
 
+    /**
+     * Sends a WebSocket ping or closes the session when the ping timeout is exceeded.
+     *
+     * @param sessionRef external session reference
+     * @param currentTime current time in milliseconds
+     * @throws IOException if the session is missing
+     */
     @Override
     public void sendPing(WebSocketSessionRef sessionRef, long currentTime) throws IOException {
         String externalId = sessionRef.getSessionId();
@@ -548,6 +625,13 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         }
     }
 
+    /**
+     * Closes a WebSocket session by external session id.
+     *
+     * @param sessionRef external session reference
+     * @param reason close status and reason
+     * @throws IOException if the underlying session close fails
+     */
     @Override
     public void close(WebSocketSessionRef sessionRef, CloseStatus reason) throws IOException {
         String externalId = sessionRef.getSessionId();
@@ -565,6 +649,12 @@ public class TbWebSocketHandler extends TextWebSocketHandler implements WebSocke
         }
     }
 
+    /**
+     * Reports whether a WebSocket session is still open.
+     *
+     * @param externalId external session id assigned at connection time
+     * @return {@code true} if the session exists and is open
+     */
     @Override
     public boolean isOpen(String externalId) {
         String internalId = externalSessionMap.get(externalId);

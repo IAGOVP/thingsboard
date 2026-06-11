@@ -20,6 +20,10 @@ import org.thingsboard.server.common.data.EntityType;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * Enumeration of resource used in role-based access control (RBAC).
+ */
+
 public enum Resource {
 
     ADMIN_SETTINGS(EntityType.ADMIN_SETTINGS),
@@ -66,9 +70,21 @@ public enum Resource {
         this.entityTypes = Set.of(entityTypes);
     }
 
+    /**
+     * Returns entity types.
+     *
+     */
+
     public Set<EntityType> getEntityTypes() {
         return entityTypes;
     }
+
+    /**
+     * Of.
+     *
+     * @param entityType entity type (EntityType)
+     * @return {@link Resource} result
+     */
 
     public static Resource of(EntityType entityType) {
         for (Resource resource : Resource.values()) {

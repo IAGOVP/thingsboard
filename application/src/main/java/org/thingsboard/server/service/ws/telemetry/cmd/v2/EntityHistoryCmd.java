@@ -20,6 +20,10 @@ import org.thingsboard.server.common.data.kv.Aggregation;
 import org.thingsboard.server.common.data.kv.IntervalType;
 
 import java.util.List;
+/**
+ * WebSocket command DTO for entity history.
+ * <p>Deserialized from UI JSON and handled by {@link DefaultWebSocketService}.
+ */
 
 @Data
 public class EntityHistoryCmd implements GetTsCmd {

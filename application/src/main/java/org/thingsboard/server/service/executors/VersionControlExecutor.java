@@ -19,11 +19,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thingsboard.common.util.AbstractListeningExecutor;
 
+    /**
+     * Spring service component for version control executor (shared thread-pool executors for async service work).
+     */
+
 @Component
 public class VersionControlExecutor extends AbstractListeningExecutor {
 
     @Value("${vc.thread_pool_size:6}")
     private int threadPoolSize;
+    /**
+     * Returns thread poll size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected int getThreadPollSize() {

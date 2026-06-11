@@ -42,6 +42,10 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+    /**
+     * Spring service component for job stats processor (background job scheduling and execution).
+     */
+
 @TbCoreComponent
 @Component
 @Slf4j
@@ -66,6 +70,12 @@ public class JobStatsProcessor {
                 .consumerExecutor(consumerExecutor)
                 .build();
     }
+    /**
+     * After start up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterStartUp(order = AfterStartUp.REGULAR_SERVICE)
     public void afterStartUp() {

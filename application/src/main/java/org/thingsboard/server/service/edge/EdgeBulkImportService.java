@@ -34,6 +34,11 @@ import org.thingsboard.server.service.sync.ie.importing.csv.AbstractBulkImportSe
 
 import java.util.Map;
 import java.util.Optional;
+/**
+ * Service implementation for edge bulk import in ThingsBoard Edge integration.
+ *
+ * <p><b>Responsibilities:</b> Spring-managed service component.
+ */
 
 @Service
 @TbCoreComponent
@@ -43,6 +48,12 @@ public class EdgeBulkImportService extends AbstractBulkImportService<Edge> {
     private final TbEdgeService tbEdgeService;
     private final RuleChainService ruleChainService;
 
+    /**
+     * Set entity fields.
+     *
+     * @param entity entity (Edge)
+     * @param fields fields (Map<BulkImportColumnType, String>)
+     */
     @Override
     protected void setEntityFields(Edge entity, Map<BulkImportColumnType, String> fields) {
         ObjectNode additionalInfo = getOrCreateAdditionalInfoObj(entity);
@@ -70,26 +81,49 @@ public class EdgeBulkImportService extends AbstractBulkImportService<Edge> {
         });
         entity.setAdditionalInfo(additionalInfo);
     }
-
+    /**
+     * Creates or persists entity.
+     *
+     * @param user user (SecurityUser)
+     * @param entity entity (Edge)
+     * @param fields fields (Map<BulkImportColumnType, String>)
+     * @return {@link Edge} result
+     */
     @SneakyThrows
     @Override
     protected Edge saveEntity(SecurityUser user, Edge entity, Map<BulkImportColumnType, String> fields) {
         RuleChain edgeTemplateRootRuleChain = ruleChainService.getEdgeTemplateRootRuleChain(user.getTenantId());
         return tbEdgeService.save(entity, edgeTemplateRootRuleChain, user);
     }
-
+    /**
+     * Loads or create entity.
+     *
+     * @param tenantId tenant id (TenantId)
+     * @param name name (String)
+     * @return {@link Edge} result
+     */
     @Override
     protected Edge findOrCreateEntity(TenantId tenantId, String name) {
         return Optional.ofNullable(edgeService.findEdgeByTenantIdAndName(tenantId, name))
                 .orElseGet(Edge::new);
     }
 
+    /**
+     * Set owners.
+     *
+     * @param entity entity (Edge)
+     * @param user user (SecurityUser)
+     */
     @Override
     protected void setOwners(Edge entity, SecurityUser user) {
         entity.setTenantId(user.getTenantId());
         entity.setCustomerId(user.getCustomerId());
     }
 
+    /**
+     * Returns entity type.
+     *
+     */
     @Override
     protected EntityType getEntityType() {
         return EntityType.EDGE;

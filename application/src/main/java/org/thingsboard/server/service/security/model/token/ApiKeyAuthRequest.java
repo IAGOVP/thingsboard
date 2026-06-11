@@ -15,4 +15,8 @@
  */
 package org.thingsboard.server.service.security.model.token;
 
+/**
+ * DTO for security DTOs and principals: api key auth request.
+ */
+
 public record ApiKeyAuthRequest(String apiKey) {}
