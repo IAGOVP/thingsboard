@@ -53,6 +53,12 @@ import {
 import { deepClone, mergeDeep } from '@core/utils';
 import { MatDialog } from '@angular/material/dialog';
 
+
+/**
+ * Angular component: map settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-settings`.
+ */
 @Component({
     selector: 'tb-map-settings',
     templateUrl: './map-settings.component.html',
@@ -69,10 +75,7 @@ import { MatDialog } from '@angular/material/dialog';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: map settings UI.
- */
+standalone: false
 })
 export class MapSettingsComponent implements OnInit, ControlValueAccessor, Validator, OnChanges {
 
@@ -126,6 +129,11 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
               private dialog: MatDialog,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
 
@@ -194,12 +202,30 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -228,6 +254,12 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MapSetting)
+   */
+
   writeValue(value: MapSetting): void {
     this.modelValue = value;
     this.mapSettingsFormGroup.patchValue(
@@ -237,6 +269,12 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
     this.updateDragButtonModeSettings();
   }
 
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
+
   public validate(_c: UntypedFormControl) {
     const valid = this.mapSettingsFormGroup.valid;
     return valid ? null : {
@@ -245,6 +283,11 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
       },
     };
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const mapType: MapType = this.mapSettingsFormGroup.get('mapType').value;
@@ -270,6 +313,12 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * map type changed.
+   *
+   * @param mapType map type (MapType)
+   */
+
   private mapTypeChanged(mapType: MapType): void {
     if (mapType === MapType.image) {
       let imageSource: ImageMapSourceSettings = this.mapSettingsFormGroup.get('imageSource').value;
@@ -279,6 +328,11 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
       }
     }
   }
+
+  /**
+   * update drag button mode settings.
+   *
+   */
 
   private updateDragButtonModeSettings() {
     const markers: MapDataLayerSettings[] = this.mapSettingsFormGroup.get('markers').value;
@@ -303,10 +357,24 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.modelValue = this.mapSettingsFormGroup.getRawValue();
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * edit key.
+   *
+   * @param key key (DataKey)
+   * @param deviceId device UUID
+   * @param entityAliasId entity alias id (string)
+   * @returns Observable<DataKey> observable or value
+   */
 
   private editKey(key: DataKey, deviceId: string, entityAliasId: string, _widgetType = widgetType.latest,
                   hideDataKeyAggregation = true): Observable<DataKey> {
@@ -334,6 +402,13 @@ export class MapSettingsComponent implements OnInit, ControlValueAccessor, Valid
         }
       }).afterClosed();
   }
+
+  /**
+   * generate data key.
+   *
+   * @param key key (DataKey)
+   * @returns DataKey observable or value
+   */
 
   private generateDataKey(key: DataKey): DataKey {
     return this.callbacks.generateDataKey(key.name, key.type, null, false, null);

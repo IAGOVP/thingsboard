@@ -26,6 +26,9 @@ import { CustomerTabsComponent } from '@home/pages/customer/customer-tabs.compon
 /**
  * Angular NgModule: customer feature area.
  */
+/**
+ * Angular NgModule bundling customer (home/customer pages).
+ */
 @NgModule({
   declarations: [
     CustomerComponent,
@@ -36,5 +39,5 @@ import { CustomerTabsComponent } from '@home/pages/customer/customer-tabs.compon
     SharedModule,
     HomeComponentsModule,
     CustomerRoutingModule
-  ]})
+]})
 export class CustomerModule { }

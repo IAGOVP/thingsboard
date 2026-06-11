@@ -18,11 +18,11 @@ import { EntityType } from '@shared/models/entity-type.models';
 import { Observable } from 'rxjs';
 import { EntityAlias } from '@shared/models/alias.models';
 
+
 /**
-
- * TypeScript models and enums for entity alias select callbacks.
-
+ * Entity alias select callbacks (ThingsBoard web UI).
  */
+
 
 export interface EntityAliasSelectCallbacks {
   createEntityAlias: (alias: string, allowedEntityTypes: Array<EntityType>) => Observable<EntityAlias>;

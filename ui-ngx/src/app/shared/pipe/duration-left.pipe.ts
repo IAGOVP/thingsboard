@@ -18,18 +18,28 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MillisecondsToTimeStringPipe } from './milliseconds-to-time-string.pipe';
 
-@Pipe({
-  name: 'durationLeft',
-  pure: false,
-  standalone: true,
+
 /**
  * Angular pipe: duration left.
  */
-})
+@Pipe({
+  name: 'durationLeft',
+  pure: false,
+/**
+ * Angular pipe: duration left (ThingsBoard web UI).
+ */
+  standalone: true,})
 export class DurationLeftPipe implements PipeTransform {
 
   constructor(private translate: TranslateService, private millisecondsToTimeString: MillisecondsToTimeStringPipe) {
   }
+
+  /**
+   * transform.
+   *
+   * @param untilTimestamp until timestamp (number)
+   * @returns string observable or value
+   */
 
   transform(untilTimestamp: number, shortFormat = true, onlyFirstDigit = true): string {
     const time = this.millisecondsToTimeString.transform((untilTimestamp - new Date().getTime()), shortFormat, onlyFirstDigit) ?? 0;

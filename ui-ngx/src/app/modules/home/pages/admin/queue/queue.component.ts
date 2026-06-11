@@ -25,14 +25,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
 import { ActionNotificationShow } from '@core/notification/notification.actions';
 
+
+/**
+ * Angular component: queue (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-queue`.
+ */
 @Component({
     selector: 'tb-queue',
     templateUrl: './queue.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: queue UI.
- */
+standalone: false
 })
 export class QueueComponent extends EntityComponent<QueueInfo> {
   entityForm: UntypedFormGroup;
@@ -50,15 +53,32 @@ export class QueueComponent extends EntityComponent<QueueInfo> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     super.ngOnInit();
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (QueueInfo)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: QueueInfo): UntypedFormGroup {
     return this.fb.group({
       queue: [entity]
     });
   }
+
+  /**
+   * hide delete.
+   *
+   */
 
   hideDelete() {
     if (this.entitiesTableConfig) {
@@ -68,15 +88,32 @@ export class QueueComponent extends EntityComponent<QueueInfo> {
     }
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (QueueInfo)
+   */
+
   updateForm(entity: QueueInfo) {
     this.entityForm.patchValue({
       queue: entity
     }, {emitEvent: false});
   }
 
+  /**
+   * prepare form value.
+   *
+   * @param formValue form value (any)
+   */
+
   prepareFormValue(formValue: any) {
     return super.prepareFormValue(formValue.queue);
   }
+
+  /**
+   * Event handler for queue id copied.
+   *
+   */
 
   onQueueIdCopied($event) {
     this.store.dispatch(new ActionNotificationShow(

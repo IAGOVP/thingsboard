@@ -16,14 +16,17 @@
 
 import { Component, Input } from '@angular/core';
 
+
+/**
+ * Angular component: example hint (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-example-hint`.
+ */
 @Component({
     selector: 'tb-example-hint',
     templateUrl: './example-hint.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: example hint UI.
- */
+standalone: false
 })
 export class ExampleHintComponent {
   @Input() hintText: string;

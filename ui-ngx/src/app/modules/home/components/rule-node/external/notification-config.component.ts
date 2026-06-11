@@ -20,14 +20,17 @@ import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/m
 import { NotificationType } from '@shared/models/notification.models';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
+/**
+ * Angular component: notification config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-notification-config`.
+ */
 @Component({
     selector: 'tb-external-node-notification-config',
     templateUrl: './notification-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: notification config UI.
- */
+standalone: false
 })
 export class NotificationConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -39,9 +42,21 @@ export class NotificationConfigComponent extends RuleNodeConfigurationComponent 
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.notificationConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.notificationConfigForm = this.fb.group({

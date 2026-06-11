@@ -48,8 +48,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.lenient;
 /**
- * Unit test for tb calculated fields node rule node.
+ * Unit test for tb calculated fields node (telemetry and attribute persistence nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbCalculatedFieldsNodeTest {

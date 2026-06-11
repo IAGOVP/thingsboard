@@ -37,6 +37,12 @@ import {
 } from '@shared/models/query/query.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: filter predicate value (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-predicate-value`.
+ */
 @Component({
     selector: 'tb-filter-predicate-value',
     templateUrl: './filter-predicate-value.component.html',
@@ -53,10 +59,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: filter predicate value UI.
- */
+standalone: false
 })
 export class FilterPredicateValueComponent implements ControlValueAccessor, Validator, OnInit {
 
@@ -122,6 +125,11 @@ export class FilterPredicateValueComponent implements ControlValueAccessor, Vali
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     let defaultValue: string | number | boolean;
     let defaultValueValidators: ValidatorFn[];
@@ -171,6 +179,12 @@ export class FilterPredicateValueComponent implements ControlValueAccessor, Vali
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (this.propagateChangePending) {
@@ -181,8 +195,20 @@ export class FilterPredicateValueComponent implements ControlValueAccessor, Vali
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -193,11 +219,23 @@ export class FilterPredicateValueComponent implements ControlValueAccessor, Vali
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.filterPredicateValueFormGroup.valid ? null : {
       filterPredicateValue: {valid: false}
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param predicateValue predicate value (FilterPredicateValue<string | number | boolean>)
+   */
 
   writeValue(predicateValue: FilterPredicateValue<string | number | boolean>): void {
     this.propagateChangePending = false;
@@ -209,6 +247,11 @@ export class FilterPredicateValueComponent implements ControlValueAccessor, Vali
     }, {emitEvent: this.onlyUserDynamicSource});
     this.updateShowInheritMode(predicateValue?.dynamicValue?.sourceType);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const predicateValue: FilterPredicateValue<string | number | boolean> = this.filterPredicateValueFormGroup.getRawValue();
@@ -224,6 +267,12 @@ export class FilterPredicateValueComponent implements ControlValueAccessor, Vali
     }
   }
 
+  /**
+   * update show inherit mode.
+   *
+   * @param sourceType source type (DynamicValueSourceType)
+   */
+
   private updateShowInheritMode(sourceType: DynamicValueSourceType) {
     if (this.inheritModeForSources.includes(sourceType)) {
       this.inheritMode = true;
@@ -232,6 +281,11 @@ export class FilterPredicateValueComponent implements ControlValueAccessor, Vali
       this.inheritMode = false;
     }
   }
+
+  /**
+   * update validation dynamic mode.
+   *
+   */
 
   private updateValidationDynamicMode() {
     if (this.onlyUserDynamicSource) {

@@ -17,11 +17,11 @@
 import { EntityId } from './entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for queue id.
-
+ * TypeScript interfaces, types, and enums for queue id (shared TypeScript models).
  */
+
 
 export class QueueId implements EntityId {
   entityType = EntityType.QUEUE;

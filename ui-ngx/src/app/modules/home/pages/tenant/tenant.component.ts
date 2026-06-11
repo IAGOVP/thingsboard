@@ -26,14 +26,17 @@ import { EntityTableConfig } from '@home/models/entity/entities-table-config.mod
 import { isDefinedAndNotNull } from '@core/utils';
 import { CountryData } from '@shared/models/country.models';
 
+
+/**
+ * Angular component: tenant (home/tenant pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tenant`.
+ */
 @Component({
     selector: 'tb-tenant',
     templateUrl: './tenant.component.html',
     styleUrls: ['./tenant.component.scss'],
-    standalone: false
-/**
- * Angular component: tenant UI.
- */
+standalone: false
 })
 export class TenantComponent extends ContactBasedComponent<TenantInfo> {
 
@@ -47,6 +50,11 @@ export class TenantComponent extends ContactBasedComponent<TenantInfo> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd, countryData);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -54,6 +62,13 @@ export class TenantComponent extends ContactBasedComponent<TenantInfo> {
       return false;
     }
   }
+
+  /**
+   * build entity form.
+   *
+   * @param entity entity (TenantInfo)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildEntityForm(entity: TenantInfo): UntypedFormGroup {
     return this.fb.group(
@@ -72,6 +87,12 @@ export class TenantComponent extends ContactBasedComponent<TenantInfo> {
     );
   }
 
+  /**
+   * update entity form.
+   *
+   * @param entity entity (Tenant)
+   */
+
   updateEntityForm(entity: Tenant) {
     this.entityForm.patchValue({title: entity.title});
     this.entityForm.patchValue({tenantProfileId: entity.tenantProfileId});
@@ -83,6 +104,11 @@ export class TenantComponent extends ContactBasedComponent<TenantInfo> {
           isDefinedAndNotNull(entity.additionalInfo.homeDashboardHideToolbar) ? entity.additionalInfo.homeDashboardHideToolbar : true}});
   }
 
+  /**
+   * update form state.
+   *
+   */
+
   updateFormState() {
     if (this.entityForm) {
       if (this.isEditValue) {
@@ -92,6 +118,11 @@ export class TenantComponent extends ContactBasedComponent<TenantInfo> {
       }
     }
   }
+
+  /**
+   * Event handler for tenant id copied.
+   *
+   */
 
   onTenantIdCopied(event) {
     this.store.dispatch(new ActionNotificationShow(
@@ -103,6 +134,11 @@ export class TenantComponent extends ContactBasedComponent<TenantInfo> {
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * Event handler for tenant profile updated.
+   *
+   */
 
   onTenantProfileUpdated() {
     this.entitiesTableConfig.updateData(false, false);

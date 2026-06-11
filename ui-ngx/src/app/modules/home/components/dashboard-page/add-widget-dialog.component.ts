@@ -41,16 +41,19 @@ export interface AddWidgetDialogData {
   isDefaultBreakpoint: boolean;
 }
 
+
+/**
+ * Angular component: add widget dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-widget-dialog`.
+ */
 @Component({
     selector: 'tb-add-widget-dialog',
     templateUrl: './add-widget-dialog.component.html',
     providers: [ /*{provide: ErrorStateMatcher, useExisting: AddWidgetDialogComponent}*/],
     styleUrls: ['./add-widget-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: add widget dialog UI.
- */
+standalone: false
 })
 export class AddWidgetDialogComponent extends DialogComponent<AddWidgetDialogComponent, Widget>
   implements OnInit, ErrorStateMatcher {
@@ -154,14 +157,33 @@ export class AddWidgetDialogComponent extends DialogComponent<AddWidgetDialogCom
     );
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * help link id for widget type.
+   *
+   * @returns string observable or value
+   */
 
   helpLinkIdForWidgetType(): string {
     let link = 'widgetsConfig';
@@ -171,9 +193,19 @@ export class AddWidgetDialogComponent extends DialogComponent<AddWidgetDialogCom
     return link;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     this.submitted = true;

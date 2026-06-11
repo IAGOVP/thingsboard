@@ -29,6 +29,9 @@ import {
 /**
  * Angular NgModule: mobile feature area.
  */
+/**
+ * Angular NgModule bundling mobile (home/mobile pages).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -38,5 +41,5 @@ import {
     MobileBundlesModule,
     MobileQrCodeWidgetSettingsModule,
     MobileRoutingModule,
-  ]})
+]})
 export class MobileModule { }

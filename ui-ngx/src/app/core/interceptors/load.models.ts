@@ -15,8 +15,9 @@
 ///
 
 /**
- * TypeScript models and enums for load state.
+ * Load state (HTTP interceptors).
  */
+
 export interface LoadState {
   isLoading: boolean;
 }

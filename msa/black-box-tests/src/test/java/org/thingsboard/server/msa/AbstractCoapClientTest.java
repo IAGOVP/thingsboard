@@ -26,11 +26,13 @@ import org.eclipse.californium.elements.config.TcpConfig;
 import org.thingsboard.common.util.JacksonUtil;
 import org.thingsboard.server.common.msg.session.FeatureType;
 
+
 /**
 
- * Abstract coap client test.
+ * Abstract base for abstract coap client black-box tests (black-box test infrastructure).
 
  */
+
 
 public abstract class AbstractCoapClientTest extends AbstractContainerTest{
 
@@ -56,6 +58,13 @@ public abstract class AbstractCoapClientTest extends AbstractContainerTest{
     };
 
     protected CoapClient client;
+    /**
+     * Creates coap client and publish.
+     *
+     * @param deviceName device name ({@link String})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected byte[] createCoapClientAndPublish(String deviceName) throws Exception {
         String provisionRequestMsg = createTestProvisionMessage(deviceName);
@@ -66,6 +75,12 @@ public abstract class AbstractCoapClientTest extends AbstractContainerTest{
                 .post(provisionRequestMsg.getBytes(), MediaTypeRegistry.APPLICATION_JSON)
                 .getPayload();
     }
+    /**
+     * Disconnect.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void disconnect() {
         if (client != null) {

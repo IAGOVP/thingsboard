@@ -31,8 +31,9 @@ import static org.thingsboard.rule.engine.telemetry.settings.AttributesProcessin
         include = JsonTypeInfo.As.PROPERTY,
         property = "type"
 /**
- * Rule engine attributes processing settings API.
+ * attributes processing settings contract (telemetry and attribute persistence nodes).
  */
+
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = OnEveryMessage.class, name = "ON_EVERY_MESSAGE"),
@@ -41,6 +42,18 @@ import static org.thingsboard.rule.engine.telemetry.settings.AttributesProcessin
         @JsonSubTypes.Type(value = Advanced.class, name = "ADVANCED")
 })
 public sealed interface AttributesProcessingSettings extends ProcessingSettings permits OnEveryMessage, Deduplicate, WebSocketsOnly, Advanced {
+
+    
+    /**
+     * Advanced.
+     *
+     * @param attributes attributes ({@link ProcessingStrategy})
+     * @param webSockets web sockets ({@link ProcessingStrategy})
+     * @param calculatedFields calculated fields ({@link ProcessingStrategy})
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     record Advanced(ProcessingStrategy attributes, ProcessingStrategy webSockets, ProcessingStrategy calculatedFields) implements AttributesProcessingSettings {
 

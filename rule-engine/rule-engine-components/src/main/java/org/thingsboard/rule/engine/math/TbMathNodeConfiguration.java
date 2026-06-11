@@ -20,8 +20,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 
 import java.util.List;
 /**
- * JSON configuration for TbMath rule node.
+ * JSON configuration POJO for {@link TbMath} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMathNodeConfiguration implements NodeConfiguration<TbMathNodeConfiguration> {
@@ -30,6 +33,12 @@ public class TbMathNodeConfiguration implements NodeConfiguration<TbMathNodeConf
     private List<TbMathArgument> arguments;
     private String customFunction;
     private TbMathResult result;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMathNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMathNodeConfiguration defaultConfiguration() {

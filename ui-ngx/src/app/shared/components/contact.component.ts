@@ -17,13 +17,16 @@
 import { Component, Input } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
+
+/**
+ * Angular component: contact (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-contact`.
+ */
 @Component({
     selector: 'tb-contact',
     templateUrl: './contact.component.html',
-    standalone: false
-/**
- * Angular component: contact UI.
- */
+standalone: false
 })
 export class ContactComponent {
 
@@ -36,6 +39,12 @@ export class ContactComponent {
 
   constructor() {
   }
+
+  /**
+   * change country.
+   *
+   * @param countryCode country code (string)
+   */
 
   changeCountry(countryCode: string) {
     this.phoneInputDefaultCountry = countryCode ?? 'US';

@@ -18,16 +18,24 @@ package org.thingsboard.server.msa.ui.pages;
 import org.openqa.selenium.WebDriver;
 import org.thingsboard.server.msa.ui.utils.Const;
 
+
 /**
 
- * Login page helper.
+ * Page object helper for login page UI actions (page object element locators and helpers — Selenium page objects).
 
  */
+
 
 public class LoginPageHelper extends LoginPageElements {
     public LoginPageHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Authorization tenant.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void authorizationTenant() {
         emailField().sendKeys(Const.TENANT_EMAIL);

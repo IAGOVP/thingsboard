@@ -49,11 +49,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+
 /**
 
- * Unit test for tb delete keys node rule node.
+ * Unit test for tb delete keys node (message transformation and originator change nodes).
 
  */
+
 
 public class TbDeleteKeysNodeTest {
     DeviceId deviceId;

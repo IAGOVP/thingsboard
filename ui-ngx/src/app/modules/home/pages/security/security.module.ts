@@ -30,6 +30,9 @@ import {
 /**
  * Angular NgModule: security feature area.
  */
+/**
+ * Angular NgModule bundling security (home/security pages).
+ */
 @NgModule({
   declarations: [
     SecurityComponent,
@@ -42,5 +45,5 @@ import {
     CommonModule,
     SharedModule,
     SecurityRoutingModule
-  ]})
+]})
 export class SecurityModule { }

@@ -32,14 +32,17 @@ export interface MobileAppConfigurationDialogData {
   bundle: MobileAppBundleInfo;
 }
 
+
+/**
+ * Angular component: mobile app configuration dialog (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-app-configuration-dialog`.
+ */
 @Component({
     selector: 'tb-mobile-app-configuration-dialog',
     templateUrl: './mobile-app-configuration-dialog.component.html',
     styleUrls: ['./mobile-app-configuration-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: mobile app configuration dialog UI.
- */
+standalone: false
 })
 export class MobileAppConfigurationDialogComponent extends DialogComponent<MobileAppConfigurationDialogComponent> {
 
@@ -61,6 +64,11 @@ export class MobileAppConfigurationDialogComponent extends DialogComponent<Mobil
     this.showDontShowAgain = this.data.afterAdd;
   }
 
+  /**
+   * close.
+   *
+   */
+
   close(): void {
     if (this.notShowAgain && this.showDontShowAgain) {
       this.store.dispatch(new ActionPreferencesPutUserSettings({ notDisplayConfigurationAfterAddMobileBundle: true }));
@@ -70,9 +78,21 @@ export class MobileAppConfigurationDialogComponent extends DialogComponent<Mobil
     }
   }
 
+  /**
+   * POST/PUT entity — create mark down command.
+   *
+   * @param commands commands (string)
+   * @returns string observable or value
+   */
+
   createMarkDownCommand(commands: string): string {
     return this.createMarkDownSingleCommand(commands);
   }
+
+  /**
+   * download settings.
+   *
+   */
 
   downloadSettings(): void {
     const settings: any = {
@@ -93,6 +113,13 @@ export class MobileAppConfigurationDialogComponent extends DialogComponent<Mobil
     }
     this.importExportService.exportJson(settings, this.fileName);
   }
+
+  /**
+   * POST/PUT entity — create mark down single command.
+   *
+   * @param command command (string)
+   * @returns string observable or value
+   */
 
   private createMarkDownSingleCommand(command: string): string {
     return '```bash\n' +

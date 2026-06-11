@@ -25,11 +25,11 @@ import {
 import { AttributeScope } from '@shared/models/telemetry/telemetry.models';
 import { isDefinedAndNotNull } from '@core/utils';
 
+
 /**
-
- * TypeScript models and enums for knob settings.
-
+ * TypeScript interfaces, types, and enums for knob settings (shared TypeScript models).
  */
+
 
 export interface KnobSettings {
   initialState: GetValueSettings<number>;

@@ -56,15 +56,18 @@ import {
 import { UtilsService } from '@core/services/utils.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: value stepper widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-stepper-widget`.
+ */
 @Component({
     selector: 'tb-value-stepper-widget',
     templateUrl: './value-stepper-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './value-stepper-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: value stepper widget UI.
- */
+standalone: false
 })
 export class ValueStepperWidgetComponent extends
   BasicActionWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -136,6 +139,11 @@ export class ValueStepperWidgetComponent extends
               protected zone: NgZone) {
     super(cd);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -210,6 +218,11 @@ export class ValueStepperWidgetComponent extends
     });
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.drawSvgShapePending) {
       this.drawSvg();
@@ -217,12 +230,22 @@ export class ValueStepperWidgetComponent extends
     super.ngAfterViewInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.shapeResize$) {
       this.shapeResize$.disconnect();
     }
     super.ngOnDestroy();
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     super.onInit();
@@ -235,6 +258,12 @@ export class ValueStepperWidgetComponent extends
     }
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for value.
+   *
+   * @param value value (number)
+   */
 
   private onValue(value: number): void {
     this.value = value;
@@ -253,6 +282,11 @@ export class ValueStepperWidgetComponent extends
     this.cd.markForCheck();
   }
 
+  /**
+   * update value text.
+   *
+   */
+
   private updateValueText() {
     if (isDefinedAndNotNull(this.value) && isNumeric(this.value)) {
       this.valueText = this.valueFormat.format(this.value);
@@ -260,6 +294,12 @@ export class ValueStepperWidgetComponent extends
       this.valueText = 'N/A';
     }
   }
+
+  /**
+   * Event handler for click.
+   *
+   * @param rightButtonClick right button click (boolean)
+   */
 
   private onClick(rightButtonClick: boolean = false) {
     this.updateValueText();
@@ -274,6 +314,11 @@ export class ValueStepperWidgetComponent extends
       });
     }
   }
+
+  /**
+   * draw svg.
+   *
+   */
 
   private drawSvg() {
     let leftButtonSetting: PowerButtonWidgetSettings;
@@ -358,6 +403,12 @@ export class ValueStepperWidgetComponent extends
     this.onResize();
   }
 
+  /**
+   * update left disabled state.
+   *
+   * @param disabled disabled (boolean)
+   */
+
   private updateLeftDisabledState(disabled: boolean) {
     this.leftDisabledState = disabled;
     this.powerButtonSvgShapeLeft?.setDisabled(this.leftDisabledState);
@@ -365,11 +416,31 @@ export class ValueStepperWidgetComponent extends
   }
 
 
+  /**
+
+
+   * update right disabled state.
+
+
+   *
+
+
+   * @param disabled disabled (boolean)
+
+
+   */
+
+
   private updateRightDisabledState(disabled: boolean) {
     this.rightDisabledState = disabled;
     this.powerButtonSvgShapeRight?.setDisabled(this.rightDisabledState);
     this.cd.markForCheck();
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const panelWidth = this.stepperContent.nativeElement.getBoundingClientRect().width;

@@ -53,15 +53,18 @@ import { WidgetComponent } from '@home/components/widget/widget.component';
 import { TbUnit } from '@shared/models/unit.models';
 import { UnitService } from '@core/services/unit.service';
 
+
+/**
+ * Angular component: range chart widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-range-chart-widget`.
+ */
 @Component({
     selector: 'tb-range-chart-widget',
     templateUrl: './range-chart-widget.component.html',
     styleUrls: ['./range-chart-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: range chart widget UI.
- */
+standalone: false
 })
 export class RangeChartWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -100,6 +103,11 @@ export class RangeChartWidgetComponent implements OnInit, OnDestroy, AfterViewIn
               private renderer: Renderer2,
               private cd: ChangeDetectorRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.ctx.$scope.rangeChartWidget = this;
@@ -142,10 +150,20 @@ export class RangeChartWidgetComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     const settings = rangeChartTimeSeriesSettings(this.settings, this.rangeItems, this.decimals, this.units);
     this.timeSeriesChart = new TbTimeSeriesChart(this.ctx, settings, this.chartShape.nativeElement, this.renderer);
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     if (this.timeSeriesChart) {
@@ -153,11 +171,21 @@ export class RangeChartWidgetComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     if (this.timeSeriesChart) {
@@ -165,11 +193,22 @@ export class RangeChartWidgetComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
+  /**
+   * Event handler for latest data updated.
+   *
+   */
+
   public onLatestDataUpdated() {
     if (this.timeSeriesChart) {
       this.timeSeriesChart.latestUpdated();
     }
   }
+
+  /**
+   * toggle range item.
+   *
+   * @param item item (RangeItem)
+   */
 
   public toggleRangeItem(item: RangeItem) {
     item.enabled = !item.enabled;

@@ -84,8 +84,9 @@ import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.lenient;
 /**
- * Unit test for tb mqtt node rule node.
+ * Unit test for tb mqtt node (MQTT publish/subscribe nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -107,6 +108,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
     protected Promise<MqttConnectResult> promiseMock;
     @Mock
     protected MqttConnectResult resultMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     protected void setUp() {
@@ -129,6 +135,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
             }
         });
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -145,6 +156,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(mqttNodeConfig.getProtocolVersion()).isEqualTo(MqttVersion.MQTT_3_1_1);
         assertThat(mqttNodeConfig.getCredentials()).isInstanceOf(AnonymousCredentials.class);
     }
+    /**
+     * Verify get owner id method.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyGetOwnerIdMethod() {
@@ -155,6 +171,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
         String expectedOwnerIdStr = "Tenant[" + TENANT_ID.getId() + "]RuleNode[" + RULE_NODE_ID.getId() + "]";
         assertThat(actualOwnerIdStr).isEqualTo(expectedOwnerIdStr);
     }
+    /**
+     * Verify prepare mqtt client config method with basic credentials.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyPrepareMqttClientConfigMethodWithBasicCredentials() throws Exception {
@@ -172,6 +193,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(mqttClientConfig.getUsername()).isEqualTo("test_username");
         assertThat(mqttClientConfig.getPassword()).isEqualTo("test_password");
     }
+    /**
+     * Given ssl is true and credentials when get ssl context then verify ssl context.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenSslIsTrueAndCredentials_whenGetSslContext_thenVerifySslContext() throws Exception {
@@ -190,6 +216,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
                         "sslContext")
                 .isEqualTo(SslContextBuilder.forClient().build());
     }
+    /**
+     * Given ssl is false when get ssl context then verify ssl context is null.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenSslIsFalse_whenGetSslContext_thenVerifySslContextIsNull() throws Exception {
@@ -203,6 +234,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
         SslContext actualSslContext = mqttClientConfig.getValue().getSslContext();
         assertThat(actualSslContext).isNull();
     }
+    /**
+     * Given successful connect result when init then ok.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenSuccessfulConnectResult_whenInit_thenOk() throws Exception {
@@ -214,6 +250,16 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
 
         assertThatNoException().isThrownBy(() -> mqttNode.init(ctxMock, new TbNodeConfiguration(JacksonUtil.valueToTree(mqttNodeConfig))));
     }
+    /**
+     * Given invalid client id when init then throws exception.
+     *
+     * @param version version ({@link MqttVersion})
+     * @param maxLength max length
+     * @param repeat repeat
+     * @param serviceId service id ({@link String})
+     * @param appendSuffix append suffix
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource("provideInvalidClientIdScenarios")
@@ -255,6 +301,13 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
                 Arguments.of(MqttVersion.MQTT_3_1, 23, 5, "verylongservicename", true)
         );
     }
+    /**
+     * Given failed by timeout connect result when init then throws exception.
+     *
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TimeoutException if timeout exception is thrown during processing
+     */
 
     @Test
     public void givenFailedByTimeoutConnectResult_whenInit_thenThrowsException() throws ExecutionException, InterruptedException, TimeoutException {
@@ -271,6 +324,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(false);
     }
+    /**
+     * Given failed connect result when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFailedConnectResult_whenInit_thenThrowsException() throws Exception {
@@ -290,6 +348,14 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(false);
     }
+    /**
+     * Given force ack is true and topic pattern and is retained msg is true when on msg then tell success.
+     *
+     * @param topicPattern topic pattern ({@link String})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -335,6 +401,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
                 Arguments.of("$[msg-topic-name]", TbMsgMetaData.EMPTY, "{\"msg-topic-name\":\"msg-new-topic\"}")
         );
     }
+    /**
+     * Given force ack is false parse to plain text is true and msg publishing failed when on msg then tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenForceAckIsFalseParseToPlainTextIsTrueAndMsgPublishingFailed_whenOnMsg_thenTellFailure() throws Exception {
@@ -377,6 +448,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
         TbMsg actualMsg = actualMsgCaptor.getValue();
         assertThat(actualMsg).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(expectedMsg);
     }
+    /**
+     * Given mqtt client is not null when destroy then disconnect.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMqttClientIsNotNull_whenDestroy_thenDisconnect() {
@@ -384,6 +460,11 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
         mqttNode.destroy();
         then(mqttClientMock).should().disconnect();
     }
+    /**
+     * Given mqtt client is null when destroy then should have no interactions.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMqttClientIsNull_whenDestroy_thenShouldHaveNoInteractions() {
@@ -391,6 +472,12 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
         mqttNode.destroy();
         then(mqttClientMock).shouldHaveNoInteractions();
     }
+    /**
+     * Verify protocol version mapping.
+     *
+     * @param expectedVersion expected version ({@link MqttVersion})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -429,6 +516,12 @@ public class TbMqttNodeTest extends AbstractRuleNodeUpgradeTest {
                         "{\"topicPattern\":\"my-topic\",\"port\":1883,\"connectTimeoutSec\":10,\"cleanSession\":true, \"ssl\":false, \"retainedMessage\":false,\"credentials\":{\"type\":\"anonymous\"},\"parseToPlainText\":false, \"protocolVersion\":\"MQTT_3_1\"}")
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

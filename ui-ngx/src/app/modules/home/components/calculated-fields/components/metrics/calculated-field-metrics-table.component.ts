@@ -58,6 +58,12 @@ import { TbEditorCompleter } from '@shared/models/ace/completion.models';
 import { AceHighlightRules } from '@shared/models/ace/ace.models';
 import { Observable } from "rxjs";
 
+
+/**
+ * Angular component: calculated field metrics table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-metrics-table`.
+ */
 @Component({
     selector: 'tb-calculated-field-metrics-table',
     templateUrl: './calculated-field-metrics-table.component.html',
@@ -74,10 +80,7 @@ import { Observable } from "rxjs";
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: calculated field metrics table UI.
- */
+standalone: false
 })
 export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValueAccessor, Validator, AfterViewInit {
 
@@ -119,11 +122,21 @@ export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValu
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (this.simpleMode) {
       this.displayColumns = ['name', 'function', 'argumentName', 'actions'];
     }
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.sort.sortChange.asObservable().pipe(
@@ -139,16 +152,40 @@ export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValu
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {}
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     this.updateErrorText();
     return this.errorText ? { metricsFormArray: false } : null;
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disable = isDisabled;
   }
+
+  /**
+   * Event handler for delete.
+   *
+   * @param metric metric (CalculatedFieldAggMetricValue)
+   */
 
   onDelete($event: Event, metric: CalculatedFieldAggMetricValue): void {
     $event.stopPropagation();
@@ -156,6 +193,13 @@ export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValu
     this.metricsFormArray.removeAt(index);
     this.metricsFormArray.markAsDirty();
   }
+
+  /**
+   * manage metrics.
+   *
+   * @param matButton mat button (MatIconButton)
+   * @param readonly readonly (boolean)
+   */
 
   manageMetrics($event: Event, matButton: MatIconButton, metric = {} as CalculatedFieldAggMetricValue, readonly: boolean = false): void {
     $event?.stopPropagation();
@@ -201,10 +245,21 @@ export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValu
     }
   }
 
+  /**
+   * update data source.
+   *
+   * @param value value (CalculatedFieldAggMetricValue[])
+   */
+
   private updateDataSource(value: CalculatedFieldAggMetricValue[]): void {
     const sortedValue = this.sortData(value);
     this.dataSource.loadData(sortedValue);
   }
+
+  /**
+   * update error text.
+   *
+   */
 
   private updateErrorText(): void {
     if (!this.metricsFormArray.controls.length) {
@@ -214,6 +269,13 @@ export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValu
     }
   }
 
+  /**
+   * get metrics object.
+   *
+   * @param value value (CalculatedFieldAggMetricValue[])
+   * @returns Record<string, CalculatedFieldAggMetric> observable or value
+   */
+
   private getMetricsObject(value: CalculatedFieldAggMetricValue[]): Record<string, CalculatedFieldAggMetric> {
     return value.reduce((acc, metricValue) => {
       const { name, ...metric } = metricValue;
@@ -222,10 +284,22 @@ export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValu
     }, {} as Record<string, CalculatedFieldAggMetric>);
   }
 
+  /**
+   * write value.
+   *
+   * @param metrics metrics (Record<string, CalculatedFieldAggMetric>)
+   */
+
   writeValue(metrics: Record<string, CalculatedFieldAggMetric>): void {
     this.metricsFormArray.clear({emitEvent: false});
     this.populateZonesFormArray(metrics);
   }
+
+  /**
+   * populate zones form array.
+   *
+   * @param metrics metrics (Record<string, CalculatedFieldAggMetric>)
+   */
 
   private populateZonesFormArray(metrics: Record<string, CalculatedFieldAggMetric>): void {
     Object.keys(metrics).forEach(key => {
@@ -237,6 +311,14 @@ export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValu
     });
     this.updateDataSource(this.metricsFormArray.value);
   }
+
+  /**
+   * get sort value.
+   *
+   * @param metric metric (CalculatedFieldAggMetricValue)
+   * @param column column (string)
+   * @returns string observable or value
+   */
 
   private getSortValue(metric: CalculatedFieldAggMetricValue, column: string): string {
     switch (column) {
@@ -250,6 +332,13 @@ export class CalculatedFieldMetricsTableComponent implements OnInit, ControlValu
         return metric.name;
     }
   }
+
+  /**
+   * sort data.
+   *
+   * @param data dialog or route input data
+   * @returns CalculatedFieldAggMetricValue[] observable or value
+   */
 
   private sortData(data: CalculatedFieldAggMetricValue[]): CalculatedFieldAggMetricValue[] {
     return data.sort((a, b) => {

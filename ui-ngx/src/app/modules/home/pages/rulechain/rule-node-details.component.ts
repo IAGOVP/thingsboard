@@ -39,14 +39,17 @@ import { ServiceType } from '@shared/models/queue.models';
 import { takeUntil } from 'rxjs/operators';
 import { AdditionalDebugActionConfig } from '@home/components/entity/debug/entity-debug-settings.model';
 
+
+/**
+ * Angular component: rule node details (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-node`.
+ */
 @Component({
     selector: 'tb-rule-node',
     templateUrl: './rule-node-details.component.html',
     styleUrls: ['./rule-node-details.component.scss'],
-    standalone: false
-/**
- * Angular component: rule node details UI.
- */
+standalone: false
 })
 export class RuleNodeDetailsComponent extends PageComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -91,6 +94,11 @@ export class RuleNodeDetailsComponent extends PageComponent implements OnInit, O
     super();
     this.ruleNodeFormGroup = this.fb.group({});
   }
+
+  /**
+   * build form.
+   *
+   */
 
   private buildForm() {
     if (this.ruleNode) {
@@ -139,17 +147,32 @@ export class RuleNodeDetailsComponent extends PageComponent implements OnInit, O
     }
   }
 
+  /**
+   * update rule node.
+   *
+   */
+
   private updateRuleNode() {
     const formValue = this.ruleNodeFormGroup.value || {};
     formValue.name = formValue.name.trim();
     Object.assign(this.ruleNode, formValue);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.disabled) {
       this.ruleNodeFormGroup.disable({emitEvent: false});
     }
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -167,9 +190,19 @@ export class RuleNodeDetailsComponent extends PageComponent implements OnInit, O
     }
   }
 
+  /**
+   * validate.
+   *
+   */
+
   validate() {
     this.ruleNodeConfigComponent.validate();
   }
+
+  /**
+   * Event handler for single mode change.
+   *
+   */
 
   onSingleModeChange($event: Event): void {
     if ($event) {
@@ -179,6 +212,11 @@ export class RuleNodeDetailsComponent extends PageComponent implements OnInit, O
     singleModeControl.patchValue(!singleModeControl.value);
     singleModeControl.markAsDirty();
   }
+
+  /**
+   * open rule chain.
+   *
+   */
 
   openRuleChain($event: Event) {
     if ($event) {
@@ -194,14 +232,29 @@ export class RuleNodeDetailsComponent extends PageComponent implements OnInit, O
     }
   }
 
+  /**
+   * is add queue.
+   *
+   */
+
   isAddQueue() {
     return this.isSingleton() || this.ruleNode.component.hasQueueName;
   }
+
+  /**
+   * is singleton.
+   *
+   */
 
   isSingleton() {
     return this.ruleNode.component.clusteringMode === ComponentClusteringMode.SINGLETON ||
       this.ruleNode.component.clusteringMode === ComponentClusteringMode.USER_PREFERENCE;
   }
+
+  /**
+   * is singleton edit allowed.
+   *
+   */
 
   isSingletonEditAllowed() {
     return this.ruleNode.component.clusteringMode === ComponentClusteringMode.USER_PREFERENCE;

@@ -29,11 +29,11 @@ export enum TenantProfileType {
   DEFAULT = 'DEFAULT'
 }
 
+
 /**
-
- * TypeScript models and enums for default tenant profile configuration.
-
+ * TypeScript interfaces, types, and enums for default tenant profile configuration (shared TypeScript models).
  */
+
 
 export interface DefaultTenantProfileConfiguration {
   maxDevices: number;

@@ -52,11 +52,11 @@ export const directionTypeTranslations = new Map<EntitySearchDirection, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for relation entity type filter.
-
+ * TypeScript interfaces, types, and enums for relation entity type filter (shared TypeScript models).
  */
+
 
 export interface RelationEntityTypeFilter {
   relationType: string;

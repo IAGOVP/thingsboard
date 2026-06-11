@@ -49,6 +49,12 @@ import { WidgetService } from '@core/http/widget.service';
 import { TbFunction } from '@shared/models/js-function.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: mobile action editor (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-action-editor`.
+ */
 @Component({
     selector: 'tb-mobile-action-editor',
     templateUrl: './mobile-action-editor.component.html',
@@ -58,10 +64,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => MobileActionEditorComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: mobile action editor UI.
- */
+standalone: false
 })
 export class MobileActionEditorComponent implements ControlValueAccessor, OnInit {
 
@@ -102,12 +105,29 @@ export class MobileActionEditorComponent implements ControlValueAccessor, OnInit
     this.functionScopeVariables = this.widgetService.getWidgetScopeVariables();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.mobileActionFormGroup = this.fb.group({
@@ -134,6 +154,12 @@ export class MobileActionEditorComponent implements ControlValueAccessor, OnInit
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -149,6 +175,12 @@ export class MobileActionEditorComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (WidgetMobileActionDescriptor | null)
+   */
+
   writeValue(value: WidgetMobileActionDescriptor | null): void {
     this.mobileActionFormGroup.patchValue({
       type: value?.type,
@@ -160,6 +192,11 @@ export class MobileActionEditorComponent implements ControlValueAccessor, OnInit
     this.getActionConfigs();
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     let descriptor: WidgetMobileActionDescriptor = null;
     if (this.mobileActionFormGroup.valid && this.mobileActionTypeFormGroup.valid) {
@@ -167,6 +204,13 @@ export class MobileActionEditorComponent implements ControlValueAccessor, OnInit
     }
     this.propagateChange(descriptor);
   }
+
+  /**
+   * update mobile action type.
+   *
+   * @param type type (WidgetMobileActionType)
+   * @param action action (WidgetMobileActionDescriptor)
+   */
 
   private updateMobileActionType(type?: WidgetMobileActionType, action?: WidgetMobileActionDescriptor) {
     const prevType = action?.type;
@@ -311,6 +355,11 @@ export class MobileActionEditorComponent implements ControlValueAccessor, OnInit
     });
   }
 
+  /**
+   * get action configs.
+   *
+   */
+
   getActionConfigs() {
     const type = this.mobileActionFormGroup.get('type').value;
     this.actionConfig = [];
@@ -387,6 +436,11 @@ export class MobileActionEditorComponent implements ControlValueAccessor, OnInit
         break;
     }
   }
+
+  /**
+   * get common action configs.
+   *
+   */
 
   getCommonActionConfigs() {
     this.commonActionConfig = [

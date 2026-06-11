@@ -26,6 +26,12 @@ import { RelationTypes } from '@app/shared/models/relation.models';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 import { coerceArray, coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: relation type autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-relation-type-autocomplete`.
+ */
 @Component({
     selector: 'tb-relation-type-autocomplete',
     templateUrl: './relation-type-autocomplete.component.html',
@@ -35,10 +41,7 @@ import { coerceArray, coerceBoolean } from '@shared/decorators/coercion';
             useExisting: forwardRef(() => RelationTypeAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: relation type autocomplete UI.
- */
+standalone: false
 })
 export class RelationTypeAutocompleteComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
 
@@ -86,12 +89,29 @@ export class RelationTypeAutocompleteComponent implements ControlValueAccessor, 
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
 
@@ -106,11 +126,27 @@ export class RelationTypeAutocompleteComponent implements ControlValueAccessor, 
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -121,12 +157,23 @@ export class RelationTypeAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
+
   writeValue(value: string | null): void {
     this.searchText = '';
     this.modelValue = value;
     this.relationTypeFormGroup.get('relationType').patchValue(value, {emitEvent: false});
     this.dirty = true;
   }
+
+  /**
+   * Event handler for focus.
+   *
+   */
 
   onFocus() {
     if (this.dirty) {
@@ -135,6 +182,12 @@ export class RelationTypeAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (string | null)
+   */
+
   updateView(value: string | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -142,13 +195,32 @@ export class RelationTypeAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * display relation type fn.
+   *
+   * @param relationType relation type (string)
+   * @returns string | undefined observable or value
+   */
+
   displayRelationTypeFn(relationType?: string): string | undefined {
     return relationType ? relationType : undefined;
   }
 
+  /**
+   * fetch relation types.
+   *
+   * @param searchText search text (string)
+   * @param strictMatch strict match (boolean)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   fetchRelationTypes(searchText?: string, strictMatch: boolean = false): Observable<Array<string>> {
     this.searchText = searchText;
     return of(RelationTypes).pipe(
+      /**
+       * map.
+       *
+       */
       map(relationTypes => relationTypes.filter( relationType => {
         if (strictMatch) {
           return searchText ? relationType === searchText : false;
@@ -158,6 +230,11 @@ export class RelationTypeAutocompleteComponent implements ControlValueAccessor, 
       }))
     );
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.relationTypeFormGroup.get('relationType').patchValue(null, {emitEvent: true});

@@ -23,11 +23,11 @@ import { deepClone, isNotEmptyStr } from '@core/utils';
 
 export const WEB_URL_REGEX = /^(https?:\/\/)?(localhost|([\p{L}\p{M}\w-]+\.)+[\p{L}\p{M}\w-]+)(:\d+)?(\/[\w\-._~:/?#[\]@!$&'()*+,;=%\p{L}\p{N}]*)?$/u;
 
+
 /**
-
- * TypeScript models and enums for qr code settings.
-
+ * TypeScript interfaces, types, and enums for qr code settings (shared TypeScript models).
  */
+
 
 export interface QrCodeSettings extends HasTenantId {
   useDefaultApp: boolean;

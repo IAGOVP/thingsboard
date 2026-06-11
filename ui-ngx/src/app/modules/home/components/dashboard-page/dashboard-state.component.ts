@@ -26,14 +26,17 @@ import { IDashboardComponent } from '@home/models/dashboard-component.models';
 import { EntityId } from '@shared/models/id/entity-id';
 import { Subscription } from 'rxjs';
 
+
+/**
+ * Angular component: dashboard state (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-state`.
+ */
 @Component({
     selector: 'tb-dashboard-state',
     templateUrl: './dashboard-state.component.html',
     styleUrls: ['./dashboard-state.component.scss'],
-    standalone: false
-/**
- * Angular component: dashboard state UI.
- */
+standalone: false
 })
 export class DashboardStateComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -81,6 +84,11 @@ export class DashboardStateComponent extends PageComponent implements OnInit, On
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.dashboard = deepClone(this.ctx.stateController.dashboardCtrl.dashboardCtx.getDashboard());
     const state = this.dashboard.configuration.states[this.stateId];
@@ -115,11 +123,21 @@ export class DashboardStateComponent extends PageComponent implements OnInit, On
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.stateSubscription) {
       this.stateSubscription.unsubscribe();
     }
   }
+
+  /**
+   * update current state.
+   *
+   */
 
   private updateCurrentState(): void {
     const stateObject: StateObject = {};

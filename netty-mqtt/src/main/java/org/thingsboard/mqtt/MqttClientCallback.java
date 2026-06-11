@@ -22,34 +22,80 @@ import io.netty.handler.codec.mqtt.MqttSubAckMessage;
 import io.netty.handler.codec.mqtt.MqttUnsubAckMessage;
 
 /**
- * Lifecycle hooks: connection lost, reconnect attempts, and successful reconnect.
+ * Client lifecycle callbacks for connection loss and reconnect.
+ *
+ * <p>Optional hooks: {@link #connectionLost(Throwable)}, reconnect attempts, and successful reconnect.
  */
+
 public interface MqttClientCallback {
 
+    
     /**
-     * This method is called when the connection to the server is lost.
+     * Called when the TCP/MQTT connection is lost unexpectedly.
      *
-     * @param cause the reason behind the loss of connection.
+     * @param cause failure that closed the connection or caused the error
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void connectionLost(Throwable cause);
 
+    
     /**
-     * This method is called when the connection to the server is recovered.
+     * Called after a successful automatic reconnect.
      *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void onSuccessfulReconnect();
+    /**
+     * Handles conn ack.
+     *
+     * @param connAckMessage conn ack message ({@link MqttConnAckMessage})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default void onConnAck(MqttConnAckMessage connAckMessage) {
     }
+    /**
+     * Handles pub ack.
+     *
+     * @param pubAckMessage pub ack message ({@link MqttPubAckMessage})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default void onPubAck(MqttPubAckMessage pubAckMessage) {
     }
+    /**
+     * Handles sub ack.
+     *
+     * @param pubAckMessage pub ack message ({@link MqttSubAckMessage})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default void onSubAck(MqttSubAckMessage pubAckMessage) {
     }
+    /**
+     * Handles unsub ack.
+     *
+     * @param unsubAckMessage unsub ack message ({@link MqttUnsubAckMessage})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default void onUnsubAck(MqttUnsubAckMessage unsubAckMessage) {
     }
+    /**
+     * Handles disconnect.
+     *
+     * @param mqttDisconnectMessage mqtt disconnect message ({@link MqttMessage})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default void onDisconnect(MqttMessage mqttDisconnectMessage) {
     }

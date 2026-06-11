@@ -21,14 +21,17 @@ import { EntityTableHeaderComponent } from '../../components/entity/entity-table
 import { EntityType } from '@shared/models/entity-type.models';
 import { EntityViewInfo } from '@app/shared/models/entity-view.models';
 
+
+/**
+ * Angular component: entity view table header (home/entity-view pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-view-table-header`.
+ */
 @Component({
     selector: 'tb-entity-view-table-header',
     templateUrl: './entity-view-table-header.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: entity view table header UI.
- */
+standalone: false
 })
 export class EntityViewTableHeaderComponent extends EntityTableHeaderComponent<EntityViewInfo> {
 
@@ -37,6 +40,12 @@ export class EntityViewTableHeaderComponent extends EntityTableHeaderComponent<E
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * entity view type changed.
+   *
+   * @param entityViewType entity view type (string)
+   */
 
   entityViewTypeChanged(entityViewType: string) {
     this.entitiesTableConfig.componentsData.entityViewType = entityViewType;

@@ -18,14 +18,23 @@ package org.thingsboard.rule.engine.action;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbMsgCount rule node.
+ * JSON configuration POJO for {@link TbMsgCount} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMsgCountNodeConfiguration implements NodeConfiguration<TbMsgCountNodeConfiguration> {
 
     private String telemetryPrefix;
     private int interval;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgCountNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgCountNodeConfiguration defaultConfiguration() {

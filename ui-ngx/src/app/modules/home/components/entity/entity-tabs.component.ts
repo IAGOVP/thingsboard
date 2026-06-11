@@ -36,8 +36,11 @@ import { PageLink } from '@shared/models/page/page-link';
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: entity tabs UI.
+ * Angular component: entity tabs (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class EntityTabsComponent<T extends BaseData<HasId>,
   P extends PageLink = PageLink,
   L extends BaseData<HasId> = T,
@@ -110,8 +113,18 @@ export abstract class EntityTabsComponent<T extends BaseData<HasId>,
     this.authUser = getCurrentAuthUser(this.store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.entityTabsSubject.next(this.entityTabs.toArray());
@@ -122,9 +135,21 @@ export abstract class EntityTabsComponent<T extends BaseData<HasId>,
     );
   }
 
+  /**
+   * set entity.
+   *
+   * @param entity entity (T)
+   */
+
   protected setEntity(entity: T) {
     this.entityValue = entity;
   }
+
+  /**
+   * set entities table config.
+   *
+   * @param entitiesTableConfig entities table config (C)
+   */
 
   protected setEntitiesTableConfig(entitiesTableConfig: C) {
     this.entitiesTableConfigValue = entitiesTableConfig;

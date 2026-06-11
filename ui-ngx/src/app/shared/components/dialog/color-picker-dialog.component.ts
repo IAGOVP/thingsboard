@@ -31,14 +31,17 @@ export interface ColorPickerDialogResult {
   canceled?: boolean;
 }
 
+
+/**
+ * Angular component: color picker dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-color-picker-dialog`.
+ */
 @Component({
     selector: 'tb-color-picker-dialog',
     templateUrl: './color-picker-dialog.component.html',
     styleUrls: ['./color-picker-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: color picker dialog UI.
- */
+standalone: false
 })
 export class ColorPickerDialogComponent extends DialogComponent<ColorPickerDialogComponent, ColorPickerDialogResult> {
 
@@ -54,9 +57,20 @@ export class ColorPickerDialogComponent extends DialogComponent<ColorPickerDialo
     this.colorClearButton = data.colorClearButton;
   }
 
+  /**
+   * select color.
+   *
+   * @param color color (string)
+   */
+
   selectColor(color: string) {
     this.dialogRef.close({color});
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel(): void {
     this.dialogRef.close({canceled: true});

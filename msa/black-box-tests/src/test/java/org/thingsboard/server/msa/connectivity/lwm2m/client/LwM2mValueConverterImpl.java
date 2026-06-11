@@ -32,17 +32,34 @@ import java.util.Date;
 
 import static org.eclipse.leshan.core.model.ResourceModel.Type.OPAQUE;
 /**
- * Lw m2m value converter impl.
+ * Lw m2m value converter impl (black-box test infrastructure — LwM2M transport tests).
  */
+
 
 @Slf4j
 public class LwM2mValueConverterImpl implements LwM2mValueConverter {
 
     private static final LwM2mValueConverterImpl INSTANCE = new LwM2mValueConverterImpl();
+    /**
+     * Returns singleton {@link ContainerTestSuite} instance.
+     *
+     * @return {@link LwM2mValueConverterImpl}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static LwM2mValueConverterImpl getInstance() {
         return INSTANCE;
     }
+    /**
+     * Convert value.
+     *
+     * @param value value ({@link Object})
+     * @param currentType current type ({@link Type})
+     * @param expectedType expected type ({@link Type})
+     * @param resourcePath resource path ({@link LwM2mPath})
+     * @return {@link Object}
+     * @throws CodecException if codec exception is thrown during processing
+     */
 
     @Override
     public Object convertValue(Object value, Type currentType, Type expectedType, LwM2mPath resourcePath)

@@ -25,11 +25,11 @@ export interface DashboardStateInfo extends DashboardState {
   id: string;
 }
 
+
 /**
-
- * TypeScript models and enums for dashboard states datasource.
-
+ * Dashboard states datasource (ThingsBoard web UI).
  */
+
 
 export class DashboardStatesDatasource implements DataSource<DashboardStateInfo> {
 
@@ -43,14 +43,35 @@ export class DashboardStatesDatasource implements DataSource<DashboardStateInfo>
   constructor(private states: {[id: string]: DashboardState }) {
   }
 
+  /**
+   * connect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   * @returns Observable<DashboardStateInfo[] | ReadonlyArray<DashboardStateInfo>> observable or value
+   */
+
   connect(collectionViewer: CollectionViewer): Observable<DashboardStateInfo[] | ReadonlyArray<DashboardStateInfo>> {
     return this.statesSubject.asObservable();
   }
+
+  /**
+   * disconnect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   */
 
   disconnect(collectionViewer: CollectionViewer): void {
     this.statesSubject.complete();
     this.pageDataSubject.complete();
   }
+
+  /**
+   * load states.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param reload reload (boolean)
+   * @returns Observable<PageData<DashboardStateInfo>> observable or value
+   */
 
   loadStates(pageLink: PageLink, reload: boolean = false): Observable<PageData<DashboardStateInfo>> {
     if (reload) {
@@ -69,11 +90,24 @@ export class DashboardStatesDatasource implements DataSource<DashboardStateInfo>
     return result;
   }
 
+  /**
+   * fetch states.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<DashboardStateInfo>> observable or value
+   */
+
   fetchStates(pageLink: PageLink): Observable<PageData<DashboardStateInfo>> {
     return this.getAllStates().pipe(
       map((data) => pageLink.filterData(data))
     );
   }
+
+  /**
+   * get all states.
+   *
+   * @returns Observable<Array<DashboardStateInfo>> observable or value
+   */
 
   getAllStates(): Observable<Array<DashboardStateInfo>> {
     if (!this.allStates) {
@@ -90,11 +124,23 @@ export class DashboardStatesDatasource implements DataSource<DashboardStateInfo>
     return this.allStates;
   }
 
+  /**
+   * is empty.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isEmpty(): Observable<boolean> {
     return this.statesSubject.pipe(
       map((states) => !states.length)
     );
   }
+
+  /**
+   * total.
+   *
+   * @returns Observable<number> observable or value
+   */
 
   total(): Observable<number> {
     return this.pageDataSubject.pipe(

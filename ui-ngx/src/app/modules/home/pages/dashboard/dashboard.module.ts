@@ -34,6 +34,9 @@ import { ImportDashboardFileDialogComponent } from "@home/pages/dashboard/import
 /**
  * Angular NgModule: dashboard feature area.
  */
+/**
+ * Angular NgModule bundling dashboard (home/dashboard pages).
+ */
 @NgModule({
   declarations: [
     DashboardFormComponent,
@@ -48,6 +51,6 @@ import { ImportDashboardFileDialogComponent } from "@home/pages/dashboard/import
     HomeComponentsModule,
     HomeDialogsModule,
     DashboardRoutingModule
-  ]})
+]})
 export class DashboardModule {
 }

@@ -20,11 +20,11 @@ import { deepClone } from '@core/utils';
 
 export declare type MenuSectionType = 'link' | 'toggle';
 
+
 /**
-
- * TypeScript models and enums for menu section.
-
+ * Menu section (ThingsBoard web UI).
  */
+
 
 export interface MenuSection {
   id: MenuId | string;

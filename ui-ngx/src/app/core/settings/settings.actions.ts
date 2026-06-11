@@ -20,11 +20,11 @@ export enum SettingsActionTypes {
   CHANGE_LANGUAGE = '[Settings] Change Language'
 }
 
+
 /**
-
- * action settings change language.
-
+ * Action settings change language (ThingsBoard web UI).
  */
+
 
 export class ActionSettingsChangeLanguage implements Action {
   readonly type = SettingsActionTypes.CHANGE_LANGUAGE;

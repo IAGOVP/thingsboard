@@ -20,11 +20,11 @@ import {
 } from '@shared/components/button/widget-button.models';
 import { DataToValueType, GetValueAction, GetValueSettings } from '@shared/models/action-widget-settings.models';
 
+
 /**
-
- * TypeScript models and enums for action button widget settings.
-
+ * Action button widget settings (ThingsBoard web UI).
  */
+
 
 export interface ActionButtonWidgetSettings {
   appearance: WidgetButtonAppearance;

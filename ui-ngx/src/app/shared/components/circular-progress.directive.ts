@@ -17,13 +17,17 @@
 import { ComponentRef, Directive, ElementRef, Input, ViewContainerRef } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
-@Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[tb-circular-progress]',
-    standalone: false
+
 /**
  * Angular directive: circular progress.
  */
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: '[tb-circular-progress]',
+/**
+ * Angular directive: circular progress (shared UI components).
+ */
+    standalone: false
 })
 export class CircularProgressDirective {
 
@@ -67,6 +71,11 @@ export class CircularProgressDirective {
               private viewContainerRef: ViewContainerRef) {
     this.createCircularProgress();
   }
+
+  /**
+   * POST/PUT entity — create circular progress.
+   *
+   */
 
   createCircularProgress() {
     this.elementRef.nativeElement.style.position = 'relative';

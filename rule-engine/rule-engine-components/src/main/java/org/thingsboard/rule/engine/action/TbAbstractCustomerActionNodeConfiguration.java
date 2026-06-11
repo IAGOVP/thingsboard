@@ -17,8 +17,11 @@ package org.thingsboard.rule.engine.action;
 
 import lombok.Data;
 /**
- * JSON configuration for TbAbstractCustomerAction rule node.
+ * JSON configuration POJO for {@link TbAbstractCustomerAction} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public abstract class TbAbstractCustomerActionNodeConfiguration {

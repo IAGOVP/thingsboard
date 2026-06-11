@@ -45,14 +45,17 @@ import { DashboardId } from '@shared/models/id/dashboard-id';
 import { RuleChainType } from '@shared/models/rule-chain.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: device profile (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile`.
+ */
 @Component({
     selector: 'tb-device-profile',
     templateUrl: './device-profile.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device profile UI.
- */
+standalone: false
 })
 export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
 
@@ -93,6 +96,11 @@ export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -100,6 +108,13 @@ export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (DeviceProfile)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: DeviceProfile): UntypedFormGroup {
     this.deviceProfileId = entity?.id ? entity.id : null;
@@ -149,6 +164,13 @@ export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
     return form;
   }
 
+  /**
+   * check is new device profile.
+   *
+   * @param entity entity (DeviceProfile)
+   * @param form Angular reactive form group
+   */
+
   private checkIsNewDeviceProfile(entity: DeviceProfile, form: UntypedFormGroup) {
     if (entity && !entity.id) {
       form.get('type').patchValue(DeviceProfileType.DEFAULT, {emitEvent: true});
@@ -156,6 +178,12 @@ export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
       form.get('provisionType').patchValue(DeviceProvisionType.DISABLED, {emitEvent: true});
     }
   }
+
+  /**
+   * device profile type changed.
+   *
+   * @param form Angular reactive form group
+   */
 
   private deviceProfileTypeChanged(form: UntypedFormGroup) {
     const deviceProfileType: DeviceProfileType = form.get('type').value;
@@ -172,6 +200,12 @@ export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
     form.patchValue({profileData});
   }
 
+  /**
+   * device profile transport type changed.
+   *
+   * @param form Angular reactive form group
+   */
+
   private deviceProfileTransportTypeChanged(form: UntypedFormGroup) {
     const deviceTransportType: DeviceTransportType = form.get('transportType').value;
     this.displayTransportConfiguration = deviceTransportType &&
@@ -187,6 +221,12 @@ export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
     profileData.transportConfiguration = createDeviceProfileTransportConfiguration(deviceTransportType);
     form.patchValue({profileData});
   }
+
+  /**
+   * update form.
+   *
+   * @param entity entity (DeviceProfile)
+   */
 
   updateForm(entity: DeviceProfile) {
     this.deviceProfileId = entity.id;
@@ -222,6 +262,13 @@ export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
     this.entityForm.patchValue({description: entity.description}, {emitEvent: false});
   }
 
+  /**
+   * prepare form value.
+   *
+   * @param formValue form value (any)
+   * @returns any observable or value
+   */
+
   prepareFormValue(formValue: any): any {
     if (formValue.defaultRuleChainId) {
       formValue.defaultRuleChainId = new RuleChainId(formValue.defaultRuleChainId);
@@ -238,6 +285,11 @@ export class DeviceProfileComponent extends EntityComponent<DeviceProfile> {
     delete deviceProvisionConfiguration.provisionDeviceKey;
     return super.prepareFormValue(formValue);
   }
+
+  /**
+   * Event handler for device profile id copied.
+   *
+   */
 
   onDeviceProfileIdCopied(event) {
     this.store.dispatch(new ActionNotificationShow(

@@ -17,14 +17,17 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LegendConfig, LegendData, LegendDirection, LegendKey, LegendPosition } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: legend (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-legend`.
+ */
 @Component({
     selector: 'tb-legend',
     templateUrl: './legend.component.html',
     styleUrls: ['./legend.component.scss'],
-    standalone: false
-/**
- * Angular component: legend UI.
- */
+standalone: false
 })
 export class LegendComponent implements OnInit {
 
@@ -43,6 +46,11 @@ export class LegendComponent implements OnInit {
 
   isRowDirection: boolean;
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.displayHeader = this.legendConfig.showMin === true ||
       this.legendConfig.showMax === true ||
@@ -56,6 +64,12 @@ export class LegendComponent implements OnInit {
     this.isRowDirection = this.legendConfig.direction === LegendDirection.row;
   }
 
+  /**
+   * toggle hide data.
+   *
+   * @param index index (number)
+   */
+
   toggleHideData(index: number) {
     const dataKey = this.legendData.keys.find(key => key.dataIndex === index).dataKey;
     if (!dataKey.settings.disableDataHiding) {
@@ -63,6 +77,12 @@ export class LegendComponent implements OnInit {
       this.legendKeyHiddenChange.emit(index);
     }
   }
+
+  /**
+   * legend keys.
+   *
+   * @returns LegendKey[] observable or value
+   */
 
   legendKeys(): LegendKey[] {
     try {

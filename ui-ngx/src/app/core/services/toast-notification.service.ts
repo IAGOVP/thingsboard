@@ -24,8 +24,11 @@ import { Observable, Subject } from 'rxjs';
     providedIn: 'root'
   }
 /**
- * Angular HTTP service: toast notification REST wrappers (`@core/http`).
+ * Angular injectable service: toast notification (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 )
 export class ToastNotificationService {
 
@@ -37,17 +40,41 @@ export class ToastNotificationService {
   ) {
   }
 
+  /**
+   * dispatch notification.
+   *
+   * @param notification notification (NotificationMessage)
+   */
+
   dispatchNotification(notification: NotificationMessage) {
     this.notificationSubject.next(notification);
   }
+
+  /**
+   * hide notification.
+   *
+   * @param hideNotification hide notification (HideNotification)
+   */
 
   hideNotification(hideNotification: HideNotification) {
     this.hideNotificationSubject.next(hideNotification);
   }
 
+  /**
+   * get notification.
+   *
+   * @returns Observable<NotificationMessage> observable or value
+   */
+
   getNotification(): Observable<NotificationMessage> {
     return this.notificationSubject.asObservable();
   }
+
+  /**
+   * get hide notification.
+   *
+   * @returns Observable<HideNotification> observable or value
+   */
 
   getHideNotification(): Observable<HideNotification> {
     return this.hideNotificationSubject.asObservable();

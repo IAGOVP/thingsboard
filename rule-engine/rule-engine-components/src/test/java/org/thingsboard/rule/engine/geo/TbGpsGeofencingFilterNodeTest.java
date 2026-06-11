@@ -45,11 +45,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+
 /**
 
- * Unit test for tb gps geofencing filter node rule node.
+ * Unit test for tb gps geofencing filter node (GPS geofencing filter and action nodes).
 
  */
+
 
 class TbGpsGeofencingFilterNodeTest {
 

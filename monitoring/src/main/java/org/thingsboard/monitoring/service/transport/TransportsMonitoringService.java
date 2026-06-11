@@ -23,18 +23,36 @@ import org.thingsboard.monitoring.config.transport.TransportMonitoringTarget;
 import org.thingsboard.monitoring.service.BaseHealthChecker;
 import org.thingsboard.monitoring.service.BaseMonitoringService;
 /**
- * Monitors MQTT, HTTP, CoAP, and LwM2M transports using {@link TransportType}-specific health checkers.
+ * Monitors MQTT, HTTP, CoAP, and LwM2M transports.
+ *
+ * <p>Registers {@link org.thingsboard.monitoring.config.transport.TransportType}-specific {@link org.thingsboard.monitoring.service.transport.TransportHealthChecker} beans from configuration.
  */
+
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public final class TransportsMonitoringService extends BaseMonitoringService<TransportMonitoringConfig, TransportMonitoringTarget> {
+    /**
+     * Creates health checker.
+     *
+     * @param config monitoring configuration for this transport or domain
+     * @param target monitoring target URL and device configuration
+     * @return {@link BaseHealthChecker}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected BaseHealthChecker<?, ?> createHealthChecker(TransportMonitoringConfig config, TransportMonitoringTarget target) {
         return applicationContext.getBean(config.getTransportType().getServiceClass(), config, target);
     }
+    /**
+     * Creates target.
+     *
+     * @param baseUrl base url ({@link String})
+     * @return {@link TransportMonitoringTarget}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TransportMonitoringTarget createTarget(String baseUrl) {
@@ -42,6 +60,12 @@ public final class TransportsMonitoringService extends BaseMonitoringService<Tra
         target.setBaseUrl(baseUrl);
         return target;
     }
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getName() {

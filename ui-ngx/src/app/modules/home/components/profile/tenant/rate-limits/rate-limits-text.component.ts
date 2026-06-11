@@ -18,14 +18,17 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { RateLimits, rateLimitsArrayToHtml } from './rate-limits.models';
 
+
+/**
+ * Angular component: rate limits text (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rate-limits-text`.
+ */
 @Component({
     selector: 'tb-rate-limits-text',
     templateUrl: './rate-limits-text.component.html',
     styleUrls: ['./rate-limits-text.component.scss'],
-    standalone: false
-/**
- * Angular component: rate limits text UI.
- */
+standalone: false
 })
 export class RateLimitsTextComponent implements OnChanges {
 
@@ -48,6 +51,12 @@ export class RateLimitsTextComponent implements OnChanges {
       }
     }
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (Array<RateLimits>)
+   */
 
   private updateView(value: Array<RateLimits>): void {
     if (value?.length) {

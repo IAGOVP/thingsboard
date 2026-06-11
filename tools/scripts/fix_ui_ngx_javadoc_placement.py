@@ -1,37 +1,25 @@
 #!/usr/bin/env python3
-"""Move JSDoc from inside @Injectable({...}) or after @NgModule({ to before decorators."""
+"""Move JSDoc from inside @Component/@Injectable/@NgModule/@Directive blocks to before decorators."""
 import re
 import sys
 from pathlib import Path
 
-# JSDoc between @Injectable({ ... and closing })
-INJECTABLE = re.compile(
-    r"(@Injectable\(\{\s*\n(?:[^}]*\n)*?)(\s*/\*\*[\s\S]*?\*/\s*\n)(\}\))",
-    re.MULTILINE,
-)
-# JSDoc after @NgModule({ ... exports without closing on same block - before })
-NGMODULE = re.compile(
-    r"(@NgModule\(\{[\s\S]*?)(\s*/\*\*[\s\S]*?\*/\s*\n)(\}\))",
+DECORATOR_BLOCK = re.compile(
+    r"(@(?:Component|Injectable|NgModule|Directive|Pipe)\(\{[\s\S]*?)"
+    r"(\s*/\*\*[\s\S]*?\*/\s*\n)"
+    r"(\}\))",
 )
 
 
 def fix(content: str) -> tuple[str, int]:
     n = 0
 
-    def inj_repl(m: re.Match) -> str:
+    def repl(m: re.Match) -> str:
         nonlocal n
         n += 1
         return m.group(2) + m.group(1) + m.group(3)
 
-    content = INJECTABLE.sub(inj_repl, content)
-
-    def ng_repl(m: re.Match) -> str:
-        nonlocal n
-        n += 1
-        return m.group(2) + m.group(1) + m.group(3)
-
-    content = NGMODULE.sub(ng_repl, content)
-    return content, n
+    return DECORATOR_BLOCK.sub(repl, content), n
 
 
 def main() -> int:

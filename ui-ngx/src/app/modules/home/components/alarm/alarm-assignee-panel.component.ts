@@ -53,14 +53,17 @@ export interface AlarmAssigneePanelData {
   assigneeId: string;
 }
 
+
+/**
+ * Angular component: alarm assignee panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-assignee-panel`.
+ */
 @Component({
     selector: 'tb-alarm-assignee-panel',
     templateUrl: './alarm-assignee-panel.component.html',
     styleUrls: ['./alarm-assignee-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm assignee panel UI.
- */
+standalone: false
 })
 export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDestroy {
 
@@ -110,6 +113,11 @@ export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDe
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.filteredUsers = this.selectUserFormGroup.get('user').valueChanges
       .pipe(
@@ -122,20 +130,43 @@ export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDe
     );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     setTimeout(() => {
       this.userInput.nativeElement.focus();
     }, 0);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * display user fn.
+   *
+   * @param user user (User)
+   * @returns string | undefined observable or value
+   */
+
   displayUserFn(user?: User): string | undefined {
     return user ? user.email : undefined;
   }
+
+  /**
+   * selected.
+   *
+   * @param event DOM or Angular event object
+   */
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.clear();
@@ -147,6 +178,12 @@ export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDe
     }
   }
 
+  /**
+   * assign.
+   *
+   * @param user user (User)
+   */
+
   assign(user: User): void {
     this.alarmService.assignAlarm(this.alarmId, user.id.id, {ignoreLoading: true}).subscribe(
       () => {
@@ -155,6 +192,11 @@ export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDe
       });
   }
 
+  /**
+   * unassign.
+   *
+   */
+
   unassign(): void {
     this.alarmService.unassignAlarm(this.alarmId, {ignoreLoading: true}).subscribe(
       () => {
@@ -162,6 +204,13 @@ export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDe
         this.overlayRef.dispose();
       });
   }
+
+  /**
+   * fetch users.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<UserEmailInfo>> observable or value
+   */
 
   fetchUsers(searchText?: string): Observable<Array<UserEmailInfo>> {
     this.searchText = searchText;
@@ -176,12 +225,22 @@ export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDe
     );
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus(): void {
     if (!this.dirty) {
       this.selectUserFormGroup.get('user').updateValueAndValidity({onlySelf: true});
       this.dirty = true;
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectUserFormGroup.get('user').patchValue('', {emitEvent: true});
@@ -191,9 +250,23 @@ export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDe
     }, 0);
   }
 
+  /**
+   * get user initials.
+   *
+   * @param entity entity (UserEmailInfo)
+   * @returns string observable or value
+   */
+
   getUserInitials(entity: UserEmailInfo): string {
     return getUserInitials(entity);
   }
+
+  /**
+   * get full name.
+   *
+   * @param entity entity (UserEmailInfo)
+   * @returns string observable or value
+   */
 
   getFullName(entity: UserEmailInfo): string {
     let fullName = '';
@@ -211,6 +284,12 @@ export class AlarmAssigneePanelComponent implements  OnInit, AfterViewInit, OnDe
     }
     return fullName;
   }
+
+  /**
+   * get avatar bg color.
+   *
+   * @param entity entity (UserEmailInfo)
+   */
 
   getAvatarBgColor(entity: UserEmailInfo) {
     return this.utilsService.stringToHslColor(getUserDisplayName(entity), 40, 60);

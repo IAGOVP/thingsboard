@@ -20,11 +20,11 @@ import LeafletMap from '../leaflet-map';
 import { DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings } from '../map-models';
 import { WidgetContext } from '@home/models/widget-component.models';
 
+
 /**
-
- * tencent map.
-
+ * Tencent map (ThingsBoard web UI).
  */
+
 
 export class TencentMap extends LeafletMap {
   constructor(ctx: WidgetContext, $container: HTMLElement, options: WidgetUnitedMapSettings) {

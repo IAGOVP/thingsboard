@@ -22,11 +22,11 @@ import { BackgroundSettings, BackgroundType, Font } from '@shared/models/widget-
 import { defaultLegendConfig, LegendConfig, LegendPosition, widgetType } from '@shared/models/widget.models';
 import { mergeDeep } from '@core/utils';
 
+
 /**
-
- * TypeScript models and enums for time series chart widget settings.
-
+ * Time series chart widget settings (ThingsBoard web UI).
  */
+
 
 export interface TimeSeriesChartWidgetSettings extends TimeSeriesChartSettings {
   showLegend: boolean;

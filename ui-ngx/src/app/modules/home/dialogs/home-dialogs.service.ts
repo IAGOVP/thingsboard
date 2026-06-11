@@ -23,8 +23,11 @@ import {
   ImportDialogCsvData
 } from '@shared/import-export/import-dialog-csv.component';
 /**
- * Angular HTTP service: home dialogs REST wrappers (`@core/http`).
+ * Angular injectable service: home dialogs (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 @Injectable()
 export class HomeDialogsService {
@@ -32,6 +35,13 @@ export class HomeDialogsService {
     private dialog: MatDialog
   ) {
   }
+
+  /**
+   * import entities.
+   *
+   * @param entityType entity type (EntityType)
+   * @returns Observable<boolean> observable or value
+   */
 
   public importEntities(entityType: EntityType): Observable<boolean> {
     switch (entityType) {
@@ -43,6 +53,15 @@ export class HomeDialogsService {
         return this.openImportDialogCSV(entityType, 'edge.import', 'edge.edge-file');
     }
   }
+
+  /**
+   * open import dialog csv.
+   *
+   * @param entityType entity type (EntityType)
+   * @param importTitle import title (string)
+   * @param importFileLabel import file label (string)
+   * @returns Observable<boolean> observable or value
+   */
 
   private openImportDialogCSV(entityType: EntityType, importTitle: string, importFileLabel: string): Observable<boolean> {
     return this.dialog.open<ImportDialogCsvComponent, ImportDialogCsvData,

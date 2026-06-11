@@ -18,8 +18,11 @@ package org.thingsboard.rule.engine.aws.sns;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbSns rule node.
+ * JSON configuration POJO for {@link TbSns} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbSnsNodeConfiguration implements NodeConfiguration<TbSnsNodeConfiguration> {
@@ -28,6 +31,12 @@ public class TbSnsNodeConfiguration implements NodeConfiguration<TbSnsNodeConfig
     private String accessKeyId;
     private String secretAccessKey;
     private String region;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbSnsNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbSnsNodeConfiguration defaultConfiguration() {

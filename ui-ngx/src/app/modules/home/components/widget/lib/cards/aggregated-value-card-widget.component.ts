@@ -62,14 +62,17 @@ import { DeepPartial } from '@shared/models/common';
 const valuesLayoutHeight = 66;
 const valuesLayoutVerticalPadding = 16;
 
+
+/**
+ * Angular component: aggregated value card widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aggregated-value-card-widget`.
+ */
 @Component({
     selector: 'tb-aggregated-value-card-widget',
     templateUrl: './aggregated-value-card-widget.component.html',
     styleUrls: ['./aggregated-value-card-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: aggregated value card widget UI.
- */
+standalone: false
 })
 export class AggregatedValueCardWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -127,6 +130,11 @@ export class AggregatedValueCardWidgetComponent implements OnInit, AfterViewInit
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.aggregatedValueCardWidget = this;
     this.settings = {...aggregatedValueCardDefaultSettings, ...this.ctx.settings};
@@ -176,6 +184,11 @@ export class AggregatedValueCardWidgetComponent implements OnInit, AfterViewInit
     this.padding = this.settings.background.overlay.enabled ? undefined : this.settings.padding;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.showChart && this.ctx.datasources?.length) {
       const settings: DeepPartial<TimeSeriesChartSettings> = {
@@ -220,17 +233,32 @@ export class AggregatedValueCardWidgetComponent implements OnInit, AfterViewInit
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     const tsValue = getLatestSingleTsValue(this.ctx.data);
@@ -246,6 +274,11 @@ export class AggregatedValueCardWidgetComponent implements OnInit, AfterViewInit
     this.updateLastUpdateTs(ts);
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for latest data updated.
+   *
+   */
 
   public onLatestDataUpdated() {
     if (this.showValues) {
@@ -274,11 +307,26 @@ export class AggregatedValueCardWidgetComponent implements OnInit, AfterViewInit
     }
   }
 
+  /**
+   * Event handler for resize.
+   *
+   */
+
   public onResize() {
   }
 
+  /**
+   * Event handler for edit mode changed.
+   *
+   */
+
   public onEditModeChanged() {
   }
+
+  /**
+   * Event handler for destroy.
+   *
+   */
 
   public onDestroy() {
     if (this.showChart) {
@@ -286,12 +334,23 @@ export class AggregatedValueCardWidgetComponent implements OnInit, AfterViewInit
     }
   }
 
+  /**
+   * update last update ts.
+   *
+   * @param ts ts (number)
+   */
+
   private updateLastUpdateTs(ts: number) {
     if (ts && (!this.lastUpdateTs || ts > this.lastUpdateTs)) {
       this.lastUpdateTs = ts;
       this.dateFormat.update(ts);
     }
   }
+
+  /**
+   * Event handler for value card values resize.
+   *
+   */
 
   private onValueCardValuesResize() {
     const panelWidth = this.valueCardValues.nativeElement.getBoundingClientRect().width;

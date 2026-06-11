@@ -99,8 +99,9 @@ import static org.thingsboard.server.msa.connectivity.lwm2m.client.Lwm2mTestHelp
 import static org.thingsboard.server.msa.connectivity.lwm2m.client.Lwm2mTestHelper.resources;
 import static org.thingsboard.server.msa.connectivity.lwm2m.client.Lwm2mTestHelper.shortServerId;
 /**
- * Abstract lwm2m client test.
+ * Abstract base for abstract lwm2m client black-box tests (black-box test infrastructure — LwM2M transport tests).
  */
+
 
 @Slf4j
 public class AbstractLwm2mClientTest extends AbstractContainerTest {
@@ -112,6 +113,14 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
     protected TenantId tenantId;
 
     public final Set<LwM2MClientState> expectedStatusesRegistrationLwm2mSuccess = new HashSet<>(Arrays.asList(ON_INIT, ON_REGISTRATION_STARTED, ON_REGISTRATION_SUCCESS));
+    /**
+     * Creates lwm2m devices for connect no sec.
+     *
+     * @param name name ({@link String})
+     * @param devicesForTest devices for test ({@link Lwm2mDevicesForTest})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createLwm2mDevicesForConnectNoSec(String name, Lwm2mDevicesForTest devicesForTest) throws Exception {
         String clientEndpoint = name + "-" + RandomStringUtils.randomAlphanumeric(7);
@@ -121,6 +130,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         devicesForTest.setLwM2MDeviceTest(lwM2MDeviceTest);
         devicesForTest.setLwM2MTestClient(lwM2MTestClient);
     }
+    /**
+     * Creates lwm2m devices for connect psk.
+     *
+     * @param devicesForTest devices for test ({@link Lwm2mDevicesForTest})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createLwm2mDevicesForConnectPsk(Lwm2mDevicesForTest devicesForTest) throws Exception {
         String clientEndpoint = CLIENT_ENDPOINT_PSK + "-" + RandomStringUtils.randomAlphanumeric(7);
@@ -141,17 +157,16 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         devicesForTest.setLwM2MTestClient(lwM2MTestClient);
     }
 
-    /**
-     * Observe {"id":"/3/0/0"}
-     * Observe {"id":"/3/0/9"}
-     * ObserveCancel {"id":"/3"} - Bad
-     * ObserveCancel {"/3/0/0"} - Ok
-     * ObserveCancelAl - Ok
-     *
-     * @param lwM2MTestClient
-     * @param deviceId
-     * @throws Exception
-     */
+    
+   /**
+    * Observe resource update after update registration test.
+    *
+    * @param lwM2MTestClient lw m2mtest client ({@link LwM2MTestClient})
+    * @param deviceId device under test
+    * @return nothing
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
     public void observeResource_Update_AfterUpdateRegistration_test(LwM2MTestClient lwM2MTestClient, DeviceId deviceId) throws Exception {
         awaitUpdateRegistrationSuccess(lwM2MTestClient, 5);
         sendCancelObserveAllWithAwait(deviceId.toString());
@@ -173,6 +188,14 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         sendCancelObserveAllWithAwait(deviceId.toString());
         awaitUpdateRegistrationSuccess(lwM2MTestClient, 1);
     }
+    /**
+     * Observe composite resource update after update registration test.
+     *
+     * @param lwM2MTestClient lw m2mtest client ({@link LwM2MTestClient})
+     * @param deviceId device under test
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void observeCompositeResource_Update_AfterUpdateRegistration_test(LwM2MTestClient lwM2MTestClient, DeviceId deviceId) throws Exception {
         String id_3_0_9 = "/3/0/9";
@@ -207,6 +230,14 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         awaitUpdateRegistrationSuccess(lwM2MTestClient, 1);
         assertEquals(0, (Object) Optional.ofNullable(getCntObserveAll(deviceId.toString())).get());
     }
+    /**
+     * Basic test connection.
+     *
+     * @param lwM2MTestClient lw m2mtest client ({@link LwM2MTestClient})
+     * @param alias alias ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     public void basicTestConnection(LwM2MTestClient lwM2MTestClient, String alias) throws Exception {
@@ -226,6 +257,15 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         assertThat(lwM2MTestClient.getClientStates()).containsAll(expectedStatusesRegistrationLwm2mSuccess);
 
     }
+    /**
+     * Creates new client.
+     *
+     * @param security security ({@link Security})
+     * @param endpoint endpoint ({@link String})
+     * @param executor executor ({@link ScheduledExecutorService})
+     * @return {@link LwM2MTestClient}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     public LwM2MTestClient createNewClient(Security security,
@@ -236,6 +276,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         lwM2MTestClient.init(security, clientPort);
         return lwM2MTestClient;
     }
+    /**
+     * Destroy after.
+     *
+     * @param devicesForTest devices for test ({@link Lwm2mDevicesForTest})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void destroyAfter(Lwm2mDevicesForTest devicesForTest) {
         clientDestroy(devicesForTest.getLwM2MTestClient());
@@ -245,6 +292,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
             executor.shutdown();
         }
     }
+    /**
+     * Client destroy.
+     *
+     * @param lwM2MTestClient lw m2mtest client ({@link LwM2MTestClient})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void clientDestroy(LwM2MTestClient lwM2MTestClient) {
         try {
@@ -255,6 +309,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
             log.error("Failed client Destroy", e);
         }
     }
+    /**
+     * Device destroy.
+     *
+     * @param lwM2MDeviceTest lw m2mdevice test ({@link Device})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void deviceDestroy(Device lwM2MDeviceTest) {
         try {
@@ -265,6 +326,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
             log.error("Failed device Delete", e);
         }
     }
+    /**
+     * Init test.
+     *
+     * @param deviceProfileName device profile name ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected DeviceProfile initTest(String deviceProfileName) throws Exception {
         if (executor != null) {
@@ -287,6 +355,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         }
         return lwm2mDeviceProfile;
     }
+    /**
+     * Returns device profile.
+     *
+     * @param deviceProfileName device profile name ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected DeviceProfile getDeviceProfile(String deviceProfileName) throws Exception {
         DeviceProfile deviceProfile = getDeviceProfileIfExists(deviceProfileName);
@@ -295,6 +370,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         }
         return deviceProfile;
     }
+    /**
+     * Returns device profile if exists.
+     *
+     * @param deviceProfileName device profile name ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected DeviceProfile getDeviceProfileIfExists(String deviceProfileName) throws Exception {
         return testRestClient.getDeviceProfiles(pageLink).getData().stream()
@@ -302,6 +384,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
                 .findFirst()
                 .orElse(null);
     }
+    /**
+     * Creates device profile.
+     *
+     * @param deviceProfileName device profile name ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     protected DeviceProfile createDeviceProfile(String deviceProfileName) throws Exception {
@@ -319,6 +408,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         deviceProfile.setProfileData(deviceProfileData);
         return deviceProfile;
     }
+    /**
+     * Device profile destroy.
+     *
+     * @param lwm2mDeviceProfile lwm2m device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void deviceProfileDestroy(DeviceProfile lwm2mDeviceProfile) {
         try {
@@ -329,11 +425,29 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
             log.error("Failed deviceProfile Delete", e);
         }
     }
+    /**
+     * Creates device with credentials.
+     *
+     * @param deviceCredentials device credentials ({@link LwM2MDeviceCredentials})
+     * @param clientEndpoint client endpoint ({@link String})
+     * @param profileId profile id ({@link DeviceProfileId})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Device createDeviceWithCredentials(LwM2MDeviceCredentials deviceCredentials, String clientEndpoint, DeviceProfileId profileId) throws Exception {
         Device device = createDevice(deviceCredentials, clientEndpoint, profileId);
         return device;
     }
+    /**
+     * Creates a test device via REST API and returns its id.
+     *
+     * @param credentials credentials ({@link LwM2MDeviceCredentials})
+     * @param clientEndpoint client endpoint ({@link String})
+     * @param profileId profile id ({@link DeviceProfileId})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Device createDevice(LwM2MDeviceCredentials credentials, String clientEndpoint, DeviceProfileId profileId) throws Exception {
         Device device = testRestClient.getDeviceByNameIfExists(clientEndpoint);
@@ -352,6 +466,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         assertThat(deviceCredentials).isNotNull();
         return device;
     }
+    /**
+     * Returns device credentials no sec.
+     *
+     * @param clientCredentials client credentials ({@link LwM2MClientCredential})
+     * @return {@link LwM2MDeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected LwM2MDeviceCredentials getDeviceCredentialsNoSec(LwM2MClientCredential clientCredentials) {
         LwM2MDeviceCredentials credentials = new LwM2MDeviceCredentials();
@@ -363,12 +484,25 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         credentials.setBootstrap(bootstrapCredentials);
         return credentials;
     }
+    /**
+     * Creates no sec client credentials.
+     *
+     * @param clientEndpoint client endpoint ({@link String})
+     * @return {@link NoSecClientCredential}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public NoSecClientCredential createNoSecClientCredentials(String clientEndpoint) {
         NoSecClientCredential clientCredentials = new NoSecClientCredential();
         clientCredentials.setEndpoint(clientEndpoint);
         return clientCredentials;
     }
+    /**
+     * Returns transport configuration.
+     *
+     * @return {@link Lwm2mDeviceProfileTransportConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Lwm2mDeviceProfileTransportConfiguration getTransportConfiguration() {
         List<LwM2MBootstrapServerCredential> bootstrapServerCredentials = new ArrayList<>();
@@ -381,6 +515,13 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         transportConfiguration.setBootstrap(bootstrapServerCredentials);
         return transportConfiguration;
     }
+    /**
+     * Returns device credentials secure psk.
+     *
+     * @param clientCredentials client credentials ({@link LwM2MClientCredential})
+     * @return {@link LwM2MDeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected LwM2MDeviceCredentials getDeviceCredentialsSecurePsk(LwM2MClientCredential clientCredentials) {
         LwM2MDeviceCredentials credentials = new LwM2MDeviceCredentials();
@@ -402,30 +543,71 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         bootstrapCredentials.setLwm2mServer(serverCredentials);
         return bootstrapCredentials;
     }
+    /**
+     * Send observe cancel bad request.
+     *
+     * @param method method ({@link String})
+     * @param params params ({@link String})
+     * @param deviceIdStr device id str ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected String sendObserveCancel_BadRequest(String method, String params, String deviceIdStr) throws Exception {
         ObjectNode rpcActualResult = sendRpcObserve(method, params, deviceIdStr);
         assertEquals(ResponseCode.BAD_REQUEST.getName(), rpcActualResult.get("result").asText());
         return rpcActualResult.get("error").asText();
     }
+    /**
+     * Send observe cancel ok.
+     *
+     * @param method method ({@link String})
+     * @param params params ({@link String})
+     * @param deviceIdStr device id str ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void sendObserveCancel_Ok(String method, String params, String deviceIdStr) throws Exception {
         ObjectNode rpcActualResult = sendRpcObserve(method, params, deviceIdStr);
         assertEquals(ResponseCode.CONTENT.getName(), rpcActualResult.get("result").asText());
         assertEquals("1", rpcActualResult.get("value").asText());
     }
+    /**
+     * Send cancel observe all with await.
+     *
+     * @param deviceIdStr device id str ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void sendCancelObserveAllWithAwait(String deviceIdStr) throws Exception {
         ObjectNode rpcActualResultCancelAll = sendRpcObserve("ObserveCancelAll", null, deviceIdStr);
         assertEquals(ResponseCode.CONTENT.getName(), rpcActualResultCancelAll.get("result").asText());
         awaitObserveReadAll(0, deviceIdStr);
     }
+    /**
+     * Await observe read all.
+     *
+     * @param cntObserve cnt observe
+     * @param deviceIdStr device id str ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void awaitObserveReadAll(int cntObserve, String deviceIdStr) throws Exception {
         await("ObserveReadAll after start client/test: countObserve " + cntObserve)
                 .atMost(40, TimeUnit.SECONDS)
                 .until(() -> cntObserve == getCntObserveAll(deviceIdStr));
     }
+    /**
+     * Await update registration success.
+     *
+     * @param lwM2MTestClient lw m2mtest client ({@link LwM2MTestClient})
+     * @param cntUpdate cnt update
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void awaitUpdateRegistrationSuccess(LwM2MTestClient lwM2MTestClient, int cntUpdate) throws Exception {
         cntUpdate = cntUpdate + lwM2MTestClient.getCountUpdateRegistrationSuccess();
@@ -434,12 +616,27 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
                 .atMost(40, TimeUnit.SECONDS)
                 .until(() -> finalCntUpdate <= lwM2MTestClient.getCountUpdateRegistrationSuccess());
     }
+    /**
+     * Await observe read resource 3 0 9.
+     *
+     * @param cntRead cnt read
+     * @param deviceIdStr device id str ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void awaitObserveReadResource_3_0_9(int cntRead, String deviceIdStr) throws Exception {
         await("Read value 3/0/9 after start observe: countRead " + cntRead)
                 .atMost(40, TimeUnit.SECONDS)
                 .until(() -> cntRead == getCntObserveAll(deviceIdStr));
     }
+    /**
+     * Returns cnt observe all.
+     *
+     * @param deviceIdStr device id str ({@link String})
+     * @return {@link Integer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Integer getCntObserveAll(String deviceIdStr) throws Exception {
         ObjectNode rpcActualResultBefore = sendRpcObserve("ObserveReadAll", null, deviceIdStr);
@@ -465,6 +662,15 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         assertEquals(ResponseCode.CONTENT.getName(), rpcActualResult.get("result").asText());
         return rpcActualResult.get("value").asText();
     }
+    /**
+     * Send rpc observe.
+     *
+     * @param method method ({@link String})
+     * @param params params ({@link String})
+     * @param deviceIdStr device id str ({@link String})
+     * @return {@link ObjectNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ObjectNode sendRpcObserve(String method, String params, String deviceIdStr) throws Exception {
         String sendRpcRequest;
@@ -475,12 +681,29 @@ public class AbstractLwm2mClientTest extends AbstractContainerTest {
         }
         return testRestClient.postRpcLwm2mParams(deviceIdStr, sendRpcRequest);
     }
+    /**
+     * Send rpc observe composite.
+     *
+     * @param keys keys ({@link String})
+     * @param deviceIdStr device id str ({@link String})
+     * @return {@link ObjectNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ObjectNode sendRpcObserveComposite(String keys, String deviceIdStr) throws Exception {
         String method = "ObserveComposite";
         String sendRpcRequest = "{\"method\": \"" + method + "\", \"params\": {\"keys\":" + keys + "}}";
         return testRestClient.postRpcLwm2mParams(deviceIdStr, sendRpcRequest);
     }
+    /**
+     * Checks latest telemetry uploaded.
+     *
+     * @param deviceId device under test
+     * @param tsBefore ts before
+     * @param keyNames key names
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void checkLatestTelemetryUploaded(DeviceId deviceId, long tsBefore, String... keyNames) throws Exception {
         WsClient wsClient = subscribeToWebSocket(deviceId, "LATEST_TELEMETRY", CmdsType.TS_SUB_CMDS);

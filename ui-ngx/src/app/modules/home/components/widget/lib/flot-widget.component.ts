@@ -27,14 +27,17 @@ import {
 } from '@shared/models/widget.models';
 import { isDefinedAndNotNull } from '@core/utils';
 
+
+/**
+ * Angular component: flot widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flot-widget`.
+ */
 @Component({
     selector: 'tb-flot-widget',
     templateUrl: './flot-widget.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: flot widget UI.
- */
+standalone: false
 })
 export class FlotWidgetComponent implements OnInit {
 
@@ -59,6 +62,11 @@ export class FlotWidgetComponent implements OnInit {
   constructor() {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.flotWidget = this;
     this.settings = this.ctx.settings;
@@ -68,6 +76,11 @@ export class FlotWidgetComponent implements OnInit {
       this.flot = new TbFlot(this.ctx, this.chartType, $(this.flotElement.nativeElement));
     }
   }
+
+  /**
+   * configure legend.
+   *
+   */
 
   private configureLegend(): void {
 
@@ -127,6 +140,12 @@ export class FlotWidgetComponent implements OnInit {
     }
   }
 
+  /**
+   * Event handler for legend key hidden change.
+   *
+   * @param index index (number)
+   */
+
   public onLegendKeyHiddenChange(index: number) {
     for (const id of Object.keys(this.ctx.subscriptions)) {
       const subscription = this.ctx.subscriptions[id];
@@ -134,21 +153,46 @@ export class FlotWidgetComponent implements OnInit {
     }
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.flot.update();
   }
+
+  /**
+   * Event handler for latest data updated.
+   *
+   */
 
   public onLatestDataUpdated() {
     this.flot.latestDataUpdate();
   }
 
+  /**
+   * Event handler for resize.
+   *
+   */
+
   public onResize() {
     this.flot.resize();
   }
 
+  /**
+   * Event handler for edit mode changed.
+   *
+   */
+
   public onEditModeChanged() {
     this.flot.checkMouseEvents();
   }
+
+  /**
+   * Event handler for destroy.
+   *
+   */
 
   public onDestroy() {
     this.flot.destroy();

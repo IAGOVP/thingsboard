@@ -52,6 +52,12 @@ import {
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 import { DatasourceType } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: marker shape settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-marker-shape-settings`.
+ */
 @Component({
     selector: 'tb-marker-shape-settings',
     templateUrl: './marker-shape-settings.component.html',
@@ -63,10 +69,7 @@ import { DatasourceType } from '@shared/models/widget.models';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: marker shape settings UI.
- */
+standalone: false
 })
 export class MarkerShapeSettingsComponent implements ControlValueAccessor, OnInit {
 
@@ -111,6 +114,11 @@ export class MarkerShapeSettingsComponent implements ControlValueAccessor, OnIni
               private renderer: Renderer2,
               private viewContainerRef: ViewContainerRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.shapeSettingsFormGroup = this.fb.group({
       size: [null, [Validators.required, Validators.min(1)]],
@@ -130,12 +138,30 @@ export class MarkerShapeSettingsComponent implements ControlValueAccessor, OnIni
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -146,6 +172,12 @@ export class MarkerShapeSettingsComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MarkerShapeSettings | MarkerIconSettings)
+   */
+
   writeValue(value: MarkerShapeSettings | MarkerIconSettings): void {
     this.modelValue = value;
     this.shapeSettingsFormGroup.patchValue(
@@ -153,6 +185,12 @@ export class MarkerShapeSettingsComponent implements ControlValueAccessor, OnIni
     );
     this.updatePreview();
   }
+
+  /**
+   * open shape popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openShapePopup($event: Event, matButton: MatButton) {
     if ($event) {
@@ -210,11 +248,21 @@ export class MarkerShapeSettingsComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.modelValue = this.shapeSettingsFormGroup.getRawValue();
     this.propagateChange(this.modelValue);
     this.updatePreview();
   }
+
+  /**
+   * update preview.
+   *
+   */
 
   private updatePreview() {
     const color = this.modelValue.color.color;

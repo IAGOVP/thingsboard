@@ -22,6 +22,12 @@ import { TbPopoverService } from '@shared/components/popover.service';
 import { Timewindow } from '@shared/models/time/time.models';
 import { TimewindowStylePanelComponent } from '@home/components/widget/config/timewindow-style-panel.component';
 
+
+/**
+ * Angular component: timewindow style (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timewindow-style`.
+ */
 @Component({
     selector: 'tb-timewindow-style',
     templateUrl: './timewindow-style.component.html',
@@ -33,10 +39,7 @@ import { TimewindowStylePanelComponent } from '@home/components/widget/config/ti
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: timewindow style UI.
- */
+standalone: false
 })
 export class TimewindowStyleComponent implements OnInit, ControlValueAccessor {
 
@@ -54,23 +57,58 @@ export class TimewindowStyleComponent implements OnInit, ControlValueAccessor {
               private renderer: Renderer2,
               private viewContainerRef: ViewContainerRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TimewindowStyle)
+   */
+
   writeValue(value: TimewindowStyle): void {
     this.modelValue = value;
   }
+
+  /**
+   * open timewindow style popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openTimewindowStylePopup($event: Event, matButton: MatButton) {
     if ($event) {

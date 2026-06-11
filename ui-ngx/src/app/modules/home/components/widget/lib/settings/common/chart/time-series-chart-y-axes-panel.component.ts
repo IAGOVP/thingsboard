@@ -54,6 +54,12 @@ import { IAliasController } from '@app/core/public-api';
 import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/key/data-keys.component.models';
 import { Datasource } from '@app/shared/public-api';
 
+
+/**
+ * Angular component: time series chart yaxes panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-y-axes-panel`.
+ */
 @Component({
     selector: 'tb-time-series-chart-y-axes-panel',
     templateUrl: './time-series-chart-y-axes-panel.component.html',
@@ -71,10 +77,7 @@ import { Datasource } from '@app/shared/public-api';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart yaxes panel UI.
- */
+standalone: false
 })
 export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -113,6 +116,11 @@ export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor,
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.yAxesFormGroup = this.fb.group({
       axes: [this.fb.array([]), []]
@@ -138,12 +146,30 @@ export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor,
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -153,6 +179,12 @@ export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor,
       this.yAxesFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartYAxes | undefined)
+   */
 
   writeValue(value: TimeSeriesChartYAxes | undefined): void {
     const yAxes: TimeSeriesChartYAxes = checkLatestDataKeys(value || {}, this.datasource);
@@ -165,6 +197,12 @@ export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor,
     this.yAxesFormGroup.setControl('axes', this.prepareAxesFormArray(yAxisSettingsList), {emitEvent: false});
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     const valid = this.yAxesFormGroup.valid;
     return valid ? null : {
@@ -174,6 +212,12 @@ export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor,
     };
   }
 
+  /**
+   * axis drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   axisDrop(event: CdkDragDrop<string[]>) {
     const axesArray = this.yAxesFormGroup.get('axes') as UntypedFormArray;
     const axis = axesArray.at(event.previousIndex);
@@ -181,13 +225,33 @@ export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor,
     axesArray.insert(event.currentIndex, axis);
   }
 
+  /**
+   * axes form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   axesFormArray(): UntypedFormArray {
     return this.yAxesFormGroup.get('axes') as UntypedFormArray;
   }
 
+  /**
+   * track by axis.
+   *
+   * @param index index (number)
+   * @param axisControl axis control (AbstractControl)
+   * @returns any observable or value
+   */
+
   trackByAxis(index: number, axisControl: AbstractControl): any {
     return axisControl;
   }
+
+  /**
+   * DELETE — remove axis.
+   *
+   * @param index index (number)
+   */
 
   removeAxis(index: number) {
     const axis =
@@ -195,6 +259,11 @@ export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor,
     (this.yAxesFormGroup.get('axes') as UntypedFormArray).removeAt(index);
     this.axisRemoved.emit(axis.id);
   }
+
+  /**
+   * POST/PUT entity — add axis.
+   *
+   */
 
   addAxis() {
     const axis = mergeDeep<TimeSeriesChartYAxisSettings>({} as TimeSeriesChartYAxisSettings,
@@ -206,6 +275,13 @@ export class TimeSeriesChartYAxesPanelComponent implements ControlValueAccessor,
     const axisControl = this.fb.control(axis, [timeSeriesChartYAxisValidator]);
     axesArray.push(axisControl);
   }
+
+  /**
+   * prepare axes form array.
+   *
+   * @param axes axes (TimeSeriesChartYAxisSettings[])
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareAxesFormArray(axes: TimeSeriesChartYAxisSettings[]): UntypedFormArray {
     const axesControls: Array<AbstractControl> = [];

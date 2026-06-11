@@ -48,6 +48,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 const tagIsEmpty = (tag: ScadaSymbolTag): boolean =>
   !tag.stateRenderFunction && !tag.actions?.click?.actionFunction;
 
+
+/**
+ * Angular component: scada symbol metadata tags (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-metadata-tags`.
+ */
 @Component({
     selector: 'tb-scada-symbol-metadata-tags',
     templateUrl: './scada-symbol-metadata-tags.component.html',
@@ -65,10 +71,7 @@ const tagIsEmpty = (tag: ScadaSymbolTag): boolean =>
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol metadata tags UI.
- */
+standalone: false
 })
 export class ScadaSymbolMetadataTagsComponent implements ControlValueAccessor, OnInit, Validator, OnChanges {
 
@@ -99,6 +102,11 @@ export class ScadaSymbolMetadataTagsComponent implements ControlValueAccessor, O
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.tagsFormGroup = this.fb.group({
@@ -142,12 +150,30 @@ export class ScadaSymbolMetadataTagsComponent implements ControlValueAccessor, O
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -158,12 +184,24 @@ export class ScadaSymbolMetadataTagsComponent implements ControlValueAccessor, O
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ScadaSymbolTag[] | undefined)
+   */
+
   writeValue(value: ScadaSymbolTag[] | undefined): void {
     this.modelValue = value || [];
     const tagsResult= this.setupTags(this.modelValue);
     this.tagsFormGroup.setControl('tags', this.prepareTagsFormArray(tagsResult.tags), {emitEvent: false});
     this.setDisabledState(this.disabled);
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   public validate(_c: UntypedFormControl) {
     const valid = this.tagsFormGroup.valid;
@@ -174,13 +212,33 @@ export class ScadaSymbolMetadataTagsComponent implements ControlValueAccessor, O
     };
   }
 
+  /**
+   * tags form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   tagsFormArray(): UntypedFormArray {
     return this.tagsFormGroup.get('tags') as UntypedFormArray;
   }
 
+  /**
+   * track by tag.
+   *
+   * @param _index  index (number)
+   * @param tagControl tag control (AbstractControl)
+   * @returns any observable or value
+   */
+
   trackByTag(_index: number, tagControl: AbstractControl): any {
     return tagControl;
   }
+
+  /**
+   * edit tag state render function.
+   *
+   * @param tag tag (string)
+   */
 
   editTagStateRenderFunction(tag: string): void {
     setTimeout(() => {
@@ -191,6 +249,12 @@ export class ScadaSymbolMetadataTagsComponent implements ControlValueAccessor, O
     });
   }
 
+  /**
+   * edit tag click action.
+   *
+   * @param tag tag (string)
+   */
+
   editTagClickAction(tag: string): void {
     setTimeout(() => {
       const tags: ScadaSymbolTag[] = this.tagsFormGroup.get('tags').value;
@@ -199,6 +263,12 @@ export class ScadaSymbolMetadataTagsComponent implements ControlValueAccessor, O
       tagComponent?.editClickAction();
     });
   }
+
+  /**
+   * setup tags.
+   *
+   * @param existing existing (ScadaSymbolTag[])
+   */
 
   private setupTags(existing?: ScadaSymbolTag[]): {tags: ScadaSymbolTag[]; emitEvent: boolean} {
     existing = (existing || []).filter(t => !tagIsEmpty(t));
@@ -227,6 +297,13 @@ export class ScadaSymbolMetadataTagsComponent implements ControlValueAccessor, O
       emitEvent: tagRemoved
     };
   }
+
+  /**
+   * prepare tags form array.
+   *
+   * @param tags tags (ScadaSymbolTag[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareTagsFormArray(tags: ScadaSymbolTag[] | undefined): UntypedFormArray {
     const tagsControls: Array<AbstractControl> = [];

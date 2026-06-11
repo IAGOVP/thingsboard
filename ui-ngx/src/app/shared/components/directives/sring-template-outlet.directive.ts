@@ -25,14 +25,18 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
+
+/**
+ * Angular directive: tb string template outlet.
+ */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[tbStringTemplateOutlet]',
     exportAs: 'tbStringTemplateOutlet',
-    standalone: false
 /**
- * Angular directive: tb string template outlet.
+ * Angular directive: tb string template outlet (shared UI components).
  */
+    standalone: false
 })
 export class TbStringTemplateOutletDirective<_T = unknown> implements OnChanges {
   private embeddedViewRef: EmbeddedViewRef<any> | null = null;
@@ -49,6 +53,11 @@ export class TbStringTemplateOutletDirective<_T = unknown> implements OnChanges 
     return true;
   }
 
+  /**
+   * recreate view.
+   *
+   */
+
   private recreateView(): void {
     this.viewContainer.clear();
     const isTemplateRef = this.tbStringTemplateOutlet instanceof TemplateRef;
@@ -58,6 +67,11 @@ export class TbStringTemplateOutletDirective<_T = unknown> implements OnChanges 
       isTemplateRef ? this.tbStringTemplateOutletContext : this.context
     );
   }
+
+  /**
+   * update context.
+   *
+   */
 
   private updateContext(): void {
     const isTemplateRef = this.tbStringTemplateOutlet instanceof TemplateRef;

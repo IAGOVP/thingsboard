@@ -48,6 +48,12 @@ export const setTimewindowConfig = (config: WidgetConfig, data: TimewindowConfig
   config.timewindowStyle = data.timewindowStyle;
 };
 
+
+/**
+ * Angular component: timewindow config panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timewindow-config-panel`.
+ */
 @Component({
     selector: 'tb-timewindow-config-panel',
     templateUrl: './timewindow-config-panel.component.html',
@@ -59,10 +65,7 @@ export const setTimewindowConfig = (config: WidgetConfig, data: TimewindowConfig
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: timewindow config panel UI.
- */
+standalone: false
 })
 export class TimewindowConfigPanelComponent implements ControlValueAccessor, OnInit {
 
@@ -90,6 +93,11 @@ export class TimewindowConfigPanelComponent implements ControlValueAccessor, OnI
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.timewindowConfig = this.fb.group({
       useDashboardTimewindow: [null, []],
@@ -114,17 +122,41 @@ export class TimewindowConfigPanelComponent implements ControlValueAccessor, OnI
     });
   }
 
+  /**
+   * write value.
+   *
+   * @param data dialog or route input data
+   */
+
   writeValue(data?: TimewindowConfigData): void {
     this.timewindowConfig.patchValue(data || {}, {emitEvent: false});
     this.updateTimewindowConfigEnabledState();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -135,6 +167,11 @@ export class TimewindowConfigPanelComponent implements ControlValueAccessor, OnI
       this.updateTimewindowConfigEnabledState();
     }
   }
+
+  /**
+   * update timewindow config enabled state.
+   *
+   */
 
   private updateTimewindowConfigEnabledState() {
     const useDashboardTimewindow: boolean = this.timewindowConfig.get('useDashboardTimewindow').value;

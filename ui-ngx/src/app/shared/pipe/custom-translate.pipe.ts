@@ -17,16 +17,28 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { UtilsService } from '@core/services/utils.service';
 
-@Pipe({
-    name: 'customTranslate',
-    standalone: false
+
 /**
  * Angular pipe: custom translate.
  */
+@Pipe({
+    name: 'customTranslate',
+/**
+ * Angular pipe: custom translate (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class CustomTranslatePipe implements PipeTransform {
 
   constructor(private utils: UtilsService) { }
+
+  /**
+   * transform.
+   *
+   * @param translationValue translation value (string)
+   * @param defaultValue default value (string)
+   * @returns string observable or value
+   */
 
   transform(translationValue: string, defaultValue?: string): string {
     if (!defaultValue) {

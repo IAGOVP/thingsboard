@@ -21,8 +21,9 @@ import org.thingsboard.server.common.data.id.EntityId;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 /**
- * Rule engine component: gps geofencing action test case.
+ * Gps geofencing action test case (GPS geofencing filter and action nodes).
  */
+
 
 @Data
 public class GpsGeofencingActionTestCase {

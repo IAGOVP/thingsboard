@@ -36,6 +36,12 @@ import { MatIconButton } from '@angular/material/button';
 import { TranslateService } from '@ngx-translate/core';
 import { deepClone } from '@core/utils';
 
+
+/**
+ * Angular component: map tooltip tag actions (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-tooltip-tag-actions-panel`.
+ */
 @Component({
     selector: 'tb-map-tooltip-tag-actions-panel',
     templateUrl: './map-tooltip-tag-actions.component.html',
@@ -48,10 +54,7 @@ import { deepClone } from '@core/utils';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map tooltip tag actions UI.
- */
+standalone: false
 })
 export class MapTooltipTagActionsComponent implements ControlValueAccessor, OnInit {
 
@@ -73,6 +76,11 @@ export class MapTooltipTagActionsComponent implements ControlValueAccessor, OnIn
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.actionsFormGroup = this.fb.group({
       actions: [null, []]
@@ -84,16 +92,40 @@ export class MapTooltipTagActionsComponent implements ControlValueAccessor, OnIn
     );
   }
 
+  /**
+   * write value.
+   *
+   * @param actions actions (WidgetAction[])
+   */
+
   writeValue(actions?: WidgetAction[]): void {
     this.actionsFormGroup.get('actions').patchValue(actions || [], {emitEvent: false});
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -104,6 +136,12 @@ export class MapTooltipTagActionsComponent implements ControlValueAccessor, OnIn
     }
   }
 
+  /**
+   * DELETE — remove action.
+   *
+   * @param index index (number)
+   */
+
   removeAction(index: number): void {
     const actions: WidgetAction[] = this.actionsFormGroup.get('actions').value;
     if (actions[index]) {
@@ -111,6 +149,12 @@ export class MapTooltipTagActionsComponent implements ControlValueAccessor, OnIn
       this.actionsFormGroup.get('actions').patchValue(actions);
     }
   }
+
+  /**
+   * POST/PUT entity — add action.
+   *
+   * @param matButton mat button (MatIconButton)
+   */
 
   addAction($event: Event, matButton: MatIconButton): void {
     if ($event) {
@@ -130,6 +174,13 @@ export class MapTooltipTagActionsComponent implements ControlValueAccessor, OnIn
       }
     });
   }
+
+  /**
+   * edit action.
+   *
+   * @param matButton mat button (MatIconButton)
+   * @param index index (number)
+   */
 
   editAction($event: Event, matButton: MatIconButton, index: number): void {
     if ($event) {

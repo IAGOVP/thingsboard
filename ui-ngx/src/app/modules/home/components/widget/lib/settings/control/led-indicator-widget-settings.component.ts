@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { WidgetService } from '@core/http/widget.service';
 import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 
+
+/**
+ * Angular component: led indicator widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-led-indicator-widget-settings`.
+ */
 @Component({
     selector: 'tb-led-indicator-widget-settings',
     templateUrl: './led-indicator-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: led indicator widget settings UI.
- */
+standalone: false
 })
 export class LedIndicatorWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -49,9 +52,21 @@ export class LedIndicatorWidgetSettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.ledIndicatorWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -68,6 +83,12 @@ export class LedIndicatorWidgetSettingsComponent extends WidgetSettingsComponent
       persistentPollingInterval: 5000
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.ledIndicatorWidgetSettingsForm = this.fb.group({
@@ -100,9 +121,21 @@ export class LedIndicatorWidgetSettingsComponent extends WidgetSettingsComponent
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['performCheckStatus', 'requestPersistent'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean): void {
     const performCheckStatus: boolean = this.ledIndicatorWidgetSettingsForm.get('performCheckStatus').value;

@@ -22,11 +22,11 @@ import { WidgetPolylineSettings } from './map-models';
 import { functionValueCalculator } from '@home/components/widget/lib/maps-legacy/common-maps-utils';
 import { FormattedData } from '@shared/models/widget.models';
 
+
 /**
-
- * polyline.
-
+ * Polyline (ThingsBoard web UI).
  */
+
 
 export class Polyline {
 
@@ -48,6 +48,13 @@ export class Polyline {
     }
   }
 
+  /**
+   * get decorator settings.
+   *
+   * @param settings settings (Partial<WidgetPolylineSettings>)
+   * @returns PolylineDecoratorOptions observable or value
+   */
+
   getDecoratorSettings(settings: Partial<WidgetPolylineSettings>): PolylineDecoratorOptions {
     return {
       patterns: [
@@ -68,6 +75,15 @@ export class Polyline {
     };
   }
 
+  /**
+   * update polyline.
+   *
+   * @param locations locations (L.LatLng[])
+   * @param data dialog or route input data
+   * @param dataSources data sources (FormattedData[])
+   * @param settings settings (Partial<WidgetPolylineSettings>)
+   */
+
   updatePolyline(locations: L.LatLng[], data: FormattedData, dataSources: FormattedData[], settings: Partial<WidgetPolylineSettings>) {
     this.data = data;
     this.dataSources = dataSources;
@@ -77,6 +93,13 @@ export class Polyline {
       this.polylineDecorator.setPaths(this.leafletPoly);
     }
   }
+
+  /**
+   * get poly style.
+   *
+   * @param settings settings (Partial<WidgetPolylineSettings>)
+   * @returns L.PolylineOptions observable or value
+   */
 
   getPolyStyle(settings: Partial<WidgetPolylineSettings>): L.PolylineOptions {
     return {
@@ -91,9 +114,19 @@ export class Polyline {
     };
   }
 
+  /**
+   * DELETE — remove polyline.
+   *
+   */
+
   removePolyline() {
     this.map.removeLayer(this.leafletPoly);
   }
+
+  /**
+   * get polyline lat lngs.
+   *
+   */
 
   getPolylineLatLngs() {
     return this.leafletPoly.getLatLngs();

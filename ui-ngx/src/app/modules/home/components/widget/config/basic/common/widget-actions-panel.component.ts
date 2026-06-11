@@ -27,6 +27,12 @@ import { deepClone } from '@core/utils';
 import { MatDialog } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: widget actions panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-actions-panel`.
+ */
 @Component({
     selector: 'tb-widget-actions-panel',
     templateUrl: './widget-actions-panel.component.html',
@@ -38,10 +44,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: widget actions panel UI.
- */
+standalone: false
 })
 export class WidgetActionsPanelComponent implements ControlValueAccessor, OnInit {
 
@@ -59,6 +62,11 @@ export class WidgetActionsPanelComponent implements ControlValueAccessor, OnInit
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.actionsFormGroup = this.fb.group({
       actions: [null, []]
@@ -70,16 +78,40 @@ export class WidgetActionsPanelComponent implements ControlValueAccessor, OnInit
     );
   }
 
+  /**
+   * write value.
+   *
+   * @param actions actions ({[actionSourceId: string]: Array<WidgetActionDescriptor>})
+   */
+
   writeValue(actions?: {[actionSourceId: string]: Array<WidgetActionDescriptor>}): void {
     this.actionsFormGroup.get('actions').patchValue(actions || {}, {emitEvent: false});
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -94,6 +126,13 @@ export class WidgetActionsPanelComponent implements ControlValueAccessor, OnInit
     const actions: {[actionSourceId: string]: Array<WidgetActionDescriptor>} = this.actionsFormGroup.get('actions').value;
     return actions ? Object.keys(actions) : [];
   }
+
+  /**
+   * widget actions by action source id.
+   *
+   * @param actionSourceId action source id (string)
+   * @returns Array<WidgetActionDescriptor> observable or value
+   */
 
   public widgetActionsByActionSourceId(actionSourceId: string): Array<WidgetActionDescriptor> {
     const actions: {[actionSourceId: string]: Array<WidgetActionDescriptor>} = this.actionsFormGroup.get('actions').value;
@@ -111,6 +150,11 @@ export class WidgetActionsPanelComponent implements ControlValueAccessor, OnInit
     }
     return false;
   }
+
+  /**
+   * manage widget actions.
+   *
+   */
 
   public manageWidgetActions() {
     const actions: {[actionSourceId: string]: Array<WidgetActionDescriptor>} = this.actionsFormGroup.get('actions').value;

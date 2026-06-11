@@ -39,6 +39,12 @@ import { IAliasController } from '@core/api/widget-api.models';
 import { TbFlotKeyThreshold } from '@home/components/widget/lib/flot-widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: flot threshold (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flot-threshold`.
+ */
 @Component({
     selector: 'tb-flot-threshold',
     templateUrl: './flot-threshold.component.html',
@@ -51,10 +57,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: flot threshold UI.
- */
+standalone: false
 })
 export class FlotThresholdComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -79,6 +82,11 @@ export class FlotThresholdComponent extends PageComponent implements OnInit, Con
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.thresholdFormGroup = this.fb.group({
       valueSource: [null, []],
@@ -92,12 +100,30 @@ export class FlotThresholdComponent extends PageComponent implements OnInit, Con
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -107,6 +133,12 @@ export class FlotThresholdComponent extends PageComponent implements OnInit, Con
       this.thresholdFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TbFlotKeyThreshold)
+   */
 
   writeValue(value: TbFlotKeyThreshold): void {
     this.modelValue = value;
@@ -120,6 +152,11 @@ export class FlotThresholdComponent extends PageComponent implements OnInit, Con
       {valueSource, lineWidth: value?.lineWidth, color: value?.color}, {emitEvent: false}
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: {valueSource: ValueSourceProperty; lineWidth: number; color: string} = this.thresholdFormGroup.value;

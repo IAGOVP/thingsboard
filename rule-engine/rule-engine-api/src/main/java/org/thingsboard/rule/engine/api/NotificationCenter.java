@@ -38,27 +38,94 @@ import java.util.List;
 
  */
 
+
 /**
 
- * Dispatches notification rules from rule engine.
+ * Dispatches notification rules triggered from the rule engine.
 
  */
 
+
 public interface NotificationCenter {
+    /**
+     * Processes notification request.
+     *
+     * @param tenantId tenant UUID
+     * @param notificationRequest notification request ({@link NotificationRequest})
+     * @param callback completion callback for async rule engine operations
+     * @return {@link NotificationRequest}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     NotificationRequest processNotificationRequest(TenantId tenantId, NotificationRequest notificationRequest, FutureCallback<NotificationRequestStats> callback);
+    /**
+     * Send general web notification.
+     *
+     * @param tenantId tenant UUID
+     * @param recipients recipients ({@link UsersFilter})
+     * @param template template ({@link NotificationTemplate})
+     * @param info info ({@link GeneralNotificationInfo})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendGeneralWebNotification(TenantId tenantId, UsersFilter recipients, NotificationTemplate template, GeneralNotificationInfo info); // for future use
+    /**
+     * Send system notification.
+     *
+     * @param tenantId tenant UUID
+     * @param targetId target id ({@link NotificationTargetId})
+     * @param type type ({@link NotificationType})
+     * @param info info ({@link NotificationInfo})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendSystemNotification(TenantId tenantId, NotificationTargetId targetId, NotificationType type, NotificationInfo info); // for future use and compatibility with PE
+    /**
+     * Deletes notification request.
+     *
+     * @param tenantId tenant UUID
+     * @param notificationRequestId notification request id ({@link NotificationRequestId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteNotificationRequest(TenantId tenantId, NotificationRequestId notificationRequestId);
+    /**
+     * Mark notification as read.
+     *
+     * @param tenantId tenant UUID
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void markNotificationAsRead(TenantId tenantId, UserId recipientId, NotificationId notificationId);
+    /**
+     * Mark all notifications as read.
+     *
+     * @param tenantId tenant UUID
+     * @param deliveryMethod delivery method ({@link NotificationDeliveryMethod})
+     * @param recipientId recipient id ({@link UserId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void markAllNotificationsAsRead(TenantId tenantId, NotificationDeliveryMethod deliveryMethod, UserId recipientId);
+    /**
+     * Deletes notification.
+     *
+     * @param tenantId tenant UUID
+     * @param recipientId recipient id ({@link UserId})
+     * @param notificationId notification id ({@link NotificationId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteNotification(TenantId tenantId, UserId recipientId, NotificationId notificationId);
+    /**
+     * Returns available delivery methods.
+     *
+     * @param tenantId tenant UUID
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<NotificationDeliveryMethod> getAvailableDeliveryMethods(TenantId tenantId);
 

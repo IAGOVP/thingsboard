@@ -23,8 +23,11 @@ import org.thingsboard.server.common.data.DataConstants;
 
 import static org.thingsboard.rule.engine.telemetry.settings.AttributesProcessingSettings.OnEveryMessage;
 /**
- * JSON configuration for TbMsgAttributes rule node.
+ * JSON configuration POJO for {@link TbMsgAttributes} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMsgAttributesNodeConfiguration implements NodeConfiguration<TbMsgAttributesNodeConfiguration> {
@@ -37,6 +40,12 @@ public class TbMsgAttributesNodeConfiguration implements NodeConfiguration<TbMsg
     private boolean notifyDevice;
     private boolean sendAttributesUpdatedNotification;
     private boolean updateAttributesOnlyOnValueChange;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgAttributesNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgAttributesNodeConfiguration defaultConfiguration() {

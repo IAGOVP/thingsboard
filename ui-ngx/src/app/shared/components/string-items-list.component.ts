@@ -36,6 +36,12 @@ export interface StringItemsOption {
   name: string;
   value: any;
 }
+
+/**
+ * Angular component: string items list (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-string-items-list`.
+ */
 @Component({
   selector: 'tb-string-items-list',
   templateUrl: './string-items-list.component.html',
@@ -48,10 +54,7 @@ export interface StringItemsOption {
     }
   ],
   encapsulation: ViewEncapsulation.None,
-  standalone: false
-/**
- * Angular component: string items list UI.
- */
+standalone: false
 })
 export class StringItemsListComponent implements ControlValueAccessor, OnInit {
 
@@ -147,6 +150,11 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (this.predefinedValues || isDefined(this.fetchOptionsFn)) {
       this.filteredValues = this.itemControl.valueChanges
@@ -164,18 +172,41 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   updateValidators() {
     this.itemsControl.setValidators(this.required ? [Validators.required] : []);
     this.itemsControl.updateValueAndValidity();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -185,6 +216,12 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
       this.stringItemsForm.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<string> | null)
+   */
 
   writeValue(value: Array<string> | null): void {
     this.searchText = '';
@@ -210,6 +247,12 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     this.dirty = true;
   }
 
+  /**
+   * Event handler for option selected.
+   *
+   * @param event DOM or Angular event object
+   */
+
   onOptionSelected(event: MatAutocompleteSelectedEvent): void {
     if (event.option.value != null) {
       this.add(event.option.value);
@@ -218,10 +261,22 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * POST/PUT entity — add on end.
+   *
+   * @param event DOM or Angular event object
+   */
+
   addOnEnd(event: MatChipInputEvent): void {
     this.addItem(event.value ?? '');
     this.onTouched();
   }
+
+  /**
+   * DELETE — remove items.
+   *
+   * @param item item (StringItemsOption)
+   */
 
   removeItems(item: StringItemsOption) {
     const index = this.modelValue.indexOf(item.value);
@@ -237,6 +292,11 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.itemControl.updateValueAndValidity({onlySelf: true, emitEvent: true});
@@ -244,9 +304,22 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * display value fn.
+   *
+   * @param values values (StringItemsOption)
+   * @returns string | undefined observable or value
+   */
+
   displayValueFn(values?: StringItemsOption): string | undefined {
     return values ? values.name : undefined;
   }
+
+  /**
+   * POST/PUT entity — add item.
+   *
+   * @param searchText search text (string)
+   */
 
   private addItem(searchText: string) {
     searchText = searchText.trim();
@@ -269,6 +342,12 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param item item (StringItemsOption)
+   */
+
   private add(item: StringItemsOption) {
     if (!this.modelValue || this.modelValue.indexOf(item.value) === -1) {
       if (!this.modelValue) {
@@ -282,6 +361,13 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     this.clear();
   }
 
+  /**
+   * fetch values.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<StringItemsOption>> observable or value
+   */
+
   private fetchValues(searchText?: string): Observable<Array<StringItemsOption>> {
     if (!this.predefinedValues?.length) {
       return of([]);
@@ -292,6 +378,12 @@ export class StringItemsListComponent implements ControlValueAccessor, OnInit {
     }
     return of(result);
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   private clear(value: string = '') {
     this.stringItemInput.nativeElement.value = value;

@@ -19,11 +19,13 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
 /**
-
- * Angular component: analogue gauge widget settings UI.
-
+ * Angular component: analogue gauge widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 
 export class AnalogueGaugeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +40,21 @@ export class AnalogueGaugeWidgetSettingsComponent extends WidgetSettingsComponen
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.analogueGaugeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -105,6 +119,12 @@ export class AnalogueGaugeWidgetSettingsComponent extends WidgetSettingsComponen
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.analogueGaugeWidgetSettingsForm = this.fb.group({
 
@@ -168,9 +188,21 @@ export class AnalogueGaugeWidgetSettingsComponent extends WidgetSettingsComponen
     this.ctx.settingsForm = this.analogueGaugeWidgetSettingsForm;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showUnitTitle', 'valueBox', 'animation'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showUnitTitle: boolean = this.analogueGaugeWidgetSettingsForm.get('showUnitTitle').value;
@@ -222,6 +254,11 @@ export class AnalogueGaugeWidgetSettingsComponent extends WidgetSettingsComponen
     this.analogueGaugeWidgetSettingsForm.get('animationDuration').updateValueAndValidity({emitEvent});
     this.analogueGaugeWidgetSettingsForm.get('animationRule').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * prepare output settings.
+   *
+   */
 
   protected prepareOutputSettings(settings) {
     settings.numbersFont.color = this.analogueGaugeWidgetSettingsForm.get('numbersColor').value;

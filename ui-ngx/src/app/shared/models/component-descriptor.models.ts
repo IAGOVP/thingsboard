@@ -36,11 +36,11 @@ export enum ComponentClusteringMode {
   SINGLETON = 'SINGLETON'
 }
 
+
 /**
-
- * TypeScript models and enums for component descriptor.
-
+ * TypeScript interfaces, types, and enums for component descriptor (shared TypeScript models).
  */
+
 
 export interface ComponentDescriptor {
   type: ComponentType | RuleNodeType;

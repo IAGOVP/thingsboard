@@ -39,6 +39,12 @@ import {
   WidgetButtonToggleCustomStylePanelComponent
 } from '@home/components/widget/lib/settings/common/button/widget-button-toggle-custom-style-panel.component';
 
+
+/**
+ * Angular component: widget button toggle custom style (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-button-toggle-custom-style`.
+ */
 @Component({
     selector: 'tb-widget-button-toggle-custom-style',
     templateUrl: './widget-button-toggle-custom-style.component.html',
@@ -51,10 +57,7 @@ import {
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widget button toggle custom style UI.
- */
+standalone: false
 })
 export class WidgetButtonToggleCustomStyleComponent implements OnInit, OnChanges, ControlValueAccessor {
 
@@ -89,6 +92,11 @@ export class WidgetButtonToggleCustomStyleComponent implements OnInit, OnChanges
               private viewContainerRef: ViewContainerRef,
               private cd: ChangeDetectorRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.updatePreviewAppearance();
   }
@@ -104,24 +112,59 @@ export class WidgetButtonToggleCustomStyleComponent implements OnInit, OnChanges
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param _isDisabled  is disabled (boolean)
+   */
+
   setDisabledState(_isDisabled: boolean): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (WidgetButtonToggleCustomStyle)
+   */
 
   writeValue(value: WidgetButtonToggleCustomStyle): void {
     this.modelValue = value;
     this.updatePreviewAppearance();
   }
 
+  /**
+   * clear style.
+   *
+   */
+
   clearStyle() {
     this.updateModel(null);
   }
+
+  /**
+   * open button custom style popup.
+   *
+   * @param matButton mat button (MatIconButton)
+   */
 
   openButtonCustomStylePopup($event: Event, matButton: MatIconButton) {
     if ($event) {
@@ -155,11 +198,22 @@ export class WidgetButtonToggleCustomStyleComponent implements OnInit, OnChanges
     }
   }
 
+  /**
+   * update model.
+   *
+   * @param value value (WidgetButtonToggleCustomStyle)
+   */
+
   private updateModel(value: WidgetButtonToggleCustomStyle): void {
     this.modelValue = value;
     this.updatePreviewAppearance();
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update preview appearance.
+   *
+   */
 
   private updatePreviewAppearance() {
     this.previewAppearance = deepClone(this.appearance);

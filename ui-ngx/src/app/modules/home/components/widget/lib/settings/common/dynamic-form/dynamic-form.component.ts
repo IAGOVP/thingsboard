@@ -54,6 +54,12 @@ import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 import { ContentType } from '@shared/models/constants';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
+/**
+ * Angular component: dynamic form (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dynamic-form`.
+ */
 @Component({
     selector: 'tb-dynamic-form',
     templateUrl: './dynamic-form.component.html',
@@ -70,10 +76,7 @@ import { DomSanitizer } from '@angular/platform-browser';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: dynamic form UI.
- */
+standalone: false
 })
 export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
@@ -134,6 +137,11 @@ export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAcce
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.propertiesFormGroup = this.fb.group({
     });
@@ -156,12 +164,30 @@ export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAcce
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -173,10 +199,22 @@ export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAcce
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value ({[id: string]: any})
+   */
+
   writeValue(value: {[id: string]: any}): void {
     this.modelValue = value || {};
     this.setupValue();
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   validate(_c: UntypedFormControl) {
     const valid = this.propertiesFormGroup.valid;
@@ -186,6 +224,11 @@ export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAcce
       },
     };
   }
+
+  /**
+   * load metadata.
+   *
+   */
 
   private loadMetadata() {
     this.validatorTriggers = [];
@@ -245,6 +288,11 @@ export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAcce
     this.cd.markForCheck();
   }
 
+  /**
+   * calculate controls state.
+   *
+   */
+
   private calculateControlsState(updateControls = false) {
     for (const trigger of this.validatorTriggers) {
       const value: boolean = this.propertiesFormGroup.get(trigger).value;
@@ -276,6 +324,11 @@ export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAcce
     }
   }
 
+  /**
+   * update controls state.
+   *
+   */
+
   private updateControlsState() {
     if (this.properties) {
       for (let property of this.properties) {
@@ -292,6 +345,11 @@ export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAcce
     }
   }
 
+  /**
+   * setup value.
+   *
+   */
+
   private setupValue() {
     if (this.properties) {
       this.modelValue = mergeDeep<{[id: string]: any}>({}, this.defaults, this.modelValue);
@@ -302,6 +360,11 @@ export class DynamicFormComponent implements OnInit, OnChanges, ControlValueAcce
       this.setDisabledState(this.disabled);
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.propertiesFormGroup.getRawValue();

@@ -41,11 +41,11 @@ export enum PlatformType {
   IOS = 'IOS'
 }
 
+
 /**
-
- * TypeScript models and enums for oauth2client registration template.
-
+ * TypeScript interfaces, types, and enums for oauth2client registration template (shared TypeScript models).
  */
+
 
 export interface OAuth2ClientRegistrationTemplate extends OAuth2RegistrationInfo {
   comment: string;

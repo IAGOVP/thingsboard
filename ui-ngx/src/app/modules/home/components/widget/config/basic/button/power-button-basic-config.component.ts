@@ -33,14 +33,17 @@ import {
 } from '@home/components/widget/lib/rpc/power-button-widget.models';
 import { cssSizeToStrSize, resolveCssSize } from '@shared/models/widget-settings.models';
 
+
+/**
+ * Angular component: power button basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-power-button-basic-config`.
+ */
 @Component({
     selector: 'tb-power-button-basic-config',
     templateUrl: './power-button-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: power button basic config UI.
- */
+standalone: false
 })
 export class PowerButtonBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -65,9 +68,21 @@ export class PowerButtonBasicConfigComponent extends BasicWidgetConfigComponent 
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.powerButtonWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: PowerButtonWidgetSettings = {...powerButtonDefaultSettings, ...(configData.config.settings || {})};
@@ -125,6 +140,13 @@ export class PowerButtonBasicConfigComponent extends BasicWidgetConfigComponent 
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.targetDevice = config.targetDevice;
 
@@ -169,9 +191,22 @@ export class PowerButtonBasicConfigComponent extends BasicWidgetConfigComponent 
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon', 'onButtonIcon.showIcon', 'offButtonIcon.showIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.powerButtonWidgetConfigForm.get('showTitle').value;
@@ -224,6 +259,13 @@ export class PowerButtonBasicConfigComponent extends BasicWidgetConfigComponent 
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -231,6 +273,13 @@ export class PowerButtonBasicConfigComponent extends BasicWidgetConfigComponent 
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

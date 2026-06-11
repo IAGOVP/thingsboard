@@ -27,14 +27,17 @@ import {
   LatestChartWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/latest-chart-widget-settings.component';
 
+
+/**
+ * Angular component: bar chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-bar-chart-widget-settings`.
+ */
 @Component({
     selector: 'tb-bar-chart-widget-settings',
     templateUrl: './latest-chart-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: bar chart widget settings UI.
- */
+standalone: false
 })
 export class BarChartWidgetSettingsComponent extends LatestChartWidgetSettingsComponent<BarChartWidgetSettings> {
 
@@ -46,13 +49,31 @@ export class BarChartWidgetSettingsComponent extends LatestChartWidgetSettingsCo
     super(store, fb);
   }
 
+  /**
+   * default latest chart settings.
+   *
+   */
+
   protected defaultLatestChartSettings() {
     return barChartWidgetDefaultSettings;
   }
 
+  /**
+   * latest chart config template.
+   *
+   * @returns TemplateRef<any> observable or value
+   */
+
   public latestChartConfigTemplate(): TemplateRef<any> {
     return this.barChartConfigTemplate;
   }
+
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
 
   protected setupLatestChartControls(latestChartWidgetSettingsForm: UntypedFormGroup, settings: WidgetSettings) {
     latestChartWidgetSettingsForm.addControl('barSettings', this.fb.control(settings.barSettings, []));

@@ -16,11 +16,11 @@
 
 import { Observable } from 'rxjs';
 
+
 /**
-
- * TypeScript models and enums for imodules map.
-
+ * Imodules map (ThingsBoard web UI).
  */
+
 
 export interface IModulesMap {
   init(): Observable<any>;

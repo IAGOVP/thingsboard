@@ -73,11 +73,11 @@ import { AlarmRulesComponent } from '@home/components/alarm-rules/alarm-rules.co
 
 export type AlarmRuleTableEntity = CalculatedFieldAlarmRule | CalculatedFieldAlarmRuleInfo;
 
+
 /**
-
- * alarm rules table config.
-
+ * Alarm rules table config (ThingsBoard web UI).
  */
+
 
 export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntity> {
 
@@ -219,11 +219,24 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
     }
   }
 
+  /**
+   * fetch calculated fields.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<AlarmRuleTableEntity>> observable or value
+   */
+
   fetchCalculatedFields(pageLink: PageLink): Observable<PageData<AlarmRuleTableEntity>> {
     return this.pageMode ?
       this.alarmRulesService.getAlarmRules(pageLink, this.alarmRuleFilterConfig) :
       this.alarmRulesService.getAlarmRulesByEntityId(this.entityId, pageLink);
   }
+
+  /**
+   * Event handler for open debug config.
+   *
+   * @param calculatedField calculated field (AlarmRuleTableEntity)
+   */
 
   onOpenDebugConfig($event: Event, calculatedField: AlarmRuleTableEntity): void {
     $event?.stopPropagation();
@@ -250,6 +263,12 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
     }, $event.target as Element);
   }
 
+  /**
+   * edit calculated field.
+   *
+   * @param calculatedField calculated field (AlarmRuleTableEntity)
+   */
+
   private editCalculatedField($event: Event, calculatedField: AlarmRuleTableEntity, isDirty = false): void {
     $event?.stopPropagation();
     this.getCalculatedAlarmDialog(calculatedField, 'action.apply', isDirty)
@@ -259,6 +278,12 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
         }
       });
   }
+
+  /**
+   * copy calculated field.
+   *
+   * @param calculatedField calculated field (AlarmRuleTableEntity)
+   */
 
   private copyCalculatedField($event: Event, calculatedField: AlarmRuleTableEntity, isDirty = false): void {
     $event?.stopPropagation();
@@ -275,6 +300,13 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
         }
       });
   }
+
+  /**
+   * get calculated alarm dialog.
+   *
+   * @param value value (AlarmRuleTableEntity)
+   * @returns Observable<CalculatedFieldAlarmRule> observable or value
+   */
 
   private getCalculatedAlarmDialog(value?: AlarmRuleTableEntity, buttonTitle = 'action.add', isDirty = false): Observable<CalculatedFieldAlarmRule> {
     const entityId = this.entityId || value?.entityId;
@@ -299,6 +331,12 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
       .pipe(filter(Boolean));
   }
 
+  /**
+   * open debug events dialog.
+   *
+   * @param calculatedField calculated field (AlarmRuleTableEntity)
+   */
+
   private openDebugEventsDialog($event: Event, calculatedField: AlarmRuleTableEntity): void {
     $event?.stopPropagation();
     this.dialog.open<EventsDialogComponent, EventsDialogData, null>(EventsDialogComponent, {
@@ -318,6 +356,12 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
       .subscribe();
   }
 
+  /**
+   * open debug tab.
+   *
+   * @param calculatedField calculated field (AlarmRuleTableEntity)
+   */
+
   private openDebugTab($event: Event, calculatedField: AlarmRuleTableEntity) {
     const table = this.getTable();
     if (!table.isDetailsOpen) {
@@ -334,15 +378,30 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
     }
   }
 
+  /**
+   * export alarm rule.
+   *
+   * @param calculatedField calculated field (AlarmRuleTableEntity)
+   */
+
   private exportAlarmRule($event: Event, calculatedField: AlarmRuleTableEntity): void {
     $event?.stopPropagation();
     this.importExportService.exportCalculatedField(calculatedField.id.id);
   }
 
+  /**
+   * import calculated field.
+   *
+   */
+
   private importCalculatedField(): void {
     this.importExportService.openCalculatedFieldImportDialog('alarm-rule.import', 'alarm-rule.file')
       .pipe(
         filter(Boolean),
+        /**
+         * switch map.
+         *
+         */
         switchMap(calculatedField => {
           if (calculatedField.type !== CalculatedFieldType.ALARM) {
             this.store.dispatch(new ActionNotificationShow({
@@ -365,6 +424,13 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
       .subscribe(() => this.updateData());
   }
 
+  /**
+   * update imported calculated field.
+   *
+   * @param calculatedField calculated field (CalculatedFieldAlarmRule)
+   * @returns CalculatedFieldAlarmRule observable or value
+   */
+
   private updateImportedCalculatedField(calculatedField: CalculatedFieldAlarmRule): CalculatedFieldAlarmRule {
     if (calculatedField.type === CalculatedFieldType.ALARM) {
       calculatedField.configuration.arguments = Object.keys(calculatedField.configuration.arguments).reduce((acc, key) => {
@@ -379,6 +445,13 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
     return calculatedField;
   }
 
+  /**
+   * Event handler for debug config changed.
+   *
+   * @param id id (string)
+   * @param debugSettings debug settings (EntityDebugSettings)
+   */
+
   private onDebugConfigChanged(id: string, debugSettings: EntityDebugSettings): void {
     this.alarmRulesService.getAlarmRuleById(id).pipe(
       switchMap(field => this.alarmRulesService.saveAlarmRule({ ...field, debugSettings })),
@@ -386,6 +459,15 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => this.updateData());
   }
+
+  /**
+   * get test script dialog.
+   *
+   * @param calculatedField calculated field (AlarmRuleTableEntity)
+   * @param argumentsObj arguments obj (CalculatedFieldEventArguments)
+   * @param expression expression (string)
+   * @returns Observable<string> observable or value
+   */
 
   getTestScriptDialog(calculatedField: AlarmRuleTableEntity, argumentsObj?: CalculatedFieldEventArguments, openCalculatedFieldEdit = true, expression?: string): Observable<string> {
     const resultArguments = Object.keys(calculatedField.configuration.arguments).reduce((acc, key) => {
@@ -409,6 +491,10 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
       }).afterClosed()
       .pipe(
         filter(Boolean),
+        /**
+         * tap.
+         *
+         */
         tap(expression => {
           if (openCalculatedFieldEdit) {
             this.editCalculatedField(null, {
@@ -420,11 +506,24 @@ export class AlarmRulesTableConfig extends EntityTableConfig<AlarmRuleTableEntit
       );
   }
 
+  /**
+   * open calculated field.
+   *
+   * @param entity entity (AlarmRuleTableEntity)
+   */
+
   private openCalculatedField($event: Event, entity: AlarmRuleTableEntity) {
     $event?.stopPropagation();
     const url = this.router.createUrlTree(['alarms', 'alarm-rules', entity.id.id]);
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * Event handler for cfaction.
+   *
+   * @param action action (EntityAction<AlarmRuleTableEntity>)
+   * @returns boolean observable or value
+   */
 
   private onCFAction(action: EntityAction<AlarmRuleTableEntity>): boolean {
     switch (action.action) {

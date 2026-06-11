@@ -21,14 +21,17 @@ import { EntityTableHeaderComponent } from '../../components/entity/entity-table
 import { CalculatedFieldAlarmRule, CalculatedFieldsQuery } from "@shared/models/calculated-field.models";
 import { AlarmRulesTableConfig } from "@home/components/alarm-rules/alarm-rules-table-config";
 
+
+/**
+ * Angular component: alarm rule table header (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-table-header`.
+ */
 @Component({
     selector: 'tb-alarm-rule-table-header',
     templateUrl: './alarm-rule-table-header.component.html',
     styleUrls: ['./alarm-rule-table-header.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm rule table header UI.
- */
+standalone: false
 })
 export class AlarmRuleTableHeaderComponent extends EntityTableHeaderComponent<CalculatedFieldAlarmRule> {
 
@@ -39,6 +42,12 @@ export class AlarmRuleTableHeaderComponent extends EntityTableHeaderComponent<Ca
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * alarm rule filter changed.
+   *
+   * @param alarmRuleFilterConfig alarm rule filter config (CalculatedFieldsQuery)
+   */
 
   alarmRuleFilterChanged(alarmRuleFilterConfig: CalculatedFieldsQuery) {
     this.alarmRuleTableConfig.alarmRuleFilterConfig = alarmRuleFilterConfig;

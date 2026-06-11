@@ -41,11 +41,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+
 /**
 
- * Unit test for tb originator type filter node rule node.
+ * Unit test for tb originator type filter node (message filtering and branching rule nodes).
 
  */
+
 
 class TbOriginatorTypeFilterNodeTest {
 

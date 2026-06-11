@@ -26,6 +26,12 @@ import { TimeSeriesChartGridSettings } from '@home/components/widget/lib/chart/t
 import { WidgetService } from '@core/http/widget.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: time series chart grid settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-grid-settings`.
+ */
 @Component({
     selector: 'tb-time-series-chart-grid-settings',
     templateUrl: './time-series-chart-grid-settings.component.html',
@@ -37,10 +43,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: time series chart grid settings UI.
- */
+standalone: false
 })
 export class TimeSeriesChartGridSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -59,6 +62,11 @@ export class TimeSeriesChartGridSettingsComponent implements OnInit, ControlValu
               private widgetService: WidgetService,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.gridSettingsFormGroup = this.fb.group({
@@ -79,12 +87,30 @@ export class TimeSeriesChartGridSettingsComponent implements OnInit, ControlValu
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -95,6 +121,12 @@ export class TimeSeriesChartGridSettingsComponent implements OnInit, ControlValu
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartGridSettings)
+   */
 
   writeValue(value: TimeSeriesChartGridSettings): void {
     this.modelValue = value;
@@ -109,6 +141,11 @@ export class TimeSeriesChartGridSettingsComponent implements OnInit, ControlValu
     });
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     const show: boolean = this.gridSettingsFormGroup.get('show').value;
     if (show) {
@@ -118,6 +155,11 @@ export class TimeSeriesChartGridSettingsComponent implements OnInit, ControlValu
       this.gridSettingsFormGroup.get('show').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.gridSettingsFormGroup.getRawValue();

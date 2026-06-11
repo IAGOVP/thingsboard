@@ -17,11 +17,11 @@
 import { EntityId } from '@shared/models/id/entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for oauth2client id.
-
+ * TypeScript interfaces, types, and enums for oauth2client id (shared TypeScript models).
  */
+
 
 export class OAuth2ClientId implements EntityId {
   entityType = EntityType.OAUTH2_CLIENT

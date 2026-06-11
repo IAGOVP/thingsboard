@@ -17,11 +17,13 @@ package org.thingsboard.rule.engine.util;
 
 import lombok.Getter;
 
+
 /**
 
- * Rule engine component: contact based entity details.
+ * Enumerates contact based entity details values used by rule engine shared rule-engine utilities and async loaders.
 
  */
+
 
 public enum ContactBasedEntityDetails {
 

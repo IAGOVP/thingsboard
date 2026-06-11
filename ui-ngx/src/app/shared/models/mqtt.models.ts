@@ -14,6 +14,9 @@
 /// limitations under the License.
 ///
 
+/**
+ * TypeScript interfaces, types, and enums for mqtt version (shared TypeScript models).
+ */
 export enum MqttVersion {
   MQTT_3_1 = 'MQTT_3_1',
   MQTT_3_1_1 = 'MQTT_3_1_1',

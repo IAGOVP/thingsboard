@@ -21,7 +21,9 @@ export type CancelAnimationFrame = () => void;
 
 // @dynamic
 /**
- * Angular HTTP service: raf REST wrappers (`@core/http`).
+ * Angular injectable service: raf (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'

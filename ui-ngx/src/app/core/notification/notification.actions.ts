@@ -22,11 +22,11 @@ export enum NotificationActionTypes {
   HIDE_NOTIFICATION = '[Notification] Hide'
 }
 
+
 /**
-
- * action notification show.
-
+ * Action notification show (ThingsBoard web UI).
  */
+
 
 export class ActionNotificationShow implements Action {
   readonly type = NotificationActionTypes.SHOW_NOTIFICATION;

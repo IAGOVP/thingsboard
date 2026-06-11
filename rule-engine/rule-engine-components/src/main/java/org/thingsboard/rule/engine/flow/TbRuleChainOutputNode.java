@@ -24,7 +24,13 @@ import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine flow node 'output': transfers the message to the caller rule chain Implements org.thingsboard.rule.engine.api.TbNode.
+ * Flow rule node — <b>output</b>.
+ *
+ * <p>transfers the message to the caller rule chain
+ * <br>Produces output of the rule chain processing. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link EmptyNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/flow/output/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/flow/output/</a>
  */
 @RuleNode(
         type = ComponentType.FLOW,
@@ -39,9 +45,23 @@ import org.thingsboard.server.common.msg.TbMsg;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/flow/output/"
 )
 public class TbRuleChainOutputNode implements TbNode {
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) {}
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

@@ -17,11 +17,11 @@
 import { EntityId } from './entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for rule node id.
-
+ * TypeScript interfaces, types, and enums for rule node id (shared TypeScript models).
  */
+
 
 export class RuleNodeId implements EntityId {
   entityType = EntityType.RULE_NODE;

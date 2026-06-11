@@ -22,19 +22,37 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+
 /**
 
- * Test utils.
+ * Shared utilities for compose file patching, waits, and test data helpers.
 
  */
 
+
 public class TestUtils {
+    /**
+     * Add compose version.
+     *
+     * @param composeFiles compose files ({@link List})
+     * @param version version ({@link String})
+     * @return nothing
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     public static void addComposeVersion(List<File> composeFiles, String version) throws IOException {
         for (File composeFile : composeFiles) {
             addComposeVersion(composeFile, version);
         }
     }
+    /**
+     * Add compose version.
+     *
+     * @param composeFile compose file ({@link File})
+     * @param version version ({@link String})
+     * @return nothing
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     public static void addComposeVersion(File composeFile, String version) throws IOException {
         Path composeFilePath = composeFile.toPath();

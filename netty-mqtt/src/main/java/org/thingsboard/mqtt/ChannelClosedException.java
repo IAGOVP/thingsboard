@@ -17,11 +17,18 @@ package org.thingsboard.mqtt;
 
 import java.io.Serial;
 
+
+
+
 /**
 
- * Raised when an operation is attempted on a closed MQTT channel.
+
+ * Thrown when an MQTT operation is attempted on a closed Netty channel.
+
 
  */
+
+
 
 public class ChannelClosedException extends RuntimeException {
 

@@ -25,7 +25,9 @@ import { EntityInfoData } from '@shared/models/entity.models';
 import { isDefinedAndNotNull } from '@core/utils';
 
 /**
- * Angular HTTP service: asset profile REST wrappers (`@core/http`).
+ * Angular injectable service: asset profile (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -37,66 +39,152 @@ export class AssetProfileService {
   ) {
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfiles${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get asset profiles.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AssetProfile>> observable or value
+   */
+
 
   public getAssetProfiles(pageLink: PageLink, config?: RequestConfig): Observable<PageData<AssetProfile>> {
     return this.http.get<PageData<AssetProfile>>(`/api/assetProfiles${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfileInfos?assetProfileIds=${assetProfileIds.join(, ...`. */
+  
+  /**
+   * get asset profiles by ids.
+   *
+   * @param assetProfileIds asset profile ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<AssetProfileInfo>> observable or value
+   */
+
 
   public getAssetProfilesByIds(assetProfileIds: Array<string>, config?: RequestConfig): Observable<Array<AssetProfileInfo>> {
     return this.http.get<Array<AssetProfileInfo>>(`/api/assetProfileInfos?assetProfileIds=${assetProfileIds.join(',')}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfile/${assetProfileId}, ...`. */
+  
+  /**
+   * get asset profile.
+   *
+   * @param assetProfileId asset profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AssetProfile> observable or value
+   */
+
 
   public getAssetProfile(assetProfileId: string, config?: RequestConfig): Observable<AssetProfile> {
     return this.http.get<AssetProfile>(`/api/assetProfile/${assetProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfile/${assetProfileId}?inlineImages=true, ...`. */
+  
+  /**
+   * export asset profile.
+   *
+   * @param assetProfileId asset profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AssetProfile> observable or value
+   */
+
 
   public exportAssetProfile(assetProfileId: string, config?: RequestConfig): Observable<AssetProfile> {
     return this.http.get<AssetProfile>(`/api/assetProfile/${assetProfileId}?inlineImages=true`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfile, ...`. */
+  
+  /**
+   * POST/PUT entity — save asset profile.
+   *
+   * @param assetProfile asset profile (AssetProfile)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AssetProfile> observable or value
+   */
+
 
   public saveAssetProfile(assetProfile: AssetProfile, config?: RequestConfig): Observable<AssetProfile> {
     return this.http.post<AssetProfile>('/api/assetProfile', assetProfile, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete asset profile.
+   *
+   * @param assetProfileId asset profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteAssetProfile(assetProfileId: string, config?: RequestConfig) {
     return this.http.delete(`/api/assetProfile/${assetProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfile/${assetProfileId}/default, ...`. */
+  
+  /**
+   * set default asset profile.
+   *
+   * @param assetProfileId asset profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AssetProfile> observable or value
+   */
+
 
   public setDefaultAssetProfile(assetProfileId: string, config?: RequestConfig): Observable<AssetProfile> {
     return this.http.post<AssetProfile>(`/api/assetProfile/${assetProfileId}/default`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfileInfo/default, ...`. */
+  
+  /**
+   * get default asset profile info.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AssetProfileInfo> observable or value
+   */
+
 
   public getDefaultAssetProfileInfo(config?: RequestConfig): Observable<AssetProfileInfo> {
     return this.http.get<AssetProfileInfo>('/api/assetProfileInfo/default', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfileInfo/${assetProfileId}, ...`. */
+  
+  /**
+   * get asset profile info.
+   *
+   * @param assetProfileId asset profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AssetProfileInfo> observable or value
+   */
+
 
   public getAssetProfileInfo(assetProfileId: string, config?: RequestConfig): Observable<AssetProfileInfo> {
     return this.http.get<AssetProfileInfo>(`/api/assetProfileInfo/${assetProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfileInfos${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get asset profile infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AssetProfileInfo>> observable or value
+   */
+
 
   public getAssetProfileInfos(pageLink: PageLink, config?: RequestConfig): Observable<PageData<AssetProfileInfo>> {
     return this.http.get<PageData<AssetProfileInfo>>(`/api/assetProfileInfos${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/assetProfile/names`. */
+  
+  /**
+   * get asset profile names.
+   *
+   * @param activeOnly active only (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityInfoData>> observable or value
+   */
+
 
   public getAssetProfileNames(activeOnly: boolean = false, config?: RequestConfig): Observable<Array<EntityInfoData>> {
     let url = '/api/assetProfile/names';

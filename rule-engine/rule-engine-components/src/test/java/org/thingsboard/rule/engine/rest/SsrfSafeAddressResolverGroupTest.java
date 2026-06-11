@@ -37,8 +37,9 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 /**
- * Unit test for ssrf safe address resolver group rule node.
+ * Unit test for ssrf safe address resolver group (outbound REST API call nodes).
  */
+
 
 @ResourceLock("SsrfProtectionValidator") // to avoid race conditions when modifying SsrfProtectionValidator's static configuration
 class SsrfSafeAddressResolverGroupTest {

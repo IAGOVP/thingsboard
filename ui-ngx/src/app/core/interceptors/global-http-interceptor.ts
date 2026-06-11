@@ -35,9 +35,12 @@ import { DomSanitizer } from '@angular/platform-browser';
 const tmpHeaders = {};
 
 /**
- * Intercepts all `/api/**` HTTP calls: JWT via {@link AuthService}, global loading indicator,
- * error notifications, and token refresh on 401.
+ * Intercepts all `/api/**
+ * HTTP interceptor: attaches Bearer JWT, shows loading spinner, handles 401 refresh.
+ *
+ * <p>Applies to all `/api/**` requests from `@core/http` services.
  */
+
 @Injectable()
 export class GlobalHttpInterceptor implements HttpInterceptor {
 
@@ -53,6 +56,14 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     private authService: AuthService,
     private sanitizer: DomSanitizer
   ) {}
+
+  /**
+   * intercept.
+   *
+   * @param req req (HttpRequest<any>)
+   * @param next next (HttpHandler)
+   * @returns Observable<HttpEvent<any>> observable or value
+   */
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.url.startsWith('/api/')) {
@@ -82,6 +93,14 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     }
   }
 
+  /**
+   * jwt intercept.
+   *
+   * @param req req (HttpRequest<any>)
+   * @param next next (HttpHandler)
+   * @returns Observable<HttpEvent<any>> observable or value
+   */
+
   private jwtIntercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const newReq = this.updateAuthorizationHeader(req);
     if (newReq) {
@@ -91,6 +110,14 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     }
   }
 
+  /**
+   * handle request.
+   *
+   * @param req req (HttpRequest<any>)
+   * @param next next (HttpHandler)
+   * @returns Observable<HttpEvent<any>> observable or value
+   */
+
   private handleRequest(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((err) => {
@@ -98,6 +125,15 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
         return this.handleResponseError(req, next, errorResponse);
       }));
   }
+
+  /**
+   * handle response error.
+   *
+   * @param req req (HttpRequest<any>)
+   * @param next next (HttpHandler)
+   * @param errorResponse error response (HttpErrorResponse)
+   * @returns Observable<HttpEvent<any>> observable or value
+   */
 
   private handleResponseError(req: HttpRequest<any>, next: HttpHandler, errorResponse: HttpErrorResponse): Observable<HttpEvent<any>> {
     const config = getInterceptorConfig(req);
@@ -147,6 +183,14 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     return throwError(() => errorResponse);
   }
 
+  /**
+   * retry request.
+   *
+   * @param req req (HttpRequest<any>)
+   * @param next next (HttpHandler)
+   * @returns Observable<HttpEvent<any>> observable or value
+   */
+
   private retryRequest(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const thisTimeout =  1000 + Math.random() * 3000;
     return of(null).pipe(
@@ -154,6 +198,14 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
       mergeMap(() => this.jwtIntercept(req, next)
     ));
   }
+
+  /**
+   * refresh token and retry.
+   *
+   * @param req req (HttpRequest<any>)
+   * @param next next (HttpHandler)
+   * @returns Observable<HttpEvent<any>> observable or value
+   */
 
   private refreshTokenAndRetry(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.authService.refreshJwtToken().pipe(
@@ -165,6 +217,13 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
       switchMap(() => this.jwtIntercept(req, next)),
     );
   }
+
+  /**
+   * update authorization header.
+   *
+   * @param req req (HttpRequest<any>)
+   * @returns HttpRequest<any> observable or value
+   */
 
   private updateAuthorizationHeader(req: HttpRequest<any>): HttpRequest<any> {
     const jwtToken = AuthService.getJwtToken();
@@ -179,12 +238,26 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     }
   }
 
+  /**
+   * is token based auth entry point.
+   *
+   * @param url url (string)
+   * @returns boolean observable or value
+   */
+
   private isTokenBasedAuthEntryPoint(url: string): boolean {
     return  url.startsWith('/api/') &&
       !url.startsWith(Constants.entryPoints.login) &&
       !url.startsWith(Constants.entryPoints.tokenRefresh) &&
       !url.startsWith(Constants.entryPoints.nonTokenBased);
   }
+
+  /**
+   * update loading state.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @param isLoading is loading (boolean)
+   */
 
   private updateLoadingState(config: InterceptorConfig, isLoading: boolean) {
     if (!config.ignoreLoading) {
@@ -200,6 +273,13 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
       }
     }
   }
+
+  /**
+   * show error.
+   *
+   * @param error error (string)
+   * @param timeout timeout (number)
+   */
 
   private showError(error: string, timeout: number = 0) {
     setTimeout(() => {

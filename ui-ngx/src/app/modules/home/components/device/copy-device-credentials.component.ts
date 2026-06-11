@@ -27,14 +27,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: copy device credentials (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-copy-device-credentials`.
+ */
 @Component({
     selector: 'tb-copy-device-credentials',
     templateUrl: './copy-device-credentials.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: copy device credentials UI.
- */
+standalone: false
 })
 export class CopyDeviceCredentialsComponent implements OnInit, OnDestroy {
 
@@ -78,6 +81,11 @@ export class CopyDeviceCredentialsComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.credentialsSubscription = this.credentials$.pipe(
       filter(credential => isDefinedAndNotNull(credential)),
@@ -88,12 +96,23 @@ export class CopyDeviceCredentialsComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.deviceId$.unsubscribe();
     if (this.credentialsSubscription !== null) {
       this.credentialsSubscription.unsubscribe();
     }
   }
+
+  /**
+   * processing value.
+   *
+   * @param credential credential (DeviceCredentials)
+   */
 
   private processingValue(credential: DeviceCredentials): void {
     switch (credential.credentialsType) {
@@ -117,10 +136,22 @@ export class CopyDeviceCredentialsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * convert object to string.
+   *
+   * @param obj obj (object)
+   * @returns string observable or value
+   */
+
   private convertObjectToString(obj: object): string {
     Object.keys(obj).forEach(k => (!obj[k] && obj[k] !== undefined) && delete obj[k]);
     return JSON.stringify(obj).replace(/"([^"]+)":/g, '$1:');
   }
+
+  /**
+   * Event handler for copy credential.
+   *
+   */
 
   onCopyCredential() {
     this.store.dispatch(new ActionNotificationShow(

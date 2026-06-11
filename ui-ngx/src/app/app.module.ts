@@ -29,14 +29,21 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DefaultUrlSerializer, UrlSerializer, UrlTree } from '@angular/router';
 
+
 /**
-
- * tb url serializer.
-
+ * Tb url serializer (ThingsBoard web UI).
  */
+
 
 export default class TbUrlSerializer implements UrlSerializer {
   private _defaultUrlSerializer: DefaultUrlSerializer = new DefaultUrlSerializer();
+
+  /**
+   * parse.
+   *
+   * @param url url (string)
+   * @returns UrlTree observable or value
+   */
 
   parse(url: string): UrlTree {
     // Encode parentheses
@@ -44,6 +51,13 @@ export default class TbUrlSerializer implements UrlSerializer {
     // Use the default serializer.
     return this._defaultUrlSerializer.parse(url)
   }
+
+  /**
+   * serialize.
+   *
+   * @param tree tree (UrlTree)
+   * @returns string observable or value
+   */
 
   serialize(tree: UrlTree): string {
     return this._defaultUrlSerializer.serialize(tree).replace(/%28/g, '(').replace(/%29/g, ')');

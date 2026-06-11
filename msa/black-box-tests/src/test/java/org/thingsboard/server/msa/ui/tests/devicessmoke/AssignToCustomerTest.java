@@ -36,8 +36,9 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.PUBLIC_CUSTOMER_NAME;
 /**
- * Assign to customer test.
+ * Black-box test: assign to customer (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Assign to customer")
 public class AssignToCustomerTest extends AbstractDeviceTest {
@@ -48,6 +49,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
     private Device device;
     private Device device1;
     private String customerName;
+    /**
+     * Creates the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void create() {
@@ -58,6 +65,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
         customerName = customer.getName();
         device1 = testRestClient.postDevice("", EntityPrototypes.defaultDevicePrototype("Device " + random()));
     }
+    /**
+     * Deletes customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterClass
     public void deleteCustomer() {
@@ -65,12 +78,24 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
         deleteCustomerByName(PUBLIC_CUSTOMER_NAME);
         deleteDeviceByName(device1.getName());
     }
+    /**
+     * Creates a test device via REST API and returns its id.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void createDevice() {
         device = testRestClient.postDevice("", EntityPrototypes.defaultDevicePrototype(ENTITY_NAME));
         deviceName = device.getName();
     }
+    /**
+     * Assigns to customer by right side btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Assign to customer by right side of device btn")
@@ -86,6 +111,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(customerName).click();
         assertIsDisplayed(devicePage.device(deviceName));
     }
+    /**
+     * Assigns to customer from details tab.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Assign to customer by 'Assign to customer' btn on details tab")
@@ -106,6 +137,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(customerName).click();
         assertIsDisplayed(devicePage.device(deviceName));
     }
+    /**
+     * Assigns to customer marked device.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Assign marked device by btn on the top")
@@ -121,6 +158,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(customerName).click();
         assertIsDisplayed(devicePage.device(deviceName));
     }
+    /**
+     * Unassigns ed from customer by right side btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Unassign from customer by right side of device btn")
@@ -137,6 +180,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(customerName).click();
         devicePage.assertEntityIsNotPresent(deviceName);
     }
+    /**
+     * Unassigns ed from customer from details tab.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Unassign from customer by 'Unassign from customer' btn on details tab")
@@ -157,6 +206,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(customerName).click();
         devicePage.assertEntityIsNotPresent(deviceName);
     }
+    /**
+     * Assigns to several customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Can't assign device on several customer")
@@ -167,6 +222,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
 
         assertIsDisable(devicePage.assignBtnVisible(deviceName));
     }
+    /**
+     * Assigns public device.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Can't assign public device")
@@ -176,6 +237,12 @@ public class AssignToCustomerTest extends AbstractDeviceTest {
         sideBarMenuView.goToDevicesPage();
         assertIsDisable(devicePage.assignBtnVisible(deviceName));
     }
+    /**
+     * Assigns several devices.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Assign several devices by btn on the top")

@@ -52,11 +52,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 
+
 /**
 
- * Unit test for entities related entity id async loader rule node.
+ * Unit test for entities related entity id async loader (shared rule-engine utilities and async loaders).
 
  */
+
 
 public class EntitiesRelatedEntityIdAsyncLoaderTest {
 
@@ -84,6 +86,11 @@ public class EntitiesRelatedEntityIdAsyncLoaderTest {
         );
         relationsQuery.setFilters(Collections.singletonList(entityTypeFilter));
     }
+    /**
+     * Given relations query when find entity async should build correct entity relations query.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRelationsQuery_whenFindEntityAsync_ShouldBuildCorrectEntityRelationsQuery() {
@@ -110,6 +117,11 @@ public class EntitiesRelatedEntityIdAsyncLoaderTest {
         // THEN
         verify(relationServiceMock, times(1)).findByQuery(eq(TENANT_ID), eq(expectedEntityRelationsQuery));
     }
+    /**
+     * Given several entities found when find entity async should keep one and discard others.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Test
@@ -165,6 +177,11 @@ public class EntitiesRelatedEntityIdAsyncLoaderTest {
         assertNotNull(actualDeviceId);
         assertEquals(device1.getId(), actualDeviceId);
     }
+    /**
+     * Given relation query when find entity async then ok.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Test
@@ -180,6 +197,11 @@ public class EntitiesRelatedEntityIdAsyncLoaderTest {
         // THEN
         verifyEntityIdFuture(entityIdFuture, ASSET_ORIGINATOR_ID);
     }
+    /**
+     * Given relation query when find entity async then return null.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRelationQuery_whenFindEntityAsync_thenReturnNull() {
@@ -193,6 +215,11 @@ public class EntitiesRelatedEntityIdAsyncLoaderTest {
         // THEN
         verifyEntityIdFuture(entityIdFuture, null);
     }
+    /**
+     * Given relation query when find entity async then failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRelationQuery_whenFindEntityAsync_thenFailure() {

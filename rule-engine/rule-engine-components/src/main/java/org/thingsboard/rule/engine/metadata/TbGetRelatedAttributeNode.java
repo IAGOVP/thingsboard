@@ -31,7 +31,13 @@ import org.thingsboard.server.common.data.util.TbPair;
 import java.util.Arrays;
 
 /**
- * Rule engine enrichment node 'related entity data': Adds originators related entity attributes or latest telemetry or fields into message or message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>related entity data</b>.
+ *
+ * <p>Adds originators related entity attributes or latest telemetry or fields into message or message metadata
+ * <br>Related entity lookup based on the configured relation query. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGetRelatedDataNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/related-entity-data/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/related-entity-data/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -49,6 +55,13 @@ import java.util.Arrays;
 public class TbGetRelatedAttributeNode extends TbAbstractGetEntityDataNode<EntityId> {
 
     private static final String RELATED_ENTITY_NOT_FOUND_MESSAGE = "Failed to find related entity to message originator using relation query specified in the configuration!";
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbGetRelatedDataNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbGetRelatedDataNodeConfiguration loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
@@ -57,6 +70,14 @@ public class TbGetRelatedAttributeNode extends TbAbstractGetEntityDataNode<Entit
         checkDataToFetchSupportedOrElseThrow(config.getDataToFetch());
         return config;
     }
+    /**
+     * Finds entity async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originator message originator entity id
+     * @return future completing with {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ListenableFuture<EntityId> findEntityAsync(TbContext ctx, EntityId originator) {
@@ -66,6 +87,12 @@ public class TbGetRelatedAttributeNode extends TbAbstractGetEntityDataNode<Entit
                 checkIfEntityIsPresentOrThrow(RELATED_ENTITY_NOT_FOUND_MESSAGE),
                 ctx.getDbCallbackExecutor());
     }
+    /**
+     * Checks data to fetch supported or else throw.
+     *
+     * @param dataToFetch data to fetch ({@link DataToFetch})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected void checkDataToFetchSupportedOrElseThrow(DataToFetch dataToFetch) throws TbNodeException {
@@ -73,6 +100,14 @@ public class TbGetRelatedAttributeNode extends TbAbstractGetEntityDataNode<Entit
             throw new TbNodeException("DataToFetch property cannot be null! Supported values are: " + Arrays.toString(DataToFetch.values()));
         }
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

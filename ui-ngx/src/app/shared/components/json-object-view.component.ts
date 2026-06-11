@@ -21,6 +21,12 @@ import { isDefinedAndNotNull, isUndefined } from '@core/utils';
 import { getAce, updateEditorSize } from '@shared/models/ace/ace.models';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: json object view (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-json-object-view`.
+ */
 @Component({
     selector: 'tb-json-object-view',
     templateUrl: './json-object-view.component.html',
@@ -32,10 +38,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: json object view UI.
- */
+standalone: false
 })
 export class JsonObjectViewComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
@@ -67,6 +70,11 @@ export class JsonObjectViewComponent implements OnInit, OnDestroy, ControlValueA
   constructor(private renderer: Renderer2) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.viewerElement = this.jsonViewerElmRef.nativeElement;
     const editorOptions: Partial<Ace.EditorOptions> = {
@@ -95,16 +103,39 @@ export class JsonObjectViewComponent implements OnInit, OnDestroy, ControlValueA
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.jsonViewer?.destroy();
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (any)
+   */
 
   writeValue(value: any): void {
     this.modelValue = value;

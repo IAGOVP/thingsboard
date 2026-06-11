@@ -40,14 +40,17 @@ import { BreakpointId, LayoutType, ViewFormatType } from '@shared/models/dashboa
 import { isNotEmptyStr } from '@core/utils';
 import { TbContextMenuEvent } from '@shared/models/jquery-event.models';
 
+
+/**
+ * Angular component: dashboard layout (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-layout`.
+ */
 @Component({
     selector: 'tb-dashboard-layout',
     templateUrl: './dashboard-layout.component.html',
     styleUrls: ['./dashboard-layout.component.scss'],
-    standalone: false
-/**
- * Angular component: dashboard layout UI.
- */
+standalone: false
 })
 export class DashboardLayoutComponent extends PageComponent implements ILayoutController, DashboardCallbacks, OnInit, OnDestroy {
 
@@ -157,6 +160,11 @@ export class DashboardLayoutComponent extends PageComponent implements ILayoutCo
     this.initHotKeys();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const dashboardTimewindowChanged = this.parentDashboard ?
       this.parentDashboard.dashboardTimewindowChanged : this.dashboard.dashboardTimewindowChanged;
@@ -168,12 +176,22 @@ export class DashboardLayoutComponent extends PageComponent implements ILayoutCo
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.rxSubscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
     this.rxSubscriptions.length = 0;
   }
+
+  /**
+   * init hot keys.
+   *
+   */
 
   private initHotKeys(): void {
     this.hotKeys.push(
@@ -247,6 +265,11 @@ export class DashboardLayoutComponent extends PageComponent implements ILayoutCo
     );
   }
 
+  /**
+   * load dashboard style.
+   *
+   */
+
   private loadDashboardStyle() {
     this.dashboardStyle = {'background-color': this.layoutCtx.gridSettings.backgroundColor,
       'background-repeat': 'no-repeat',
@@ -259,6 +282,11 @@ export class DashboardLayoutComponent extends PageComponent implements ILayoutCo
       ) : of('none');
   }
 
+  /**
+   * reload.
+   *
+   */
+
   reload() {
     this.loadDashboardStyle();
     this.dashboard.pauseChangeNotifications();
@@ -268,70 +296,174 @@ export class DashboardLayoutComponent extends PageComponent implements ILayoutCo
     }, 0);
   }
 
+  /**
+   * reset highlight.
+   *
+   */
+
   resetHighlight() {
     this.dashboard.resetHighlight();
   }
+
+  /**
+   * highlight widget.
+   *
+   * @param widgetId widget id (string)
+   * @param delay delay (number)
+   */
 
   highlightWidget(widgetId: string, delay?: number) {
     this.dashboard.highlightWidget(widgetId, delay);
   }
 
+  /**
+   * select widget.
+   *
+   * @param widgetId widget id (string)
+   * @param delay delay (number)
+   */
+
   selectWidget(widgetId: string, delay?: number) {
     this.dashboard.selectWidget(widgetId, delay);
   }
+
+  /**
+   * POST/PUT entity — add widget.
+   *
+   */
 
   addWidget($event: Event) {
     this.layoutCtx.dashboardCtrl.addWidget($event, this.layoutCtx);
   }
 
+  /**
+   * Event handler for edit widget.
+   *
+   * @param widget widget (Widget)
+   */
+
   onEditWidget($event: Event, widget: Widget): void {
     this.layoutCtx.dashboardCtrl.editWidget($event, this.layoutCtx, widget);
   }
+
+  /**
+   * replace reference with widget copy.
+   *
+   * @param widget widget (Widget)
+   */
 
   replaceReferenceWithWidgetCopy($event: Event, widget: Widget): void {
     this.layoutCtx.dashboardCtrl.replaceReferenceWithWidgetCopy($event, this.layoutCtx, widget);
   }
 
+  /**
+   * Event handler for export widget.
+   *
+   * @param widget widget (Widget)
+   * @param widgetTitle widget title (string)
+   */
+
   onExportWidget($event: Event, widget: Widget, widgetTitle: string): void {
     this.layoutCtx.dashboardCtrl.exportWidget($event, this.layoutCtx, widget, widgetTitle);
   }
+
+  /**
+   * Event handler for remove widget.
+   *
+   * @param widget widget (Widget)
+   */
 
   onRemoveWidget($event: Event, widget: Widget): void {
     return this.layoutCtx.dashboardCtrl.removeWidget($event, this.layoutCtx, widget);
   }
 
+  /**
+   * Event handler for widget mouse down.
+   *
+   * @param widget widget (Widget)
+   */
+
   onWidgetMouseDown($event: Event, widget: Widget): void {
     this.layoutCtx.dashboardCtrl.widgetMouseDown($event, this.layoutCtx, widget);
   }
+
+  /**
+   * Event handler for dashboard mouse down.
+   *
+   */
 
   onDashboardMouseDown($event: Event): void {
     this.layoutCtx.dashboardCtrl.dashboardMouseDown($event, this.layoutCtx);
   }
 
+  /**
+   * Event handler for widget clicked.
+   *
+   * @param widget widget (Widget)
+   */
+
   onWidgetClicked($event: Event, widget: Widget): void {
     this.layoutCtx.dashboardCtrl.widgetClicked($event, this.layoutCtx, widget);
   }
+
+  /**
+   * prepare dashboard context menu.
+   *
+   * @param _   (Event)
+   * @returns Array<DashboardContextMenuItem> observable or value
+   */
 
   prepareDashboardContextMenu(_: Event): Array<DashboardContextMenuItem> {
     return this.layoutCtx.dashboardCtrl.prepareDashboardContextMenu(this.layoutCtx);
   }
 
+  /**
+   * prepare widget context menu.
+   *
+   * @param _   (Event)
+   * @param widget widget (Widget)
+   * @param isReference is reference (boolean)
+   * @returns Array<WidgetContextMenuItem> observable or value
+   */
+
   prepareWidgetContextMenu(_: Event, widget: Widget, isReference: boolean): Array<WidgetContextMenuItem> {
     return this.layoutCtx.dashboardCtrl.prepareWidgetContextMenu(this.layoutCtx, widget, isReference);
   }
+
+  /**
+   * copy widget.
+   *
+   * @param widget widget (Widget)
+   */
 
   copyWidget($event: Event, widget: Widget) {
     this.layoutCtx.dashboardCtrl.copyWidget($event, this.layoutCtx, widget);
   }
 
+  /**
+   * copy widget reference.
+   *
+   * @param widget widget (Widget)
+   */
+
   copyWidgetReference($event: Event, widget: Widget) {
     this.layoutCtx.dashboardCtrl.copyWidgetReference($event, this.layoutCtx, widget);
   }
+
+  /**
+   * paste widget.
+   *
+   */
 
   pasteWidget($event: TbContextMenuEvent | KeyboardEvent) {
     const pos = this.dashboard.getEventGridPosition($event);
     this.layoutCtx.dashboardCtrl.pasteWidget($event, this.layoutCtx, pos);
   }
+
+  /**
+   * paste widget reference.
+   *
+   */
 
   pasteWidgetReference($event: TbContextMenuEvent | KeyboardEvent) {
     const pos = this.dashboard.getEventGridPosition($event);

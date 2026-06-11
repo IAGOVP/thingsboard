@@ -40,14 +40,17 @@ import {
 } from '@home/components/widget/config/timewindow-config-panel.component';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: label value card basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-label-value-card-basic-config`.
+ */
 @Component({
     selector: 'tb-label-value-card-basic-config',
     templateUrl: './label-value-card-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: label value card basic config UI.
- */
+standalone: false
 })
 export class LabelValueCardBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -55,6 +58,12 @@ export class LabelValueCardBasicConfigComponent extends BasicWidgetConfigCompone
     const datasources = this.labelValueCardWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.labelValueCardWidgetConfigForm.get('datasources').value;
@@ -73,13 +82,32 @@ export class LabelValueCardBasicConfigComponent extends BasicWidgetConfigCompone
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.labelValueCardWidgetConfigForm;
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'temperature', label: 'Temperature', type: DataKeyType.timeseries }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: LabelValueCardWidgetSettings = {...labelValueCardWidgetDefaultSettings, ...(configData.config.settings || {})};
@@ -113,6 +141,13 @@ export class LabelValueCardBasicConfigComponent extends BasicWidgetConfigCompone
       actions: [configData.config.actions || {}, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
@@ -148,9 +183,22 @@ export class LabelValueCardBasicConfigComponent extends BasicWidgetConfigCompone
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showLabel', 'showIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showLabel: boolean = this.labelValueCardWidgetConfigForm.get('showLabel').value;
@@ -179,6 +227,13 @@ export class LabelValueCardBasicConfigComponent extends BasicWidgetConfigCompone
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -186,6 +241,13 @@ export class LabelValueCardBasicConfigComponent extends BasicWidgetConfigCompone
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

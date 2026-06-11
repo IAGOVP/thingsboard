@@ -23,31 +23,46 @@ import org.thingsboard.server.msa.AbstractContainerTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 /**
 
- * Js executor sandbox isolation test.
+ * Security test ensuring JS executor sandbox isolates tenant script execution.
 
  */
 
+
 public class JsExecutorSandboxIsolationTest extends AbstractContainerTest {
+    /**
+     * Before class.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void beforeClass() {
         testRestClient.login("tenant@thingsboard.org", "tenant");
     }
+    /**
+     * After class.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterClass
     public void afterClass() {
         testRestClient.resetToken();
     }
 
+    
     /**
-     * Black-box regression for JVN#16937365: a tenant admin must not be able
-     * to escape the tb-js-executor sandbox via the host-realm prototype chain
-     * exposed through the script's `args` argument. Runs against the live
-     * docker-compose deployment, which uses script.use_sandbox=true and
-     * JS_EVALUATOR=remote (Kafka -> tb-js-executor).
+     * Test rule chain script cannot reach host process.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Test
     public void testRuleChainScriptCannotReachHostProcess() {
         JsonNode response = testRestClient.testRuleChainScript("""

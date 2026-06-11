@@ -65,6 +65,12 @@ const stateDisplayTypesTranslations = new Map<stateDisplayType, string>(
   ]
 );
 
+
+/**
+ * Angular component: widget action (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-action`.
+ */
 @Component({
     selector: 'tb-widget-action',
     templateUrl: './widget-action.component.html',
@@ -81,10 +87,7 @@ const stateDisplayTypesTranslations = new Map<stateDisplayType, string>(
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: widget action UI.
- */
+standalone: false
 })
 export class WidgetActionComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -152,12 +155,30 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
               private translate: TranslateService) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -173,6 +194,11 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
       this.widgetActionFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.widgetActionFormGroup = this.fb.group({});
@@ -194,6 +220,12 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     });
   }
 
+  /**
+   * write value.
+   *
+   * @param widgetAction widget action (WidgetAction)
+   */
+
   writeValue(widgetAction?: WidgetAction): void {
     if (this.withName) {
       this.widgetActionFormGroup.patchValue({
@@ -206,6 +238,12 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     this.updateActionTypeFormGroup(widgetAction?.type, widgetAction);
   }
 
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
+
   validate(_c: UntypedFormControl) {
     return (this.widgetActionFormGroup.valid &&
       this.actionTypeFormGroup.valid && (!this.stateDisplayTypeFormGroup || this.stateDisplayTypeFormGroup.valid)) ? null : {
@@ -214,6 +252,12 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
       }
     };
   }
+
+  /**
+   * clear target dashboard state.
+   *
+   * @param value value (string)
+   */
 
   clearTargetDashboardState(value: string = '') {
     this.dashboardStateInput.nativeElement.value = value;
@@ -224,9 +268,21 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     }, 0);
   }
 
+  /**
+   * Event handler for dashboard state input focus.
+   *
+   */
+
   onDashboardStateInputFocus(): void {
     this.actionTypeFormGroup.get('targetDashboardStateId').updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
+
+  /**
+   * state display type name.
+   *
+   * @param displayType display type (stateDisplayType)
+   * @returns string observable or value
+   */
 
   stateDisplayTypeName(displayType: stateDisplayType): string {
     if (displayType) {
@@ -236,6 +292,13 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     }
   }
 
+  /**
+   * popover placement name.
+   *
+   * @param placement placement (PopoverPlacement)
+   * @returns string observable or value
+   */
+
   popoverPlacementName(placement: PopoverPlacement): string {
     if (placement) {
       return this.translate.instant(`widget-action.popover-placement-${placement}`) + '';
@@ -243,6 +306,13 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
       return '';
     }
   }
+
+  /**
+   * update action type form group.
+   *
+   * @param type type (WidgetActionType)
+   * @param action action (WidgetAction)
+   */
 
   private updateActionTypeFormGroup(type?: WidgetActionType, action?: WidgetAction) {
     this.actionTypeFormGroupSubscriptions.forEach(s => s.unsubscribe());
@@ -350,6 +420,13 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     );
   }
 
+  /**
+   * update state display type form group.
+   *
+   * @param displayType display type (stateDisplayType)
+   * @param action action (WidgetAction)
+   */
+
   private updateStateDisplayTypeFormGroup(displayType?: stateDisplayType, action?: WidgetAction) {
     this.stateDisplayTypeFormGroupSubscriptions.forEach(s => s.unsubscribe());
     this.stateDisplayTypeFormGroupSubscriptions.length = 0;
@@ -417,6 +494,12 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     );
   }
 
+  /**
+   * setup selected dashboard state ids.
+   *
+   * @param targetDashboardId target dashboard id (string | null)
+   */
+
   private setupSelectedDashboardStateIds(targetDashboardId: string | null) {
     this.selectedDashboardStateIds =
       this.actionTypeFormGroup.get('targetDashboardId').valueChanges.pipe(
@@ -460,6 +543,11 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
       );
   }
 
+  /**
+   * setup filtered dashboard states.
+   *
+   */
+
   private setupFilteredDashboardStates() {
     this.targetDashboardStateSearchText = '';
     this.filteredDashboardStates = this.actionTypeFormGroup.get('targetDashboardStateId').valueChanges
@@ -470,6 +558,13 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
       takeUntil(this.destroy$)
     );
   }
+
+  /**
+   * fetch dashboard states.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchDashboardStates(searchText?: string): Observable<Array<string>> {
     this.targetDashboardStateSearchText = searchText;
@@ -489,10 +584,24 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     }
   }
 
+  /**
+   * POST/PUT entity — create filter for dashboard state.
+   *
+   * @param query query (string)
+   * @returns (stateId: string) => boolean observable or value
+   */
+
   private createFilterForDashboardState(query: string): (stateId: string) => boolean {
     const lowercaseQuery = query.toLowerCase();
     return stateId => stateId.toLowerCase().indexOf(lowercaseQuery) === 0;
   }
+
+  /**
+   * get state display type.
+   *
+   * @param action action (WidgetAction)
+   * @returns stateDisplayType observable or value
+   */
 
   private getStateDisplayType(action?: WidgetAction): stateDisplayType {
     let res: stateDisplayType = 'normal';
@@ -506,6 +615,12 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     return res;
   }
 
+  /**
+   * validate action name.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private validateActionName(): ValidatorFn {
     return (c: FormControl) => {
       const newName = c.value;
@@ -516,6 +631,13 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     };
   }
 
+  /**
+   * check action name.
+   *
+   * @param name name (string)
+   * @returns boolean observable or value
+   */
+
   private checkActionName(name: string): boolean {
     let actionNameIsUnique = true;
     if (this.actionNames?.length) {
@@ -523,6 +645,11 @@ export class WidgetActionComponent implements ControlValueAccessor, OnInit, Vali
     }
     return actionNameIsUnique;
   }
+
+  /**
+   * widget action updated.
+   *
+   */
 
   private widgetActionUpdated() {
     const type: WidgetActionType = this.widgetActionFormGroup.get('type').value;

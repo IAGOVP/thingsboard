@@ -53,11 +53,11 @@ export const horizontalDoughnutLayoutImages = new Map<DoughnutLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for doughnut widget settings.
-
+ * Doughnut widget settings (ThingsBoard web UI).
  */
+
 
 export interface DoughnutWidgetSettings extends LatestChartWidgetSettings {
   layout: DoughnutLayout;

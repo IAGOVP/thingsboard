@@ -46,14 +46,17 @@ export interface AIModelDialogData {
   name?: string;
 }
 
+
+/**
+ * Angular component: aimodel dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-ai-model-dialog`.
+ */
 @Component({
     selector: 'tb-ai-model-dialog',
     templateUrl: './ai-model-dialog.component.html',
     styleUrls: ['./ai-model-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: aimodel dialog UI.
- */
+standalone: false
 })
 export class AIModelDialogComponent extends DialogComponent<AIModelDialogComponent, AiModel> {
 
@@ -178,12 +181,25 @@ export class AIModelDialogComponent extends DialogComponent<AIModelDialogCompone
     this.updateValidation(this.provider);
   }
 
+  /**
+   * fetch options.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   fetchOptions(searchText: string): Observable<Array<string>> {
       const search = searchText ? searchText?.toLowerCase() : '';
       return of(this.provider ? AiModelMap.get(this.provider).modelList || [] : []).pipe(
         map(name => name?.filter(option => option.toLowerCase().includes(search))),
       );
   }
+
+  /**
+   * update api key validator for open aiprovider.
+   *
+   * @param url url (string)
+   */
 
   private updateApiKeyValidatorForOpenAIProvider(url: string) {
     if (url !== this.openAiDefaultBaseUrl) {
@@ -196,6 +212,12 @@ export class AIModelDialogComponent extends DialogComponent<AIModelDialogCompone
     this.aiModelForms.get('configuration.providerConfig.apiKey').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * get authentication hint.
+   *
+   * @param type type (AuthenticationType)
+   */
+
   private getAuthenticationHint(type: AuthenticationType) {
     if (type === AuthenticationType.BASIC) {
       this.authenticationHint = this.translate.instant('ai-models.authentication-basic-hint');
@@ -205,6 +227,12 @@ export class AIModelDialogComponent extends DialogComponent<AIModelDialogCompone
       this.authenticationHint = null;
     }
   }
+
+  /**
+   * update validation.
+   *
+   * @param provider provider (AiProvider)
+   */
 
   private updateValidation(provider: AiProvider) {
     ProviderFieldsAllList.forEach(key => {
@@ -229,9 +257,19 @@ export class AIModelDialogComponent extends DialogComponent<AIModelDialogCompone
     return AiModelMap.get(this.provider).modelFieldsList;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * check connectivity.
+   *
+   */
 
   checkConnectivity() {
     return this.dialog.open<CheckConnectivityDialogComponent, AIModelDialogData>(CheckConnectivityDialogComponent, {
@@ -242,6 +280,11 @@ export class AIModelDialogComponent extends DialogComponent<AIModelDialogCompone
       }
     }).afterClosed();
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     const aiModel = {...this.data.AIModel, ...this.aiModelForms.value} as AiModel;

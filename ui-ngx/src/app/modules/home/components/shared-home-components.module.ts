@@ -27,6 +27,9 @@ import { AlarmAssigneeComponent } from '@home/components/alarm/alarm-assignee.co
 /**
  * Angular NgModule: shared home components feature area.
  */
+/**
+ * Angular NgModule bundling shared home components (ThingsBoard web UI).
+ */
 @NgModule({
   providers: [
     { provide: SHARED_HOME_COMPONENTS_MODULE_TOKEN, useValue: SharedHomeComponentsModule }
@@ -47,5 +50,5 @@ import { AlarmAssigneeComponent } from '@home/components/alarm/alarm-assignee.co
     AlarmCommentComponent,
     AlarmCommentDialogComponent,
     AlarmAssigneeComponent
-  ]})
+]})
 export class SharedHomeComponentsModule { }

@@ -14,6 +14,9 @@
 /// limitations under the License.
 ///
 
+/**
+ * TypeScript interfaces, types, and enums for authority (shared TypeScript models).
+ */
 export enum Authority {
   SYS_ADMIN = 'SYS_ADMIN',
   TENANT_ADMIN = 'TENANT_ADMIN',

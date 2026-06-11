@@ -21,6 +21,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { _ToggleBase, ToggleHeaderAppearance } from '@shared/components/toggle-header.component';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: toggle select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-toggle-select`.
+ */
 @Component({
     selector: 'tb-toggle-select',
     templateUrl: './toggle-select.component.html',
@@ -32,10 +38,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: toggle select UI.
- */
+standalone: false
 })
 export class ToggleSelectComponent extends _ToggleBase implements ControlValueAccessor {
 
@@ -76,20 +79,50 @@ export class ToggleSelectComponent extends _ToggleBase implements ControlValueAc
     super(store);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (any)
+   */
+
   writeValue(value: any): void {
     this.modelValue = value;
   }
+
+  /**
+   * update model.
+   *
+   * @param value value (any)
+   */
 
   updateModel(value: any) {
     this.modelValue = value;

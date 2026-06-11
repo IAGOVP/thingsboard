@@ -33,14 +33,17 @@ import { deepClone } from '@core/utils';
 
 import printTemplate from './backup-code-print-template.raw';
 
+
+/**
+ * Angular component: backup code auth dialog (home/security pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-backup-code-auth-dialog`.
+ */
 @Component({
     selector: 'tb-backup-code-auth-dialog',
     templateUrl: './backup-code-auth-dialog.component.html',
     styleUrls: ['./authentication-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: backup code auth dialog UI.
- */
+standalone: false
 })
 export class BackupCodeAuthDialogComponent extends DialogComponent<BackupCodeAuthDialogComponent> {
 
@@ -62,13 +65,28 @@ export class BackupCodeAuthDialogComponent extends DialogComponent<BackupCodeAut
     });
   }
 
+  /**
+   * close dialog.
+   *
+   */
+
   closeDialog() {
     this.dialogRef.close(this.config);
   }
 
+  /**
+   * download file.
+   *
+   */
+
   downloadFile() {
     this.importExportService.exportText(this.backupCode.codes, 'backup-codes');
   }
+
+  /**
+   * print code.
+   *
+   */
 
   printCode() {
     const codeTemplate = deepClone(this.backupCode.codes)

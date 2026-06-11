@@ -158,6 +158,9 @@ import {
 /**
  * Angular NgModule: basic widget config feature area.
  */
+/**
+ * Angular NgModule bundling basic widget config (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     WidgetActionsPanelComponent,
@@ -265,7 +268,7 @@ import {
     UnreadNotificationBasicConfigComponent,
     MapBasicConfigComponent,
     HtmlContainerBasicConfigComponent
-  ]})
+]})
 export class BasicWidgetConfigModule {
   constructor(private widgetService: WidgetService) {
     this.widgetService.registerBasicWidgetConfigComponents(this.constructor)

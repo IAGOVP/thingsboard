@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: timeseries table latest key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timeseries-table-latest-key-settings`.
+ */
 @Component({
     selector: 'tb-timeseries-table-latest-key-settings',
     templateUrl: './timeseries-table-latest-key-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: timeseries table latest key settings UI.
- */
+standalone: false
 })
 export class TimeseriesTableLatestKeySettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class TimeseriesTableLatestKeySettingsComponent extends WidgetSettingsCom
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.timeseriesTableLatestKeySettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -54,6 +69,12 @@ export class TimeseriesTableLatestKeySettingsComponent extends WidgetSettingsCom
       disableSorting: false
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.timeseriesTableLatestKeySettingsForm = this.fb.group({
@@ -69,9 +90,21 @@ export class TimeseriesTableLatestKeySettingsComponent extends WidgetSettingsCom
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['show', 'useCellStyleFunction', 'useCellContentFunction'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const show: boolean = this.timeseriesTableLatestKeySettingsForm.get('show').value;

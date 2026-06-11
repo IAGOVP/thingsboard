@@ -29,14 +29,17 @@ export interface DashboardInfoDialogData {
   dashboard: Dashboard;
 }
 
+
+/**
+ * Angular component: import dashboard file dialog (home/dashboard pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-import-dashboard-file-dialog`.
+ */
 @Component({
     selector: 'tb-import-dashboard-file-dialog',
     templateUrl: './import-dashboard-file-dialog.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: import dashboard file dialog UI.
- */
+standalone: false
 })
 export class ImportDashboardFileDialogComponent extends DialogComponent<ImportDashboardFileDialogComponent> implements OnInit {
 
@@ -54,15 +57,30 @@ export class ImportDashboardFileDialogComponent extends DialogComponent<ImportDa
     this.dashboard = data.dashboard;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.uploadFileFormGroup = this.fb.group({
       file: [null]
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close();
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save() {
     const fileControl = this.uploadFileFormGroup.get('file');
@@ -80,6 +98,13 @@ export class ImportDashboardFileDialogComponent extends DialogComponent<ImportDa
       this.dialogRef.close(true);
     })
   }
+
+  /**
+   * load data from json content.
+   *
+   * @param content content (string)
+   * @returns any observable or value
+   */
 
   loadDataFromJsonContent(content: string): any {
     try {

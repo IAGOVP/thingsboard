@@ -29,8 +29,9 @@ import java.util.UUID;
  * Request DTO for rule engine rule engine device rpc.
  */
 /**
- * Request DTO for rule engine rule engine device rpc.
+ * Async request DTO for rule engine rule engine device rpc (rule engine public API contracts and services).
  */
+
 @Data
 @Builder
 public final class RuleEngineDeviceRpcRequest {

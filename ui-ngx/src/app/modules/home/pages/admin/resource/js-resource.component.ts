@@ -35,13 +35,16 @@ import { ActionNotificationShow } from '@core/notification/notification.actions'
 import { base64toString, isDefinedAndNotNull, stringToBase64 } from '@core/utils';
 import { getCurrentAuthState } from '@core/auth/auth.selectors';
 
+
+/**
+ * Angular component: js resource (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-js-resource`.
+ */
 @Component({
     selector: 'tb-js-resource',
     templateUrl: './js-resource.component.html',
-    standalone: false
-/**
- * Angular component: js resource UI.
- */
+standalone: false
 })
 export class JsResourceComponent extends EntityComponent<Resource> implements OnInit, OnDestroy {
 
@@ -61,6 +64,11 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
     if (this.isAdd) {
@@ -68,11 +76,22 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * hide delete.
+   *
+   * @returns boolean observable or value
+   */
 
   hideDelete(): boolean {
     if (this.entitiesTableConfig) {
@@ -81,6 +100,13 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (Resource)
+   * @returns FormGroup observable or value
+   */
 
   buildForm(entity: Resource): FormGroup {
     return this.fb.group({
@@ -92,11 +118,22 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
     });
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (Resource)
+   */
+
   updateForm(entity: Resource): void {
     this.entityForm.patchValue(entity);
     const content = entity.resourceSubType === ResourceSubType.MODULE && entity?.data?.length ? base64toString(entity.data) : '';
     this.entityForm.get('content').patchValue(content);
   }
+
+  /**
+   * update form state.
+   *
+   */
 
   override updateFormState(): void {
     super.updateFormState();
@@ -105,6 +142,13 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
       this.updateResourceSubTypeFieldsState(this.entityForm.get('resourceSubType').value);
     }
   }
+
+  /**
+   * prepare form value.
+   *
+   * @param formValue form value (Resource)
+   * @returns Resource observable or value
+   */
 
   prepareFormValue(formValue: Resource): Resource {
     if (this.isEdit && !isDefinedAndNotNull(formValue.data)) {
@@ -122,17 +166,41 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
     return super.prepareFormValue(formValue);
   }
 
+  /**
+   * get allowed extensions.
+   *
+   * @returns string observable or value
+   */
+
   getAllowedExtensions(): string {
     return ResourceTypeExtension.get(ResourceType.JS_MODULE);
   }
+
+  /**
+   * get accept type.
+   *
+   * @returns string observable or value
+   */
 
   getAcceptType(): string {
     return ResourceTypeMIMETypes.get(ResourceType.JS_MODULE);
   }
 
+  /**
+   * convert to base64file.
+   *
+   * @param data dialog or route input data
+   * @returns string observable or value
+   */
+
   convertToBase64File(data: string): string {
     return stringToBase64(data);
   }
+
+  /**
+   * Event handler for resource id copied.
+   *
+   */
 
   onResourceIdCopied(): void {
     this.store.dispatch(new ActionNotificationShow(
@@ -145,10 +213,21 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
       }));
   }
 
+  /**
+   * upload content from file.
+   *
+   * @param content content (string)
+   */
+
   uploadContentFromFile(content: string) {
     this.entityForm.get('content').patchValue(content);
     this.entityForm.markAsDirty();
   }
+
+  /**
+   * observe resource sub type change.
+   *
+   */
 
   private observeResourceSubTypeChange(): void {
     this.entityForm.get('resourceSubType').valueChanges.pipe(
@@ -157,6 +236,12 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
     ).subscribe((subType: ResourceSubType) => this.onResourceSubTypeChange(subType));
   }
 
+  /**
+   * Event handler for resource sub type change.
+   *
+   * @param subType sub type (ResourceSubType)
+   */
+
   private onResourceSubTypeChange(subType: ResourceSubType): void {
     this.updateResourceSubTypeFieldsState(subType);
     this.entityForm.patchValue({
@@ -164,6 +249,12 @@ export class JsResourceComponent extends EntityComponent<Resource> implements On
       fileName: null
     }, {emitEvent: false});
   }
+
+  /**
+   * update resource sub type fields state.
+   *
+   * @param subType sub type (ResourceSubType)
+   */
 
   private updateResourceSubTypeFieldsState(subType: ResourceSubType) {
     if (subType === ResourceSubType.EXTENSION) {

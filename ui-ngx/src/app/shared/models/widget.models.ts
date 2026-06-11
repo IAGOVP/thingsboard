@@ -1020,8 +1020,11 @@ export interface IWidgetSettingsComponent {
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: widget settings UI.
+ * Angular component: widget settings (shared TypeScript models).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class WidgetSettingsComponent extends PageComponent implements
   IWidgetSettingsComponent, OnInit, AfterViewInit {
 
@@ -1081,7 +1084,17 @@ export abstract class WidgetSettingsComponent extends PageComponent implements
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {}
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     if (!this.validateSettings()) {
@@ -1091,9 +1104,21 @@ export abstract class WidgetSettingsComponent extends PageComponent implements
     }
   }
 
+  /**
+   * validate settings.
+   *
+   * @returns boolean observable or value
+   */
+
   public validateSettings(): boolean {
     return this.settingsForm().valid;
   }
+
+  /**
+   * setup settings.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected setupSettings(settings: WidgetSettings) {
     this.onSettingsSet(this.prepareInputSettings(settings));
@@ -1117,6 +1142,12 @@ export abstract class WidgetSettingsComponent extends PageComponent implements
     });
   }
 
+  /**
+   * update settings.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected updateSettings(settings: WidgetSettings) {
     settings = this.prepareInputSettings(settings);
     this.settingsForm().reset(settings, {emitEvent: false});
@@ -1124,24 +1155,64 @@ export abstract class WidgetSettingsComponent extends PageComponent implements
     this.updateValidators(false);
   }
 
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
+
   protected updateValidators(emitEvent: boolean, trigger?: string) {
   }
+
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected validatorTriggers(): string[] {
     return [];
   }
+
+  /**
+   * Event handler for settings changed.
+   *
+   * @param updated updated (WidgetSettings)
+   */
 
   protected onSettingsChanged(updated: WidgetSettings) {
     this.settingsValue = updated;
     this.settingsChangedEmitter.emit(this.settingsValue);
   }
 
+  /**
+   * do update settings.
+   *
+   * @param settingsForm settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
+
   protected doUpdateSettings(settingsForm: UntypedFormGroup, settings: WidgetSettings) {
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return settings;
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return settings;
@@ -1151,9 +1222,21 @@ export abstract class WidgetSettingsComponent extends PageComponent implements
 
   protected abstract onSettingsSet(settings: WidgetSettings);
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return {};
   }
+
+  /**
+   * Event handler for widget config set.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected onWidgetConfigSet(widgetConfig: WidgetConfigComponentData) {
   }

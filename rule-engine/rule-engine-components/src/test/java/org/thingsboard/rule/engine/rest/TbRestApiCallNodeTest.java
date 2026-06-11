@@ -82,8 +82,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 /**
- * Unit test for tb rest api call node rule node.
+ * Unit test for tb rest api call node (outbound REST API call nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 @ResourceLock("SsrfProtectionValidator") // to avoid race conditions when modifying SsrfProtectionValidator's static configuration
@@ -104,6 +105,13 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
     private final RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
 
     private HttpServer server;
+    /**
+     * Setup server.
+     *
+     * @param pattern pattern ({@link String})
+     * @param handler handler ({@link HttpRequestHandler})
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     public void setupServer(String pattern, HttpRequestHandler handler) throws IOException {
         SocketConfig config = SocketConfig.custom().setSoReuseAddress(true).setTcpNoDelay(true).build();
@@ -123,6 +131,11 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
             throw new IllegalStateException(ex);
         }
     }
+    /**
+     * Setup.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setup() {
@@ -131,6 +144,11 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         ruleNode.setName("Test REST API call node");
         lenient().when(ctx.getSelf()).thenReturn(ruleNode);
     }
+    /**
+     * Teardown.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterEach
     public void teardown() {
@@ -138,6 +156,11 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
             server.stop();
         }
     }
+    /**
+     * Should not allow null query param names.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void shouldNotAllowNullQueryParamNames() {
@@ -153,6 +176,11 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(DataValidationException.class)
                 .hasMessageContaining("query parameter names and values must be non-null");
     }
+    /**
+     * Should not allow null query param values.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void shouldNotAllowNullQueryParamValues() {
@@ -168,6 +196,11 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(DataValidationException.class)
                 .hasMessageContaining("query parameter names and values must be non-null");
     }
+    /**
+     * Should not allow null query param entries.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void shouldNotAllowNullQueryParamEntries() {
@@ -187,6 +220,11 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(DataValidationException.class)
                 .hasMessageContaining("must not be null");
     }
+    /**
+     * Should use new encoding for new nodes by default.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void shouldUseNewEncodingForNewNodesByDefault() {
@@ -196,6 +234,11 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         // THEN
         assertEquals(Collections.emptyList(), defaultConfig.getQueryParams());
     }
+    /**
+     * Should default to old encoding for legacy configs.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void shouldDefaultToOldEncodingForLegacyConfigs() {
@@ -230,6 +273,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         // THEN
         assertNull(config.getQueryParams());
     }
+    /**
+     * Deletes request without body.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void deleteRequestWithoutBody() throws IOException, InterruptedException {
@@ -279,6 +328,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         assertNotSame(metaData, metadataCaptor.getValue());
         assertEquals(TbMsg.EMPTY_JSON_OBJECT, dataCaptor.getValue());
     }
+    /**
+     * Deletes request with body.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void deleteRequestWithBody() throws IOException, InterruptedException {
@@ -334,6 +389,11 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         assertNotSame(metaData, metadataCaptor.getValue());
         assertEquals(TbMsg.EMPTY_JSON_OBJECT, dataCaptor.getValue());
     }
+    /**
+     * Given force ack true when on msg and server returns200 then acked immediately and enqueued for tell next.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     @Test
     public void givenForceAckTrue_whenOnMsgAndServerReturns200_thenAckedImmediatelyAndEnqueuedForTellNext() throws IOException {
@@ -381,6 +441,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx, timeout(TIMEOUT)).enqueueForTellNext(any(), eq(TbNodeConnectionType.SUCCESS));
         verify(ctx, never()).tellSuccess(any());
     }
+    /**
+     * Given max parallel requests count and bad url when on msg then semaphore is released and failure reported.
+     *
+     * @param forceAck force ack
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
@@ -410,6 +476,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
             verify(ctx).tellFailure(any(), any());
         }
     }
+    /**
+     * Given max pending requests exceeded when on msg then fails immediately and queued request fires after slot opens.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenMaxPendingRequestsExceeded_whenOnMsg_thenFailsImmediatelyAndQueuedRequestFiresAfterSlotOpens() throws IOException, InterruptedException {
@@ -465,6 +537,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         releaseResponse.countDown();
         verify(ctx, timeout(TIMEOUT).times(2)).tellSuccess(any());
     }
+    /**
+     * Post request with body template.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void postRequestWithBodyTemplate() throws IOException, InterruptedException {
@@ -494,6 +572,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         assertTrue(latch.await(10, TimeUnit.SECONDS), "Server handled request");
         assertEquals("{\"grant_type\":\"client_credentials\",\"client_id\":\"my-client-123\",\"value\":\"abc-xyz\"}", capturedBody.get());
     }
+    /**
+     * Post request with body template and parse to plain text.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void postRequestWithBodyTemplateAndParseToPlainText() throws IOException, InterruptedException {
@@ -524,6 +608,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         assertTrue(latch.await(10, TimeUnit.SECONDS), "Server handled request");
         assertEquals("Hello World, your token is abc-xyz!", capturedBody.get());
     }
+    /**
+     * Post request with body template escapes json special chars.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void postRequestWithBodyTemplateEscapesJsonSpecialChars() throws IOException, InterruptedException {
@@ -553,6 +643,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
         assertTrue(latch.await(10, TimeUnit.SECONDS), "Server handled request");
         assertEquals("{\"name\":\"John \\\"Doe\\\"\",\"desc\":\"line1\\nline2\"}", capturedBody.get());
     }
+    /**
+     * Post request with empty body template uses message data.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void postRequestWithEmptyBodyTemplateUsesMessageData() throws IOException, InterruptedException {
@@ -706,6 +802,12 @@ public class TbRestApiCallNodeTest extends AbstractRuleNodeUpgradeTest {
                                 }""")
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

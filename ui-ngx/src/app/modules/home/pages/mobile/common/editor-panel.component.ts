@@ -19,15 +19,18 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { TbPopoverComponent } from '@shared/components/popover.component';
 import { EditorOptions } from 'tinymce';
 
+
+/**
+ * Angular component: editor panel (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-release-notes-panel`.
+ */
 @Component({
     selector: 'tb-release-notes-panel',
     templateUrl: './editor-panel.component.html',
     styleUrls: ['./editor-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: editor panel UI.
- */
+standalone: false
 })
 export class EditorPanelComponent implements OnInit {
 
@@ -99,6 +102,11 @@ export class EditorPanelComponent implements OnInit {
   constructor(private fb: FormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.editorControl = this.fb.control(this.content);
     if (this.disabled) {
@@ -109,9 +117,19 @@ export class EditorPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply.
+   *
+   */
 
   apply() {
     if (this.editorControl.valid) {

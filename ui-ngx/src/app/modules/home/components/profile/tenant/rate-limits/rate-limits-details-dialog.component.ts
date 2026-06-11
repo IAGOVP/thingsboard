@@ -28,12 +28,15 @@ export interface RateLimitsDetailsDialogData {
   readonly: boolean;
 }
 
+
+/**
+ * Angular component: rate limits details dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
+ */
 @Component({
     templateUrl: './rate-limits-details-dialog.component.html',
-    standalone: false
-/**
- * Angular component: rate limits details dialog UI.
- */
+standalone: false
 })
 export class RateLimitsDetailsDialogComponent extends DialogComponent<RateLimitsDetailsDialogComponent> {
 
@@ -56,6 +59,11 @@ export class RateLimitsDetailsDialogComponent extends DialogComponent<RateLimits
       this.editDetailsFormGroup.disable();
     }
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close(this.editDetailsFormGroup.get('rateLimits').value);

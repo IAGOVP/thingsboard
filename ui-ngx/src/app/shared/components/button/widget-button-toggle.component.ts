@@ -45,14 +45,17 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 const initialButtonHeight = 60;
 const horizontalLayoutPadding = 10;
 
+
+/**
+ * Angular component: widget button toggle (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-button-toggle`.
+ */
 @Component({
     selector: 'tb-widget-button-toggle',
     templateUrl: './widget-button-toggle.component.html',
     styleUrls: ['./widget-button-toggle.component.scss'],
-    standalone: false
-/**
- * Angular component: widget button toggle UI.
- */
+standalone: false
 })
 export class WidgetButtonToggleComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 
@@ -119,6 +122,11 @@ export class WidgetButtonToggleComponent implements OnInit, AfterViewInit, OnDes
               private elementRef: ElementRef,
               private utils: UtilsService) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.updateAppearance();
   }
@@ -138,9 +146,19 @@ export class WidgetButtonToggleComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     this.updateAutoScale();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.buttonResize$) {
@@ -149,11 +167,21 @@ export class WidgetButtonToggleComponent implements OnInit, AfterViewInit, OnDes
     this.clearAppearanceCss();
   }
 
+  /**
+   * validate size.
+   *
+   */
+
   public validateSize() {
     if (this.appearance.autoScale && this.widgetButton.nativeElement) {
       this.onResize();
     }
   }
+
+  /**
+   * update appearance.
+   *
+   */
 
   private updateAppearance(): void {
     this.clearAppearanceCss();
@@ -181,6 +209,11 @@ export class WidgetButtonToggleComponent implements OnInit, AfterViewInit, OnDes
     this.updateAutoScale();
   }
 
+  /**
+   * update border radius.
+   *
+   */
+
   private updateBorderRadius(): void {
     if (this.borderRadius?.length) {
       const validatedBorderRadius = validateCssSize(this.borderRadius);
@@ -195,12 +228,22 @@ export class WidgetButtonToggleComponent implements OnInit, AfterViewInit, OnDes
 
   }
 
+  /**
+   * clear appearance css.
+   *
+   */
+
   private clearAppearanceCss(): void {
     if (this.appearanceCssClass) {
       this.utils.clearCssElement(this.renderer, this.appearanceCssClass, this.elementRef?.nativeElement);
       this.appearanceCssClass = null;
     }
   }
+
+  /**
+   * update auto scale.
+   *
+   */
 
   private updateAutoScale() {
     if (this.buttonResize$) {
@@ -220,6 +263,11 @@ export class WidgetButtonToggleComponent implements OnInit, AfterViewInit, OnDes
       }
     }
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const height = this.widgetButton.nativeElement.getBoundingClientRect().height;

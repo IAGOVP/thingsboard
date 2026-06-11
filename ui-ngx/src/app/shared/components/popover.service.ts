@@ -38,8 +38,11 @@ import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { Observable } from 'rxjs';
 import { mergeDeep } from '@core/utils';
 /**
- * Angular HTTP service: tb popover REST wrappers (`@core/http`).
+ * Angular injectable service: tb popover (shared UI components).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 @Injectable()
 export class TbPopoverService {
@@ -49,10 +52,24 @@ export class TbPopoverService {
   constructor(@Inject(HELP_MARKDOWN_COMPONENT_TOKEN) private helpMarkdownComponent: ComponentType<any>) {
   }
 
+  /**
+   * has popover.
+   *
+   * @param trigger trigger (Element)
+   * @returns boolean observable or value
+   */
+
   hasPopover(trigger: Element): boolean {
     const res = this.findPopoverByTrigger(trigger);
     return res !== null;
   }
+
+  /**
+   * hide popover.
+   *
+   * @param trigger trigger (Element)
+   * @returns boolean observable or value
+   */
 
   hidePopover(trigger: Element): boolean {
     const component: TbPopoverComponent = this.findPopoverByTrigger(trigger);
@@ -63,6 +80,13 @@ export class TbPopoverService {
       return false;
     }
   }
+
+  /**
+   * POST/PUT entity — create popover ref.
+   *
+   * @param hostView host view (ViewContainerRef)
+   * @returns ComponentRef<TbPopoverComponent> observable or value
+   */
 
   createPopoverRef(hostView: ViewContainerRef): ComponentRef<TbPopoverComponent> {
     return hostView.createComponent(TbPopoverComponent);
@@ -253,6 +277,13 @@ export class TbPopoverService {
     }
   }
 
+  /**
+   * find popover by trigger.
+   *
+   * @param trigger trigger (Element)
+   * @returns TbPopoverComponent | null observable or value
+   */
+
   private findPopoverByTrigger(trigger: Element): TbPopoverComponent | null {
     const res = this.popoverWithTriggers.find(val => this.elementsAreEqualOrDescendant(trigger, val.trigger));
     if (res) {
@@ -262,12 +293,26 @@ export class TbPopoverService {
     }
   }
 
+  /**
+   * DELETE — remove popover by component.
+   *
+   * @param component component (TbPopoverComponent)
+   */
+
   private removePopoverByComponent(component: TbPopoverComponent): void {
     const index = this.popoverWithTriggers.findIndex(val => val.popoverComponent === component);
     if (index > -1) {
       this.popoverWithTriggers.splice(index, 1);
     }
   }
+
+  /**
+   * elements are equal or descendant.
+   *
+   * @param element1 element1 (Element)
+   * @param element2 element2 (Element)
+   * @returns boolean observable or value
+   */
 
   private elementsAreEqualOrDescendant(element1: Element, element2: Element): boolean {
     return element1 === element2 || element1.contains(element2) || element2.contains(element1);

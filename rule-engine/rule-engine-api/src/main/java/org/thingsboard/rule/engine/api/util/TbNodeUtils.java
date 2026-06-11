@@ -31,11 +31,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
 
- * Configuration conversion and JSON helpers for rule nodes.
+ * Configuration conversion and JSON helper utilities for rule nodes.
 
  */
+
 
 public final class TbNodeUtils {
 
@@ -47,6 +49,14 @@ public final class TbNodeUtils {
 
     private static final String ALL_DATA_TEMPLATE = "$[*]";
     private static final String ALL_METADATA_TEMPLATE = "${*}";
+    /**
+     * Convert.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @param clazz clazz ({@link Class})
+     * @return {@link T}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     public static <T> T convert(TbNodeConfiguration configuration, Class<T> clazz) throws TbNodeException {
         try {
@@ -55,6 +65,14 @@ public final class TbNodeUtils {
             throw new TbNodeException(e, true);
         }
     }
+    /**
+     * Processes patterns.
+     *
+     * @param patterns patterns ({@link List})
+     * @param tbMsg rule engine message being processed
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static List<String> processPatterns(List<String> patterns, TbMsg tbMsg) {
         if (CollectionsUtil.isEmpty(patterns)) {
@@ -62,10 +80,27 @@ public final class TbNodeUtils {
         }
         return patterns.stream().map(p -> processPattern(p, tbMsg)).toList();
     }
+    /**
+     * Processes pattern.
+     *
+     * @param pattern pattern ({@link String})
+     * @param tbMsg rule engine message being processed
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String processPattern(String pattern, TbMsg tbMsg) {
         return processPattern(pattern, tbMsg, false);
     }
+    /**
+     * Processes pattern.
+     *
+     * @param pattern pattern ({@link String})
+     * @param tbMsg rule engine message being processed
+     * @param escapeJsonValues escape json values
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String processPattern(String pattern, TbMsg tbMsg, boolean escapeJsonValues) {
         try {
@@ -113,6 +148,14 @@ public final class TbNodeUtils {
     private static String processPattern(String pattern, TbMsgMetaData metaData) {
         return processPattern(pattern, metaData, false);
     }
+    /**
+     * Processes template.
+     *
+     * @param template template ({@link String})
+     * @param data data ({@link Map})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String processTemplate(String template, Map<String, String> data) {
         return processTemplate(template, data, false);

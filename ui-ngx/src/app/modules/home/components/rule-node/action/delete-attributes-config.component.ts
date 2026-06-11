@@ -22,14 +22,17 @@ import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shar
 import { AttributeScope, telemetryTypeTranslations } from '@shared/models/telemetry/telemetry.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: delete attributes config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-delete-attributes-config`.
+ */
 @Component({
     selector: 'tb-action-node-delete-attributes-config',
     templateUrl: './delete-attributes-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: delete attributes config UI.
- */
+standalone: false
 })
 export class DeleteAttributesConfigComponent extends RuleNodeConfigurationComponent {
   @ViewChild('attributeChipList') attributeChipList: MatChipGrid;
@@ -44,9 +47,21 @@ export class DeleteAttributesConfigComponent extends RuleNodeConfigurationCompon
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.deleteAttributesConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.deleteAttributesConfigForm = this.fb.group({
@@ -65,6 +80,12 @@ export class DeleteAttributesConfigComponent extends RuleNodeConfigurationCompon
     });
   }
 
+  /**
+   * DELETE — remove key.
+   *
+   * @param key key (string)
+   */
+
   removeKey(key: string): void {
     const keys: string[] = this.deleteAttributesConfigForm.get('keys').value;
     const index = keys.indexOf(key);
@@ -73,6 +94,12 @@ export class DeleteAttributesConfigComponent extends RuleNodeConfigurationCompon
       this.deleteAttributesConfigForm.get('keys').patchValue(keys, {emitEvent: true});
     }
   }
+
+  /**
+   * POST/PUT entity — add key.
+   *
+   * @param event DOM or Angular event object
+   */
 
   addKey(event: MatChipInputEvent): void {
     const input = event.input;

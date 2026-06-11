@@ -28,13 +28,21 @@ import BaseGauge = CanvasGauges.BaseGauge;
 
 // @dynamic
 /**
- * tb analogue linear gauge.
+ * Tb analogue linear gauge (ThingsBoard web UI).
  */
+
 export class TbAnalogueLinearGauge extends TbAnalogueGauge<AnalogueLinearGaugeSettings, LinearGaugeOptions>{
 
   constructor(ctx: WidgetContext, canvasId: string) {
     super(ctx, canvasId);
   }
+
+  /**
+   * prepare gauge options.
+   *
+   * @param settings settings (AnalogueLinearGaugeSettings)
+   * @param gaugeData gauge data (LinearGaugeOptions)
+   */
 
   protected prepareGaugeOptions(settings: AnalogueLinearGaugeSettings, gaugeData: LinearGaugeOptions) {
     const dataKey = this.ctx.data[0].dataKey;
@@ -51,6 +59,13 @@ export class TbAnalogueLinearGauge extends TbAnalogueGauge<AnalogueLinearGaugeSe
     gaugeData.colorBarProgress = settings.colorBarProgress || progressColorStart;
     gaugeData.colorBarProgressEnd = settings.colorBarProgressEnd || progressColorEnd;
   }
+
+  /**
+   * POST/PUT entity — create gauge.
+   *
+   * @param gaugeData gauge data (LinearGaugeOptions)
+   * @returns BaseGauge observable or value
+   */
 
   protected createGauge(gaugeData: LinearGaugeOptions): BaseGauge {
     return new LinearGauge(gaugeData);

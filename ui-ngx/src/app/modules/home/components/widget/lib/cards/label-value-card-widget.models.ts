@@ -23,11 +23,11 @@ import {
   Font
 } from '@shared/models/widget-settings.models';
 
+
 /**
-
- * TypeScript models and enums for label value card widget settings.
-
+ * Label value card widget settings (ThingsBoard web UI).
  */
+
 
 export interface LabelValueCardWidgetSettings {
   autoScale: boolean;

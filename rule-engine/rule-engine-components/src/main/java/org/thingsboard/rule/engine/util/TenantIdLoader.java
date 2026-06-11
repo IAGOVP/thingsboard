@@ -56,13 +56,23 @@ import org.thingsboard.server.common.data.rule.RuleNode;
 
 import java.util.UUID;
 
+
 /**
 
- * Rule engine component: tenant id loader.
+ * Tenant id loader (shared rule-engine utilities and async loaders).
 
  */
 
+
 public class TenantIdLoader {
+    /**
+     * Finds tenant id.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param entityId target entity identifier
+     * @return {@link TenantId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TenantId findTenantId(TbContext ctx, EntityId entityId) {
         UUID id = entityId.getId();

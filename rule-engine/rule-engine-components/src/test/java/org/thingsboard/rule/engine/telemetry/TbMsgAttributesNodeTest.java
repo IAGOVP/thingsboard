@@ -75,8 +75,9 @@ import static org.thingsboard.rule.engine.telemetry.settings.AttributesProcessin
 import static org.thingsboard.rule.engine.telemetry.settings.AttributesProcessingSettings.WebSocketsOnly;
 import static org.thingsboard.server.common.data.DataConstants.NOTIFY_DEVICE_METADATA_KEY;
 /**
- * Unit test for tb msg attributes node rule node.
+ * Unit test for tb msg attributes node (telemetry and attribute persistence nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbMsgAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -369,6 +370,11 @@ class TbMsgAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
                 actualSaveRequest -> assertThat(actualSaveRequest.getStrategy()).isEqualTo(new Strategy(true, false, true))
         ));
     }
+    /**
+     * Given advanced processing settings with skip strategies for all actions and same message two times when on msg then skips same message two times.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenAdvancedProcessingSettingsWithSkipStrategiesForAllActionsAndSameMessageTwoTimes_whenOnMsg_thenSkipsSameMessageTwoTimes() throws TbNodeException {
@@ -704,6 +710,12 @@ class TbMsgAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
                 )
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

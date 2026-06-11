@@ -24,8 +24,11 @@ import org.thingsboard.server.common.data.validation.NoXss;
 import java.util.Collections;
 import java.util.List;
 /**
- * JSON configuration for TbCreateAlarm rule node.
+ * JSON configuration POJO for {@link TbCreateAlarm} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbCreateAlarmNodeConfiguration extends TbAbstractAlarmNodeConfiguration implements NodeConfiguration<TbCreateAlarmNodeConfiguration> {
@@ -40,6 +43,12 @@ public class TbCreateAlarmNodeConfiguration extends TbAbstractAlarmNodeConfigura
     private boolean dynamicSeverity;
 
     private List<String> relationTypes;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbCreateAlarmNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbCreateAlarmNodeConfiguration defaultConfiguration() {

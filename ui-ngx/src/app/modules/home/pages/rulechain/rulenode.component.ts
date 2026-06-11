@@ -22,15 +22,18 @@ import { Router } from '@angular/router';
 import { RuleChainType } from '@app/shared/models/rule-chain.models';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: rule node (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `rule-node`.
+ */
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'rule-node',
     templateUrl: './rulenode.component.html',
     styleUrls: ['./rulenode.component.scss'],
-    standalone: false
-/**
- * Angular component: rule node UI.
- */
+standalone: false
 })
 export class RuleNodeComponent extends FcNodeComponent implements OnInit {
 
@@ -43,12 +46,23 @@ export class RuleNodeComponent extends FcNodeComponent implements OnInit {
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
     if (this.node.iconUrl) {
       this.iconUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.node.iconUrl);
     }
   }
+
+  /**
+   * open rule chain.
+   *
+   * @param node node (FcRuleNode)
+   */
 
   openRuleChain($event: Event, node: FcRuleNode) {
     if ($event) {
@@ -63,6 +77,12 @@ export class RuleNodeComponent extends FcNodeComponent implements OnInit {
 
     }
   }
+
+  /**
+   * display open rule chain tooltip.
+   *
+   * @param node node (FcRuleNode)
+   */
 
   displayOpenRuleChainTooltip($event: MouseEvent, node: FcRuleNode) {
     if ($event) {

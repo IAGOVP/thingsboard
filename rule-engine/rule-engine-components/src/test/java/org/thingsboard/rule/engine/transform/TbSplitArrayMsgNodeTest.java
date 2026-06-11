@@ -45,11 +45,13 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+
 /**
 
- * Unit test for tb split array msg node rule node.
+ * Unit test for tb split array msg node (message transformation and originator change nodes).
 
  */
+
 
 public class TbSplitArrayMsgNodeTest {
     DeviceId deviceId;

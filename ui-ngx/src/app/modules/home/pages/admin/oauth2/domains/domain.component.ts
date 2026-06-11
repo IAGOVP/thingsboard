@@ -30,14 +30,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { ClientDialogComponent } from '@home/pages/admin/oauth2/clients/client-dialog.component';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
+/**
+ * Angular component: domain (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-domain`.
+ */
 @Component({
     selector: 'tb-domain',
     templateUrl: './domain.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: domain UI.
- */
+standalone: false
 })
 export class DomainComponent extends EntityComponent<DomainInfo> {
 
@@ -62,6 +65,13 @@ export class DomainComponent extends EntityComponent<DomainInfo> {
     });
   }
 
+  /**
+   * build form.
+   *
+   * @param entity entity (DomainInfo)
+   * @returns UntypedFormGroup observable or value
+   */
+
   buildForm(entity: DomainInfo): UntypedFormGroup {
     return this.fb.group({
       name: [entity?.name ? entity.name : '', [
@@ -72,6 +82,12 @@ export class DomainComponent extends EntityComponent<DomainInfo> {
     });
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (DomainInfo)
+   */
+
   updateForm(entity: DomainInfo) {
     this.entityForm.patchValue({
       name: entity.name,
@@ -81,10 +97,21 @@ export class DomainComponent extends EntityComponent<DomainInfo> {
     });
   }
 
+  /**
+   * redirect uri.
+   *
+   * @returns string observable or value
+   */
+
   redirectURI(): string {
     const domainName = this.entityForm.get('name').value;
     return domainName !== '' ? `${domainName}${this.loginProcessingUrl}` : '';
   }
+
+  /**
+   * POST/PUT entity — create client.
+   *
+   */
 
   createClient($event: Event) {
     if ($event) {

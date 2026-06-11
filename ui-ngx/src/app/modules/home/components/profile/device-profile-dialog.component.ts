@@ -31,15 +31,18 @@ export interface DeviceProfileDialogData {
   isAdd: boolean;
 }
 
+
+/**
+ * Angular component: device profile dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile-dialog`.
+ */
 @Component({
     selector: 'tb-device-profile-dialog',
     templateUrl: './device-profile-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: DeviceProfileDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device profile dialog UI.
- */
+standalone: false
 })
 export class DeviceProfileDialogComponent extends
   DialogComponent<DeviceProfileDialogComponent, DeviceProfile> implements ErrorStateMatcher, AfterViewInit {
@@ -62,6 +65,11 @@ export class DeviceProfileDialogComponent extends
     this.deviceProfile = this.data.deviceProfile;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.isAdd) {
       setTimeout(() => {
@@ -70,15 +78,33 @@ export class DeviceProfileDialogComponent extends
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

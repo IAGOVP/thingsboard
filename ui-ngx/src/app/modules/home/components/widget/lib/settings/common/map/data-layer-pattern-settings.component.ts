@@ -36,6 +36,12 @@ import {
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 
+
+/**
+ * Angular component: data layer pattern settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-data-layer-pattern-settings`.
+ */
 @Component({
     selector: 'tb-data-layer-pattern-settings',
     templateUrl: './data-layer-pattern-settings.component.html',
@@ -52,10 +58,7 @@ import { MapSettingsContext } from '@home/components/widget/lib/settings/common/
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: data layer pattern settings UI.
- */
+standalone: false
 })
 export class DataLayerPatternSettingsComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -103,6 +106,11 @@ export class DataLayerPatternSettingsComponent implements OnInit, ControlValueAc
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
 
     this.patternSettingsFormGroup = this.fb.group({
@@ -134,12 +142,30 @@ export class DataLayerPatternSettingsComponent implements OnInit, ControlValueAc
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -150,6 +176,12 @@ export class DataLayerPatternSettingsComponent implements OnInit, ControlValueAc
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DataLayerPatternSettings | DataLayerTooltipSettings)
+   */
 
   writeValue(value: DataLayerPatternSettings | DataLayerTooltipSettings): void {
     this.modelValue = value;
@@ -165,6 +197,12 @@ export class DataLayerPatternSettingsComponent implements OnInit, ControlValueAc
     });
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     const valid = this.patternSettingsFormGroup.valid;
     return valid ? null : {
@@ -173,6 +211,11 @@ export class DataLayerPatternSettingsComponent implements OnInit, ControlValueAc
       },
     };
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const show: boolean = this.patternSettingsFormGroup.get('show').value;
@@ -191,6 +234,11 @@ export class DataLayerPatternSettingsComponent implements OnInit, ControlValueAc
       this.patternSettingsFormGroup.get('show').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.patternSettingsFormGroup.getRawValue();

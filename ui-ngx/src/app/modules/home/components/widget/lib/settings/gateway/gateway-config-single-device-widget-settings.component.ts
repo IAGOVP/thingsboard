@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: gateway config single device widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-gateway-config-single-device-widget-settings`.
+ */
 @Component({
     selector: 'tb-gateway-config-single-device-widget-settings',
     templateUrl: './gateway-config-single-device-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: gateway config single device widget settings UI.
- */
+standalone: false
 })
 export class GatewayConfigSingleDeviceWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class GatewayConfigSingleDeviceWidgetSettingsComponent extends WidgetSett
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.gatewayConfigSingleDeviceWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -50,6 +65,12 @@ export class GatewayConfigSingleDeviceWidgetSettingsComponent extends WidgetSett
       readOnly: false
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.gatewayConfigSingleDeviceWidgetSettingsForm = this.fb.group({

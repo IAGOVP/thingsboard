@@ -36,11 +36,11 @@ import { AlarmSeverity } from "@shared/models/alarm.models";
 
 export const FORBIDDEN_NAMES = ['ctx', 'e', 'pi'];
 
+
 /**
-
- * TypeScript models and enums for base calculated field.
-
+ * TypeScript interfaces, types, and enums for base calculated field (shared TypeScript models).
  */
+
 
 interface BaseCalculatedField extends Omit<BaseData<CalculatedFieldId>, 'label'>, HasVersion, HasEntityDebugSettings, HasTenantId, ExportableEntity<CalculatedFieldId> {
   entityId: EntityId;

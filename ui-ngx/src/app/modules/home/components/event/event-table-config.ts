@@ -63,11 +63,11 @@ import { getCurrentAuthState } from '@core/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
 /**
-
- * event table config.
-
+ * Event table config (ThingsBoard web UI).
  */
+
 
 export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {
 
@@ -174,6 +174,11 @@ export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {
     });
   }
 
+  /**
+   * clear events.
+   *
+   */
+
   clearEvents($event) {
     if ($event) {
       $event.stopPropagation();
@@ -196,9 +201,22 @@ export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {
     });
   }
 
+  /**
+   * fetch events.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<Event>> observable or value
+   */
+
   fetchEvents(pageLink: TimePageLink): Observable<PageData<Event>> {
     return this.eventService.getFilterEvents(this.entityId, this.eventType, this.tenantId, this.filterParams, pageLink);
   }
+
+  /**
+   * update columns.
+   *
+   * @param updateTableColumns update table columns (boolean)
+   */
 
   updateColumns(updateTableColumns: boolean = false): void {
     this.columns = [];
@@ -459,6 +477,11 @@ export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {
     }
   }
 
+  /**
+   * update cell action.
+   *
+   */
+
   updateCellAction() {
     this.cellActionDescriptors = [];
     switch (this.eventType) {
@@ -486,6 +509,14 @@ export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {
     this.getTable()?.cellActionDescriptorsUpdated();
   }
 
+  /**
+   * show content.
+   *
+   * @param content content (string)
+   * @param title title (string)
+   * @param contentType content type (ContentType)
+   */
+
   showContent($event: MouseEvent, content: string, title: string, contentType: ContentType = null, sortKeys = false): void {
     if ($event) {
       $event.stopPropagation();
@@ -510,6 +541,11 @@ export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {
       }
     });
   }
+
+  /**
+   * update filter columns.
+   *
+   */
 
   private updateFilterColumns() {
     this.filterParams = {};
@@ -571,6 +607,11 @@ export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {
     }
   }
 
+  /**
+   * clear fiter.
+   *
+   */
+
   private clearFiter($event) {
     if ($event) {
       $event.stopPropagation();
@@ -580,6 +621,11 @@ export class EventTableConfig extends EntityTableConfig<Event, TimePageLink> {
     this.getTable().paginator.pageIndex = 0;
     this.updateData();
   }
+
+  /**
+   * edit event filter.
+   *
+   */
 
   private editEventFilter($event: MouseEvent) {
     if ($event) {

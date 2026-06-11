@@ -15,8 +15,9 @@
 ///
 
 /**
- * TypeScript models and enums for trendz settings.
+ * TypeScript interfaces, types, and enums for trendz settings (shared TypeScript models).
  */
+
 export interface TrendzSettings {
   enabled: boolean,
   baseUrl: string,

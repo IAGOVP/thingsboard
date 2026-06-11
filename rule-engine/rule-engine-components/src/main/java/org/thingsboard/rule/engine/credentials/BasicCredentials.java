@@ -18,14 +18,21 @@ package org.thingsboard.rule.engine.credentials;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 /**
- * Rule engine component: basic credentials.
+ * Basic credentials (credentials helper types).
  */
+
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BasicCredentials implements ClientCredentials {
     private String username;
     private String password;
+    /**
+     * Returns type.
+     *
+     * @return {@link CredentialsType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CredentialsType getType() {

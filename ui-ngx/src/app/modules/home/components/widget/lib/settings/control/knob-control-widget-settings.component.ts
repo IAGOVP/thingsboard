@@ -23,14 +23,17 @@ import { knobWidgetDefaultSettings, prepareKnobSettings } from '@shared/models/w
 import { ValueType } from '@shared/models/constants';
 import { deepClone } from '@core/utils';
 
+
+/**
+ * Angular component: knob control widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-knob-control-widget-settings`.
+ */
 @Component({
     selector: 'tb-knob-control-widget-settings',
     templateUrl: './knob-control-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: knob control widget settings UI.
- */
+standalone: false
 })
 export class KnobControlWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -51,13 +54,32 @@ export class KnobControlWidgetSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.knobControlWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return knobWidgetDefaultSettings;
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     const knobSettings = prepareKnobSettings(deepClone(settings) as any) as WidgetSettings;
@@ -65,6 +87,13 @@ export class KnobControlWidgetSettingsComponent extends WidgetSettingsComponent 
     knobSettings.valueUnits = deepClone(this.widgetConfig?.config?.units);
     return super.prepareInputSettings(knobSettings);
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     const newSettings = deepClone(settings);
@@ -76,6 +105,12 @@ export class KnobControlWidgetSettingsComponent extends WidgetSettingsComponent 
     delete newSettings.valueDecimals;
     return super.prepareOutputSettings(newSettings);
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.knobControlWidgetSettingsForm = this.fb.group({

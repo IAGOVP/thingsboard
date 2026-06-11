@@ -28,6 +28,13 @@ interface EntityListSelectModel {
   ids: Array<string>;
 }
 
+
+
+/**
+ * Angular component: entity list select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-list-select`.
+ */
 @Component({
     selector: 'tb-entity-list-select',
     templateUrl: './entity-list-select.component.html',
@@ -37,13 +44,8 @@ interface EntityListSelectModel {
             useExisting: forwardRef(() => EntityListSelectComponent),
             multi: true
         }],
-    standalone: false
 
-/**
-
- * Angular component: entity list select UI.
-
- */
+standalone: false
 })
 
 export class EntityListSelectComponent implements ControlValueAccessor, OnInit {
@@ -107,12 +109,29 @@ export class EntityListSelectComponent implements ControlValueAccessor, OnInit {
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.entityListSelectFormGroup.get('entityType').valueChanges.pipe(
@@ -134,6 +153,12 @@ export class EntityListSelectComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -142,6 +167,12 @@ export class EntityListSelectComponent implements ControlValueAccessor, OnInit {
       this.entityListSelectFormGroup.enable();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<EntityId> | null)
+   */
 
   writeValue(value: Array<EntityId> | null): void {
     if (value != null && value.length > 0) {
@@ -160,6 +191,13 @@ export class EntityListSelectComponent implements ControlValueAccessor, OnInit {
     this.entityListSelectFormGroup.get('entityIds').patchValue([...this.modelValue.ids], {emitEvent: true});
   }
 
+  /**
+   * update view.
+   *
+   * @param entityType entity type (EntityType | AliasEntityType | null)
+   * @param entityIds entity ids (Array<string> | null)
+   */
+
   private updateView(entityType: EntityType | AliasEntityType | null, entityIds: Array<string> | null) {
     if (this.modelValue.entityType !== entityType ||
       !this.compareIds(this.modelValue.ids, entityIds)) {
@@ -171,6 +209,14 @@ export class EntityListSelectComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * compare ids.
+   *
+   * @param ids1 ids1 (Array<string> | null)
+   * @param ids2 ids2 (Array<string> | null)
+   * @returns boolean observable or value
+   */
+
   private compareIds(ids1: Array<string> | null, ids2: Array<string> | null): boolean {
     if (ids1 !== null && ids2 !== null) {
       return JSON.stringify(ids1) === JSON.stringify(ids2);
@@ -178,6 +224,13 @@ export class EntityListSelectComponent implements ControlValueAccessor, OnInit {
       return ids1 === ids2;
     }
   }
+
+  /**
+   * to entity ids.
+   *
+   * @param modelValue model value (EntityListSelectModel)
+   * @returns Array<EntityId> observable or value
+   */
 
   private toEntityIds(modelValue: EntityListSelectModel): Array<EntityId> {
     if (modelValue !== null && modelValue.entityType && modelValue.ids && modelValue.ids.length > 0) {

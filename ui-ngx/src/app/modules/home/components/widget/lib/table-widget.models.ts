@@ -40,11 +40,11 @@ type ColumnVisibilityOptions = 'visible' | 'hidden' | 'hidden-mobile';
 
 type ColumnSelectionOptions = 'enabled' | 'disabled';
 
+
 /**
-
- * TypeScript models and enums for table widget settings.
-
+ * Table widget settings (ThingsBoard web UI).
  */
+
 
 export interface TableWidgetSettings {
   enableSearch: boolean;

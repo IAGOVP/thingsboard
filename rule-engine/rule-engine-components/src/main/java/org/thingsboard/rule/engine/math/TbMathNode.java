@@ -55,7 +55,13 @@ import java.util.stream.Collectors;
 import static org.thingsboard.rule.engine.math.TbMathArgumentType.CONSTANT;
 
 /**
- * Rule engine action node 'math function': Apply math function and save the result into the message and/or database Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>math function</b>.
+ *
+ * <p>Apply math function and save the result into the message and/or database
+ * <br>Supports math operations like: ADD, SUB, MULT, DIV, etc and functions: SIN, COS, TAN, SEC, etc. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMathNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/math-function/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/math-function/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -86,6 +92,13 @@ public class TbMathNode implements TbNode {
     private final ThreadLocal<Expression> customExpression = new ThreadLocal<>();
     private TbMathNodeConfiguration config;
     private boolean msgBodyToJsonConversionRequired;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -105,6 +118,13 @@ public class TbMathNode implements TbNode {
         msgBodyToJsonConversionRequired = config.getArguments().stream().anyMatch(arg -> TbMathArgumentType.MESSAGE_BODY.equals(arg.getType()));
         msgBodyToJsonConversionRequired = msgBodyToJsonConversionRequired || TbMathArgumentType.MESSAGE_BODY.equals(config.getResult().getType());
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

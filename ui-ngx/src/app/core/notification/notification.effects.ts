@@ -21,8 +21,9 @@ import { map } from 'rxjs/operators';
 import { NotificationActions, NotificationActionTypes } from '@app/core/notification/notification.actions';
 import { ToastNotificationService } from '@core/services/toast-notification.service';
 /**
- * notification effects.
+ * Notification effects (ThingsBoard web UI).
  */
+
 
 @Injectable()
 export class NotificationEffects {

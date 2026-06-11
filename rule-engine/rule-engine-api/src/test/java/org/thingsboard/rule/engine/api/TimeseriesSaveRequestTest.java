@@ -20,11 +20,13 @@ import org.thingsboard.common.util.NoOpFutureCallback;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 /**
 
- * Unit test for timeseries save request rule node.
+ * Unit test for timeseries save request (rule engine public API contracts and services).
 
  */
+
 
 class TimeseriesSaveRequestTest {
 

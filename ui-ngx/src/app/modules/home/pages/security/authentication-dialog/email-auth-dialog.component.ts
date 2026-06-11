@@ -34,14 +34,17 @@ export interface EmailAuthDialogData {
   email: string;
 }
 
+
+/**
+ * Angular component: email auth dialog (home/security pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-email-auth-dialog`.
+ */
 @Component({
     selector: 'tb-email-auth-dialog',
     templateUrl: './email-auth-dialog.component.html',
     styleUrls: ['./authentication-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: email auth dialog UI.
- */
+standalone: false
 })
 export class EmailAuthDialogComponent extends DialogComponent<EmailAuthDialogComponent> {
 
@@ -75,6 +78,11 @@ export class EmailAuthDialogComponent extends DialogComponent<EmailAuthDialogCom
     });
   }
 
+  /**
+   * next step.
+   *
+   */
+
   nextStep() {
     switch (this.stepper.selectedIndex) {
       case 0:
@@ -105,9 +113,20 @@ export class EmailAuthDialogComponent extends DialogComponent<EmailAuthDialogCom
     }
   }
 
+  /**
+   * close dialog.
+   *
+   */
+
   closeDialog() {
     return this.dialogRef.close(this.config);
   }
+
+  /**
+   * show form errors.
+   *
+   * @param form Angular reactive form group
+   */
 
   private showFormErrors(form: UntypedFormGroup) {
     Object.keys(form.controls).forEach(field => {

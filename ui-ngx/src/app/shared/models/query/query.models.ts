@@ -98,11 +98,11 @@ export function dataKeyTypeToEntityKeyType(dataKeyType: DataKeyType): EntityKeyT
   }
 }
 
+
 /**
-
- * TypeScript models and enums for entity key.
-
+ * TypeScript interfaces, types, and enums for entity key (shared TypeScript models).
  */
+
 
 export interface EntityKey {
   type: EntityKeyType;

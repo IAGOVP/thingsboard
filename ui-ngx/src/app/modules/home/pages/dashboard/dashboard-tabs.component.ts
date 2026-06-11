@@ -20,20 +20,28 @@ import { AppState } from '@core/core.state';
 import { EntityTabsComponent } from '../../components/entity/entity-tabs.component';
 import { Dashboard } from '@shared/models/dashboard.models';
 
+
+/**
+ * Angular component: dashboard tabs (home/dashboard pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-tabs`.
+ */
 @Component({
     selector: 'tb-dashboard-tabs',
     templateUrl: './dashboard-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: dashboard tabs UI.
- */
+standalone: false
 })
 export class DashboardTabsComponent extends EntityTabsComponent<Dashboard> {
 
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     super.ngOnInit();

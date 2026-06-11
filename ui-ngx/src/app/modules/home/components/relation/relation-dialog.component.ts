@@ -43,15 +43,18 @@ export interface RelationDialogData {
   relation: EntityRelation;
 }
 
+
+/**
+ * Angular component: relation dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-relation-dialog`.
+ */
 @Component({
     selector: 'tb-relation-dialog',
     templateUrl: './relation-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: RelationDialogComponent }],
     styleUrls: ['./relation-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: relation dialog UI.
- */
+standalone: false
 })
 export class RelationDialogComponent extends DialogComponent<RelationDialogComponent, boolean> implements OnInit, ErrorStateMatcher {
 
@@ -84,6 +87,11 @@ export class RelationDialogComponent extends DialogComponent<RelationDialogCompo
     this.direction = data.direction;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.authUser.authority === Authority.TENANT_ADMIN) {
       this.additionEntityTypes = {[EntityType.RULE_CHAIN]: null};
@@ -109,15 +117,33 @@ export class RelationDialogComponent extends DialogComponent<RelationDialogCompo
     );
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (FormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(false);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

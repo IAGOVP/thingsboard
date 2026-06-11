@@ -28,6 +28,12 @@ import { EntityFilter } from '@shared/models/query/query.models';
 import { EntityService } from '@core/http/entity.service';
 import { isDefinedAndNotNull } from '@core/utils';
 
+
+/**
+ * Angular component: aliases entity autocomplete (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aliases-entity-autocomplete`.
+ */
 @Component({
     selector: 'tb-aliases-entity-autocomplete',
     templateUrl: './aliases-entity-autocomplete.component.html',
@@ -37,10 +43,7 @@ import { isDefinedAndNotNull } from '@core/utils';
             useExisting: forwardRef(() => AliasesEntityAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: aliases entity autocomplete UI.
- */
+standalone: false
 })
 export class AliasesEntityAutocompleteComponent implements ControlValueAccessor, OnInit, AfterViewInit {
 
@@ -83,17 +86,38 @@ export class AliasesEntityAutocompleteComponent implements ControlValueAccessor,
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredEntityInfos = this.selectEntityInfoFormGroup.get('entityInfo').valueChanges
       .pipe(
         debounceTime(150),
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue;
           if (typeof value === 'string' || !value) {
@@ -110,12 +134,29 @@ export class AliasesEntityAutocompleteComponent implements ControlValueAccessor,
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (EntityInfo | null)
+   */
 
   writeValue(value: EntityInfo | null): void {
     this.searchText = '';
@@ -128,6 +169,12 @@ export class AliasesEntityAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (EntityInfo | null)
+   */
+
   updateView(value: EntityInfo | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -135,9 +182,23 @@ export class AliasesEntityAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * display entity info fn.
+   *
+   * @param entityInfo entity info (EntityInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayEntityInfoFn(entityInfo?: EntityInfo): string | undefined {
     return entityInfo ? entityInfo.name : undefined;
   }
+
+  /**
+   * fetch entity infos.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<EntityInfo>> observable or value
+   */
 
   fetchEntityInfos(searchText?: string): Observable<Array<EntityInfo>> {
     this.searchText = searchText;
@@ -148,11 +209,23 @@ export class AliasesEntityAutocompleteComponent implements ControlValueAccessor,
     );
   }
 
+  /**
+   * get entity infos.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<PageData<EntityInfo>> observable or value
+   */
+
   getEntityInfos(searchText: string): Observable<PageData<EntityInfo>> {
     return this.entityService.findEntityInfosByFilterAndName(this.entityFilter, searchText, {ignoreLoading: true}).pipe(
       catchError(() => of(emptyPageData<EntityInfo>()))
     );
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectEntityInfoFormGroup.get('entityInfo').patchValue(null, {emitEvent: true});

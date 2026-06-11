@@ -31,6 +31,12 @@ import { DeviceCredentialMQTTBasic } from '@shared/models/device.models';
 import { takeUntil } from 'rxjs/operators';
 import { generateSecret, isDefinedAndNotNull, isEmptyStr } from '@core/utils';
 
+
+/**
+ * Angular component: device credentials mqtt basic (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-credentials-mqtt-basic`.
+ */
 @Component({
     selector: 'tb-device-credentials-mqtt-basic',
     templateUrl: './device-credentials-mqtt-basic.component.html',
@@ -47,10 +53,7 @@ import { generateSecret, isDefinedAndNotNull, isEmptyStr } from '@core/utils';
         }
     ],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device credentials mqtt basic UI.
- */
+standalone: false
 })
 export class DeviceCredentialsMqttBasicComponent implements ControlValueAccessor, Validator, OnDestroy {
 
@@ -75,16 +78,39 @@ export class DeviceCredentialsMqttBasicComponent implements ControlValueAccessor
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {}
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -95,11 +121,23 @@ export class DeviceCredentialsMqttBasicComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.deviceCredentialsMqttFormGroup.valid ? null : {
       deviceCredentialsMqttBasic: false
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param mqttBasic mqtt basic (string)
+   */
 
   writeValue(mqttBasic: string) {
     if (isDefinedAndNotNull(mqttBasic) && !isEmptyStr(mqttBasic)) {
@@ -108,10 +146,21 @@ export class DeviceCredentialsMqttBasicComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (DeviceCredentialMQTTBasic)
+   */
+
   updateView(value: DeviceCredentialMQTTBasic) {
     const formValue = JSON.stringify(value);
     this.propagateChange(formValue);
   }
+
+  /**
+   * password changed.
+   *
+   */
 
   passwordChanged() {
     const value = this.deviceCredentialsMqttFormGroup.get('password').value;
@@ -123,6 +172,13 @@ export class DeviceCredentialsMqttBasicComponent implements ControlValueAccessor
     this.deviceCredentialsMqttFormGroup.get('userName').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * at least one.
+   *
+   * @param validator validator (ValidatorFn)
+   * @param controls controls (string[])
+   */
+
   private atLeastOne(validator: ValidatorFn, controls: string[] = null) {
     return (group: UntypedFormGroup): ValidationErrors | null => {
       if (!controls) {
@@ -133,6 +189,12 @@ export class DeviceCredentialsMqttBasicComponent implements ControlValueAccessor
       return hasAtLeastOne ? null : {atLeastOne: true};
     };
   }
+
+  /**
+   * generate.
+   *
+   * @param formControlName form control name (string)
+   */
 
   public generate(formControlName: string) {
     this.deviceCredentialsMqttFormGroup.get(formControlName).patchValue(generateSecret(20));

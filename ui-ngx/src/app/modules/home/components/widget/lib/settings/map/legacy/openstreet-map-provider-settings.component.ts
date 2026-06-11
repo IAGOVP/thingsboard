@@ -36,6 +36,12 @@ import {
 } from '@home/components/widget/lib/maps-legacy/map-models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: open street map provider settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-openstreet-map-provider-settings`.
+ */
 @Component({
     selector: 'tb-openstreet-map-provider-settings',
     templateUrl: './openstreet-map-provider-settings.component.html',
@@ -52,10 +58,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: open street map provider settings UI.
- */
+standalone: false
 })
 export class OpenStreetMapProviderSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -79,6 +82,11 @@ export class OpenStreetMapProviderSettingsComponent extends PageComponent implem
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.providerSettingsFormGroup = this.fb.group({
       mapProvider: [null, [Validators.required]],
@@ -98,12 +106,30 @@ export class OpenStreetMapProviderSettingsComponent extends PageComponent implem
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -115,6 +141,12 @@ export class OpenStreetMapProviderSettingsComponent extends PageComponent implem
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (OpenStreetMapProviderSettings)
+   */
+
   writeValue(value: OpenStreetMapProviderSettings): void {
     this.modelValue = value;
     this.providerSettingsFormGroup.patchValue(
@@ -122,6 +154,12 @@ export class OpenStreetMapProviderSettingsComponent extends PageComponent implem
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.providerSettingsFormGroup.valid ? null : {
@@ -131,11 +169,22 @@ export class OpenStreetMapProviderSettingsComponent extends PageComponent implem
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: OpenStreetMapProviderSettings = this.providerSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const useCustomProvider: boolean = this.providerSettingsFormGroup.get('useCustomProvider').value;

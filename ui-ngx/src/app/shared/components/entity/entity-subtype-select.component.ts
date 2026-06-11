@@ -28,6 +28,12 @@ import { isNotEmptyStr } from '@core/utils';
 import { EntityService } from '@core/http/entity.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: entity sub type select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-subtype-select`.
+ */
 @Component({
     selector: 'tb-entity-subtype-select',
     templateUrl: './entity-subtype-select.component.html',
@@ -37,10 +43,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => EntitySubTypeSelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: entity sub type select UI.
- */
+standalone: false
 })
 export class EntitySubTypeSelectComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
 
@@ -92,12 +95,29 @@ export class EntitySubTypeSelectComponent implements ControlValueAccessor, OnIni
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
 
@@ -156,14 +176,30 @@ export class EntitySubTypeSelectComponent implements ControlValueAccessor, OnIni
     );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.broadcastSubscription) {
       this.broadcastSubscription.unsubscribe();
     }
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -173,6 +209,12 @@ export class EntitySubTypeSelectComponent implements ControlValueAccessor, OnIni
       this.subTypeFormGroup.enable();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     if (value != null && value !== '') {
@@ -189,12 +231,25 @@ export class EntitySubTypeSelectComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (string | null)
+   */
+
   updateView(value: string | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * display sub type fn.
+   *
+   * @param subType sub type (string)
+   * @returns string | undefined observable or value
+   */
 
   displaySubTypeFn(subType?: string): string | undefined {
     if (isNotEmptyStr(subType)) {
@@ -208,11 +263,24 @@ export class EntitySubTypeSelectComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * find sub types.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   findSubTypes(searchText: string): Observable<Array<string>> {
     return this.getSubTypes().pipe(
       map(subTypes => subTypes.filter( subType => subType === searchText))
     );
   }
+
+  /**
+   * get sub types.
+   *
+   * @returns Observable<Array<string>> observable or value
+   */
 
   getSubTypes(): Observable<Array<string>> {
     if (!this.subTypes) {

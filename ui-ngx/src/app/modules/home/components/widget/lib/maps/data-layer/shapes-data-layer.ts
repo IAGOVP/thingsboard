@@ -75,13 +75,21 @@ export interface ShapeStyleInfo {
   style: L.PathOptions;
 }
 
+
 /**
-
- * shape pattern processor.
-
+ * Shape pattern processor (ThingsBoard web UI).
  */
 
+
 abstract class ShapePatternProcessor<S = any> {
+
+  /**
+   * from settings.
+   *
+   * @param dataLayer data layer (TbMapDataLayer)
+   * @param settings settings (ShapeDataLayerSettings)
+   * @returns ShapePatternProcessor observable or value
+   */
 
   static fromSettings(dataLayer: TbMapDataLayer,
                       settings: ShapeDataLayerSettings): ShapePatternProcessor {
@@ -103,12 +111,29 @@ abstract class ShapePatternProcessor<S = any> {
   protected abstract computePattern(data: FormattedData<TbMapDatasource>,
                                     dsData: FormattedData<TbMapDatasource>[]): Observable<ShapePatternInfo>;
 
+  /**
+   * process pattern.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   * @param prevPatternId prev pattern id (string)
+   * @returns Observable<PatternWithId> observable or value
+   */
+
   public processPattern(data: FormattedData<TbMapDatasource>,
                         dsData: FormattedData<TbMapDatasource>[], prevPatternId?: string): Observable<PatternWithId> {
     return this.computePattern(data, dsData).pipe(
       map((patternInfo) => this.patternFromPatternInfo(patternInfo, prevPatternId))
     );
   }
+
+  /**
+   * pattern from pattern info.
+   *
+   * @param patternInfo pattern info (ShapePatternInfo)
+   * @param prevPatternId prev pattern id (string)
+   * @returns PatternWithId observable or value
+   */
 
   private patternFromPatternInfo(patternInfo: ShapePatternInfo, prevPatternId?: string): PatternWithId {
     const patternId = objectHashCode(patternInfo) + '';
@@ -122,6 +147,13 @@ abstract class ShapePatternProcessor<S = any> {
       patternId
     };
   }
+
+  /**
+   * construct pattern.
+   *
+   * @param patternInfo pattern info (ShapePatternInfo)
+   * @returns L.TB.Pattern observable or value
+   */
 
   private constructPattern(patternInfo: ShapePatternInfo): L.TB.Pattern {
     let pattern: L.TB.Pattern;

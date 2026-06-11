@@ -15,8 +15,9 @@
 ///
 
 /**
- * interceptor config.
+ * Interceptor config (HTTP interceptors).
  */
+
 export class InterceptorConfig {
   constructor(public ignoreLoading: boolean = false,
               public ignoreErrors: boolean = false,

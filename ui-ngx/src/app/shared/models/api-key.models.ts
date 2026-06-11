@@ -21,11 +21,11 @@ import { UserId } from '@shared/models/id/user-id';
 
 export const userInfoCommand  = (baseUrl: string, apiKey: string): string => `curl -X GET "${baseUrl}/api/auth/user" -H "Content-Type: application/json" -H "X-Authorization: ApiKey ${apiKey}"`
 
+
 /**
-
- * TypeScript models and enums for api key info.
-
+ * TypeScript interfaces, types, and enums for api key info (shared TypeScript models).
  */
+
 
 export interface ApiKeyInfo extends BaseData<ApiKeyId>, HasTenantId {
   enabled: boolean;

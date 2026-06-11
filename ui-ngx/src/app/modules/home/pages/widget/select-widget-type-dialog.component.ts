@@ -22,14 +22,17 @@ import { DialogComponent } from '@shared/components/dialog.component';
 import { Router } from '@angular/router';
 import { widgetType, widgetTypesData } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: select widget type dialog (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-select-widget-type-dialog`.
+ */
 @Component({
     selector: 'tb-select-widget-type-dialog',
     templateUrl: './select-widget-type-dialog.component.html',
     styleUrls: ['./select-widget-type-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: select widget type dialog UI.
- */
+standalone: false
 })
 export class SelectWidgetTypeDialogComponent extends
   DialogComponent<SelectWidgetTypeDialogComponent, widgetType> {
@@ -46,9 +49,20 @@ export class SelectWidgetTypeDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * type selected.
+   *
+   * @param type type (widgetType)
+   */
 
   typeSelected(type: widgetType) {
     this.dialogRef.close(type);

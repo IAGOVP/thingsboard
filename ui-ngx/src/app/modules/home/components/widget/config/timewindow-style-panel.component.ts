@@ -25,16 +25,19 @@ import { Timewindow } from '@shared/models/time/time.models';
 import { deepClone } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: timewindow style panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timewindow-style-panel`.
+ */
 @Component({
     selector: 'tb-timewindow-style-panel',
     templateUrl: './timewindow-style-panel.component.html',
     providers: [],
     styleUrls: ['./timewindow-style-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: timewindow style panel UI.
- */
+standalone: false
 })
 export class TimewindowStylePanelComponent extends PageComponent implements OnInit {
 
@@ -59,6 +62,11 @@ export class TimewindowStylePanelComponent extends PageComponent implements OnIn
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     const computedTimewindowStyle = {...defaultTimewindowStyle, ...(this.timewindowStyle || {})};
@@ -90,14 +98,29 @@ export class TimewindowStylePanelComponent extends PageComponent implements OnIn
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply timewindow style.
+   *
+   */
 
   applyTimewindowStyle() {
     const timewindowStyle = this.timewindowStyleFormGroup.getRawValue();
     this.timewindowStyleApplied.emit(timewindowStyle);
   }
+
+  /**
+   * update timewindow style enabled state.
+   *
+   */
 
   private updateTimewindowStyleEnabledState() {
     const showIcon: boolean = this.timewindowStyleFormGroup.get('showIcon').value;
@@ -111,6 +134,12 @@ export class TimewindowStylePanelComponent extends PageComponent implements OnIn
       this.timewindowStyleFormGroup.get('iconPosition').disable({emitEvent: false});
     }
   }
+
+  /**
+   * update preview style.
+   *
+   * @param timewindowStyle timewindow style (TimewindowStyle)
+   */
 
   private updatePreviewStyle(timewindowStyle: TimewindowStyle) {
     this.previewTimewindowStyle = deepClone(timewindowStyle);

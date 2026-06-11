@@ -17,15 +17,29 @@ package org.thingsboard.rule.engine.api.sms;
 
 import org.thingsboard.rule.engine.api.sms.exception.SmsException;
 
+
 /**
 
- * Rule engine sms sender API.
+ * sms sender contract (rule engine public API contracts and services).
 
  */
 
+
 public interface SmsSender {
+    /**
+     * Send sms.
+     *
+     * @param numberTo number to ({@link String})
+     * @param message message ({@link String})
+     * @return the int result
+     * @throws SmsException if sms exception is thrown during processing
+     */
 
     int sendSms(String numberTo, String message) throws SmsException;
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     void destroy();
 

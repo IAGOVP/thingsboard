@@ -36,14 +36,17 @@ export interface EventsDialogData {
   debugActionDisabled?: boolean;
 }
 
+
+/**
+ * Angular component: events dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-debug-dialog`.
+ */
 @Component({
     selector: 'tb-debug-dialog',
     templateUrl: './events-dialog.component.html',
     styleUrl: './events-dialog.component.scss',
-    standalone: false
-/**
- * Angular component: events dialog UI.
- */
+standalone: false
 })
 export class EventsDialogComponent extends DialogComponent<EventsDialogComponent, string> implements AfterViewInit{
 
@@ -56,13 +59,29 @@ export class EventsDialogComponent extends DialogComponent<EventsDialogComponent
     super(store, router, dialogRef);
   }
 
+ /**
+  * Angular lifecycle hook: run after the component view is initialized.
+  *
+  */
+
  ngAfterViewInit() {
    this.eventsTable.entitiesTable.updateData();
  }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * Event handler for debug event selected.
+   *
+   * @param event DOM or Angular event object
+   */
 
   onDebugEventSelected(event: any): void {
     if(this.data.onDebugEventSelected) {

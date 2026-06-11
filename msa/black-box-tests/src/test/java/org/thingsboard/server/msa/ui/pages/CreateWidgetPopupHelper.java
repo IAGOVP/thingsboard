@@ -19,31 +19,61 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 
+
 /**
 
- * Create widget popup helper.
+ * Page object helper for create widget popup UI actions (page object element locators and helpers — Selenium page objects).
 
  */
+
 
 public class CreateWidgetPopupHelper extends CreateWidgetPopupElements {
     public CreateWidgetPopupHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Go to create entity alias popup.
+     *
+     * @param aliasName alias name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void goToCreateEntityAliasPopup(String aliasName) {
         entityAlias().sendKeys(aliasName + RandomStringUtils.randomAlphanumeric(7));
         createNewAliasBtn().click();
     }
+    /**
+     * Select filter type.
+     *
+     * @param filterType filter type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void selectFilterType(String filterType) {
         filterTypeFiled().click();
         optionFromDropdown(filterType).click();
     }
+    /**
+     * Select type.
+     *
+     * @param entityType entity type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void selectType(String entityType) {
         typeFiled().click();
         optionFromDropdown(entityType).click();
     }
+    /**
+     * Select entity.
+     *
+     * @param entityName entity name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void selectEntity(String entityName) {
         entityFiled().sendKeys(entityName);

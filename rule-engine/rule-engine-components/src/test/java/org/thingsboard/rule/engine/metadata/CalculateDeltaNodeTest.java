@@ -85,8 +85,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for calculate delta node rule node.
+ * Unit test for calculate delta node (entity metadata and related-data fetch nodes).
  */
+
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -107,12 +108,22 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
     private CalculateDeltaNode node;
     private CalculateDeltaNodeConfiguration config;
     private TbNodeConfiguration nodeConfiguration;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
         config = new CalculateDeltaNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
     }
+    /**
+     * Given default config when default configuration then verify.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenDefaultConfiguration_thenVerify() {
@@ -123,6 +134,12 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         assertEquals(config.getPeriodValueKey(), "periodInMs");
         assertTrue(config.isTellFailureIfDeltaIsNegative());
     }
+    /**
+     * Given invalid input key when init then throw exception.
+     *
+     * @param key key ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @ParameterizedTest
@@ -135,6 +152,12 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(exception).hasMessage("Input value key should be specified!");
         assertThat(exception.isUnrecoverable()).isTrue();
     }
+    /**
+     * Given invalid output key when init then throw exception.
+     *
+     * @param key key ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -146,6 +169,12 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(exception).hasMessage("Output value key should be specified!");
         assertThat(exception.isUnrecoverable()).isTrue();
     }
+    /**
+     * Given invalid period key when init then throw exception.
+     *
+     * @param key key ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -158,6 +187,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(exception).hasMessage("Period value key should be specified!");
         assertThat(exception.isUnrecoverable()).isTrue();
     }
+    /**
+     * Given invalid period key and add period disabled when init then no exception thrown.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenInvalidPeriodKeyAndAddPeriodDisabled_whenInitThenNoExceptionThrown() {
@@ -166,6 +200,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         assertDoesNotThrow(() -> node.init(ctxMock, nodeConfiguration));
     }
+    /**
+     * Given invalid msg type when on msg then should tell next other.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenInvalidMsgType_whenOnMsg_thenShouldTellNextOther() throws TbNodeException {
@@ -187,6 +226,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock, never()).tellSuccess(any());
         verify(ctxMock, never()).tellFailure(any(), any());
     }
+    /**
+     * Given invalid msg data type when on msg then should tell next other.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenInvalidMsgDataType_whenOnMsg_thenShouldTellNextOther() throws TbNodeException {
@@ -207,6 +251,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock, never()).tellSuccess(any());
         verify(ctxMock, never()).tellFailure(any(), any());
     }
+    /**
+     * Given input key is not present when on msg then should tell next other.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
 
     @Test
@@ -228,6 +277,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock, never()).tellSuccess(any());
         verify(ctxMock, never()).tellFailure(any(), any());
     }
+    /**
+     * Given double value when on msg and caching off then should tell success.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenDoubleValue_whenOnMsgAndCachingOff_thenShouldTellSuccess() throws TbNodeException {
@@ -264,6 +318,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
 
         assertEquals(expectedMsgData, actualMsgCaptor.getValue().getData());
     }
+    /**
+     * Given long string value when on msg and caching off then should tell success.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenLongStringValue_whenOnMsgAndCachingOff_thenShouldTellSuccess() throws TbNodeException {
@@ -299,6 +358,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
 
         assertEquals(expectedMsgData, actualMsgCaptor.getValue().getData());
     }
+    /**
+     * Given valid string value when on msg and caching off then should tell success.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenValidStringValue_whenOnMsgAndCachingOff_thenShouldTellSuccess() throws TbNodeException {
@@ -334,6 +398,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
 
         assertEquals(expectedMsgData, actualMsgCaptor.getValue().getData());
     }
+    /**
+     * Given two messages and period on and caching on when on msg then verify.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenTwoMessagesAndPeriodOnAndCachingOn_whenOnMsg_thenVerify() throws TbNodeException {
@@ -405,6 +474,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
 
         assertEquals(expectedMsgData, actualMsgCaptor.getValue().getData());
     }
+    /**
+     * Given last value is null when on msg and caching off then delta should be zero.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenLastValueIsNull_whenOnMsgAndCachingOff_thenDeltaShouldBeZero() throws TbNodeException {
@@ -440,6 +514,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
 
         assertEquals(expectedMsgData, actualMsgCaptor.getValue().getData());
     }
+    /**
+     * Given negative delta and tell failure if negative delta true when on msg then should tell failure.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenNegativeDeltaAndTellFailureIfNegativeDeltaTrue_whenOnMsg_thenShouldTellFailure() throws TbNodeException {
@@ -477,6 +556,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         assertInstanceOf(IllegalArgumentException.class, actualException);
         assertEquals(expectedExceptionMsg, actualException.getMessage());
     }
+    /**
+     * Given negative delta and tell failure if negative delta false when on msg then should tell success.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenNegativeDeltaAndTellFailureIfNegativeDeltaFalse_whenOnMsg_thenShouldTellSuccess() throws TbNodeException {
@@ -509,6 +593,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         String expectedMsgData = "{\"pulseCounter\":\"123\",\"delta\":-77}";
         assertEquals(expectedMsgData, actualMsgCaptor.getValue().getData());
     }
+    /**
+     * Given invalid string value when on msg then exception.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenInvalidStringValue_whenOnMsg_thenException() throws TbNodeException {
@@ -539,6 +628,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Calculation failed. Unable to parse value [high] of telemetry [pulseCounter] to Double");
     }
+    /**
+     * Given boolean value when on msg then exception.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenBooleanValue_whenOnMsg_thenException() throws TbNodeException {
@@ -569,6 +663,11 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Calculation failed. Boolean values are not supported!");
     }
+    /**
+     * Given json value when on msg then exception.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenJsonValue_whenOnMsg_thenException() throws TbNodeException {
@@ -599,6 +698,12 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Calculation failed. JSON values are not supported!");
     }
+    /**
+     * Given concurrent access when on msg then get from dbinvoked once.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenConcurrentAccess_whenOnMsg_thenGetFromDBInvokedOnce() throws TbNodeException, InterruptedException {
@@ -648,6 +753,12 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> verify(ctx, times(tbMsgList.size())).tellSuccess(any()));
     }
 
+    /**
+
+     * Rule dispatcher executor (entity metadata and related-data fetch nodes).
+
+     */
+
     private static class RuleDispatcherExecutor extends AbstractListeningExecutor {
         @Override
         protected int getThreadPollSize() {
@@ -655,12 +766,24 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         }
     }
 
+    /**
+
+     * Dbcallback executor (entity metadata and related-data fetch nodes).
+
+     */
+
     private static class DBCallbackExecutor extends AbstractListeningExecutor {
         @Override
         protected int getThreadPollSize() {
             return DB_CALLBACK_POOL_SIZE;
         }
     }
+    /**
+     * Given calculate delta config when on msg then verify.
+     *
+     * @param testConfig test config ({@link CalculateDeltaTestConfig})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource("CalculateDeltaTestConfig")
@@ -741,6 +864,12 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         );
     }
 
+    /**
+
+     * Immutable record for calculate delta test config (entity metadata and related-data fetch nodes).
+
+     */
+
     private record CalculateDeltaTestConfig(boolean tellFailureIfDeltaIsNegative, boolean excludeZeroDeltas,
                                             double prevValue, double currentValue,
                                             BiConsumer<TbContext, TbMsg> verificationMethod) {
@@ -770,6 +899,12 @@ public class CalculateDeltaNodeTest extends AbstractRuleNodeUpgradeTest {
         );
 
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

@@ -28,7 +28,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.UUID;
 
 /**
- * Rule engine action node 'push to cloud': Pushes messages from edge to cloud Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>push to cloud</b>.
+ *
+ * <p>Pushes messages from edge to cloud
+ * <br>Push messages from edge to cloud. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgPushToCloudNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/push-to-cloud/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/push-to-cloud/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -75,6 +81,12 @@ public class TbMsgPushToCloudNode extends AbstractTbMsgPushNode<TbMsgPushToCloud
     String getIgnoredMessageSource() {
         return null;
     }
+    /**
+     * Returns config clazz.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<TbMsgPushToCloudNodeConfiguration> getConfigClazz() {

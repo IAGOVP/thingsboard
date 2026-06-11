@@ -17,11 +17,13 @@ package org.thingsboard.mqtt;
 
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 
+
 /**
 
- * QoS2 inbound PUBLISH waiting for PUBREL/PUBCOMP handshake completion.
+ * Inbound QoS 2 PUBLISH during PUBREC/PUBREL/PUBCOMP handshake.
 
  */
+
 
 final class MqttIncomingQos2Publish {
 

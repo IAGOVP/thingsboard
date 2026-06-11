@@ -36,6 +36,12 @@ import { isDefinedAndNotNull } from '@core/utils';
 import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/key/data-keys.component.models';
 import { Datasource } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: gradient (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-gradient`.
+ */
 @Component({
     selector: 'tb-gradient',
     templateUrl: './gradient.component.html',
@@ -47,10 +53,7 @@ import { Datasource } from '@shared/models/widget.models';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: gradient UI.
- */
+standalone: false
 })
 export class GradientComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
@@ -95,6 +98,11 @@ export class GradientComponent implements OnInit, ControlValueAccessor, OnDestro
   constructor(private fb: UntypedFormBuilder,
               private sanitizer: DomSanitizer) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.gradientFormGroup = this.fb.group({
       advancedMode: [false],
@@ -123,21 +131,50 @@ export class GradientComponent implements OnInit, ControlValueAccessor, OnDestro
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ColorGradientSettings)
+   */
 
   writeValue(value: ColorGradientSettings): void {
     if (isDefinedAndNotNull(value)) {
@@ -178,6 +215,14 @@ export class GradientComponent implements OnInit, ControlValueAccessor, OnDestro
     }
   }
 
+  /**
+   * pointer.
+   *
+   * @param shift shift (number)
+   * @param index index (number)
+   * @param value value (number)
+   */
+
   pointer(shift: number, index?: number, value?: number, advanced = false) {
     if (advanced) {
       return `<div class="pointer" style="left: ${shift}%"></div>`;
@@ -199,6 +244,13 @@ export class GradientComponent implements OnInit, ControlValueAccessor, OnDestro
     return this.sanitizer.bypassSecurityTrustStyle(`background-image: linear-gradient(90deg, ${gradient})`);
   }
 
+  /**
+   * color gradient control.
+   *
+   * @param gradient gradient (string)
+   * @returns UntypedFormGroup observable or value
+   */
+
   private colorGradientControl(gradient: string): UntypedFormGroup {
     return this.fb.group({
       color: [gradient, []]
@@ -211,6 +263,13 @@ export class GradientComponent implements OnInit, ControlValueAccessor, OnDestro
   get gradientListFormGroups(): FormGroup[] {
     return this.gradientListFormArray.controls as FormGroup[];
   }
+
+  /**
+   * advanced gradient control.
+   *
+   * @param gradient gradient (AdvancedGradient)
+   * @returns UntypedFormGroup observable or value
+   */
 
   private advancedGradientControl(gradient: AdvancedGradient): UntypedFormGroup {
     return this.fb.group({
@@ -226,9 +285,23 @@ export class GradientComponent implements OnInit, ControlValueAccessor, OnDestro
     return this.advancedGradientListFormArray.controls as FormGroup[];
   }
 
+  /**
+   * track by gradient.
+   *
+   * @param index index (number)
+   * @param gradientControl gradient control (AbstractControl)
+   * @returns any observable or value
+   */
+
   trackByGradient(index: number, gradientControl: AbstractControl): any {
     return gradientControl;
   }
+
+  /**
+   * DELETE — remove gradient.
+   *
+   * @param index index (number)
+   */
 
   removeGradient(index: number, advanced = false) {
     if (advanced) {
@@ -239,12 +312,23 @@ export class GradientComponent implements OnInit, ControlValueAccessor, OnDestro
     this.gradientFormGroup.markAsDirty();
   }
 
+  /**
+   * gradient drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   gradientDrop(event: CdkDragDrop<string[]>, advanced = false) {
     const gradientColorsArray = advanced ? this.advancedGradientListFormArray : this.gradientListFormArray;
     const gradientColor = gradientColorsArray.at(event.previousIndex);
     gradientColorsArray.removeAt(event.previousIndex);
     gradientColorsArray.insert(event.currentIndex, gradientColor);
   }
+
+  /**
+   * POST/PUT entity — add gradient.
+   *
+   */
 
   addGradient(advanced = false) {
     if (advanced) {
@@ -256,6 +340,11 @@ export class GradientComponent implements OnInit, ControlValueAccessor, OnDestro
     }
     this.gradientFormGroup.markAsDirty();
   }
+
+  /**
+   * update model.
+   *
+   */
 
   updateModel() {
     const gradient = this.gradientFormGroup.getRawValue();

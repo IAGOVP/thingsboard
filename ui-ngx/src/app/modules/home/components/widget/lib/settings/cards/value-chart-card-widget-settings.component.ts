@@ -28,14 +28,17 @@ import {
 } from '@home/components/widget/lib/cards/value-chart-card-widget.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: value chart card widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-chart-card-widget-settings`.
+ */
 @Component({
     selector: 'tb-value-chart-card-widget-settings',
     templateUrl: './value-chart-card-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: value chart card widget settings UI.
- */
+standalone: false
 })
 export class ValueChartCardWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -54,13 +57,31 @@ export class ValueChartCardWidgetSettingsComponent extends WidgetSettingsCompone
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.valueChartCardWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return valueChartCardDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.valueChartCardWidgetSettingsForm = this.fb.group({
@@ -76,9 +97,21 @@ export class ValueChartCardWidgetSettingsComponent extends WidgetSettingsCompone
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showValue'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showValue: boolean = this.valueChartCardWidgetSettingsForm.get('showValue').value;

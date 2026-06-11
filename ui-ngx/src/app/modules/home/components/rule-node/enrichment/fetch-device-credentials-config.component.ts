@@ -20,16 +20,18 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 import { FetchTo } from '@home/components/rule-node/rule-node-config.models';
 
+
+
+/**
+ * Angular component: fetch device credentials config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-fetch-device-credentials-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-fetch-device-credentials-config',
     templateUrl: './fetch-device-credentials-config.component.html',
-    standalone: false
 
-/**
-
- * Angular component: fetch device credentials config UI.
-
- */
+standalone: false
 })
 
 export class FetchDeviceCredentialsConfigComponent extends RuleNodeConfigurationComponent {
@@ -40,15 +42,34 @@ export class FetchDeviceCredentialsConfigComponent extends RuleNodeConfiguration
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.fetchDeviceCredentialsConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
       fetchTo: isDefinedAndNotNull(configuration?.fetchTo) ? configuration.fetchTo : FetchTo.METADATA
     };
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.fetchDeviceCredentialsConfigForm = this.fb.group({

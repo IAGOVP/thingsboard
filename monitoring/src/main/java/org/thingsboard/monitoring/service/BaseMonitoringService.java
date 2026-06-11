@@ -61,9 +61,11 @@ import static org.thingsboard.monitoring.service.BaseHealthChecker.TEST_CF_TELEM
 import static org.thingsboard.monitoring.service.BaseHealthChecker.TEST_TELEMETRY_KEY;
 
 /**
- * Abstract monitoring loop: REST login, WebSocket telemetry subscription, per-target health checks,
- * optional EDQS validation, and latency reporting via {@link MonitoringReporter}.
+ * Abstract monitoring loop shared by domain-specific monitoring services.
+ *
+ * <p>Performs REST login, WebSocket telemetry subscription, per-target health checks, optional EDQS validation, and latency reporting via {@link org.thingsboard.monitoring.service.MonitoringReporter}.
  */
+
 @Slf4j
 public abstract class BaseMonitoringService<C extends MonitoringConfig<T>, T extends MonitoringTarget> {
 
@@ -90,7 +92,14 @@ public abstract class BaseMonitoringService<C extends MonitoringConfig<T>, T ext
     @Value("${monitoring.calculated_fields.enabled:true}")
     protected boolean checkCalculatedFields;
 
-    /** Creates {@link BaseHealthChecker} instances for each configured target (and optional DNS IP associates). */
+    
+   /**
+    * Builds health checkers from configuration and prepares WebSocket subscriptions.
+    *
+    * @return nothing
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
     public void init() {
         if (configs == null || configs.isEmpty()) {
             return;
@@ -118,10 +127,14 @@ public abstract class BaseMonitoringService<C extends MonitoringConfig<T>, T ext
         return healthChecker;
     }
 
+    
     /**
-     * One monitoring cycle: login, WS subscribe, run all health checkers, optional EDQS query, report latencies.
-     * Invoked on a fixed delay by {@link org.thingsboard.monitoring.ThingsboardMonitoringApplication}.
+     * Executes one monitoring cycle: login, subscribe, health probes, and latency reporting.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public final void runChecks() {
         if (healthCheckers.isEmpty()) {
             return;
@@ -281,10 +294,31 @@ public abstract class BaseMonitoringService<C extends MonitoringConfig<T>, T ext
         devices.remove(healthChecker.getTarget().getDeviceId());
         log.info("Stopped {} for {}", healthChecker.getClass().getSimpleName(), healthChecker.getTarget().getBaseUrl());
     }
+    /**
+     * Creates health checker.
+     *
+     * @param config monitoring configuration for this transport or domain
+     * @param target monitoring target URL and device configuration
+     * @return {@link BaseHealthChecker}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract BaseHealthChecker<?, ?> createHealthChecker(C config, T target);
+    /**
+     * Creates target.
+     *
+     * @param baseUrl base url ({@link String})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract T createTarget(String baseUrl);
+    /**
+     * Returns name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getName();
 

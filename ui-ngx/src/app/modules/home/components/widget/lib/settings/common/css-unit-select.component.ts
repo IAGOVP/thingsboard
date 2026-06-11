@@ -20,6 +20,12 @@ import { cssUnit, cssUnits } from '@shared/models/widget-settings.models';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: css unit select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-css-unit-select`.
+ */
 @Component({
     selector: 'tb-css-unit-select',
     templateUrl: './css-unit-select.component.html',
@@ -31,10 +37,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: css unit select UI.
- */
+standalone: false
 })
 export class CssUnitSelectComponent implements OnInit, ControlValueAccessor {
 
@@ -58,6 +61,11 @@ export class CssUnitSelectComponent implements OnInit, ControlValueAccessor {
 
   constructor(private destroyRef: DestroyRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.cssUnitFormControl = new UntypedFormControl();
     this.cssUnitFormControl.valueChanges.pipe(
@@ -67,12 +75,30 @@ export class CssUnitSelectComponent implements OnInit, ControlValueAccessor {
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -83,10 +109,22 @@ export class CssUnitSelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (cssUnit)
+   */
+
   writeValue(value: cssUnit): void {
     this.modelValue = value;
     this.cssUnitFormControl.patchValue(this.modelValue, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   * @param value value (cssUnit)
+   */
 
   updateModel(value: cssUnit): void {
     if (this.modelValue !== value) {

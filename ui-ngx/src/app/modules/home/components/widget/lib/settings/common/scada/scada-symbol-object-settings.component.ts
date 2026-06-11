@@ -55,6 +55,12 @@ import { ImageService } from '@core/http/image.service';
 import { map } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: scada symbol object settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-object-settings`.
+ */
 @Component({
     selector: 'tb-scada-symbol-object-settings',
     templateUrl: './scada-symbol-object-settings.component.html',
@@ -71,10 +77,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: scada symbol object settings UI.
- */
+standalone: false
 })
 export class ScadaSymbolObjectSettingsComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
@@ -120,6 +123,11 @@ export class ScadaSymbolObjectSettingsComponent implements OnInit, OnChanges, Co
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.scadaSymbolObjectSettingsFormGroup = this.fb.group({
       behavior: this.fb.group({}),
@@ -144,12 +152,30 @@ export class ScadaSymbolObjectSettingsComponent implements OnInit, OnChanges, Co
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -160,10 +186,22 @@ export class ScadaSymbolObjectSettingsComponent implements OnInit, OnChanges, Co
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ScadaSymbolObjectSettings)
+   */
+
   writeValue(value: ScadaSymbolObjectSettings): void {
     this.modelValue = value || { behavior: {}, properties: {} };
     this.setupValue();
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   validate(_c: UntypedFormControl) {
     const valid = this.scadaSymbolObjectSettingsFormGroup.valid;
@@ -173,6 +211,11 @@ export class ScadaSymbolObjectSettingsComponent implements OnInit, OnChanges, Co
       },
     };
   }
+
+  /**
+   * load metadata.
+   *
+   */
 
   private loadMetadata() {
     let metadata$: Observable<ScadaSymbolMetadata>;
@@ -208,6 +251,11 @@ export class ScadaSymbolObjectSettingsComponent implements OnInit, OnChanges, Co
     );
   }
 
+  /**
+   * setup value.
+   *
+   */
+
   private setupValue() {
     if (this.metadata) {
       const defaults = defaultScadaSymbolObjectSettings(this.metadata);
@@ -218,6 +266,11 @@ export class ScadaSymbolObjectSettingsComponent implements OnInit, OnChanges, Co
       this.setDisabledState(this.disabled);
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.scadaSymbolObjectSettingsFormGroup.getRawValue();

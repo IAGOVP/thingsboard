@@ -21,14 +21,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { ThemePalette } from '@angular/material/core';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: copy button (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-copy-button`.
+ */
 @Component({
     selector: 'tb-copy-button',
     styleUrls: ['copy-button.component.scss'],
     templateUrl: './copy-button.component.html',
-    standalone: false
-/**
- * Angular component: copy button UI.
- */
+standalone: false
 })
 export class CopyButtonComponent {
 
@@ -73,6 +76,11 @@ export class CopyButtonComponent {
               private translate: TranslateService,
               private cd: ChangeDetectorRef) {
   }
+
+  /**
+   * copy.
+   *
+   */
 
   copy($event: Event): void {
     $event.stopPropagation();

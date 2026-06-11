@@ -76,14 +76,17 @@ export interface RuleNotificationDialogData {
   isCopy?: boolean;
 }
 
+
+/**
+ * Angular component: rule notification dialog (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-notification-dialog`.
+ */
 @Component({
     selector: 'tb-rule-notification-dialog',
     templateUrl: './rule-notification-dialog.component.html',
     styleUrls: ['rule-notification-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: rule notification dialog UI.
- */
+standalone: false
 })
 export class RuleNotificationDialogComponent extends
   DialogComponent<RuleNotificationDialogComponent, NotificationRule> implements OnDestroy {
@@ -405,11 +408,21 @@ export class RuleNotificationDialogComponent extends
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * change step.
+   *
+   */
 
   changeStep($event: StepperSelectionEvent) {
     this.selectedIndex = $event.selectedIndex;
@@ -418,9 +431,19 @@ export class RuleNotificationDialogComponent extends
     }
   }
 
+  /**
+   * back step.
+   *
+   */
+
   backStep() {
     this.addNotificationRule.previous();
   }
+
+  /**
+   * next step.
+   *
+   */
 
   nextStep() {
     if (this.selectedIndex >= this.maxStepperIndex) {
@@ -429,6 +452,12 @@ export class RuleNotificationDialogComponent extends
       this.addNotificationRule.next();
     }
   }
+
+  /**
+   * next step label.
+   *
+   * @returns string observable or value
+   */
 
   nextStepLabel(): string {
     if (this.selectedIndex !== 0) {
@@ -440,6 +469,11 @@ export class RuleNotificationDialogComponent extends
   private get maxStepperIndex(): number {
     return this.addNotificationRule?._steps?.length - 1;
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   private add(): void {
     if (this.allValid()) {
@@ -469,6 +503,12 @@ export class RuleNotificationDialogComponent extends
     }
   }
 
+  /**
+   * all valid.
+   *
+   * @returns boolean observable or value
+   */
+
   private allValid(): boolean {
     return !this.addNotificationRule.steps.find((item, index) => {
       if (item.stepControl.invalid) {
@@ -481,9 +521,20 @@ export class RuleNotificationDialogComponent extends
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — create target.
+   *
+   * @param button button (MatButton)
+   */
 
   createTarget($event: Event, button: MatButton) {
     if ($event) {
@@ -508,17 +559,42 @@ export class RuleNotificationDialogComponent extends
       });
   }
 
+  /**
+   * count recipients chain config.
+   *
+   * @returns number observable or value
+   */
+
   countRecipientsChainConfig(): number {
     return Object.keys(this.ruleNotificationForm.get('recipientsConfig.escalationTable').value ?? {}).length;
   }
+
+  /**
+   * format label.
+   *
+   * @param value value (number)
+   * @returns string observable or value
+   */
 
   formatLabel(value: number): string {
     return `${value}%`;
   }
 
+  /**
+   * is sys admin.
+   *
+   * @returns boolean observable or value
+   */
+
   private isSysAdmin(): boolean {
     return this.authUser.authority === Authority.SYS_ADMIN;
   }
+
+  /**
+   * allow trigger types.
+   *
+   * @returns TriggerType[] observable or value
+   */
 
   private allowTriggerTypes(): TriggerType[] {
     const sysAdminAllowTriggerTypes = new Set([

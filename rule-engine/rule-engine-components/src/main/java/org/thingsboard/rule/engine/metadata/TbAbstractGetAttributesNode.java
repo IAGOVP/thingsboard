@@ -52,8 +52,9 @@ import static org.thingsboard.server.common.data.DataConstants.LATEST_TS;
 import static org.thingsboard.server.common.data.DataConstants.SERVER_SCOPE;
 import static org.thingsboard.server.common.data.DataConstants.SHARED_SCOPE;
 /**
- * Base implementation for get attributes node rule nodes.
+ * Abstract base class for get attributes node rule nodes (entity metadata and related-data fetch nodes).
  */
+
 
 @Slf4j
 public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeConfiguration, T extends EntityId> extends TbAbstractNodeWithFetchTo<C> {
@@ -62,6 +63,13 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
     private static final String TS = "ts";
     private boolean isTellFailureIfAbsent;
     private boolean getLatestValueWithTs;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -69,6 +77,13 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
         getLatestValueWithTs = config.isGetLatestValueWithTs();
         isTellFailureIfAbsent = BooleanUtils.toBooleanDefaultIfNull(config.isTellFailureIfAbsent(), true);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
@@ -78,8 +93,26 @@ public abstract class TbAbstractGetAttributesNode<C extends TbGetAttributesNodeC
                 entityId -> safePutAttributes(ctx, msg, msgDataAsObjectNode, entityId),
                 t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
     }
+    /**
+     * Finds entity id async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract ListenableFuture<T> findEntityIdAsync(TbContext ctx, TbMsg msg);
+    /**
+     * Upgrade rule nodes with old property to use fetch to.
+     *
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @param oldProperty old property ({@link String})
+     * @param ifTrue if true ({@link String})
+     * @param ifFalse if false ({@link String})
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected TbPair<Boolean, JsonNode> upgradeRuleNodesWithOldPropertyToUseFetchTo(
             JsonNode oldConfiguration,

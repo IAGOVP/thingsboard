@@ -45,6 +45,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TimeSeriesChartYAxesPanelComponent } from '@home/components/widget/lib/settings/common/chart/time-series-chart-y-axes-panel.component';
 import { ValueSourceType } from '@shared/models/widget-settings.models';
 
+
+/**
+ * Angular component: time series chart yaxis row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-y-axis-row`.
+ */
 @Component({
     selector: 'tb-time-series-chart-y-axis-row',
     templateUrl: './time-series-chart-y-axis-row.component.html',
@@ -57,10 +63,7 @@ import { ValueSourceType } from '@shared/models/widget-settings.models';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart yaxis row UI.
- */
+standalone: false
 })
 export class TimeSeriesChartYAxisRowComponent implements ControlValueAccessor, OnInit {
 
@@ -98,6 +101,11 @@ export class TimeSeriesChartYAxisRowComponent implements ControlValueAccessor, O
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.axisFormGroup = this.fb.group({
       label: [null, []],
@@ -120,12 +128,30 @@ export class TimeSeriesChartYAxisRowComponent implements ControlValueAccessor, O
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -136,6 +162,12 @@ export class TimeSeriesChartYAxisRowComponent implements ControlValueAccessor, O
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartYAxisSettings)
+   */
 
   writeValue(value: TimeSeriesChartYAxisSettings): void {
     this.modelValue = value;
@@ -155,6 +187,12 @@ export class TimeSeriesChartYAxisRowComponent implements ControlValueAccessor, O
     this.updateValidators();
     this.cd.markForCheck();
   }
+
+  /**
+   * edit axis.
+   *
+   * @param matButton mat button (MatIconButton)
+   */
 
   editAxis($event: Event, matButton: MatIconButton) {
     if ($event) {
@@ -202,9 +240,20 @@ export class TimeSeriesChartYAxisRowComponent implements ControlValueAccessor, O
     }
   }
 
+  /**
+   * check is constant limit.
+   *
+   * @param limit limit ('min' | 'max')
+   */
+
   checkIsConstantLimit(limit: 'min' | 'max') {
     return this.axisFormGroup.get(`${limit}.type`)?.value === ValueSourceType.constant;
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const show: boolean = this.axisFormGroup.get('show').value;
@@ -232,6 +281,11 @@ export class TimeSeriesChartYAxisRowComponent implements ControlValueAccessor, O
 
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value = this.axisFormGroup.getRawValue();
     this.modelValue.label = value.label;
@@ -243,6 +297,11 @@ export class TimeSeriesChartYAxisRowComponent implements ControlValueAccessor, O
     this.modelValue.show = value.show;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * POST/PUT entity — create limit form group.
+   *
+   */
 
   private createLimitFormGroup() {
     return this.fb.group({

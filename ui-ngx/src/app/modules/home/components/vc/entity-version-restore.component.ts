@@ -35,14 +35,17 @@ import { Observable, Subscription } from 'rxjs';
 import { parseHttpErrorMessage } from '@core/utils';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
+/**
+ * Angular component: entity version restore (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-version-restore`.
+ */
 @Component({
     selector: 'tb-entity-version-restore',
     templateUrl: './entity-version-restore.component.html',
     styleUrls: ['./version-control.scss'],
-    standalone: false
-/**
- * Angular component: entity version restore UI.
- */
+standalone: false
 })
 export class EntityVersionRestoreComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -82,6 +85,11 @@ export class EntityVersionRestoreComponent extends PageComponent implements OnIn
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.restoreFormGroup = this.fb.group({
       loadAttributes: [true, []],
@@ -98,6 +106,11 @@ export class EntityVersionRestoreComponent extends PageComponent implements OnIn
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     if (this.versionLoadResultSubscription) {
@@ -105,11 +118,21 @@ export class EntityVersionRestoreComponent extends PageComponent implements OnIn
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     if (this.onClose) {
       this.onClose(null);
     }
   }
+
+  /**
+   * restore.
+   *
+   */
 
   restore(): void {
     const request: SingleEntityVersionLoadRequest = {

@@ -23,11 +23,13 @@ import org.thingsboard.server.common.msg.TbMsgMetaData;
 
 import java.util.Optional;
 
+
 /**
 
- * Rule engine component: tb math argument value.
+ * Tb math argument value (expression evaluation nodes).
 
  */
+
 
 public class TbMathArgumentValue {
 
@@ -37,6 +39,13 @@ public class TbMathArgumentValue {
     private TbMathArgumentValue(double value) {
         this.value = value;
     }
+    /**
+     * Constant.
+     *
+     * @param arg arg ({@link TbMathArgument})
+     * @return {@link TbMathArgumentValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TbMathArgumentValue constant(TbMathArgument arg) {
         return fromString(arg.getKey());
@@ -48,6 +57,15 @@ public class TbMathArgumentValue {
         }
         throw new RuntimeException(error);
     }
+    /**
+     * From message body.
+     *
+     * @param arg arg ({@link TbMathArgument})
+     * @param argKey arg key ({@link String})
+     * @param jsonNodeOpt json node opt ({@link Optional})
+     * @return {@link TbMathArgumentValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TbMathArgumentValue fromMessageBody(TbMathArgument arg, String argKey, Optional<ObjectNode> jsonNodeOpt) {
         Double defaultValue = arg.getDefaultValue();
@@ -81,6 +99,15 @@ public class TbMathArgumentValue {
         }
         return new TbMathArgumentValue(value);
     }
+    /**
+     * From message metadata.
+     *
+     * @param arg arg ({@link TbMathArgument})
+     * @param argKey arg key ({@link String})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @return {@link TbMathArgumentValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TbMathArgumentValue fromMessageMetadata(TbMathArgument arg, String argKey, TbMsgMetaData metaData) {
         Double defaultValue = arg.getDefaultValue();
@@ -93,14 +120,35 @@ public class TbMathArgumentValue {
         }
         return fromString(value);
     }
+    /**
+     * From long.
+     *
+     * @param value value
+     * @return {@link TbMathArgumentValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TbMathArgumentValue fromLong(long value) {
         return new TbMathArgumentValue(value);
     }
+    /**
+     * From double.
+     *
+     * @param value value
+     * @return {@link TbMathArgumentValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TbMathArgumentValue fromDouble(double value) {
         return new TbMathArgumentValue(value);
     }
+    /**
+     * From string.
+     *
+     * @param value value ({@link String})
+     * @return {@link TbMathArgumentValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TbMathArgumentValue fromString(String value) {
         try {

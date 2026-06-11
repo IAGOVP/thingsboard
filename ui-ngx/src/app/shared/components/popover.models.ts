@@ -80,11 +80,11 @@ export const getPlacementName = (position: ConnectedOverlayPositionChange): Popo
   return undefined;
 };
 
+
 /**
-
- * TypeScript models and enums for property mapping.
-
+ * Property mapping (shared UI components).
  */
+
 
 export interface PropertyMapping {
   // @ts-ignore

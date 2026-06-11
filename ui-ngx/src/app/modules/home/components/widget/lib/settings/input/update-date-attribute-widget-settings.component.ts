@@ -24,14 +24,17 @@ import {
   updateAttributeGeneralDefaultSettings
 } from '@home/components/widget/lib/settings/input/update-attribute-general-settings.component';
 
+
+/**
+ * Angular component: update date attribute widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-date-attribute-widget-settings`.
+ */
 @Component({
     selector: 'tb-update-date-attribute-widget-settings',
     templateUrl: './update-date-attribute-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update date attribute widget settings UI.
- */
+standalone: false
 })
 export class UpdateDateAttributeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -42,9 +45,21 @@ export class UpdateDateAttributeWidgetSettingsComponent extends WidgetSettingsCo
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateDateAttributeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -53,12 +68,25 @@ export class UpdateDateAttributeWidgetSettingsComponent extends WidgetSettingsCo
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateDateAttributeWidgetSettingsForm = this.fb.group({
       updateAttributeGeneralSettings: [settings.updateAttributeGeneralSettings, []],
       showTimeInput: [settings.showTimeInput, []]
     });
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     const updateAttributeGeneralSettings = deepClone(settings, ['showTimeInput']);
@@ -67,6 +95,13 @@ export class UpdateDateAttributeWidgetSettingsComponent extends WidgetSettingsCo
       showTimeInput: settings.showTimeInput
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return {

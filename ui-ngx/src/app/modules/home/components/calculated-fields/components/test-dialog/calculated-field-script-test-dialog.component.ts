@@ -54,15 +54,18 @@ export interface CalculatedFieldTestScriptDialogData extends CalculatedFieldTest
   openCalculatedFieldEdit?: boolean;
 }
 
+
+/**
+ * Angular component: calculated field script test dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-script-test-dialog`.
+ */
 @Component({
     selector: 'tb-calculated-field-script-test-dialog',
     templateUrl: './calculated-field-script-test-dialog.component.html',
     styleUrls: ['./calculated-field-script-test-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: calculated field script test dialog UI.
- */
+standalone: false
 })
 export class CalculatedFieldScriptTestDialogComponent extends DialogComponent<CalculatedFieldScriptTestDialogComponent,
   string> implements AfterViewInit, OnDestroy {
@@ -104,18 +107,38 @@ export class CalculatedFieldScriptTestDialogComponent extends DialogComponent<Ca
     this.calculatedFieldScriptTestFormGroup.get('arguments').patchValue(this.getArgumentsValue());
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     this.observeResize();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
     this.testScriptResize.disconnect();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * Event handler for test script.
+   *
+   */
 
   onTestScript(): void {
     this.testScript()
@@ -126,6 +149,11 @@ export class CalculatedFieldScriptTestDialogComponent extends DialogComponent<Ca
       .subscribe(output => this.calculatedFieldScriptTestFormGroup.get('output').setValue(output));
   }
 
+  /**
+   * POST/PUT entity — save.
+   *
+   */
+
   save(): void {
     this.testScript(true).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.calculatedFieldScriptTestFormGroup.get('expression').markAsPristine();
@@ -133,12 +161,22 @@ export class CalculatedFieldScriptTestDialogComponent extends DialogComponent<Ca
     });
   }
 
+  /**
+   * test script.
+   *
+   * @returns Observable<string> observable or value
+   */
+
   private testScript(onSave = false): Observable<string> {
     if (this.checkInputParamErrors()) {
       return this.calculatedFieldService.testScript({
         expression: this.calculatedFieldScriptTestFormGroup.get('expression').value,
         arguments: this.getTestArguments()
       }).pipe(
+        /**
+         * switch map.
+         *
+         */
         switchMap(result => {
           if (result.error) {
             this.store.dispatch(new ActionNotificationShow(
@@ -160,10 +198,21 @@ export class CalculatedFieldScriptTestDialogComponent extends DialogComponent<Ca
     }
   }
 
+  /**
+   * check input param errors.
+   *
+   * @returns boolean observable or value
+   */
+
   private checkInputParamErrors(): boolean {
     this.expressionContent.validateOnSubmit();
     return !this.calculatedFieldScriptTestFormGroup.get('expression').invalid;
   }
+
+  /**
+   * observe resize.
+   *
+   */
 
   private observeResize(): void {
     this.testScriptResize = new ResizeObserver(() => {
@@ -173,9 +222,20 @@ export class CalculatedFieldScriptTestDialogComponent extends DialogComponent<Ca
     this.testScriptResize.observe(this.testScriptContainer.nativeElement);
   }
 
+  /**
+   * update sizes.
+   *
+   */
+
   private updateSizes(): void {
     this.initSplitLayout(this.testScriptContainer.nativeElement.clientWidth <= 960);
   }
+
+  /**
+   * get test arguments.
+   *
+   * @returns CalculatedFieldEventArguments observable or value
+   */
 
   private getTestArguments(): CalculatedFieldEventArguments {
     const argumentsValue = this.calculatedFieldScriptTestFormGroup.get('arguments').value;
@@ -187,6 +247,12 @@ export class CalculatedFieldScriptTestDialogComponent extends DialogComponent<Ca
       }, {});
   }
 
+  /**
+   * get arguments value.
+   *
+   * @returns CalculatedFieldEventArguments observable or value
+   */
+
   private getArgumentsValue(): CalculatedFieldEventArguments {
     return Object.keys(this.data.arguments)
       .reduce((acc, key) => {
@@ -196,6 +262,11 @@ export class CalculatedFieldScriptTestDialogComponent extends DialogComponent<Ca
         return acc;
       }, {});
   }
+
+  /**
+   * init split layout.
+   *
+   */
 
   private initSplitLayout(smallMode = false): void {
     const [leftPanel, rightPanel, topRightPanel, bottomRightPanel] = [

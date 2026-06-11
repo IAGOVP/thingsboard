@@ -28,11 +28,11 @@ import {
   TimeSeriesChartTooltipValueFormatFunction
 } from '@home/components/widget/lib/chart/time-series-chart-tooltip.models';
 
+
 /**
-
- * TypeScript models and enums for time series chart state value converter.
-
+ * Time series chart state value converter (ThingsBoard web UI).
  */
+
 
 export class TimeSeriesChartStateValueConverter {
 
@@ -109,6 +109,13 @@ export class TimeSeriesChartStateValueConverter {
       return value;
     };
   }
+
+  /**
+   * constant range.
+   *
+   * @param state state (TimeSeriesChartStateSettings)
+   * @returns boolean observable or value
+   */
 
   static constantRange(state: TimeSeriesChartStateSettings): boolean {
     return isNumber(state.sourceRangeFrom) && isNumber(state.sourceRangeTo) && state.sourceRangeFrom === state.sourceRangeTo;

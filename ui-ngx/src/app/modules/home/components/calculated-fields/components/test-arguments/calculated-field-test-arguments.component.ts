@@ -43,6 +43,12 @@ import {
 import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 
+
+/**
+ * Angular component: calculated field test arguments (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-test-arguments`.
+ */
 @Component({
     selector: 'tb-calculated-field-test-arguments',
     templateUrl: './calculated-field-test-arguments.component.html',
@@ -59,10 +65,7 @@ import { MatDialog } from '@angular/material/dialog';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: calculated field test arguments UI.
- */
+standalone: false
 })
 export class CalculatedFieldTestArgumentsComponent extends PageComponent implements ControlValueAccessor, Validator {
 
@@ -88,8 +91,19 @@ export class CalculatedFieldTestArgumentsComponent extends PageComponent impleme
     this.propagateChange = propagateChange;
   }
 
+  /**
+   * register on touched.
+   *
+   */
+
   registerOnTouched(_): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param argumentsObj arguments obj (CalculatedFieldEventArguments)
+   */
 
   writeValue(argumentsObj: CalculatedFieldEventArguments): void {
     this.argumentsFormArray.clear();
@@ -102,9 +116,21 @@ export class CalculatedFieldTestArgumentsComponent extends PageComponent impleme
     });
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.argumentsFormArray.valid ? null : { arguments: { valid: false } };
   }
+
+  /**
+   * open edit jsondialog.
+   *
+   * @param group group (FormGroup)
+   */
 
   openEditJSONDialog(group: FormGroup): void {
     this.dialog.open<JsonObjectEditDialogComponent, JsonObjectEditDialogData, CalculatedFieldArgumentEventValue>(JsonObjectEditDialogComponent, {
@@ -125,6 +151,12 @@ export class CalculatedFieldTestArgumentsComponent extends PageComponent impleme
         : group.patchValue({ ts: (result as CalculatedFieldSingleArgumentValue).ts, value: (result as CalculatedFieldSingleArgumentValue).value }) );
   }
 
+  /**
+   * get simple argument form group.
+   *
+   * @returns FormGroup observable or value
+   */
+
   private getSimpleArgumentFormGroup({ argumentName, ts, value }: CalculatedFieldSingleArgumentValue): FormGroup {
     return this.fb.group({
       argumentName: [{ value: argumentName, disabled: true}],
@@ -133,12 +165,24 @@ export class CalculatedFieldTestArgumentsComponent extends PageComponent impleme
     }) as FormGroup;
   }
 
+  /**
+   * get rolling argument form group.
+   *
+   * @returns FormGroup observable or value
+   */
+
   private getRollingArgumentFormGroup({ argumentName, timeWindow, values }: CalculatedFieldRollingTelemetryArgumentValue): FormGroup {
     return this.fb.group({
       argumentName: [{ value: argumentName, disabled: true }],
       rollingJson: [{ values: values ?? [], timeWindow: timeWindow ?? {} }]
     }) as FormGroup;
   }
+
+  /**
+   * get value.
+   *
+   * @returns CalculatedFieldEventArguments observable or value
+   */
 
   private getValue(): CalculatedFieldEventArguments {
     return this.argumentsFormArray.getRawValue().reduce((acc, rowItem) => {

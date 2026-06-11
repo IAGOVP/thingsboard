@@ -39,15 +39,18 @@ import { WidgetComponent } from '@home/components/widget/widget.component';
 import { ImagePipe } from '@shared/pipe/image.pipe';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
+/**
+ * Angular component: map widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-widget`.
+ */
 @Component({
     selector: 'tb-map-widget',
     templateUrl: './map-widget.component.html',
     styleUrls: ['./map-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map widget UI.
- */
+standalone: false
 })
 export class MapWidgetComponent implements OnInit, OnDestroy {
 
@@ -74,6 +77,11 @@ export class MapWidgetComponent implements OnInit, OnDestroy {
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.mapWidget = this;
     this.settings = {...mapWidgetDefaultSettings, ...this.ctx.settings};
@@ -83,11 +91,21 @@ export class MapWidgetComponent implements OnInit, OnDestroy {
     this.padding = this.settings.background.overlay.enabled ? undefined : this.settings.padding;
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.map) {
       this.map.destroy();
     }
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');

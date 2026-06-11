@@ -18,11 +18,11 @@ import { BaseData, ExportableEntity } from '@shared/models/base-data';
 import { HasTenantId } from '@shared/models/entity.models';
 import { AiModelId } from '@shared/models/id/ai-model-id';
 
+
 /**
-
- * TypeScript models and enums for ai model.
-
+ * TypeScript interfaces, types, and enums for ai model (shared TypeScript models).
  */
+
 
 export interface AiModel extends Omit<BaseData<AiModelId>, 'label'>, HasTenantId, ExportableEntity<AiModelId> {
   modelType: ModelType;

@@ -64,8 +64,11 @@ import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: latest chart basic config UI.
+ * Angular component: latest chart basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidgetSettings> extends BasicWidgetConfigComponent {
 
   public get datasource(): Datasource {
@@ -81,6 +84,12 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
     const datasources = this.latestChartWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.latestChartWidgetConfigForm.get('datasources').value;
@@ -140,9 +149,21 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.latestChartWidgetConfigForm;
   }
+
+  /**
+   * setup config.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected setupConfig(widgetConfig: WidgetConfigComponentData) {
     const params = widgetConfig.typeParameters as any;
@@ -150,6 +171,12 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
     this.doughnutLayoutImageMap = this.doughnutHorizontal ? horizontalDoughnutLayoutImages : doughnutLayoutImages;
     super.setupConfig(widgetConfig);
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: S = mergeDeep<S>({} as S,
@@ -203,6 +230,13 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
     this.setupLatestChartControls(this.latestChartWidgetConfigForm, settings);
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -255,9 +289,22 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showTitleIcon', 'showLegend', 'showTooltip'].concat(this.latestChartValidatorTriggers());
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.latestChartWidgetConfigForm.get('showTitle').value;
@@ -319,13 +366,40 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
     this.updateLatestChartValidators(this.latestChartWidgetConfigForm, emitEvent, trigger);
   }
 
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetConfigForm latest chart widget config form (UntypedFormGroup)
+   * @param settings settings (S)
+   */
+
   protected setupLatestChartControls(latestChartWidgetConfigForm: UntypedFormGroup, settings: S) {}
 
+  /**
+   * prepare output latest chart config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   protected prepareOutputLatestChartConfig(config: any) {}
+
+  /**
+   * latest chart validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected latestChartValidatorTriggers(): string[] {
     return [];
   }
+
+  /**
+   * update latest chart validators.
+   *
+   * @param latestChartWidgetConfigForm latest chart widget config form (UntypedFormGroup)
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateLatestChartValidators(latestChartWidgetConfigForm: UntypedFormGroup, emitEvent: boolean, trigger?: string) {
   }
@@ -334,6 +408,13 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
 
   public abstract latestChartConfigTemplate(): TemplateRef<any>;
 
+  /**
+   * get series.
+   *
+   * @param datasources datasources (Datasource[])
+   * @returns DataKey[] observable or value
+   */
+
   private getSeries(datasources?: Datasource[]): DataKey[] {
     if (datasources && datasources.length) {
       return datasources[0].dataKeys || [];
@@ -341,11 +422,25 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
     return [];
   }
 
+  /**
+   * set series.
+   *
+   * @param series series (DataKey[])
+   * @param datasources datasources (Datasource[])
+   */
+
   private setSeries(series: DataKey[], datasources?: Datasource[]) {
     if (datasources && datasources.length) {
       datasources[0].dataKeys = series;
     }
   }
+
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
 
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
@@ -354,6 +449,13 @@ export abstract class LatestChartBasicConfigComponent<S extends LatestChartWidge
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

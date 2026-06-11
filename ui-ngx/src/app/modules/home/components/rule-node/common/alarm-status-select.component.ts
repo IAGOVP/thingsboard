@@ -19,6 +19,13 @@ import { AlarmStatus, alarmStatusTranslations, PageComponent } from '@shared/pub
 import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+
+/**
+ * Angular component: alarm status select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-status-select`.
+ */
 @Component({
     selector: 'tb-alarm-status-select',
     templateUrl: './alarm-status-select.component.html',
@@ -28,13 +35,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => AlarmStatusSelectComponent),
             multi: true
         }],
-    standalone: false
 
-/**
-
- * Angular component: alarm status select UI.
-
- */
+standalone: false
 })
 
 export class AlarmStatusSelectComponent extends PageComponent implements OnInit, ControlValueAccessor {
@@ -51,6 +53,11 @@ export class AlarmStatusSelectComponent extends PageComponent implements OnInit,
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.alarmStatusGroup = this.fb.group({
       alarmStatus: [null, []]
@@ -63,6 +70,12 @@ export class AlarmStatusSelectComponent extends PageComponent implements OnInit,
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
       this.alarmStatusGroup.disable({emitEvent: false});
@@ -71,12 +84,30 @@ export class AlarmStatusSelectComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<AlarmStatus>)
+   */
 
   writeValue(value: Array<AlarmStatus>): void {
     this.alarmStatusGroup.get('alarmStatus').patchValue(value, {emitEvent: false});

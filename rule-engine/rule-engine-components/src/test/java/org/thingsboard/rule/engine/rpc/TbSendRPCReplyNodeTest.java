@@ -55,8 +55,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb send rpcreply node rule node.
+ * Unit test for tb send rpcreply node (device RPC request/reply nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbSendRPCReplyNodeTest {
@@ -83,6 +84,11 @@ public class TbSendRPCReplyNodeTest {
 
     @Mock
     private ListeningExecutor listeningExecutor;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
@@ -90,6 +96,11 @@ public class TbSendRPCReplyNodeTest {
         config = new TbSendRpcReplyNodeConfiguration().defaultConfiguration();
         node.init(ctx, new TbNodeConfiguration(JacksonUtil.valueToTree(config)));
     }
+    /**
+     * Send reply to transport.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void sendReplyToTransport() {
@@ -108,6 +119,11 @@ public class TbSendRPCReplyNodeTest {
         verify(rpcService).sendRpcReplyToDevice(DUMMY_SERVICE_ID, DUMMY_SESSION_ID, DUMMY_REQUEST_ID, DUMMY_DATA);
         verify(edgeEventService, never()).saveAsync(any());
     }
+    /**
+     * Send reply to edge queue.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void sendReplyToEdgeQueue() {
@@ -132,6 +148,12 @@ public class TbSendRPCReplyNodeTest {
         verify(edgeEventService).saveAsync(any());
         verify(rpcService, never()).sendRpcReplyToDevice(DUMMY_SERVICE_ID, DUMMY_SESSION_ID, DUMMY_REQUEST_ID, DUMMY_DATA);
     }
+    /**
+     * Test originator entity types.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @EnumSource(EntityType.class)
@@ -152,6 +174,13 @@ public class TbSendRPCReplyNodeTest {
                 .hasMessage(EntityType.DEVICE != entityType ? "Message originator is not a device entity!"
                         : "Request id is not present in the metadata!");
     }
+    /**
+     * Test for availability of metadata and data values.
+     *
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param errorMsg error msg ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -169,6 +198,11 @@ public class TbSendRPCReplyNodeTest {
         verify(ctx).tellFailure(eq(msg), throwableCaptor.capture());
         assertThat(throwableCaptor.getValue()).isInstanceOf(RuntimeException.class).hasMessage(errorMsg);
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {

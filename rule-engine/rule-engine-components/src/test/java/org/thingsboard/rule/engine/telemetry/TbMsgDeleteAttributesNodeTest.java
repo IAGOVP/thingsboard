@@ -52,8 +52,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 /**
- * Unit test for tb msg delete attributes node rule node.
+ * Unit test for tb msg delete attributes node (telemetry and attribute persistence nodes).
  */
+
 
 @Slf4j
 public class TbMsgDeleteAttributesNodeTest {

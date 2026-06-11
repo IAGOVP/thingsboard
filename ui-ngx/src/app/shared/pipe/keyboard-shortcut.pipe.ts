@@ -18,16 +18,27 @@ import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { WINDOW } from '@core/services/window.service';
 
 // @dynamic
-@Pipe({
-    name: 'keyboardShortcut',
-    standalone: false
+
 /**
  * Angular pipe: keyboard shortcut.
  */
+@Pipe({
+    name: 'keyboardShortcut',
+/**
+ * Angular pipe: keyboard shortcut (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class KeyboardShortcutPipe implements PipeTransform {
 
   constructor(@Inject(WINDOW) private window: Window) {}
+
+  /**
+   * transform.
+   *
+   * @param value value (string)
+   * @returns string observable or value
+   */
 
   transform(value: string): string {
     if (!value) {

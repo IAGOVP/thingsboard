@@ -27,23 +27,42 @@ import static org.thingsboard.server.msa.connectivity.lwm2m.client.Lwm2mTestHelp
 import static org.thingsboard.server.msa.ui.utils.Const.TENANT_EMAIL;
 import static org.thingsboard.server.msa.ui.utils.Const.TENANT_PASSWORD;
 /**
- * Lwm2m client no sec test.
+ * Black-box test: lwm2m client no sec (black-box test infrastructure — LwM2M transport tests).
  */
+
 
 @DisableUIListeners
 public class Lwm2mClientNoSecTest extends AbstractLwm2mClientTest {
     private Lwm2mDevicesForTest lwm2mDevicesForTest;
+    /**
+     * Set up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void setUp() throws Exception {
         testRestClient.login(TENANT_EMAIL, TENANT_PASSWORD);
         this.lwm2mDevicesForTest = new Lwm2mDevicesForTest(initTest("lwm2m-NoSec-profile" + "-" +  RandomStringUtils.randomAlphanumeric(7)));
     }
+    /**
+     * Tear down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void tearDown() {
         destroyAfter(this.lwm2mDevicesForTest);
     }
+    /**
+     * Connect lwm2m client no sec with lwm2m server.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void connectLwm2mClientNoSecWithLwm2mServer() throws Exception {

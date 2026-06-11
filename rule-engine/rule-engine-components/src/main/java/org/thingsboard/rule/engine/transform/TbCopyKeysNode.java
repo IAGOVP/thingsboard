@@ -38,7 +38,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 /**
- * Rule engine transformation node 'copy key-value pairs': Copies key-value pairs from message to message metadata or vice-versa. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Transformation rule node — <b>copy key-value pairs</b>.
+ *
+ * <p>Copies key-value pairs from message to message metadata or vice-versa.
+ * <br>Copies key-value pairs from the message to message metadata, or vice-versa, according to the configured direction and keys. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbCopyKeysNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/copy-key-value-pairs/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/copy-key-value-pairs/</a>
  */
 @RuleNode(
         type = ComponentType.TRANSFORMATION,
@@ -57,6 +63,13 @@ public class TbCopyKeysNode extends TbAbstractTransformNodeWithTbMsgSource {
 
     private TbMsgSource copyFrom;
     private List<Pattern> compiledKeyPatterns;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -67,6 +80,15 @@ public class TbCopyKeysNode extends TbAbstractTransformNodeWithTbMsgSource {
         }
         compiledKeyPatterns = config.getKeys().stream().map(Pattern::compile).collect(Collectors.toList());
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
@@ -112,11 +134,23 @@ public class TbCopyKeysNode extends TbAbstractTransformNodeWithTbMsgSource {
                 .data(msgData)
                 .build() : msg);
     }
+    /**
+     * Returns new key for upgrade from version zero.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getNewKeyForUpgradeFromVersionZero() {
         return "copyFrom";
     }
+    /**
+     * Returns key to upgrade from version one.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getKeyToUpgradeFromVersionOne() {

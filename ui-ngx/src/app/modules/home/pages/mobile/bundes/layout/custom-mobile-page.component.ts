@@ -36,6 +36,12 @@ import { Authority } from '@shared/models/authority.enum';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: custom mobile page (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-page-item`.
+ */
 @Component({
     selector: 'tb-mobile-page-item',
     templateUrl: './custom-mobile-page.component.html',
@@ -52,10 +58,7 @@ import { AppState } from '@core/core.state';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: custom mobile page UI.
- */
+standalone: false
 })
 export class CustomMobilePageComponent implements ControlValueAccessor, Validator {
 
@@ -109,12 +112,30 @@ export class CustomMobilePageComponent implements ControlValueAccessor, Validato
     ).subscribe((value) => this.propagateChange(value))
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -126,6 +147,12 @@ export class CustomMobilePageComponent implements ControlValueAccessor, Validato
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     if (!this.customMobilePageForm.valid) {
       return {
@@ -134,6 +161,12 @@ export class CustomMobilePageComponent implements ControlValueAccessor, Validato
     }
     return null;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (CustomMobilePage)
+   */
 
   writeValue(value: CustomMobilePage) {
     this.customMobilePageForm.patchValue(value, {emitEvent: false});

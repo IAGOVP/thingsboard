@@ -35,6 +35,9 @@ import { WidgetConfigComponentsModule } from '@home/components/widget/config/wid
 /**
  * Angular NgModule: widget library feature area.
  */
+/**
+ * Angular NgModule bundling widget library (home/widget pages).
+ */
 @NgModule({
   declarations: [
     WidgetTypeComponent,
@@ -54,5 +57,5 @@ import { WidgetConfigComponentsModule } from '@home/components/widget/config/wid
     HomeComponentsModule,
     WidgetConfigComponentsModule,
     WidgetLibraryRoutingModule
-  ]})
+]})
 export class WidgetLibraryModule { }

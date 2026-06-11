@@ -16,14 +16,26 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-    name: 'nospace',
-    standalone: false
+
 /**
  * Angular pipe: nospace.
  */
+@Pipe({
+    name: 'nospace',
+/**
+ * Angular pipe: nospace (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class NospacePipe implements PipeTransform {
+
+  /**
+   * transform.
+   *
+   * @param value value (string)
+   * @param args args (any)
+   * @returns string observable or value
+   */
 
   transform(value: string, args?: any): string {
     return (!value) ? '' : value.replace(/ /g, '');

@@ -19,14 +19,17 @@ import { isDefinedAndNotNull } from '@core/public-api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 
+
+/**
+ * Angular component: check alarm status (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-node-check-alarm-status-config`.
+ */
 @Component({
     selector: 'tb-filter-node-check-alarm-status-config',
     templateUrl: './check-alarm-status.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: check alarm status UI.
- */
+standalone: false
 })
 export class CheckAlarmStatusComponent extends RuleNodeConfigurationComponent {
   alarmStatusConfigForm: FormGroup;
@@ -37,15 +40,34 @@ export class CheckAlarmStatusComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.alarmStatusConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
       alarmStatusList: isDefinedAndNotNull(configuration?.alarmStatusList) ? configuration.alarmStatusList : null
     };
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.alarmStatusConfigForm = this.fb.group({

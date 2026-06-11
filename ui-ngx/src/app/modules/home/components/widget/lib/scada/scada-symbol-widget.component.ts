@@ -43,15 +43,18 @@ import { catchError, share } from 'rxjs/operators';
 import { MatIconRegistry } from '@angular/material/icon';
 import { RafService } from '@core/services/raf.service';
 
+
+/**
+ * Angular component: scada symbol widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-widget`.
+ */
 @Component({
     selector: 'tb-scada-symbol-widget',
     templateUrl: './scada-symbol-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './scada-symbol-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol widget UI.
- */
+standalone: false
 })
 export class ScadaSymbolWidgetComponent implements OnInit, AfterViewInit, OnDestroy, ScadaSymbolObjectCallbacks {
 
@@ -86,6 +89,11 @@ export class ScadaSymbolWidgetComponent implements OnInit, AfterViewInit, OnDest
               protected cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.actionWidget = this;
     this.settings = mergeDeep({} as ScadaSymbolWidgetSettings, scadaSymbolWidgetDefaultSettings, this.ctx.settings || {});
@@ -104,11 +112,21 @@ export class ScadaSymbolWidgetComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     this.scadaSymbolContent$.subscribe((content) => {
       this.initObject(this.scadaSymbolShape.nativeElement, content);
     });
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     if (this.scadaSymbolObject) {
@@ -118,24 +136,54 @@ export class ScadaSymbolWidgetComponent implements OnInit, AfterViewInit, OnDest
     this.loadingSubject.unsubscribe();
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
 
+  /**
+   * Event handler for scada symbol object loading state.
+   *
+   * @param loading loading (boolean)
+   */
+
   onScadaSymbolObjectLoadingState(loading: boolean) {
     this.loadingSubject.next(loading);
     this.cd.detectChanges();
   }
 
+  /**
+   * Event handler for scada symbol object error.
+   *
+   * @param error error (string)
+   */
+
   onScadaSymbolObjectError(error: string) {
     this.ctx.showErrorToast(error, 'bottom', 'center', this.ctx.toastTargetId, true);
   }
 
+  /**
+   * Event handler for scada symbol object message.
+   *
+   * @param message message (string)
+   */
+
   onScadaSymbolObjectMessage(message: string) {
     this.ctx.showSuccessToast(message, 3000, 'bottom', 'center', this.ctx.toastTargetId, true);
   }
+
+  /**
+   * init object.
+   *
+   * @param rootElement root element (HTMLElement)
+   * @param content content (string)
+   */
 
   private initObject(rootElement: HTMLElement,
                      content: string) {

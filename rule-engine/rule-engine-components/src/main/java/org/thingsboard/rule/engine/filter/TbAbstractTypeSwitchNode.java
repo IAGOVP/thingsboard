@@ -25,23 +25,46 @@ import org.thingsboard.rule.engine.api.util.TbNodeUtils;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.msg.TbMsg;
 /**
- * Base implementation for type switch node rule nodes.
+ * Abstract base class for type switch node rule nodes (message filtering and branching rule nodes).
  */
+
 
 @Slf4j
 public abstract class TbAbstractTypeSwitchNode implements TbNode {
 
     private EmptyNodeConfiguration config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, EmptyNodeConfiguration.class);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
         ctx.tellNext(msg, getRelationType(ctx, msg.getOriginator()));
     }
+    /**
+     * Returns relation type.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originator message originator entity id
+     * @return {@link String}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract String getRelationType(TbContext ctx, EntityId originator) throws TbNodeException;
 

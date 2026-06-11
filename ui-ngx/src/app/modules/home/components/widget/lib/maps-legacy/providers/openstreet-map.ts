@@ -19,11 +19,11 @@ import LeafletMap from '../leaflet-map';
 import { DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings } from '../map-models';
 import { WidgetContext } from '@home/models/widget-component.models';
 
+
 /**
-
- * open street map.
-
+ * Open street map (ThingsBoard web UI).
  */
+
 
 export class OpenStreetMap extends LeafletMap {
     constructor(ctx: WidgetContext, $container: HTMLElement, options: WidgetUnitedMapSettings) {

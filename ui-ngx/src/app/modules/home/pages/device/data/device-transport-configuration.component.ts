@@ -32,6 +32,12 @@ import { DeviceTransportConfiguration, DeviceTransportType } from '@shared/model
 import { deepClone } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: device transport configuration (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-transport-configuration`.
+ */
 @Component({
     selector: 'tb-device-transport-configuration',
     templateUrl: './device-transport-configuration.component.html',
@@ -48,10 +54,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: device transport configuration UI.
- */
+standalone: false
 })
 export class DeviceTransportConfigurationComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -80,12 +83,29 @@ export class DeviceTransportConfigurationComponent implements ControlValueAccess
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.deviceTransportConfigurationFormGroup = this.fb.group({
@@ -98,6 +118,12 @@ export class DeviceTransportConfigurationComponent implements ControlValueAccess
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -106,6 +132,12 @@ export class DeviceTransportConfigurationComponent implements ControlValueAccess
       this.deviceTransportConfigurationFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DeviceTransportConfiguration | null)
+   */
 
   writeValue(value: DeviceTransportConfiguration | null): void {
     this.transportType = value?.type;
@@ -116,11 +148,22 @@ export class DeviceTransportConfigurationComponent implements ControlValueAccess
     this.deviceTransportConfigurationFormGroup.patchValue({configuration}, {emitEvent: false});
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.deviceTransportConfigurationFormGroup.valid ? null : {
       deviceTransportConfiguration: false
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: DeviceTransportConfiguration = null;

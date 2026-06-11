@@ -17,8 +17,9 @@ package org.thingsboard.mqtt;
 
 import io.netty.handler.codec.mqtt.MqttQoS;
 /**
- * Last will message published by broker if client disconnects unexpectedly.
+ * Last will and testament published by broker if client disconnects unexpectedly.
  */
+
 
 @SuppressWarnings({"WeakerAccess", "unused", "SimplifiableIfStatement", "StringBufferReplaceableByString"})
 public final class MqttLastWill {
@@ -59,10 +60,36 @@ public final class MqttLastWill {
     public MqttQoS getQos() {
         return qos;
     }
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Builder.
+     *
+     * @return the MqttLastWill.Builder value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
+
+
+
+
+
 
     public static MqttLastWill.Builder builder(){
         return new MqttLastWill.Builder();
     }
+
+    /**
+
+     * Builder (netty-mqtt client library).
+
+     */
 
     public static final class Builder {
 

@@ -431,11 +431,14 @@ const routes: Routes = [
 /**
  * Angular NgModule: edge routing feature area.
  */
+/**
+ * Angular NgModule bundling edge routing (home/edge pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     EdgesTableConfigResolver
-  ]})
+]})
 export class EdgeRoutingModule {
 }

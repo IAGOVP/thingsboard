@@ -22,13 +22,22 @@ import org.thingsboard.server.common.data.EntityType;
 import java.util.Arrays;
 import java.util.List;
 /**
- * JSON configuration for TbOriginatorTypeFilter rule node.
+ * JSON configuration POJO for {@link TbOriginatorTypeFilter} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbOriginatorTypeFilterNodeConfiguration implements NodeConfiguration<TbOriginatorTypeFilterNodeConfiguration> {
 
     private List<EntityType> originatorTypes;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbOriginatorTypeFilterNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbOriginatorTypeFilterNodeConfiguration defaultConfiguration() {

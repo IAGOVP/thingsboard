@@ -30,16 +30,24 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultCustomerPrototype;
 
+
 /**
 
- * Delete several customer test.
+ * Black-box test: delete several customer (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class DeleteSeveralCustomerTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewElements sideBarMenuView;
     private CustomerPageHelper customerPage;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -47,6 +55,12 @@ public class DeleteSeveralCustomerTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewElements(driver);
         customerPage = new CustomerPageHelper(driver);
     }
+    /**
+     * Can delete several customers by top btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Delete several customer")
@@ -71,6 +85,12 @@ public class DeleteSeveralCustomerTest extends AbstractDriverBaseTest {
     @Test(priority = 10, groups = "smoke")
     @Description("Remove several customers by mark all the Customers on the page by clicking in the topmost checkbox " +
             "and then clicking on the trash icon in the menu that appears")
+    /**
+     * Select all customers.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void selectAllCustomers() {
         sideBarMenuView.customerBtn().click();
         customerPage.selectAllCheckBox().click();
@@ -86,6 +106,12 @@ public class DeleteSeveralCustomerTest extends AbstractDriverBaseTest {
     @Test(priority = 30, groups = "smoke")
     @Description("Remove several customers by mark in the checkbox and then click on the trash can icon in the menu " +
             "that appears at the top without refresh")
+    /**
+     * Deletes several customers by top btn without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void deleteSeveralCustomersByTopBtnWithoutRefresh() {
         String title1 = ENTITY_NAME + random() + "1";
         String title2 = ENTITY_NAME + random() + "2";

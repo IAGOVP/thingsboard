@@ -22,11 +22,11 @@ import { User } from '@shared/models/user.model';
 
 export declare type HasId = EntityId | HasUUID;
 
+
 /**
-
- * TypeScript models and enums for base data.
-
+ * TypeScript interfaces, types, and enums for base data (shared TypeScript models).
  */
+
 
 export interface BaseData<T extends HasId> {
   createdTime?: number;

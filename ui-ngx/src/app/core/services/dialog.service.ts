@@ -43,7 +43,9 @@ import {
 } from '@shared/components/dialog/entity-limit-exceeded-dialog.component';
 
 /**
- * Angular HTTP service: dialog REST wrappers (`@core/http`).
+ * Angular injectable service: dialog (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -56,6 +58,17 @@ export class DialogService {
     public dialog: MatDialog
   ) {
   }
+
+  /**
+   * confirm.
+   *
+   * @param title title (string)
+   * @param message message (string)
+   * @param cancel cancel (string)
+   * @param ok ok (string)
+   * @param fullscreen fullscreen (boolean)
+   * @returns Observable<boolean> observable or value
+   */
 
   confirm(title: string, message: string, cancel: string = null, ok: string = null, fullscreen: boolean = false): Observable<boolean> {
     const dialogConfig: MatDialogConfig<ConfirmDialogData> = {
@@ -74,6 +87,16 @@ export class DialogService {
     return dialogRef.afterClosed();
   }
 
+  /**
+   * alert.
+   *
+   * @param title title (string)
+   * @param message message (string)
+   * @param ok ok (string)
+   * @param fullscreen fullscreen (boolean)
+   * @returns Observable<boolean> observable or value
+   */
+
   alert(title: string, message: string, ok: string = null, fullscreen: boolean = false): Observable<boolean> {
     const dialogConfig: MatDialogConfig<AlertDialogData> = {
       disableClose: true,
@@ -89,6 +112,17 @@ export class DialogService {
     const dialogRef = this.dialog.open<AlertDialogComponent, AlertDialogData, boolean>(AlertDialogComponent, dialogConfig);
     return dialogRef.afterClosed();
   }
+
+  /**
+   * error alert.
+   *
+   * @param title title (string)
+   * @param message message (string)
+   * @param error error (any)
+   * @param ok ok (string)
+   * @param fullscreen fullscreen (boolean)
+   * @returns Observable<boolean> observable or value
+   */
 
   errorAlert(title: string, message: string, error: any, ok: string = null, fullscreen: boolean = false): Observable<boolean> {
     const dialogConfig: MatDialogConfig<ErrorAlertDialogData> = {
@@ -107,6 +141,13 @@ export class DialogService {
     return dialogRef.afterClosed();
   }
 
+  /**
+   * color picker.
+   *
+   * @param color color (string)
+   * @returns Observable<ColorPickerDialogResult> observable or value
+   */
+
   colorPicker(color: string, colorClearButton = false): Observable<ColorPickerDialogResult> {
     return this.dialog.open<ColorPickerDialogComponent, ColorPickerDialogData, ColorPickerDialogResult>(ColorPickerDialogComponent,
       {
@@ -119,6 +160,13 @@ export class DialogService {
         autoFocus: false
     }).afterClosed();
   }
+
+  /**
+   * material icon picker.
+   *
+   * @param icon icon (string)
+   * @returns Observable<MaterialIconsDialogResult> observable or value
+   */
 
   materialIconPicker(icon: string, iconClearButton = false): Observable<MaterialIconsDialogResult> {
     return this.dialog.open<MaterialIconsDialogComponent, MaterialIconsDialogData, MaterialIconsDialogResult>(MaterialIconsDialogComponent,
@@ -133,6 +181,14 @@ export class DialogService {
       }).afterClosed();
   }
 
+  /**
+   * entities limit exceeded.
+   *
+   * @param entityLimitData entity limit data ({entityType: EntityType)
+   * @param limit limit (number})
+   * @returns Observable<any> observable or value
+   */
+
   entitiesLimitExceeded(entityLimitData: {entityType: EntityType, limit: number}): Observable<any> {
     return this.dialog.open<EntityLimitExceededDialogComponent, EntityLimitExceededDialogData>(EntityLimitExceededDialogComponent,
       {
@@ -143,6 +199,11 @@ export class DialogService {
       }).afterClosed();
   }
 
+  /**
+   * permission denied.
+   *
+   */
+
   private permissionDenied() {
     this.alert(
       this.translate.instant('access.permission-denied'),
@@ -150,6 +211,12 @@ export class DialogService {
       this.translate.instant('action.close')
     );
   }
+
+  /**
+   * forbidden.
+   *
+   * @returns Observable<boolean> observable or value
+   */
 
   forbidden(): Observable<boolean> {
     const observable = this.confirm(
@@ -166,6 +233,12 @@ export class DialogService {
     });
     return observable;
   }
+
+  /**
+   * todo.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   todo(): Observable<any> {
     const dialogConfig: MatDialogConfig = {

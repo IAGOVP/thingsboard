@@ -43,11 +43,11 @@ import {
 } from '@shared/models/query/query.models';
 import { TranslateService } from '@ngx-translate/core';
 
+
 /**
-
- * alias controller.
-
+ * Alias controller (ThingsBoard web UI).
  */
+
 
 export class AliasController implements IAliasController {
 
@@ -84,6 +84,12 @@ export class AliasController implements IAliasController {
     this.userFilters = deepClone(this.origUserFilters) || {};
   }
 
+  /**
+   * update entity aliases.
+   *
+   * @param newEntityAliases new entity aliases (EntityAliases)
+   */
+
   updateEntityAliases(newEntityAliases: EntityAliases) {
     const changedAliasIds: Array<string> = [];
     for (const aliasId of Object.keys(newEntityAliases)) {
@@ -105,6 +111,12 @@ export class AliasController implements IAliasController {
       this.entityAliasesChangedSubject.next(changedAliasIds);
     }
   }
+
+  /**
+   * update filters.
+   *
+   * @param newFilters new filters (Filters)
+   */
 
   updateFilters(newFilters: Filters) {
     const changedFilterIds: Array<string> = [];
@@ -129,6 +141,12 @@ export class AliasController implements IAliasController {
     }
   }
 
+  /**
+   * update aliases.
+   *
+   * @param aliasIds alias ids (Array<string>)
+   */
+
   updateAliases(aliasIds?: Array<string>) {
     if (!aliasIds) {
       aliasIds = [];
@@ -146,6 +164,11 @@ export class AliasController implements IAliasController {
     });
   }
 
+  /**
+   * dashboard state changed.
+   *
+   */
+
   dashboardStateChanged() {
     const changedAliasIds: Array<string> = [];
     for (const aliasId of Object.keys(this.resolvedAliasesToStateEntities)) {
@@ -162,23 +185,54 @@ export class AliasController implements IAliasController {
     }
   }
 
+  /**
+   * set alias unresolved.
+   *
+   * @param aliasId alias id (string)
+   */
+
   setAliasUnresolved(aliasId: string) {
     delete this.resolvedAliases[aliasId];
     delete this.resolvedAliasesObservable[aliasId];
     delete this.resolvedAliasesToStateEntities[aliasId];
   }
 
+  /**
+   * get entity aliases.
+   *
+   * @returns EntityAliases observable or value
+   */
+
   getEntityAliases(): EntityAliases {
     return this.entityAliases;
   }
+
+  /**
+   * get filters.
+   *
+   * @returns Filters observable or value
+   */
 
   getFilters(): Filters {
     return this.filters;
   }
 
+  /**
+   * get user filters.
+   *
+   * @returns Filters observable or value
+   */
+
   getUserFilters(): Filters {
     return this.userFilters;
   }
+
+  /**
+   * get filter info.
+   *
+   * @param filterId filter id (string)
+   * @returns FilterInfo observable or value
+   */
 
   getFilterInfo(filterId: string): FilterInfo {
     if (this.userFilters[filterId]) {
@@ -187,6 +241,13 @@ export class AliasController implements IAliasController {
       return this.filters[filterId];
     }
   }
+
+  /**
+   * get key filters.
+   *
+   * @param filterId filter id (string)
+   * @returns Array<KeyFilter> observable or value
+   */
 
   getKeyFilters(filterId: string): Array<KeyFilter> {
     const filter = this.getFilterInfo(filterId);
@@ -197,6 +258,13 @@ export class AliasController implements IAliasController {
     }
   }
 
+  /**
+   * get entity alias id.
+   *
+   * @param aliasName alias name (string)
+   * @returns string observable or value
+   */
+
   getEntityAliasId(aliasName: string): string {
     for (const aliasId of Object.keys(this.entityAliases)) {
       const alias = this.entityAliases[aliasId];
@@ -206,6 +274,13 @@ export class AliasController implements IAliasController {
     }
     return null;
   }
+
+  /**
+   * get alias info.
+   *
+   * @param aliasId alias id (string)
+   * @returns Observable<AliasInfo> observable or value
+   */
 
   getAliasInfo(aliasId: string): Observable<AliasInfo> {
     let aliasInfo = this.resolvedAliases[aliasId];
@@ -252,6 +327,13 @@ export class AliasController implements IAliasController {
     }
   }
 
+  /**
+   * resolve single entity info.
+   *
+   * @param aliasId alias id (string)
+   * @returns Observable<EntityInfo> observable or value
+   */
+
   resolveSingleEntityInfo(aliasId: string): Observable<EntityInfo> {
     return this.getAliasInfo(aliasId).pipe(
       mergeMap((aliasInfo) => {
@@ -268,6 +350,13 @@ export class AliasController implements IAliasController {
       })
     );
   }
+
+  /**
+   * resolve single entity info for device id.
+   *
+   * @param deviceId device UUID
+   * @returns Observable<EntityInfo> observable or value
+   */
 
   resolveSingleEntityInfoForDeviceId(deviceId: string): Observable<EntityInfo> {
     let entityInfo = this.resolvedDevices[deviceId];
@@ -301,6 +390,13 @@ export class AliasController implements IAliasController {
     }
   }
 
+  /**
+   * resolve single entity info for target device.
+   *
+   * @param targetDevice target device (TargetDevice)
+   * @returns Observable<EntityInfo> observable or value
+   */
+
   resolveSingleEntityInfoForTargetDevice(targetDevice: TargetDevice): Observable<EntityInfo> {
     if (targetDeviceValid(targetDevice)) {
       if (targetDevice.type === TargetDeviceType.entity) {
@@ -312,6 +408,13 @@ export class AliasController implements IAliasController {
       return of(null);
     }
   }
+
+  /**
+   * resolve datasource.
+   *
+   * @param datasource datasource (Datasource)
+   * @returns Observable<Datasource> observable or value
+   */
 
   private resolveDatasource(datasource: Datasource, forceFilter = false): Observable<Datasource> {
     const newDatasource = deepClone(datasource);
@@ -405,6 +508,13 @@ export class AliasController implements IAliasController {
     }
   }
 
+  /**
+   * resolve alarm source.
+   *
+   * @param alarmSource alarm source (Datasource)
+   * @returns Observable<Datasource> observable or value
+   */
+
   resolveAlarmSource(alarmSource: Datasource): Observable<Datasource> {
     return this.resolveDatasource(alarmSource).pipe(
       map((datasource) => {
@@ -423,6 +533,14 @@ export class AliasController implements IAliasController {
       })
     );
   }
+
+  /**
+   * resolve datasources.
+   *
+   * @param datasources datasources (Array<Datasource>)
+   * @param singleEntity single entity (boolean)
+   * @returns Observable<Array<Datasource>> observable or value
+   */
 
   resolveDatasources(datasources: Array<Datasource>, singleEntity?: boolean, pageSize = 1024): Observable<Array<Datasource>> {
     if (!datasources || !datasources.length) {
@@ -480,9 +598,23 @@ export class AliasController implements IAliasController {
     );
   }
 
+  /**
+   * get instant alias info.
+   *
+   * @param aliasId alias id (string)
+   * @returns AliasInfo observable or value
+   */
+
   getInstantAliasInfo(aliasId: string): AliasInfo {
     return this.resolvedAliases[aliasId];
   }
+
+  /**
+   * update current alias entity.
+   *
+   * @param aliasId alias id (string)
+   * @param currentEntity current entity (EntityInfo)
+   */
 
   updateCurrentAliasEntity(aliasId: string, currentEntity: EntityInfo) {
     const aliasInfo = this.resolvedAliases[aliasId];
@@ -494,6 +626,12 @@ export class AliasController implements IAliasController {
       }
     }
   }
+
+  /**
+   * update user filter.
+   *
+   * @param filter filter (Filter)
+   */
 
   updateUserFilter(filter: Filter) {
     let prevUserFilter = this.userFilters[filter.id];

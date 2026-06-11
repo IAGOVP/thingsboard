@@ -31,14 +31,17 @@ export interface MobileAppDeleteDialogData {
   id: string;
 }
 
+
+/**
+ * Angular component: remove app dialog (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-remove-app-dialog`.
+ */
 @Component({
     selector: 'tb-remove-app-dialog',
     templateUrl: './remove-app-dialog.component.html',
     styleUrls: ['./remove-app-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: remove app dialog UI.
- */
+standalone: false
 })
 export class RemoveAppDialogComponent extends DialogComponent<RemoveAppDialogComponent, boolean> {
 
@@ -62,9 +65,19 @@ export class RemoveAppDialogComponent extends DialogComponent<RemoveAppDialogCom
     )
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(false);
   }
+
+  /**
+   * suspend.
+   *
+   */
 
   suspend(): void {
     this.mobileAppService.getMobileAppInfoById(this.data.id).pipe(
@@ -76,6 +89,11 @@ export class RemoveAppDialogComponent extends DialogComponent<RemoveAppDialogCom
       this.dialogRef.close(true);
     });
   }
+
+  /**
+   * DELETE — delete.
+   *
+   */
 
   delete(): void {
     this.mobileAppService.deleteMobileApp(this.data.id).subscribe(() => {

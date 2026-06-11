@@ -22,14 +22,17 @@ import { UserPasswordPolicy } from '@shared/models/settings.models';
 import { passwordsMatchValidator, passwordStrengthValidator } from '@shared/models/password.models';
 import { finalize } from 'rxjs/operators';
 
+
+/**
+ * Angular component: reset password (login pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-reset-password`.
+ */
 @Component({
     selector: 'tb-reset-password',
     templateUrl: './reset-password.component.html',
     styleUrls: ['./password.component.scss'],
-    standalone: false
-/**
- * Angular component: reset password UI.
- */
+standalone: false
 })
 export class ResetPasswordComponent {
 
@@ -53,6 +56,11 @@ export class ResetPasswordComponent {
     this.buildResetPasswordForm();
   }
 
+  /**
+   * build reset password form.
+   *
+   */
+
   private buildResetPasswordForm() {
     this.resetPassword = this.fb.group({
       newPassword: ['', [Validators.required, passwordStrengthValidator(this.passwordPolicy)]],
@@ -63,6 +71,11 @@ export class ResetPasswordComponent {
       ]
     });
   }
+
+  /**
+   * Event handler for reset password.
+   *
+   */
 
   onResetPassword() {
     if (this.resetPassword.invalid) {

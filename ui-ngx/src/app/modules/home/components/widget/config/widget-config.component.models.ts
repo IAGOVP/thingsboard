@@ -50,8 +50,11 @@ export interface IBasicWidgetConfigComponent {
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: basic widget config UI.
+ * Angular component: basic widget config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class BasicWidgetConfigComponent extends PageComponent implements
   IBasicWidgetConfigComponent, OnInit, AfterViewInit {
 
@@ -104,7 +107,17 @@ export abstract class BasicWidgetConfigComponent extends PageComponent implement
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {}
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     if (!this.validateConfig()) {
@@ -113,6 +126,12 @@ export abstract class BasicWidgetConfigComponent extends PageComponent implement
       }, 0);
     }
   }
+
+  /**
+   * setup config.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected setupConfig(widgetConfig: WidgetConfigComponentData) {
     if (this.isAdd) {
@@ -144,6 +163,12 @@ export abstract class BasicWidgetConfigComponent extends PageComponent implement
     });
   }
 
+  /**
+   * setup defaults.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
+
   protected setupDefaults(configData: WidgetConfigComponentData) {
     const params = configData.typeParameters;
     let dataKeys: DataKey[];
@@ -165,33 +190,87 @@ export abstract class BasicWidgetConfigComponent extends PageComponent implement
     }
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return null;
   }
+
+  /**
+   * default latest data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
 
   protected defaultLatestDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return null;
   }
 
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
+
   protected updateValidators(emitEvent: boolean, trigger?: string) {
   }
+
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected validatorTriggers(): string[] {
     return [];
   }
+
+  /**
+   * Event handler for config changed.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected onConfigChanged(widgetConfig: WidgetConfigComponentData) {
     this.widgetConfigValue = widgetConfig;
     this.widgetConfigChangedEmitter.emit(this.widgetConfigValue);
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     return config;
   }
 
+  /**
+   * validate config.
+   *
+   * @returns boolean observable or value
+   */
+
   public validateConfig(): boolean {
     return this.configForm().valid;
   }
+
+  /**
+   * setup default datasource.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @param keys keys (DataKey[])
+   * @param latestKeys latest keys (DataKey[])
+   */
 
   protected setupDefaultDatasource(configData: WidgetConfigComponentData, keys?: DataKey[], latestKeys?: DataKey[]) {
     let datasources = configData.config.datasources;
@@ -229,6 +308,15 @@ export abstract class BasicWidgetConfigComponent extends PageComponent implement
       });
     }
   }
+
+  /**
+   * construct data key.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @param key key (DataKey)
+   * @param isLatestKey is latest key (boolean)
+   * @returns DataKey observable or value
+   */
 
   protected constructDataKey(configData: WidgetConfigComponentData, key: DataKey, isLatestKey: boolean): DataKey {
     const dataKey =

@@ -29,6 +29,9 @@ import { CommonMobileModule } from '@home/pages/mobile/common/common-mobile.modu
 /**
  * Angular NgModule: mobile application feature area.
  */
+/**
+ * Angular NgModule bundling mobile application (home/mobile pages).
+ */
 @NgModule({
   declarations: [
     MobileAppComponent,
@@ -45,5 +48,5 @@ import { CommonMobileModule } from '@home/pages/mobile/common/common-mobile.modu
   ],
   exports: [
     MobileAppDialogComponent,
-  ]})
+]})
 export class MobileApplicationModule { }

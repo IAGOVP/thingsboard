@@ -53,15 +53,18 @@ export interface EntityAliasesDialogData {
   customTitle?: string;
 }
 
+
+/**
+ * Angular component: entity aliases dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-aliases-dialog`.
+ */
 @Component({
     selector: 'tb-entity-aliases-dialog',
     templateUrl: './entity-aliases-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: EntityAliasesDialogComponent }],
     styleUrls: ['./entity-aliases-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: entity aliases dialog UI.
- */
+standalone: false
 })
 export class EntityAliasesDialogComponent extends DialogComponent<EntityAliasesDialogComponent, EntityAliases>
   implements ErrorStateMatcher {
@@ -140,6 +143,13 @@ export class EntityAliasesDialogComponent extends DialogComponent<EntityAliasesD
     });
   }
 
+  /**
+   * POST/PUT entity — add widget title to widgets map.
+   *
+   * @param aliasId alias id (string)
+   * @param widgetTitle widget title (string)
+   */
+
   private addWidgetTitleToWidgetsMap(aliasId: string, widgetTitle: string) {
     let widgetsTitleList: Array<string> = this.aliasToWidgetsMap[aliasId];
     if (!widgetsTitleList) {
@@ -150,6 +160,14 @@ export class EntityAliasesDialogComponent extends DialogComponent<EntityAliasesD
       widgetsTitleList.push(widgetTitle);
     }
   }
+
+  /**
+   * POST/PUT entity — create entity alias form control.
+   *
+   * @param aliasId alias id (string)
+   * @param entityAlias entity alias (EntityAlias)
+   * @returns AbstractControl observable or value
+   */
 
   private createEntityAliasFormControl(aliasId: string, entityAlias: EntityAlias): AbstractControl {
     const aliasFormControl = this.fb.group({
@@ -167,15 +185,44 @@ export class EntityAliasesDialogComponent extends DialogComponent<EntityAliasesD
   }
 
 
+  /**
+
+
+   * entity aliases form array.
+
+
+   *
+
+
+   * @returns UntypedFormArray observable or value
+
+
+   */
+
+
   entityAliasesFormArray(): UntypedFormArray {
     return this.entityAliasesFormGroup.get('entityAliases') as UntypedFormArray;
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * DELETE — remove alias.
+   *
+   * @param index index (number)
+   */
 
   removeAlias(index: number) {
     const entityAlias = (this.entityAliasesFormGroup.get('entityAliases').value as any[])[index];
@@ -195,13 +242,30 @@ export class EntityAliasesDialogComponent extends DialogComponent<EntityAliasesD
     }
   }
 
+  /**
+   * POST/PUT entity — add alias.
+   *
+   */
+
   public addAlias() {
     this.openAliasDialog(-1);
   }
 
+  /**
+   * edit alias.
+   *
+   * @param index index (number)
+   */
+
   public editAlias(index: number) {
     this.openAliasDialog(index);
   }
+
+  /**
+   * open alias dialog.
+   *
+   * @param index index (number)
+   */
 
   private openAliasDialog(index: number) {
     const isAdd = index === -1;
@@ -236,9 +300,19 @@ export class EntityAliasesDialogComponent extends DialogComponent<EntityAliasesD
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

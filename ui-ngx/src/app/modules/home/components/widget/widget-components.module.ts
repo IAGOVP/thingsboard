@@ -101,6 +101,9 @@ import { ApiUsageWidgetComponent } from "@home/components/widget/lib/cards/api-u
 /**
  * Angular NgModule: widget components feature area.
  */
+/**
+ * Angular NgModule bundling widget components (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     DisplayColumnsPanelComponent,
@@ -228,6 +231,6 @@ import { ApiUsageWidgetComponent } from "@home/components/widget/lib/cards/api-u
   ],
   providers: [
     {provide: WIDGET_COMPONENTS_MODULE_TOKEN, useValue: WidgetComponentsModule},
-  ]})
+]})
 export class WidgetComponentsModule {
 }

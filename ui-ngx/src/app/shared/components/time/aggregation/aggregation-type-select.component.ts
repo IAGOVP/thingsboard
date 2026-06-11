@@ -23,6 +23,12 @@ import { aggregationTranslations, AggregationType } from '@shared/models/time/ti
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isEqual } from '@core/utils';
 
+
+/**
+ * Angular component: aggregation type select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aggregation-type-select`.
+ */
 @Component({
     selector: 'tb-aggregation-type-select',
     templateUrl: './aggregation-type-select.component.html',
@@ -32,10 +38,7 @@ import { isEqual } from '@core/utils';
             useExisting: forwardRef(() => AggregationTypeSelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: aggregation type select UI.
- */
+standalone: false
 })
 export class AggregationTypeSelectComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -101,12 +104,29 @@ export class AggregationTypeSelectComponent implements ControlValueAccessor, OnI
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.aggregationTypes = this.allowedAggregationTypes?.length ? this.allowedAggregationTypes : this.allAggregationTypes;
@@ -122,6 +142,12 @@ export class AggregationTypeSelectComponent implements ControlValueAccessor, OnI
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -130,6 +156,12 @@ export class AggregationTypeSelectComponent implements ControlValueAccessor, OnI
       this.aggregationTypeFormGroup.enable();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (AggregationType | null)
+   */
 
   writeValue(value: AggregationType | null): void {
     let aggregationType: AggregationType;
@@ -142,12 +174,25 @@ export class AggregationTypeSelectComponent implements ControlValueAccessor, OnI
     this.aggregationTypeFormGroup.get('aggregationType').patchValue(aggregationType, {emitEvent: false});
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (AggregationType | null)
+   */
+
   updateView(value: AggregationType | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * display aggregation type fn.
+   *
+   * @param aggregationType aggregation type (AggregationType | null)
+   * @returns string | undefined observable or value
+   */
 
   displayAggregationTypeFn(aggregationType?: AggregationType | null): string | undefined {
     if (aggregationType) {

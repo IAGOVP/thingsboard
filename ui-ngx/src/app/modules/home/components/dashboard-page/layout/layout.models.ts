@@ -16,11 +16,11 @@
 
 import { TbContextMenuEvent } from '@shared/models/jquery-event.models';
 
+
 /**
-
- * TypeScript models and enums for ilayout controller.
-
+ * Ilayout controller (ThingsBoard web UI).
  */
+
 
 export interface ILayoutController {
   reload();

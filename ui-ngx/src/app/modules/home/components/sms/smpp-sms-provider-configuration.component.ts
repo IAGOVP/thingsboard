@@ -35,6 +35,13 @@ import { isDefinedAndNotNull } from '@core/utils';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+
+/**
+ * Angular component: smpp sms provider configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-smpp-sms-provider-configuration`.
+ */
 @Component({
     selector: 'tb-smpp-sms-provider-configuration',
     templateUrl: './smpp-sms-provider-configuration.component.html',
@@ -44,13 +51,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => SmppSmsProviderConfigurationComponent),
             multi: true
         }],
-    standalone: false
 
-/**
-
- * Angular component: smpp sms provider configuration UI.
-
- */
+standalone: false
 })
 
 export class SmppSmsProviderConfigurationComponent  implements ControlValueAccessor, OnInit{
@@ -88,6 +90,11 @@ export class SmppSmsProviderConfigurationComponent  implements ControlValueAcces
 
   private propagateChange = (v: any) => { };
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.smppSmsProviderConfigurationFormGroup = this.fb.group({
       protocolVersion: [null, [Validators.required]],
@@ -114,12 +121,30 @@ export class SmppSmsProviderConfigurationComponent  implements ControlValueAcces
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -130,11 +155,22 @@ export class SmppSmsProviderConfigurationComponent  implements ControlValueAcces
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (AwsSnsSmsProviderConfiguration | null)
+   */
+
   writeValue(value: AwsSnsSmsProviderConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
       this.smppSmsProviderConfigurationFormGroup.patchValue(value, {emitEvent: false});
     }
   }
+
+  /**
+   * update value.
+   *
+   */
 
   private updateValue() {
     let configuration: SmppSmsProviderConfiguration = null;

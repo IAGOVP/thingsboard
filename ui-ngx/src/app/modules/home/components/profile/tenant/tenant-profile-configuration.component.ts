@@ -23,6 +23,12 @@ import { deepClone } from '@core/utils';
 import { TenantProfileConfiguration, TenantProfileType } from '@shared/models/tenant.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: tenant profile configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tenant-profile-configuration`.
+ */
 @Component({
     selector: 'tb-tenant-profile-configuration',
     templateUrl: './tenant-profile-configuration.component.html',
@@ -32,10 +38,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => TenantProfileConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: tenant profile configuration UI.
- */
+standalone: false
 })
 export class TenantProfileConfigurationComponent implements ControlValueAccessor, OnInit {
 
@@ -64,12 +67,29 @@ export class TenantProfileConfigurationComponent implements ControlValueAccessor
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.tenantProfileConfigurationFormGroup = this.fb.group({
@@ -82,6 +102,12 @@ export class TenantProfileConfigurationComponent implements ControlValueAccessor
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -91,6 +117,12 @@ export class TenantProfileConfigurationComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TenantProfileConfiguration | null)
+   */
+
   writeValue(value: TenantProfileConfiguration | null): void {
     this.type = value?.type;
     const configuration = deepClone(value);
@@ -99,6 +131,11 @@ export class TenantProfileConfigurationComponent implements ControlValueAccessor
     }
     this.tenantProfileConfigurationFormGroup.patchValue({configuration}, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: TenantProfileConfiguration = null;

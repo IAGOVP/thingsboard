@@ -19,11 +19,20 @@ import io.netty.handler.codec.mqtt.MqttVersion;
 import lombok.Data;
 import org.thingsboard.rule.engine.mqtt.TbMqttNodeConfiguration;
 /**
- * JSON configuration for TbAzureIotHub rule node.
+ * JSON configuration POJO for {@link TbAzureIotHub} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbAzureIotHubNodeConfiguration extends TbMqttNodeConfiguration {
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbAzureIotHubNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbAzureIotHubNodeConfiguration defaultConfiguration() {

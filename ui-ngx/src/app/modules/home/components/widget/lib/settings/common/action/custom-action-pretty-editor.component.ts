@@ -31,6 +31,12 @@ import {
   CustomPrettyActionEditorCompleter
 } from '@home/components/widget/lib/settings/common/action/custom-action.models';
 
+
+/**
+ * Angular component: custom action pretty editor (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-custom-action-pretty-editor`.
+ */
 @Component({
     selector: 'tb-custom-action-pretty-editor',
     templateUrl: './custom-action-pretty-editor.component.html',
@@ -43,10 +49,7 @@ import {
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: custom action pretty editor UI.
- */
+standalone: false
 })
 export class CustomActionPrettyEditorComponent implements AfterViewInit, ControlValueAccessor {
 
@@ -80,6 +83,11 @@ export class CustomActionPrettyEditorComponent implements AfterViewInit, Control
   constructor() {
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     combineLatest([this.leftPanelElmRef.changes, this.rightPanelElmRef.changes]).subscribe(() => {
       if (this.leftPanelElmRef.length && this.rightPanelElmRef.length) {
@@ -89,6 +97,13 @@ export class CustomActionPrettyEditorComponent implements AfterViewInit, Control
     });
   }
 
+  /**
+   * init split layout.
+   *
+   * @param leftPanel left panel (any)
+   * @param rightPanel right panel (any)
+   */
+
   private initSplitLayout(leftPanel: any, rightPanel: any) {
     Split([leftPanel, rightPanel], {
       sizes: [50, 50],
@@ -97,20 +112,50 @@ export class CustomActionPrettyEditorComponent implements AfterViewInit, Control
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param obj obj (CustomActionDescriptor)
+   */
+
   writeValue(obj: CustomActionDescriptor): void {
     this.action = obj;
   }
+
+  /**
+   * Event handler for action updated.
+   *
+   * @param valid valid (boolean)
+   */
 
   public onActionUpdated(valid: boolean = true) {
     if (!valid) {

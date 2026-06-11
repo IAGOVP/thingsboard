@@ -44,6 +44,12 @@ import { ColorPickerPanelComponent } from '@shared/components/color-picker/color
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: color input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-color-input`.
+ */
 @Component({
     selector: 'tb-color-input',
     templateUrl: './color-input.component.html',
@@ -55,10 +61,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: color input UI.
- */
+standalone: false
 })
 export class ColorInputComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -128,6 +131,11 @@ export class ColorInputComponent extends PageComponent implements OnInit, Contro
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.colorFormGroup = this.fb.group({
       color: [null, this.required ? [Validators.required] : []]
@@ -140,6 +148,11 @@ export class ColorInputComponent extends PageComponent implements OnInit, Contro
     });
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   updateValidators() {
     if (this.colorFormGroup) {
       this.colorFormGroup.get('color').setValidators(this.required ? [Validators.required] : []);
@@ -147,12 +160,30 @@ export class ColorInputComponent extends PageComponent implements OnInit, Contro
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -163,12 +194,23 @@ export class ColorInputComponent extends PageComponent implements OnInit, Contro
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string): void {
     this.modelValue = value;
     this.colorFormGroup.patchValue(
       { color: this.modelValue }, {emitEvent: false}
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const color: string = this.colorFormGroup.get('color').value;
@@ -177,6 +219,11 @@ export class ColorInputComponent extends PageComponent implements OnInit, Contro
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * show color picker.
+   *
+   */
 
   showColorPicker($event: MouseEvent) {
     $event.stopPropagation();
@@ -194,6 +241,12 @@ export class ColorInputComponent extends PageComponent implements OnInit, Contro
       );
     }
   }
+
+  /**
+   * open color picker popup.
+   *
+   * @param element element (ElementRef)
+   */
 
   openColorPickerPopup($event: Event, element?: ElementRef) {
     if ($event) {
@@ -230,6 +283,11 @@ export class ColorInputComponent extends PageComponent implements OnInit, Contro
       }
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.colorFormGroup.get('color').patchValue(null, {emitEvent: true});

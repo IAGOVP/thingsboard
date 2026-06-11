@@ -30,7 +30,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Rule engine filter node 'check fields presence': Checks the presence of the specified fields in the message and/or metadata. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>check fields presence</b>.
+ *
+ * <p>Checks the presence of the specified fields in the message and/or metadata.
+ * <br>By default, the rule node checks that all specified fields are present. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbCheckMessageNodeConfiguration}.
+ * <br>Output relations: {@code TbNodeConnectionType.TRUE, TbNodeConnectionType.FALSE}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/check-fields-presence/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/check-fields-presence/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -51,6 +58,13 @@ public class TbCheckMessageNode implements TbNode {
     private TbCheckMessageNodeConfiguration config;
     private List<String> messageNamesList;
     private List<String> metadataNamesList;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param tbContext tb context ({@link TbContext})
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext tbContext, TbNodeConfiguration configuration) throws TbNodeException {
@@ -58,6 +72,13 @@ public class TbCheckMessageNode implements TbNode {
         messageNamesList = config.getMessageNames();
         metadataNamesList = config.getMetadataNames();
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

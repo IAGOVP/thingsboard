@@ -33,6 +33,12 @@ import { EntityId } from '@shared/models/id/entity-id';
 import { UtilsService } from '@core/services/utils.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: device profile alarm (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile-alarm`.
+ */
 @Component({
     selector: 'tb-device-profile-alarm',
     templateUrl: './device-profile-alarm.component.html',
@@ -49,10 +55,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: device profile alarm UI.
- */
+standalone: false
 })
 export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -83,6 +86,12 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (this.propagateChangePending) {
@@ -93,8 +102,19 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.alarmFormGroup = this.fb.group({
@@ -114,6 +134,12 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -122,6 +148,12 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
       this.alarmFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DeviceProfileAlarm)
+   */
 
   writeValue(value: DeviceProfileAlarm): void {
     this.propagateChangePending = false;
@@ -135,6 +167,11 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * POST/PUT entity — add clear alarm rule.
+   *
+   */
+
   public addClearAlarmRule() {
     const clearAlarmRule: DeviceProfileAlarmRule = {
       condition: {
@@ -144,9 +181,20 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
     this.alarmFormGroup.patchValue({clearRule: clearAlarmRule});
   }
 
+  /**
+   * DELETE — remove clear alarm rule.
+   *
+   */
+
   public removeClearAlarmRule() {
     this.alarmFormGroup.patchValue({clearRule: null});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     if (c.parent) {
@@ -169,6 +217,12 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
     };
   }
 
+  /**
+   * DELETE — remove relation type.
+   *
+   * @param key key (string)
+   */
+
   removeRelationType(key: string): void {
     const keys: string[] = this.alarmFormGroup.get('propagateRelationTypes').value;
     const index = keys.indexOf(key);
@@ -177,6 +231,12 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
       this.alarmFormGroup.get('propagateRelationTypes').setValue(keys, {emitEvent: true});
     }
   }
+
+  /**
+   * POST/PUT entity — add relation type.
+   *
+   * @param event DOM or Angular event object
+   */
 
   addRelationType(event: MatChipInputEvent): void {
     const input = event.chipInput.inputElement;
@@ -201,6 +261,11 @@ export class DeviceProfileAlarmComponent implements ControlValueAccessor, OnInit
     const alarmType = this.alarmFormGroup.get('alarmType').value;
     return this.utils.customTranslation(alarmType, alarmType);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.alarmFormGroup.value;

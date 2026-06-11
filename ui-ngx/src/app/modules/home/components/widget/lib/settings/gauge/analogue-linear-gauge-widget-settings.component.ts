@@ -23,14 +23,17 @@ import {
   AnalogueGaugeWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/gauge/analogue-gauge-widget-settings.component';
 
+
+/**
+ * Angular component: analogue linear gauge widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-analogue-linear-gauge-widget-settings`.
+ */
 @Component({
     selector: 'tb-analogue-linear-gauge-widget-settings',
     templateUrl: './analogue-gauge-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: analogue linear gauge widget settings UI.
- */
+standalone: false
 })
 export class AnalogueLinearGaugeWidgetSettingsComponent extends AnalogueGaugeWidgetSettingsComponent {
 
@@ -40,6 +43,12 @@ export class AnalogueLinearGaugeWidgetSettingsComponent extends AnalogueGaugeWid
               protected fb: UntypedFormBuilder) {
     super(store, fb);
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     const settings = super.defaultSettings();
@@ -51,6 +60,12 @@ export class AnalogueLinearGaugeWidgetSettingsComponent extends AnalogueGaugeWid
     settings.colorBarProgressEnd = null;
     return settings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     super.onSettingsSet(settings);

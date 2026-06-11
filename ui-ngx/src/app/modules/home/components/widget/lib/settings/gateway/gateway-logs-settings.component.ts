@@ -20,14 +20,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: gateway logs settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-gateway-logs-settings`.
+ */
 @Component({
     selector: 'tb-gateway-logs-settings',
     templateUrl: './gateway-logs-settings.component.html',
     styleUrls: ['../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: gateway logs settings UI.
- */
+standalone: false
 })
 export class GatewayLogsSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class GatewayLogsSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected settingsForm(): FormGroup {
     return this.gatewayLogSettingForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -49,6 +64,12 @@ export class GatewayLogsSettingsComponent extends WidgetSettingsComponent {
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.gatewayLogSettingForm = this.fb.group({
       isConnectorLog: [false, []],
@@ -56,9 +77,21 @@ export class GatewayLogsSettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['isConnectorLog'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const isConnectorLog: boolean = this.gatewayLogSettingForm.get('isConnectorLog').value;

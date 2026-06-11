@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: update location attribute widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-location-attribute-widget-settings`.
+ */
 @Component({
     selector: 'tb-update-location-attribute-widget-settings',
     templateUrl: './update-location-attribute-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update location attribute widget settings UI.
- */
+standalone: false
 })
 export class UpdateLocationAttributeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class UpdateLocationAttributeWidgetSettingsComponent extends WidgetSettin
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateLocationAttributeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -62,6 +77,12 @@ export class UpdateLocationAttributeWidgetSettingsComponent extends WidgetSettin
       requiredErrorMessage: ''
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateLocationAttributeWidgetSettingsForm = this.fb.group({
@@ -87,9 +108,21 @@ export class UpdateLocationAttributeWidgetSettingsComponent extends WidgetSettin
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showLabel', 'isLatRequired', 'isLngRequired'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showLabel: boolean = this.updateLocationAttributeWidgetSettingsForm.get('showLabel').value;

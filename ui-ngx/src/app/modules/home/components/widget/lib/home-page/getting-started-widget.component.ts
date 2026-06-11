@@ -32,14 +32,17 @@ import { MatStepper } from '@angular/material/stepper';
 import { first } from 'rxjs/operators';
 import { Authority } from '@shared/models/authority.enum';
 
+
+/**
+ * Angular component: getting started widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-getting-started-widget`.
+ */
 @Component({
     selector: 'tb-getting-started-widget',
     templateUrl: './getting-started-widget.component.html',
     styleUrls: ['./getting-started-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: getting started widget UI.
- */
+standalone: false
 })
 export class GettingStartedWidgetComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -66,6 +69,11 @@ export class GettingStartedWidgetComponent extends PageComponent implements OnIn
               private dialog: MatDialog) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.userSettingsService.getGettingStarted().subscribe(
@@ -102,13 +110,29 @@ export class GettingStartedWidgetComponent extends PageComponent implements OnIn
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }
 
+  /**
+   * is selected.
+   *
+   * @param step step (CdkStep)
+   */
+
   isSelected(step: CdkStep) {
     return this.matStepper?.selected === step;
   }
+
+  /**
+   * getting started completed.
+   *
+   */
 
   gettingStartedCompleted() {
     this.dialog.open<GettingStartedCompletedDialogComponent, any,
@@ -118,6 +142,12 @@ export class GettingStartedWidgetComponent extends PageComponent implements OnIn
       panelClass: ['tb-dialog', 'tb-fullscreen-dialog']
     }).afterClosed().subscribe();
   }
+
+  /**
+   * update selected index.
+   *
+   * @param event DOM or Angular event object
+   */
 
   updateSelectedIndex(event: StepperSelectionEvent) {
     if (this.gettingStarted.lastSelectedIndex !== event.selectedIndex) {
@@ -130,6 +160,11 @@ export class GettingStartedWidgetComponent extends PageComponent implements OnIn
         .updateGettingStarted(this.gettingStarted, {ignoreLoading: true}).subscribe();
     }
   }
+
+  /**
+   * update completed steps.
+   *
+   */
 
   updateCompletedSteps() {
     if (this.gettingStarted.maxSelectedIndex >= this.matStepper.steps.length-1) {

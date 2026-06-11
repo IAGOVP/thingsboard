@@ -21,14 +21,17 @@ import { EntityTableHeaderComponent } from '@home/components/entity/entity-table
 import { Resource, ResourceInfo, ResourceSubType, ResourceSubTypeTranslationMap } from '@shared/models/resource.models';
 import { PageLink } from '@shared/models/page/page-link';
 
+
+/**
+ * Angular component: js library table header (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-js-library-table-header`.
+ */
 @Component({
     selector: 'tb-js-library-table-header',
     templateUrl: './js-library-table-header.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: js library table header UI.
- */
+standalone: false
 })
 export class JsLibraryTableHeaderComponent extends EntityTableHeaderComponent<Resource, PageLink, ResourceInfo> {
 
@@ -38,6 +41,12 @@ export class JsLibraryTableHeaderComponent extends EntityTableHeaderComponent<Re
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * js resource sub type changed.
+   *
+   * @param resourceSubType resource sub type (ResourceSubType)
+   */
 
   jsResourceSubTypeChanged(resourceSubType: ResourceSubType) {
     this.entitiesTableConfig.componentsData.resourceSubType = resourceSubType;

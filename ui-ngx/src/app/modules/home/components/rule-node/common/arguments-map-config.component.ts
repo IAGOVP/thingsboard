@@ -38,6 +38,12 @@ import {
 } from './../rule-node-config.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: arguments map config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-arguments-map-config`.
+ */
 @Component({
     selector: 'tb-arguments-map-config',
     templateUrl: './arguments-map-config.component.html',
@@ -54,10 +60,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: arguments map config UI.
- */
+standalone: false
 })
 export class ArgumentsMapConfigComponent extends PageComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -98,6 +101,11 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.argumentsFormGroup = this.fb.group({
       arguments: this.fb.array([])
@@ -112,6 +120,12 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
     this.setupArgumentsFormGroup();
   }
 
+  /**
+   * Event handler for drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   public onDrop(event: CdkDragDrop<string[]>) {
     const columnsFormArray = this.argumentsFormArray;
     const columnForm = columnsFormArray.at(event.previousIndex);
@@ -124,12 +138,30 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
     return this.argumentsFormGroup.get('arguments') as FormArray;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -141,6 +173,12 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
         .forEach((control: FormGroup) => this.updateArgumentControlValidators(control));
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param argumentsList arguments list (Array<any>)
+   */
 
   writeValue(argumentsList: Array<any>): void {
     const argumentsControls: Array<FormGroup> = [];
@@ -154,16 +192,41 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
   }
 
 
+  /**
+
+
+   * DELETE — remove argument.
+
+
+   *
+
+
+   * @param index index (number)
+
+
+   */
+
+
   public removeArgument(index: number) {
     this.argumentsFormArray.removeAt(index);
     this.updateArgumentNames();
   }
+
+  /**
+   * POST/PUT entity — add argument.
+   *
+   */
 
   public addArgument(emitEvent = true) {
     const argumentsFormArray = this.argumentsFormArray;
     const argumentControl = this.createArgumentControl(null, argumentsFormArray.length);
     argumentsFormArray.push(argumentControl, {emitEvent});
   }
+
+  /**
+   * validate.
+   *
+   */
 
   public validate() {
     if (!this.argumentsFormGroup.valid) {
@@ -173,6 +236,11 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
     }
     return null;
   }
+
+  /**
+   * setup arguments form group.
+   *
+   */
 
   private setupArgumentsFormGroup(emitEvent = false) {
     if (this.function) {
@@ -191,6 +259,14 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
       this.argumentsFormGroup.get('arguments').updateValueAndValidity({emitEvent: false});
     }
   }
+
+  /**
+   * POST/PUT entity — create argument control.
+   *
+   * @param property property (any)
+   * @param index index (number)
+   * @returns FormGroup observable or value
+   */
 
   private createArgumentControl(property: any, index: number): FormGroup {
     const argumentControl = this.fb.group({
@@ -211,6 +287,12 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
     return argumentControl;
   }
 
+  /**
+   * update argument control validators.
+   *
+   * @param control control (FormGroup)
+   */
+
   private updateArgumentControlValidators(control: FormGroup) {
     const argumentType: ArgumentType = control.get('type').value;
     if (argumentType === ArgumentType.ATTRIBUTE) {
@@ -225,11 +307,21 @@ export class ArgumentsMapConfigComponent extends PageComponent implements Contro
     }
   }
 
+  /**
+   * update argument names.
+   *
+   */
+
   private updateArgumentNames() {
     this.argumentsFormArray.controls.forEach((argumentControl, argumentIndex) => {
       argumentControl.get('name').setValue(ArgumentName[argumentIndex]);
     });
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const argumentsForm = this.argumentsFormArray.value;

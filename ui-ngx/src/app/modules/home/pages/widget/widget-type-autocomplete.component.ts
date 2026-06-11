@@ -36,6 +36,12 @@ import { WidgetTypeInfo } from '@shared/models/widget.models';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { WidgetService } from '@core/http/widget.service';
 
+
+/**
+ * Angular component: widget type autocomplete (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-type-autocomplete`.
+ */
 @Component({
     selector: 'tb-widget-type-autocomplete',
     templateUrl: './widget-type-autocomplete.component.html',
@@ -46,10 +52,7 @@ import { WidgetService } from '@core/http/widget.service';
             multi: true
         }],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widget type autocomplete UI.
- */
+standalone: false
 })
 export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, OnInit, AfterViewInit {
 
@@ -100,17 +103,38 @@ export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, On
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredWidgetTypes = this.selectWidgetTypeFormGroup.get('widgetType').valueChanges
       .pipe(
         debounceTime(150),
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue: WidgetTypeInfo;
           if (typeof value === 'string' || !value) {
@@ -127,8 +151,19 @@ export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, On
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -138,6 +173,12 @@ export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, On
       this.selectWidgetTypeFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (WidgetTypeInfo | string | null)
+   */
 
   writeValue(value: WidgetTypeInfo | string | null): void {
     this.searchText = '';
@@ -160,6 +201,12 @@ export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, On
     this.dirty = true;
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (WidgetTypeInfo | null)
+   */
+
   updateView(value: WidgetTypeInfo | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -167,9 +214,23 @@ export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, On
     }
   }
 
+  /**
+   * display widget type fn.
+   *
+   * @param widgetType widget type (WidgetTypeInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayWidgetTypeFn(widgetType?: WidgetTypeInfo): string | undefined {
     return widgetType ? widgetType.name : undefined;
   }
+
+  /**
+   * fetch widget types.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<WidgetTypeInfo>> observable or value
+   */
 
   fetchWidgetTypes(searchText?: string): Observable<Array<WidgetTypeInfo>> {
     this.searchText = searchText;
@@ -179,6 +240,14 @@ export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, On
     });
     return this.getWidgetTypes(pageLink);
   }
+
+  /**
+   * get widget types.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param result result (Array<WidgetTypeInfo>)
+   * @returns Observable<Array<WidgetTypeInfo>> observable or value
+   */
 
   getWidgetTypes(pageLink: PageLink,
                  result: Array<WidgetTypeInfo> = []): Observable<Array<WidgetTypeInfo>> {
@@ -200,12 +269,22 @@ export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, On
     );
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectWidgetTypeFormGroup.get('widgetType').updateValueAndValidity({onlySelf: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectWidgetTypeFormGroup.get('widgetType').patchValue('');
@@ -214,6 +293,13 @@ export class WidgetTypeAutocompleteComponent implements ControlValueAccessor, On
       this.widgetTypeInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
 
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);

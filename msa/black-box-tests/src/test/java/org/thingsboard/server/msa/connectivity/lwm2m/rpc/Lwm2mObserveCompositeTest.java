@@ -26,8 +26,9 @@ import org.thingsboard.server.msa.connectivity.lwm2m.Lwm2mDevicesForTest;
 import static org.thingsboard.server.msa.ui.utils.Const.TENANT_EMAIL;
 import static org.thingsboard.server.msa.ui.utils.Const.TENANT_PASSWORD;
 /**
- * Lwm2m observe composite test.
+ * Black-box test: lwm2m observe composite (black-box test infrastructure — LwM2M transport tests).
  */
+
 
 @DisableUIListeners
 public class Lwm2mObserveCompositeTest extends AbstractLwm2mClientTest {
@@ -35,17 +36,35 @@ public class Lwm2mObserveCompositeTest extends AbstractLwm2mClientTest {
     private Lwm2mDevicesForTest lwm2mDevicesForTest;
 
     private final static String name = "lwm2m-NoSec-ObserveComposite";
+    /**
+     * Set up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void setUp() throws Exception {
         testRestClient.login(TENANT_EMAIL, TENANT_PASSWORD);
         this.lwm2mDevicesForTest = new Lwm2mDevicesForTest(initTest(name + "-profile" +  RandomStringUtils.randomAlphanumeric(7)));
     }
+    /**
+     * Tear down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void tearDown() {
         destroyAfter(this.lwm2mDevicesForTest);
     }
+    /**
+     * Test observe resource update after update registration.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testObserveResource_Update_AfterUpdateRegistration() throws Exception {

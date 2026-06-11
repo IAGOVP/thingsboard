@@ -20,19 +20,34 @@ import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import org.thingsboard.common.util.JacksonUtil;
 import org.thingsboard.server.common.data.Device;
 
+
 /**
 
- * Device prototypes.
+ * Pre-built device names and credentials for connectivity black-box tests.
 
  */
 
+
 public class DevicePrototypes {
+    /**
+     * Default device prototype.
+     *
+     * @param name name ({@link String})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public static Device defaultDevicePrototype(String name){
         Device device = new Device();
         device.setName(name + RandomStringUtils.randomAlphanumeric(7));
         device.setType("DEFAULT");
         return device;
     }
+    /**
+     * Default gateway prototype.
+     *
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Device defaultGatewayPrototype() {
         String isGateway = "{\"gateway\":true}";

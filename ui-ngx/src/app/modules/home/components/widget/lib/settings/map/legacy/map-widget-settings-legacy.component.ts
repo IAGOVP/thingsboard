@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { defaultMapSettings } from 'src/app/modules/home/components/widget/lib/maps-legacy/map-models';
 
+
+/**
+ * Angular component: map widget settings legacy (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-widget-settings-legacy`.
+ */
 @Component({
     selector: 'tb-map-widget-settings-legacy',
     templateUrl: './map-widget-settings-legacy.component.html',
     styleUrls: ['./../../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: map widget settings legacy UI.
- */
+standalone: false
 })
 export class MapWidgetSettingsLegacyComponent extends WidgetSettingsComponent {
 
@@ -39,13 +42,31 @@ export class MapWidgetSettingsLegacyComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.mapWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return defaultMapSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.mapWidgetSettingsForm = this.fb.group({
@@ -53,11 +74,25 @@ export class MapWidgetSettingsLegacyComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return {
       mapSettings: settings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return settings.mapSettings;

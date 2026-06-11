@@ -26,8 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 /**
- * Parsed WebSocket entity data update payload.
+ * Parsed WebSocket entity data update payload from the monitored tenant.
  */
+
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -35,6 +36,13 @@ public class EntityDataUpdate {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private List<EntityData> update;
+    /**
+     * Returns latest.
+     *
+     * @param entityId target entity identifier
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Map<String, String> getLatest(UUID entityId) {
         if (update == null || update.isEmpty()) {

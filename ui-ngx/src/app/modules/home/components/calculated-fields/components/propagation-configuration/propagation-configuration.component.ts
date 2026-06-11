@@ -47,6 +47,12 @@ import {Store} from "@ngrx/store";
 import {AppState} from "@core/core.state";
 import {getCurrentAuthState} from "@core/auth/auth.selectors";
 
+
+/**
+ * Angular component: propagation configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-propagation-configuration`.
+ */
 @Component({
     selector: 'tb-propagation-configuration',
     templateUrl: './propagation-configuration.component.html',
@@ -62,10 +68,7 @@ import {getCurrentAuthState} from "@core/auth/auth.selectors";
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: propagation configuration UI.
- */
+standalone: false
 })
 export class PropagationConfigurationComponent implements ControlValueAccessor, Validator {
 
@@ -136,9 +139,21 @@ export class PropagationConfigurationComponent implements ControlValueAccessor, 
     })
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.propagateConfiguration.valid || this.propagateConfiguration.disabled ? null : {invalidPropagateConfig: false};
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (PropagationWithExpression)
+   */
 
   writeValue(value: PropagationWithExpression): void {
     value.expression = value.expression ?? calculatedFieldDefaultScript;
@@ -155,7 +170,19 @@ export class PropagationConfigurationComponent implements ControlValueAccessor, 
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _   (any)
+   */
+
   registerOnTouched(_: any): void { }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -167,6 +194,11 @@ export class PropagationConfigurationComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * Event handler for test script.
+   *
+   */
+
   onTestScript() {
     this.testScript().subscribe((expression) => {
       this.propagateConfiguration.get('expression').setValue(expression);
@@ -174,15 +206,33 @@ export class PropagationConfigurationComponent implements ControlValueAccessor, 
     })
   }
 
+  /**
+   * fetch options.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   fetchOptions(searchText: string): Observable<Array<string>> {
     const search = searchText ? searchText?.toLowerCase() : '';
     return of(['Contains', 'Manages']).pipe(map(name => name?.filter(option => option.toLowerCase().includes(search))));
   }
 
+  /**
+   * updated model.
+   *
+   * @param value value (CalculatedFieldPropagationConfiguration)
+   */
+
   private updatedModel(value: CalculatedFieldPropagationConfiguration): void {
     value.type = CalculatedFieldType.PROPAGATION;
     this.propagateChange(value);
   }
+
+  /**
+   * updated form with script.
+   *
+   */
 
   private updatedFormWithScript() {
     if (this.propagateConfiguration.get('applyExpressionToResolvedArguments').value) {

@@ -24,14 +24,17 @@ import {
   updateAttributeGeneralDefaultSettings
 } from '@home/components/widget/lib/settings/input/update-attribute-general-settings.component';
 
+
+/**
+ * Angular component: update integer attribute widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-integer-attribute-widget-settings`.
+ */
 @Component({
     selector: 'tb-update-integer-attribute-widget-settings',
     templateUrl: './update-integer-attribute-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update integer attribute widget settings UI.
- */
+standalone: false
 })
 export class UpdateIntegerAttributeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -42,9 +45,21 @@ export class UpdateIntegerAttributeWidgetSettingsComponent extends WidgetSetting
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateIntegerAttributeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -54,6 +69,12 @@ export class UpdateIntegerAttributeWidgetSettingsComponent extends WidgetSetting
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateIntegerAttributeWidgetSettingsForm = this.fb.group({
       updateAttributeGeneralSettings: [settings.updateAttributeGeneralSettings, []],
@@ -61,6 +82,13 @@ export class UpdateIntegerAttributeWidgetSettingsComponent extends WidgetSetting
       maxValue: [settings.maxValue, []]
     });
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     const updateAttributeGeneralSettings = deepClone(settings, ['minValue', 'maxValue']);
@@ -70,6 +98,13 @@ export class UpdateIntegerAttributeWidgetSettingsComponent extends WidgetSetting
       maxValue: settings.maxValue
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return {

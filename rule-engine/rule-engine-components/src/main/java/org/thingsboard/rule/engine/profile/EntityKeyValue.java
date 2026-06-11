@@ -19,8 +19,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.thingsboard.server.common.data.kv.DataType;
 /**
- * Rule engine component: entity key value.
+ * Entity key value (device profile state nodes).
  */
+
 
 @EqualsAndHashCode
 @Deprecated
@@ -32,47 +33,107 @@ class EntityKeyValue {
     private Double dblValue;
     private Boolean boolValue;
     private String strValue;
+    /**
+     * Returns lng value.
+     *
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Long getLngValue() {
         return dataType == DataType.LONG ? lngValue : null;
     }
+    /**
+     * Set lng value.
+     *
+     * @param lngValue lng value ({@link Long})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setLngValue(Long lngValue) {
         this.dataType = DataType.LONG;
         this.lngValue = lngValue;
     }
+    /**
+     * Returns dbl value.
+     *
+     * @return {@link Double}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Double getDblValue() {
         return dataType == DataType.DOUBLE ? dblValue : null;
     }
+    /**
+     * Set dbl value.
+     *
+     * @param dblValue dbl value ({@link Double})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setDblValue(Double dblValue) {
         this.dataType = DataType.DOUBLE;
         this.dblValue = dblValue;
     }
+    /**
+     * Returns bool value.
+     *
+     * @return {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Boolean getBoolValue() {
         return dataType == DataType.BOOLEAN ? boolValue : null;
     }
+    /**
+     * Set bool value.
+     *
+     * @param boolValue bool value ({@link Boolean})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setBoolValue(Boolean boolValue) {
         this.dataType = DataType.BOOLEAN;
         this.boolValue = boolValue;
     }
+    /**
+     * Returns str value.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getStrValue() {
         return dataType == DataType.STRING ? strValue : null;
     }
+    /**
+     * Set str value.
+     *
+     * @param strValue str value ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setStrValue(String strValue) {
         this.dataType = DataType.STRING;
         this.strValue = strValue;
     }
+    /**
+     * Set json value.
+     *
+     * @param jsonValue json value ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setJsonValue(String jsonValue) {
         this.dataType = DataType.JSON;
         this.strValue = jsonValue;
     }
+    /**
+     * Returns json value.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getJsonValue() {
         return dataType == DataType.JSON ? strValue : null;

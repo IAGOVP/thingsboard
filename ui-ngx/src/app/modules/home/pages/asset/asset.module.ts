@@ -28,6 +28,9 @@ import { AssetTabsComponent } from '@home/pages/asset/asset-tabs.component';
 /**
  * Angular NgModule: asset feature area.
  */
+/**
+ * Angular NgModule bundling asset (home/asset pages).
+ */
 @NgModule({
   declarations: [
     AssetComponent,
@@ -40,5 +43,5 @@ import { AssetTabsComponent } from '@home/pages/asset/asset-tabs.component';
     HomeComponentsModule,
     HomeDialogsModule,
     AssetRoutingModule,
-  ]})
+]})
 export class AssetModule { }

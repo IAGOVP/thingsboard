@@ -22,14 +22,17 @@ import { AlarmInfo, AlarmSearchStatus, alarmSearchStatusTranslations } from '@sh
 import { AlarmTableConfig } from './alarm-table-config';
 import { AlarmFilterConfig } from '@shared/models/query/query.models';
 
+
+/**
+ * Angular component: alarm table header (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-table-header`.
+ */
 @Component({
     selector: 'tb-alarm-table-header',
     templateUrl: './alarm-table-header.component.html',
     styleUrls: ['./alarm-table-header.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm table header UI.
- */
+standalone: false
 })
 export class AlarmTableHeaderComponent extends EntityTableHeaderComponent<AlarmInfo> {
 
@@ -40,6 +43,12 @@ export class AlarmTableHeaderComponent extends EntityTableHeaderComponent<AlarmI
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * alarm filter changed.
+   *
+   * @param alarmFilterConfig alarm filter config (AlarmFilterConfig)
+   */
 
   alarmFilterChanged(alarmFilterConfig: AlarmFilterConfig) {
     this.alarmTableConfig.alarmFilterConfig = alarmFilterConfig;

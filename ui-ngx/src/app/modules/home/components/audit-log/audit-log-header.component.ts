@@ -20,20 +20,29 @@ import { AuditLog, AuditLogFilter, TimePageLink } from '@app/shared/public-api';
 import { EntityTableHeaderComponent } from '@home/components/entity/entity-table-header.component';
 import { Store } from '@ngrx/store';
 
+
+/**
+ * Angular component: audit log header (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-audit-log-header`.
+ */
 @Component({
     selector: 'tb-audit-log-header',
     templateUrl: './audit-log-header.component.html',
     styles: ``,
-    standalone: false
-/**
- * Angular component: audit log header UI.
- */
+standalone: false
 })
 export class AuditLogHeaderComponent extends EntityTableHeaderComponent<AuditLog, TimePageLink> {
 
   constructor(protected store: Store<AppState>) {
     super(store)
   }
+
+  /**
+   * audit log filters changed.
+   *
+   * @param auditLogFilter audit log filter (AuditLogFilter)
+   */
 
   auditLogFiltersChanged(auditLogFilter: AuditLogFilter) {
     this.entitiesTableConfig.componentsData.auditLogFilter = auditLogFilter;

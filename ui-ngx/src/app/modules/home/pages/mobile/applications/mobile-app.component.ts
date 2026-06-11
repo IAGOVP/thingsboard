@@ -30,14 +30,17 @@ import { MatIconButton } from '@angular/material/button';
 import { TbPopoverService } from '@shared/components/popover.service';
 import { EditorPanelComponent } from '@home/pages/mobile/common/editor-panel.component';
 
+
+/**
+ * Angular component: mobile app (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-app`.
+ */
 @Component({
     selector: 'tb-mobile-app',
     templateUrl: './mobile-app.component.html',
     styleUrls: ['./mobile-app.component.scss'],
-    standalone: false
-/**
- * Angular component: mobile app UI.
- */
+standalone: false
 })
 export class MobileAppComponent extends EntityComponent<MobileApp> {
 
@@ -64,6 +67,13 @@ export class MobileAppComponent extends EntityComponent<MobileApp> {
               private viewContainerRef: ViewContainerRef) {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (MobileApp)
+   * @returns FormGroup observable or value
+   */
 
   buildForm(entity: MobileApp): FormGroup {
     const form = this.fb.group({
@@ -124,9 +134,20 @@ export class MobileAppComponent extends EntityComponent<MobileApp> {
     return form;
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (MobileApp)
+   */
+
   updateForm(entity: MobileApp) {
     this.entityForm.patchValue(entity, {emitEvent: false});
   }
+
+  /**
+   * update form state.
+   *
+   */
 
   override updateFormState(): void {
     super.updateFormState();
@@ -145,16 +166,35 @@ export class MobileAppComponent extends EntityComponent<MobileApp> {
     }
   }
 
+  /**
+   * prepare form value.
+   *
+   * @param value value (MobileApp)
+   * @returns MobileApp observable or value
+   */
+
   override prepareFormValue(value: MobileApp): MobileApp {
     value.storeInfo = this.entityForm.get('storeInfo').value;
     return super.prepareFormValue(value);
   }
+
+  /**
+   * generate app secret.
+   *
+   */
 
   generateAppSecret($event: Event) {
     $event.stopPropagation();
     this.entityForm.get('appSecret').setValue(btoa(randomAlphanumeric(64)));
     this.entityForm.get('appSecret').markAsDirty();
   }
+
+  /**
+   * edit release note.
+   *
+   * @param matButton mat button (MatIconButton)
+   * @param isLatest is latest (boolean)
+   */
 
   editReleaseNote($event: Event, matButton: MatIconButton, isLatest: boolean) {
     if ($event) {
@@ -195,6 +235,12 @@ export class MobileAppComponent extends EntityComponent<MobileApp> {
       });
     }
   }
+
+  /**
+   * base64format.
+   *
+   * @param control control (UntypedFormControl)
+   */
 
   private base64Format(control: UntypedFormControl): { [key: string]: boolean } | null {
     if (control.value === '') {

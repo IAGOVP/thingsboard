@@ -21,14 +21,17 @@ import { AppState } from '@core/core.state';
 import { Component } from '@angular/core';
 import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
 
+
+/**
+ * Angular component: analogue compass widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-analogue-compass-widget-settings`.
+ */
 @Component({
     selector: 'tb-analogue-compass-widget-settings',
     templateUrl: './analogue-compass-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: analogue compass widget settings UI.
- */
+standalone: false
 })
 export class AnalogueCompassWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -41,9 +44,21 @@ export class AnalogueCompassWidgetSettingsComponent extends WidgetSettingsCompon
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.analogueCompassWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -72,6 +87,12 @@ export class AnalogueCompassWidgetSettingsComponent extends WidgetSettingsCompon
       animationTarget: 'needle'
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.analogueCompassWidgetSettingsForm = this.fb.group({
@@ -104,9 +125,21 @@ export class AnalogueCompassWidgetSettingsComponent extends WidgetSettingsCompon
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showBorder', 'animation'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showBorder: boolean = this.analogueCompassWidgetSettingsForm.get('showBorder').value;
@@ -133,6 +166,11 @@ export class AnalogueCompassWidgetSettingsComponent extends WidgetSettingsCompon
     this.analogueCompassWidgetSettingsForm.get('animationRule').updateValueAndValidity({emitEvent});
     this.analogueCompassWidgetSettingsForm.get('animationTarget').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * prepare output settings.
+   *
+   */
 
   protected prepareOutputSettings(settings) {
     settings.majorTickFont.color = this.analogueCompassWidgetSettingsForm.get('majorTickColor').value;

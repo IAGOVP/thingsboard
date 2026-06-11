@@ -21,7 +21,9 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 
 /**
- * Angular HTTP service: git hub REST wrappers (`@core/http`).
+ * Angular injectable service: git hub (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -31,6 +33,13 @@ export class GitHubService {
   constructor(
     private http: HttpClient
   ) { }
+
+  /**
+   * get git hub star.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<number> observable or value
+   */
 
   public getGitHubStar(config?: RequestConfig): Observable<number> {
     return this.http.get<any>('https://api.github.com/repos/thingsboard/thingsboard', defaultHttpOptionsFromConfig(config)).pipe(

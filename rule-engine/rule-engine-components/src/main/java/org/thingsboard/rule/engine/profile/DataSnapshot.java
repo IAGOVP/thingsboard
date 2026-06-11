@@ -26,8 +26,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 /**
- * Rule engine component: data snapshot.
+ * Data snapshot (device profile state nodes).
  */
+
 
 @Deprecated
 class DataSnapshot {

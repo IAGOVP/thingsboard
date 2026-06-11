@@ -21,11 +21,13 @@ import lombok.Setter;
 
 import java.util.regex.Pattern;
 
+
 /**
 
- * Topic filter, QoS, handler, and once-flag for a client-side subscription.
+ * Client-side subscription: topic filter, QoS, handler, and optional once-flag.
 
  */
+
 
 final class MqttSubscription {
 

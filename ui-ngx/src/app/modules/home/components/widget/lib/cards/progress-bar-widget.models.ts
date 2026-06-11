@@ -43,11 +43,11 @@ export const progressBarLayoutImages = new Map<ProgressBarLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for progress bar widget settings.
-
+ * Progress bar widget settings (ThingsBoard web UI).
  */
+
 
 export interface ProgressBarWidgetSettings {
   layout: ProgressBarLayout;

@@ -52,5 +52,8 @@ const routes: Routes = [
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling mobile qr code widget settings routing (home/mobile pages).
+ */
   exports: [RouterModule]})
 export class MobileQrCodeWidgetSettingsRoutingModule { }

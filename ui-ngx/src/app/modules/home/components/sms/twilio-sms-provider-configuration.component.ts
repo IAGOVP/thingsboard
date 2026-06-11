@@ -28,6 +28,12 @@ import {
 } from '@shared/models/settings.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: twilio sms provider configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-twilio-sms-provider-configuration`.
+ */
 @Component({
     selector: 'tb-twilio-sms-provider-configuration',
     templateUrl: './twilio-sms-provider-configuration.component.html',
@@ -37,10 +43,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => TwilioSmsProviderConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: twilio sms provider configuration UI.
- */
+standalone: false
 })
 export class TwilioSmsProviderConfigurationComponent implements ControlValueAccessor, OnInit {
 
@@ -69,12 +72,29 @@ export class TwilioSmsProviderConfigurationComponent implements ControlValueAcce
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.twilioSmsProviderConfigurationFormGroup = this.fb.group({
@@ -89,6 +109,12 @@ export class TwilioSmsProviderConfigurationComponent implements ControlValueAcce
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -98,11 +124,22 @@ export class TwilioSmsProviderConfigurationComponent implements ControlValueAcce
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TwilioSmsProviderConfiguration | null)
+   */
+
   writeValue(value: TwilioSmsProviderConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
       this.twilioSmsProviderConfigurationFormGroup.patchValue(value, {emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: TwilioSmsProviderConfiguration = null;

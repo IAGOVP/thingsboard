@@ -49,15 +49,18 @@ export interface ScadaSymbolEditorData {
 
 type editorModeType = 'svg' | 'xml';
 
+
+/**
+ * Angular component: scada symbol editor (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-editor`.
+ */
 @Component({
     selector: 'tb-scada-symbol-editor',
     templateUrl: './scada-symbol-editor.component.html',
     styleUrls: ['./scada-symbol-editor.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol editor UI.
- */
+standalone: false
 })
 export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
@@ -117,6 +120,11 @@ export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewI
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.readonly) {
       this.svgContentFormControl.disable({emitEvent: false});
@@ -133,6 +141,11 @@ export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewI
       this.editObjectCallbacks.onSymbolEditObjectValid(this.svgContentFormControl.valid);
     });
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.editObjectCallbacks.onZoom = () => {
@@ -173,9 +186,20 @@ export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.scadaSymbolEditObject.destroy();
   }
+
+  /**
+   * get content.
+   *
+   * @returns string observable or value
+   */
 
   getContent(): string {
     if (this.editorMode === 'svg') {
@@ -185,6 +209,12 @@ export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
+  /**
+   * get tags.
+   *
+   * @returns string[] observable or value
+   */
+
   getTags(): string[] {
     if (this.editorMode === 'svg') {
       return this.scadaSymbolEditObject?.getTags();
@@ -193,19 +223,40 @@ export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
+  /**
+   * zoom in.
+   *
+   */
+
   zoomIn() {
     this.scadaSymbolEditObject.zoomIn();
   }
 
+  /**
+   * zoom out.
+   *
+   */
+
   zoomOut() {
     this.scadaSymbolEditObject.zoomOut();
   }
+
+  /**
+   * toggle show hidden.
+   *
+   */
 
   toggleShowHidden() {
     this.showHiddenElements = !this.showHiddenElements;
     this.showHiddenElementsChange.emit(this.showHiddenElements);
     this.scadaSymbolEditObject.showHiddenElements(this.showHiddenElements);
   }
+
+  /**
+   * update editor mode.
+   *
+   * @param mode mode (editorModeType)
+   */
 
   private updateEditorMode(mode: editorModeType) {
     this.editorModeValue = mode;
@@ -217,6 +268,12 @@ export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
+  /**
+   * update content.
+   *
+   * @param content content (string)
+   */
+
   private updateContent(content: string) {
     this.svgContent = removeScadaSymbolMetadata(content);
     if (this.editorMode === 'xml') {
@@ -225,6 +282,12 @@ export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewI
       this.updateEditObjectContent(this.svgContent);
     }
   }
+
+  /**
+   * update edit object content.
+   *
+   * @param content content (string)
+   */
 
   private updateEditObjectContent(content: string) {
     if (this.scadaSymbolEditObject) {
@@ -235,6 +298,11 @@ export class ScadaSymbolEditorComponent implements OnInit, OnDestroy, AfterViewI
       });
     }
   }
+
+  /**
+   * update zoom buttons state.
+   *
+   */
 
   private updateZoomButtonsState() {
     this.zoomInDisabled = this.scadaSymbolEditObject.zoomInDisabled();

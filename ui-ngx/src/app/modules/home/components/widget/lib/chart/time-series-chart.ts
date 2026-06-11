@@ -87,13 +87,19 @@ import {
 import { UnitService } from '@core/services/unit.service';
 import { isNotEmptyTbUnits, TbUnit } from '@shared/models/unit.models';
 
+
 /**
-
- * tb time series chart.
-
+ * Tb time series chart (ThingsBoard web UI).
  */
 
+
 export class TbTimeSeriesChart {
+
+  /**
+   * data key settings.
+   *
+   * @returns DataKeySettingsFunction observable or value
+   */
 
   public static dataKeySettings(type = TimeSeriesChartType.default): DataKeySettingsFunction {
     return (_key, isLatestDataKey) => {
@@ -243,6 +249,11 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * update.
+   *
+   */
+
   public update(): void {
     for (const item of this.dataItems) {
       const datasourceData = this.ctx.data ? this.ctx.data.find(d => d.dataKey === item.dataKey) : null;
@@ -273,6 +284,11 @@ export class TbTimeSeriesChart {
       }
     }
   }
+
+  /**
+   * latest updated.
+   *
+   */
 
   public latestUpdated() {
     let update = false;
@@ -327,6 +343,12 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * key enter.
+   *
+   * @param dataKey data key (DataKey)
+   */
+
   public keyEnter(dataKey: DataKey): void {
     this.highlightedDataKey = dataKey;
     const item = this.dataItems.find(d => d.dataKey === dataKey);
@@ -338,6 +360,12 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * key leave.
+   *
+   * @param dataKey data key (DataKey)
+   */
+
   public keyLeave(dataKey: DataKey): void {
     this.highlightedDataKey = null;
     const item = this.dataItems.find(d => d.dataKey === dataKey);
@@ -348,6 +376,13 @@ export class TbTimeSeriesChart {
       });
     }
   }
+
+  /**
+   * toggle key.
+   *
+   * @param dataKey data key (DataKey)
+   * @param dataIndex data index (number)
+   */
 
   public toggleKey(dataKey: DataKey, dataIndex?: number): void {
     const enable = dataKey.hidden;
@@ -381,6 +416,12 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * toggle visual map range.
+   *
+   * @param index index (number)
+   */
+
   public toggleVisualMapRange(index: number): void {
     if (this.hasVisualMap) {
       this.visualMapSelectedRanges[index] = !this.visualMapSelectedRanges[index];
@@ -390,6 +431,11 @@ export class TbTimeSeriesChart {
       });
     }
   }
+
+  /**
+   * destroy.
+   *
+   */
 
   public destroy(): void {
     if (this.shapeResize$) {
@@ -404,9 +450,20 @@ export class TbTimeSeriesChart {
     this.ctx.dashboard.gridster.el.removeEventListener('scroll', this.onParentScroll);
   }
 
+  /**
+   * resize.
+   *
+   */
+
   public resize(): void {
     this.onResize();
   }
+
+  /**
+   * set dark mode.
+   *
+   * @param darkMode dark mode (boolean)
+   */
 
   public setDarkMode(darkMode: boolean): void {
     if (this.darkMode !== darkMode) {
@@ -419,9 +476,20 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * is dark mode.
+   *
+   * @returns boolean observable or value
+   */
+
   public isDarkMode(): boolean {
     return this.darkMode;
   }
+
+  /**
+   * setup data.
+   *
+   */
 
   private setupData(): void {
     const noAggregationBarWidthSettings = this.settings.noAggregationBarWidthSettings;
@@ -486,6 +554,11 @@ export class TbTimeSeriesChart {
       }
     }
   }
+
+  /**
+   * setup thresholds.
+   *
+   */
 
   private setupThresholds(): void {
     const thresholdDatasources: Datasource[] = [];
@@ -570,6 +643,11 @@ export class TbTimeSeriesChart {
     this.subscribeForEntityThresholds(thresholdDatasources);
   }
 
+  /**
+   * setup xaxes.
+   *
+   */
+
   private setupXAxes(): void {
     const mainXAxis = createTimeSeriesXAxis('main', this.settings.xAxis, this.ctx.defaultSubscription.timeWindow.minTime,
       this.ctx.defaultSubscription.timeWindow.maxTime, this.ctx.date, this.ctx.utilsService, this.darkMode);
@@ -581,6 +659,11 @@ export class TbTimeSeriesChart {
       this.xAxisList.push(comparisonXAxis);
     }
   }
+
+  /**
+   * setup yaxes.
+   *
+   */
 
   private setupYAxes(): void {
     const yAxisSettingsList = Object.values(this.settings.yAxes);
@@ -678,6 +761,11 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * setup visual map.
+   *
+   */
+
   private setupVisualMap(): void {
     if (this.settings.visualMapSettings?.pieces && this.settings.visualMapSettings?.pieces.length) {
       this.hasVisualMap = true;
@@ -688,9 +776,22 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * next component id.
+   *
+   * @returns string observable or value
+   */
+
   private nextComponentId(): string {
     return (this.componentIndexCounter++) + '';
   }
+
+  /**
+   * get yaxis index.
+   *
+   * @param id id (TimeSeriesChartYAxisId)
+   * @returns number observable or value
+   */
 
   private getYAxisIndex(id: TimeSeriesChartYAxisId): number {
     let yAxisIndex = this.yAxisList.findIndex(axis => axis.id === id);
@@ -702,6 +803,12 @@ export class TbTimeSeriesChart {
     }
     return yAxisIndex;
   }
+
+  /**
+   * subscribe for entity thresholds.
+   *
+   * @param datasources datasources (Datasource[])
+   */
 
   private subscribeForEntityThresholds(datasources: Datasource[]) {
     if (datasources.length) {
@@ -732,6 +839,12 @@ export class TbTimeSeriesChart {
       this.ctx.subscriptionApi.createSubscription(thresholdsSourcesSubscriptionOptions, true).subscribe();
     }
   }
+
+  /**
+   * subscribe for axis limits.
+   *
+   * @param datasources datasources (Datasource[])
+   */
 
   private subscribeForAxisLimits(datasources: Datasource[]) {
     if (datasources.length) {
@@ -776,6 +889,11 @@ export class TbTimeSeriesChart {
       this.ctx.subscriptionApi.createSubscription(axisLimitsSubscriptionOptions, true).subscribe();
     }
   }
+
+  /**
+   * draw chart.
+   *
+   */
 
   private drawChart() {
     echartsModule.init();
@@ -858,6 +976,11 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * update series data.
+   *
+   */
+
   private updateSeriesData(updateScale = false): void {
     if (!this.timeSeriesChart.isDisposed()) {
       this.updateSeries();
@@ -887,6 +1010,11 @@ export class TbTimeSeriesChart {
     return null;
   };
 
+  /**
+   * update series.
+   *
+   */
+
   private updateSeries(): void {
     this.timeSeriesChartOptions.series = generateChartData(this.dataItems, this.thresholdItems,
       this.stackMode,
@@ -898,6 +1026,11 @@ export class TbTimeSeriesChart {
         this.ctx.defaultSubscription.timeWindow.maxTime);
     }
   }
+
+  /**
+   * update axes.
+   *
+   */
 
   private updateAxes(lazy = true) {
     const leftAxisList = this.yAxisList.filter(axis => axis.option.position === 'left');
@@ -954,6 +1087,12 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * update axis offset.
+   *
+   * @param axisList axis list (TimeSeriesChartAxis[])
+   */
+
   private updateAxisOffset(axisList: TimeSeriesChartAxis[]): {offset: number; changed: boolean} {
     const result = {offset: 0, changed: false};
     let size = 0;
@@ -997,6 +1136,13 @@ export class TbTimeSeriesChart {
     return result;
   }
 
+  /**
+   * update yaxis scale.
+   *
+   * @param axisList axis list (TimeSeriesChartYAxis[])
+   * @returns boolean observable or value
+   */
+
   private updateYAxisScale(axisList: TimeSeriesChartYAxis[]): boolean {
     let changed = false;
     for (const yAxis of axisList) {
@@ -1009,6 +1155,11 @@ export class TbTimeSeriesChart {
     return changed;
   }
 
+  /**
+   * update axis limits.
+   *
+   */
+
   private updateAxisLimits(): void {
     if (this.timeSeriesChart && !this.timeSeriesChart.isDisposed()) {
       this.timeSeriesChartOptions.yAxis = this.yAxisList.map(axis => axis.option);
@@ -1018,6 +1169,13 @@ export class TbTimeSeriesChart {
       this.updateAxes();
     }
   }
+
+  /**
+   * scale yaxis.
+   *
+   * @param yAxis y axis (TimeSeriesChartYAxis)
+   * @returns boolean observable or value
+   */
 
   private scaleYAxis(yAxis: TimeSeriesChartYAxis): boolean {
     if (!this.stateData) {
@@ -1029,12 +1187,24 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * min top offset.
+   *
+   * @returns number observable or value
+   */
+
   private minTopOffset(): number {
     const showTickLabels =
       !!this.yAxisList.find(yAxis => yAxis.settings.show && yAxis.settings.showTickLabels);
     return (this.topPointLabels) ? 25 :
       (showTickLabels ? 10 : 5);
   }
+
+  /**
+   * min bottom offset.
+   *
+   * @returns number observable or value
+   */
 
   private minBottomOffset(): number {
     return this.settings.dataZoom ? 45 : 5;
@@ -1047,6 +1217,11 @@ export class TbTimeSeriesChart {
       });
     }
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const shapeWidth = this.chartElement.offsetWidth;
@@ -1074,9 +1249,22 @@ export class TbTimeSeriesChart {
     }
   }
 
+  /**
+   * animation enabled.
+   *
+   * @returns boolean observable or value
+   */
+
   private animationEnabled(): boolean {
     return this.settings.animation.animation;
   }
+
+  /**
+   * update bars animation.
+   *
+   * @param barItems bar items (TimeSeriesChartDataItem[])
+   * @param animation animation (boolean)
+   */
 
   private updateBarsAnimation(barItems: TimeSeriesChartDataItem[], animation: boolean) {
     if (barItems.length) {

@@ -28,15 +28,48 @@ import java.util.function.Consumer;
  * Created by ashvayka on 02.04.18.
  */
 /**
- * Rule engine rule engine device profile cache API.
+ * rule engine device profile cache contract (rule engine public API contracts and services).
  */
+
 public interface RuleEngineDeviceProfileCache {
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant UUID
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     DeviceProfile get(TenantId tenantId, DeviceProfileId deviceProfileId);
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant UUID
+     * @param deviceId device UUID
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     DeviceProfile get(TenantId tenantId, DeviceId deviceId);
+    /**
+     * Add listener.
+     *
+     * @param tenantId tenant UUID
+     * @param listenerId listener id ({@link EntityId})
+     * @param profileListener profile listener ({@link Consumer})
+     * @param devicelistener devicelistener ({@link BiConsumer})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void addListener(TenantId tenantId, EntityId listenerId, Consumer<DeviceProfile> profileListener, BiConsumer<DeviceId, DeviceProfile> devicelistener);
+    /**
+     * Removes listener.
+     *
+     * @param tenantId tenant UUID
+     * @param listenerId listener id ({@link EntityId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeListener(TenantId tenantId, EntityId listenerId);
 

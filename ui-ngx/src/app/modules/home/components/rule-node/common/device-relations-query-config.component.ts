@@ -30,6 +30,12 @@ interface DeviceRelationsQuery {
   deviceTypes: string[];
 }
 
+
+/**
+ * Angular component: device relations query config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-relations-query-config`.
+ */
 @Component({
     selector: 'tb-device-relations-query-config',
     templateUrl: './device-relations-query-config.component.html',
@@ -41,10 +47,7 @@ interface DeviceRelationsQuery {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: device relations query config UI.
- */
+standalone: false
 })
 export class DeviceRelationsQueryConfigComponent extends PageComponent implements ControlValueAccessor, OnInit {
 
@@ -75,6 +78,11 @@ export class DeviceRelationsQueryConfigComponent extends PageComponent implement
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.deviceRelationsQueryFormGroup = this.fb.group({
       fetchLastLevelOnly: [false, []],
@@ -94,12 +102,30 @@ export class DeviceRelationsQueryConfigComponent extends PageComponent implement
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -109,6 +135,12 @@ export class DeviceRelationsQueryConfigComponent extends PageComponent implement
       this.deviceRelationsQueryFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param query query (DeviceRelationsQuery)
+   */
 
   writeValue(query: DeviceRelationsQuery): void {
     this.deviceRelationsQueryFormGroup.reset(query, {emitEvent: false});

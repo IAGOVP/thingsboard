@@ -372,13 +372,21 @@ export interface ColorProcessorSettings {
   maxGradientValue?: number;
 }
 
+
 /**
-
- * TypeScript models and enums for color processor.
-
+ * TypeScript interfaces, types, and enums for color processor (shared TypeScript models).
  */
 
+
 export abstract class ColorProcessor {
+
+  /**
+   * from settings.
+   *
+   * @param color color (ColorSettings)
+   * @param ctx Angular template or component context
+   * @returns ColorProcessor observable or value
+   */
 
   static fromSettings(color: ColorSettings, ctx?: WidgetContext): ColorProcessor {
     return ColorProcessor.fromColorProcessorSettings({
@@ -386,6 +394,13 @@ export abstract class ColorProcessor {
       ctx
     });
   }
+
+  /**
+   * from color processor settings.
+   *
+   * @param setting setting (ColorProcessorSettings)
+   * @returns ColorProcessor observable or value
+   */
 
   static fromColorProcessorSettings(setting: ColorProcessorSettings): ColorProcessor {
     const settings = setting.settings || constantColor(null);
@@ -413,6 +428,10 @@ export abstract class ColorProcessor {
   }
 
   abstract update(value: any): void;
+  /**
+   * destroy.
+   *
+   */
   destroy(): void {};
 }
 

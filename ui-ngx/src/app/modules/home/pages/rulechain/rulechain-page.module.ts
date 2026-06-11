@@ -40,6 +40,9 @@ import { RuleNoteEditorComponent } from '@home/pages/rulechain/rule-note-editor.
 /**
  * Angular NgModule: rule chain page feature area.
  */
+/**
+ * Angular NgModule bundling rule chain page (home/rulechain pages).
+ */
 @NgModule({
   declarations: [
     RuleChainPageComponent,
@@ -60,5 +63,5 @@ import { RuleNoteEditorComponent } from '@home/pages/rulechain/rule-note-editor.
     EntityDebugSettingsButtonComponent,
     RuleNodeConfigModule,
     HomeComponentsModule,
-  ]})
+]})
 export class RuleChainPageModule {}

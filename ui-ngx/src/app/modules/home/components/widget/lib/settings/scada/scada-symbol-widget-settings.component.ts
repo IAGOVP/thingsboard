@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { scadaSymbolWidgetDefaultSettings } from '@home/components/widget/lib/scada/scada-symbol-widget.models';
 
+
+/**
+ * Angular component: scada symbol widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-widget-settings`.
+ */
 @Component({
     selector: 'tb-scada-symbol-widget-settings',
     templateUrl: './scada-symbol-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: scada symbol widget settings UI.
- */
+standalone: false
 })
 export class ScadaSymbolWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -47,13 +50,31 @@ export class ScadaSymbolWidgetSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.scadaSymbolWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return scadaSymbolWidgetDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.scadaSymbolWidgetSettingsForm = this.fb.group({

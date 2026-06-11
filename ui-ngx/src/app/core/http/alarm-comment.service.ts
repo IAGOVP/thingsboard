@@ -23,7 +23,9 @@ import { PageData } from '@shared/models/page/page-data';
 import { AlarmComment, AlarmCommentInfo } from '@shared/models/alarm.models';
 
 /**
- * Angular HTTP service: alarm comment REST wrappers (`@core/http`).
+ * Angular injectable service: alarm comment (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -34,19 +36,46 @@ export class AlarmCommentService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}/comment, ...`. */
+  
+  /**
+   * POST/PUT entity — save alarm comment.
+   *
+   * @param alarmId alarm UUID
+   * @param alarmComment alarm comment (AlarmComment)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AlarmComment> observable or value
+   */
+
 
   public saveAlarmComment(alarmId: string, alarmComment: AlarmComment, config?: RequestConfig): Observable<AlarmComment> {
     return this.http.post<AlarmComment>(`/api/alarm/${alarmId}/comment`, alarmComment, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}/comment${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get alarm comments.
+   *
+   * @param alarmId alarm UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AlarmCommentInfo>> observable or value
+   */
+
 
   public getAlarmComments(alarmId: string, pageLink: PageLink, config?: RequestConfig): Observable<PageData<AlarmCommentInfo>> {
     return this.http.get<PageData<AlarmComment>>(`/api/alarm/${alarmId}/comment${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}/comment/${commentId}`. */
+  
+  /**
+   * DELETE — delete alarm comments.
+   *
+   * @param alarmId alarm UUID
+   * @param commentId comment id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public deleteAlarmComments(alarmId: string, commentId: string, config?: RequestConfig): Observable<void> {
     return this.http.delete<void>(`/api/alarm/${alarmId}/comment/${commentId}`, defaultHttpOptionsFromConfig(config));

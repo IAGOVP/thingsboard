@@ -34,14 +34,17 @@ import { WidgetConfigComponentData } from '@home/models/widget-component.models'
 import { TimeSeriesChartWidgetSettings } from '@home/components/widget/lib/chart/time-series-chart-widget.models';
 import { WidgetService } from '@core/http/widget.service';
 
+
+/**
+ * Angular component: time series chart key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-key-settings`.
+ */
 @Component({
     selector: 'tb-time-series-chart-key-settings',
     templateUrl: './time-series-chart-key-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: time series chart key settings UI.
- */
+standalone: false
 })
 export class TimeSeriesChartKeySettingsComponent extends WidgetSettingsComponent {
 
@@ -71,9 +74,21 @@ export class TimeSeriesChartKeySettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.timeSeriesChartKeySettingsForm;
   }
+
+  /**
+   * Event handler for widget config set.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected onWidgetConfigSet(widgetConfig: WidgetConfigComponentData) {
     const params = widgetConfig.typeParameters as any;
@@ -85,9 +100,21 @@ export class TimeSeriesChartKeySettingsComponent extends WidgetSettingsComponent
     this.comparisonEnabled = !!widgetSettings.comparisonEnabled;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return timeSeriesChartKeyDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     const seriesSettings = settings as TimeSeriesChartKeySettings;
@@ -111,9 +138,21 @@ export class TimeSeriesChartKeySettingsComponent extends WidgetSettingsComponent
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showInLegend', 'type', 'comparisonSettings.showValuesForComparison'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param _emitEvent  emit event (boolean)
+   */
 
   protected updateValidators(_emitEvent: boolean) {
     const showInLegend: boolean = this.timeSeriesChartKeySettingsForm.get('showInLegend').value;

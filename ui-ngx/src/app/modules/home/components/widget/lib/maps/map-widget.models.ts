@@ -23,11 +23,11 @@ import { TbMap } from '@home/components/widget/lib/maps/map';
 import { TbGeoMap } from '@home/components/widget/lib/maps/geo-map';
 import { TbImageMap } from '@home/components/widget/lib/maps/image-map';
 
+
 /**
-
- * TypeScript models and enums for map widget settings.
-
+ * Map widget settings (ThingsBoard web UI).
  */
+
 
 export interface MapWidgetSettings extends MapSetting {
   background: BackgroundSettings;

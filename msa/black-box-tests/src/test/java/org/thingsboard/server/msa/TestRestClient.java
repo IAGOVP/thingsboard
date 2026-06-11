@@ -86,11 +86,13 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.thingsboard.server.common.data.StringUtils.isEmpty;
 
+
 /**
 
- * Test rest client.
+ * REST client wrapper for black-box tests against the running ThingsBoard container.
 
  */
+
 
 public class TestRestClient {
     private static final String JWT_TOKEN_HEADER_PARAM = "X-Authorization";
@@ -112,6 +114,14 @@ public class TestRestClient {
             requestSpec.relaxedHTTPSValidation();
         }
     }
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @param username username ({@link String})
+     * @param password password ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void login(String username, String password) {
         Map<String, String> loginRequest = new HashMap<>();
@@ -125,11 +135,24 @@ public class TestRestClient {
         refreshToken = jsonPath.get("refreshToken");
         requestSpec.header(JWT_TOKEN_HEADER_PARAM, "Bearer " + token);
     }
+    /**
+     * Reset token.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void resetToken() {
         token = null;
         refreshToken = null;
     }
+    /**
+     * Post tenant.
+     *
+     * @param tenant tenant ({@link Tenant})
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Tenant postTenant(Tenant tenant) {
         return given().spec(requestSpec).body(tenant)
@@ -139,6 +162,14 @@ public class TestRestClient {
                 .extract()
                 .as(Tenant.class);
     }
+    /**
+     * Post device.
+     *
+     * @param accessToken access token ({@link String})
+     * @param device device ({@link Device})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Device postDevice(String accessToken, Device device) {
         return given().spec(requestSpec).body(device)
@@ -149,6 +180,14 @@ public class TestRestClient {
                 .extract()
                 .as(Device.class);
     }
+    /**
+     * Post rpc lwm2m params.
+     *
+     * @param deviceIdStr device id str ({@link String})
+     * @param body body ({@link String})
+     * @return {@link ObjectNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ObjectNode postRpcLwm2mParams(String deviceIdStr, String body) {
         return given().spec(requestSpec).body(body)
@@ -158,6 +197,13 @@ public class TestRestClient {
                 .extract()
                 .as(ObjectNode.class);
     }
+    /**
+     * Post calculated field.
+     *
+     * @param calculatedField calculated field ({@link CalculatedField})
+     * @return {@link CalculatedField}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public CalculatedField postCalculatedField(CalculatedField calculatedField) {
         return given().spec(requestSpec).body(calculatedField)
@@ -167,6 +213,13 @@ public class TestRestClient {
                 .extract()
                 .as(CalculatedField.class);
     }
+    /**
+     * Returns device by name.
+     *
+     * @param deviceName device name ({@link String})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Device getDeviceByName(String deviceName) {
         return given().spec(requestSpec).pathParam("deviceName", deviceName)
@@ -176,6 +229,14 @@ public class TestRestClient {
                 .extract()
                 .as(Device.class);
     }
+    /**
+     * Returns device by id.
+     *
+     * @param deviceId device under test
+     * @param statusCode status code
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse getDeviceById(DeviceId deviceId, int statusCode) {
         return given().spec(requestSpec)
@@ -184,12 +245,26 @@ public class TestRestClient {
                 .then()
                 .statusCode(statusCode);
     }
+    /**
+     * Returns device by id.
+     *
+     * @param deviceId device under test
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Device getDeviceById(DeviceId deviceId) {
         return getDeviceById(deviceId, HTTP_OK)
                 .extract()
                 .as(Device.class);
     }
+    /**
+     * Returns devices.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<Device> getDevices(PageLink pageLink) {
         Map<String, String> params = new HashMap<>();
@@ -202,6 +277,13 @@ public class TestRestClient {
                 .as(new TypeRef<PageData<Device>>() {
                 });
     }
+    /**
+     * Returns device credentials by device id.
+     *
+     * @param deviceId device under test
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DeviceCredentials getDeviceCredentialsByDeviceId(DeviceId deviceId) {
         return given().spec(requestSpec).get("/api/device/{deviceId}/credentials", deviceId.getId())
@@ -211,6 +293,14 @@ public class TestRestClient {
                 .extract()
                 .as(DeviceCredentials.class);
     }
+    /**
+     * Post telemetry.
+     *
+     * @param credentialsId credentials id ({@link String})
+     * @param telemetry telemetry ({@link JsonNode})
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse postTelemetry(String credentialsId, JsonNode telemetry) {
         return given().spec(requestSpec).body(telemetry)
@@ -218,6 +308,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Removes a device by id through REST API.
+     *
+     * @param deviceId device under test
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse deleteDevice(DeviceId deviceId) {
         return given().spec(requestSpec)
@@ -225,6 +322,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Deletes device if exists.
+     *
+     * @param deviceId device under test
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse deleteDeviceIfExists(DeviceId deviceId) {
         return given().spec(requestSpec)
@@ -232,6 +336,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(anyOf(is(HTTP_OK), is(HTTP_NOT_FOUND)));
     }
+    /**
+     * Deletes calculated field if exists.
+     *
+     * @param calculatedFieldId calculated field id ({@link CalculatedFieldId})
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse deleteCalculatedFieldIfExists(CalculatedFieldId calculatedFieldId) {
         return given().spec(requestSpec)
@@ -239,6 +350,15 @@ public class TestRestClient {
                 .then()
                 .statusCode(anyOf(is(HTTP_OK), is(HTTP_NOT_FOUND)));
     }
+    /**
+     * Post telemetry attribute.
+     *
+     * @param entityId target entity identifier
+     * @param scope scope ({@link AttributeScope})
+     * @param attribute attribute ({@link JsonNode})
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse postTelemetryAttribute(EntityId entityId, AttributeScope scope, JsonNode attribute) {
         return given().spec(requestSpec).body(attribute)
@@ -246,6 +366,14 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Post attribute.
+     *
+     * @param accessToken access token ({@link String})
+     * @param attribute attribute ({@link JsonNode})
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse postAttribute(String accessToken, JsonNode attribute) {
         return given().spec(requestSpec).body(attribute)
@@ -253,6 +381,15 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Returns attributes.
+     *
+     * @param accessToken access token ({@link String})
+     * @param clientKeys client keys ({@link String})
+     * @param sharedKeys shared keys ({@link String})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public JsonNode getAttributes(String accessToken, String clientKeys, String sharedKeys) {
         return given().spec(requestSpec)
@@ -264,6 +401,15 @@ public class TestRestClient {
                 .extract()
                 .as(JsonNode.class);
     }
+    /**
+     * Returns attributes.
+     *
+     * @param entityId target entity identifier
+     * @param scope scope ({@link AttributeScope})
+     * @param keys keys ({@link String})
+     * @return {@link ArrayNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ArrayNode getAttributes(EntityId entityId, AttributeScope scope, String keys) {
         return given().spec(requestSpec)
@@ -273,6 +419,15 @@ public class TestRestClient {
                 .extract()
                 .as(ArrayNode.class);
     }
+    /**
+     * Deletes entity attributes.
+     *
+     * @param entityId target entity identifier
+     * @param scope scope ({@link AttributeScope})
+     * @param keys keys ({@link String})
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     public ValidatableResponse deleteEntityAttributes(EntityId entityId, AttributeScope scope, String keys) {
@@ -287,6 +442,15 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Deletes entity timeseries.
+     *
+     * @param entityId target entity identifier
+     * @param keys keys ({@link String})
+     * @param deleteAllDataForKeys delete all data for keys
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse deleteEntityTimeseries(EntityId entityId, String keys, boolean deleteAllDataForKeys) {
         Map<String, String> pathParams = new HashMap<>();
@@ -300,6 +464,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Returns latest telemetry.
+     *
+     * @param entityId target entity identifier
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public JsonNode getLatestTelemetry(EntityId entityId) {
         return given().spec(requestSpec)
@@ -309,6 +480,13 @@ public class TestRestClient {
                 .extract()
                 .as(JsonNode.class);
     }
+    /**
+     * Post provision request.
+     *
+     * @param provisionRequest provision request ({@link String})
+     * @return {@link JsonPath}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public JsonPath postProvisionRequest(String provisionRequest) {
         return given().spec(requestSpec)
@@ -317,6 +495,13 @@ public class TestRestClient {
                 .getBody()
                 .jsonPath();
     }
+    /**
+     * Returns rule chains.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<RuleChain> getRuleChains(PageLink pageLink) {
         Map<String, String> params = new HashMap<>();
@@ -329,6 +514,13 @@ public class TestRestClient {
                 .as(new TypeRef<PageData<RuleChain>>() {
                 });
     }
+    /**
+     * Post rule chain.
+     *
+     * @param ruleChain rule chain ({@link RuleChain})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public RuleChain postRuleChain(RuleChain ruleChain) {
         return given().spec(requestSpec)
@@ -339,6 +531,13 @@ public class TestRestClient {
                 .extract()
                 .as(RuleChain.class);
     }
+    /**
+     * Post rule chain metadata.
+     *
+     * @param ruleChainMetaData rule chain meta data ({@link RuleChainMetaData})
+     * @return {@link RuleChainMetaData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public RuleChainMetaData postRuleChainMetadata(RuleChainMetaData ruleChainMetaData) {
         return given().spec(requestSpec)
@@ -349,6 +548,13 @@ public class TestRestClient {
                 .extract()
                 .as(RuleChainMetaData.class);
     }
+    /**
+     * Set root rule chain.
+     *
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setRootRuleChain(RuleChainId ruleChainId) {
         given().spec(requestSpec)
@@ -356,6 +562,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Deletes rule chain.
+     *
+     * @param ruleChainId rule chain id ({@link RuleChainId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteRuleChain(RuleChainId ruleChainId) {
         given().spec(requestSpec)
@@ -363,6 +576,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Test rule chain script.
+     *
+     * @param body body ({@link Object})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public JsonNode testRuleChainScript(Object body) {
         return given().spec(requestSpec)
@@ -396,6 +616,14 @@ public class TestRestClient {
             params.put("sortOrder", pageLink.getSortOrder().getDirection().name());
         }
     }
+    /**
+     * Finds relation by from.
+     *
+     * @param fromId from id ({@link EntityId})
+     * @param relationTypeGroup relation type group ({@link RelationTypeGroup})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<EntityRelation> findRelationByFrom(EntityId fromId, RelationTypeGroup relationTypeGroup) {
         Map<String, String> params = new HashMap<>();
@@ -412,6 +640,13 @@ public class TestRestClient {
                 .as(new TypeRef<List<EntityRelation>>() {
                 });
     }
+    /**
+     * Post entity relation.
+     *
+     * @param entityRelation entity relation ({@link EntityRelation})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityRelation postEntityRelation(EntityRelation entityRelation) {
         return given().spec(requestSpec)
@@ -422,6 +657,15 @@ public class TestRestClient {
                 .extract()
                 .as(EntityRelation.class);
     }
+    /**
+     * Deletes entity relation.
+     *
+     * @param fromId from id ({@link EntityId})
+     * @param relationType relation type ({@link String})
+     * @param toId to id ({@link EntityId})
+     * @return {@link EntityRelation}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     public EntityRelation deleteEntityRelation(EntityId fromId, String relationType, EntityId toId) {
@@ -439,6 +683,14 @@ public class TestRestClient {
                 .extract()
                 .as(EntityRelation.class);
     }
+    /**
+     * Post server side rpc.
+     *
+     * @param deviceId device under test
+     * @param serverRpcPayload server rpc payload ({@link JsonNode})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public JsonNode postServerSideRpc(DeviceId deviceId, JsonNode serverRpcPayload) {
         return given().spec(requestSpec)
@@ -449,6 +701,13 @@ public class TestRestClient {
                 .extract()
                 .as(JsonNode.class);
     }
+    /**
+     * Returns persisted rpc.
+     *
+     * @param rpcId rpc id ({@link RpcId})
+     * @return {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Rpc getPersistedRpc(RpcId rpcId) {
         return given().spec(requestSpec)
@@ -458,6 +717,14 @@ public class TestRestClient {
                 .extract()
                 .as(Rpc.class);
     }
+    /**
+     * Returns persisted rpc by device.
+     *
+     * @param deviceId device under test
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<Rpc> getPersistedRpcByDevice(DeviceId deviceId, PageLink pageLink) {
         Map<String, String> params = new HashMap<>();
@@ -470,6 +737,13 @@ public class TestRestClient {
                 .as(new TypeRef<>() {
                 });
     }
+    /**
+     * Returns device profiles.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<DeviceProfile> getDeviceProfiles(PageLink pageLink) {
         Map<String, String> params = new HashMap<>();
@@ -482,6 +756,13 @@ public class TestRestClient {
                 .as(new TypeRef<PageData<DeviceProfile>>() {
                 });
     }
+    /**
+     * Returns device profile by id.
+     *
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DeviceProfile getDeviceProfileById(DeviceProfileId deviceProfileId) {
         return given().spec(requestSpec).get("/api/deviceProfile/{deviceProfileId}", deviceProfileId.getId())
@@ -491,6 +772,13 @@ public class TestRestClient {
                 .extract()
                 .as(DeviceProfile.class);
     }
+    /**
+     * Post device profile.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DeviceProfile postDeviceProfile(DeviceProfile deviceProfile) {
         return given().spec(requestSpec).body(deviceProfile)
@@ -500,6 +788,13 @@ public class TestRestClient {
                 .extract()
                 .as(DeviceProfile.class);
     }
+    /**
+     * Deletes device profile.
+     *
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteDeviceProfile(DeviceProfileId deviceProfileId) {
         given().spec(requestSpec)
@@ -507,6 +802,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Set default device profile.
+     *
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setDefaultDeviceProfile(DeviceProfileId deviceProfileId) {
         given().spec(requestSpec)
@@ -514,6 +816,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Post asset profile.
+     *
+     * @param assetProfile asset profile ({@link AssetProfile})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public AssetProfile postAssetProfile(AssetProfile assetProfile) {
         return given().spec(requestSpec).body(assetProfile)
@@ -523,6 +832,13 @@ public class TestRestClient {
                 .extract()
                 .as(AssetProfile.class);
     }
+    /**
+     * Returns asset profiles.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<AssetProfile> getAssetProfiles(PageLink pageLink) {
         Map<String, String> params = new HashMap<>();
@@ -535,6 +851,13 @@ public class TestRestClient {
                 .as(new TypeRef<PageData<AssetProfile>>() {
                 });
     }
+    /**
+     * Deletes asset profile.
+     *
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteAssetProfile(AssetProfileId assetProfileId) {
         given().spec(requestSpec)
@@ -542,6 +865,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Set default asset profile.
+     *
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setDefaultAssetProfile(AssetProfileId assetProfileId) {
         given().spec(requestSpec)
@@ -549,6 +879,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Post customer.
+     *
+     * @param customer customer ({@link Customer})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Customer postCustomer(Customer customer) {
         return given().spec(requestSpec)
@@ -559,6 +896,13 @@ public class TestRestClient {
                 .extract()
                 .as(Customer.class);
     }
+    /**
+     * Deletes customer.
+     *
+     * @param customerId customer id ({@link CustomerId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteCustomer(CustomerId customerId) {
         given().spec(requestSpec)
@@ -566,6 +910,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Returns customers.
+     *
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<Customer> getCustomers(PageLink pageLink) {
         Map<String, String> params = new HashMap<>();
@@ -578,6 +929,13 @@ public class TestRestClient {
                 .as(new TypeRef<PageData<Customer>>() {
                 });
     }
+    /**
+     * Post alarm.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Alarm postAlarm(Alarm alarm) {
         return given().spec(requestSpec)
@@ -588,6 +946,13 @@ public class TestRestClient {
                 .extract()
                 .as(Alarm.class);
     }
+    /**
+     * Deletes alarm.
+     *
+     * @param alarmId alarm id ({@link AlarmId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteAlarm(AlarmId alarmId) {
         given().spec(requestSpec)
@@ -595,6 +960,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Post user.
+     *
+     * @param user authenticated user performing the action
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public User postUser(User user) {
         return given().spec(requestSpec)
@@ -605,12 +977,27 @@ public class TestRestClient {
                 .extract()
                 .as(User.class);
     }
+    /**
+     * Creates user and login.
+     *
+     * @param user authenticated user performing the action
+     * @param password password ({@link String})
+     * @return {@link UserId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public UserId createUserAndLogin(User user, String password) {
         UserId userId = postUser(user).getId();
         getAndSetUserToken(userId);
         return userId;
     }
+    /**
+     * Returns and set user token.
+     *
+     * @param id id ({@link UserId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void getAndSetUserToken(UserId id) {
         ObjectNode tokenInfo = given().spec(requestSpec)
@@ -622,11 +1009,24 @@ public class TestRestClient {
         refreshToken = tokenInfo.get("refreshToken").asText();
         requestSpec.header(JWT_TOKEN_HEADER_PARAM, "Bearer " + token);
     }
+    /**
+     * Reset tokens.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void resetTokens() {
         this.token = null;
         this.refreshToken = null;
     }
+    /**
+     * Deletes user.
+     *
+     * @param userId user id ({@link UserId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteUser(UserId userId) {
         given().spec(requestSpec)
@@ -634,14 +1034,33 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Returns token.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getToken() {
         return token;
     }
+    /**
+     * Returns refresh token.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getRefreshToken() {
         return refreshToken;
     }
+    /**
+     * Post asset.
+     *
+     * @param asset asset ({@link Asset})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Asset postAsset(Asset asset) {
         return given().spec(requestSpec)
@@ -652,6 +1071,13 @@ public class TestRestClient {
                 .extract()
                 .as(Asset.class);
     }
+    /**
+     * Returns asset by id.
+     *
+     * @param assetId asset id ({@link AssetId})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Asset getAssetById(AssetId assetId) {
         return given().spec(requestSpec)
@@ -661,6 +1087,13 @@ public class TestRestClient {
                 .extract()
                 .as(Asset.class);
     }
+    /**
+     * Deletes asset.
+     *
+     * @param assetId asset id ({@link AssetId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteAsset(AssetId assetId) {
         given().spec(requestSpec)
@@ -668,6 +1101,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Post entity view.
+     *
+     * @param entityView entity view ({@link EntityView})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityView postEntityView(EntityView entityView) {
         return given().spec(requestSpec)
@@ -678,6 +1118,13 @@ public class TestRestClient {
                 .extract()
                 .as(EntityView.class);
     }
+    /**
+     * Returns entity view by id.
+     *
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityView getEntityViewById(EntityViewId entityViewId) {
         return given().spec(requestSpec)
@@ -687,6 +1134,13 @@ public class TestRestClient {
                 .extract()
                 .as(EntityView.class);
     }
+    /**
+     * Deletes entity view.
+     *
+     * @param entityViewId entity view id ({@link EntityViewId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteEntityView(EntityViewId entityViewId) {
         given().spec(requestSpec)
@@ -694,6 +1148,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Post dashboard.
+     *
+     * @param dashboard dashboard ({@link Dashboard})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Dashboard postDashboard(Dashboard dashboard) {
         return given().spec(requestSpec)
@@ -704,6 +1165,13 @@ public class TestRestClient {
                 .extract()
                 .as(Dashboard.class);
     }
+    /**
+     * Deletes dashboard.
+     *
+     * @param dashboardId dashboard id ({@link DashboardId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteDashboard(DashboardId dashboardId) {
         given().spec(requestSpec)
@@ -711,6 +1179,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Set device public.
+     *
+     * @param deviceId device under test
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setDevicePublic(DeviceId deviceId) {
         given().spec(requestSpec)
@@ -718,6 +1193,16 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Returns events.
+     *
+     * @param entityId target entity identifier
+     * @param eventType event type ({@link EventType})
+     * @param tenantId target tenant UUID in the test environment
+     * @param pageLink pagination and sort parameters
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<EventInfo> getEvents(EntityId entityId, EventType eventType, TenantId tenantId, TimePageLink pageLink) {
         Map<String, String> params = new HashMap<>();
@@ -734,6 +1219,13 @@ public class TestRestClient {
                 .extract()
                 .as(new TypeRef<>() {});
     }
+    /**
+     * Post tb resource if not exists.
+     *
+     * @param lwModel lw model ({@link TbResource})
+     * @return {@link ValidatableResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ValidatableResponse postTbResourceIfNotExists(TbResource lwModel) {
         return given().spec(requestSpec).body(lwModel)
@@ -741,6 +1233,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(anyOf(is(HTTP_OK), is(HTTP_BAD_REQUEST)));
     }
+    /**
+     * Deletes device profile if exists.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteDeviceProfileIfExists(DeviceProfile deviceProfile) {
         given().spec(requestSpec)
@@ -748,6 +1247,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(anyOf(is(HTTP_OK), is(HTTP_NOT_FOUND)));
     }
+    /**
+     * Returns device by name if exists.
+     *
+     * @param deviceName device name ({@link String})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Device getDeviceByNameIfExists(String deviceName) {
         ValidatableResponse response = given().spec(requestSpec)
@@ -762,6 +1268,13 @@ public class TestRestClient {
             return null;
         }
     }
+    /**
+     * Post device credentials.
+     *
+     * @param deviceCredentials device credentials ({@link DeviceCredentials})
+     * @return {@link DeviceCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DeviceCredentials postDeviceCredentials(DeviceCredentials deviceCredentials) {
         return given().spec(requestSpec).body(deviceCredentials)
@@ -793,6 +1306,13 @@ public class TestRestClient {
         }
         return urlParams;
     }
+    /**
+     * Post entity data query.
+     *
+     * @param entityDataQuery entity data query ({@link EntityDataQuery})
+     * @return {@link PageData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public PageData<EntityData> postEntityDataQuery(EntityDataQuery entityDataQuery) {
         return given().spec(requestSpec).body(entityDataQuery)
@@ -802,6 +1322,13 @@ public class TestRestClient {
                 .extract()
                 .as(new TypeRef<>() {});
     }
+    /**
+     * Post count data query.
+     *
+     * @param entityCountQuery entity count query ({@link EntityCountQuery})
+     * @return {@link Long}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Long postCountDataQuery(EntityCountQuery entityCountQuery) {
         return given().spec(requestSpec).body(entityCountQuery)
@@ -811,6 +1338,12 @@ public class TestRestClient {
                 .extract()
                 .as(Long.class);
     }
+    /**
+     * Returns edqs state.
+     *
+     * @return {@link EdqsState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EdqsState getEdqsState() {
         return given().spec(requestSpec)
@@ -820,6 +1353,14 @@ public class TestRestClient {
                 .extract()
                 .as(EdqsState.class);
     }
+    /**
+     * Assigns device to customer.
+     *
+     * @param customerId customer id ({@link CustomerId})
+     * @param id id ({@link DeviceId})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void assignDeviceToCustomer(CustomerId customerId, DeviceId id) {
         given().spec(requestSpec)
@@ -827,6 +1368,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Deletes tenant.
+     *
+     * @param tenantId target tenant UUID in the test environment
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void deleteTenant(TenantId tenantId) {
         given().spec(requestSpec)
@@ -834,6 +1382,13 @@ public class TestRestClient {
                 .then()
                 .statusCode(HTTP_OK);
     }
+    /**
+     * Post tenant profile.
+     *
+     * @param tenantProfile tenant profile ({@link TenantProfile})
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TenantProfile postTenantProfile(TenantProfile tenantProfile) {
         return given().spec(requestSpec).body(tenantProfile)
@@ -843,6 +1398,12 @@ public class TestRestClient {
                 .extract()
                 .as(TenantProfile.class);
     }
+    /**
+     * Returns default tenant profile info.
+     *
+     * @return {@link EntityInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public EntityInfo getDefaultTenantProfileInfo() {
         return given().spec(requestSpec)
@@ -852,6 +1413,13 @@ public class TestRestClient {
                 .extract()
                 .as(EntityInfo.class);
     }
+    /**
+     * Returns tenant profile by id.
+     *
+     * @param tenantProfileId tenant profile id ({@link String})
+     * @return {@link TenantProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public TenantProfile getTenantProfileById(String tenantProfileId) {
         return given().spec(requestSpec)

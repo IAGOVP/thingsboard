@@ -28,14 +28,17 @@ import {
   LatestChartWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/latest-chart-widget-settings.component';
 
+
+/**
+ * Angular component: doughnut widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-doughnut-widget-settings`.
+ */
 @Component({
     selector: 'tb-doughnut-widget-settings',
     templateUrl: './latest-chart-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: doughnut widget settings UI.
- */
+standalone: false
 })
 export class DoughnutWidgetSettingsComponent extends LatestChartWidgetSettingsComponent<DoughnutWidgetSettings> {
 
@@ -47,13 +50,31 @@ export class DoughnutWidgetSettingsComponent extends LatestChartWidgetSettingsCo
     super(store, fb);
   }
 
+  /**
+   * default latest chart settings.
+   *
+   */
+
   protected defaultLatestChartSettings() {
     return doughnutDefaultSettings(this.doughnutHorizontal);
   }
 
+  /**
+   * latest chart config template.
+   *
+   * @returns TemplateRef<any> observable or value
+   */
+
   public latestChartConfigTemplate(): TemplateRef<any> {
     return this.doughnutChartConfigTemplate;
   }
+
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
 
   protected setupLatestChartControls(latestChartWidgetSettingsForm: UntypedFormGroup, settings: WidgetSettings) {
     latestChartWidgetSettingsForm.addControl('layout', this.fb.control(settings.layout, []));
@@ -63,9 +84,23 @@ export class DoughnutWidgetSettingsComponent extends LatestChartWidgetSettingsCo
     latestChartWidgetSettingsForm.addControl('totalValueColor', this.fb.control(settings.totalValueColor, []));
   }
 
+  /**
+   * latest chart validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected latestChartValidatorTriggers(): string[] {
     return ['layout'];
   }
+
+  /**
+   * update latest chart validators.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateLatestChartValidators(latestChartWidgetSettingsForm: UntypedFormGroup, emitEvent: boolean, trigger?: string) {
     const layout: DoughnutLayout = latestChartWidgetSettingsForm.get('layout').value;

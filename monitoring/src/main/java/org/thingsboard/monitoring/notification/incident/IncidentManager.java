@@ -31,11 +31,11 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Thread-safety: all public entry points and scheduled callbacks are {@code synchronized} on the
- * manager instance. Transport I/O is performed while the monitor is held. This is safe under the
- * assumptions that (a) the transport enforces a short per-call timeout, and (b) notification
- * producers are single-threaded; see the Slack client (default 5s) for the Slack-based transport.
+ * Tracks open incidents and routes failure/recovery messages.
+ *
+ * <p>Delegates to {@link org.thingsboard.monitoring.notification.incident.IncidentTransport} implementations (e.g. Slack).
  */
+
 @Slf4j
 public class IncidentManager {
 
@@ -66,6 +66,14 @@ public class IncidentManager {
             return t;
         });
     }
+    /**
+     * Send alert.
+     *
+     * @param message Slack or notification message body
+     * @param affectedServices affected services ({@link List})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public synchronized void sendAlert(String message, List<AffectedService> affectedServices) {
         try {
@@ -277,6 +285,12 @@ public class IncidentManager {
         }
         return sb.toString();
     }
+    /**
+     * Shutdown.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void shutdown() {
         scheduler.shutdownNow();

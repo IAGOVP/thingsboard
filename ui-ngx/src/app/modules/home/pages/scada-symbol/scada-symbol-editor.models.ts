@@ -64,11 +64,11 @@ export interface ScadaSymbolEditObjectCallbacks {
 const minSymbolZoom = 0.75;
 const maxSymbolZoom = 4;
 
+
 /**
-
- * TypeScript models and enums for scada symbol edit object.
-
+ * Scada symbol edit object (home/scada-symbol pages).
  */
+
 
 export class ScadaSymbolEditObject {
 
@@ -97,9 +97,21 @@ export class ScadaSymbolEditObject {
     });
   }
 
+  /**
+   * set read only.
+   *
+   * @param readonly readonly (boolean)
+   */
+
   public setReadOnly(readonly: boolean) {
     this.readonly = readonly;
   }
+
+  /**
+   * set content.
+   *
+   * @param svgContent svg content (string)
+   */
 
   public setContent(svgContent: string) {
     this.shapeResize$.unobserve(this.rootElement);
@@ -133,6 +145,12 @@ export class ScadaSymbolEditObject {
     this.shapeResize$.observe(this.rootElement);
   }
 
+  /**
+   * get content.
+   *
+   * @returns string observable or value
+   */
+
   public getContent(): string {
     if (this.svgShape) {
       this.elements.forEach(e => e.restoreOrigVisibility());
@@ -154,24 +172,51 @@ export class ScadaSymbolEditObject {
     }
   }
 
+  /**
+   * cancel edit.
+   *
+   */
+
   public cancelEdit() {
     this.elements.filter(e => e.isEditing()).forEach(e => e.stopEdit(true));
   }
+
+  /**
+   * zoom in.
+   *
+   */
 
   public zoomIn() {
     const level = Math.min(Math.pow(1 + this.zoomFactor, 1.2) * this.svgShape.zoom(), maxSymbolZoom);
     this.zoomAnimate(level);
   }
 
+  /**
+   * zoom out.
+   *
+   */
+
   public zoomOut() {
     const level = Math.max(Math.pow(1 + this.zoomFactor, -1.2) * this.svgShape.zoom(), minSymbolZoom);
     this.zoomAnimate(level);
   }
 
+  /**
+   * show hidden elements.
+   *
+   * @param show show (boolean)
+   */
+
   public showHiddenElements(show: boolean) {
     this.showHidden = show;
     this.elements.forEach(e => show ? e.showInvisible() : e.hideInvisible());
   }
+
+  /**
+   * zoom animate.
+   *
+   * @param level level (number)
+   */
 
   private zoomAnimate(level: number, animationMs = 200) {
     if (level !== this.svgShape.zoom()) {
@@ -189,13 +234,28 @@ export class ScadaSymbolEditObject {
     }
   }
 
+  /**
+   * zoom in disabled.
+   *
+   */
+
   public zoomInDisabled() {
     return Number(this.svgShape.zoom().toFixed(5)) >= maxSymbolZoom;
   }
 
+  /**
+   * zoom out disabled.
+   *
+   */
+
   public zoomOutDisabled() {
     return Number(this.svgShape.zoom().toFixed(5)) <= minSymbolZoom;
   }
+
+  /**
+   * do setup.
+   *
+   */
 
   private doSetup() {
     this.setupZoomPan();
@@ -209,6 +269,11 @@ export class ScadaSymbolEditObject {
       });
     });
   }
+
+  /**
+   * setup zoom pan.
+   *
+   */
 
   private setupZoomPan() {
     this.svgShape.panZoom({
@@ -251,6 +316,13 @@ export class ScadaSymbolEditObject {
     }
   }
 
+  /**
+   * restrict to margins.
+   *
+   * @param box box (Box)
+   * @returns Box observable or value
+   */
+
   private restrictToMargins(box: Box): Box {
     const marginX = Math.max(box.width - this.box.width, 0);
     const marginY = Math.max(box.height - this.box.height, 0);
@@ -266,6 +338,11 @@ export class ScadaSymbolEditObject {
     }
     return box;
   }
+
+  /**
+   * setup elements.
+   *
+   */
 
   private setupElements() {
     this.svgShape.children().forEach(child => {
@@ -323,6 +400,12 @@ export class ScadaSymbolEditObject {
     }
   }
 
+  /**
+   * POST/PUT entity — add element.
+   *
+   * @param e e (Element)
+   */
+
   private addElement(e: Element, parentInvisible = false) {
     if (hasBBox(e)) {
       const invisible = parentInvisible || !e.visible();
@@ -336,6 +419,11 @@ export class ScadaSymbolEditObject {
     }
   }
 
+  /**
+   * destroy.
+   *
+   */
+
   public destroy() {
     if (this.shapeResize$) {
       this.shapeResize$.disconnect();
@@ -343,12 +431,22 @@ export class ScadaSymbolEditObject {
     this.destroyElements();
   }
 
+  /**
+   * destroy elements.
+   *
+   */
+
   private destroyElements() {
     this.elements.forEach(e => {
       e.destroy();
     });
     this.elements.length = 0;
   }
+
+  /**
+   * resize.
+   *
+   */
 
   private resize() {
     if (this.svgShape) {
@@ -377,6 +475,11 @@ export class ScadaSymbolEditObject {
     }
   }
 
+  /**
+   * update hover filter style.
+   *
+   */
+
   private updateHoverFilterStyle() {
     if (this.hoverFilterStyle) {
       this.hoverFilterStyle.remove();
@@ -394,11 +497,21 @@ export class ScadaSymbolEditObject {
       );
   }
 
+  /**
+   * update tooltip positions.
+   *
+   */
+
   private updateTooltipPositions() {
     for (const e of this.elements) {
       e.updateTooltipPosition();
     }
   }
+
+  /**
+   * hide tooltips.
+   *
+   */
 
   private hideTooltips() {
     for (const e of this.elements) {
@@ -406,11 +519,21 @@ export class ScadaSymbolEditObject {
     }
   }
 
+  /**
+   * restore tooltips.
+   *
+   */
+
   private restoreTooltips() {
     for (const e of this.elements) {
       e.restoreTooltip();
     }
   }
+
+  /**
+   * update tags.
+   *
+   */
 
   public updateTags() {
     this.tags = this.elements
@@ -421,25 +544,63 @@ export class ScadaSymbolEditObject {
     this.callbacks.tagsUpdated(this.tags);
   }
 
+  /**
+   * get tags.
+   *
+   * @returns string[] observable or value
+   */
+
   public getTags(): string[] {
     return this.tags;
   }
+
+  /**
+   * tag has state render function.
+   *
+   * @param tag tag (string)
+   * @returns boolean observable or value
+   */
 
   public tagHasStateRenderFunction(tag: string): boolean {
     return this.callbacks.tagHasStateRenderFunction(tag);
   }
 
+  /**
+   * tag has click action.
+   *
+   * @param tag tag (string)
+   * @returns boolean observable or value
+   */
+
   public tagHasClickAction(tag: string): boolean {
     return this.callbacks.tagHasClickAction(tag);
   }
+
+  /**
+   * edit tag state render function.
+   *
+   * @param tag tag (string)
+   */
 
   public editTagStateRenderFunction(tag: string) {
     this.callbacks.editTagStateRenderFunction(tag);
   }
 
+  /**
+   * edit tag click action.
+   *
+   * @param tag tag (string)
+   */
+
   public editTagClickAction(tag: string) {
     this.callbacks.editTagClickAction(tag);
   }
+
+  /**
+   * set dirty.
+   *
+   * @param dirty dirty (boolean)
+   */
 
   public setDirty(dirty: boolean) {
     this.callbacks.onSymbolEditObjectDirty(dirty);

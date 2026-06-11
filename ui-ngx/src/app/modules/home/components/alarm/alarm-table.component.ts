@@ -41,14 +41,17 @@ interface AlarmPageQueryParams extends PageQueryParam {
   assignedToMe?: boolean;
 }
 
+
+/**
+ * Angular component: alarm table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-table`.
+ */
 @Component({
     selector: 'tb-alarm-table',
     templateUrl: './alarm-table.component.html',
     styleUrls: ['./alarm-table.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm table UI.
- */
+standalone: false
 })
 export class AlarmTableComponent implements OnInit {
 
@@ -100,6 +103,11 @@ export class AlarmTableComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.dirtyValue = !this.activeValue;

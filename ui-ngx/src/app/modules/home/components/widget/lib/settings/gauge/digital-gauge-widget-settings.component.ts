@@ -48,14 +48,17 @@ import {
 } from '@shared/models/widget-settings.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: digital gauge widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-digital-gauge-widget-settings`.
+ */
 @Component({
     selector: 'tb-digital-gauge-widget-settings',
     templateUrl: './digital-gauge-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: digital gauge widget settings UI.
- */
+standalone: false
 })
 export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -84,9 +87,21 @@ export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.digitalGaugeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -148,6 +163,12 @@ export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent
       }
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     if (!settings.barColor) {
@@ -219,6 +240,12 @@ export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent
     });
   }
 
+  /**
+   * max value validation.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private maxValueValidation(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value: string = control.value;
@@ -230,6 +257,11 @@ export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent
       return null;
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   */
 
   protected prepareOutputSettings(settings) {
 
@@ -258,9 +290,22 @@ export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent
     return settings;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['gaugeType', 'showTitle', 'showUnitTitle', 'showValue', 'showMinMax', 'showTimestamp', 'showTicks', 'animation', 'minValue'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger: string) {
     if (trigger === 'minValue') {
@@ -377,9 +422,23 @@ export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent
     this.digitalGaugeWidgetSettingsForm.get('animationRule').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * do update settings.
+   *
+   * @param settingsForm settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
+
   protected doUpdateSettings(settingsForm: UntypedFormGroup, settings: WidgetSettings) {
     settingsForm.setControl('ticksValue', this.prepareTicksValueFormArray(settings.ticksValue), {emitEvent: false});
   }
+
+  /**
+   * prepare ticks value form array.
+   *
+   * @param ticksValue ticks value (ValueSourceConfig[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareTicksValueFormArray(ticksValue: ValueSourceConfig[] | undefined): UntypedFormArray {
     const ticksValueControls: Array<AbstractControl> = [];
@@ -391,17 +450,42 @@ export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent
     return this.fb.array(ticksValueControls);
   }
 
+  /**
+   * tick values form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   tickValuesFormArray(): UntypedFormArray {
     return this.digitalGaugeWidgetSettingsForm.get('ticksValue') as UntypedFormArray;
   }
+
+  /**
+   * track by tick value.
+   *
+   * @param index index (number)
+   * @param tickValueControl tick value control (AbstractControl)
+   * @returns any observable or value
+   */
 
   public trackByTickValue(index: number, tickValueControl: AbstractControl): any {
     return tickValueControl;
   }
 
+  /**
+   * DELETE — remove tick value.
+   *
+   * @param index index (number)
+   */
+
   public removeTickValue(index: number) {
     (this.digitalGaugeWidgetSettingsForm.get('ticksValue') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add tick value.
+   *
+   */
 
   public addTickValue() {
     const tickValue: ValueSourceConfig = {
@@ -413,6 +497,12 @@ export class DigitalGaugeWidgetSettingsComponent extends WidgetSettingsComponent
     tickValuesArray.push(tickValueControl);
     this.digitalGaugeWidgetSettingsForm.updateValueAndValidity();
   }
+
+  /**
+   * tick value drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   tickValueDrop(event: CdkDragDrop<string[]>) {
     const tickValuesArray = this.digitalGaugeWidgetSettingsForm.get('ticksValue') as UntypedFormArray;

@@ -28,14 +28,17 @@ import { generateSecret, guid } from '@core/utils';
 import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
 import {EdgeService} from "@core/http/edge.service";
 
+
+/**
+ * Angular component: edge (home/edge pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edge`.
+ */
 @Component({
     selector: 'tb-edge',
     templateUrl: './edge.component.html',
     styleUrls: ['./edge.component.scss'],
-    standalone: false
-/**
- * Angular component: edge UI.
- */
+standalone: false
 })
 export class EdgeComponent extends EntityComponent<EdgeInfo> {
 
@@ -54,10 +57,20 @@ export class EdgeComponent extends EntityComponent<EdgeInfo> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.edgeScope = this.entitiesTableConfig.componentsData.edgeScope;
     super.ngOnInit();
   }
+
+  /**
+   * hide delete.
+   *
+   */
 
   hideDelete() {
     if (this.entitiesTableConfig) {
@@ -67,9 +80,23 @@ export class EdgeComponent extends EntityComponent<EdgeInfo> {
     }
   }
 
+  /**
+   * is assigned to customer.
+   *
+   * @param entity entity (EdgeInfo)
+   * @returns boolean observable or value
+   */
+
   isAssignedToCustomer(entity: EdgeInfo): boolean {
     return entity && entity.customerId && entity.customerId.id !== NULL_UUID;
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (EdgeInfo)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: EdgeInfo): UntypedFormGroup {
     const form = this.fb.group(
@@ -90,6 +117,12 @@ export class EdgeComponent extends EntityComponent<EdgeInfo> {
     return form;
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (EdgeInfo)
+   */
+
   updateForm(entity: EdgeInfo) {
     this.entityForm.patchValue({
       name: entity.name,
@@ -108,11 +141,21 @@ export class EdgeComponent extends EntityComponent<EdgeInfo> {
       });
   }
 
+  /**
+   * update form state.
+   *
+   */
+
   updateFormState() {
     super.updateFormState();
     this.entityForm.get('routingKey').disable({emitEvent: false});
     this.entityForm.get('secret').disable({emitEvent: false});
   }
+
+  /**
+   * Event handler for edge id copied.
+   *
+   */
 
   onEdgeIdCopied($event) {
     this.store.dispatch(new ActionNotificationShow(
@@ -124,6 +167,12 @@ export class EdgeComponent extends EntityComponent<EdgeInfo> {
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * Event handler for edge info copied.
+   *
+   * @param type type (string)
+   */
 
   onEdgeInfoCopied(type: string) {
     const message = type === 'key' ? 'edge.edge-key-copied-message'
@@ -137,6 +186,13 @@ export class EdgeComponent extends EntityComponent<EdgeInfo> {
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * generate routing key and secret.
+   *
+   * @param entity entity (EdgeInfo)
+   * @param form Angular reactive form group
+   */
 
   private generateRoutingKeyAndSecret(entity: EdgeInfo, form: UntypedFormGroup) {
     if (entity && !entity.id) {

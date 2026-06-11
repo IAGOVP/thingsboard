@@ -61,6 +61,12 @@ import { isNotEmptyTbFunction, TbFunction } from '@shared/models/js-function.mod
 import { FormProperty } from '@shared/models/dynamic-form.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: data key config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-data-key-config`.
+ */
 @Component({
     selector: 'tb-data-key-config',
     templateUrl: './data-key-config.component.html',
@@ -77,10 +83,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: data key config UI.
- */
+standalone: false
 })
 export class DataKeyConfigComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -208,6 +211,11 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
     this.functionScopeVariables = this.widgetService.getWidgetScopeVariables();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
 
     const widgetInfo = this.widgetComponentService.getInstantWidgetInfo(this.widget);
@@ -329,15 +337,39 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
       );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DataKey)
+   */
 
   writeValue(value: DataKey): void {
     this.modelValue = value;
@@ -357,6 +389,11 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
     }
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     this.dataKeyFormGroup.get('name').setValidators(this.modelValue.type !== DataKeyType.function &&
     this.modelValue.type !== DataKeyType.count
@@ -369,6 +406,11 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
     this.dataKeyFormGroup.get('name').updateValueAndValidity({emitEvent: false});
     this.updateComparisonValidators();
   }
+
+  /**
+   * update comparison values.
+   *
+   */
 
   private updateComparisonValues() {
     const comparisonEnabled = this.dataKeyFormGroup.get('comparisonEnabled').value;
@@ -389,6 +431,11 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
     }
     this.updateComparisonValidators();
   }
+
+  /**
+   * update comparison validators.
+   *
+   */
 
   private updateComparisonValidators() {
     const aggregationType: AggregationType = this.dataKeyFormGroup.get('aggregationType').value;
@@ -426,6 +473,11 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
     this.dataKeyFormGroup.get('comparisonCustomIntervalValue').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.modelValue = {...this.modelValue, ...this.dataKeyFormGroup.value};
     if (this.hasAdvanced) {
@@ -437,6 +489,11 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
     this.propagateChange(this.modelValue);
   }
 
+  /**
+   * clear key.
+   *
+   */
+
   clearKey() {
     this.dataKeyFormGroup.get('name').patchValue(null, {emitEvent: true});
     setTimeout(() => {
@@ -444,6 +501,13 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
       this.keyInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * fetch keys.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchKeys(searchText?: string): Observable<Array<string>> {
     if (this.keySearchText !== searchText || this.latestKeySearchResult === null) {
@@ -456,6 +520,11 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
     }
     return of(this.latestKeySearchResult);
   }
+
+  /**
+   * get keys.
+   *
+   */
 
   private getKeys() {
     if (this.fetchObservable$ === null) {
@@ -485,10 +554,23 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
     return this.fetchObservable$;
   }
 
+  /**
+   * POST/PUT entity — create key filter.
+   *
+   * @param query query (string)
+   * @returns (key: string) => boolean observable or value
+   */
+
   private createKeyFilter(query: string): (key: string) => boolean {
     const lowercaseQuery = query.toLowerCase();
     return key => key.toLowerCase().startsWith(lowercaseQuery);
   }
+
+  /**
+   * validate on submit.
+   *
+   * @returns Observable<void> observable or value
+   */
 
   public validateOnSubmit(): Observable<void> {
     if (this.modelValue.type === DataKeyType.function && this.funcBodyEdit) {
@@ -501,6 +583,12 @@ export class DataKeyConfigComponent extends PageComponent implements OnInit, Con
       return of(null);
     }
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     if (!this.dataKeyFormGroup.valid) {

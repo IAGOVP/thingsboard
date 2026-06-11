@@ -36,6 +36,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { CancelAnimationFrame, RafService } from '@core/services/raf.service';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: svg xml (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-svg-xml`.
+ */
 @Component({
     selector: 'tb-svg-xml',
     templateUrl: './svg-xml.component.html',
@@ -53,10 +59,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: svg xml UI.
- */
+standalone: false
 })
 export class SvgXmlComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
@@ -107,6 +110,11 @@ export class SvgXmlComponent implements OnInit, OnDestroy, ControlValueAccessor,
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const editorElement = this.svgXmlEditorElmRef.nativeElement;
     let editorOptions: Partial<Ace.EditorOptions> = {
@@ -152,6 +160,11 @@ export class SvgXmlComponent implements OnInit, OnDestroy, ControlValueAccessor,
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.editorResize$) {
       this.editorResize$.disconnect();
@@ -160,6 +173,11 @@ export class SvgXmlComponent implements OnInit, OnDestroy, ControlValueAccessor,
       this.svgXmlEditor.destroy();
     }
   }
+
+  /**
+   * Event handler for ace editor resize.
+   *
+   */
 
   private onAceEditorResize() {
     if (this.editorsResizeCaf) {
@@ -172,12 +190,30 @@ export class SvgXmlComponent implements OnInit, OnDestroy, ControlValueAccessor,
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -185,6 +221,12 @@ export class SvgXmlComponent implements OnInit, OnDestroy, ControlValueAccessor,
       this.svgXmlEditor.setReadOnly(this.disabled);
     }
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return (!this.hasErrors) ? null : {
@@ -194,6 +236,12 @@ export class SvgXmlComponent implements OnInit, OnDestroy, ControlValueAccessor,
     };
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string): void {
     this.modelValue = value;
     if (this.svgXmlEditor) {
@@ -202,6 +250,11 @@ export class SvgXmlComponent implements OnInit, OnDestroy, ControlValueAccessor,
       this.ignoreChange = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   */
 
   updateView() {
     const editorValue = this.svgXmlEditor.getValue();

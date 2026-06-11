@@ -19,8 +19,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 /**
- * Rule engine component: persisted alarm rule state.
+ * Persisted alarm rule state (device profile state nodes).
  */
+
 
 @Data
 @NoArgsConstructor

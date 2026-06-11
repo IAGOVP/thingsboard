@@ -17,11 +17,11 @@
 import { EntityId } from '@shared/models/id/entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for rpc id.
-
+ * TypeScript interfaces, types, and enums for rpc id (shared TypeScript models).
  */
+
 
 export class RpcId implements EntityId {
   entityType = EntityType.RPC;

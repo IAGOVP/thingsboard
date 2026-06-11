@@ -50,15 +50,18 @@ interface PhotoCameraInputWidgetSettings {
 }
 
 // @dynamic
+
+/**
+ * Angular component: photo camera input widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-photo-camera-widget`.
+ */
 @Component({
     selector: 'tb-photo-camera-widget',
     templateUrl: './photo-camera-input.component.html',
     styleUrls: ['./photo-camera-input.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: photo camera input widget UI.
- */
+standalone: false
 })
 export class PhotoCameraInputWidgetComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -124,9 +127,21 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
   private mimeType: string;
   private quality: number;
 
+  /**
+   * has get user media.
+   *
+   * @returns boolean observable or value
+   */
+
   private static hasGetUserMedia(): boolean {
     return !!(window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia);
   }
+
+  /**
+   * get available video inputs.
+   *
+   * @returns Promise<MediaDeviceInfo[]> observable or value
+   */
 
   private static getAvailableVideoInputs(): Promise<MediaDeviceInfo[]> {
     return new Promise((resolve, reject) => {
@@ -139,6 +154,11 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
         });
     });
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.ctx.$scope.photoCameraInputWidget = this;
@@ -171,9 +191,20 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
     this.detectAvailableDevices();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.stopMediaTracks();
   }
+
+  /**
+   * update widget data.
+   *
+   * @param data dialog or route input data
+   */
 
   private updateWidgetData(data: Array<DatasourceData>) {
     const keyData = data[0].data;
@@ -182,10 +213,27 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
     }
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.updateWidgetData(this.ctx.defaultSubscription.data);
     this.ctx.detectChanges();
   }
+
+
+  /**
+
+
+   * detect available devices.
+
+
+   *
+
+
+   */
 
 
   private detectAvailableDevices(): void {
@@ -213,6 +261,12 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
     }
   }
 
+  /**
+   * get video aspect ratio.
+   *
+   * @returns number observable or value
+   */
+
   private getVideoAspectRatio(): number {
     if (this.videoElement.videoWidth && this.videoElement.videoWidth > 0 &&
       this.videoElement.videoHeight && this.videoElement.videoHeight > 0) {
@@ -221,6 +275,11 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
     return this.width / this.height;
   }
 
+  /**
+   * stop media tracks.
+   *
+   */
+
   private stopMediaTracks() {
     if (this.mediaStream && this.mediaStream.getTracks) {
       this.mediaStream.getTracks()
@@ -228,9 +287,19 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
     }
   }
 
+  /**
+   * take photo.
+   *
+   */
+
   takePhoto() {
     this.inititedVideoStream(this.availableVideoInputs[this.videoInputsIndex].deviceId, true);
   }
+
+  /**
+   * close camera.
+   *
+   */
 
   closeCamera() {
     this.stopMediaTracks();
@@ -238,10 +307,20 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
     this.isShowCamera = false;
   }
 
+  /**
+   * cancel photo.
+   *
+   */
+
   cancelPhoto() {
     this.isPreviewPhoto = false;
     this.previewPhoto = '';
   }
+
+  /**
+   * POST/PUT entity — save photo.
+   *
+   */
 
   savePhoto() {
     this.updatePhoto = true;
@@ -276,11 +355,21 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
     });
   }
 
+  /**
+   * switch web camera.
+   *
+   */
+
   switchWebCamera() {
     this.videoInputsIndex = (this.videoInputsIndex + 1) % this.availableVideoInputs.length;
     this.stopMediaTracks();
     this.inititedVideoStream(this.availableVideoInputs[this.videoInputsIndex].deviceId);
   }
+
+  /**
+   * POST/PUT entity — create photo.
+   *
+   */
 
   createPhoto() {
     this.canvasElement.width = this.videoWidth;
@@ -290,6 +379,12 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
     this.previewPhoto = this.canvasElement.toDataURL(this.mimeType, this.quality);
     this.isPreviewPhoto = true;
   }
+
+  /**
+   * POST/PUT entity — save image to gallery.
+   *
+   * @returns Observable<string> observable or value
+   */
 
   private saveImageToGallery(): Observable<string> {
     return new Observable<Blob>((observer) => {
@@ -316,6 +411,12 @@ export class PhotoCameraInputWidgetComponent extends PageComponent implements On
       )
     );
   }
+
+  /**
+   * initited video stream.
+   *
+   * @param deviceId device UUID
+   */
 
   private inititedVideoStream(deviceId?: string, init = false) {
     if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {

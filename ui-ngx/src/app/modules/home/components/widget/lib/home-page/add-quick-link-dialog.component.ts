@@ -23,14 +23,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { DialogComponent } from '@shared/components/dialog.component';
 import { Router } from '@angular/router';
 
+
+/**
+ * Angular component: add quick link dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-quick-link-dialog`.
+ */
 @Component({
     selector: 'tb-add-quick-link-dialog',
     templateUrl: './add-quick-link-dialog.component.html',
     styleUrls: ['./add-quick-link-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: add quick link dialog UI.
- */
+standalone: false
 })
 export class AddQuickLinkDialogComponent extends
   DialogComponent<AddQuickLinkDialogComponent, string> implements OnInit {
@@ -45,15 +48,31 @@ export class AddQuickLinkDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.addQuickLinkFormGroup = this.fb.group({
       link: [null, [Validators.required]]
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param link link (string)
+   */
 
   add(link: string): void {
     this.dialogRef.close(link);

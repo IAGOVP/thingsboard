@@ -35,14 +35,17 @@ export interface DeleteTimeseriesPanelResult {
   rewriteLatest: boolean;
 }
 
+
+/**
+ * Angular component: delete timeseries panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-delete-timeseries-panel`.
+ */
 @Component({
     selector: 'tb-delete-timeseries-panel',
     templateUrl: './delete-timeseries-panel.component.html',
     styleUrls: ['./delete-timeseries-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: delete timeseries panel UI.
- */
+standalone: false
 })
 export class DeleteTimeseriesPanelComponent implements OnInit, OnDestroy {
 
@@ -56,6 +59,11 @@ export class DeleteTimeseriesPanelComponent implements OnInit, OnDestroy {
 
   constructor(private overlayRef: OverlayRef,
               private fb: FormBuilder) { }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     const today = new Date();
@@ -88,10 +96,20 @@ export class DeleteTimeseriesPanelComponent implements OnInit, OnDestroy {
     ).subscribe(value => this.onEndDateTimeChange(value));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * DELETE — delete.
+   *
+   */
 
   delete(): void {
     if (this.deleteTimeseriesFormGroup.valid) {
@@ -102,17 +120,40 @@ export class DeleteTimeseriesPanelComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.overlayRef.dispose();
   }
+
+  /**
+   * is period strategy.
+   *
+   * @returns boolean observable or value
+   */
 
   isPeriodStrategy(): boolean {
     return this.deleteTimeseriesFormGroup.get('strategy').value === TimeseriesDeleteStrategy.DELETE_ALL_DATA_FOR_TIME_PERIOD;
   }
 
+  /**
+   * is delete latest strategy.
+   *
+   * @returns boolean observable or value
+   */
+
   isDeleteLatestStrategy(): boolean {
     return this.deleteTimeseriesFormGroup.get('strategy').value === TimeseriesDeleteStrategy.DELETE_LATEST_VALUE;
   }
+
+  /**
+   * Event handler for start date time change.
+   *
+   * @param newStartDateTime new start date time (Date)
+   */
 
   private onStartDateTimeChange(newStartDateTime: Date) {
     if (newStartDateTime) {
@@ -126,6 +167,12 @@ export class DeleteTimeseriesPanelComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  /**
+   * Event handler for end date time change.
+   *
+   * @param newEndDateTime new end date time (Date)
+   */
 
   private onEndDateTimeChange(newEndDateTime: Date) {
     if (newEndDateTime) {

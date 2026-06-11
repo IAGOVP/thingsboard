@@ -97,8 +97,9 @@ import static org.thingsboard.server.msa.connectivity.lwm2m.client.Lwm2mTestHelp
 import static org.thingsboard.server.msa.connectivity.lwm2m.client.Lwm2mTestHelper.serverId;
 import static org.thingsboard.server.msa.connectivity.lwm2m.client.Lwm2mTestHelper.shortServerId;
 /**
- * Lw m2mtest client.
+ * In-test LwM2M client simulating device registration, observe, and RPC.
  */
+
 
 @Slf4j
 @Data
@@ -120,6 +121,15 @@ public class LwM2MTestClient {
     private int countReadObserveAfterUpdateRegistrationSuccess;
 
     private int clientPort;
+    /**
+     * Init.
+     *
+     * @param security security ({@link Security})
+     * @param clientPort client port
+     * @return nothing
+     * @throws InvalidDDFFileException if invalid ddffile exception is thrown during processing
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     public void init(Security security, int clientPort) throws InvalidDDFFileException, IOException {
         assertThat(leshanClient).as("client already initialized").isNull();
@@ -350,6 +360,12 @@ public class LwM2MTestClient {
         });
 
     }
+    /**
+     * Starts Docker Compose stack and waits until ThingsBoard is healthy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void start() {
         leshanClient.start();
@@ -360,6 +376,12 @@ public class LwM2MTestClient {
                     .until(() -> isUDPPortAvailable(clientPort));
         }
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void destroy() {
         if (leshanClient != null) {

@@ -36,7 +36,14 @@ import java.util.Objects;
 
 @Slf4j
 /**
- * Rule engine filter node 'alarm status filter': Checks alarm status. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>alarm status filter</b>.
+ *
+ * <p>Checks alarm status.
+ * <br>Checks the alarm status to match one of the specified statuses.  
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbCheckAlarmStatusNodeConfig}.
+ * <br>Output relations: {@code TbNodeConnectionType.TRUE, TbNodeConnectionType.FALSE}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/alarm-status-filter/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/alarm-status-filter/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -52,11 +59,25 @@ import java.util.Objects;
 public class TbCheckAlarmStatusNode implements TbNode {
 
     private TbCheckAlarmStatusNodeConfig config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param tbContext tb context ({@link TbContext})
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext tbContext, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbCheckAlarmStatusNodeConfig.class);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {

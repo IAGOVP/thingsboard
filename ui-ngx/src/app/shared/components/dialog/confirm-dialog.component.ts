@@ -29,14 +29,17 @@ export interface ConfirmDialogData {
 }
 
 // @dynamic
+
+/**
+ * Angular component: confirm dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-confirm-dialog`.
+ */
 @Component({
     selector: 'tb-confirm-dialog',
     templateUrl: './confirm-dialog.component.html',
     styleUrls: ['./confirm-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: confirm dialog UI.
- */
+standalone: false
 })
 export class ConfirmDialogComponent extends DialogComponent<ConfirmDialogComponent, boolean>{
   constructor(protected store: Store<AppState>,

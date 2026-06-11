@@ -17,11 +17,11 @@
 import { FcModel } from 'ngx-flowchart';
 import { FcRuleEdge, FcRuleNode, FcRuleNodeType } from '@shared/models/rule-node.models';
 
+
 /**
-
- * TypeScript models and enums for fc rule node type model.
-
+ * Fc rule node type model (home/rulechain pages).
  */
+
 
 export interface FcRuleNodeTypeModel extends FcModel {
   nodes: Array<FcRuleNodeType>;

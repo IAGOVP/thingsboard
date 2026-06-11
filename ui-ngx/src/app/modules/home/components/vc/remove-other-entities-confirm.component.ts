@@ -22,14 +22,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+
+/**
+ * Angular component: remove other entities confirm (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-remove-other-entities-confirm`.
+ */
 @Component({
     selector: 'tb-remove-other-entities-confirm',
     templateUrl: './remove-other-entities-confirm.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: remove other entities confirm UI.
- */
+standalone: false
 })
 export class RemoveOtherEntitiesConfirmComponent extends PageComponent implements OnInit {
 
@@ -50,17 +53,32 @@ export class RemoveOtherEntitiesConfirmComponent extends PageComponent implement
     this.removeOtherEntitiesConfirmText = this.sanitizer.bypassSecurityTrustHtml(this.translate.instant('version-control.remove-other-entities-confirm-text'));
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.confirmFormGroup = this.fb.group({
       verification: [null, []]
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     if (this.onClose) {
       this.onClose(null);
     }
   }
+
+  /**
+   * confirm.
+   *
+   */
 
   confirm(): void {
     if (this.onClose) {

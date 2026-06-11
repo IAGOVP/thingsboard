@@ -17,11 +17,11 @@
 import { EntityId } from '@shared/models/id/entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for mobile app id.
-
+ * TypeScript interfaces, types, and enums for mobile app id (shared TypeScript models).
  */
+
 
 export class MobileAppId implements EntityId {
   entityType = EntityType.MOBILE_APP

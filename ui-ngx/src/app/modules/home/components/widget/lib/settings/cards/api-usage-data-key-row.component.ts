@@ -41,6 +41,12 @@ import {
 } from "@home/components/widget/lib/settings/cards/api-usage-settings.component.models";
 import { Observable, of } from "rxjs";
 
+
+/**
+ * Angular component: api usage data key row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-api-usage-data-key-row`.
+ */
 @Component({
     selector: 'tb-api-usage-data-key-row',
     templateUrl: './api-usage-data-key-row.component.html',
@@ -53,10 +59,7 @@ import { Observable, of } from "rxjs";
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: api usage data key row UI.
- */
+standalone: false
 })
 export class ApiUsageDataKeyRowComponent implements ControlValueAccessor, OnInit {
 
@@ -88,6 +91,11 @@ export class ApiUsageDataKeyRowComponent implements ControlValueAccessor, OnInit
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.dataKeyFormGroup = this.fb.group({
       label: [null, [Validators.required]],
@@ -103,12 +111,30 @@ export class ApiUsageDataKeyRowComponent implements ControlValueAccessor, OnInit
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -119,6 +145,12 @@ export class ApiUsageDataKeyRowComponent implements ControlValueAccessor, OnInit
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ApiUsageDataKeysSettings)
+   */
 
   writeValue(value: ApiUsageDataKeysSettings): void {
     this.modelValue = value;
@@ -135,6 +167,12 @@ export class ApiUsageDataKeyRowComponent implements ControlValueAccessor, OnInit
     this.cd.markForCheck();
   }
 
+  /**
+   * edit key.
+   *
+   * @param keyType key type ('status' | 'maxLimit' | 'current')
+   */
+
   editKey(keyType: 'status' | 'maxLimit' | 'current') {
     const targetDataKey: DataKey = this.dataKeyFormGroup.get(keyType).value;
     this.context.editKey(targetDataKey, this.dsEntityAliasId).subscribe(
@@ -146,13 +184,30 @@ export class ApiUsageDataKeyRowComponent implements ControlValueAccessor, OnInit
     );
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = {...this.modelValue, ...this.dataKeyFormGroup.value};
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * fetch dashboard states.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   fetchDashboardStates(searchText?: string): Observable<Array<string>> {
     return of(this.context.callbacks.fetchDashboardStates(searchText));

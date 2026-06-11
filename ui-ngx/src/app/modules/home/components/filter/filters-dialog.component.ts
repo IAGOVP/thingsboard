@@ -52,15 +52,18 @@ export interface FiltersDialogData {
   customTitle?: string;
 }
 
+
+/**
+ * Angular component: filters dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filters-dialog`.
+ */
 @Component({
     selector: 'tb-filters-dialog',
     templateUrl: './filters-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: FiltersDialogComponent }],
     styleUrls: ['./filters-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: filters dialog UI.
- */
+standalone: false
 })
 export class FiltersDialogComponent extends DialogComponent<FiltersDialogComponent, Filters>
   implements ErrorStateMatcher {
@@ -135,6 +138,14 @@ export class FiltersDialogComponent extends DialogComponent<FiltersDialogCompone
     });
   }
 
+  /**
+   * POST/PUT entity — create filter form control.
+   *
+   * @param filterId filter id (string)
+   * @param filter filter (Filter)
+   * @returns AbstractControl observable or value
+   */
+
   private createFilterFormControl(filterId: string, filter: Filter): AbstractControl {
     const filterFormControl = this.fb.group({
       id: [filterId],
@@ -147,15 +158,44 @@ export class FiltersDialogComponent extends DialogComponent<FiltersDialogCompone
   }
 
 
+  /**
+
+
+   * filters form array.
+
+
+   *
+
+
+   * @returns UntypedFormArray observable or value
+
+
+   */
+
+
   filtersFormArray(): UntypedFormArray {
     return this.filtersFormGroup.get('filters') as UntypedFormArray;
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * DELETE — remove filter.
+   *
+   * @param index index (number)
+   */
 
   removeFilter(index: number) {
     const filter = (this.filtersFormGroup.get('filters').value as any[])[index];
@@ -177,6 +217,13 @@ export class FiltersDialogComponent extends DialogComponent<FiltersDialogCompone
     this.table.renderRows();
   }
 
+  /**
+   * get next duplicated name.
+   *
+   * @param filterName filter name (string)
+   * @returns string observable or value
+   */
+
   private getNextDuplicatedName(filterName: string): string {
     const suffix = ` - ${this.translate.instant('action.copy')} `;
     let counter = 0;
@@ -189,6 +236,12 @@ export class FiltersDialogComponent extends DialogComponent<FiltersDialogCompone
 
     return null;
   }
+
+  /**
+   * duplicate filter.
+   *
+   * @param index index (number)
+   */
 
   duplicateFilter(index: number) {
     const originalFilter = (this.filtersFormGroup.get('filters').value as any[])[index];
@@ -204,13 +257,30 @@ export class FiltersDialogComponent extends DialogComponent<FiltersDialogCompone
     this.table.renderRows();
   }
 
+  /**
+   * POST/PUT entity — add filter.
+   *
+   */
+
   public addFilter() {
     this.openFilterDialog(-1);
   }
 
+  /**
+   * edit filter.
+   *
+   * @param index index (number)
+   */
+
   public editFilter(index: number) {
     this.openFilterDialog(index);
   }
+
+  /**
+   * open filter dialog.
+   *
+   * @param index index (number)
+   */
 
   private openFilterDialog(index: number) {
     const isAdd = index === -1;
@@ -248,9 +318,19 @@ export class FiltersDialogComponent extends DialogComponent<FiltersDialogCompone
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

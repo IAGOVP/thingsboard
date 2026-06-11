@@ -38,14 +38,17 @@ export interface IntervalOptionsConfigPanelData {
   aggIntervalsConfig: TimewindowAggIntervalsConfig
 }
 
+
+/**
+ * Angular component: interval options config panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-interval-options-config-panel`.
+ */
 @Component({
     selector: 'tb-interval-options-config-panel',
     templateUrl: './interval-options-config-panel.component.html',
     styleUrls: ['./interval-options-config-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: interval options config panel UI.
- */
+standalone: false
 })
 export class IntervalOptionsConfigPanelComponent implements OnInit {
 
@@ -83,6 +86,11 @@ export class IntervalOptionsConfigPanelComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private timeService: TimeService,
               private translate: TranslateService) {}
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     if (this.intervalType === RealtimeWindowType.LAST_INTERVAL ||
@@ -136,13 +144,32 @@ export class IntervalOptionsConfigPanelComponent implements OnInit {
     return this.intervalOptionsConfigForm.get('intervals') as UntypedFormArray;
   }
 
+  /**
+   * min agg interval.
+   *
+   * @param interval interval (TimewindowInterval)
+   */
+
   minAggInterval(interval: TimewindowInterval) {
     return this.timeService.minIntervalLimit(this.getIntervalMs(interval));
   }
 
+  /**
+   * max agg interval.
+   *
+   * @param interval interval (TimewindowInterval)
+   */
+
   maxAggInterval(interval: TimewindowInterval) {
     return this.timeService.maxIntervalLimit(this.getIntervalMs(interval));
   }
+
+  /**
+   * get interval ms.
+   *
+   * @param interval interval (TimewindowInterval)
+   * @returns number observable or value
+   */
 
   private getIntervalMs(interval: TimewindowInterval): number {
     if (this.intervalType === RealtimeWindowType.INTERVAL ||
@@ -152,9 +179,21 @@ export class IntervalOptionsConfigPanelComponent implements OnInit {
     return interval as number;
   }
 
+  /**
+   * track by element.
+   *
+   * @param i i (number)
+   * @param item item (any)
+   */
+
   trackByElement(i: number, item: any) {
     return item;
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     if (this.onClose) {
@@ -184,11 +223,21 @@ export class IntervalOptionsConfigPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     if (this.onClose) {
       this.onClose(null);
     }
   }
+
+  /**
+   * reset.
+   *
+   */
 
   reset() {
     const intervalControls = this.intervalsFormArray.controls;
@@ -204,6 +253,12 @@ export class IntervalOptionsConfigPanelComponent implements OnInit {
     this.intervalOptionsConfigForm.markAsDirty();
   }
 
+  /**
+   * get quick intervals.
+   *
+   * @returns Array<QuickTimeInterval> observable or value
+   */
+
   private getQuickIntervals(): Array<QuickTimeInterval> {
     const allQuickIntervals = Object.values(QuickTimeInterval);
     if (this.timewindowType === TimewindowType.REALTIME) {
@@ -212,10 +267,22 @@ export class IntervalOptionsConfigPanelComponent implements OnInit {
     return allQuickIntervals;
   }
 
+  /**
+   * get indeterminate.
+   *
+   * @returns boolean observable or value
+   */
+
   getIndeterminate(): boolean {
     const enabledIntervals = this.intervalsFormArray.value.filter(interval => interval.enabled);
     return enabledIntervals.length !== 0 && enabledIntervals.length !== this.allIntervals.length;
   }
+
+  /**
+   * enable disable intervals.
+   *
+   * @param allEnabled all enabled (boolean)
+   */
 
   enableDisableIntervals(allEnabled: boolean) {
     const intervalControls = this.intervalsFormArray.controls;
@@ -226,6 +293,12 @@ export class IntervalOptionsConfigPanelComponent implements OnInit {
     }
     this.intervalOptionsConfigForm.markAsDirty();
   }
+
+  /**
+   * get checked.
+   *
+   * @returns boolean observable or value
+   */
 
   getChecked(): boolean {
     const intervals = this.intervalsFormArray.value;

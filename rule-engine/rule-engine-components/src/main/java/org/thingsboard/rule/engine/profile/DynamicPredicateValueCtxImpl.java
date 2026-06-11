@@ -28,8 +28,9 @@ import org.thingsboard.server.common.data.kv.AttributeKvEntry;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 /**
- * Rule engine component: dynamic predicate value ctx impl.
+ * Dynamic predicate value ctx impl (device profile state nodes).
  */
+
 
 @Slf4j
 @Deprecated
@@ -45,16 +46,35 @@ public class DynamicPredicateValueCtxImpl implements DynamicPredicateValueCtx {
         this.ctx = ctx;
         resetCustomer();
     }
+    /**
+     * Returns tenant value.
+     *
+     * @param key key ({@link String})
+     * @return {@link EntityKeyValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityKeyValue getTenantValue(String key) {
         return getValue(tenantId, key);
     }
+    /**
+     * Returns customer value.
+     *
+     * @param key key ({@link String})
+     * @return {@link EntityKeyValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EntityKeyValue getCustomerValue(String key) {
         return customerId == null || customerId.isNullUid() ? null : getValue(customerId, key);
     }
+    /**
+     * Reset customer.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void resetCustomer() {

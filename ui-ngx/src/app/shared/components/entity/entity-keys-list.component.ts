@@ -31,6 +31,12 @@ import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 import { isEqual } from '@core/utils';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: entity keys list (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-keys-list`.
+ */
 @Component({
     selector: 'tb-entity-keys-list',
     templateUrl: './entity-keys-list.component.html',
@@ -42,10 +48,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity keys list UI.
- */
+standalone: false
 })
 export class EntityKeysListComponent implements ControlValueAccessor, OnInit, AfterViewInit {
 
@@ -110,12 +113,29 @@ export class EntityKeysListComponent implements ControlValueAccessor, OnInit, Af
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredKeys = this.keysListFormGroup.get('key').valueChanges
@@ -126,7 +146,18 @@ export class EntityKeysListComponent implements ControlValueAccessor, OnInit, Af
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {}
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -137,6 +168,12 @@ export class EntityKeysListComponent implements ControlValueAccessor, OnInit, Af
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (Array<string> | null)
+   */
+
   writeValue(value: Array<string> | null): void {
     this.searchText = '';
     if (value != null) {
@@ -146,12 +183,23 @@ export class EntityKeysListComponent implements ControlValueAccessor, OnInit, Af
     }
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.keysListFormGroup.get('key').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * POST/PUT entity — add key.
+   *
+   * @param key key (string)
+   */
 
   addKey(key: string): void {
     if (!this.modelValue || this.modelValue.indexOf(key) === -1) {
@@ -166,6 +214,12 @@ export class EntityKeysListComponent implements ControlValueAccessor, OnInit, Af
     this.propagateChange(this.modelValue);
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param event DOM or Angular event object
+   */
+
   add(event: MatChipInputEvent): void {
    if (!this.matAutocomplete.isOpen) {
       const value = (event.value || '').trim();
@@ -175,6 +229,12 @@ export class EntityKeysListComponent implements ControlValueAccessor, OnInit, Af
       this.clear('', document.activeElement === this.keyInput.nativeElement);
    }
   }
+
+  /**
+   * DELETE — remove.
+   *
+   * @param key key (string)
+   */
 
   remove(key: string) {
     const index = this.modelValue.indexOf(key);
@@ -189,14 +249,34 @@ export class EntityKeysListComponent implements ControlValueAccessor, OnInit, Af
     }
   }
 
+  /**
+   * selected.
+   *
+   * @param event DOM or Angular event object
+   */
+
   selected(event: MatAutocompleteSelectedEvent): void {
     this.addKey(event.option.viewValue);
     this.clear('');
   }
 
+  /**
+   * display key fn.
+   *
+   * @param key key (string)
+   * @returns string | undefined observable or value
+   */
+
   displayKeyFn(key?: string): string | undefined {
     return key ? key : undefined;
   }
+
+  /**
+   * fetch keys.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   fetchKeys(searchText?: string): Observable<Array<string>> {
     this.searchText = searchText;
@@ -204,6 +284,12 @@ export class EntityKeysListComponent implements ControlValueAccessor, OnInit, Af
       this.dataKeyType, {ignoreLoading: true}).pipe(
       map((data) => data ? data : [])) : of([]);
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   clear(value: string = '', emitEvent = true) {
     this.keyInput.nativeElement.value = value;

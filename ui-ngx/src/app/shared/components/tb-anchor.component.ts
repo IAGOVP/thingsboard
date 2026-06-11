@@ -16,13 +16,16 @@
 
 import { Component, ViewContainerRef } from '@angular/core';
 
+
+/**
+ * Angular component: tb anchor (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-anchor`.
+ */
 @Component({
     selector: 'tb-anchor',
     template: '<ng-template></ng-template>',
-    standalone: false
-/**
- * Angular component: tb anchor UI.
- */
+standalone: false
 })
 export class TbAnchorComponent {
   constructor(public viewContainerRef: ViewContainerRef) { }

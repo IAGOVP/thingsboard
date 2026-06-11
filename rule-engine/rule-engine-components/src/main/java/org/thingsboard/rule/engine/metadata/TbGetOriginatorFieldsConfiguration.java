@@ -22,14 +22,21 @@ import org.thingsboard.rule.engine.util.TbMsgSource;
 
 import java.util.HashMap;
 /**
- * JSON configuration for TbGetOriginatorFields rule node.
+ * Tb get originator fields configuration (entity metadata and related-data fetch nodes).
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TbGetOriginatorFieldsConfiguration extends TbGetMappedDataNodeConfiguration implements NodeConfiguration<TbGetOriginatorFieldsConfiguration> {
 
     private boolean ignoreNullStrings;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGetOriginatorFieldsConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGetOriginatorFieldsConfiguration defaultConfiguration() {

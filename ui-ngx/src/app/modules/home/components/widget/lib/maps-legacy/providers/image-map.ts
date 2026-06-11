@@ -37,11 +37,11 @@ import { CompiledTbFunction } from '@shared/models/js-function.models';
 
 const maxZoom = 4; // ?
 
+
 /**
-
- * image map.
-
+ * Image map (ThingsBoard web UI).
  */
+
 
 export class ImageMap extends LeafletMap {
 
@@ -74,6 +74,13 @@ export class ImageMap extends LeafletMap {
           }
         });
     }
+
+    /**
+     * map image.
+     *
+     * @param options options (WidgetUnitedMapSettings)
+     * @returns Observable<MapImage> observable or value
+     */
 
     private mapImage(options: WidgetUnitedMapSettings): Observable<MapImage> {
       const imageEntityAlias = options.imageEntityAlias;
@@ -132,8 +139,19 @@ export class ImageMap extends LeafletMap {
       return this.imageFromAlias(result);
     }
 
+    /**
+     * image from url.
+     *
+     * @param url url (string)
+     * @returns Observable<MapImage> observable or value
+     */
+
     private imageFromUrl(url: string, update = false): Observable<MapImage> {
       return loadImageWithAspect(this.ctx.$injector.get(ImagePipe), url).pipe(
+        /**
+         * switch map.
+         *
+         */
         switchMap( aspectImage => {
             if (aspectImage) {
               return of({
@@ -149,6 +167,13 @@ export class ImageMap extends LeafletMap {
         catchError(() => this.imageFromUrl(defaultImageMapProviderSettings.mapImageUrl, update))
       );
     }
+
+    /**
+     * image from alias.
+     *
+     * @param alias alias (Observable<[DataSet, boolean]>)
+     * @returns Observable<MapImage> observable or value
+     */
 
     private imageFromAlias(alias: Observable<[DataSet, boolean]>): Observable<MapImage> {
       return alias.pipe(
@@ -175,6 +200,13 @@ export class ImageMap extends LeafletMap {
         })
       );
     }
+
+    /**
+     * update bounds.
+     *
+     * @param updateImage update image (boolean)
+     * @param lastCenterPos last center pos (L.Point)
+     */
 
     updateBounds(updateImage?: boolean, lastCenterPos?: L.Point) {
         const w = this.width;
@@ -207,6 +239,12 @@ export class ImageMap extends LeafletMap {
         }
         (this.map as any)._enforcingBounds = false;
     }
+
+    /**
+     * Event handler for resize.
+     *
+     * @param updateImage update image (boolean)
+     */
 
     onResize(updateImage?: boolean) {
       let width = this.$container.clientWidth;
@@ -245,7 +283,20 @@ export class ImageMap extends LeafletMap {
       }
     }
 
+    /**
+     * fit bounds.
+     *
+     * @param _bounds  bounds (LatLngBounds)
+     * @param _padding  padding (PointExpression)
+     */
+
     fitBounds(_bounds: LatLngBounds, _padding?: PointExpression) { }
+
+    /**
+     * init map.
+     *
+     * @param updateImage update image (boolean)
+     */
 
     initMap(updateImage?: boolean) {
       if (!this.map && this.aspect > 0) {
@@ -265,6 +316,12 @@ export class ImageMap extends LeafletMap {
       }
     }
 
+    /**
+     * extract position.
+     *
+     * @param data dialog or route input data
+     */
+
     extractPosition(data: FormattedData): {x: number; y: number} {
       if (!data) {
         return null;
@@ -277,11 +334,26 @@ export class ImageMap extends LeafletMap {
       return {x: xPos, y: yPos};
     }
 
+    /**
+     * position to lat lng.
+     *
+     * @param position position ({x: number; y: number})
+     * @returns L.LatLng observable or value
+     */
+
     positionToLatLng(position: {x: number; y: number}): L.LatLng {
       return this.pointToLatLng(
         position.x * this.width,
         position.y * this.height);
     }
+
+    /**
+     * convert position.
+     *
+     * @param data dialog or route input data
+     * @param dsData ds data (FormattedData[])
+     * @returns L.LatLng observable or value
+     */
 
     convertPosition(data: FormattedData, dsData: FormattedData[]): L.LatLng {
       const position = this.extractPosition(data);
@@ -308,13 +380,34 @@ export class ImageMap extends LeafletMap {
       }).filter(el => !!el);
     }
 
+    /**
+     * point to lat lng.
+     *
+     * @param x x (number)
+     * @param y y (number)
+     * @returns L.LatLng observable or value
+     */
+
     pointToLatLng(x: number, y: number): L.LatLng {
         return L.CRS.Simple.pointToLatLng({ x, y } as L.PointExpression, maxZoom - 1);
     }
 
+    /**
+     * lat lng to point.
+     *
+     * @param latLng lat lng (LatLngLiteral)
+     * @returns L.Point observable or value
+     */
+
     latLngToPoint(latLng: LatLngLiteral): L.Point {
         return L.CRS.Simple.latLngToPoint(latLng, maxZoom - 1);
     }
+
+    /**
+     * convert to custom format.
+     *
+     * @param position position (L.LatLng)
+     */
 
     convertToCustomFormat(position: L.LatLng, _offset = 0, width = this.width, height = this.height): {[key: string]: any} {
       if (!position) {
@@ -344,6 +437,13 @@ export class ImageMap extends LeafletMap {
       };
     }
 
+    /**
+     * convert to polygon format.
+     *
+     * @param points points (Array<any>)
+     * @returns Array<any> observable or value
+     */
+
     convertToPolygonFormat(points: Array<any>, width = this.width, height = this.height): Array<any> {
       if (points.length) {
         return points.map(point => {
@@ -359,12 +459,25 @@ export class ImageMap extends LeafletMap {
       }
     }
 
+    /**
+     * convert polygon to custom format.
+     *
+     * @param expression expression (any[][])
+     */
+
     convertPolygonToCustomFormat(expression: any[][]): {[key: string]: any} {
       const coordinate = expression ? this.convertToPolygonFormat(expression) : null;
       return {
         [this.options.polygonKeyName]: coordinate
       };
     }
+
+    /**
+     * convert circle to custom format.
+     *
+     * @param expression expression (L.LatLng)
+     * @param radius radius (number)
+     */
 
     convertCircleToCustomFormat(expression: L.LatLng, radius: number, width = this.width,
                                 height = this.height): {[key: string]: CircleData} {
@@ -384,6 +497,13 @@ export class ImageMap extends LeafletMap {
         [this.options.circleKeyName]: circleDara
       };
     }
+
+    /**
+     * convert to circle format.
+     *
+     * @param circle circle (CircleData)
+     * @returns CircleData observable or value
+     */
 
     convertToCircleFormat(circle: CircleData, width = this.width, height = this.height): CircleData {
       const centerPoint = this.pointToLatLng(circle.latitude * width, circle.longitude * height);

@@ -26,17 +26,25 @@ import org.thingsboard.server.msa.ui.pages.CustomerPageHelper;
 import org.thingsboard.server.msa.ui.pages.LoginPageHelper;
 import org.thingsboard.server.msa.ui.pages.SideBarMenuViewElements;
 
+
 /**
 
- * Manage customers assets test.
+ * Black-box test: manage customers assets (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class ManageCustomersAssetsTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewElements sideBarMenuView;
     private CustomerPageHelper customerPage;
     private final String manage = "Assets";
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -44,6 +52,12 @@ public class ManageCustomersAssetsTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewElements(driver);
         customerPage = new CustomerPageHelper(driver);
     }
+    /**
+     * Open window by right corner btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Manage customer assets")
@@ -59,6 +73,12 @@ public class ManageCustomersAssetsTest extends AbstractDriverBaseTest {
         Assert.assertTrue(customerPage.customerAssetsIconHeader().isDisplayed());
         Assert.assertTrue(customerPage.customerManageWindowIconHead().getText().contains(manage));
     }
+    /**
+     * Open window by view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Manage customer assets")

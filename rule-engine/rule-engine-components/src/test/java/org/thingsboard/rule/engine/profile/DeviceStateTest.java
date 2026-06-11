@@ -65,15 +65,22 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
 
- * Unit test for device state rule node.
+ * Unit test for device state (device profile state nodes).
 
  */
+
 
 public class DeviceStateTest {
 
     private TbContext ctx;
+    /**
+     * Before each.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void beforeEach() {
@@ -109,6 +116,11 @@ public class DeviceStateTest {
         });
 
     }
+    /**
+     * When attribute is deleted then unneeded alarm rules are not reevaluated.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void whenAttributeIsDeleted_thenUnneededAlarmRulesAreNotReevaluated() throws Exception {
@@ -147,6 +159,11 @@ public class DeviceStateTest {
                 .build());
         verify(ctx, never()).enqueueForTellNext(any(), anyString());
     }
+    /**
+     * When deleting cleared alarm then no error.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void whenDeletingClearedAlarm_thenNoError() throws Exception {

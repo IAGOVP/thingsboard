@@ -34,6 +34,12 @@ import { AlarmSeverity, alarmSeverityTranslations } from '@shared/models/alarm.m
 import { EntityId } from '@shared/models/id/entity-id';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: create alarm rules (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-create-alarm-rules`.
+ */
 @Component({
     selector: 'tb-create-alarm-rules',
     templateUrl: './create-alarm-rules.component.html',
@@ -50,10 +56,7 @@ import { takeUntil } from 'rxjs/operators';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: create alarm rules UI.
- */
+standalone: false
 })
 export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, Validator, OnDestroy {
 
@@ -79,12 +82,29 @@ export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, 
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.createAlarmRulesFormGroup = this.fb.group({
@@ -95,14 +115,31 @@ export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, 
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * POST/PUT entity — create alarm rules form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   createAlarmRulesFormArray(): UntypedFormArray {
     return this.createAlarmRulesFormGroup.get('createAlarmRules') as UntypedFormArray;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -112,6 +149,12 @@ export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, 
       this.createAlarmRulesFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param createAlarmRules create alarm rules ({[severity: string]: DeviceProfileAlarmRule})
+   */
 
   writeValue(createAlarmRules: {[severity: string]: DeviceProfileAlarmRule}): void {
     const createAlarmRulesControls: Array<AbstractControl> = [];
@@ -139,9 +182,20 @@ export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, 
     }
   }
 
+  /**
+   * DELETE — remove create alarm rule.
+   *
+   * @param index index (number)
+   */
+
   public removeCreateAlarmRule(index: number) {
     (this.createAlarmRulesFormGroup.get('createAlarmRules') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add create alarm rule.
+   *
+   */
 
   public addCreateAlarmRule() {
     const createAlarmRule: DeviceProfileAlarmRule = {
@@ -160,6 +214,12 @@ export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, 
     }
   }
 
+  /**
+   * get first unused severity.
+   *
+   * @returns AlarmSeverity observable or value
+   */
+
   private getFirstUnusedSeverity(): AlarmSeverity {
     for (const severityKey of Object.keys(AlarmSeverity)) {
       const severity = AlarmSeverity[severityKey];
@@ -170,6 +230,12 @@ export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, 
     return null;
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return (this.createAlarmRulesFormGroup.valid) ? null : {
       createAlarmRules: {
@@ -178,10 +244,23 @@ export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, 
     };
   }
 
+  /**
+   * is disabled severity.
+   *
+   * @param severity severity (AlarmSeverity)
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public isDisabledSeverity(severity: AlarmSeverity, index: number): boolean {
     const usedIndex = this.usedSeverities.indexOf(severity);
     return usedIndex > -1 && usedIndex !== index;
   }
+
+  /**
+   * update used severities.
+   *
+   */
 
   private updateUsedSeverities() {
     this.usedSeverities = [];
@@ -190,6 +269,11 @@ export class CreateAlarmRulesComponent implements ControlValueAccessor, OnInit, 
       this.usedSeverities[index] = AlarmSeverity[rule.severity];
     });
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: {severity: string, alarmRule: DeviceProfileAlarmRule}[] = this.createAlarmRulesFormGroup.get('createAlarmRules').value;

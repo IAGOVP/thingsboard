@@ -54,7 +54,12 @@ import static org.thingsboard.server.common.data.msg.TbMsgType.POST_ATTRIBUTES_R
 import static org.thingsboard.server.dao.util.KvUtils.filterChangedAttr;
 
 /**
- * Rule engine component: tb msg attributes node.
+ * Action rule node — <b>save attributes</b>.
+ *
+ * <p>
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgAttributesNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/save-attributes/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/save-attributes/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -118,12 +123,26 @@ public class TbMsgAttributesNode implements TbNode {
     private TbMsgAttributesNodeConfiguration config;
 
     private AttributesProcessingSettings processingSettings;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         config = TbNodeUtils.convert(configuration, TbMsgAttributesNodeConfiguration.class);
         processingSettings = config.getProcessingSettings();
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -232,6 +251,14 @@ public class TbMsgAttributesNode implements TbNode {
         }
         return AttributeScope.valueOf(config.getScope());
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

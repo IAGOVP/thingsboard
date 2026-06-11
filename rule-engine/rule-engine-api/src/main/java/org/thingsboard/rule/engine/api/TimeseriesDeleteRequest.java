@@ -32,8 +32,9 @@ import java.util.UUID;
  * Request DTO for rule engine timeseries delete.
  */
 /**
- * Request DTO for rule engine timeseries delete.
+ * Async request DTO for rule engine timeseries delete (rule engine public API contracts and services).
  */
+
 
 @Getter
 @ToString
@@ -48,10 +49,22 @@ public class TimeseriesDeleteRequest implements CalculatedFieldSystemAwareReques
     private final UUID tbMsgId;
     private final TbMsgType tbMsgType;
     private final FutureCallback<List<String>> callback;
+    /**
+     * Builder.
+     *
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Builder builder() {
         return new Builder();
     }
+
+    /**
+
+     * Builder (rule engine public API contracts and services).
+
+     */
 
     public static class Builder {
 
@@ -75,26 +88,61 @@ public class TimeseriesDeleteRequest implements CalculatedFieldSystemAwareReques
             this.entityId = entityId;
             return this;
         }
+    /**
+     * Keys.
+     *
+     * @param keys keys ({@link List})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder keys(List<String> keys) {
             this.keys = keys;
             return this;
         }
+    /**
+     * Deletes history queries.
+     *
+     * @param deleteHistoryQueries delete history queries ({@link List})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder deleteHistoryQueries(List<DeleteTsKvQuery> deleteHistoryQueries) {
             this.deleteHistoryQueries = deleteHistoryQueries;
             return this;
         }
+    /**
+     * Previous calculated field ids.
+     *
+     * @param previousCalculatedFieldIds previous calculated field ids ({@link List})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder previousCalculatedFieldIds(List<CalculatedFieldId> previousCalculatedFieldIds) {
             this.previousCalculatedFieldIds = previousCalculatedFieldIds;
             return this;
         }
+    /**
+     * Tb msg id.
+     *
+     * @param tbMsgId tb msg id ({@link UUID})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder tbMsgId(UUID tbMsgId) {
             this.tbMsgId = tbMsgId;
             return this;
         }
+    /**
+     * Tb msg type.
+     *
+     * @param tbMsgType tb msg type ({@link TbMsgType})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder tbMsgType(TbMsgType tbMsgType) {
             this.tbMsgType = tbMsgType;
@@ -105,6 +153,12 @@ public class TimeseriesDeleteRequest implements CalculatedFieldSystemAwareReques
             this.callback = callback;
             return this;
         }
+    /**
+     * Build.
+     *
+     * @return {@link TimeseriesDeleteRequest}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public TimeseriesDeleteRequest build() {
             return new TimeseriesDeleteRequest(tenantId, entityId, keys, deleteHistoryQueries, previousCalculatedFieldIds, tbMsgId, tbMsgType, callback);

@@ -28,6 +28,12 @@ import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
 import { catchError, map, mergeMap, share, startWith } from 'rxjs/operators';
 import { RuleChainService } from '@core/http/rule-chain.service';
 
+
+/**
+ * Angular component: link labels (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-link-labels`.
+ */
 @Component({
     selector: 'tb-link-labels',
     templateUrl: './link-labels.component.html',
@@ -37,10 +43,7 @@ import { RuleChainService } from '@core/http/rule-chain.service';
             useExisting: forwardRef(() => LinkLabelsComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: link labels UI.
- */
+standalone: false
 })
 export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -101,12 +104,36 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+
+  /**
+
+
+   * Angular lifecycle hook: initialize component state and subscriptions.
+
+
+   *
+
+
+   */
 
 
   ngOnInit(): void {
@@ -134,6 +161,12 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -142,6 +175,12 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
       this.linksFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string[])
+   */
 
   writeValue(value: string[]): void {
     this.searchText = '';
@@ -169,6 +208,12 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
     });
   }
 
+  /**
+   * prepare labels list.
+   *
+   * @returns Observable<Array<LinkLabel>> observable or value
+   */
+
   prepareLabelsList(): Observable<Array<LinkLabel>> {
     const labelsList: Array<LinkLabel> = [];
     if (this.sourceRuleChainId) {
@@ -194,24 +239,57 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * display label fn.
+   *
+   * @param label label (LinkLabel)
+   * @returns string | undefined observable or value
+   */
+
   displayLabelFn(label?: LinkLabel): string | undefined {
     return label ? label.name : undefined;
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * POST/PUT entity — create link label.
+   *
+   * @param value value (string)
+   */
 
   createLinkLabel($event: Event, value: string) {
     $event.preventDefault();
     this.transformLinkLabel(value);
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param event DOM or Angular event object
+   */
+
   add(event: MatChipInputEvent): void {
     if (!this.matAutocomplete.isOpen || this.allowCustom) {
       this.transformLinkLabel(event.value);
     }
   }
+
+  /**
+   * fetch labels.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<LinkLabel>> observable or value
+   */
 
   private fetchLabels(searchText?: string): Observable<Array<LinkLabel>> {
     this.searchText = searchText;
@@ -222,6 +300,12 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
       return of(this.labelsList);
     }
   }
+
+  /**
+   * transform link label.
+   *
+   * @param value value (string)
+   */
 
   private transformLinkLabel(value: string) {
     if ((value || '').trim()) {
@@ -243,6 +327,12 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
     this.clear('');
   }
 
+  /**
+   * DELETE — remove.
+   *
+   * @param label label (LinkLabel)
+   */
+
   remove(label: LinkLabel) {
     const index = this.labels.indexOf(label);
     if (index >= 0) {
@@ -256,10 +346,22 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * selected.
+   *
+   * @param event DOM or Angular event object
+   */
+
   selected(event: MatAutocompleteSelectedEvent): void {
     this.addLabel(event.option.value);
     this.clear('');
   }
+
+  /**
+   * POST/PUT entity — add label.
+   *
+   * @param label label (LinkLabel)
+   */
 
   addLabel(label: LinkLabel): void {
     const index = this.labels.findIndex(existinglabel => existinglabel.value === label.value);
@@ -272,9 +374,20 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     this.linksFormGroup.get('label').updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   clear(value: string = '') {
     this.labelInput.nativeElement.value = value;
@@ -284,6 +397,11 @@ export class LinkLabelsComponent implements ControlValueAccessor, OnInit, OnChan
       this.labelInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const labels = this.labels.map((label => label.value));

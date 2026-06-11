@@ -29,14 +29,17 @@ import { ValueType } from '@shared/models/constants';
 import { BasicActionWidgetComponent, ValueSetter } from '@home/components/widget/lib/action/action-widget.models';
 import GenericOptions = CanvasGauges.GenericOptions;
 
+
+/**
+ * Angular component: knob (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-knob`.
+ */
 @Component({
     selector: 'tb-knob',
     templateUrl: './knob.component.html',
     styleUrls: ['./knob.component.scss'],
-    standalone: false
-/**
- * Angular component: knob UI.
- */
+standalone: false
 })
 export class KnobComponent extends BasicActionWidgetComponent implements OnInit, OnDestroy {
 
@@ -99,6 +102,11 @@ export class KnobComponent extends BasicActionWidgetComponent implements OnInit,
     super(cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.knob = $(this.knobRef.nativeElement);
     this.knobContainer = $(this.knobContainerRef.nativeElement);
@@ -120,12 +128,22 @@ export class KnobComponent extends BasicActionWidgetComponent implements OnInit,
     this.init();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.knobResize$) {
       this.knobResize$.disconnect();
     }
     this.ctx.controlApi.completedCommand();
   }
+
+  /**
+   * init.
+   *
+   */
 
   private init() {
     const settings: KnobSettings = prepareKnobSettings({...deepClone(knobWidgetDefaultSettings), ...this.ctx.settings});
@@ -296,13 +314,33 @@ export class KnobComponent extends BasicActionWidgetComponent implements OnInit,
 
   }
 
+  /**
+   * degree to ratio.
+   *
+   * @param degree degree (number)
+   * @returns number observable or value
+   */
+
   private degreeToRatio(degree: number): number {
     return (degree - this.minDeg) / (this.maxDeg - this.minDeg);
   }
 
+  /**
+   * ratio to degree.
+   *
+   * @param ratio ratio (number)
+   * @returns number observable or value
+   */
+
   private ratioToDegree(ratio: number): number {
     return this.minDeg + ratio * (this.maxDeg - this.minDeg);
   }
+
+  /**
+   * turn.
+   *
+   * @param ratio ratio (number)
+   */
 
   private turn(ratio: number) {
     this.newValue = Number((this.minValue + (this.maxValue - this.minValue) * ratio).toFixed(this.decimals));
@@ -312,6 +350,11 @@ export class KnobComponent extends BasicActionWidgetComponent implements OnInit,
     this.updateColor(this.canvasBar.getValueColor());
     this.onValue(this.newValue);
   }
+
+  /**
+   * resize.
+   *
+   */
 
   private resize() {
     const width = this.knobContainer.width();
@@ -327,11 +370,25 @@ export class KnobComponent extends BasicActionWidgetComponent implements OnInit,
     this.checkValueSize();
   }
 
+  /**
+   * check value size.
+   *
+   */
+
   private checkValueSize() {
     const fontSize = this.knobValueContainer.height() / 3.3;
     const containerWidth = this.knobValueContainer.width();
     this.setFontSize(this.knobValue, this.value + '', fontSize, containerWidth);
   }
+
+  /**
+   * set font size.
+   *
+   * @param element element (JQuery<HTMLElement>)
+   * @param text text (string)
+   * @param fontSize font size (number)
+   * @param maxWidth max width (number)
+   */
 
   private setFontSize(element: JQuery<HTMLElement>, text: string, fontSize: number, maxWidth: number) {
     let textWidth = this.measureTextWidth(text, fontSize);
@@ -345,11 +402,25 @@ export class KnobComponent extends BasicActionWidgetComponent implements OnInit,
     element.css({fontSize: fontSize + 'px', lineHeight: fontSize + 'px'});
   }
 
+  /**
+   * measure text width.
+   *
+   * @param text text (string)
+   * @param fontSize font size (number)
+   * @returns number observable or value
+   */
+
   private measureTextWidth(text: string, fontSize: number): number {
     this.textMeasure.css({fontSize: fontSize + 'px', lineHeight: fontSize + 'px'});
     this.textMeasure.html(text);
     return this.textMeasure.width();
   }
+
+  /**
+   * set value.
+   *
+   * @param value value (number)
+   */
 
   private setValue(value: number) {
     const ratio = (value - this.minValue) / (this.maxValue - this.minValue);
@@ -364,6 +435,12 @@ export class KnobComponent extends BasicActionWidgetComponent implements OnInit,
     this.ctx.detectChanges();
   }
 
+  /**
+   * update color.
+   *
+   * @param color color (string)
+   */
+
   private updateColor(color: string) {
     const glowColor = tinycolor(color).brighten(30).toHexString();
     this.knobValue.css({color: glowColor});
@@ -374,15 +451,34 @@ export class KnobComponent extends BasicActionWidgetComponent implements OnInit,
     this.knobTopPointer.css({boxShadow});
   }
 
+  /**
+   * Event handler for value.
+   *
+   * @param value value (number)
+   */
+
   private onValue(value: number) {
     this.value = this.formatValue(value);
     this.checkValueSize();
     this.ctx.detectChanges();
   }
 
+  /**
+   * format value.
+   *
+   * @param value value (any)
+   * @returns string observable or value
+   */
+
   private formatValue(value: any): string {
     return this.valueFormat.format(value);
   }
+
+  /**
+   * rpc update value.
+   *
+   * @param value value (number)
+   */
 
   private rpcUpdateValue(value: number) {
     if (this.executingUpdateValue) {

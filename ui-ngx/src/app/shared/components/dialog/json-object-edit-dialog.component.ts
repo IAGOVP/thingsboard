@@ -33,14 +33,17 @@ export interface JsonObjectEditDialogData {
   fillHeight?: boolean;
 }
 
+
+/**
+ * Angular component: json object edit dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-object-edit-dialog`.
+ */
 @Component({
     selector: 'tb-object-edit-dialog',
     templateUrl: './json-object-edit-dialog.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: json object edit dialog UI.
- */
+standalone: false
 })
 export class JsonObjectEditDialogComponent extends DialogComponent<JsonObjectEditDialogComponent, object> {
 
@@ -72,9 +75,19 @@ export class JsonObjectEditDialogComponent extends DialogComponent<JsonObjectEdi
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(undefined);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     this.dialogRef.close(this.jsonFormGroup.get('json').value);

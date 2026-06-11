@@ -17,14 +17,17 @@
 import { Component, HostBinding, Input } from '@angular/core';
 import { TooltipPosition } from '@angular/material/tooltip';
 
+
+/**
+ * Angular component: hint tooltip icon (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `[tb-hint-tooltip-icon]`.
+ */
 @Component({
     selector: '[tb-hint-tooltip-icon]',
     templateUrl: './hint-tooltip-icon.component.html',
     styleUrls: ['./hint-tooltip-icon.component.scss'],
-    standalone: false
-/**
- * Angular component: hint tooltip icon UI.
- */
+standalone: false
 })
 export class HintTooltipIconComponent {
 

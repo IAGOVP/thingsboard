@@ -29,14 +29,17 @@ import {
 } from '@home/components/widget/lib/cards/progress-bar-widget.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: progress bar widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-progress-bar-widget-settings`.
+ */
 @Component({
     selector: 'tb-progress-bar-widget-settings',
     templateUrl: './progress-bar-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: progress bar widget settings UI.
- */
+standalone: false
 })
 export class ProgressBarWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -57,13 +60,31 @@ export class ProgressBarWidgetSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.progressBarWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return progressBarDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.progressBarWidgetSettingsForm = this.fb.group({
@@ -89,9 +110,21 @@ export class ProgressBarWidgetSettingsComponent extends WidgetSettingsComponent 
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showValue', 'showTicks', 'layout'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showValue: boolean = this.progressBarWidgetSettingsForm.get('showValue').value;

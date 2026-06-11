@@ -40,6 +40,12 @@ import {
 } from '@home/components/widget/lib/cards/value-card-widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: count widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-count-widget-settings`.
+ */
 @Component({
     selector: 'tb-count-widget-settings',
     templateUrl: './count-widget-settings.component.html',
@@ -51,10 +57,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: count widget settings UI.
- */
+standalone: false
 })
 export class CountWidgetSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -81,6 +84,11 @@ export class CountWidgetSettingsComponent extends PageComponent implements OnIni
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.countCardLayoutImageMap = this.alarmElseEntity ? alarmCountCardLayoutImages : entityCountCardLayoutImages;
@@ -131,12 +139,39 @@ export class CountWidgetSettingsComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+
+  /**
+
+
+   * set disabled state.
+
+
+   *
+
+
+   * @param isDisabled is disabled (boolean)
+
+
+   */
 
 
   setDisabledState(isDisabled: boolean): void {
@@ -149,6 +184,12 @@ export class CountWidgetSettingsComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (CountWidgetSettings)
+   */
+
   writeValue(value: CountWidgetSettings): void {
     this.countWidgetConfigForm.patchValue(
       value, {emitEvent: false}
@@ -156,10 +197,20 @@ export class CountWidgetSettingsComponent extends PageComponent implements OnIni
     this.updateValidators();
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: CountWidgetSettings = this.countWidgetConfigForm.value;
     this.propagateChange(value);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   protected updateValidators() {
     const showLabel: boolean = this.countWidgetConfigForm.get('showLabel').value;

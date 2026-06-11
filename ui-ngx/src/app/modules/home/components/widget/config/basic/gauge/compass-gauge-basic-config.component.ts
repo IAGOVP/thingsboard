@@ -32,14 +32,17 @@ import {
 } from '@home/components/widget/config/timewindow-config-panel.component';
 import { isUndefined } from '@core/utils';
 
+
+/**
+ * Angular component: compass gauge basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-compass-gauge-basic-config`.
+ */
 @Component({
     selector: 'tb-compass-gauge-basic-config',
     templateUrl: './compass-gauge-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: compass gauge basic config UI.
- */
+standalone: false
 })
 export class CompassGaugeBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -47,6 +50,12 @@ export class CompassGaugeBasicConfigComponent extends BasicWidgetConfigComponent
     const datasources = this.compassGaugeWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.compassGaugeWidgetConfigForm.get('datasources').value;
@@ -61,13 +70,31 @@ export class CompassGaugeBasicConfigComponent extends BasicWidgetConfigComponent
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.compassGaugeWidgetConfigForm;
   }
 
+  /**
+   * setup defaults.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
+
   protected setupDefaults(configData: WidgetConfigComponentData) {
     super.setupDefaults(configData);
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     this.compassGaugeWidgetConfigForm = this.fb.group({
@@ -97,6 +124,13 @@ export class CompassGaugeBasicConfigComponent extends BasicWidgetConfigComponent
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -125,9 +159,22 @@ export class CompassGaugeBasicConfigComponent extends BasicWidgetConfigComponent
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showTitleIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.compassGaugeWidgetConfigForm.get('showTitle').value;
@@ -161,6 +208,24 @@ export class CompassGaugeBasicConfigComponent extends BasicWidgetConfigComponent
   }
 
 
+  /**
+
+
+   * get card buttons.
+
+
+   *
+
+
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+
+
+   * @returns string[] observable or value
+
+
+   */
+
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -168,6 +233,13 @@ export class CompassGaugeBasicConfigComponent extends BasicWidgetConfigComponent
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

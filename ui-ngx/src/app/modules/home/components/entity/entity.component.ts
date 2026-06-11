@@ -29,8 +29,11 @@ import { deepTrim } from '@core/utils';
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: entity UI.
+ * Angular component: entity (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class EntityComponent<T extends BaseData<HasId>,
   P extends PageLink = PageLink,
   L extends BaseData<HasId> = T,
@@ -92,8 +95,19 @@ export abstract class EntityComponent<T extends BaseData<HasId>,
     this.entityForm = this.buildForm(this.entityValue);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * Event handler for entity action.
+   *
+   * @param action action (string)
+   */
 
   onEntityAction($event: Event, action: string) {
     const entityAction = {event: $event, action, entity: this.entity} as EntityAction<T>;
@@ -106,6 +120,11 @@ export abstract class EntityComponent<T extends BaseData<HasId>,
     }
   }
 
+  /**
+   * update form state.
+   *
+   */
+
   updateFormState() {
     if (this.entityForm) {
       if (this.isEditValue) {
@@ -116,14 +135,32 @@ export abstract class EntityComponent<T extends BaseData<HasId>,
     }
   }
 
+  /**
+   * entity form value.
+   *
+   */
+
   entityFormValue() {
     const formValue = this.entityForm ? {...this.entityForm.getRawValue()} : {};
     return this.prepareFormValue(formValue);
   }
 
+  /**
+   * prepare form value.
+   *
+   * @param formValue form value (any)
+   * @returns any observable or value
+   */
+
   prepareFormValue(formValue: any): any {
     return deepTrim(formValue);
   }
+
+  /**
+   * set entities table config.
+   *
+   * @param entitiesTableConfig entities table config (C)
+   */
 
   protected setEntitiesTableConfig(entitiesTableConfig: C) {
     this.entitiesTableConfigValue = entitiesTableConfig;

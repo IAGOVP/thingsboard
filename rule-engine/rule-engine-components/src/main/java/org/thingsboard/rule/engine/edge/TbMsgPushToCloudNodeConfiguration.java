@@ -19,12 +19,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.thingsboard.server.common.data.AttributeScope;
 /**
- * JSON configuration for TbMsgPushToCloud rule node.
+ * JSON configuration POJO for {@link TbMsgPushToCloud} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class TbMsgPushToCloudNodeConfiguration extends BaseTbMsgPushNodeConfiguration {
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgPushToCloudNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgPushToCloudNodeConfiguration defaultConfiguration() {

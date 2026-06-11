@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.transform;
 
+
 /**
 
- * Rule engine component: originator source.
+ * Enumerates originator source values used by rule engine message transformation and originator change nodes.
 
  */
+
 
 public enum OriginatorSource {
     CUSTOMER,

@@ -32,14 +32,17 @@ import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
 type ButtonAppearanceType = 'left' | 'right';
 
+
+/**
+ * Angular component: value stepper widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-stepper-widget-settings`.
+ */
 @Component({
     selector: 'tb-value-stepper-widget-settings',
     templateUrl: './value-stepper-widget-settings.component.html',
     styleUrls: ['../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: value stepper widget settings UI.
- */
+standalone: false
 })
 export class ValueStepperWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -72,13 +75,31 @@ export class ValueStepperWidgetSettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.valueStepperWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return valueStepperDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.valueStepperWidgetSettingsForm = this.fb.group({
@@ -130,10 +151,31 @@ export class ValueStepperWidgetSettingsComponent extends WidgetSettingsComponent
   }
 
 
+  /**
+
+
+   * validator triggers.
+
+
+   *
+
+
+   * @returns string[] observable or value
+
+
+   */
+
+
   protected validatorTriggers(): string[] {
     return ['appearance.showValueBox', 'appearance.showBorder',
       'buttonAppearance.leftButton.showButton', 'buttonAppearance.rightButton.showButton'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param _emitEvent  emit event (boolean)
+   */
 
   protected updateValidators(_emitEvent: boolean): void {
     const showValueBox: boolean = this.valueStepperWidgetSettingsForm.get('appearance').get('showValueBox').value;
@@ -167,6 +209,13 @@ export class ValueStepperWidgetSettingsComponent extends WidgetSettingsComponent
     this.buttonValidators(showLeftButton, 'leftButton');
     this.buttonValidators(showRightButton, 'rightButton');
   }
+
+  /**
+   * button validators.
+   *
+   * @param showButtonValue show button value (boolean)
+   * @param button button (string)
+   */
 
   private buttonValidators(showButtonValue: boolean, button: string) {
     if (showButtonValue) {

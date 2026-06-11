@@ -24,11 +24,11 @@ import { pieChartAnimationDefaultSettings, PieChartSettings } from '@home/compon
 import { isDefinedAndNotNull, mergeDeep } from '@core/utils';
 import { ChartAnimationSettings, PieChartLabelPosition } from '@home/components/widget/lib/chart/chart.models';
 
+
 /**
-
- * TypeScript models and enums for pie chart widget settings.
-
+ * Pie chart widget settings (ThingsBoard web UI).
  */
+
 
 export interface PieChartWidgetSettings extends LatestChartWidgetSettings {
   showLabel: boolean;

@@ -34,23 +34,42 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.msa.prototypes.DevicePrototypes.defaultDevicePrototype;
 /**
- * Coap client test.
+ * Black-box test: coap client (black-box test infrastructure — device transport connectivity tests).
  */
+
 
 @DisableUIListeners
 public class CoapClientTest extends AbstractCoapClientTest{
     private Device device;
+    /**
+     * Set up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @BeforeMethod
     public void setUp() throws Exception {
         testRestClient.login("tenant@thingsboard.org", "tenant");
         device = testRestClient.postDevice("", defaultDevicePrototype("http_"));
     }
+    /**
+     * Tear down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void tearDown() {
         testRestClient.deleteDeviceIfExists(device.getId());
         disconnect();
     }
+    /**
+     * Provision request for device with pre provisioned strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForDeviceWithPreProvisionedStrategy() throws Exception {
@@ -81,6 +100,12 @@ public class CoapClientTest extends AbstractCoapClientTest{
 
         updateDeviceProfileWithProvisioningStrategy(deviceProfile, DeviceProfileProvisionType.DISABLED);
     }
+    /**
+     * Provision request for device with allow to create new devices strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForDeviceWithAllowToCreateNewDevicesStrategy() throws Exception {
@@ -104,6 +129,12 @@ public class CoapClientTest extends AbstractCoapClientTest{
 
         updateDeviceProfileWithProvisioningStrategy(deviceProfile, DeviceProfileProvisionType.DISABLED);
     }
+    /**
+     * Provision request for device with disabled provisioning strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForDeviceWithDisabledProvisioningStrategy() throws Exception {

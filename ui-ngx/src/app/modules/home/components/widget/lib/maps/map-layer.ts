@@ -58,13 +58,20 @@ interface TbMapLayerData {
   attribution: boolean;
 }
 
+
 /**
-
- * tb map layer.
-
+ * Tb map layer (ThingsBoard web UI).
  */
 
+
 export abstract class TbMapLayer<S extends MapLayerSettings> {
+
+  /**
+   * from settings.
+   *
+   * @param ctx Angular template or component context
+   * @param inputSettings input settings (DeepPartial<MapLayerSettings>)
+   */
 
   static fromSettings(ctx: WidgetContext,
                       inputSettings: DeepPartial<MapLayerSettings>) {
@@ -92,6 +99,13 @@ export abstract class TbMapLayer<S extends MapLayerSettings> {
     this.settings = mergeDeep({} as S, this.defaultSettings(), this.inputSettings as S);
   }
 
+  /**
+   * load layer.
+   *
+   * @param theMap the map (L.Map)
+   * @returns Observable<L.TB.LayerData> observable or value
+   */
+
   public loadLayer(theMap: L.Map): Observable<L.TB.LayerData> {
     return this.generateLayer().pipe(
       switchMap((layerData) => {
@@ -117,6 +131,12 @@ export abstract class TbMapLayer<S extends MapLayerSettings> {
       })
     );
   }
+
+  /**
+   * generate layer.
+   *
+   * @returns Observable<TbMapLayerData> observable or value
+   */
 
   private generateLayer(): Observable<TbMapLayerData> {
     return this.createLayer().pipe(
@@ -167,6 +187,13 @@ export abstract class TbMapLayer<S extends MapLayerSettings> {
     ));
   }
 
+  /**
+   * load reference layer.
+   *
+   * @param referenceLayer reference layer (ReferenceLayerType)
+   * @returns Observable<L.Layer> observable or value
+   */
+
   private loadReferenceLayer(referenceLayer: ReferenceLayerType): Observable<L.Layer> {
     let spec$ = referenceLayerCache.get(referenceLayer);
     if (!spec$) {
@@ -188,6 +215,12 @@ export abstract class TbMapLayer<S extends MapLayerSettings> {
     );
   }
 
+  /**
+   * title.
+   *
+   * @returns string observable or value
+   */
+
   private title(): string {
     const customTranslate = this.ctx.$injector.get(CustomTranslatePipe);
     if (this.settings.label) {
@@ -196,6 +229,12 @@ export abstract class TbMapLayer<S extends MapLayerSettings> {
       return this.generateTitle();
     }
   }
+
+  /**
+   * generate title.
+   *
+   * @returns string observable or value
+   */
 
   private generateTitle(): string {
     const translationKey = defaultLayerTitle(this.settings);

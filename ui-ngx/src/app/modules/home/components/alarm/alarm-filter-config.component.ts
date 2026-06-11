@@ -59,6 +59,12 @@ export interface AlarmFilterConfigData {
 }
 
 // @dynamic
+
+/**
+ * Angular component: alarm filter config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-filter-config`.
+ */
 @Component({
     selector: 'tb-alarm-filter-config',
     templateUrl: './alarm-filter-config.component.html',
@@ -70,10 +76,7 @@ export interface AlarmFilterConfigData {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm filter config UI.
- */
+standalone: false
 })
 export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
@@ -139,6 +142,11 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.data) {
       this.panelMode = this.data.panelMode;
@@ -170,15 +178,38 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -189,6 +220,12 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param alarmFilterConfig alarm filter config (AlarmFilterConfig)
+   */
+
   writeValue(alarmFilterConfig?: AlarmFilterConfig): void {
     this.alarmFilterConfig = alarmFilterConfig;
     if (!this.initialAlarmFilterConfig && alarmFilterConfig) {
@@ -197,6 +234,11 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
     this.updateButtonDisplayValue();
     this.updateAlarmConfigForm(alarmFilterConfig);
   }
+
+  /**
+   * toggle alarm filter panel.
+   *
+   */
 
   toggleAlarmFilterPanel($event: Event) {
     if ($event) {
@@ -226,6 +268,11 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.updateAlarmConfigForm(this.alarmFilterConfig);
     this.alarmFilterConfigForm.markAsPristine();
@@ -236,6 +283,11 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
       this.alarmFilterOverlayRef.dispose();
     }
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     this.alarmConfigUpdated(this.alarmFilterConfigForm.value);
@@ -250,6 +302,11 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
       this.alarmFilterOverlayRef.dispose();
     }
   }
+
+  /**
+   * reset.
+   *
+   */
 
   reset() {
     if (this.initialAlarmFilterConfig) {
@@ -270,6 +327,12 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * update alarm config form.
+   *
+   * @param alarmFilterConfig alarm filter config (AlarmFilterConfig)
+   */
+
   private updateAlarmConfigForm(alarmFilterConfig?: AlarmFilterConfig) {
     this.alarmFilterConfigForm.patchValue({
       statusList: alarmFilterConfig?.statusList,
@@ -281,11 +344,24 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
     }, {emitEvent: false});
   }
 
+  /**
+   * alarm config updated.
+   *
+   * @param formValue form value (any)
+   */
+
   private alarmConfigUpdated(formValue: any) {
     this.alarmFilterConfig = this.alarmFilterConfigFromFormValue(formValue);
     this.updateButtonDisplayValue();
     this.propagateChange(this.alarmFilterConfig);
   }
+
+  /**
+   * alarm filter config from form value.
+   *
+   * @param formValue form value (any)
+   * @returns AlarmFilterConfig observable or value
+   */
 
   private alarmFilterConfigFromFormValue(formValue: any): AlarmFilterConfig {
     return {
@@ -297,6 +373,11 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
       assigneeId: formValue.assigneeId?.id ? formValue.assigneeId : null
     };
   }
+
+  /**
+   * update button display value.
+   *
+   */
 
   private updateButtonDisplayValue() {
     if (this.buttonMode) {
@@ -324,6 +405,12 @@ export class AlarmFilterConfigComponent implements OnInit, OnDestroy, ControlVal
       }
     }
   }
+
+  /**
+   * custom translate.
+   *
+   * @param entity entity (string)
+   */
 
   private customTranslate(entity: string) {
     return this.utils.customTranslation(entity, entity);

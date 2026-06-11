@@ -34,7 +34,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Rule engine flow node 'rule chain': Transfers the message to another rule chain Implements org.thingsboard.rule.engine.api.TbNode.
+ * Flow rule node — <b>rule chain</b>.
+ *
+ * <p>Transfers the message to another rule chain
+ * <br>The incoming message is forwarded to the input node of target rule chain. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbRuleChainInputNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/flow/rule-chain/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/flow/rule-chain/</a>
  */
 @RuleNode(
         type = ComponentType.FLOW,
@@ -57,6 +63,13 @@ public class TbRuleChainInputNode implements TbNode {
 
     private RuleChainId ruleChainId;
     private boolean forwardMsgToDefaultRuleChain;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -74,6 +87,13 @@ public class TbRuleChainInputNode implements TbNode {
         ctx.checkTenantEntity(ruleChainId);
         forwardMsgToDefaultRuleChain = config.isForwardMsgToDefaultRuleChain();
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
@@ -88,6 +108,14 @@ public class TbRuleChainInputNode implements TbNode {
         }
         ctx.input(msg, targetRuleChainId);
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

@@ -27,15 +27,18 @@ import {
 import { ComponentStyle } from '@shared/models/widget-settings.models';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
+
+/**
+ * Angular component: two segment button widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-two-segment-button-widget`.
+ */
 @Component({
     selector: 'tb-two-segment-button-widget',
     templateUrl: './two-segment-button-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './two-segment-button-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: two segment button widget UI.
- */
+standalone: false
 })
 export class TwoSegmentButtonWidgetComponent extends
   BasicActionWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -55,6 +58,11 @@ export class TwoSegmentButtonWidgetComponent extends
               protected cd: ChangeDetectorRef) {
     super(cd);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -77,13 +85,28 @@ export class TwoSegmentButtonWidgetComponent extends
     this.appearance = this.settings.appearance;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     super.ngAfterViewInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     super.onInit();
@@ -91,6 +114,12 @@ export class TwoSegmentButtonWidgetComponent extends
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for value.
+   *
+   * @param value value (boolean)
+   */
 
   private onValue(value: boolean): void {
     const newValue = !!value;
@@ -101,6 +130,12 @@ export class TwoSegmentButtonWidgetComponent extends
     }
   }
 
+  /**
+   * Event handler for disabled.
+   *
+   * @param value value (boolean)
+   */
+
   private onDisabled(value: boolean): void {
     const newDisabled = !!value;
     if (this.disabled !== newDisabled) {
@@ -108,6 +143,11 @@ export class TwoSegmentButtonWidgetComponent extends
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * Event handler for click.
+   *
+   */
 
   public onClick(_$event: MatButtonToggleChange) {
     if (!this.ctx.isEdit && !this.ctx.isPreview) {

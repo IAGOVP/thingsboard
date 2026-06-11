@@ -74,6 +74,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormProperty } from '@shared/models/dynamic-form.models';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: data keys (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-data-keys`.
+ */
 @Component({
     selector: 'tb-data-keys',
     templateUrl: './data-keys.component.html',
@@ -95,10 +101,7 @@ import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: data keys UI.
- */
+standalone: false
 })
 export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChanges, ErrorStateMatcher, Validator {
 
@@ -264,6 +267,11 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   updateValidators() {
     if (this.required) {
       this.keysListFormGroup.get('keys').addValidators(this.keysRequired);
@@ -294,6 +302,12 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     return null;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (!this.keysListFormGroup.valid) {
@@ -301,8 +315,19 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.keysListFormGroup = this.fb.group({
@@ -352,6 +377,12 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     })
   }
 
+  /**
+   * max data keys text.
+   *
+   * @returns string observable or value
+   */
+
   public maxDataKeysText(): string {
     if (this.maxDataKeys !== null && this.maxDataKeys > -1) {
       if (this.datasourceType === DatasourceType.function) {
@@ -365,6 +396,11 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
       return '';
     }
   }
+
+  /**
+   * update params.
+   *
+   */
 
   private updateParams() {
     const singleKey = this.maxDataKeysSet && this.maxDataKeys === 1;
@@ -402,6 +438,11 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
       }
     }
   }
+
+  /**
+   * reset.
+   *
+   */
 
   private reset() {
     if (this.widgetType === widgetType.alarm) {
@@ -449,11 +490,25 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (FormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = this.keysListFormGroup.get('keys').hasError('dataKey');
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -463,6 +518,12 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
       this.keysListFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<DataKey> | null)
+   */
 
   writeValue(value: Array<DataKey> | null): void {
     this.searchText = '';
@@ -478,6 +539,12 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     this.dirty = true;
   }
 
+  /**
+   * validate.
+   *
+   * @param _c  c (FormControl)
+   */
+
   validate(_c: FormControl) {
     return (this.keysListFormGroup.get('keys').hasError('dataKey')) ? {
       dataKeys: {
@@ -486,12 +553,23 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     } : null;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.keysListFormGroup.get('key').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * POST/PUT entity — add from chip value.
+   *
+   * @param chip chip (DataKey)
+   */
 
   private addFromChipValue(chip: DataKey) {
     let key: DataKey;
@@ -503,6 +581,12 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     }
     this.addKey(key);
   }
+
+  /**
+   * POST/PUT entity — add key.
+   *
+   * @param key key (DataKey)
+   */
 
   addKey(key: DataKey): void {
     if (!this.maxDataKeysSet ||
@@ -519,6 +603,12 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     this.clear('', focus);
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param event DOM or Angular event object
+   */
+
   add(event: MatChipInputEvent): void {
     const value = event.value;
     if ((value || '').trim() && this.dataKeyType) {
@@ -527,6 +617,12 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
       this.clear();
     }
   }
+
+  /**
+   * DELETE — remove.
+   *
+   * @param key key (DataKey)
+   */
 
   remove(key: DataKey) {
     const index = this.keys.indexOf(key);
@@ -542,6 +638,14 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     }
   }
 
+  /**
+   * chip drag start.
+   *
+   * @param index index (number)
+   * @param chipRow chip row (MatChipRow)
+   * @param placeholderChipRow placeholder chip row (Element)
+   */
+
   chipDragStart(index: number, chipRow: MatChipRow, placeholderChipRow: Element) {
     this.autocomplete.closePanel();
     this.renderer.setStyle(placeholderChipRow,
@@ -549,9 +653,20 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     this.dragIndex = index;
   }
 
+  /**
+   * chip drag end.
+   *
+   */
+
   chipDragEnd() {
     this.dragIndex = -1;
   }
+
+  /**
+   * Event handler for chip drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   onChipDrop(event: DndDropEvent) {
     let index = event.index;
@@ -564,6 +679,13 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     this.dragIndex = -1;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * open color picker popup.
+   *
+   * @param key key (DataKey)
+   * @param keyColorButton key color button (HTMLDivElement)
+   */
 
   openColorPickerPopup(key: DataKey, $event: Event, keyColorButton: HTMLDivElement) {
     if ($event) {
@@ -598,6 +720,13 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     }
   }
 
+  /**
+   * edit data key.
+   *
+   * @param key key (DataKey)
+   * @param index index (number)
+   */
+
   editDataKey(key: DataKey, index: number) {
     this.dialog.open<DataKeyConfigDialogComponent, DataKeyConfigDialogData, DataKey>(DataKeyConfigDialogComponent,
       {
@@ -631,22 +760,57 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     });
   }
 
+  /**
+   * POST/PUT entity — create key.
+   *
+   * @param name name (string)
+   * @param dataKeyType data key type (DataKeyType)
+   */
+
   createKey(name: string, dataKeyType: DataKeyType = this.dataKeyType) {
     this.addFromChipValue({name: name ? name.trim() : '', type: dataKeyType});
   }
 
+  /**
+   * display key fn.
+   *
+   * @param key key (DataKey)
+   * @returns string | undefined observable or value
+   */
+
   displayKeyFn(key?: DataKey): string | undefined {
     return key ? key.name : undefined;
   }
+
+  /**
+   * data key has aggregation.
+   *
+   * @param key key (DataKey)
+   * @returns boolean observable or value
+   */
 
   dataKeyHasAggregation(key: DataKey): boolean {
     return this.widgetType === widgetType.latest && key.type === DataKeyType.timeseries
       && key.aggregationType && key.aggregationType !== AggregationType.NONE;
   }
 
+  /**
+   * data key has postprocessing.
+   *
+   * @param key key (DataKey)
+   * @returns boolean observable or value
+   */
+
   dataKeyHasPostprocessing(key: DataKey): boolean {
     return this.datasourceType !== DatasourceType.function && !!key.postFuncBody;
   }
+
+  /**
+   * fetch keys.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   private fetchKeys(searchText?: string): Observable<Array<DataKey>> {
     if (this.searchText !== searchText || this.latestSearchTextResult === null) {
@@ -659,6 +823,12 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     }
     return of(this.latestSearchTextResult);
   }
+
+  /**
+   * get keys.
+   *
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   private getKeys(): Observable<Array<DataKey>> {
     if (this.fetchObservable$ === null) {
@@ -696,14 +866,34 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
     return this.fetchObservable$;
   }
 
+  /**
+   * POST/PUT entity — create data key filter.
+   *
+   * @param query query (string)
+   * @returns (key: DataKey) => boolean observable or value
+   */
+
   private createDataKeyFilter(query: string): (key: DataKey) => boolean {
     const lowercaseQuery = query.toLowerCase();
     return key => key.name.toLowerCase().startsWith(lowercaseQuery);
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return text?.length > 0;
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   clear(value: string = '', focus = true) {
     this.autocomplete.closePanel();
@@ -736,6 +926,11 @@ export class DataKeysComponent implements ControlValueAccessor, OnInit, OnChange
   get maxDataKeysSet(): boolean {
     return isDefinedAndNotNull(this.maxDataKeysValue) && this.maxDataKeysValue > -1;
   }
+
+  /**
+   * clear search cache.
+   *
+   */
 
   private clearSearchCache() {
     this.searchText = '';

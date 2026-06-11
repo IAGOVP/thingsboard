@@ -29,6 +29,9 @@ import { FC_NODE_COMPONENT_CONFIG, FC_NOTE_COMPONENT_CONFIG } from 'ngx-flowchar
 /**
  * Angular NgModule: rule chain feature area.
  */
+/**
+ * Angular NgModule bundling rule chain (home/rulechain pages).
+ */
 @NgModule({
   declarations: [
     RuleChainComponent,
@@ -55,5 +58,5 @@ import { FC_NODE_COMPONENT_CONFIG, FC_NOTE_COMPONENT_CONFIG } from 'ngx-flowchar
     SharedModule,
     HomeComponentsModule,
     RuleChainRoutingModule,
-  ]})
+]})
 export class RuleChainModule { }

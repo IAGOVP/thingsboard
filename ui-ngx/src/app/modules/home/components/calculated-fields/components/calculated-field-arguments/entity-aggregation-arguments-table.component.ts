@@ -25,6 +25,12 @@ import {
 } from '@home/components/calculated-fields/components/calculated-field-arguments/calculated-field-arguments-table.component';
 import { ArgumentEntityType } from '@shared/models/calculated-field.models';
 
+
+/**
+ * Angular component: entity aggregation arguments table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-aggregation-arguments-table`.
+ */
 @Component({
     selector: 'tb-entity-aggregation-arguments-table',
     templateUrl: './calculated-field-arguments-table.component.html',
@@ -41,10 +47,7 @@ import { ArgumentEntityType } from '@shared/models/calculated-field.models';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity aggregation arguments table UI.
- */
+standalone: false
 })
 export class EntityAggregationArgumentsTableComponent extends CalculatedFieldArgumentsTableComponent {
 

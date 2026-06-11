@@ -20,8 +20,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.script.ScriptLanguage;
 /**
- * JSON configuration for TbMsgGenerator rule node.
+ * JSON configuration POJO for {@link TbMsgGenerator} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMsgGeneratorNodeConfiguration implements NodeConfiguration<TbMsgGeneratorNodeConfiguration> {
@@ -39,6 +42,12 @@ public class TbMsgGeneratorNodeConfiguration implements NodeConfiguration<TbMsgG
     private ScriptLanguage scriptLang;
     private String jsScript;
     private String tbelScript;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgGeneratorNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgGeneratorNodeConfiguration defaultConfiguration() {

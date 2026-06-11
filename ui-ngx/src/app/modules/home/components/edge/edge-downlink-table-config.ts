@@ -53,11 +53,11 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { ActionNotificationShow } from '@core/notification/notification.actions';
 
+
 /**
-
- * edge downlink table config.
-
+ * Edge downlink table config (ThingsBoard web UI).
  */
+
 
 export class EdgeDownlinkTableConfig extends EntityTableConfig<EdgeEvent, TimePageLink> {
 
@@ -92,12 +92,25 @@ export class EdgeDownlinkTableConfig extends EntityTableConfig<EdgeEvent, TimePa
     this.updateColumns();
   }
 
+  /**
+   * fetch events.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<EdgeEvent>> observable or value
+   */
+
   private fetchEvents(pageLink: TimePageLink): Observable<PageData<EdgeEvent>> {
     return this.attributeService.getEntityAttributes(this.entityId, AttributeScope.SERVER_SCOPE, ['queueStartTs']).pipe(
       map((attributes) => this.onUpdate(attributes)),
       concatMap(() => this.edgeService.getEdgeEvents(this.entityId, pageLink))
     );
   }
+
+  /**
+   * Event handler for update.
+   *
+   * @param attributes attributes (any)
+   */
 
   private onUpdate(attributes: any): void {
     this.queueStartTs = 0;
@@ -107,6 +120,12 @@ export class EdgeDownlinkTableConfig extends EntityTableConfig<EdgeEvent, TimePa
     }, {});
     this.queueStartTs = edge.queueStartTs && edge.queueStartTs.value ? edge.queueStartTs.value : 0;
   }
+
+  /**
+   * update columns.
+   *
+   * @param updateTableColumns update table columns (boolean)
+   */
 
   private updateColumns(updateTableColumns: boolean = false): void {
     this.columns = [];
@@ -150,6 +169,13 @@ export class EdgeDownlinkTableConfig extends EntityTableConfig<EdgeEvent, TimePa
     }
   }
 
+  /**
+   * update edge event status.
+   *
+   * @param createdTime created time (number)
+   * @returns string observable or value
+   */
+
   private updateEdgeEventStatus(createdTime: number): string {
     if (this.queueStartTs && createdTime <= this.queueStartTs) {
       return this.translate.instant('edge.deployed');
@@ -158,20 +184,48 @@ export class EdgeDownlinkTableConfig extends EntityTableConfig<EdgeEvent, TimePa
     }
   }
 
+  /**
+   * is pending.
+   *
+   * @param createdTime created time (number)
+   * @returns boolean observable or value
+   */
+
   private isPending(createdTime: number): boolean {
     return createdTime > this.queueStartTs;
   }
+
+  /**
+   * is edge event has data.
+   *
+   * @param entity entity (EdgeEvent)
+   * @returns boolean observable or value
+   */
 
   private isEdgeEventHasData(entity: EdgeEvent): boolean {
     return !(entity.type === EdgeEventType.ADMIN_SETTINGS ||
              entity.action === EdgeEventActionType.DELETED);
   }
 
+  /**
+   * prepare edge event content.
+   *
+   * @param entity entity (EdgeEvent)
+   * @returns Observable<string> observable or value
+   */
+
   private prepareEdgeEventContent(entity: EdgeEvent): Observable<string> {
     return this.entityService.getEdgeEventContent(entity).pipe(
       map((result) => JSON.stringify(result))
     );
   }
+
+  /**
+   * show edge event content.
+   *
+   * @param content content (string)
+   * @param title title (string)
+   */
 
   private showEdgeEventContent($event: MouseEvent, content: string, title: string): void {
     if ($event) {
@@ -187,6 +241,11 @@ export class EdgeDownlinkTableConfig extends EntityTableConfig<EdgeEvent, TimePa
       }
     });
   }
+
+  /**
+   * show entity not found error.
+   *
+   */
 
   private showEntityNotFoundError(): void {
     this.store.dispatch(new ActionNotificationShow(

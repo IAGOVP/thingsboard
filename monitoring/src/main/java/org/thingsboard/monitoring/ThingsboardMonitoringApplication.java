@@ -38,9 +38,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Spring Boot entry point for ThingsBoard synthetic monitoring: schedules transport health checks,
- * reports latencies to telemetry, and sends Slack (or other) notifications.
+ * Spring Boot entry point for ThingsBoard synthetic monitoring.
+ *
+ * <p>Schedules {@link org.thingsboard.monitoring.service.BaseMonitoringService} health probes, provisions monitoring entities, reports latencies to telemetry, and sends Slack notifications.
  */
+
 @SpringBootApplication
 @EnableScheduling
 @Slf4j
@@ -57,16 +59,27 @@ public class ThingsboardMonitoringApplication {
     /** Single-thread scheduler stagger-starts each {@link BaseMonitoringService#runChecks()}. */
     ScheduledExecutorService scheduler = ThingsBoardExecutors.newSingleThreadScheduledExecutor("monitoring");
 
-    /** Loads {@code tb-monitoring.yml} via {@code spring.config.name=tb-monitoring}. */
+    /**
+     * Starts the monitoring Spring Boot application.
+     *
+     * <p>Loads {@code tb-monitoring.yml} via {@code spring.config.name=tb-monitoring}.
+     *
+     * @param args standard Spring Boot command-line arguments
+     */
     public static void main(String[] args) {
         new SpringApplicationBuilder(ThingsboardMonitoringApplication.class)
                 .properties(Map.of("spring.config.name", "tb-monitoring"))
                 .run(args);
     }
 
+    
     /**
-     * After context is ready: provision entities, init health checkers, schedule probes, notify startup.
+     * After Spring context is ready: provisions entities, inits checkers, and schedules probes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @EventListener(ApplicationReadyEvent.class)
     public void startMonitoring() {
         entityService.checkEntities();
@@ -83,7 +96,11 @@ public class ThingsboardMonitoringApplication {
         notificationService.sendNotification(new InfoNotification(":rocket: <"+publicDashboardUrl+"|Monitoring> started"));
     }
 
-    /** Sends shutdown notification before the JVM exits. */
+    /**
+     * Sends shutdown notification before the monitoring JVM exits.
+     *
+     * @param event Spring application lifecycle event
+     */
     @EventListener(ContextClosedEvent.class)
     public void onShutdown(ContextClosedEvent event) {
         log.info("Shutting down monitoring service");
@@ -96,6 +113,12 @@ public class ThingsboardMonitoringApplication {
             log.warn("Failed to send shutdown notification", e);
         }
     }
+    /**
+     * Stops the monitoring scheduler thread pool.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void shutdownScheduler() {

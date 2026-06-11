@@ -25,14 +25,17 @@ import { EntityId } from '@shared/models/id/entity-id';
 import { Observable } from 'rxjs';
 import { TbPopoverComponent } from '@shared/components/popover.component';
 
+
+/**
+ * Angular component: version control (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-version-control`.
+ */
 @Component({
     selector: 'tb-version-control',
     templateUrl: './version-control.component.html',
     styleUrls: ['./version-control.component.scss'],
-    standalone: false
-/**
- * Angular component: version control UI.
- */
+standalone: false
 })
 export class VersionControlComponent implements OnInit, HasConfirmForm {
 
@@ -71,9 +74,20 @@ export class VersionControlComponent implements OnInit, HasConfirmForm {
 
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
 
   }
+
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
 
   confirmForm(): UntypedFormGroup {
     return this.repositorySettingsComponent?.repositorySettingsForm;

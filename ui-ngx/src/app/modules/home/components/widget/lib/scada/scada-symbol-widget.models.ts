@@ -17,11 +17,11 @@
 import { ScadaSymbolObjectSettings } from '@home/components/widget/lib/scada/scada-symbol.models';
 import { BackgroundSettings, BackgroundType } from '@shared/models/widget-settings.models';
 
+
 /**
-
- * TypeScript models and enums for scada symbol widget settings.
-
+ * Scada symbol widget settings (ThingsBoard web UI).
  */
+
 
 export interface ScadaSymbolWidgetSettings {
   scadaSymbolUrl?: string;

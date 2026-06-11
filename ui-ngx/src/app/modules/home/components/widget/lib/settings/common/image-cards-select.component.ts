@@ -55,8 +55,9 @@ export interface ImageCardsColumns {
     standalone: false
 }
 /**
- * Angular directive: image cards select option.
+ * Angular directive: image cards select option (ThingsBoard web UI).
  */
+
 )
 export class ImageCardsSelectOptionDirective {
 

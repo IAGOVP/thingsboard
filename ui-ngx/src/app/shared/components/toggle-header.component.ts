@@ -66,8 +66,9 @@ export type ScrollDirection = 'after' | 'before';
 )
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * toggle option.
+ * Toggle option (shared UI components).
  */
+
 export class ToggleOption implements OnChanges, OnDestroy {
 
   @Input() value: any;
@@ -91,6 +92,11 @@ export class ToggleOption implements OnChanges, OnDestroy {
       }
     }
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.currentError.complete();

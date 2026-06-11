@@ -16,12 +16,16 @@
 
 import { Directive, EventEmitter, HostBinding, HostListener, Input, numberAttribute, Output } from '@angular/core';
 
-@Directive({
-  selector: '[inputChange]',
-  standalone: false
+
 /**
  * Angular directive: input change.
  */
+@Directive({
+  selector: '[inputChange]',
+/**
+ * Angular directive: input change (shared UI components).
+ */
+  standalone: false
 })
 export class InputChangeDirective {
 
@@ -37,6 +41,11 @@ export class InputChangeDirective {
   public inputChange = new EventEmitter<number>();
 
   @HostListener('input', ['$event'])
+  /**
+   * input changes.
+   *
+   * @param event DOM or Angular event object
+   */
   public inputChanges(event: any): void {
     const element = event.target as HTMLInputElement || event.srcElement as HTMLInputElement;
     const value = element.value;

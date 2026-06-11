@@ -43,6 +43,9 @@ import { ResourceLibraryTabsComponent } from '@home/pages/admin/resource/resourc
 /**
  * Angular NgModule: admin feature area.
  */
+/**
+ * Angular NgModule bundling admin (home/admin pages).
+ */
 @NgModule({
   declarations:
     [
@@ -70,5 +73,5 @@ import { ResourceLibraryTabsComponent } from '@home/pages/admin/resource/resourc
     AdminRoutingModule,
     OAuth2Module,
     NgxFlowModule
-  ]})
+]})
 export class AdminModule { }

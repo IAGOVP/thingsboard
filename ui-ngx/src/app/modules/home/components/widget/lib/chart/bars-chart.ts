@@ -36,11 +36,11 @@ import {
 import { ValueAxisBaseOption } from 'echarts/types/src/coord/axisCommonTypes';
 import { RadiusAxisOption, YAXisOption } from 'echarts/types/dist/shared';
 
+
 /**
-
- * tb bars chart.
-
+ * Tb bars chart (ThingsBoard web UI).
  */
+
 
 export class TbBarsChart extends TbLatestChart<BarsChartSettings> {
 
@@ -54,9 +54,20 @@ export class TbBarsChart extends TbLatestChart<BarsChartSettings> {
     super(ctx, inputSettings, chartElement, renderer, translate, autoResize);
   }
 
+  /**
+   * default settings.
+   *
+   * @returns BarsChartSettings observable or value
+   */
+
   protected defaultSettings(): BarsChartSettings {
     return barsChartDefaultSettings;
   }
+
+  /**
+   * prepare latest chart option.
+   *
+   */
 
   protected prepareLatestChartOption() {
     let labelStyle: ComponentStyle = {};
@@ -142,6 +153,11 @@ export class TbBarsChart extends TbLatestChart<BarsChartSettings> {
       this.latestChartOption.yAxis = valueAxis as YAXisOption;
     }
   }
+
+  /**
+   * do update series data.
+   *
+   */
 
   protected doUpdateSeriesData() {
     const seriesData: BarDataItemOption[] = [];

@@ -28,11 +28,11 @@ interface GmGlobal {
   [key: string]: boolean;
 }
 
+
 /**
-
- * google map.
-
+ * Google map (ThingsBoard web UI).
  */
+
 
 export class GoogleMap extends LeafletMap {
   private resource: ResourcesService;

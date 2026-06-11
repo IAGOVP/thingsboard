@@ -20,14 +20,17 @@ import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shar
 import { EntitySearchDirection } from '@app/shared/models/relation.models';
 import { EntityType } from '@app/shared/models/entity-type.models';
 
+
+/**
+ * Angular component: create relation config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-create-relation-config`.
+ */
 @Component({
     selector: 'tb-action-node-create-relation-config',
     templateUrl: './create-relation-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: create relation config UI.
- */
+standalone: false
 })
 export class CreateRelationConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -62,9 +65,21 @@ export class CreateRelationConfigComponent extends RuleNodeConfigurationComponen
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.createRelationConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.createRelationConfigForm = this.fb.group({
@@ -79,9 +94,21 @@ export class CreateRelationConfigComponent extends RuleNodeConfigurationComponen
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['entityType', 'createEntityIfNotExists'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const entityType: EntityType = this.createRelationConfigForm.get('entityType').value;
@@ -102,6 +129,13 @@ export class CreateRelationConfigComponent extends RuleNodeConfigurationComponen
     this.createRelationConfigForm.get('entityNamePattern').updateValueAndValidity({emitEvent});
     this.createRelationConfigForm.get('entityTypePattern').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     configuration.entityNamePattern = configuration.entityNamePattern ? configuration.entityNamePattern.trim() : null;

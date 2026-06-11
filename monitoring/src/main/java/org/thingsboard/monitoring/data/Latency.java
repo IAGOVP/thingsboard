@@ -17,13 +17,20 @@ package org.thingsboard.monitoring.data;
 
 import lombok.Data;
 /**
- * Single latency sample with formatted value for notifications.
+ * Single latency sample with formatted value for notifications and telemetry.
  */
+
 
 @Data(staticConstructor = "of")
 public class Latency {
     private final String key;
     private final double value;
+    /**
+     * Returns formatted value.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getFormattedValue() {
         return String.format("%,.2f ms", value);

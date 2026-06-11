@@ -38,22 +38,41 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.common.data.AttributeScope.SHARED_SCOPE;
 import static org.thingsboard.server.msa.prototypes.DevicePrototypes.defaultDevicePrototype;
 /**
- * Http client test.
+ * Black-box HTTP transport API test: device telemetry POST and REST validation.
  */
+
 
 @DisableUIListeners
 public class HttpClientTest extends AbstractContainerTest {
     private Device device;
+    /**
+     * Set up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @BeforeMethod
     public void setUp() throws Exception {
         testRestClient.login("tenant@thingsboard.org", "tenant");
         device = testRestClient.postDevice("", defaultDevicePrototype("http_"));
     }
+    /**
+     * Tear down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void tearDown() {
         testRestClient.deleteDeviceIfExists(device.getId());
     }
+    /**
+     * Telemetry upload.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void telemetryUpload() throws Exception {
@@ -72,6 +91,12 @@ public class HttpClientTest extends AbstractContainerTest {
         assertThat(actualLatestTelemetry.getDataValuesByKey("doubleKey").get(1)).isEqualTo(Double.toString(42.0));
         assertThat(actualLatestTelemetry.getDataValuesByKey("longKey").get(1)).isEqualTo(Long.toString(73));
     }
+    /**
+     * Returns attributes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void getAttributes() throws Exception {
@@ -100,6 +125,12 @@ public class HttpClientTest extends AbstractContainerTest {
         assertThat(attributes3.get("client").get("longKey")).isEqualTo(clientAttribute.get("longKey"));
         assertThat(attributes3.get("client").get("stringKey")).isEqualTo(clientAttribute.get("stringKey"));
     }
+    /**
+     * Provision request for device with pre provisioned strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForDeviceWithPreProvisionedStrategy() throws Exception {
@@ -126,6 +157,12 @@ public class HttpClientTest extends AbstractContainerTest {
 
         updateDeviceProfileWithProvisioningStrategy(deviceProfile, DeviceProfileProvisionType.DISABLED);
     }
+    /**
+     * Provision request for device with allow to create new devices strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForDeviceWithAllowToCreateNewDevicesStrategy() throws Exception {
@@ -158,6 +195,12 @@ public class HttpClientTest extends AbstractContainerTest {
 
         updateDeviceProfileWithProvisioningStrategy(deviceProfile, DeviceProfileProvisionType.DISABLED);
     }
+    /**
+     * Provision request for gateway device with allow to create new devices strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForGatewayDeviceWithAllowToCreateNewDevicesStrategy() throws Exception {
@@ -198,6 +241,12 @@ public class HttpClientTest extends AbstractContainerTest {
 
         updateDeviceProfileWithProvisioningStrategy(deviceProfile, DeviceProfileProvisionType.DISABLED);
     }
+    /**
+     * Provision request for device with disabled provisioning strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForDeviceWithDisabledProvisioningStrategy() throws Exception {

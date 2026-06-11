@@ -64,11 +64,11 @@ export const valueCardLayoutImages = new Map<ValueCardLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for value card widget settings.
-
+ * Value card widget settings (ThingsBoard web UI).
  */
+
 
 export interface ValueCardWidgetSettings {
   layout: ValueCardLayout;

@@ -48,15 +48,18 @@ interface DiffInfo {
   rightEndLine: number;
 }
 
+
+/**
+ * Angular component: entity version diff (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-version-diff`.
+ */
 @Component({
     selector: 'tb-entity-version-diff',
     templateUrl: './entity-version-diff.component.html',
     styleUrls: ['./entity-version-diff.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: entity version diff UI.
- */
+standalone: false
 })
 export class EntityVersionDiffComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -106,6 +109,11 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
               private popoverService: TbPopoverService) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.entitiesVersionControlService
@@ -169,6 +177,12 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     });
   }
 
+  /**
+   * version id content.
+   *
+   * @returns string observable or value
+   */
+
   versionIdContent(): string {
     let versionId = this.versionId;
     if (versionId.length > 7) {
@@ -177,6 +191,11 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     return versionId + ' (' + this.versionName + ')';
   }
 
+  /**
+   * prev difference.
+   *
+   */
+
   prevDifference($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -184,12 +203,23 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     this.moveToDiff(false);
   }
 
+  /**
+   * next difference.
+   *
+   */
+
   nextDifference($event: Event) {
     if ($event) {
       $event.stopPropagation();
     }
     this.moveToDiff(true);
   }
+
+  /**
+   * move to diff.
+   *
+   * @param next next (boolean)
+   */
 
   private moveToDiff(next: boolean) {
     const currentRow = this.getCurrentRow();
@@ -204,6 +234,12 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * Event handler for fullscreen changed.
+   *
+   * @param fullscreen fullscreen (boolean)
+   */
+
   onFullscreenChanged(fullscreen: boolean) {
     if (fullscreen) {
       this.resizeEditors();
@@ -214,6 +250,12 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * get diffs.
+   *
+   * @returns DiffInfo[] observable or value
+   */
+
   private getDiffs(): DiffInfo[] {
     if (this.differ) {
       // @ts-ignore
@@ -222,6 +264,11 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
       return [];
     }
   }
+
+  /**
+   * get current row.
+   *
+   */
 
   private getCurrentRow(): {row: number, left: boolean} {
     const leftEditor: Ace.Editor = this.differ.getEditors().left;
@@ -241,15 +288,39 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     return {row: currentRow, left};
   }
 
+  /**
+   * next diff.
+   *
+   * @param currentLine current line ({row: number)
+   * @param left left (boolean})
+   * @returns DiffInfo | undefined observable or value
+   */
+
   private nextDiff(currentLine: {row: number, left: boolean}): DiffInfo | undefined {
     const diffs = this.getDiffs();
     return diffs.find((diff) => (currentLine.left ? diff.leftStartLine : diff.rightStartLine) > currentLine.row);
   }
 
+  /**
+   * prev diff.
+   *
+   * @param currentLine current line ({row: number)
+   * @param left left (boolean})
+   * @returns DiffInfo | undefined observable or value
+   */
+
   private prevDiff(currentLine: {row: number, left: boolean}): DiffInfo | undefined {
     const diffs = this.getDiffs();
     return [...diffs].reverse().find((diff) => (currentLine.left ? diff.leftEndLine : diff.rightEndLine) < currentLine.row);
   }
+
+  /**
+   * find next line.
+   *
+   * @param currentLine current line ({row: number)
+   * @param left left (boolean})
+   * @returns DiffInfo | undefined observable or value
+   */
 
   private findNextLine(currentLine: {row: number, left: boolean}): DiffInfo | undefined {
     let res = this.nextDiff(currentLine);
@@ -260,6 +331,14 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     return res;
   }
 
+  /**
+   * find prev line.
+   *
+   * @param currentLine current line ({row: number)
+   * @param left left (boolean})
+   * @returns DiffInfo | undefined observable or value
+   */
+
   private findPrevLine(currentLine: {row: number, left: boolean}): DiffInfo | undefined {
     let res = this.prevDiff(currentLine);
     const diffs = this.getDiffs();
@@ -269,12 +348,22 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     return res;
   }
 
+  /**
+   * update has next and previous.
+   *
+   */
+
   private updateHasNextAndPrevious() {
     const currentRow = this.getCurrentRow();
     this.hasNext = !!this.nextDiff(currentRow);
     this.hasPrevious = !!this.prevDiff(currentRow);
     this.cd.markForCheck();
   }
+
+  /**
+   * resize editors.
+   *
+   */
 
   private resizeEditors() {
     if (this.differ) {
@@ -288,6 +377,11 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.differ) {
       this.differ.destroy();
@@ -295,11 +389,22 @@ export class EntityVersionDiffComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * close.
+   *
+   */
+
   close(): void {
     if (this.popoverComponent) {
       this.popoverComponent.hide();
     }
   }
+
+  /**
+   * toggle restore entity version.
+   *
+   * @param restoreVersionButton restore version button (MatButton)
+   */
 
   toggleRestoreEntityVersion($event: Event, restoreVersionButton: MatButton) {
     if ($event) {

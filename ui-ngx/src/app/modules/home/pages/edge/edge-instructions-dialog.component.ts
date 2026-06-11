@@ -38,14 +38,17 @@ export interface EdgeInstructionsDialogData {
   upgradeAvailable: boolean;
 }
 
+
+/**
+ * Angular component: edge instructions dialog (home/edge pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edge-installation-dialog`.
+ */
 @Component({
     selector: 'tb-edge-installation-dialog',
     templateUrl: './edge-instructions-dialog.component.html',
     styleUrls: ['./edge-instructions-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: edge instructions dialog UI.
- */
+standalone: false
 })
 export class EdgeInstructionsDialogComponent extends DialogComponent<EdgeInstructionsDialogComponent> implements OnInit, OnDestroy {
 
@@ -78,13 +81,28 @@ export class EdgeInstructionsDialogComponent extends DialogComponent<EdgeInstruc
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.getInstructions(this.instructionsMethod[this.tabIndex]);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     if (this.notShowAgain && this.showDontShowAgain) {
@@ -95,9 +113,21 @@ export class EdgeInstructionsDialogComponent extends DialogComponent<EdgeInstruc
     }
   }
 
+  /**
+   * selected tab change.
+   *
+   * @param index index (number)
+   */
+
   selectedTabChange(index: number) {
     this.getInstructions(this.instructionsMethod[index]);
   }
+
+  /**
+   * get instructions.
+   *
+   * @param method method (string)
+   */
 
   getInstructions(method: string) {
     if (!this.contentData[method]) {

@@ -37,6 +37,12 @@ import {
 import { coerceBoolean } from "@shared/decorators/coercion";
 import { Observable } from "rxjs";
 
+
+/**
+ * Angular component: cf alarm rule (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-cf-alarm-rule`.
+ */
 @Component({
     selector: 'tb-cf-alarm-rule',
     templateUrl: './cf-alarm-rule.component.html',
@@ -53,10 +59,7 @@ import { Observable } from "rxjs";
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: cf alarm rule UI.
- */
+standalone: false
 })
 export class CfAlarmRuleComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -93,12 +96,29 @@ export class CfAlarmRuleComponent implements ControlValueAccessor, OnInit, Valid
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.alarmRuleFormGroup.valueChanges.pipe(
@@ -107,6 +127,12 @@ export class CfAlarmRuleComponent implements ControlValueAccessor, OnInit, Valid
       this.updateModel();
     });
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -117,6 +143,12 @@ export class CfAlarmRuleComponent implements ControlValueAccessor, OnInit, Valid
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (AlarmRule)
+   */
+
   writeValue(value: AlarmRule): void {
     this.modelValue = value;
     const model = this.modelValue ? {
@@ -125,6 +157,11 @@ export class CfAlarmRuleComponent implements ControlValueAccessor, OnInit, Valid
     } : null;
     this.alarmRuleFormGroup.patchValue(model, {emitEvent: false});
   }
+
+  /**
+   * open edit details dialog.
+   *
+   */
 
   public openEditDetailsDialog($event: Event) {
     if ($event) {
@@ -145,6 +182,12 @@ export class CfAlarmRuleComponent implements ControlValueAccessor, OnInit, Valid
     });
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   public validate(): ValidationErrors | null {
     return (!this.required && !this.modelValue || this.alarmRuleFormGroup.valid) ? null : {
       alarmRule: {
@@ -152,6 +195,11 @@ export class CfAlarmRuleComponent implements ControlValueAccessor, OnInit, Valid
       },
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.alarmRuleFormGroup.value;

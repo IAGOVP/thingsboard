@@ -37,6 +37,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: lwm2m object list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-object-list`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-object-list',
     templateUrl: './lwm2m-object-list.component.html',
@@ -52,10 +58,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: lwm2m object list UI.
- */
+standalone: false
 })
 export class Lwm2mObjectListComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -116,12 +119,29 @@ export class Lwm2mObjectListComponent implements ControlValueAccessor, OnInit, V
     this.lwm2mListFormGroup.get('objectsList').updateValueAndValidity();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredObjectsList = this.lwm2mListFormGroup.get('objectLwm2m').valueChanges
@@ -140,6 +160,12 @@ export class Lwm2mObjectListComponent implements ControlValueAccessor, OnInit, V
       );
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (isDisabled) {
@@ -155,6 +181,12 @@ export class Lwm2mObjectListComponent implements ControlValueAccessor, OnInit, V
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ObjectLwM2M[])
+   */
+
   writeValue(value: ObjectLwM2M[]): void {
     this.searchText = '';
     if (isDefinedAndNotNull(value)) {
@@ -168,11 +200,23 @@ export class Lwm2mObjectListComponent implements ControlValueAccessor, OnInit, V
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.lwm2mListFormGroup.valid ? null : {
       lwm2mListObj: false
     };
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param object object (ObjectLwM2M)
+   */
 
   private add(object: ObjectLwM2M): void {
     if (isDefinedAndNotNull(this.objectsList) && this.objectsList.findIndex(item => item.keyId === object.keyId) === -1) {
@@ -213,9 +257,21 @@ export class Lwm2mObjectListComponent implements ControlValueAccessor, OnInit, V
     }
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * clear.
+   *
+   */
 
   private clear(value = '', emitEvent = true) {
     this.objectInput.nativeElement.value = value;

@@ -30,15 +30,18 @@ import { AddEntityDialogData } from '@home/models/entity/entity-component.models
 import { DialogComponent } from '@shared/components/dialog.component';
 import { Router } from '@angular/router';
 
+
+/**
+ * Angular component: add entity dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-entity-dialog`.
+ */
 @Component({
     selector: 'tb-add-entity-dialog',
     templateUrl: './add-entity-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: AddEntityDialogComponent }],
     styleUrls: ['./add-entity-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: add entity dialog UI.
- */
+standalone: false
 })
 export class AddEntityDialogComponent extends
   DialogComponent<AddEntityDialogComponent, BaseData<HasId>> implements OnInit, ErrorStateMatcher {
@@ -63,6 +66,11 @@ export class AddEntityDialogComponent extends
               @SkipSelf() private errorStateMatcher: ErrorStateMatcher) {
     super(store, router, dialogRef);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.entitiesTableConfig = this.data.entitiesTableConfig;
@@ -92,6 +100,12 @@ export class AddEntityDialogComponent extends
     this.detailsForm = this.entityComponent.entityForm;
   }
 
+  /**
+   * help link id.
+   *
+   * @returns string observable or value
+   */
+
   helpLinkId(): string {
     if (this.resources.helpLinkIdForEntity && this.entityComponent.entityForm) {
       return this.resources.helpLinkIdForEntity(this.entityComponent.entityForm.getRawValue());
@@ -100,15 +114,33 @@ export class AddEntityDialogComponent extends
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     this.submitted = true;

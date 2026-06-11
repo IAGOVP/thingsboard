@@ -16,11 +16,11 @@
 
 export const NULL_UUID = '13814000-1dd2-11b2-8080-808080808080';
 
+
 /**
-
- * TypeScript models and enums for has uuid.
-
+ * TypeScript interfaces, types, and enums for has uuid (shared TypeScript models).
  */
+
 
 export interface HasUUID {
   id: string;

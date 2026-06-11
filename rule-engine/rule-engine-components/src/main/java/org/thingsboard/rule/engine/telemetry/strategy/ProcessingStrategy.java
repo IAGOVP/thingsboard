@@ -25,8 +25,9 @@ import java.util.UUID;
         include = JsonTypeInfo.As.PROPERTY,
         property = "type"
 /**
- * Rule engine processing strategy API.
+ * processing strategy contract (telemetry and attribute persistence nodes).
  */
+
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = OnEveryMessageProcessingStrategy.class, name = "ON_EVERY_MESSAGE"),
@@ -34,18 +35,45 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = SkipProcessingStrategy.class, name = "SKIP")
 })
 public sealed interface ProcessingStrategy permits OnEveryMessageProcessingStrategy, DeduplicateProcessingStrategy, SkipProcessingStrategy {
+    /**
+     * Handles every message.
+     *
+     * @return {@link ProcessingStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     static ProcessingStrategy onEveryMessage() {
         return OnEveryMessageProcessingStrategy.getInstance();
     }
+    /**
+     * Deduplicate.
+     *
+     * @param deduplicationIntervalSecs deduplication interval secs
+     * @return {@link ProcessingStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     static ProcessingStrategy deduplicate(int deduplicationIntervalSecs) {
         return new DeduplicateProcessingStrategy(deduplicationIntervalSecs);
     }
+    /**
+     * Skip.
+     *
+     * @return {@link ProcessingStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     static ProcessingStrategy skip() {
         return SkipProcessingStrategy.getInstance();
     }
+    /**
+     * Should process.
+     *
+     * @param ts ts
+     * @param originatorUuid originator uuid ({@link UUID})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean shouldProcess(long ts, UUID originatorUuid);
 

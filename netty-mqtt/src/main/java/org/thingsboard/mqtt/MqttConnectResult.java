@@ -20,8 +20,11 @@ import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import lombok.Getter;
 import lombok.ToString;
 /**
- * Result of CONNECT/CONNACK including return code and session present flag.
+ * Result of MQTT CONNECT/CONNACK handshake.
+ *
+ * <p>Includes {@link io.netty.handler.codec.mqtt.MqttConnectReturnCode} and session-present flag.
  */
+
 
 @ToString
 @SuppressWarnings({"WeakerAccess", "unused"})

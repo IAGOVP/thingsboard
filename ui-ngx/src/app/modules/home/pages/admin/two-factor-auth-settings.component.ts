@@ -34,14 +34,17 @@ import { NotificationTargetConfigType, NotificationTargetConfigTypeInfoMap } fro
 import { EntityType } from '@shared/models/entity-type.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: two factor auth settings (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-2fa-settings`.
+ */
 @Component({
     selector: 'tb-2fa-settings',
     templateUrl: './two-factor-auth-settings.component.html',
     styleUrls: ['./settings-card.scss', './two-factor-auth-settings.component.scss'],
-    standalone: false
-/**
- * Angular component: two factor auth settings UI.
- */
+standalone: false
 })
 export class TwoFactorAuthSettingsComponent extends PageComponent implements OnInit, HasConfirmForm {
 
@@ -69,6 +72,11 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.build2faSettingsForm();
     this.twoFaService.getTwoFaSettings().subscribe((setting) => {
@@ -78,9 +86,20 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     });
   }
 
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   confirmForm(): UntypedFormGroup {
     return this.twoFaFormGroup;
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save() {
     if (this.twoFaFormGroup.valid) {
@@ -112,6 +131,13 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     }
   }
 
+  /**
+   * toggle extension panel.
+   *
+   * @param index index (number)
+   * @param currentState current state (boolean)
+   */
+
   toggleExtensionPanel($event: Event, index: number, currentState: boolean) {
     if ($event) {
       $event.stopPropagation();
@@ -123,6 +149,13 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     }
   }
 
+  /**
+   * track by element.
+   *
+   * @param i i (number)
+   * @param item item (any)
+   */
+
   trackByElement(i: number, item: any) {
     return item;
   }
@@ -130,6 +163,11 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
   get providersForm(): UntypedFormArray {
     return this.twoFaFormGroup.get('providers') as UntypedFormArray;
   }
+
+  /**
+   * build2fa settings form.
+   *
+   */
 
   private build2faSettingsForm(): void {
     this.twoFaFormGroup = this.fb.group({
@@ -202,6 +240,12 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     return true;
   }
 
+  /**
+   * set auth config form value.
+   *
+   * @param settings settings (TwoFactorAuthSettings)
+   */
+
   private setAuthConfigFormValue(settings: TwoFactorAuthSettings) {
     const [checkRateLimitNumber, checkRateLimitTime] = this.splitRateLimit(settings?.verificationCodeCheckRateLimit);
     const allowProvidersConfig = settings?.providers.map(provider => provider.providerType) || [];
@@ -230,6 +274,12 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     this.filterByTenants = isDefined(this.filterByTenants) ? this.filterByTenants : !Array.isArray(settings?.enforcedUsersFilter?.tenantProfilesIds);
     this.twoFaFormGroup.get('enforcedUsersFilter.filterByTenants').patchValue(this.filterByTenants, {onlySelf: true});
   }
+
+  /**
+   * build providers settings form.
+   *
+   * @param provider provider (TwoFactorAuthProviderType)
+   */
 
   private buildProvidersSettingsForm(provider: TwoFactorAuthProviderType) {
     const formControlConfig: {[key: string]: any} = {
@@ -269,9 +319,22 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     this.providersForm.push(newProviders, {emitEvent: false});
   }
 
+  /**
+   * get by index panel.
+   *
+   * @param index index (number)
+   */
+
   private getByIndexPanel(index: number) {
     return this.expansionPanel.find((_, i) => i === index);
   }
+
+  /**
+   * split rate limit.
+   *
+   * @param setting setting (string)
+   * @returns [number, number] observable or value
+   */
 
   private splitRateLimit(setting: string): [number, number] {
     if (isNotEmptyStr(setting)) {
@@ -281,6 +344,13 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     return [0, 0];
   }
 
+  /**
+   * join rate limit.
+   *
+   * @param processFormValue process form value (TwoFactorAuthSettingsForm)
+   * @param property property (string)
+   */
+
   private joinRateLimit(processFormValue: TwoFactorAuthSettingsForm, property: string) {
     if (processFormValue[`${property}Enable`]) {
       processFormValue[property] = [processFormValue[`${property}Number`], processFormValue[`${property}Time`]].join(':');
@@ -289,6 +359,12 @@ export class TwoFactorAuthSettingsComponent extends PageComponent implements OnI
     delete processFormValue[`${property}Number`];
     delete processFormValue[`${property}Time`];
   }
+
+  /**
+   * allow notification target config types.
+   *
+   * @returns NotificationTargetConfigType[] observable or value
+   */
 
   private allowNotificationTargetConfigTypes(): NotificationTargetConfigType[] {
     return [

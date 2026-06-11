@@ -21,17 +21,19 @@ import { TranslateService } from '@ngx-translate/core';
 import { FetchFromToTranslation, FetchTo } from '../rule-node-config.models';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 
+
+
+/**
+ * Angular component: copy keys config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-transformation-node-copy-keys-config`.
+ */
 @Component({
     selector: 'tb-transformation-node-copy-keys-config',
     templateUrl: './copy-keys-config.component.html',
     styleUrls: [],
-    standalone: false
 
-/**
-
- * Angular component: copy keys config UI.
-
- */
+standalone: false
 })
 
 export class CopyKeysConfigComponent extends RuleNodeConfigurationComponent{
@@ -50,6 +52,12 @@ export class CopyKeysConfigComponent extends RuleNodeConfigurationComponent{
     }
   }
 
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
+
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.copyKeysConfigForm = this.fb.group({
       copyFrom: [configuration.copyFrom , [Validators.required]],
@@ -57,9 +65,22 @@ export class CopyKeysConfigComponent extends RuleNodeConfigurationComponent{
     });
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.copyKeysConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     let copyFrom: FetchTo;

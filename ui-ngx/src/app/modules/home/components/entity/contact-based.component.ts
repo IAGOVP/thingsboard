@@ -26,8 +26,11 @@ import { CountryData } from '@shared/models/country.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { validateEmail } from '@app/core/utils';
 /**
- * Angular component: contact based UI.
+ * Angular component: contact based (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 
 @Directive()
 export abstract class ContactBasedComponent<T extends ContactBased<HasId>> extends EntityComponent<T> implements AfterViewInit {
@@ -42,6 +45,13 @@ export abstract class ContactBasedComponent<T extends ContactBased<HasId>> exten
                         protected countryData: CountryData) {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (T)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: T): UntypedFormGroup {
     const entityForm = this.buildEntityForm(entity);
@@ -58,6 +68,12 @@ export abstract class ContactBasedComponent<T extends ContactBased<HasId>> exten
     return entityForm;
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (T)
+   */
+
   updateForm(entity: T) {
     this.updateEntityForm(entity);
     this.entityForm.patchValue({country: entity.country});
@@ -71,6 +87,11 @@ export abstract class ContactBasedComponent<T extends ContactBased<HasId>> exten
     this.entityForm.patchValue({email: entity.email});
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.entityForm.get('country').valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
@@ -82,6 +103,13 @@ export abstract class ContactBasedComponent<T extends ContactBased<HasId>> exten
       }
     );
   }
+
+  /**
+   * zip validators.
+   *
+   * @param country country (string)
+   * @returns ValidatorFn[] observable or value
+   */
 
   zipValidators(country: string): ValidatorFn[] {
     const zipValidators = [];

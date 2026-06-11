@@ -82,7 +82,9 @@ const defaultAlarmFields: Array<string> = [
 
 // @dynamic
 /**
- * Angular HTTP service: utils REST wrappers (`@core/http`).
+ * Angular injectable service: utils (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -131,13 +133,33 @@ export class UtilsService {
     }
   }
 
+  /**
+   * get predefined functions list.
+   *
+   * @returns Array<string> observable or value
+   */
+
   public getPredefinedFunctionsList(): Array<string> {
     return predefinedFunctionsList;
   }
 
+  /**
+   * get predefined function body.
+   *
+   * @param func func (string)
+   * @returns string observable or value
+   */
+
   public getPredefinedFunctionBody(func: string): string {
     return predefinedFunctions[func];
   }
+
+  /**
+   * get default datasource.
+   *
+   * @param dataKeyForm data key form (FormProperty[])
+   * @returns Datasource observable or value
+   */
 
   public getDefaultDatasource(dataKeyForm: FormProperty[]): Datasource {
     const datasource = deepClone(this.defaultDatasource);
@@ -146,6 +168,11 @@ export class UtilsService {
     }
     return datasource;
   }
+
+  /**
+   * init default alarm data keys.
+   *
+   */
 
   private initDefaultAlarmDataKeys() {
     for (let i = 0; i < defaultAlarmFields.length; i++) {
@@ -161,12 +188,26 @@ export class UtilsService {
     }
   }
 
+  /**
+   * get default alarm data keys.
+   *
+   * @returns Array<DataKey> observable or value
+   */
+
   public getDefaultAlarmDataKeys(): Array<DataKey> {
     if (!this.defaultAlarmDataKeys.length) {
       this.initDefaultAlarmDataKeys();
     }
     return deepClone(this.defaultAlarmDataKeys);
   }
+
+  /**
+   * default alarm field content.
+   *
+   * @param key key (DataKey | {name: string})
+   * @param value value (any)
+   * @returns string observable or value
+   */
 
   public defaultAlarmFieldContent(key: DataKey | {name: string}, value: any): string {
     if (isDefined(value)) {
@@ -189,6 +230,13 @@ export class UtilsService {
     return '';
   }
 
+  /**
+   * process widget exception.
+   *
+   * @param exception exception (any)
+   * @returns ExceptionData observable or value
+   */
+
   public processWidgetException(exception: any): ExceptionData {
     const data = this.parseException(exception, -6);
     if (data.message?.startsWith('NG0')) {
@@ -205,9 +253,25 @@ export class UtilsService {
     return data;
   }
 
+  /**
+   * parse exception.
+   *
+   * @param exception exception (any)
+   * @param lineOffset line offset (number)
+   * @returns ExceptionData observable or value
+   */
+
   public parseException(exception: any, lineOffset?: number): ExceptionData {
     return parseException(exception, lineOffset);
   }
+
+  /**
+   * custom translation.
+   *
+   * @param translationValue translation value (string)
+   * @param defaultValue default value (string)
+   * @returns string observable or value
+   */
 
   public customTranslation(translationValue: string, defaultValue: string = translationValue): string {
     if (!translationValue || !isString(translationValue)) {
@@ -226,6 +290,15 @@ export class UtilsService {
     return result;
   }
 
+  /**
+   * do translate.
+   *
+   * @param translationValue translation value (string)
+   * @param defaultValue default value (string)
+   * @param prefix prefix (string)
+   * @returns string observable or value
+   */
+
   private doTranslate(translationValue: string, defaultValue: string, prefix?: string): string {
     let result: string;
     let translationId;
@@ -243,14 +316,35 @@ export class UtilsService {
     return result;
   }
 
+  /**
+   * guid.
+   *
+   * @returns string observable or value
+   */
+
   public guid(): string {
     return guid();
   }
+
+  /**
+   * get material color.
+   *
+   * @param index index (number)
+   */
 
   public getMaterialColor(index: number) {
     const colorIndex = index % materialColors.length;
     return materialColors[colorIndex].value;
   }
+
+  /**
+   * POST/PUT entity — create key.
+   *
+   * @param keyInfo key info (KeyInfo)
+   * @param type type (DataKeyType)
+   * @param index index (number)
+   * @returns DataKey observable or value
+   */
 
   public createKey(keyInfo: KeyInfo, type: DataKeyType, index: number = -1): DataKey {
     let label;
@@ -312,6 +406,12 @@ export class UtilsService {
     return createLabelFromDatasource(datasource, pattern);
   }
 
+  /**
+   * generate colors.
+   *
+   * @param datasources datasources (Array<Datasource>)
+   */
+
   public generateColors(datasources: Array<Datasource>) {
     let index = 0;
     datasources.forEach((datasource) => {
@@ -324,6 +424,15 @@ export class UtilsService {
     });
   }
 
+  /**
+   * string to hsl color.
+   *
+   * @param str str (string)
+   * @param saturationPercentage saturation percentage (number)
+   * @param lightnessPercentage lightness percentage (number)
+   * @returns string observable or value
+   */
+
   public stringToHslColor(str: string, saturationPercentage: number, lightnessPercentage: number): string {
     if (str && str.length) {
       const hue = hashCode(str) % 360;
@@ -331,10 +440,23 @@ export class UtilsService {
     }
   }
 
+  /**
+   * current perf time.
+   *
+   * @returns number observable or value
+   */
+
   public currentPerfTime(): number {
     return this.window.performance && this.window.performance.now ?
       this.window.performance.now() : Date.now();
   }
+
+  /**
+   * get query param.
+   *
+   * @param name name (string)
+   * @returns string observable or value
+   */
 
   public getQueryParam(name: string, url = this.window.location.href): string {
     name = name.replace(/[\[\]]/g, '\\$&');
@@ -349,6 +471,12 @@ export class UtilsService {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 
+  /**
+   * DELETE — remove query params.
+   *
+   * @param keys keys (Array<string>)
+   */
+
   public removeQueryParams(keys: Array<string>) {
     let params = this.window.location.search;
     for (const key of keys) {
@@ -358,12 +486,28 @@ export class UtilsService {
     this.window.history.replaceState({}, '', baseUrlPart + params);
   }
 
+  /**
+   * update query param.
+   *
+   * @param name name (string)
+   * @param value value (string | null)
+   */
+
   public updateQueryParam(name: string, value: string | null) {
     const baseUrlPart = [baseUrl(), this.window.location.pathname].join('');
     const urlQueryString = this.window.location.search;
     const params = this.updateUrlQueryString(urlQueryString, name, value);
     this.window.history.replaceState({}, '', baseUrlPart + params);
   }
+
+  /**
+   * update url query string.
+   *
+   * @param urlQueryString url query string (string)
+   * @param name name (string)
+   * @param value value (string | null)
+   * @returns string observable or value
+   */
 
   private updateUrlQueryString(urlQueryString: string, name: string, value: string | null): string {
     let newParam = '';
@@ -390,6 +534,12 @@ export class UtilsService {
     return params;
   }
 
+  /**
+   * base url.
+   *
+   * @returns string observable or value
+   */
+
   public baseUrl(): string {
     return baseUrl();
   }
@@ -398,17 +548,46 @@ export class UtilsService {
     return deepClone(target, ignoreFields);
   }
 
+  /**
+   * is undefined.
+   *
+   * @param value value (any)
+   * @returns boolean observable or value
+   */
+
   public isUndefined(value: any): boolean {
     return isUndefined(value);
   }
+
+  /**
+   * is defined.
+   *
+   * @param value value (any)
+   * @returns boolean observable or value
+   */
 
   public isDefined(value: any): boolean {
     return isDefined(value);
   }
 
+  /**
+   * is defined and not null.
+   *
+   * @param value value (any)
+   * @returns boolean observable or value
+   */
+
   public isDefinedAndNotNull(value: any): boolean {
     return isDefinedAndNotNull(value);
   }
+
+  /**
+   * default value.
+   *
+   * @param value value (any)
+   * @param defaultValue default value (any)
+   * @returns any observable or value
+   */
 
   public defaultValue(value: any, defaultValue: any): any {
     if (isDefinedAndNotNull(value)) {
@@ -418,9 +597,26 @@ export class UtilsService {
     }
   }
 
+  /**
+   * get entity id from datasource.
+   *
+   * @param dataSource data source (Datasource)
+   * @returns EntityId observable or value
+   */
+
   private getEntityIdFromDatasource(dataSource: Datasource): EntityId {
     return {id: dataSource.entityId, entityType: dataSource.entityType};
   }
+
+  /**
+   * subscribe to entity telemetry.
+   *
+   * @param ctx Angular template or component context
+   * @param entityId entity UUID
+   * @param type type (TelemetryType)
+   * @param keys keys (string[])
+   * @returns Observable<Array<AttributeData>> observable or value
+   */
 
   public subscribeToEntityTelemetry(ctx: WidgetContext,
                                     entityId?: EntityId,
@@ -441,21 +637,60 @@ export class UtilsService {
     );
   }
 
+  /**
+   * obj to base64.
+   *
+   * @param obj obj (any)
+   * @returns string observable or value
+   */
+
   public objToBase64(obj: any): string {
     return objToBase64(obj);
   }
+
+  /**
+   * base64to string.
+   *
+   * @param b64Encoded b64encoded (string)
+   * @returns string observable or value
+   */
 
   public base64toString(b64Encoded: string): string {
     return base64toString(b64Encoded);
   }
 
+  /**
+   * obj to base64uri.
+   *
+   * @param obj obj (any)
+   * @returns string observable or value
+   */
+
   public objToBase64URI(obj: any): string {
     return objToBase64URI(obj);
   }
 
+  /**
+   * base64to obj.
+   *
+   * @param b64Encoded b64encoded (string)
+   * @returns any observable or value
+   */
+
   public base64toObj(b64Encoded: string): any {
     return base64toObj(b64Encoded);
   }
+
+  /**
+   * apply css to element.
+   *
+   * @param renderer renderer (Renderer2)
+   * @param element element (any)
+   * @param cssClassPrefix css class prefix (string)
+   * @param css css (string)
+   * @param addTbDefaultClass add tb default class (boolean)
+   * @returns string observable or value
+   */
 
   public applyCssToElement(renderer: Renderer2, element: any, cssClassPrefix: string, css: string, addTbDefaultClass: boolean = false): string {
     const cssParser = new cssjs();
@@ -466,6 +701,14 @@ export class UtilsService {
     renderer.addClass(element, cssClass);
     return cssClass;
   }
+
+  /**
+   * clear css element.
+   *
+   * @param renderer renderer (Renderer2)
+   * @param cssClass css class (string)
+   * @param element element (any)
+   */
 
   public clearCssElement(renderer: Renderer2, cssClass: string, element?: any): void {
     if (element) {

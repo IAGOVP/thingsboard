@@ -34,15 +34,18 @@ import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 import { TbPopoverService } from '@shared/components/popover.service';
 import { UserId } from '@shared/models/id/user-id';
 
+
+/**
+ * Angular component: api keys table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-api-keys-table`.
+ */
 @Component({
     selector: 'tb-api-keys-table',
     templateUrl: './api-keys-table.component.html',
     styleUrls: ['./api-keys-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: api keys table UI.
- */
+standalone: false
 })
 export class ApiKeysTableComponent {
 

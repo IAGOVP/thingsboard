@@ -432,11 +432,11 @@ export type UnitCache = Map<AllMeasuresUnits | string, UnitCacheInfo>;
 
 type Entries<T, S extends keyof T> = [S, T[keyof T]];
 
+
 /**
-
- * TypeScript models and enums for converter.
-
+ * TypeScript interfaces, types, and enums for converter (shared TypeScript models).
  */
+
 
 export class Converter {
   private readonly measureData: Record<AllMeasures, TbMeasure<AllMeasuresUnits>>;
@@ -450,9 +450,26 @@ export class Converter {
     this.unitCache = unitCache;
   }
 
+  /**
+   * get unit converter.
+   *
+   * @param from from (AllMeasuresUnits | string)
+   * @param to to (AllMeasuresUnits | string)
+   * @returns TbUnitConverter observable or value
+   */
+
   getUnitConverter(from: AllMeasuresUnits | string, to: AllMeasuresUnits | string): TbUnitConverter {
     return (value: number) => this.convert(value, from, to);
   }
+
+  /**
+   * convert.
+   *
+   * @param value value (number)
+   * @param from from (AllMeasuresUnits | string)
+   * @param to to (AllMeasuresUnits | string)
+   * @returns number observable or value
+   */
 
   convert(value: number, from: AllMeasuresUnits | string, to: AllMeasuresUnits | string): number {
     const origin = this.getUnit(from);
@@ -515,14 +532,36 @@ export class Converter {
     return null;
   }
 
+  /**
+   * get unit.
+   *
+   * @param abbr abbr (AllMeasuresUnits | string)
+   * @returns UnitCacheInfo | null observable or value
+   */
+
   getUnit(abbr: AllMeasuresUnits | string): UnitCacheInfo | null {
     return this.unitCache.get(abbr) ?? null;
   }
+
+  /**
+   * describe.
+   *
+   * @param abbr abbr (AllMeasuresUnits | string)
+   * @returns UnitInfo observable or value
+   */
 
   describe(abbr: AllMeasuresUnits | string): UnitInfo {
     const unit = this.getUnit(abbr);
     return unit ? this.describeUnit(unit) : null;
   }
+
+  /**
+   * list units.
+   *
+   * @param measureName measure name (AllMeasures)
+   * @param unitSystem unit system (UnitSystem)
+   * @returns UnitInfo[] observable or value
+   */
 
   listUnits(measureName?: AllMeasures, unitSystem?: UnitSystem): UnitInfo[] {
     const results: UnitInfo[] = [];
@@ -553,6 +592,15 @@ export class Converter {
     }
     return results;
   }
+
+  /**
+   * units group by measure.
+   *
+   * @param measureName measure name (AllMeasures)
+   * @param unitSystem unit system (UnitSystem)
+   * @param tagFilter tag filter (string)
+   * @returns UnitInfoGroupByMeasure<AllMeasures> observable or value
+   */
 
   unitsGroupByMeasure(measureName?: AllMeasures, unitSystem?: UnitSystem, tagFilter?: string): UnitInfoGroupByMeasure<AllMeasures> {
     const results: UnitInfoGroupByMeasure<AllMeasures> = {};
@@ -592,6 +640,13 @@ export class Converter {
     return results;
   }
 
+  /**
+   * describe unit.
+   *
+   * @param unit unit (UnitCacheInfo)
+   * @returns UnitInfo observable or value
+   */
+
   private describeUnit(unit: UnitCacheInfo): UnitInfo {
     return {
       abbr: unit.abbr,
@@ -602,9 +657,24 @@ export class Converter {
     };
   }
 
+  /**
+   * is measure.
+   *
+   * @param measureName measure name (string)
+   * @returns boolean observable or value
+   */
+
   private isMeasure(measureName: string): boolean {
     return measureName in this.measureData;
   }
+
+  /**
+   * get units for measure.
+   *
+   * @param measureName measure name (AllMeasures | string)
+   * @param unitSystem unit system (UnitSystem)
+   * @returns Partial<Record<AllMeasuresUnits, Unit>> | null observable or value
+   */
 
   private getUnitsForMeasure(
     measureName: AllMeasures | string,

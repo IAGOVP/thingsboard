@@ -22,8 +22,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import java.util.Collections;
 import java.util.Map;
 /**
- * JSON configuration for TbRabbitMq rule node.
+ * JSON configuration POJO for {@link TbRabbitMq} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbRabbitMqNodeConfiguration implements NodeConfiguration<TbRabbitMqNodeConfiguration> {
@@ -40,6 +43,12 @@ public class TbRabbitMqNodeConfiguration implements NodeConfiguration<TbRabbitMq
     private int connectionTimeout;
     private int handshakeTimeout;
     private Map<String, String> clientProperties;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbRabbitMqNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbRabbitMqNodeConfiguration defaultConfiguration() {

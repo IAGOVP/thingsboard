@@ -20,8 +20,9 @@ import org.thingsboard.server.common.data.relation.EntitySearchDirection;
 
 import java.util.List;
 /**
- * Rule engine component: device relations query.
+ * Device relations query (rule node configuration DTOs and query objects).
  */
+
 
 @Data
 public class DeviceRelationsQuery {

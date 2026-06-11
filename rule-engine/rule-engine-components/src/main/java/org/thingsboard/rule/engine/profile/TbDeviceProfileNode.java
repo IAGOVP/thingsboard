@@ -62,8 +62,16 @@ import java.util.concurrent.TimeUnit;
         configDirective = "tbActionNodeDeviceProfileConfig",
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/device-profile/"
 /**
- * Rule engine action node 'device profile (deprecated)': Process device messages based on device profile settings (deprecated) Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>device profile (deprecated)</b>.
+ *
+ * <p>Process device messages based on device profile settings (deprecated)
+ * <br>Create and clear alarms based on alarm rules defined in device profile. The output relation type is either 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbDeviceProfileNodeConfiguration}.
+ * <br>Output relations: {@code "Alarm Created", "Alarm Updated", "Alarm Severity Updated", "Alarm Cleared", "Success", "Failure"}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/device-profile/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/device-profile/</a>
  */
+
 )
 @Deprecated
 public class TbDeviceProfileNode implements TbNode {
@@ -72,6 +80,13 @@ public class TbDeviceProfileNode implements TbNode {
     private RuleEngineDeviceProfileCache cache;
     private TbContext ctx;
     private final Map<DeviceId, DeviceState> deviceStates = new ConcurrentHashMap<>();
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -111,6 +126,14 @@ public class TbDeviceProfileNode implements TbNode {
             ctx.clearRuleNodeStates();
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException {
@@ -151,6 +174,12 @@ public class TbDeviceProfileNode implements TbNode {
             }
         }
     }
+    /**
+     * Cluster hook invoked on Kafka partition reassignment for this tenant/queue.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     */
 
     @Override
     public void onPartitionChangeMsg(TbContext ctx, PartitionChangeMsg msg) {
@@ -158,6 +187,10 @@ public class TbDeviceProfileNode implements TbNode {
         deviceStates.entrySet().removeIf(entry -> !ctx.isLocalEntity(entry.getKey()));
         initAlarmRuleState(true);
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {
@@ -179,6 +212,13 @@ public class TbDeviceProfileNode implements TbNode {
         }
         return deviceState;
     }
+    /**
+     * Schedule alarm harvesting.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void scheduleAlarmHarvesting(TbContext ctx, TbMsg msg) {
         CustomerId customerId = msg != null ? msg.getCustomerId() : null;
@@ -191,12 +231,28 @@ public class TbDeviceProfileNode implements TbNode {
                 .build();
         ctx.tellSelf(periodicCheck, TimeUnit.MINUTES.toMillis(1));
     }
+    /**
+     * Harvest alarms.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param ts ts
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     protected void harvestAlarms(TbContext ctx, long ts) throws ExecutionException, InterruptedException {
         for (DeviceState state : deviceStates.values()) {
             state.harvestAlarms(ctx, ts);
         }
     }
+    /**
+     * Updates profile.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     protected void updateProfile(TbContext ctx, DeviceProfileId deviceProfileId) throws ExecutionException, InterruptedException {
         DeviceProfile deviceProfile = cache.get(ctx.getTenantId(), deviceProfileId);
@@ -211,6 +267,12 @@ public class TbDeviceProfileNode implements TbNode {
             log.debug("[{}] Received stale profile update notification: [{}]", ctx.getSelfId(), deviceProfileId);
         }
     }
+    /**
+     * Handles profile update.
+     *
+     * @param profile profile ({@link DeviceProfile})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void onProfileUpdate(DeviceProfile profile) {
         ctx.tellSelf(TbMsg.newMsg()
@@ -234,6 +296,13 @@ public class TbDeviceProfileNode implements TbNode {
                 .data(JacksonUtil.toString(msgData))
                 .build(), 0L);
     }
+    /**
+     * Invalidate device profile cache.
+     *
+     * @param deviceId device UUID
+     * @param deviceJson device json ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void invalidateDeviceProfileCache(DeviceId deviceId, String deviceJson) {
         DeviceState deviceState = deviceStates.get(deviceId);
@@ -249,6 +318,13 @@ public class TbDeviceProfileNode implements TbNode {
             }
         }
     }
+    /**
+     * Invalidate device profile cache.
+     *
+     * @param deviceId device UUID
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void invalidateDeviceProfileCache(DeviceId deviceId, DeviceProfileId deviceProfileId) {
         DeviceState deviceState = deviceStates.get(deviceId);
@@ -265,6 +341,14 @@ public class TbDeviceProfileNode implements TbNode {
             ctx.removeRuleNodeStateForEntity(deviceId);
         }
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

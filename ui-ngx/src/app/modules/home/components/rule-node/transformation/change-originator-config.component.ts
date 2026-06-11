@@ -24,13 +24,16 @@ import {
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { EntityType } from '@app/shared/models/entity-type.models';
 
+
+/**
+ * Angular component: change originator config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-transformation-node-change-originator-config`.
+ */
 @Component({
     selector: 'tb-transformation-node-change-originator-config',
     templateUrl: './change-originator-config.component.html',
-    standalone: false
-/**
- * Angular component: change originator config UI.
- */
+standalone: false
 })
 export class ChangeOriginatorConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -47,9 +50,21 @@ export class ChangeOriginatorConfigComponent extends RuleNodeConfigurationCompon
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.changeOriginatorConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.changeOriginatorConfigForm = this.fb.group({
@@ -60,9 +75,21 @@ export class ChangeOriginatorConfigComponent extends RuleNodeConfigurationCompon
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['originatorSource'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const originatorSource: OriginatorSource = this.changeOriginatorConfigForm.get('originatorSource').value;

@@ -24,11 +24,14 @@ import { ApiUsageRoutingModule } from '@home/pages/api-usage/api-usage-routing.m
 /**
  * Angular NgModule: api usage feature area.
  */
+/**
+ * Angular NgModule bundling api usage (home/api-usage pages).
+ */
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
     HomeComponentsModule,
     ApiUsageRoutingModule
-  ]})
+]})
 export class ApiUsageModule { }

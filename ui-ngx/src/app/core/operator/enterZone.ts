@@ -25,14 +25,22 @@ export function enterZone<T>(zone: { run: (fn: any) => any }): MonoTypeOperatorF
   };
 }
 
+
 /**
-
- * enter zone operator.
-
+ * Enter zone operator (ThingsBoard web UI).
  */
+
 
 export class EnterZoneOperator<T> implements Operator<T, T> {
   constructor(private zone: { run: (fn: any) => any }) { }
+
+  /**
+   * call.
+   *
+   * @param subscriber subscriber (Subscriber<T>)
+   * @param source source (any)
+   * @returns any observable or value
+   */
 
   call(subscriber: Subscriber<T>, source: any): any {
     return source._subscribe(new EnterZoneSubscriber(subscriber, this.zone));

@@ -21,14 +21,17 @@ import { EntityTableHeaderComponent } from '@home/components/entity/entity-table
 import { CalculatedField, CalculatedFieldsQuery } from "@shared/models/calculated-field.models";
 import { CalculatedFieldsTableConfig } from '@home/components/calculated-fields/calculated-fields-table-config';
 
+
+/**
+ * Angular component: calculated fields header (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-fields-table-header`.
+ */
 @Component({
     selector: 'tb-calculated-fields-table-header',
     templateUrl: './calculated-fields-header.component.html',
     styleUrls: ['./calculated-fields-header.component.scss'],
-    standalone: false
-/**
- * Angular component: calculated fields header UI.
- */
+standalone: false
 })
 export class CalculatedFieldsHeaderComponent extends EntityTableHeaderComponent<CalculatedField> {
 
@@ -39,6 +42,12 @@ export class CalculatedFieldsHeaderComponent extends EntityTableHeaderComponent<
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * calculated fields filter changed.
+   *
+   * @param calculatedFieldFilterConfig calculated field filter config (CalculatedFieldsQuery)
+   */
 
   calculatedFieldsFilterChanged(calculatedFieldFilterConfig: CalculatedFieldsQuery) {
     this.calculatedFieldsTableConfig.calculatedFieldFilterConfig = calculatedFieldFilterConfig;

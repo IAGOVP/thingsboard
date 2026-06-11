@@ -19,11 +19,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.thingsboard.server.msa.ui.base.AbstractBasePage;
 
+
 /**
 
- * Create widget popup elements.
+ * Selenium element locators for create widget popup page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class CreateWidgetPopupElements extends AbstractBasePage {
     public CreateWidgetPopupElements(WebDriver driver) {
@@ -39,38 +45,94 @@ public class CreateWidgetPopupElements extends AbstractBasePage {
     private static final String ADD_ALIAS_BTN = "//tb-entity-alias-dialog//span[text() = ' Add ']/parent::button";
     private static final String ADD_WIDGET_BTN = "//tb-add-widget-dialog//span[text() = ' Add ']/parent::button";
     private static final String ENTITY_FROM_DROPDOWN = "//b[text() = '%s']";
+    /**
+     * Entity alias.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement entityAlias() {
         return waitUntilElementToBeClickable(ENTITY_ALIAS);
     }
+    /**
+     * Creates new alias btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement createNewAliasBtn() {
         return waitUntilElementToBeClickable(CREATE_NEW_ALIAS_BTN);
     }
+    /**
+     * Filter type filed.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement filterTypeFiled() {
         return waitUntilElementToBeClickable(FILTER_TYPE_FIELD);
     }
+    /**
+     * Type filed.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement typeFiled() {
         return waitUntilElementToBeClickable(TYPE_FIELD);
     }
+    /**
+     * Option from dropdown.
+     *
+     * @param type type ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement optionFromDropdown(String type) {
         return waitUntilElementToBeClickable(String.format(OPTION_FROM_DROPDOWN, type));
     }
+    /**
+     * Entity filed.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement entityFiled() {
         return waitUntilElementToBeClickable(ENTITY_FIELD);
     }
+    /**
+     * Add alias btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement addAliasBtn() {
         return waitUntilElementToBeClickable(ADD_ALIAS_BTN);
     }
+    /**
+     * Add widget btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement addWidgetBtn() {
         return waitUntilElementToBeClickable(ADD_WIDGET_BTN);
     }
+    /**
+     * Entity from dropdown.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement entityFromDropdown(String entityName) {
         return waitUntilVisibilityOfElementLocated(String.format(ENTITY_FROM_DROPDOWN, entityName));

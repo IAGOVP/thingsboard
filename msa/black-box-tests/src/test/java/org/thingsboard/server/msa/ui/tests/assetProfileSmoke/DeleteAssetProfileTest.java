@@ -30,16 +30,24 @@ import org.thingsboard.server.msa.ui.utils.EntityPrototypes;
 import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 
+
 /**
 
- * Delete asset profile test.
+ * Black-box test: delete asset profile (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class DeleteAssetProfileTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -47,6 +55,12 @@ public class DeleteAssetProfileTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Removes asset profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Delete one asset profile")
@@ -63,6 +77,12 @@ public class DeleteAssetProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.assertEntityIsNotPresent(name));
     }
+    /**
+     * Removes asset profile from view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Delete one asset profile")
@@ -80,6 +100,12 @@ public class DeleteAssetProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.assertEntityIsNotPresent(name));
     }
+    /**
+     * Removes selected asset profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Delete one asset profile")
@@ -97,6 +123,12 @@ public class DeleteAssetProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.assertEntityIsNotPresent(name));
     }
+    /**
+     * Removes default asset profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Delete one asset profile")
@@ -107,6 +139,12 @@ public class DeleteAssetProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertFalse(profilesPage.deleteBtn("default").isEnabled());
     }
+    /**
+     * Removes default asset profile from view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Delete one asset profile")
@@ -118,6 +156,12 @@ public class DeleteAssetProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.deleteAssetProfileFromViewBtnIsNotDisplayed());
     }
+    /**
+     * Removes selected default asset profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Delete one asset profile")
@@ -129,6 +173,12 @@ public class DeleteAssetProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.presentCheckBox("default"));
         Assert.assertFalse(profilesPage.presentCheckBox("default").isDisplayed());
     }
+    /**
+     * Removes asset profile without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Delete one asset profile")

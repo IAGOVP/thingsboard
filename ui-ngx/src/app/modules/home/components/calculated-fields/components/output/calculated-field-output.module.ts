@@ -25,6 +25,9 @@ import {
 /**
  * Angular NgModule: calculated field output feature area.
  */
+/**
+ * Angular NgModule bundling calculated field output (ThingsBoard web UI).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -35,5 +38,5 @@ import {
   ],
   exports: [
     CalculatedFieldOutputComponent
-  ]})
+]})
 export class CalculatedFieldOutputModule { }

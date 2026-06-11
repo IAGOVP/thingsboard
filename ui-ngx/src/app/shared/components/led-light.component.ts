@@ -23,14 +23,17 @@ interface CircleElement extends RaphaelElement {
   theGlow?: RaphaelSet;
 }
 
+
+/**
+ * Angular component: led light (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-led-light`.
+ */
 @Component({
     selector: 'tb-led-light',
     templateUrl: './led-light.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: led light UI.
- */
+standalone: false
 })
 export class LedLightComponent implements OnInit, AfterViewInit, OnChanges {
 
@@ -62,10 +65,20 @@ export class LedLightComponent implements OnInit, AfterViewInit, OnChanges {
   constructor(private elementRef: ElementRef<HTMLElement>) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.offOpacity = this.offOpacity || 0.4;
     this.glowColor = tinycolor(this.colorOn).lighten().toHexString();
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.update();
@@ -84,6 +97,11 @@ export class LedLightComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
+  /**
+   * update.
+   *
+   */
+
   private update() {
     this.size = this.size || 50;
     this.canvasSize = this.size;
@@ -101,6 +119,11 @@ export class LedLightComponent implements OnInit, AfterViewInit, OnChanges {
       }
     );
   }
+
+  /**
+   * draw.
+   *
+   */
 
   private draw() {
     if (this.enabled) {

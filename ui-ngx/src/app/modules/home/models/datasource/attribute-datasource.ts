@@ -32,11 +32,11 @@ import { AttributeService } from '@core/http/attribute.service';
 import { TelemetryWebsocketService } from '@core/ws/telemetry-websocket.service';
 import { NgZone } from '@angular/core';
 
+
 /**
-
- * TypeScript models and enums for attribute datasource.
-
+ * TypeScript interfaces, types, and enums for attribute datasource (ThingsBoard web UI).
  */
+
 
 export class AttributeDatasource implements DataSource<AttributeData> {
 
@@ -55,9 +55,22 @@ export class AttributeDatasource implements DataSource<AttributeData> {
               private zone: NgZone,
               private translate: TranslateService) {}
 
+  /**
+   * connect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   * @returns Observable<AttributeData[] | ReadonlyArray<AttributeData>> observable or value
+   */
+
   connect(collectionViewer: CollectionViewer): Observable<AttributeData[] | ReadonlyArray<AttributeData>> {
     return this.attributesSubject.asObservable();
   }
+
+  /**
+   * disconnect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   */
 
   disconnect(collectionViewer: CollectionViewer): void {
     this.attributesSubject.complete();
@@ -67,6 +80,16 @@ export class AttributeDatasource implements DataSource<AttributeData> {
       this.telemetrySubscriber = null;
     }
   }
+
+  /**
+   * load attributes.
+   *
+   * @param entityId entity UUID
+   * @param attributesScope attributes scope (TelemetryType)
+   * @param pageLink pagination and sort parameters
+   * @param reload reload (boolean)
+   * @returns Observable<PageData<AttributeData>> observable or value
+   */
 
   loadAttributes(entityId: EntityId, attributesScope: TelemetryType,
                  pageLink: PageLink, reload: boolean = false): Observable<PageData<AttributeData>> {
@@ -91,6 +114,15 @@ export class AttributeDatasource implements DataSource<AttributeData> {
     return result;
   }
 
+  /**
+   * fetch attributes.
+   *
+   * @param entityId entity UUID
+   * @param attributesScope attributes scope (TelemetryType)
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<AttributeData>> observable or value
+   */
+
   fetchAttributes(entityId: EntityId, attributesScope: TelemetryType,
                   pageLink: PageLink): Observable<PageData<AttributeData>> {
     return this.getAllAttributes(entityId, attributesScope).pipe(
@@ -100,6 +132,14 @@ export class AttributeDatasource implements DataSource<AttributeData> {
       })
     );
   }
+
+  /**
+   * get all attributes.
+   *
+   * @param entityId entity UUID
+   * @param attributesScope attributes scope (TelemetryType)
+   * @returns Observable<Array<AttributeData>> observable or value
+   */
 
   getAllAttributes(entityId: EntityId, attributesScope: TelemetryType): Observable<Array<AttributeData>> {
     if (!this.allAttributes) {
@@ -120,6 +160,12 @@ export class AttributeDatasource implements DataSource<AttributeData> {
     return this.allAttributes;
   }
 
+  /**
+   * is all selected.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isAllSelected(): Observable<boolean> {
     return this.attributesSubject.pipe(
       map((attributes) => {
@@ -129,17 +175,34 @@ export class AttributeDatasource implements DataSource<AttributeData> {
     );
   }
 
+  /**
+   * is empty.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isEmpty(): Observable<boolean> {
     return this.attributesSubject.pipe(
       map((attributes) => !attributes.length)
     );
   }
 
+  /**
+   * total.
+   *
+   * @returns Observable<number> observable or value
+   */
+
   total(): Observable<number> {
     return this.pageDataSubject.pipe(
       map((pageData) => pageData.totalElements)
     );
   }
+
+  /**
+   * master toggle.
+   *
+   */
 
   masterToggle() {
     this.attributesSubject.pipe(

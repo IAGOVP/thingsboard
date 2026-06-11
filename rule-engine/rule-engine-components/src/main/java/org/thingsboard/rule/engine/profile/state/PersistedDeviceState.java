@@ -19,8 +19,9 @@ import lombok.Data;
 
 import java.util.Map;
 /**
- * Rule engine component: persisted device state.
+ * Persisted device state (device profile state nodes).
  */
+
 
 @Data
 @Deprecated

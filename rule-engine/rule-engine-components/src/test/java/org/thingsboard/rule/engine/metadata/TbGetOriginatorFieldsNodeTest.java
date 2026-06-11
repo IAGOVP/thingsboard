@@ -55,8 +55,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb get originator fields node rule node.
+ * Unit test for tb get originator fields node (entity metadata and related-data fetch nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbGetOriginatorFieldsNodeTest {
@@ -72,6 +73,11 @@ public class TbGetOriginatorFieldsNodeTest {
     private TbGetOriginatorFieldsConfiguration config;
     private TbNodeConfiguration nodeConfiguration;
     private TbMsg msg;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -79,6 +85,11 @@ public class TbGetOriginatorFieldsNodeTest {
         config = new TbGetOriginatorFieldsConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
     }
+    /**
+     * Given config with null fetch to when init then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenConfigWithNullFetchTo_whenInit_thenException() {
@@ -93,6 +104,11 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(exception.getMessage()).isEqualTo("FetchTo option can't be null! Allowed values: " + Arrays.toString(TbMsgSource.values()));
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given default config when init then ok.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenInit_thenOK() throws TbNodeException {
@@ -108,6 +124,11 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(config.getFetchTo()).isEqualTo(TbMsgSource.METADATA);
         assertThat(node.fetchTo).isEqualTo(TbMsgSource.METADATA);
     }
+    /**
+     * Given custom config when init then ok.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenCustomConfig_whenInit_thenOK() throws TbNodeException {
@@ -133,6 +154,11 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(config.getFetchTo()).isEqualTo(TbMsgSource.DATA);
         assertThat(node.fetchTo).isEqualTo(TbMsgSource.DATA);
     }
+    /**
+     * Given msg data is not an json object and fetch to data when on msg then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMsgDataIsNotAnJsonObjectAndFetchToData_whenOnMsg_thenException() {
@@ -152,6 +178,13 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(exception.getMessage()).isEqualTo("Message body is not an object!");
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given valid msg and fetch to data when on msg then should tell success and fetch to data.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenValidMsgAndFetchToData_whenOnMsg_thenShouldTellSuccessAndFetchToData() throws TbNodeException, ExecutionException, InterruptedException {
@@ -198,6 +231,13 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(expectedMsgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msgMetaData);
     }
+    /**
+     * Given device with empty label when on msg then should tell success and fetch to data.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenDeviceWithEmptyLabel_whenOnMsg_thenShouldTellSuccessAndFetchToData() throws TbNodeException, ExecutionException, InterruptedException {
@@ -245,6 +285,13 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(expectedMsgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msgMetaData);
     }
+    /**
+     * Given valid msg and fetch to meta data when on msg then should tell success and fetch to meta data.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenValidMsgAndFetchToMetaData_whenOnMsg_thenShouldTellSuccessAndFetchToMetaData() throws TbNodeException, ExecutionException, InterruptedException {
@@ -298,6 +345,13 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(expectedMsgMetaData);
     }
+    /**
+     * Given null entity fields and ignore null strings false when on msg then should tell success and fetch null field.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenNullEntityFieldsAndIgnoreNullStringsFalse_whenOnMsg_thenShouldTellSuccessAndFetchNullField() throws TbNodeException, ExecutionException, InterruptedException {
@@ -352,6 +406,11 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(expectedMsgMetaData);
     }
+    /**
+     * Given empty fields mapping when init then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenEmptyFieldsMapping_whenInit_thenException() {
@@ -366,6 +425,13 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(exception.getMessage()).isEqualTo("At least one mapping entry should be specified!");
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given unsupported entity type when on msg then should tell failure with same msg.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenUnsupportedEntityType_whenOnMsg_thenShouldTellFailureWithSameMsg() throws TbNodeException, ExecutionException, InterruptedException {
@@ -403,6 +469,11 @@ public class TbGetOriginatorFieldsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msgMetaData);
     }
+    /**
+     * Given old config when upgrade then should return true result with new config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenOldConfig_whenUpgrade_thenShouldReturnTrueResultWithNewConfig() throws Exception {

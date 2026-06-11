@@ -47,16 +47,19 @@ import {
 } from '@home/components/widget/lib/button/segmented-button-widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: widget button toggle custom style panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-button-toggle-custom-style-panel`.
+ */
 @Component({
     selector: 'tb-widget-button-toggle-custom-style-panel',
     templateUrl: './widget-button-toggle-custom-style-panel.component.html',
     providers: [],
     styleUrls: ['./widget-button-toggle-custom-style-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widget button toggle custom style panel UI.
- */
+standalone: false
 })
 export class WidgetButtonToggleCustomStylePanelComponent extends PageComponent implements OnInit {
 
@@ -117,6 +120,11 @@ export class WidgetButtonToggleCustomStylePanelComponent extends PageComponent i
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.style = this.value ? this.appearance.selectedStyle : this.appearance.unselectedStyle;
     this.copyFromStates = widgetButtonToggleStates.filter(state =>
@@ -147,20 +155,42 @@ export class WidgetButtonToggleCustomStylePanelComponent extends PageComponent i
     this.setStyle(this.customStyle);
   }
 
+  /**
+   * copy style.
+   *
+   * @param state state (WidgetButtonToggleState)
+   */
+
   copyStyle(state: WidgetButtonToggleState) {
     this.customStyle = deepClone(this.style[state]);
     this.setStyle(this.customStyle);
     this.customStyleFormGroup.markAsDirty();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply custom style.
+   *
+   */
 
   applyCustomStyle() {
     const customStyle: SegmentedButtonStyles = this.customStyleFormGroup.value;
     this.customStyleApplied.emit(customStyle);
   }
+
+  /**
+   * set style.
+   *
+   * @param customStyle custom style (WidgetButtonToggleCustomStyle)
+   */
 
   private setStyle(customStyle?: WidgetButtonToggleCustomStyle): void {
     let mainColor = this.state === WidgetButtonToggleState.disabled ? defaultMainColorDisabled : this.style.mainColor;
@@ -187,6 +217,11 @@ export class WidgetButtonToggleCustomStylePanelComponent extends PageComponent i
     this.updatePreviewAppearance();
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     const overrideMainColor: boolean = this.customStyleFormGroup.get('overrideMainColor').value;
     const overrideBackgroundColor: boolean = this.customStyleFormGroup.get('overrideBackgroundColor').value;
@@ -208,6 +243,11 @@ export class WidgetButtonToggleCustomStylePanelComponent extends PageComponent i
       this.customStyleFormGroup.get('borderColor').disable({emitEvent: false});
     }
   }
+
+  /**
+   * update preview appearance.
+   *
+   */
 
   private updatePreviewAppearance() {
     this.previewAppearance = deepClone(this.appearance);

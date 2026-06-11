@@ -18,13 +18,19 @@ import { MissingTranslationHandler, MissingTranslationHandlerParams, StrictTrans
 import { customTranslationsPrefix } from '@app/shared/models/constants';
 import { Observable } from 'rxjs';
 
+
 /**
-
- * tb missing translation handler.
-
+ * Tb missing translation handler (ThingsBoard web UI).
  */
 
+
 export class TbMissingTranslationHandler implements MissingTranslationHandler {
+  /**
+   * handle.
+   *
+   * @param params params (MissingTranslationHandlerParams)
+   * @returns StrictTranslation | Observable<StrictTranslation> observable or value
+   */
   handle(params: MissingTranslationHandlerParams): StrictTranslation | Observable<StrictTranslation> {
     if (params.key && !params.key.startsWith(customTranslationsPrefix)) {
       console.warn('Translation for \'' + params.key + '\' doesn\'t exist');

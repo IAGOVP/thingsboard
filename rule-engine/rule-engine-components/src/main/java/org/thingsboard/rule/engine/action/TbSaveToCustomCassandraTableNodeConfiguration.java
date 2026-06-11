@@ -21,8 +21,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * JSON configuration for TbSaveToCustomCassandraTable rule node.
+ * JSON configuration POJO for {@link TbSaveToCustomCassandraTable} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbSaveToCustomCassandraTableNodeConfiguration implements NodeConfiguration<TbSaveToCustomCassandraTableNodeConfiguration> {
@@ -30,6 +33,12 @@ public class TbSaveToCustomCassandraTableNodeConfiguration implements NodeConfig
     private String tableName;
     private Map<String, String> fieldsMapping;
     private int defaultTtl;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbSaveToCustomCassandraTableNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbSaveToCustomCassandraTableNodeConfiguration defaultConfiguration() {

@@ -27,7 +27,14 @@ import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine filter node 'entity type filter': Filter incoming messages by the type of message originator entity Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>entity type filter</b>.
+ *
+ * <p>Filter incoming messages by the type of message originator entity
+ * <br>Checks that the entity type of the incoming message originator matches one of the values specified in the filter.  
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbOriginatorTypeFilterNodeConfiguration}.
+ * <br>Output relations: {@code TbNodeConnectionType.TRUE, TbNodeConnectionType.FALSE}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/entity-type-filter/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/entity-type-filter/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -43,11 +50,25 @@ import org.thingsboard.server.common.msg.TbMsg;
 public class TbOriginatorTypeFilterNode implements TbNode {
 
     private TbOriginatorTypeFilterNodeConfiguration config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         config = TbNodeUtils.convert(configuration, TbOriginatorTypeFilterNodeConfiguration.class);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

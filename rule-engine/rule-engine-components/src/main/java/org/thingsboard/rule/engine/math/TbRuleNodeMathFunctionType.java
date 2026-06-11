@@ -17,11 +17,13 @@ package org.thingsboard.rule.engine.math;
 
 import lombok.Getter;
 
+
 /**
 
- * Rule engine component: tb rule node math function type.
+ * Enumerates tb rule node math function type values used by rule engine expression evaluation nodes.
 
  */
+
 
 public enum TbRuleNodeMathFunctionType {
 

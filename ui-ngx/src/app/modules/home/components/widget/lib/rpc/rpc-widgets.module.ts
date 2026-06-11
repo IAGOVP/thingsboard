@@ -30,6 +30,9 @@ import { PersistentAddDialogComponent } from '@home/components/widget/lib/rpc/pe
 /**
  * Angular NgModule: rpc widgets feature area.
  */
+/**
+ * Angular NgModule bundling rpc widgets (ThingsBoard web UI).
+ */
 @NgModule({
   declarations:
     [
@@ -54,5 +57,5 @@ import { PersistentAddDialogComponent } from '@home/components/widget/lib/rpc/pe
     PersistentTableComponent,
     PersistentDetailsDialogComponent,
     PersistentAddDialogComponent
-  ]})
+]})
 export class RpcWidgetsModule { }

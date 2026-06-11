@@ -49,15 +49,18 @@ import { WidgetComponent } from '@home/components/widget/widget.component';
 import tinycolor from 'tinycolor2';
 import { UnitService } from '@core/services/unit.service';
 
+
+/**
+ * Angular component: slider widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-slider-widget`.
+ */
 @Component({
     selector: 'tb-slider-widget',
     templateUrl: './slider-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './slider-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: slider widget UI.
- */
+standalone: false
 })
 export class SliderWidgetComponent extends
   BasicActionWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -149,6 +152,11 @@ export class SliderWidgetComponent extends
     super(cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
     this.settings = {...sliderWidgetDefaultSettings, ...this.ctx.settings};
@@ -230,6 +238,11 @@ export class SliderWidgetComponent extends
     this.valueSetter = this.createValueSetter(valueChangeSettings);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.autoScale) {
       this.panelResize$ = new ResizeObserver(() => {
@@ -244,6 +257,11 @@ export class SliderWidgetComponent extends
     super.ngAfterViewInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
@@ -254,12 +272,22 @@ export class SliderWidgetComponent extends
     super.ngOnDestroy();
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     super.onInit();
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for slider change.
+   *
+   */
 
   public onSliderChange() {
     this.updateValueText();
@@ -277,12 +305,23 @@ export class SliderWidgetComponent extends
     return this.valueFormat.format(value);
   }
 
+  /**
+   * Event handler for value.
+   *
+   * @param value value (number)
+   */
+
   private onValue(value: number): void {
     this.value = value;
     this.prevValue = value;
     this.updateValueText();
     this.cd.markForCheck();
   }
+
+  /**
+   * update value text.
+   *
+   */
 
   private updateValueText() {
     if (isDefinedAndNotNull(this.value) && isNumeric(this.value)) {
@@ -292,10 +331,21 @@ export class SliderWidgetComponent extends
     }
   }
 
+  /**
+   * Event handler for disabled.
+   *
+   * @param value value (boolean)
+   */
+
   private onDisabled(value: boolean): void {
     this.disabled = !!value;
     this.cd.markForCheck();
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const panelWidth = this.sliderContent.nativeElement.getBoundingClientRect().width;
@@ -348,11 +398,26 @@ export class SliderWidgetComponent extends
     }
   }
 
+  /**
+   * reset scale.
+   *
+   * @param container container (HTMLElement)
+   * @param element element (HTMLElement)
+   */
+
   private resetScale(container: HTMLElement, element: HTMLElement): void {
     this.renderer.setStyle(container, 'width', '');
     this.renderer.setStyle(container, 'height', '');
     this.renderer.setStyle(element, 'transform', '');
   }
+
+  /**
+   * update scale.
+   *
+   * @param container container (HTMLElement)
+   * @param element element (HTMLElement)
+   * @param scale scale (number)
+   */
 
   private updateScale(container: HTMLElement, element: HTMLElement, scale: number, sameHeight = false): void {
     const rect = container.getBoundingClientRect();

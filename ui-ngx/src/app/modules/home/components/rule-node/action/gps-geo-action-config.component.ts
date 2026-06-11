@@ -27,14 +27,17 @@ import {
   timeUnitTranslations
 } from '../rule-node-config.models';
 
+
+/**
+ * Angular component: gps geo action config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-gps-geofencing-config`.
+ */
 @Component({
     selector: 'tb-action-node-gps-geofencing-config',
     templateUrl: './gps-geo-action-config.component.html',
     styleUrls: ['./gps-geo-action-config.component.scss'],
-    standalone: false
-/**
- * Angular component: gps geo action config UI.
- */
+standalone: false
 })
 export class GpsGeoActionConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -59,9 +62,21 @@ export class GpsGeoActionConfigComponent extends RuleNodeConfigurationComponent 
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.geoActionConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.geoActionConfigForm = this.fb.group({
@@ -86,9 +101,21 @@ export class GpsGeoActionConfigComponent extends RuleNodeConfigurationComponent 
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['fetchPerimeterInfoFromMessageMetadata', 'perimeterType'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const fetchPerimeterInfoFromMessageMetadata: boolean = this.geoActionConfigForm.get('fetchPerimeterInfoFromMessageMetadata').value;

@@ -67,8 +67,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 /**
- * Rule engine component: tb http client.
+ * Tb http client (outbound REST API call nodes).
  */
+
 
 @Data
 @Slf4j
@@ -114,6 +115,12 @@ public class TbHttpClient {
     private final AtomicLong droppedFullCount  = new AtomicLong();
     private final AtomicLong droppedStaleCount = new AtomicLong();
     private volatile long lastAnomalyReportAt  = 0;
+
+    /**
+
+     * Immutable record for pending task (outbound REST API call nodes).
+
+     */
 
     private record PendingTask(
             TbContext ctx,
@@ -260,6 +267,15 @@ public class TbHttpClient {
                     tenantId, nodeId, dispatchedCount.get(), successCount.get(), failureCount.get(), availablePermits);
         }
     }
+    /**
+     * Processes message.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param onSuccess on success ({@link Consumer})
+     * @param onFailure on failure ({@link BiConsumer})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void processMessage(TbContext ctx, TbMsg msg,
                                Consumer<TbMsg> onSuccess,
@@ -417,6 +433,14 @@ public class TbHttpClient {
         }
         return origin;
     }
+    /**
+     * Build encoded uri.
+     *
+     * @param endpointUrl endpoint url ({@link String})
+     * @param queryParams query params ({@link List})
+     * @return {@link URI}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public URI buildEncodedUri(String endpointUrl, List<KeyValueEntry<String, String>> queryParams) {
         if (endpointUrl == null) {

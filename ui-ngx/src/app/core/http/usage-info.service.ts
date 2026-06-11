@@ -21,7 +21,9 @@ import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-uti
 import { UsageInfo } from '@shared/models/usage.models';
 
 /**
- * Angular HTTP service: usage info REST wrappers (`@core/http`).
+ * Angular injectable service: usage info (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -32,7 +34,14 @@ export class UsageInfoService {
     private http: HttpClient
   ) {}
 
-  /** Calls ThingsBoard REST `/api/usage`. */
+  
+  /**
+   * get usage info.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<UsageInfo> observable or value
+   */
+
 
   public getUsageInfo(config?: RequestConfig): Observable<UsageInfo> {
     return this.http.get<UsageInfo>('/api/usage',

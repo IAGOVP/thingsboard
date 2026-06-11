@@ -15,8 +15,9 @@
 ///
 
 /**
- * TypeScript models and enums for tb color.
+ * TypeScript interfaces, types, and enums for tb color (shared TypeScript models).
  */
+
 export interface TbColor {
   light: string;
   dark: string;

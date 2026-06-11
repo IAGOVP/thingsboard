@@ -157,14 +157,17 @@ interface AlarmWidgetActionDescriptor extends TableCellButtonActionDescriptor {
   activity?: boolean;
 }
 
+
+/**
+ * Angular component: alarms table widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarms-table-widget`.
+ */
 @Component({
     selector: 'tb-alarms-table-widget',
     templateUrl: './alarms-table-widget.component.html',
     styleUrls: ['./alarms-table-widget.component.scss', './../table-widget.scss'],
-    standalone: false
-/**
- * Angular component: alarms table widget UI.
- */
+standalone: false
 })
 export class AlarmsTableWidgetComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -275,6 +278,11 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     };
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.alarmsTableWidget = this;
     this.settings = this.ctx.settings;
@@ -301,6 +309,11 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.widgetTimewindowChanged$) {
       this.widgetTimewindowChanged$.unsubscribe();
@@ -312,6 +325,11 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.textSearch.valueChanges.pipe(
@@ -342,11 +360,21 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     this.updateData();
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.alarmsDatasource.updateAlarms();
     this.clearCache();
     this.ctx.detectChanges();
   }
+
+  /**
+   * Event handler for edit mode changed.
+   *
+   */
 
   public onEditModeChanged() {
     if (this.textSearchMode || this.enableSelection && this.alarmsDatasource.selection.hasValue()) {
@@ -355,9 +383,20 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * page link sort direction.
+   *
+   * @returns SortDirection observable or value
+   */
+
   public pageLinkSortDirection(): SortDirection {
     return entityDataPageLinkSortDirection(this.pageLink);
   }
+
+  /**
+   * initialize config.
+   *
+   */
 
   private initializeConfig() {
     this.ctx.widgetActions = [this.searchAction, this.alarmFilterAction, this.columnDisplayAction];
@@ -434,6 +473,11 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     cssParser.createStyleElement(namespace, cssString);
     $(this.elementRef.nativeElement).addClass(namespace);
   }
+
+  /**
+   * update alarm source.
+   *
+   */
 
   private updateAlarmSource() {
 
@@ -554,6 +598,11 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * edit columns to display.
+   *
+   */
+
   private editColumnsToDisplay($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -619,11 +668,21 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     this.ctx.detectChanges();
   }
 
+  /**
+   * reset page index.
+   *
+   */
+
   private resetPageIndex(): void {
     if (this.displayPagination) {
       this.paginator.pageIndex = 0;
     }
   }
+
+  /**
+   * edit alarm filter.
+   *
+   */
 
   private editAlarmFilter($event: Event) {
     if ($event) {
@@ -691,6 +750,11 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     this.ctx.detectChanges();
   }
 
+  /**
+   * enter filter mode.
+   *
+   */
+
   private enterFilterMode() {
     this.textSearchMode = true;
     this.ctx.hideTitlePanel = true;
@@ -701,12 +765,22 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
     this.ctx.hideTitlePanel = false;
     this.ctx.detectChanges(true);
   }
+
+  /**
+   * update data.
+   *
+   */
 
   private updateData() {
     if (this.displayPagination) {
@@ -730,28 +804,67 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     this.ctx.detectChanges();
   }
 
+  /**
+   * track by column def.
+   *
+   * @param column column (EntityColumn)
+   */
+
   public trackByColumnDef(index, column: EntityColumn) {
     return column.def;
   }
+
+  /**
+   * track by alarm id.
+   *
+   * @param index index (number)
+   * @param alarm alarm (AlarmData)
+   */
 
   public trackByAlarmId(index: number, alarm: AlarmData) {
     return alarm.id.id;
   }
 
+  /**
+   * track by action cell description id.
+   *
+   * @param index index (number)
+   * @param action action (WidgetActionDescriptor)
+   */
+
   public trackByActionCellDescriptionId(index: number, action: WidgetActionDescriptor) {
     return action.id;
   }
+
+  /**
+   * header style.
+   *
+   * @param key key (EntityColumn)
+   * @returns any observable or value
+   */
 
   public headerStyle(key: EntityColumn): any {
     const columnWidth = this.columnWidth[key.def];
     return widthStyle(columnWidth);
   }
 
+  /**
+   * row style.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   * @param row row (number)
+   * @returns Observable<any> observable or value
+   */
+
   public rowStyle(alarm: AlarmDataInfo, row: number): Observable<any> {
     let style$: Observable<any>;
     const res = this.rowStyleCache[row];
     if (!res) {
       style$ = this.rowStylesInfo.pipe(
+        /**
+         * map.
+         *
+         */
         map(styleInfo => {
           if (styleInfo.useRowStyleFunction && styleInfo.rowStyleFunction) {
             const style = styleInfo.rowStyleFunction.execute(alarm, this.ctx);
@@ -782,6 +895,15 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
     return style$;
   }
+
+  /**
+   * cell style.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   * @param key key (EntityColumn)
+   * @param row row (number)
+   * @returns Observable<any> observable or value
+   */
 
   public cellStyle(alarm: AlarmDataInfo, key: EntityColumn, row: number): Observable<any> {
     let style$: Observable<any>;
@@ -833,6 +955,15 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     return style$;
   }
 
+  /**
+   * cell content.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   * @param key key (EntityColumn)
+   * @param row row (number)
+   * @returns Observable<SafeHtml> observable or value
+   */
+
   public cellContent(alarm: AlarmDataInfo, key: EntityColumn, row: number): Observable<SafeHtml> {
     let content$: Observable<SafeHtml>;
     const col = this.columns.indexOf(key);
@@ -881,6 +1012,14 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     return content$;
   }
 
+  /**
+   * Event handler for cell click.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   * @param key key (EntityColumn)
+   * @param columnIndex column index (number)
+   */
+
   public onCellClick($event: Event, alarm: AlarmDataInfo, key: EntityColumn, columnIndex: number) {
     this.alarmsDatasource.toggleCurrentAlarm(alarm);
     const descriptors = this.ctx.actionsApi.getActionDescriptors('cellClick');
@@ -902,11 +1041,23 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * column has cell click.
+   *
+   * @param columnIndex column index (number)
+   */
+
   public columnHasCellClick(columnIndex: number) {
     if (this.columnsWithCellClick.length) {
       return this.columnsWithCellClick.includes(columnIndex);
     }
   }
+
+  /**
+   * Event handler for row click.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   */
 
   public onRowClick($event: Event, alarm: AlarmDataInfo) {
     if ($event) {
@@ -926,6 +1077,13 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
       this.ctx.actionsApi.handleWidgetAction($event, descriptors[0], entityId, entityName, {alarm}, entityLabel);
     }
   }
+
+  /**
+   * Event handler for action button click.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   * @param actionDescriptor action descriptor (AlarmWidgetActionDescriptor)
+   */
 
   public onActionButtonClick($event: Event, alarm: AlarmDataInfo, actionDescriptor: AlarmWidgetActionDescriptor) {
     if (actionDescriptor.details) {
@@ -952,6 +1110,14 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * action enabled.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   * @param actionDescriptor action descriptor (AlarmWidgetActionDescriptor)
+   * @returns boolean observable or value
+   */
+
   public actionEnabled(alarm: AlarmDataInfo, actionDescriptor: AlarmWidgetActionDescriptor): boolean {
     if (actionDescriptor.acknowledge) {
       return (alarm.status === AlarmStatus.ACTIVE_UNACK ||
@@ -962,6 +1128,12 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
     return true;
   }
+
+  /**
+   * open alarm details.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   */
 
   private openAlarmDetails($event: Event, alarm: AlarmDataInfo) {
     if ($event) {
@@ -990,6 +1162,12 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * ack alarm.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   */
+
   private ackAlarm($event: Event, alarm: AlarmDataInfo) {
     if ($event) {
       $event.stopPropagation();
@@ -1011,6 +1189,11 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
       });
     }
   }
+
+  /**
+   * ack alarms.
+   *
+   */
 
   public ackAlarms($event: Event) {
     if ($event) {
@@ -1053,6 +1236,12 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * clear alarm.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   */
+
   private clearAlarm($event: Event, alarm: AlarmDataInfo) {
     if ($event) {
       $event.stopPropagation();
@@ -1074,6 +1263,11 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
       });
     }
   }
+
+  /**
+   * clear alarms.
+   *
+   */
 
   public clearAlarms($event: Event) {
     if ($event) {
@@ -1116,6 +1310,12 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * open alarm activity.
+   *
+   * @param alarm alarm (AlarmDataInfo)
+   */
+
   private openAlarmActivity($event: Event, alarm: AlarmDataInfo) {
     if ($event) {
       $event.stopPropagation();
@@ -1132,6 +1332,15 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
         }).afterClosed();
     }
   }
+
+  /**
+   * default content.
+   *
+   * @param key key (EntityColumn)
+   * @param contentInfo content info (CellContentInfo)
+   * @param value value (any)
+   * @returns any observable or value
+   */
 
   private defaultContent(key: EntityColumn, contentInfo: CellContentInfo, value: any): any {
     if (isDefined(value)) {
@@ -1150,6 +1359,14 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
       return '';
     }
   }
+
+  /**
+   * default style.
+   *
+   * @param key key (EntityColumn)
+   * @param value value (any)
+   * @returns any observable or value
+   */
 
   private defaultStyle(key: EntityColumn, value: any): any {
     if (isDefined(value)) {
@@ -1171,28 +1388,65 @@ export class AlarmsTableWidgetComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * clear cache.
+   *
+   */
+
   private clearCache() {
     this.cellContentCache.length = 0;
     this.cellStyleCache.length = 0;
     this.rowStyleCache.length = 0;
   }
 
+  /**
+   * check assignee has name.
+   *
+   * @param alarmAssignee alarm assignee (AlarmAssignee)
+   * @returns boolean observable or value
+   */
+
   checkAssigneeHasName(alarmAssignee: AlarmAssignee): boolean {
     return (isNotEmptyStr(alarmAssignee?.firstName) || isNotEmptyStr(alarmAssignee?.lastName)) ||
       isNotEmptyStr(alarmAssignee?.email);
   }
 
+  /**
+   * get user display name.
+   *
+   * @param alarmAssignee alarm assignee (AlarmAssignee)
+   */
+
   getUserDisplayName(alarmAssignee: AlarmAssignee) {
     return getUserDisplayName(alarmAssignee);
   }
+
+  /**
+   * get user initials.
+   *
+   * @param alarmAssignee alarm assignee (AlarmAssignee)
+   * @returns string observable or value
+   */
 
   getUserInitials(alarmAssignee: AlarmAssignee): string {
     return getUserInitials(alarmAssignee);
   }
 
+  /**
+   * get avatar bg color.
+   *
+   * @param alarmAssignee alarm assignee (AlarmAssignee)
+   */
+
   getAvatarBgColor(alarmAssignee: AlarmAssignee) {
     return this.utils.stringToHslColor(this.getUserDisplayName(alarmAssignee), 40, 60);
   }
+
+  /**
+   * open alarm assignee panel.
+   *
+   * @param entity entity (AlarmInfo)
+   */
 
   openAlarmAssigneePanel($event: Event, entity: AlarmInfo) {
     $event?.stopPropagation();

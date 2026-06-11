@@ -33,17 +33,25 @@ import static org.thingsboard.server.msa.ui.utils.Const.EMPTY_CUSTOMER_MESSAGE;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.SAME_NAME_WARNING_CUSTOMER_MESSAGE;
 
+
 /**
 
- * Create customer test.
+ * Black-box test: create customer (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class CreateCustomerTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewElements sideBarMenuView;
     private CustomerPageHelper customerPage;
     private String customerName;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -51,6 +59,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewElements(driver);
         customerPage = new CustomerPageHelper(driver);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -59,6 +73,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
             customerName = null;
         }
     }
+    /**
+     * Creates customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Create customer")
@@ -77,6 +97,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(customerPage.customer(customerName));
         Assert.assertTrue(customerPage.customer(customerName).isDisplayed());
     }
+    /**
+     * Creates customer with full information.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Create customer")
@@ -123,6 +149,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
         Assert.assertEquals(customerPage.getCustomerCountry(), customerPage.getCountry());
         Assert.assertEquals(customerPage.getCustomerCity(), text);
     }
+    /**
+     * Creates customer without name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Create customer")
@@ -134,6 +166,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
 
         Assert.assertFalse(customerPage.addBtnV().isEnabled());
     }
+    /**
+     * Creates customer with only space.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Create customer")
@@ -151,6 +189,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(customerPage.addEntityView());
         Assert.assertTrue(customerPage.addEntityView().isDisplayed());
     }
+    /**
+     * Creates customer same name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Create customer")
@@ -170,6 +214,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(customerPage.addEntityView());
         Assert.assertTrue(customerPage.addEntityView().isDisplayed());
     }
+    /**
+     * Creates customer without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Create customer")
@@ -187,6 +237,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(customerPage.customer(customerName));
         Assert.assertTrue(customerPage.customer(customerName).isDisplayed());
     }
+    /**
+     * Documentation.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Create customer")
@@ -202,6 +258,12 @@ public class CreateCustomerTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(urlContains(urlPath), "URL contains " + urlPath);
     }
+    /**
+     * Creates customer add and remove phone number.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Create customer")

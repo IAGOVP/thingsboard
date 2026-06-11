@@ -23,14 +23,17 @@ import { AppState } from '@core/core.state';
 import { deepClone } from '@core/utils';
 import { Timewindow } from '@shared/models/time/time.models';
 
+
+/**
+ * Angular component: widget preview (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-preview`.
+ */
 @Component({
     selector: 'tb-widget-preview',
     templateUrl: './widget-preview.component.html',
     styleUrls: ['./widget-preview.component.scss'],
-    standalone: false
-/**
- * Angular component: widget preview UI.
- */
+standalone: false
 })
 export class WidgetPreviewComponent extends PageComponent implements OnInit, OnChanges {
 
@@ -61,6 +64,11 @@ export class WidgetPreviewComponent extends PageComponent implements OnInit, OnC
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.loadPreviewWidget();
   }
@@ -79,6 +87,11 @@ export class WidgetPreviewComponent extends PageComponent implements OnInit, OnC
       this.loadPreviewWidget();
     }
   }
+
+  /**
+   * load preview widget.
+   *
+   */
 
   private loadPreviewWidget() {
     if (this.widget) {

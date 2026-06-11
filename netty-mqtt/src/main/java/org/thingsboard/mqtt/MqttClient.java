@@ -25,9 +25,11 @@ import io.netty.util.concurrent.Promise;
 import org.thingsboard.common.util.ListeningExecutor;
 
 /**
- * Public MQTT client API: connect, subscribe, publish, and disconnect over Netty.
- * Use {@link #create(MqttClientConfig, MqttHandler, ListeningExecutor)} to obtain {@link MqttClientImpl}.
+ * Public MQTT 3.x client API over Netty.
+ *
+ * <p>Provides connect, subscribe, publish, unsubscribe, and disconnect. Obtain an instance via {@link #create(MqttClientConfig, MqttHandler, ListeningExecutor)}.
  */
+
 public interface MqttClient {
 
     /**
@@ -174,34 +176,91 @@ public interface MqttClient {
      */
     Future<Void> publish(String topic, ByteBuf payload, MqttQoS qos, boolean retain);
 
-    /**
-     * Retrieve the MqttClient configuration
-     * @return The {@link MqttClientConfig} instance we use
-     */
+    
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   /**
+    * Returns client config.
+    *
+    * @return {@link MqttClientConfig}
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     MqttClientConfig getClientConfig();
 
 
-    /**
-     * Construct the MqttClientImpl with additional config.
-     * This config can also be changed using the {@link #getClientConfig()} function
-     *
-     * @param config The config object to use while looking for settings
-     * @param defaultHandler The handler for incoming messages that do not match any topic subscriptions
-     */
+    
+  /**
+   * Factory method that constructs a configured {@link MqttClientImpl}.
+   *
+   * @param config client connection and behavior configuration
+   * @param defaultHandler default handler ({@link MqttHandler})
+   * @param handlerExecutor handler executor ({@link ListeningExecutor})
+   * @return {@link MqttClient}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
     static MqttClient create(MqttClientConfig config, MqttHandler defaultHandler, ListeningExecutor handlerExecutor) {
         return new MqttClientImpl(config, defaultHandler, handlerExecutor);
     }
 
-    /**
-     * Send disconnect and close channel
-     *
-     */
+    
+ /**
+  * Sends MQTT DISCONNECT and closes the Netty channel.
+  *
+  * @return nothing
+  * @throws Exception if an unexpected error occurs during processing
+  */
+
     void disconnect();
 
+    
     /**
-     * Sets the {@see #MqttClientCallback} object for this MqttClient
-     * @param callback The callback to be set
+     * Set callback.
+     *
+     * @param callback queue callback invoked when processing completes
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     void setCallback(MqttClientCallback callback);
 
 }

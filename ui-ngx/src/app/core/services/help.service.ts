@@ -30,7 +30,9 @@ const NOT_FOUND_CONTENT: HelpData = {
 };
 
 /**
- * Angular HTTP service: help REST wrappers (`@core/http`).
+ * Angular injectable service: help (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -46,6 +48,13 @@ export class HelpService {
     private http: HttpClient,
     private uiSettingsService: UiSettingsService
   ) {}
+
+  /**
+   * get help content.
+   *
+   * @param key key (string)
+   * @returns Observable<string> observable or value
+   */
 
   getHelpContent(key: string): Observable<string> {
     const lang = this.translate.currentLang;
@@ -80,6 +89,14 @@ export class HelpService {
     }
   }
 
+  /**
+   * load help content.
+   *
+   * @param lang lang (string)
+   * @param key key (string)
+   * @returns Observable<HelpData> observable or value
+   */
+
   private loadHelpContent(lang: string, key: string): Observable<HelpData> {
     return this.uiSettingsService.getHelpBaseUrl().pipe(
       mergeMap((helpBaseUrl) => {
@@ -96,6 +113,15 @@ export class HelpService {
     );
   }
 
+  /**
+   * load help content from base url.
+   *
+   * @param helpBaseUrl help base url (string)
+   * @param lang lang (string)
+   * @param key key (string)
+   * @returns Observable<HelpData> observable or value
+   */
+
   private loadHelpContentFromBaseUrl(helpBaseUrl: string, lang: string, key: string): Observable<HelpData> {
     return this.http.get(`${helpBaseUrl}/help/${lang}/${key}.md`, {responseType: 'text'} ).pipe(
       map((content) => {
@@ -106,6 +132,13 @@ export class HelpService {
       })
     );
   }
+
+  /**
+   * process variables.
+   *
+   * @param helpData help data (HelpData)
+   * @returns string observable or value
+   */
 
   private processVariables(helpData: HelpData): string {
     const variables = {
@@ -118,6 +151,13 @@ export class HelpService {
 
     return helpData.content.replace(regExp, (match) => variables[match.slice(2, -1)]);
   }
+
+  /**
+   * process includes.
+   *
+   * @param content content (string)
+   * @returns Observable<string> observable or value
+   */
 
   private processIncludes(content: string): Observable<string> {
     const includesRule = /{% include (.*) %}/;

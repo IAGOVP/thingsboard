@@ -29,15 +29,18 @@ import {
   PolarAreaChartWidgetSettings
 } from '@home/components/widget/lib/chart/polar-area-widget.models';
 
+
+/**
+ * Angular component: polar area widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-polar-area-chart-widget`.
+ */
 @Component({
     selector: 'tb-polar-area-chart-widget',
     templateUrl: './latest-chart-widget.component.html',
     styleUrls: [],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: polar area widget UI.
- */
+standalone: false
 })
 export class PolarAreaWidgetComponent implements OnInit {
 
@@ -58,6 +61,11 @@ export class PolarAreaWidgetComponent implements OnInit {
               private translate: TranslateService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.polarAreaChartWidget = this;
     this.settings = {...polarAreaChartWidgetDefaultSettings, ...this.ctx.settings};
@@ -69,9 +77,19 @@ export class PolarAreaWidgetComponent implements OnInit {
     };
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     this.latestChart?.onInit();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     this.latestChart?.onDataUpdated();

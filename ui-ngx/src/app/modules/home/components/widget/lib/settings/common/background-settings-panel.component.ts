@@ -41,16 +41,19 @@ import { ImagePipe } from '@shared/pipe/image.pipe';
 import { DomSanitizer } from '@angular/platform-browser';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: background settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-background-settings-panel`.
+ */
 @Component({
     selector: 'tb-background-settings-panel',
     templateUrl: './background-settings-panel.component.html',
     providers: [],
     styleUrls: ['./background-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: background settings panel UI.
- */
+standalone: false
 })
 export class BackgroundSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -82,6 +85,11 @@ export class BackgroundSettingsPanelComponent extends PageComponent implements O
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.backgroundSettingsFormGroup = this.fb.group(
@@ -115,14 +123,29 @@ export class BackgroundSettingsPanelComponent extends PageComponent implements O
     this.updateBackgroundStyle();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply color settings.
+   *
+   */
 
   applyColorSettings() {
     const backgroundSettings = this.backgroundSettingsFormGroup.getRawValue();
     this.backgroundSettingsApplied.emit(backgroundSettings);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const overlayEnabled: boolean = this.backgroundSettingsFormGroup.get('overlay').get('enabled').value;
@@ -136,6 +159,11 @@ export class BackgroundSettingsPanelComponent extends PageComponent implements O
     this.backgroundSettingsFormGroup.get('overlay').get('color').updateValueAndValidity({emitEvent: false});
     this.backgroundSettingsFormGroup.get('overlay').get('blur').updateValueAndValidity({emitEvent: false});
   }
+
+  /**
+   * update background style.
+   *
+   */
 
   private updateBackgroundStyle() {
     const background: BackgroundSettings = this.backgroundSettingsFormGroup.value;

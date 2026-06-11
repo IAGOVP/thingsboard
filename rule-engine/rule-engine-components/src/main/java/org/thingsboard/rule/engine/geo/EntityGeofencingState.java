@@ -18,8 +18,9 @@ package org.thingsboard.rule.engine.geo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 /**
- * Rule engine component: entity geofencing state.
+ * Entity geofencing state (GPS geofencing filter and action nodes).
  */
+
 
 @Data
 @AllArgsConstructor

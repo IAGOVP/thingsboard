@@ -33,15 +33,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isUndefinedOrNull } from '@core/utils';
 import { StringItemsOption } from '@shared/components/string-items-list.component';
 
+
+/**
+ * Angular component: dynamic form property panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dynamic-form-property-panel`.
+ */
 @Component({
     selector: 'tb-dynamic-form-property-panel',
     templateUrl: './dynamic-form-property-panel.component.html',
     styleUrls: ['./dynamic-form-property-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: dynamic form property panel UI.
- */
+standalone: false
 })
 export class DynamicFormPropertyPanelComponent implements OnInit {
 
@@ -100,6 +103,11 @@ export class DynamicFormPropertyPanelComponent implements OnInit {
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.panelTitle = this.isAdd ? 'dynamic-form.property.add-property' : 'dynamic-form.property.property-settings';
@@ -168,9 +176,19 @@ export class DynamicFormPropertyPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply property settings.
+   *
+   */
 
   applyPropertySettings() {
     const property = this.propertyFormGroup.getRawValue();
@@ -178,6 +196,11 @@ export class DynamicFormPropertyPanelComponent implements OnInit {
     property.fieldClass = (property.fieldClass || []).join(' ');
     this.propertySettingsApplied.emit(property);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     if (this.isArray) {
@@ -275,6 +298,11 @@ export class DynamicFormPropertyPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * Event handler for select items change.
+   *
+   */
+
   private onSelectItemsChange() {
     const type = this.propertyItemType;
     const multiple: boolean = this.propertyFormGroup.get('multiple').value;
@@ -292,6 +320,11 @@ export class DynamicFormPropertyPanelComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * Event handler for multiple select change.
+   *
+   */
 
   private onMultipleSelectChange() {
     const type = this.propertyItemType;

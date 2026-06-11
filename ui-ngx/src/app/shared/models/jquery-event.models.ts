@@ -16,11 +16,11 @@
 
 import Timeout = NodeJS.Timeout;
 
+
 /**
-
- * TypeScript models and enums for tb context menu event.
-
+ * TypeScript interfaces, types, and enums for tb context menu event (shared TypeScript models).
  */
+
 
 export interface TbContextMenuEvent extends Event {
   clientX: number;

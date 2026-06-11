@@ -37,15 +37,18 @@ const modulesValidator: ValidatorFn = control => {
   };
 };
 
+
+/**
+ * Angular component: js func modules (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-js-func-modules`.
+ */
 @Component({
     selector: 'tb-js-func-modules',
     templateUrl: './js-func-modules.component.html',
     styleUrls: ['./js-func-modules.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: js func modules UI.
- */
+standalone: false
 })
 export class JsFuncModulesComponent implements OnInit {
 
@@ -64,6 +67,11 @@ export class JsFuncModulesComponent implements OnInit {
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const modulesControls: Array<AbstractControl> = [];
     if (this.modules && Object.keys(this.modules).length) {
@@ -80,9 +88,19 @@ export class JsFuncModulesComponent implements OnInit {
     }, {validators: modulesValidator});
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply modules.
+   *
+   */
 
   applyModules() {
     let moduleRows: JsFuncModuleRow[] = this.modulesFormGroup.get('modules').value;
@@ -100,6 +118,14 @@ export class JsFuncModulesComponent implements OnInit {
     }
   }
 
+  /**
+   * module alias unique.
+   *
+   * @param alias alias (string)
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public moduleAliasUnique(alias: string, index: number): boolean {
     const modulesArray = this.modulesFormGroup.get('modules') as UntypedFormArray;
     for (let i = 0; i < modulesArray.controls.length; i++) {
@@ -113,18 +139,43 @@ export class JsFuncModulesComponent implements OnInit {
     return true;
   }
 
+  /**
+   * modules form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   modulesFormArray(): UntypedFormArray {
     return this.modulesFormGroup.get('modules') as UntypedFormArray;
   }
+
+  /**
+   * track by module.
+   *
+   * @param _index  index (number)
+   * @param moduleControl module control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByModule(_index: number, moduleControl: AbstractControl): any {
     return moduleControl;
   }
 
+  /**
+   * DELETE — remove module.
+   *
+   * @param index index (number)
+   */
+
   removeModule(index: number, emitEvent = true) {
     (this.modulesFormGroup.get('modules') as UntypedFormArray).removeAt(index, {emitEvent});
     this.modulesFormGroup.get('modules').markAsDirty({emitEvent});
   }
+
+  /**
+   * POST/PUT entity — add module.
+   *
+   */
 
   addModule() {
     const moduleRow: JsFuncModuleRow = {

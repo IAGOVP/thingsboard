@@ -27,6 +27,12 @@ import {
 } from '@shared/models/settings.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: aws sns provider configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aws-sns-provider-configuration`.
+ */
 @Component({
     selector: 'tb-aws-sns-provider-configuration',
     templateUrl: './aws-sns-provider-configuration.component.html',
@@ -36,10 +42,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => AwsSnsProviderConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: aws sns provider configuration UI.
- */
+standalone: false
 })
 export class AwsSnsProviderConfigurationComponent implements ControlValueAccessor, OnInit {
 
@@ -66,12 +69,29 @@ export class AwsSnsProviderConfigurationComponent implements ControlValueAccesso
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.awsSnsProviderConfigurationFormGroup = this.fb.group({
@@ -86,6 +106,12 @@ export class AwsSnsProviderConfigurationComponent implements ControlValueAccesso
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -95,11 +121,22 @@ export class AwsSnsProviderConfigurationComponent implements ControlValueAccesso
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (AwsSnsSmsProviderConfiguration | null)
+   */
+
   writeValue(value: AwsSnsSmsProviderConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
       this.awsSnsProviderConfigurationFormGroup.patchValue(value, {emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: AwsSnsSmsProviderConfiguration = null;

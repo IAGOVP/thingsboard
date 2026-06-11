@@ -39,18 +39,20 @@ export interface AlarmRuleComplexFilterPredicateDialogData {
   readonly: boolean;
 }
 
+
+
+/**
+ * Angular component: alarm rule complex filter predicate dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-complex-filter-predicate-dialog`.
+ */
 @Component({
     selector: 'tb-alarm-rule-complex-filter-predicate-dialog',
     templateUrl: './alarm-rule-complex-filter-predicate-dialog.component.html',
     providers: [],
     styleUrls: [],
-    standalone: false
 
-/**
-
- * Angular component: alarm rule complex filter predicate dialog UI.
-
- */
+standalone: false
 })
 
 export class AlarmRuleComplexFilterPredicateDialogComponent extends
@@ -89,9 +91,19 @@ export class AlarmRuleComplexFilterPredicateDialogComponent extends
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const predicate = this.complexFilterFormGroup.value as ComplexAlarmRuleFilterPredicate;

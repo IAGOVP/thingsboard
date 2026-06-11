@@ -33,7 +33,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.Set;
 
 /**
- * Rule engine filter node 'switch': Routes incoming message to one OR multiple output connections. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>switch</b>.
+ *
+ * <p>Routes incoming message to one OR multiple output connections.
+ * <br>Node executes configured TBEL(recommended) or JavaScript function that returns array of strings (connection names). 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbJsSwitchNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/switch/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/switch/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -53,12 +59,26 @@ import java.util.Set;
 public class TbJsSwitchNode implements TbNode {
 
     private ScriptEngine scriptEngine;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         var config = TbNodeUtils.convert(configuration, TbJsSwitchNodeConfiguration.class);
         scriptEngine = ctx.createScriptEngine(config.getScriptLang(), ScriptLanguage.TBEL.equals(config.getScriptLang()) ? config.getTbelScript() : config.getJsScript());
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -78,6 +98,10 @@ public class TbJsSwitchNode implements TbNode {
     private void processSwitch(TbContext ctx, TbMsg msg, Set<String> nextRelations) {
         ctx.tellNext(msg, nextRelations);
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {

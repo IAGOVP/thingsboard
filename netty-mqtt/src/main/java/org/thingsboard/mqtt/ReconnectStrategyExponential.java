@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
  * Exponential backoff implementation of {@link ReconnectStrategy}.
  */
 
+
 @Getter
 @Slf4j
 public class ReconnectStrategyExponential implements ReconnectStrategy {

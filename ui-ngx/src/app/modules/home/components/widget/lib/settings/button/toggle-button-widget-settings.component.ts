@@ -24,14 +24,17 @@ import { toggleButtonDefaultSettings } from '@home/components/widget/lib/button/
 
 type ButtonAppearanceType = 'checked' | 'unchecked';
 
+
+/**
+ * Angular component: toggle button widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-toggle-button-widget-settings`.
+ */
 @Component({
     selector: 'tb-toggle-button-widget-settings',
     templateUrl: './toggle-button-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: toggle button widget settings UI.
- */
+standalone: false
 })
 export class ToggleButtonWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -54,13 +57,31 @@ export class ToggleButtonWidgetSettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.toggleButtonWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return toggleButtonDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.toggleButtonWidgetSettingsForm = this.fb.group({
@@ -81,9 +102,21 @@ export class ToggleButtonWidgetSettingsComponent extends WidgetSettingsComponent
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['autoScale'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const autoScale: boolean = this.toggleButtonWidgetSettingsForm.get('autoScale').value;

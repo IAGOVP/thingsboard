@@ -30,16 +30,24 @@ import org.thingsboard.server.msa.ui.utils.DataProviderCredential;
 
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultDeviceProfile;
 
+
 /**
 
- * Sort by name test.
+ * Black-box test: sort by name (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class SortByNameTest extends AbstractDriverBaseTest {
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
     private String name;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -47,6 +55,12 @@ public class SortByNameTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -55,6 +69,13 @@ public class SortByNameTest extends AbstractDriverBaseTest {
             name = null;
         }
     }
+    /**
+     * Special character up.
+     *
+     * @param name name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profiles smoke")
     @Feature("Sort device profile by name")
@@ -70,6 +91,15 @@ public class SortByNameTest extends AbstractDriverBaseTest {
 
         Assert.assertEquals(profilesPage.getProfileName(), name);
     }
+    /**
+     * All sort up.
+     *
+     * @param deviceProfile device profile ({@link String})
+     * @param deviceProfileSymbol device profile symbol ({@link String})
+     * @param deviceProfileNumber device profile number ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profiles smoke")
     @Feature("Sort device profile by name")
@@ -97,6 +127,13 @@ public class SortByNameTest extends AbstractDriverBaseTest {
         Assert.assertEquals(secondDeviceProfile, deviceProfileNumber);
         Assert.assertEquals(thirdDeviceProfile, deviceProfile);
     }
+    /**
+     * Special character down.
+     *
+     * @param name name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profiles smoke")
     @Feature("Sort device profile by name")
@@ -112,6 +149,15 @@ public class SortByNameTest extends AbstractDriverBaseTest {
 
         Assert.assertEquals(profilesPage.getProfileName(), name);
     }
+    /**
+     * All sort down.
+     *
+     * @param deviceProfile device profile ({@link String})
+     * @param deviceProfileSymbol device profile symbol ({@link String})
+     * @param deviceProfileNumber device profile number ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profiles smoke")
     @Feature("Sort device profile by name")

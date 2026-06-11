@@ -22,14 +22,17 @@ import { Router } from '@angular/router';
 import { DialogComponent } from '@app/shared/components/dialog.component';
 import { DashboardLayoutId } from '@app/shared/models/dashboard.models';
 
+
+/**
+ * Angular component: select target layout dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-select-target-layout-dialog`.
+ */
 @Component({
     selector: 'tb-select-target-layout-dialog',
     templateUrl: './select-target-layout-dialog.component.html',
     styleUrls: ['./layout-button.scss'],
-    standalone: false
-/**
- * Angular component: select target layout dialog UI.
- */
+standalone: false
 })
 export class SelectTargetLayoutDialogComponent extends DialogComponent<SelectTargetLayoutDialogComponent, DashboardLayoutId>
   implements OnInit {
@@ -40,12 +43,28 @@ export class SelectTargetLayoutDialogComponent extends DialogComponent<SelectTar
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * select layout.
+   *
+   * @param layoutId layout id (DashboardLayoutId)
+   */
 
   selectLayout(layoutId: DashboardLayoutId) {
     this.dialogRef.close(layoutId);
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel(): void {
     this.dialogRef.close(null);

@@ -73,15 +73,18 @@ const horizontalBatteryDimensions = {
   }
 };
 
+
+/**
+ * Angular component: battery level widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-battery-level-widget`.
+ */
 @Component({
     selector: 'tb-battery-level-widget',
     templateUrl: './battery-level-widget.component.html',
     styleUrls: ['./battery-level-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: battery level widget UI.
- */
+standalone: false
 })
 export class BatteryLevelWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -147,6 +150,11 @@ export class BatteryLevelWidgetComponent implements OnInit, OnDestroy, AfterView
               private renderer: Renderer2,
               private cd: ChangeDetectorRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.ctx.$scope.batteryLevelWidget = this;
@@ -215,6 +223,11 @@ export class BatteryLevelWidgetComponent implements OnInit, OnDestroy, AfterView
     this.batteryShapeColor.colorUpdated?.subscribe(() => this.cd.markForCheck());
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.batteryBoxResize$ = new ResizeObserver(() => {
       this.onResize();
@@ -226,6 +239,11 @@ export class BatteryLevelWidgetComponent implements OnInit, OnDestroy, AfterView
     this.onResize();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.batteryBoxResize$) {
       this.batteryBoxResize$.disconnect();
@@ -236,11 +254,21 @@ export class BatteryLevelWidgetComponent implements OnInit, OnDestroy, AfterView
     this.batteryShapeColor.destroy();
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     const tsValue = getSingleTsValue(this.ctx.data);
@@ -264,6 +292,12 @@ export class BatteryLevelWidgetComponent implements OnInit, OnDestroy, AfterView
     this.cd.detectChanges();
   }
 
+  /**
+   * parse battery fill value.
+   *
+   * @param value value (number)
+   */
+
   parseBatteryFillValue(value: number) {
     if (value < 0) {
       return 0;
@@ -274,13 +308,30 @@ export class BatteryLevelWidgetComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  /**
+   * track by section.
+   *
+   * @param index index (number)
+   * @returns number observable or value
+   */
+
   public trackBySection(index: number): number {
     return index;
   }
 
+  /**
+   * card click.
+   *
+   */
+
   public cardClick($event: Event) {
     this.ctx.actionsApi.cardClick($event);
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     if (this.vertical) {
@@ -338,6 +389,14 @@ export class BatteryLevelWidgetComponent implements OnInit, OnDestroy, AfterView
       }
     }
   }
+
+  /**
+   * set value font size.
+   *
+   * @param valueFontSize value font size (number)
+   * @param valueLineHeight value line height (number)
+   * @param maxWidth max width (number)
+   */
 
   private setValueFontSize(valueFontSize: number, valueLineHeight: number, maxWidth: number) {
     this.renderer.setStyle(this.batteryLevelValue.nativeElement, 'fontSize', valueFontSize + 'px');

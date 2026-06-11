@@ -24,14 +24,17 @@ import {
   FcRuleNote
 } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: rule note (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-note`.
+ */
 @Component({
     selector: 'tb-rule-note',
     templateUrl: './rulenote.component.html',
     styleUrls: ['./rulenote.component.scss'],
-    standalone: false
-/**
- * Angular component: rule note UI.
- */
+standalone: false
 })
 export class RuleNoteComponent extends FcNoteComponent implements OnInit, OnChanges {
 
@@ -45,6 +48,11 @@ export class RuleNoteComponent extends FcNoteComponent implements OnInit, OnChan
   noteClass: string;
   note: FcRuleNote;
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
     this.applyDefault = this.note?.applyDefaultMarkdownStyle ?? FC_RULE_NOTE_DEFAULT_APPLY_MARKDOWN_STYLE;
@@ -57,6 +65,11 @@ export class RuleNoteComponent extends FcNoteComponent implements OnInit, OnChan
       this.processCss();
     }
   }
+
+  /**
+   * process css.
+   *
+   */
 
   private processCss(): void {
     let cssString = this.note?.markdownCss;
@@ -79,10 +92,22 @@ export class RuleNoteComponent extends FcNoteComponent implements OnInit, OnChan
     this.additionalStyles = styles.length ? styles : undefined;
   }
 
+  /**
+   * note edit.
+   *
+   * @param event DOM or Angular event object
+   */
+
   noteEdit(event: MouseEvent): void {
     event.stopPropagation();
     this.userNoteCallbacks?.noteEdit?.(event, this.note);
   }
+
+  /**
+   * note delete.
+   *
+   * @param event DOM or Angular event object
+   */
 
   noteDelete(event: MouseEvent): void {
     event.stopPropagation();

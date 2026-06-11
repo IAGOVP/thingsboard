@@ -57,16 +57,19 @@ export interface NodeScriptTestDialogData {
 }
 
 // @dynamic
+
+/**
+ * Angular component: node script test dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-node-script-test-dialog`.
+ */
 @Component({
     selector: 'tb-node-script-test-dialog',
     templateUrl: './node-script-test-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: NodeScriptTestDialogComponent }],
     styleUrls: ['./node-script-test-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: node script test dialog UI.
- */
+standalone: false
 })
 export class NodeScriptTestDialogComponent extends DialogComponent<NodeScriptTestDialogComponent,
   string> implements OnInit, AfterViewInit, ErrorStateMatcher {
@@ -117,6 +120,11 @@ export class NodeScriptTestDialogComponent extends DialogComponent<NodeScriptTes
     this.functionTitle = this.data.functionTitle;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.nodeScriptTestFormGroup = this.fb.group({
       payload: this.fb.group({
@@ -134,6 +142,11 @@ export class NodeScriptTestDialogComponent extends DialogComponent<NodeScriptTes
     );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     this.initSplitLayout(this.topPanelElmRef.first.nativeElement,
                          this.topLeftPanelElmRef.first.nativeElement,
@@ -142,6 +155,17 @@ export class NodeScriptTestDialogComponent extends DialogComponent<NodeScriptTes
                          this.bottomLeftPanelElmRef.first.nativeElement,
                          this.bottomRightPanelElmRef.first.nativeElement);
   }
+
+  /**
+   * init split layout.
+   *
+   * @param topPanel top panel (any)
+   * @param topLeftPanel top left panel (any)
+   * @param topRightPanel top right panel (any)
+   * @param bottomPanel bottom panel (any)
+   * @param bottomLeftPanel bottom left panel (any)
+   * @param bottomRightPanel bottom right panel (any)
+   */
 
   private initSplitLayout(topPanel: any,
                           topLeftPanel: any,
@@ -170,15 +194,33 @@ export class NodeScriptTestDialogComponent extends DialogComponent<NodeScriptTes
     });
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * test.
+   *
+   */
 
   test(): void {
     this.testNodeScript().subscribe((output) => {
@@ -189,6 +231,12 @@ export class NodeScriptTestDialogComponent extends DialogComponent<NodeScriptTes
       );
     });
   }
+
+  /**
+   * test node script.
+   *
+   * @returns Observable<string> observable or value
+   */
 
   private testNodeScript(): Observable<string> {
     if (this.checkInputParamErrors()) {
@@ -219,6 +267,12 @@ export class NodeScriptTestDialogComponent extends DialogComponent<NodeScriptTes
     }
   }
 
+  /**
+   * check input param errors.
+   *
+   * @returns boolean observable or value
+   */
+
   private checkInputParamErrors(): boolean {
     this.payloadContent.validateOnSubmit();
     if (!this.nodeScriptTestFormGroup.get('payload').valid) {
@@ -226,6 +280,11 @@ export class NodeScriptTestDialogComponent extends DialogComponent<NodeScriptTes
     }
     return true;
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

@@ -17,16 +17,29 @@ package org.thingsboard.monitoring.data.notification;
 
 import lombok.RequiredArgsConstructor;
 /**
- * Informational message (startup/shutdown).
+ * Informational monitoring message (startup, shutdown, or operator info).
  */
+
 
 @RequiredArgsConstructor
 public class InfoNotification implements Notification {
     private final String message;
+    /**
+     * Returns text.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Override
     public String getText() {
         return message;
     }
+    /**
+     * Is incident.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isIncident() {

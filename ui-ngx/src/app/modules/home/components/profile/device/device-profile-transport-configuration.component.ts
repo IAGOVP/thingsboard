@@ -31,6 +31,12 @@ import { DeviceProfileTransportConfiguration, DeviceTransportType } from '@share
 import { deepClone } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: device profile transport configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile-transport-configuration`.
+ */
 @Component({
     selector: 'tb-device-profile-transport-configuration',
     templateUrl: './device-profile-transport-configuration.component.html',
@@ -47,10 +53,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: device profile transport configuration UI.
- */
+standalone: false
 })
 export class DeviceProfileTransportConfigurationComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -73,12 +76,29 @@ export class DeviceProfileTransportConfigurationComponent implements ControlValu
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.deviceProfileTransportConfigurationFormGroup = this.fb.group({
@@ -91,6 +111,12 @@ export class DeviceProfileTransportConfigurationComponent implements ControlValu
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -99,6 +125,12 @@ export class DeviceProfileTransportConfigurationComponent implements ControlValu
       this.deviceProfileTransportConfigurationFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DeviceProfileTransportConfiguration | null)
+   */
 
   writeValue(value: DeviceProfileTransportConfiguration | null): void {
     this.transportType = value?.type;
@@ -111,11 +143,23 @@ export class DeviceProfileTransportConfigurationComponent implements ControlValu
     }, 0);
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const configuration = this.deviceProfileTransportConfigurationFormGroup.getRawValue().configuration;
     configuration.type = this.transportType;
     this.propagateChange(configuration);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   * @returns ValidationErrors | null observable or value
+   */
 
   public validate(c: UntypedFormControl): ValidationErrors | null {
     return (this.deviceProfileTransportConfigurationFormGroup.valid) ? null : {

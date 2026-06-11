@@ -44,15 +44,18 @@ import {
 import { ImagePipe } from '@shared/pipe/image.pipe';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
+/**
+ * Angular component: label card widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-label-card-widget`.
+ */
 @Component({
     selector: 'tb-label-card-widget',
     templateUrl: './label-card-widget.component.html',
     styleUrls: ['./label-card-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: label card widget UI.
- */
+standalone: false
 })
 export class LabelCardWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -94,6 +97,11 @@ export class LabelCardWidgetComponent implements OnInit, AfterViewInit, OnDestro
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.labelCardWidget = this;
     this.settings = {...labelCardWidgetDefaultSettings, ...this.ctx.settings};
@@ -114,6 +122,11 @@ export class LabelCardWidgetComponent implements OnInit, AfterViewInit, OnDestro
     this.hasCardClickAction = this.ctx.actionsApi.getActionDescriptors('cardClick').length > 0;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   public ngAfterViewInit() {
     if (this.settings.autoScale) {
       this.renderer.setStyle(this.labelCardContent.nativeElement, 'overflow', 'visible');
@@ -126,11 +139,21 @@ export class LabelCardWidgetComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
     }
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
@@ -138,9 +161,19 @@ export class LabelCardWidgetComponent implements OnInit, AfterViewInit, OnDestro
     this.cd.detectChanges();
   }
 
+  /**
+   * card click.
+   *
+   */
+
   public cardClick($event: Event) {
     this.ctx.actionsApi.cardClick($event);
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const paddingLeft = getComputedStyle(this.labelCardPanel.nativeElement).paddingLeft;

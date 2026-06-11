@@ -45,6 +45,12 @@ import { map } from 'rxjs/operators';
 
 type SimpeConfiguration = CalculatedFieldSimpleConfiguration | CalculatedFieldScriptConfiguration;
 
+
+/**
+ * Angular component: simple configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-simple-configuration`.
+ */
 @Component({
     selector: 'tb-simple-configuration',
     templateUrl: './simple-configuration.component.html',
@@ -60,10 +66,7 @@ type SimpeConfiguration = CalculatedFieldSimpleConfiguration | CalculatedFieldSc
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: simple configuration UI.
- */
+standalone: false
 })
 export class SimpleConfigurationComponent implements ControlValueAccessor, Validator, OnChanges {
 
@@ -145,9 +148,21 @@ export class SimpleConfigurationComponent implements ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.simpleConfiguration.valid || this.simpleConfiguration.disabled ? null : {invalidSimpleConfig: false};
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (SimpeConfiguration)
+   */
 
   writeValue(value: SimpeConfiguration): void {
     const formValue: any = deepClone(value);
@@ -167,8 +182,20 @@ export class SimpleConfigurationComponent implements ControlValueAccessor, Valid
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _   (any)
+   */
+
   registerOnTouched(_: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -180,6 +207,11 @@ export class SimpleConfigurationComponent implements ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * Event handler for test script.
+   *
+   */
+
   onTestScript() {
     this.testScript().subscribe((expression) => {
       this.simpleConfiguration.get('expressionSCRIPT').setValue(expression);
@@ -187,10 +219,21 @@ export class SimpleConfigurationComponent implements ControlValueAccessor, Valid
     })
   }
 
+  /**
+   * updated model.
+   *
+   * @param value value (SimpeConfiguration)
+   */
+
   private updatedModel(value: SimpeConfiguration): void {
     value.type = this.isScript ? CalculatedFieldType.SCRIPT : CalculatedFieldType.SIMPLE;
     this.propagateChange(value);
   }
+
+  /**
+   * updated form with script.
+   *
+   */
 
   private updatedFormWithScript() {
     if (this.isScript) {
@@ -202,6 +245,11 @@ export class SimpleConfigurationComponent implements ControlValueAccessor, Valid
     }
     this.toggleScopeByOutputType();
   }
+
+  /**
+   * toggle scope by output type.
+   *
+   */
 
   private toggleScopeByOutputType(): void {
     if (this.isScript || this.simpleConfiguration.get('output').value.type === OutputType.Attribute || this.disabled) {

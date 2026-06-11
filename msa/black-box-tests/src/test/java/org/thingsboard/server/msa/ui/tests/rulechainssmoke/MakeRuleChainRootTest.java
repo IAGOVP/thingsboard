@@ -22,16 +22,29 @@ import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 /**
- * Make rule chain root test.
+ * Black-box test: make rule chain root (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Make rule chain root")
 public class MakeRuleChainRootTest extends AbstractRuleChainTest {
+    /**
+     * Make root.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void makeRoot() {
         setRootRuleChain("Root Rule Chain");
     }
+    /**
+     * Make rule chain root by right corner btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Make rule chain root by clicking on the 'Make rule chain root' icon in the right corner")
@@ -44,6 +57,12 @@ public class MakeRuleChainRootTest extends AbstractRuleChainTest {
 
         assertIsDisplayed(ruleChainsPage.rootCheckBoxEnable(ruleChain));
     }
+    /**
+     * Make rule chain root from view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Make rule chain root by clicking on the 'Make rule chain root' button in the entity view")
@@ -58,6 +77,12 @@ public class MakeRuleChainRootTest extends AbstractRuleChainTest {
 
         assertIsDisplayed(ruleChainsPage.rootCheckBoxEnable(ruleChain));
     }
+    /**
+     * Multiply root.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 30, groups = "smoke")
     @Description("Make multiple root rule chains (only one rule chain can be root)")

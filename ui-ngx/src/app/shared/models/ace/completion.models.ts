@@ -51,11 +51,11 @@ interface TbEditorAceCompletion extends Ace.SnippetCompletion {
   return?: FunctionArgType;
 }
 
+
 /**
-
- * TypeScript models and enums for tb editor completer.
-
+ * TypeScript interfaces, types, and enums for tb editor completer (shared TypeScript models).
  */
+
 
 export class TbEditorCompleter implements Ace.Completer {
 
@@ -66,9 +66,25 @@ export class TbEditorCompleter implements Ace.Completer {
   constructor(private editorCompletions: TbEditorCompletions) {
   }
 
+  /**
+   * update completions.
+   *
+   * @param completions completions (TbEditorCompletions)
+   */
+
   updateCompletions(completions: TbEditorCompletions): void {
     this.editorCompletions = completions;
   }
+
+  /**
+   * get completions.
+   *
+   * @param editor editor (Ace.Editor)
+   * @param session session (Ace.EditSession)
+   * @param position position (Ace.Point)
+   * @param prefix prefix (string)
+   * @param callback callback (Ace.CompleterCallback)
+   */
 
   getCompletions(editor: Ace.Editor, session: Ace.EditSession,
                  position: Ace.Point, prefix: string, callback: Ace.CompleterCallback): void {
@@ -77,6 +93,13 @@ export class TbEditorCompleter implements Ace.Completer {
       callback(null, result);
     }
   }
+
+  /**
+   * resolve path.
+   *
+   * @param prefix prefix (string)
+   * @returns string[] observable or value
+   */
 
   private resolvePath(prefix: string): string[] {
     if (!prefix || !prefix.length) {
@@ -102,6 +125,13 @@ export class TbEditorCompleter implements Ace.Completer {
     return parts;
   }
 
+  /**
+   * prepare completions.
+   *
+   * @param prefix prefix (string)
+   * @returns Ace.Completion[] observable or value
+   */
+
   private prepareCompletions(prefix: string): Ace.Completion[]  {
     const path = this.resolvePath(prefix);
     if (path !== null) {
@@ -110,6 +140,14 @@ export class TbEditorCompleter implements Ace.Completer {
       return [];
     }
   }
+
+  /**
+   * to ace completions list.
+   *
+   * @param completions completions (TbEditorCompletions)
+   * @param parentPath parent path (string[])
+   * @returns Ace.Completion[] observable or value
+   */
 
   private toAceCompletionsList(completions: TbEditorCompletions, parentPath: string[]): Ace.Completion[]  {
     const result: Ace.Completion[] = [];
@@ -127,6 +165,15 @@ export class TbEditorCompleter implements Ace.Completer {
     return result;
   }
 
+  /**
+   * to ace completion.
+   *
+   * @param name name (string)
+   * @param completion completion (TbEditorCompletion)
+   * @param parentPrefix parent prefix (string)
+   * @returns Ace.Completion observable or value
+   */
+
   private toAceCompletion(name: string, completion: TbEditorCompletion, parentPrefix: string): Ace.Completion {
     const aceCompletion: TbEditorAceCompletion = {
       isTbEditorAceCompletion: true,
@@ -143,6 +190,12 @@ export class TbEditorCompleter implements Ace.Completer {
     return aceCompletion;
   }
 
+  /**
+   * get doc tooltip.
+   *
+   * @param completion completion (TbEditorAceCompletion)
+   */
+
   getDocTooltip(completion: TbEditorAceCompletion) {
     if (completion && completion.isTbEditorAceCompletion) {
       const aceCompletion = deepClone(completion);
@@ -150,6 +203,13 @@ export class TbEditorCompleter implements Ace.Completer {
       return aceCompletion;
     }
   }
+
+  /**
+   * POST/PUT entity — create doc html.
+   *
+   * @param completion completion (TbEditorAceCompletion)
+   * @returns string observable or value
+   */
 
   private createDocHTML(completion: TbEditorAceCompletion): string {
     let title = `<b>${completion.title}</b>`;

@@ -37,14 +37,17 @@ import {
   ActionButtonWidgetSettings
 } from '@home/components/widget/lib/button/action-button-widget.models';
 
+
+/**
+ * Angular component: action button basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-button-basic-config`.
+ */
 @Component({
     selector: 'tb-action-button-basic-config',
     templateUrl: './action-button-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: action button basic config UI.
- */
+standalone: false
 })
 export class ActionButtonBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -63,9 +66,21 @@ export class ActionButtonBasicConfigComponent extends BasicWidgetConfigComponent
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.actionButtonWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: ActionButtonWidgetSettings = {...actionButtonDefaultSettings, ...(configData.config.settings || {})};
@@ -82,6 +97,13 @@ export class ActionButtonBasicConfigComponent extends BasicWidgetConfigComponent
       borderRadius: [configData.config.borderRadius, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
 
@@ -100,6 +122,13 @@ export class ActionButtonBasicConfigComponent extends BasicWidgetConfigComponent
     return this.widgetConfig;
   }
 
+  /**
+   * get on click action.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetAction observable or value
+   */
+
   private getOnClickAction(config: WidgetConfig): WidgetAction {
     let clickAction: WidgetAction;
     const actions = config.actions;
@@ -115,6 +144,13 @@ export class ActionButtonBasicConfigComponent extends BasicWidgetConfigComponent
     }
     return clickAction;
   }
+
+  /**
+   * set on click action.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @param clickAction click action (WidgetAction)
+   */
 
   private setOnClickAction(config: WidgetConfig, clickAction: WidgetAction): void {
     let actions = config.actions;

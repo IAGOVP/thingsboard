@@ -51,5 +51,8 @@ const routes: Routes = [
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling features routing (home/features pages).
+ */
   exports: [RouterModule]})
 export class FeaturesRoutingModule { }

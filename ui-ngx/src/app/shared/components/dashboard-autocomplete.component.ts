@@ -41,6 +41,12 @@ import { AuthUser } from '@shared/models/user.model';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
+
+/**
+ * Angular component: dashboard autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-autocomplete`.
+ */
 @Component({
     selector: 'tb-dashboard-autocomplete',
     templateUrl: './dashboard-autocomplete.component.html',
@@ -50,10 +56,7 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
             useExisting: forwardRef(() => DashboardAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: dashboard autocomplete UI.
- */
+standalone: false
 })
 export class DashboardAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -136,17 +139,38 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredDashboards = this.selectDashboardFormGroup.get('dashboard').valueChanges
       .pipe(
         debounceTime(150),
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue: string | DashboardInfo;
           if (typeof value === 'string' || !value) {
@@ -161,6 +185,11 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
         share()
       );
   }
+
+  /**
+   * select first dashboard if needed.
+   *
+   */
 
   selectFirstDashboardIfNeeded(): void {
     if (this.selectFirstDashboard && !this.modelValue) {
@@ -180,6 +209,12 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -189,6 +224,12 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
       this.selectDashboardFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DashboardInfo | string | null)
+   */
 
   writeValue(value: DashboardInfo | string | null): void {
     this.searchText = '';
@@ -222,6 +263,12 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
     this.dirty = true;
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (DashboardInfo | string | null)
+   */
+
   updateView(value: DashboardInfo | string | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -229,9 +276,23 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
     }
   }
 
+  /**
+   * display dashboard fn.
+   *
+   * @param dashboard dashboard (DashboardInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayDashboardFn(dashboard?: DashboardInfo): string | undefined {
     return dashboard ? dashboard.title : undefined;
   }
+
+  /**
+   * fetch dashboards.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<DashboardInfo>> observable or value
+   */
 
   fetchDashboards(searchText?: string): Observable<Array<DashboardInfo>> {
     this.searchText = searchText;
@@ -244,6 +305,13 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
       map(pageData => pageData.data)
     );
   }
+
+  /**
+   * get dashboards.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<DashboardInfo>> observable or value
+   */
 
   getDashboards(pageLink: PageLink): Observable<PageData<DashboardInfo>> {
     let dashboardsObservable: Observable<PageData<DashboardInfo>>;
@@ -270,12 +338,22 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
     return dashboardsObservable;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectDashboardFormGroup.get('dashboard').updateValueAndValidity({onlySelf: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectDashboardFormGroup.get('dashboard').patchValue('');
@@ -284,6 +362,13 @@ export class DashboardAutocompleteComponent implements ControlValueAccessor, OnI
       this.dashboardInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
 
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);

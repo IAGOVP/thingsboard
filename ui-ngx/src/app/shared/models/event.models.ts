@@ -44,11 +44,11 @@ export const eventTypeTranslations = new Map<EventType | DebugEventType, string>
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for base event body.
-
+ * TypeScript interfaces, types, and enums for base event body (shared TypeScript models).
  */
+
 
 export interface BaseEventBody {
   server: string;

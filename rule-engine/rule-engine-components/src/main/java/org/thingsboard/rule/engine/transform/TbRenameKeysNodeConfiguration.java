@@ -21,14 +21,23 @@ import org.thingsboard.rule.engine.util.TbMsgSource;
 
 import java.util.Map;
 /**
- * JSON configuration for TbRenameKeys rule node.
+ * JSON configuration POJO for {@link TbRenameKeys} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbRenameKeysNodeConfiguration implements NodeConfiguration<TbRenameKeysNodeConfiguration> {
 
     private TbMsgSource renameIn;
     private Map<String, String> renameKeysMapping;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbRenameKeysNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbRenameKeysNodeConfiguration defaultConfiguration() {

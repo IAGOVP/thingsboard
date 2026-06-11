@@ -22,6 +22,12 @@ import { RateLimitsType } from './rate-limits/rate-limits.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: default tenant profile configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-default-tenant-profile-configuration`.
+ */
 @Component({
     selector: 'tb-default-tenant-profile-configuration',
     templateUrl: './default-tenant-profile-configuration.component.html',
@@ -31,10 +37,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             useExisting: forwardRef(() => DefaultTenantProfileConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: default tenant profile configuration UI.
- */
+standalone: false
 })
 export class DefaultTenantProfileConfigurationComponent implements ControlValueAccessor {
 
@@ -147,6 +150,12 @@ export class DefaultTenantProfileConfigurationComponent implements ControlValueA
     });
   }
 
+  /**
+   * max sms validation.
+   *
+   * @param smsEnabled sms enabled (boolean)
+   */
+
   private maxSmsValidation(smsEnabled: boolean) {
     if (smsEnabled) {
       this.tenantProfileConfigurationForm.get('maxSms').addValidators([Validators.required, Validators.min(0)]);
@@ -156,12 +165,30 @@ export class DefaultTenantProfileConfigurationComponent implements ControlValueA
     this.tenantProfileConfigurationForm.get('maxSms').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -172,6 +199,12 @@ export class DefaultTenantProfileConfigurationComponent implements ControlValueA
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DefaultTenantProfileConfiguration | null)
+   */
+
   writeValue(value: DefaultTenantProfileConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
       if (isUndefinedOrNull(value.smsEnabled)) {
@@ -181,6 +214,11 @@ export class DefaultTenantProfileConfigurationComponent implements ControlValueA
       this.tenantProfileConfigurationForm.patchValue(value, {emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: DefaultTenantProfileConfiguration = null;

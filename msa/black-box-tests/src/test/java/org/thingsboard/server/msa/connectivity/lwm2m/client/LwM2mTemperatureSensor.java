@@ -37,8 +37,9 @@ import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 /**
- * Lw m2m temperature sensor.
+ * Lw m2m temperature sensor (black-box test infrastructure — LwM2M transport tests).
  */
+
 
 @Slf4j
 public class LwM2mTemperatureSensor extends BaseInstanceEnabler implements Destroyable {
@@ -66,6 +67,14 @@ public class LwM2mTemperatureSensor extends BaseInstanceEnabler implements Destr
             e.printStackTrace();
         }
     }
+    /**
+     * Read.
+     *
+     * @param identity identity ({@link LwM2mServer})
+     * @param resourceId resource id
+     * @return {@link ReadResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public synchronized ReadResponse read(LwM2mServer identity, int resourceId) {
@@ -93,6 +102,15 @@ public class LwM2mTemperatureSensor extends BaseInstanceEnabler implements Destr
                 return super.read(identity, resourceId);
         }
     }
+    /**
+     * Executes the requested data.
+     *
+     * @param identity identity ({@link LwM2mServer})
+     * @param resourceId resource id
+     * @param arguments arguments ({@link Arguments})
+     * @return {@link ExecuteResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public synchronized ExecuteResponse execute(LwM2mServer identity, int resourceId, Arguments arguments) {
@@ -140,15 +158,35 @@ public class LwM2mTemperatureSensor extends BaseInstanceEnabler implements Destr
         minMeasuredValue = currentTemp;
         maxMeasuredValue = currentTemp;
     }
+    /**
+     * Returns available resource ids.
+     *
+     * @param model model ({@link ObjectModel})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<Integer> getAvailableResourceIds(ObjectModel model) {
         return supportedResources;
     }
+    /**
+     * Set leshan client.
+     *
+     * @param leshanClient leshan client ({@link LeshanClient})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void setLeshanClient(LeshanClient leshanClient){
         this.leshanClient = leshanClient;
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {

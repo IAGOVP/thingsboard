@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { unreadNotificationDefaultSettings } from '@home/components/widget/lib/cards/unread-notification-widget.models';
 
+
+/**
+ * Angular component: unread notification widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-unread-notification-widget-settings`.
+ */
 @Component({
     selector: 'tb-unread-notification-widget-settings',
     templateUrl: './unread-notification-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: unread notification widget settings UI.
- */
+standalone: false
 })
 export class UnreadNotificationWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -41,13 +44,31 @@ export class UnreadNotificationWidgetSettingsComponent extends WidgetSettingsCom
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.unreadNotificationWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return unreadNotificationDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.unreadNotificationWidgetSettingsForm = this.fb.group({
@@ -66,9 +87,21 @@ export class UnreadNotificationWidgetSettingsComponent extends WidgetSettingsCom
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showCounter'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showCounter: boolean = this.unreadNotificationWidgetSettingsForm.get('showCounter').value;

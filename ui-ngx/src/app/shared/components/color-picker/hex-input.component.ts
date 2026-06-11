@@ -17,15 +17,18 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Color } from '@iplab/ngx-color-picker';
 
+
+/**
+ * Angular component: hex input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application.
+ */
 @Component({
     selector: `tb-hex-input`,
     templateUrl: `./hex-input.component.html`,
     styleUrls: ['./hex-input.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: hex input UI.
- */
+standalone: false
 })
 export class HexInputComponent {
 
@@ -53,6 +56,13 @@ export class HexInputComponent {
     return this.color ? Math.round(this.color.getRgba().alpha * 100).toString() : '';
   }
 
+  /**
+   * Event handler for hue input change.
+   *
+   * @param event DOM or Angular event object
+   * @param inputValue input value (string)
+   */
+
   public onHueInputChange(event: KeyboardEvent, inputValue: string): void {
     const color = this.color.getRgba();
     const alpha = +inputValue / 100;
@@ -61,6 +71,13 @@ export class HexInputComponent {
       this.colorChange.emit(new Color(newColor));
     }
   }
+
+  /**
+   * Event handler for input change.
+   *
+   * @param event DOM or Angular event object
+   * @param inputValue input value (string)
+   */
 
   public onInputChange(event: KeyboardEvent, inputValue: string): void {
     const value = inputValue.replace('#', '').toLowerCase();

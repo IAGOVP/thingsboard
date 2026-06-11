@@ -279,6 +279,9 @@ export enum CountryISO {
 }
 
 /* eslint-disable max-len */
+/**
+ * TypeScript interfaces, types, and enums for country data (shared TypeScript models).
+ */
 @Injectable()
 export class CountryData {
   public allCountries: Array<Country> = [

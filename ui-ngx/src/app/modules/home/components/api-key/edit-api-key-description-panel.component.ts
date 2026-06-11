@@ -20,15 +20,18 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { TbPopoverComponent } from '@shared/components/popover.component';
 import { ApiKeyService } from '@core/http/api-key.service';
 
+
+/**
+ * Angular component: edit api key description panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edit-api-key-description-panel`.
+ */
 @Component({
     selector: 'tb-edit-api-key-description-panel',
     templateUrl: './edit-api-key-description-panel.component.html',
     styleUrls: ['./edit-api-key-description-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: edit api key description panel UI.
- */
+standalone: false
 })
 export class EditApiKeyDescriptionPanelComponent implements OnInit {
 
@@ -47,13 +50,28 @@ export class EditApiKeyDescriptionPanelComponent implements OnInit {
               private popover: TbPopoverComponent<EditApiKeyDescriptionPanelComponent>,
               private apiKeyService: ApiKeyService) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.descriptionFormControl.setValue(this.description, {emitEvent: false});
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover.hide();
   }
+
+  /**
+   * apply description.
+   *
+   */
 
   applyDescription() {
     const description = this.descriptionFormControl.value.trim();

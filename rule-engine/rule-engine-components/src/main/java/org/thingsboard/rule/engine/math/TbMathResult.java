@@ -19,8 +19,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 /**
- * Rule engine component: tb math result.
+ * Tb math result (expression evaluation nodes).
  */
+
 
 @Data
 @NoArgsConstructor

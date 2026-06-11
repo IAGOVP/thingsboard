@@ -31,6 +31,12 @@ export interface LabelWidgetLabel {
   font: WidgetFont;
 }
 
+
+/**
+ * Angular component: label widget label (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-label-widget-label`.
+ */
 @Component({
     selector: 'tb-label-widget-label',
     templateUrl: './label-widget-label.component.html',
@@ -42,10 +48,7 @@ export interface LabelWidgetLabel {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: label widget label UI.
- */
+standalone: false
 })
 export class LabelWidgetLabelComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -71,6 +74,11 @@ export class LabelWidgetLabelComponent extends PageComponent implements OnInit, 
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.labelWidgetLabelFormGroup = this.fb.group({
       pattern: [null, [Validators.required]],
@@ -86,12 +94,30 @@ export class LabelWidgetLabelComponent extends PageComponent implements OnInit, 
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -102,12 +128,23 @@ export class LabelWidgetLabelComponent extends PageComponent implements OnInit, 
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (LabelWidgetLabel)
+   */
+
   writeValue(value: LabelWidgetLabel): void {
     this.modelValue = value;
     this.labelWidgetLabelFormGroup.patchValue(
       value, {emitEvent: false}
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: LabelWidgetLabel = this.labelWidgetLabelFormGroup.value;

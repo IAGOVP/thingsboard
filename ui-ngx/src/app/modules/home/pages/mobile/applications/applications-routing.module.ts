@@ -83,5 +83,8 @@ const routes: Routes = [
     MobileAppTableConfigResolver
   ],
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling applications routing (home/mobile pages).
+ */
   exports: [RouterModule]})
 export class ApplicationsRoutingModule { }

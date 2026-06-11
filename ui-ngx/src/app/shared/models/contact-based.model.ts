@@ -16,11 +16,11 @@
 
 import { BaseData, HasId } from './base-data';
 
+
 /**
-
- * TypeScript models and enums for contact based.
-
+ * TypeScript interfaces, types, and enums for contact based (shared TypeScript models).
  */
+
 
 export interface ContactBased<T extends HasId> extends BaseData<T> {
   country: string;

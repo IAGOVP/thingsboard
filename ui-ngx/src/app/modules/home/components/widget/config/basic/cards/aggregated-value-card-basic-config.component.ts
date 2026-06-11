@@ -51,14 +51,17 @@ import {
   TimewindowType
 } from '@shared/models/time/time.models';
 
+
+/**
+ * Angular component: aggregated value card basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aggregated-value-card-basic-config`.
+ */
 @Component({
     selector: 'tb-aggregated-value-card-basic-config',
     templateUrl: './aggregated-value-card-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: aggregated value card basic config UI.
- */
+standalone: false
 })
 export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -94,9 +97,21 @@ export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigCo
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.aggregatedValueCardWidgetConfigForm;
   }
+
+  /**
+   * setup defaults.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected setupDefaults(configData: WidgetConfigComponentData) {
     super.setupDefaults(configData);
@@ -116,15 +131,39 @@ export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigCo
     };
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [
       { name: 'watermeter', label: 'Watermeter', type: DataKeyType.timeseries, color: 'rgba(0, 0, 0, 0.87)', units: 'm³', decimals: 0 }
     ];
   }
 
+  /**
+   * default latest data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultLatestDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return this.createDefaultAggregatedValueLatestDataKeys(configData, 'watermeter', 'm³', 0);
   }
+
+  /**
+   * POST/PUT entity — create default aggregated value latest data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @param keyName key name (string)
+   * @param units units (string)
+   * @param decimals decimals (number)
+   * @returns DataKey[] observable or value
+   */
 
   createDefaultAggregatedValueLatestDataKeys(configData: WidgetConfigComponentData, keyName: string,
                                              units: string, decimals: number): DataKey[] {
@@ -221,6 +260,12 @@ export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigCo
     ];
   }
 
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
+
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: AggregatedValueCardWidgetSettings = {...aggregatedValueCardDefaultSettings, ...(configData.config.settings || {})};
     const dataKey = getDataKey(configData.config.datasources);
@@ -268,6 +313,13 @@ export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigCo
       actions: [configData.config.actions || {}, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
@@ -317,9 +369,22 @@ export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigCo
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon', 'showSubtitle', 'showDate', 'showChart'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.aggregatedValueCardWidgetConfigForm.get('showTitle').value;
@@ -386,6 +451,14 @@ export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigCo
     }
   }
 
+  /**
+   * get values.
+   *
+   * @param datasources datasources (Datasource[])
+   * @param keyName key name (string)
+   * @returns DataKey[] observable or value
+   */
+
   private getValues(datasources: Datasource[], keyName: string): DataKey[] {
     if (datasources && datasources.length) {
       return (datasources[0].latestDataKeys || []).filter(k => k.name === keyName);
@@ -393,11 +466,25 @@ export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigCo
     return [];
   }
 
+  /**
+   * set values.
+   *
+   * @param values values (DataKey[])
+   * @param datasources datasources (Datasource[])
+   */
+
   private setValues(values: DataKey[], datasources?: Datasource[]) {
     if (datasources && datasources.length) {
       datasources[0].latestDataKeys = values;
     }
   }
+
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
 
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
@@ -406,6 +493,13 @@ export class AggregatedValueCardBasicConfigComponent extends BasicWidgetConfigCo
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

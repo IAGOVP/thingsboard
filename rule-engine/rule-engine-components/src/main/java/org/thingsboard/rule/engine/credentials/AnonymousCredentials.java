@@ -17,11 +17,18 @@ package org.thingsboard.rule.engine.credentials;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
- * Rule engine component: anonymous credentials.
+ * Anonymous credentials (credentials helper types).
  */
+
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AnonymousCredentials implements ClientCredentials {
+    /**
+     * Returns type.
+     *
+     * @return {@link CredentialsType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Override
     public CredentialsType getType() {
         return CredentialsType.ANONYMOUS;

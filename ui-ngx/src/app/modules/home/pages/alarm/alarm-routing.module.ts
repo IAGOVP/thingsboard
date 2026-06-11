@@ -148,5 +148,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
+/**
+ * Angular NgModule bundling alarm routing (home/alarm pages).
+ */
   providers: []})
 export class AlarmRoutingModule { }

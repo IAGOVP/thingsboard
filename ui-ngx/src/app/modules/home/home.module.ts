@@ -31,6 +31,9 @@ import { ShowNotificationPopoverComponent } from '@home/components/notification/
 /**
  * Angular NgModule: home feature area.
  */
+/**
+ * Angular NgModule bundling home (ThingsBoard web UI).
+ */
 @NgModule({
   declarations:
     [
@@ -46,5 +49,5 @@ import { ShowNotificationPopoverComponent } from '@home/components/notification/
     CommonModule,
     SharedModule,
     HomeRoutingModule
-  ]})
+]})
 export class HomeModule { }

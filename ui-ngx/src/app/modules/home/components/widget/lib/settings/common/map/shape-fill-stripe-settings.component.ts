@@ -27,6 +27,12 @@ import {
   ShapeFillStripeSettingsPanelComponent
 } from '@home/components/widget/lib/settings/common/map/shape-fill-stripe-settings-panel.component';
 
+
+/**
+ * Angular component: shape fill stripe settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-shape-fill-stripe-settings`.
+ */
 @Component({
     selector: 'tb-shape-fill-stripe-settings',
     templateUrl: './shape-fill-stripe-settings.component.html',
@@ -38,10 +44,7 @@ import {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: shape fill stripe settings UI.
- */
+standalone: false
 })
 export class ShapeFillStripeSettingsComponent implements ControlValueAccessor {
 
@@ -75,16 +78,40 @@ export class ShapeFillStripeSettingsComponent implements ControlValueAccessor {
               private cd: ChangeDetectorRef,
               private viewContainerRef: ViewContainerRef) {}
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ShapeFillStripeSettings)
+   */
 
   writeValue(value: ShapeFillStripeSettings): void {
     if (value) {
@@ -92,6 +119,12 @@ export class ShapeFillStripeSettingsComponent implements ControlValueAccessor {
     }
     this.updatePreview();
   }
+
+  /**
+   * open stripe settings popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openStripeSettingsPopup($event: Event, matButton: MatButton) {
     if ($event) {
@@ -124,6 +157,11 @@ export class ShapeFillStripeSettingsComponent implements ControlValueAccessor {
       });
     }
   }
+
+  /**
+   * update preview.
+   *
+   */
 
   private updatePreview() {
     this.stripePreviewUrl = this.sanitizer.bypassSecurityTrustUrl(generateStripePreviewUrl(this.modelValue));

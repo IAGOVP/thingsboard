@@ -44,7 +44,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActionLoadFinish, ActionLoadStart } from '@core/interceptors/load.actions';
 
 /**
- * Angular HTTP service: entities version control REST wrappers (`@core/http`).
+ * Angular injectable service: entities version control (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -67,11 +69,22 @@ export class EntitiesVersionControlService {
     );
   }
 
+  /**
+   * clear branch list.
+   *
+   */
+
   public clearBranchList(): void {
     this.branchList = null;
   }
 
-  /** Calls ThingsBoard REST `/api/entities/vc/branches, ...`. */
+  
+  /**
+   * list branches.
+   *
+   * @returns Observable<Array<BranchInfo>> observable or value
+   */
+
 
   public listBranches(): Observable<Array<BranchInfo>> {
     if (!this.branchList) {
@@ -87,7 +100,16 @@ export class EntitiesVersionControlService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/entities/vc/info/${versionId}/${externalEntityId.entityType}/${externalEntityId.id}, ...`. */
+  
+  /**
+   * get entity data info.
+   *
+   * @param externalEntityId external entity id (EntityId)
+   * @param versionId version id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntityDataInfo> observable or value
+   */
+
 
   public getEntityDataInfo(externalEntityId: EntityId,
                            versionId: string,
@@ -96,7 +118,15 @@ export class EntitiesVersionControlService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/entities/vc/version, ...`. */
+  
+  /**
+   * POST/PUT entity — save entities version.
+   *
+   * @param request request (VersionCreateRequest)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<VersionCreationResult> observable or value
+   */
+
 
   public saveEntitiesVersion(request: VersionCreateRequest, config?: RequestConfig): Observable<VersionCreationResult> {
     this.store.dispatch(new ActionLoadStart());
@@ -118,12 +148,30 @@ export class EntitiesVersionControlService {
     );
   }
 
+  /**
+   * get version create request status.
+   *
+   * @param requestId request id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<VersionCreationResult> observable or value
+   */
+
   private getVersionCreateRequestStatus(requestId: string, config?: RequestConfig): Observable<VersionCreationResult> {
     return this.http.get<VersionCreationResult>(`/api/entities/vc/version/${requestId}/status`,
       defaultHttpOptionsFromConfig({...config, ...{ignoreLoading: true}}));
   }
 
-  /** Calls ThingsBoard REST `/api/entities/vc/version/${externalEntityId.entityType}/${externalEntityId.id}${pageLink.toQuery()}&branch=${encodedBranch}, ...`. */
+  
+  /**
+   * list entity versions.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param branch branch (string)
+   * @param externalEntityId external entity id (EntityId)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EntityVersion>> observable or value
+   */
+
 
   public listEntityVersions(pageLink: PageLink, branch: string,
                             externalEntityId: EntityId,
@@ -133,7 +181,17 @@ export class EntitiesVersionControlService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/entities/vc/version/${entityType}${pageLink.toQuery()}&branch=${encodedBranch}, ...`. */
+  
+  /**
+   * list entity type versions.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param branch branch (string)
+   * @param entityType entity type (EntityType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EntityVersion>> observable or value
+   */
+
 
   public listEntityTypeVersions(pageLink: PageLink, branch: string,
                                 entityType: EntityType,
@@ -143,7 +201,16 @@ export class EntitiesVersionControlService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/entities/vc/version${pageLink.toQuery()}&branch=${encodedBranch}, ...`. */
+  
+  /**
+   * list versions.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param branch branch (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EntityVersion>> observable or value
+   */
+
 
   public listVersions(pageLink: PageLink, branch: string,
                       config?: RequestConfig): Observable<PageData<EntityVersion>> {
@@ -152,7 +219,15 @@ export class EntitiesVersionControlService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/entities/vc/entity, ...`. */
+  
+  /**
+   * load entities version.
+   *
+   * @param request request (VersionLoadRequest)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<VersionLoadResult> observable or value
+   */
+
 
   public loadEntitiesVersion(request: VersionLoadRequest, config?: RequestConfig): Observable<VersionLoadResult> {
     this.store.dispatch(new ActionLoadStart());
@@ -170,12 +245,29 @@ export class EntitiesVersionControlService {
     );
   }
 
+  /**
+   * get version load request status.
+   *
+   * @param requestId request id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<VersionLoadResult> observable or value
+   */
+
   private getVersionLoadRequestStatus(requestId: string, config?: RequestConfig): Observable<VersionLoadResult> {
     return this.http.get<VersionLoadResult>(`/api/entities/vc/entity/${requestId}/status`,
       defaultHttpOptionsFromConfig({...config, ...{ignoreLoading: true}}));
   }
 
-  /** Calls ThingsBoard REST `/api/entities/vc/diff/${entityId.entityType}/${entityId.id}?versionId=${versionId}`. */
+  
+  /**
+   * compare entity data to version.
+   *
+   * @param entityId entity UUID
+   * @param versionId version id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntityDataDiff> observable or value
+   */
+
 
   public compareEntityDataToVersion(entityId: EntityId,
                                     versionId: string,
@@ -183,6 +275,13 @@ export class EntitiesVersionControlService {
     return this.http.get<EntityDataDiff>(`/api/entities/vc/diff/${entityId.entityType}/${entityId.id}?versionId=${versionId}`,
       defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * entity load error to message.
+   *
+   * @param entityLoadError entity load error (EntityLoadError)
+   * @returns SafeHtml observable or value
+   */
 
   public entityLoadErrorToMessage(entityLoadError: EntityLoadError): SafeHtml {
     const type = entityLoadError.type;

@@ -54,6 +54,12 @@ export const gpioItemValidator = (hasColor: boolean): ValidatorFn => (control: A
   return null;
 };
 
+
+/**
+ * Angular component: gpio item (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-gpio-item`.
+ */
 @Component({
     selector: 'tb-gpio-item',
     templateUrl: './gpio-item.component.html',
@@ -65,10 +71,7 @@ export const gpioItemValidator = (hasColor: boolean): ValidatorFn => (control: A
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: gpio item UI.
- */
+standalone: false
 })
 export class GpioItemComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -97,6 +100,11 @@ export class GpioItemComponent extends PageComponent implements OnInit, ControlV
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.gpioItemFormGroup = this.fb.group({
       pin: [null, [Validators.required, Validators.min(1)]],
@@ -114,12 +122,30 @@ export class GpioItemComponent extends PageComponent implements OnInit, ControlV
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -130,6 +156,12 @@ export class GpioItemComponent extends PageComponent implements OnInit, ControlV
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (GpioItem)
+   */
+
   writeValue(value: GpioItem): void {
     this.modelValue = value;
     this.gpioItemFormGroup.patchValue(
@@ -137,9 +169,22 @@ export class GpioItemComponent extends PageComponent implements OnInit, ControlV
     );
   }
 
+  /**
+   * number text.
+   *
+   * @param value value (any)
+   * @param minValue min value (number)
+   * @returns string observable or value
+   */
+
   numberText(value: any, minValue: number): string {
     return isNumber(value) && value > minValue ? value : 'Undefined';
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: GpioItem = this.gpioItemFormGroup.value;

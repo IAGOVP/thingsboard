@@ -36,7 +36,13 @@ import org.thingsboard.server.common.msg.TbMsgMetaData;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Rule engine external node 'send notification': Sends notification to targets using the template Implements org.thingsboard.rule.engine.api.TbNode.
+ * External rule node — <b>send notification</b>.
+ *
+ * <p>Sends notification to targets using the template
+ * <br>Will send notification to the specified targets using the template
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbNotificationNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/send-notification/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/send-notification/</a>
  */
 @RuleNode(
         type = ComponentType.EXTERNAL,
@@ -51,12 +57,28 @@ import java.util.concurrent.ExecutionException;
 public class TbNotificationNode extends TbAbstractExternalNode {
 
     private TbNotificationNodeConfiguration config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         super.init(ctx);
         config = TbNodeUtils.convert(configuration, TbNotificationNodeConfiguration.class);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {

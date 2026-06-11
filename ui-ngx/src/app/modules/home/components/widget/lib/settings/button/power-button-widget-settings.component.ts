@@ -27,14 +27,17 @@ import {
   powerButtonLayoutTranslations
 } from '@home/components/widget/lib/rpc/power-button-widget.models';
 
+
+/**
+ * Angular component: power button widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-power-button-widget-settings`.
+ */
 @Component({
     selector: 'tb-power-button-widget-settings',
     templateUrl: './power-button-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: power button widget settings UI.
- */
+standalone: false
 })
 export class PowerButtonWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -60,13 +63,31 @@ export class PowerButtonWidgetSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.powerButtonWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return powerButtonDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.powerButtonWidgetSettingsForm = this.fb.group({

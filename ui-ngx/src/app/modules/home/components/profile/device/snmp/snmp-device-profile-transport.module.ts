@@ -25,6 +25,9 @@ import { SnmpDeviceProfileMappingComponent } from '@home/components/profile/devi
 /**
  * Angular NgModule: snmp device profile transport feature area.
  */
+/**
+ * Angular NgModule bundling snmp device profile transport (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     SnmpDeviceProfileTransportConfigurationComponent,
@@ -37,5 +40,5 @@ import { SnmpDeviceProfileMappingComponent } from '@home/components/profile/devi
   ],
   exports: [
     SnmpDeviceProfileTransportConfigurationComponent
-  ]})
+]})
 export class SnmpDeviceProfileTransportModule { }

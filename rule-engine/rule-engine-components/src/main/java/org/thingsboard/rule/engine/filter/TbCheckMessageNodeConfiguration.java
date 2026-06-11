@@ -21,8 +21,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import java.util.Collections;
 import java.util.List;
 /**
- * JSON configuration for TbCheckMessage rule node.
+ * JSON configuration POJO for {@link TbCheckMessage} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbCheckMessageNodeConfiguration implements NodeConfiguration<TbCheckMessageNodeConfiguration>  {
@@ -31,6 +34,12 @@ public class TbCheckMessageNodeConfiguration implements NodeConfiguration<TbChec
     private List<String> metadataNames;
 
     private boolean checkAllKeys;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbCheckMessageNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override

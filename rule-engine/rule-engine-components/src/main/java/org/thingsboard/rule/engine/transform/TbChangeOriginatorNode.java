@@ -41,7 +41,13 @@ import static org.thingsboard.rule.engine.transform.OriginatorSource.RELATED;
 
 @Slf4j
 /**
- * Rule engine transformation node 'change originator': Change message originator to Tenant/Customer/Related Entity/Alarm Originator/Entity by name pattern. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Transformation rule node — <b>change originator</b>.
+ *
+ * <p>Change message originator to Tenant/Customer/Related Entity/Alarm Originator/Entity by name pattern.
+ * <br>Configuration: <ul><li><strong>Customer</strong> - use customer of incoming message originator as new originator. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbChangeOriginatorNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/change-originator/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/change-originator/</a>
  */
 @RuleNode(
         type = ComponentType.TRANSFORMATION,
@@ -62,6 +68,14 @@ import static org.thingsboard.rule.engine.transform.OriginatorSource.RELATED;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/change-originator/"
 )
 public class TbChangeOriginatorNode extends TbAbstractTransformNode<TbChangeOriginatorNodeConfiguration> {
+    /**
+     * Loads node configuration.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbChangeOriginatorNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbChangeOriginatorNodeConfiguration loadNodeConfiguration(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -69,6 +83,14 @@ public class TbChangeOriginatorNode extends TbAbstractTransformNode<TbChangeOrig
         validateConfig(config);
         return config;
     }
+    /**
+     * Transform.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<List<TbMsg>> transform(TbContext ctx, TbMsg msg) {

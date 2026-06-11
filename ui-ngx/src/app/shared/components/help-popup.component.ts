@@ -33,15 +33,18 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: help popup (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `[tb-help-popup], [tb-help-popup-content], [tb-help-popup-content-base64], [tb-help-popup-async-content]`.
+ */
 @Component({
     selector: '[tb-help-popup], [tb-help-popup-content], [tb-help-popup-content-base64], [tb-help-popup-async-content]',
     templateUrl: './help-popup.component.html',
     styleUrls: ['./help-popup.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: help popup UI.
- */
+standalone: false
 })
 export class HelpPopupComponent implements OnChanges {
 
@@ -107,9 +110,20 @@ export class HelpPopupComponent implements OnChanges {
     this.textMode = this.triggerSafeHtml != null;
   }
 
+  /**
+   * disabled.
+   *
+   * @returns boolean observable or value
+   */
+
   disabled(): boolean {
     return !this.helpId && !this.helpContent && !this.helpContentBase64 && !this.asyncHelpContent;
   }
+
+  /**
+   * toggle help.
+   *
+   */
 
   toggleHelp() {
     if (!this.disabled()) {

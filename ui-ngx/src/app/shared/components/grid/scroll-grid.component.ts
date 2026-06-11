@@ -42,15 +42,18 @@ export interface ItemSizeStrategy {
   itemSizeFunction: ItemSizeFunction;
 }
 
+
+/**
+ * Angular component: scroll grid (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scroll-grid`.
+ */
 @Component({
     selector: 'tb-scroll-grid',
     templateUrl: './scroll-grid.component.html',
     styleUrls: ['./scroll-grid.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scroll grid UI.
- */
+standalone: false
 })
 export class ScrollGridComponent<T, F> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
@@ -98,6 +101,11 @@ export class ScrollGridComponent<T, F> implements OnInit, AfterViewInit, OnChang
               private zone: NgZone) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (typeof this.itemSize === 'number') {
       this.calculatedItemSize = this.itemSize;
@@ -108,6 +116,11 @@ export class ScrollGridComponent<T, F> implements OnInit, AfterViewInit, OnChang
     this.maxBuffer = this.calculatedItemSize * 2;
     this.dataSource = new ScrollGridDatasource<T, F>(this.breakpointObserver, this.columns, this.fetchFunction, this.filter);
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.renderer.setStyle(this.viewport._contentWrapper.nativeElement, 'gap', this.gap + 'px');
@@ -131,35 +144,86 @@ export class ScrollGridComponent<T, F> implements OnInit, AfterViewInit, OnChang
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.contentResize$) {
       this.contentResize$.disconnect();
     }
   }
 
+  /**
+   * is object.
+   *
+   * @param value value (any)
+   * @returns boolean observable or value
+   */
+
   isObject(value: any): boolean {
     return isObject(value);
   }
+
+  /**
+   * track by items row.
+   *
+   * @param index index (number)
+   * @param itemsRow items row (T[])
+   * @returns number observable or value
+   */
 
   trackByItemsRow(index: number, itemsRow: T[]): number {
     return index;
   }
 
+  /**
+   * track by item.
+   *
+   * @param index index (number)
+   * @param item item (T)
+   * @returns T observable or value
+   */
+
   trackByItem(index: number, item: T): T {
     return item;
   }
+
+  /**
+   * update.
+   *
+   */
 
   public update() {
     this.dataSource.update();
   }
 
+  /**
+   * update item.
+   *
+   * @param index index (number)
+   * @param item item (T)
+   */
+
   public updateItem(index: number, item: T) {
     this.dataSource.updateItem(index, item);
   }
 
+  /**
+   * DELETE — delete item.
+   *
+   * @param index index (number)
+   */
+
   public deleteItem(index: number) {
     this.dataSource.deleteItem(index);
   }
+
+  /**
+   * Event handler for content resize.
+   *
+   */
 
   private onContentResize() {
     const contentWidth = this.viewport._contentWrapper.nativeElement.getBoundingClientRect().width;

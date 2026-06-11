@@ -26,6 +26,9 @@ import { AddEntitiesToEdgeDialogComponent } from '@home/dialogs/add-entities-to-
 /**
  * Angular NgModule: home dialogs feature area.
  */
+/**
+ * Angular NgModule bundling home dialogs (ThingsBoard web UI).
+ */
 @NgModule({
   declarations:
   [
@@ -44,5 +47,5 @@ import { AddEntitiesToEdgeDialogComponent } from '@home/dialogs/add-entities-to-
   ],
   providers: [
     HomeDialogsService
-  ]})
+]})
 export class HomeDialogsModule { }

@@ -22,15 +22,18 @@ import { HomeSection } from '@core/services/menu.models';
 import { ActivatedRoute } from '@angular/router';
 import { HomeDashboard } from '@shared/models/dashboard.models';
 
+
+/**
+ * Angular component: home links (home/home-links pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-home-links`.
+ */
 @Component({
     selector: 'tb-home-links',
     templateUrl: './home-links.component.html',
     styleUrls: ['./home-links.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: home links UI.
- */
+standalone: false
 })
 export class HomeLinksComponent implements OnInit {
 
@@ -46,6 +49,11 @@ export class HomeLinksComponent implements OnInit {
               private route: ActivatedRoute) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (!this.homeDashboard) {
       this.updateColumnCount();
@@ -54,6 +62,11 @@ export class HomeLinksComponent implements OnInit {
         .subscribe((state: BreakpointState) => this.updateColumnCount());
     }
   }
+
+  /**
+   * update column count.
+   *
+   */
 
   private updateColumnCount() {
     this.cols = 2;
@@ -65,6 +78,13 @@ export class HomeLinksComponent implements OnInit {
     }
     this.cd.detectChanges();
   }
+
+  /**
+   * section colspan.
+   *
+   * @param section section (HomeSection)
+   * @returns number observable or value
+   */
 
   sectionColspan(section: HomeSection): number {
     if (this.breakpointObserver.isMatched(MediaBreakpoints['gt-sm'])) {

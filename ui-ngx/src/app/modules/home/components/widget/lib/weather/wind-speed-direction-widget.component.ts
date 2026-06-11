@@ -67,15 +67,18 @@ const ticksTextMap: {[angle: number]: string} = {
   315: 'NW'
 };
 
+
+/**
+ * Angular component: wind speed direction widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-wind-speed-direction-widget`.
+ */
 @Component({
     selector: 'tb-wind-speed-direction-widget',
     templateUrl: './wind-speed-direction-widget.component.html',
     styleUrls: ['./wind-speed-direction-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: wind speed direction widget UI.
- */
+standalone: false
 })
 export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -123,6 +126,11 @@ export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, Aft
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.windSpeedDirectionWidget = this;
     this.settings = {...windSpeedDirectionDefaultSettings, ...this.ctx.settings};
@@ -154,17 +162,32 @@ export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, Aft
     this.hasCardClickAction = this.ctx.actionsApi.getActionDescriptors('cardClick').length > 0;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     if (this.drawSvgShapePending) {
       this.drawSvg();
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.shapeResize$) {
       this.shapeResize$.disconnect();
     }
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
@@ -176,6 +199,11 @@ export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, Aft
     }
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     let value = 0;
@@ -202,9 +230,19 @@ export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, Aft
     this.renderValues();
   }
 
+  /**
+   * card click.
+   *
+   */
+
   public cardClick($event: Event) {
     this.ctx.actionsApi.cardClick($event);
   }
+
+  /**
+   * draw svg.
+   *
+   */
 
   private drawSvg() {
     this.svgShape = SVG().addTo(this.windSpeedDirectionShape.nativeElement).size(shapeSize, shapeSize);
@@ -309,6 +347,16 @@ export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, Aft
     this.renderValues();
   }
 
+  /**
+   * draw tick text.
+   *
+   * @param degree degree (number)
+   * @param font font (Font)
+   * @param color color (string)
+   * @param x x (number)
+   * @param y y (number)
+   */
+
   private drawTickText(degree: number, font: Font, color: string, x: number, y: number) {
     const tickText = this.settings.directionalNamesElseDegrees ? ticksTextMap[degree] : degree + '';
     this.svgShape.text(tickText).font({
@@ -319,6 +367,11 @@ export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, Aft
     }).fill(color).center(x, y);
   }
 
+  /**
+   * render values.
+   *
+   */
+
   private renderValues() {
     if (this.svgShape) {
       this.arrow.timeline().finish();
@@ -326,6 +379,11 @@ export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, Aft
       this.renderCenterValueText();
     }
   }
+
+  /**
+   * render center value text.
+   *
+   */
 
   private renderCenterValueText() {
     this.centerValueTextNode.text(add => {
@@ -335,6 +393,11 @@ export class WindSpeedDirectionWidgetComponent implements OnInit, OnDestroy, Aft
       }
     }).fill(this.centerValueColor.color);
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const shapeWidth = this.windSpeedDirectionShape.nativeElement.getBoundingClientRect().width;

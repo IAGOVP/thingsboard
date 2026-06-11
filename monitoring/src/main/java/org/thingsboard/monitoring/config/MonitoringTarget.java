@@ -17,21 +17,47 @@ package org.thingsboard.monitoring.config;
 
 import java.util.UUID;
 
+
 /**
 
- * One monitored ThingsBoard/transport base URL and per-target device id.
+ * One monitored ThingsBoard base URL and per-target device identifiers.
 
  */
 
+
 public interface MonitoringTarget {
+    /**
+     * Returns device id.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UUID getDeviceId();
+    /**
+     * Returns base url.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String getBaseUrl();
+    /**
+     * Returns queue.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default String getQueue() {
         return "Main";
     }
+    /**
+     * Is check domain ips.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean isCheckDomainIps();
 

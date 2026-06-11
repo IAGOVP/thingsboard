@@ -58,14 +58,17 @@ import {
 } from '@home/components/api-key/api-keys-table-dialog.component';
 import { passwordsMatchValidator, passwordStrengthValidator } from '@shared/models/password.models';
 
+
+/**
+ * Angular component: security (home/security pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-security`.
+ */
 @Component({
     selector: 'tb-security',
     templateUrl: './security.component.html',
     styleUrls: ['./security.component.scss'],
-    standalone: false
-/**
- * Angular component: security UI.
- */
+standalone: false
 })
 export class SecurityComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -110,6 +113,11 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.buildTwoFactorForm();
     this.user = this.route.snapshot.data.user;
@@ -118,11 +126,21 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     this.loadPasswordPolicy();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * build two factor form.
+   *
+   */
 
   private buildTwoFactorForm() {
     this.twoFactorAuth = this.fb.group({
@@ -144,6 +162,12 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     });
   }
 
+  /**
+   * two factor load.
+   *
+   * @param providers providers (TwoFactorAuthProviderType[])
+   */
+
   private twoFactorLoad(providers: TwoFactorAuthProviderType[]) {
     if (providers.length) {
       this.twoFaService.getAccountTwoFaSettings().subscribe(data => this.processTwoFactorAuthConfig(data));
@@ -154,6 +178,12 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
       });
     }
   }
+
+  /**
+   * process two factor auth config.
+   *
+   * @param setting setting (AccountTwoFaSettings)
+   */
 
   private processTwoFactorAuthConfig(setting: AccountTwoFaSettings) {
     this.accountConfig = setting?.configs || {};
@@ -169,6 +199,11 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     });
   }
 
+  /**
+   * build change password form.
+   *
+   */
+
   private buildChangePasswordForm() {
     this.changePassword = this.fb.group({
       currentPassword: [''],
@@ -182,6 +217,11 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     });
   }
 
+  /**
+   * load password policy.
+   *
+   */
+
   private loadPasswordPolicy() {
     this.authService.getUserPasswordPolicy().subscribe(policy => {
       this.passwordPolicy = policy;
@@ -192,6 +232,12 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
       this.changePassword.get('newPassword').updateValueAndValidity({emitEvent: false});
     });
   }
+
+  /**
+   * password not same as old.
+   *
+   * @returns ValidatorFn observable or value
+   */
 
   passwordNotSameAsOld(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
@@ -219,9 +265,21 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     };
   }
 
+  /**
+   * track by provider.
+   *
+   * @param i i (number)
+   * @param provider provider (TwoFactorAuthProviderType)
+   */
+
   trackByProvider(i: number, provider: TwoFactorAuthProviderType) {
     return provider;
   }
+
+  /**
+   * copy token.
+   *
+   */
 
   copyToken() {
     if (+this.jwtTokenExpiration < Date.now()) {
@@ -243,6 +301,13 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
       }));
     }
   }
+
+  /**
+   * confirm2fachange.
+   *
+   * @param event DOM or Angular event object
+   * @param provider provider (TwoFactorAuthProviderType)
+   */
 
   confirm2FAChange(event: MouseEvent, provider: TwoFactorAuthProviderType) {
     event.stopPropagation();
@@ -268,6 +333,12 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     }
   }
 
+  /**
+   * POST/PUT entity — created new auth config.
+   *
+   * @param provider provider (TwoFactorAuthProviderType)
+   */
+
   private createdNewAuthConfig(provider: TwoFactorAuthProviderType) {
     const dialogData = provider === TwoFactorAuthProviderType.EMAIL ? {email: this.user.email} : {};
     this.dialog.open(authenticationDialogMap.get(provider), {
@@ -281,6 +352,13 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     });
   }
 
+  /**
+   * change default provider.
+   *
+   * @param event DOM or Angular event object
+   * @param provider provider (TwoFactorAuthProviderType)
+   */
+
   changeDefaultProvider(event: MatCheckboxChange, provider: TwoFactorAuthProviderType) {
     if (this.useByDefault !== provider) {
       this.twoFactorAuth.disable({emitEvent: false});
@@ -291,6 +369,11 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
       event.source.checked = true;
     }
   }
+
+  /**
+   * generate new backup code.
+   *
+   */
 
   generateNewBackupCode() {
     const codeLeft = (this.accountConfig[TwoFactorAuthProviderType.BACKUP_CODE] as BackupCodeTwoFactorAuthAccountConfig).codesLeft;
@@ -315,6 +398,12 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     });
   }
 
+  /**
+   * provider data info.
+   *
+   * @param provider provider (TwoFactorAuthProviderType)
+   */
+
   providerDataInfo(provider: TwoFactorAuthProviderType) {
     const info = {info: null};
     const providerConfig = this.accountConfig[provider];
@@ -333,6 +422,12 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     }
     return info;
   }
+
+  /**
+   * Event handler for change password.
+   *
+   * @param form Angular reactive form group
+   */
 
   onChangePassword(form: FormGroupDirective): void {
     if (this.changePassword.valid) {
@@ -362,6 +457,13 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
     }
   }
 
+  /**
+   * discard changes.
+   *
+   * @param form Angular reactive form group
+   * @param event DOM or Angular event object
+   */
+
   discardChanges(form: FormGroupDirective, event?: MouseEvent) {
     if (event) {
       event.stopPropagation();
@@ -372,6 +474,11 @@ export class SecurityComponent extends PageComponent implements OnInit, OnDestro
       newPassword2: ''
     });
   }
+
+  /**
+   * open api keys table.
+   *
+   */
 
   openApiKeysTable() {
     this.dialog.open<ApiKeysTableDialogComponent, ApiKeysTableDialogData>(

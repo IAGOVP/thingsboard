@@ -19,11 +19,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { HasUUID } from '@shared/models/id/has-uuid';
 import { MenuId } from '@core/services/menu.models';
 
+
 /**
-
- * bread crumb.
-
+ * Bread crumb (shared UI components).
  */
+
 
 export interface BreadCrumb extends HasUUID{
   label: string;

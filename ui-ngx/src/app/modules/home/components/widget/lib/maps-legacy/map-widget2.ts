@@ -34,8 +34,9 @@ import { FormProperty } from '@shared/models/dynamic-form.models';
 
 // @dynamic
 /**
- * map widget controller.
+ * Map widget controller (ThingsBoard web UI).
  */
+
 export class MapWidgetController implements MapWidgetInterface {
 
     private updatePending = false;
@@ -116,6 +117,12 @@ export class MapWidgetController implements MapWidgetInterface {
     settings: WidgetUnitedMapSettings;
     pageLink: EntityDataPageLink;
 
+    /**
+     * action sources.
+     *
+     * @returns object observable or value
+     */
+
     public static actionSources(): object {
         return {
             markerClick: {
@@ -145,6 +152,12 @@ export class MapWidgetController implements MapWidgetInterface {
       return '';
     }
 
+    /**
+     * get descriptors.
+     *
+     * @param name name (string)
+     */
+
     getDescriptors(name: string): { [name: string]: ($event: Event, datasource: Datasource) => void } {
         const descriptors = this.ctx.actionsApi.getActionDescriptors(name);
         const actions = {};
@@ -154,8 +167,20 @@ export class MapWidgetController implements MapWidgetInterface {
         return actions;
     }
 
+    /**
+     * Event handler for init.
+     *
+     */
+
     onInit() {
     }
+
+    /**
+     * Event handler for custom action.
+     *
+     * @param descriptor descriptor (WidgetActionDescriptor)
+     * @param entityInfo entity info (Datasource)
+     */
 
     private onCustomAction(descriptor: WidgetActionDescriptor, $event: Event, entityInfo: Datasource) {
         if ($event) {
@@ -168,6 +193,14 @@ export class MapWidgetController implements MapWidgetInterface {
             id: entityId
         }, entityName, null, entityLabel);
     }
+
+    /**
+     * set marker location.
+     *
+     * @param e e (FormattedData)
+     * @param lat lat (number)
+     * @param lng lng (number)
+     */
 
     setMarkerLocation(e: FormattedData, lat?: number, lng?: number) {
       let markerValue: {[p: string]: any};
@@ -188,6 +221,13 @@ export class MapWidgetController implements MapWidgetInterface {
       return this.saveLocation(e, markerValue);
     }
 
+    /**
+     * POST/PUT entity — save polygon location.
+     *
+     * @param e e (FormattedData)
+     * @param coordinates coordinates (Array<any>)
+     */
+
     savePolygonLocation(e: FormattedData, coordinates?: Array<any>) {
       let polygonValue: {[p: string]: any};
       if (isDefined(coordinates)) {
@@ -199,6 +239,14 @@ export class MapWidgetController implements MapWidgetInterface {
       }
       return this.saveLocation(e, polygonValue);
     }
+
+    /**
+     * POST/PUT entity — save location.
+     *
+     * @param e e (FormattedData)
+     * @param values values ({[key: string]: any})
+     * @returns Observable<any> observable or value
+     */
 
     saveLocation(e: FormattedData, values: {[key: string]: any}): Observable<any> {
       const attributeService = this.ctx.$injector.get(AttributeService);
@@ -253,6 +301,14 @@ export class MapWidgetController implements MapWidgetInterface {
       }
     }
 
+    /**
+     * init settings.
+     *
+     * @param settings settings (UnitedMapSettings)
+     * @param isEditMap is edit map (boolean)
+     * @returns Promise<WidgetUnitedMapSettings> observable or value
+     */
+
     async initSettings(settings: UnitedMapSettings, isEditMap?: boolean): Promise<WidgetUnitedMapSettings> {
         const functionParams = ['data', 'dsData', 'dsIndex'];
         this.provider = settings.provider || this.mapProvider;
@@ -296,6 +352,11 @@ export class MapWidgetController implements MapWidgetInterface {
         return { ...defaultMapSettings, ...settings, ...parsedOptions };
     }
 
+    /**
+     * update.
+     *
+     */
+
     update() {
       if (this.map) {
         this.updatePending = false;
@@ -306,6 +367,11 @@ export class MapWidgetController implements MapWidgetInterface {
       }
     }
 
+    /**
+     * latest data update.
+     *
+     */
+
     latestDataUpdate() {
       if (this.map) {
         this.latestUpdatePending = false;
@@ -314,6 +380,11 @@ export class MapWidgetController implements MapWidgetInterface {
         this.latestUpdatePending = true;
       }
     }
+
+    /**
+     * resize.
+     *
+     */
 
     resize() {
       if (this.map) {
@@ -324,6 +395,11 @@ export class MapWidgetController implements MapWidgetInterface {
         this.resizePending = true;
       }
     }
+
+    /**
+     * destroy.
+     *
+     */
 
     destroy() {
       this.destroyed = true;

@@ -28,6 +28,9 @@ import { EntityViewTabsComponent } from '@home/pages/entity-view/entity-view-tab
 /**
  * Angular NgModule: entity view feature area.
  */
+/**
+ * Angular NgModule bundling entity view (home/entity-view pages).
+ */
 @NgModule({
   declarations: [
     EntityViewComponent,
@@ -40,5 +43,5 @@ import { EntityViewTabsComponent } from '@home/pages/entity-view/entity-view-tab
     HomeComponentsModule,
     HomeDialogsModule,
     EntityViewRoutingModule
-  ]})
+]})
 export class EntityViewModule { }

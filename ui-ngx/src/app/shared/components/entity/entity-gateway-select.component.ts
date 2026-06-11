@@ -31,6 +31,13 @@ import { DeviceService } from '@core/http/device.service';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { Authority } from '@shared/models/authority.enum';
 
+
+
+/**
+ * Angular component: entity gateway select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-gateway-select`.
+ */
 @Component({
     selector: 'tb-entity-gateway-select',
     templateUrl: './entity-gateway-select.component.html',
@@ -40,13 +47,8 @@ import { Authority } from '@shared/models/authority.enum';
             useExisting: forwardRef(() => EntityGatewaySelectComponent),
             multi: true
         }],
-    standalone: false
 
-/**
-
- * Angular component: entity gateway select UI.
-
- */
+standalone: false
 })
 
 export class EntityGatewaySelectComponent implements ControlValueAccessor, OnInit {
@@ -94,12 +96,29 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
   @ViewChild('deviceGatewayInput', {static: true}) deviceGatewayInput: ElementRef<HTMLInputElement>;
   private propagateChange = (v: any) => { };
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.selectDeviceGatewayFormGroup = this.fb.group({
@@ -108,6 +127,10 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
     this.loadGatewayList();
     this.filteredGateways = this.selectDeviceGatewayFormGroup.get('gateway').valueChanges
       .pipe(
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue;
           if (typeof value === 'string' || !value) {
@@ -126,6 +149,13 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
       );
   }
 
+  /**
+   * fetch gateway.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<Device>> observable or value
+   */
+
   fetchGateway(searchText?: string): Observable<Array<Device>> {
     this.searchText = searchText;
     let result = [];
@@ -137,6 +167,11 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
     return of(result);
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectDeviceGatewayFormGroup.get('gateway').updateValueAndValidity({onlySelf: true, emitEvent: true});
@@ -144,12 +179,31 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * display gateway fn.
+   *
+   * @param gateway gateway (Device)
+   * @returns string | undefined observable or value
+   */
+
   displayGatewayFn(gateway?: Device): string | undefined {
     return gateway ? gateway.name : undefined;
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     if(value === null){
@@ -158,6 +212,13 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
       this.dirty = true;
     }
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   * @param hideList hide list (boolean)
+   */
 
   clear(value: string = '', hideList?: boolean) {
     this.searchText = value;
@@ -170,9 +231,21 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return !!text && text.length > 0;
   }
+
+  /**
+   * gateway name enter.
+   *
+   */
 
   gatewayNameEnter($event: KeyboardEvent) {
     if ($event.keyCode === ENTER) {
@@ -181,6 +254,12 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
       }
     }
   }
+
+  /**
+   * POST/PUT entity — create gateway.
+   *
+   * @param gatewayName gateway name (string)
+   */
 
   createGateway($event: Event, gatewayName: string) {
     $event.preventDefault();
@@ -195,6 +274,12 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
       }
     });
   }
+
+  /**
+   * POST/PUT entity — create device gateway.
+   *
+   * @param gatewayName gateway name (string)
+   */
 
   private createDeviceGateway(gatewayName: string){
     this.deviceService.findByName(gatewayName, {ignoreErrors: true}).subscribe(value => {
@@ -218,6 +303,11 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
       );
     })
   }
+
+  /**
+   * load gateway list.
+   *
+   */
 
   private loadGatewayList(): void {
     let listObservable: Observable<any[]>;
@@ -249,6 +339,12 @@ export class EntityGatewaySelectComponent implements ControlValueAccessor, OnIni
       }
     })
   }
+
+  /**
+   * update view.
+   *
+   * @param modelValue model value (any)
+   */
 
   private updateView(modelValue: any) {
     this.propagateChange(modelValue);

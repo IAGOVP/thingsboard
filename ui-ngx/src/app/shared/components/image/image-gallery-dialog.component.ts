@@ -26,14 +26,17 @@ export interface ImageGalleryDialogData {
   imageSubType: ResourceSubType;
 }
 
+
+/**
+ * Angular component: image gallery dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-image-gallery-dialog`.
+ */
 @Component({
     selector: 'tb-image-gallery-dialog',
     templateUrl: './image-gallery-dialog.component.html',
     styleUrls: ['./image-gallery-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: image gallery dialog UI.
- */
+standalone: false
 })
 export class ImageGalleryDialogComponent extends
   DialogComponent<ImageGalleryDialogComponent, ImageResourceInfo> implements OnInit {
@@ -45,12 +48,28 @@ export class ImageGalleryDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * image selected.
+   *
+   * @param image image (ImageResourceInfo)
+   */
 
   imageSelected(image: ImageResourceInfo): void {
     this.dialogRef.close(image);

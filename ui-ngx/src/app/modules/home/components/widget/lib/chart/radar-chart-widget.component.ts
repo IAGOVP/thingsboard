@@ -29,15 +29,18 @@ import {
 } from '@home/components/widget/lib/chart/radar-chart-widget.models';
 import { TbRadarChart } from '@home/components/widget/lib/chart/radar-chart';
 
+
+/**
+ * Angular component: radar chart widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-radar-chart-widget`.
+ */
 @Component({
     selector: 'tb-radar-chart-widget',
     templateUrl: './latest-chart-widget.component.html',
     styleUrls: [],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: radar chart widget UI.
- */
+standalone: false
 })
 export class RadarChartWidgetComponent implements OnInit {
 
@@ -58,6 +61,11 @@ export class RadarChartWidgetComponent implements OnInit {
               private translate: TranslateService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.radarChartWidget = this;
     this.settings = {...radarChartWidgetDefaultSettings, ...this.ctx.settings};
@@ -69,9 +77,19 @@ export class RadarChartWidgetComponent implements OnInit {
     };
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     this.latestChart?.onInit();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     this.latestChart?.onDataUpdated();

@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { countDefaultSettings } from '@home/components/widget/lib/count/count-widget.models';
 
+
+/**
+ * Angular component: entity count widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-count-widget-settings`.
+ */
 @Component({
     selector: 'tb-entity-count-widget-settings',
     templateUrl: './entity-count-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: entity count widget settings UI.
- */
+standalone: false
 })
 export class EntityCountWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -41,13 +44,31 @@ export class EntityCountWidgetSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.entityCountWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return countDefaultSettings(false);
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.entityCountWidgetSettingsForm = this.fb.group({
@@ -55,11 +76,25 @@ export class EntityCountWidgetSettingsComponent extends WidgetSettingsComponent 
     });
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return {
       entityCountSettings: settings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return settings.entityCountSettings;

@@ -25,14 +25,17 @@ import { Store } from "@ngrx/store";
 import { AppState } from "@core/core.state";
 import { ActionAuthUpdateTrendzSettings } from "@core/auth/auth.actions";
 
+
+/**
+ * Angular component: trendz settings (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-trendz-settings`.
+ */
 @Component({
     selector: 'tb-trendz-settings',
     templateUrl: './trendz-settings.component.html',
     styleUrls: ['./trendz-settings.component.scss', './settings-card.scss'],
-    standalone: false
-/**
- * Angular component: trendz settings UI.
- */
+standalone: false
 })
 export class TrendzSettingsComponent extends PageComponent implements OnInit, HasConfirmForm {
 
@@ -44,6 +47,11 @@ export class TrendzSettingsComponent extends PageComponent implements OnInit, Ha
               private destroyRef: DestroyRef) {
     super();
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.trendzSettingsForm = this.fb.group({
@@ -61,6 +69,12 @@ export class TrendzSettingsComponent extends PageComponent implements OnInit, Ha
           .subscribe((enabled: boolean) => this.toggleUrlRequired(enabled));
   }
 
+  /**
+   * toggle url required.
+   *
+   * @param enabled enabled (boolean)
+   */
+
   toggleUrlRequired(enabled: boolean) {
     const trendzUrlControl = this.trendzSettingsForm.get('trendzUrl')!;
 
@@ -73,6 +87,12 @@ export class TrendzSettingsComponent extends PageComponent implements OnInit, Ha
     trendzUrlControl.updateValueAndValidity();
   }
 
+  /**
+   * set trendz settings.
+   *
+   * @param trendzSettings trendz settings (TrendzSettings)
+   */
+
   setTrendzSettings(trendzSettings: TrendzSettings) {
     this.trendzSettingsForm.reset({
       isTrendzEnabled: trendzSettings?.enabled ?? false,
@@ -83,9 +103,20 @@ export class TrendzSettingsComponent extends PageComponent implements OnInit, Ha
     this.toggleUrlRequired(this.trendzSettingsForm.get('isTrendzEnabled').value);
   }
 
+  /**
+   * confirm form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   confirmForm(): FormGroup {
     return this.trendzSettingsForm;
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const isTrendzEnabled =   this.trendzSettingsForm.get('isTrendzEnabled').value;

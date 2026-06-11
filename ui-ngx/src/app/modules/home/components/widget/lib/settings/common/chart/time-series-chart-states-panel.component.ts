@@ -34,6 +34,12 @@ import {
 } from '@home/components/widget/lib/chart/time-series-chart.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: time series chart states panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-states-panel`.
+ */
 @Component({
     selector: 'tb-time-series-chart-states-panel',
     templateUrl: './time-series-chart-states-panel.component.html',
@@ -51,10 +57,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart states panel UI.
- */
+standalone: false
 })
 export class TimeSeriesChartStatesPanelComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -68,6 +71,11 @@ export class TimeSeriesChartStatesPanelComponent implements ControlValueAccessor
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.statesFormGroup = this.fb.group({
@@ -86,12 +94,30 @@ export class TimeSeriesChartStatesPanelComponent implements ControlValueAccessor
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -102,10 +128,22 @@ export class TimeSeriesChartStatesPanelComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartStateSettings[] | undefined)
+   */
+
   writeValue(value: TimeSeriesChartStateSettings[] | undefined): void {
     const states = value || [];
     this.statesFormGroup.setControl('states', this.prepareStatesFormArray(states), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     const valid = this.statesFormGroup.valid;
@@ -116,17 +154,42 @@ export class TimeSeriesChartStatesPanelComponent implements ControlValueAccessor
     };
   }
 
+  /**
+   * states form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   statesFormArray(): UntypedFormArray {
     return this.statesFormGroup.get('states') as UntypedFormArray;
   }
+
+  /**
+   * track by state.
+   *
+   * @param index index (number)
+   * @param stateControl state control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByState(index: number, stateControl: AbstractControl): any {
     return stateControl;
   }
 
+  /**
+   * DELETE — remove state.
+   *
+   * @param index index (number)
+   */
+
   removeState(index: number) {
     (this.statesFormGroup.get('states') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add state.
+   *
+   */
 
   addState() {
     const state: TimeSeriesChartStateSettings = {
@@ -138,6 +201,13 @@ export class TimeSeriesChartStatesPanelComponent implements ControlValueAccessor
     const stateControl = this.fb.control(state, [timeSeriesChartStateValidator]);
     statesArray.push(stateControl);
   }
+
+  /**
+   * prepare states form array.
+   *
+   * @param states states (TimeSeriesChartStateSettings[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareStatesFormArray(states: TimeSeriesChartStateSettings[] | undefined): UntypedFormArray {
     const statesControls: Array<AbstractControl> = [];

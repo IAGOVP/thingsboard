@@ -29,6 +29,12 @@ import { deepClone } from '@core/utils';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { TimeService } from '@core/services/time.service';
 
+
+/**
+ * Angular component: timezone select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timezone-select`.
+ */
 @Component({
     selector: 'tb-timezone-select',
     templateUrl: './timezone-select.component.html',
@@ -38,10 +44,7 @@ import { TimeService } from '@core/services/time.service';
             useExisting: forwardRef(() => TimezoneSelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: timezone select UI.
- */
+standalone: false
 })
 export class TimezoneSelectComponent implements ControlValueAccessor, OnInit, AfterViewInit {
 
@@ -124,16 +127,37 @@ export class TimezoneSelectComponent implements ControlValueAccessor, OnInit, Af
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredTimezones = this.selectTimezoneFormGroup.get('timezone').valueChanges
       .pipe(
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue;
           if (typeof value === 'string' || !value) {
@@ -152,8 +176,19 @@ export class TimezoneSelectComponent implements ControlValueAccessor, OnInit, Af
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -163,6 +198,12 @@ export class TimezoneSelectComponent implements ControlValueAccessor, OnInit, Af
       this.selectTimezoneFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.searchText = '';
@@ -187,12 +228,22 @@ export class TimezoneSelectComponent implements ControlValueAccessor, OnInit, Af
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectTimezoneFormGroup.get('timezone').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * Event handler for panel closed.
+   *
+   */
 
   onPanelClosed() {
     if (this.ignoreClosePanel) {
@@ -215,6 +266,12 @@ export class TimezoneSelectComponent implements ControlValueAccessor, OnInit, Af
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (string | null)
+   */
+
   updateView(value: string | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -222,9 +279,23 @@ export class TimezoneSelectComponent implements ControlValueAccessor, OnInit, Af
     }
   }
 
+  /**
+   * display timezone fn.
+   *
+   * @param timezone timezone (TimezoneInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayTimezoneFn(timezone?: TimezoneInfo): string | undefined {
     return timezone ? `${timezone.name} (${timezone.offset})` : undefined;
   }
+
+  /**
+   * fetch timezones.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<TimezoneInfo>> observable or value
+   */
 
   fetchTimezones(searchText?: string): Observable<Array<TimezoneInfo>> {
     this.searchText = searchText;
@@ -235,12 +306,23 @@ export class TimezoneSelectComponent implements ControlValueAccessor, OnInit, Af
     return of(this.loadTimezones());
   }
 
+  /**
+   * clear.
+   *
+   */
+
   clear() {
     this.selectTimezoneFormGroup.get('timezone').patchValue('', {emitEvent: true});
     setTimeout(() => {
       this.timezoneInputTrigger.openPanel();
     }, 0);
   }
+
+  /**
+   * load timezones.
+   *
+   * @returns Array<TimezoneInfo> observable or value
+   */
 
   private loadTimezones(): Array<TimezoneInfo> {
     if (!this.timezones) {

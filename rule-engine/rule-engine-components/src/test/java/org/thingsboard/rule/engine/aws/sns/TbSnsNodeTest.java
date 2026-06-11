@@ -55,8 +55,9 @@ import static org.mockito.BDDMockito.never;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.verifyNoMoreInteractions;
 /**
- * Unit test for tb sns node rule node.
+ * Unit test for tb sns node (AWS integration nodes (SQS, SNS, Lambda)).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbSnsNodeTest {

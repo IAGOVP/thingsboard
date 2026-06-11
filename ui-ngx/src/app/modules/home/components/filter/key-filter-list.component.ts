@@ -42,6 +42,12 @@ import { deepClone } from '@core/utils';
 import { KeyFilterDialogComponent, KeyFilterDialogData } from '@home/components/filter/key-filter-dialog.component';
 import { EntityId } from '@shared/models/id/entity-id';
 
+
+/**
+ * Angular component: key filter list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-key-filter-list`.
+ */
 @Component({
   selector: 'tb-key-filter-list',
   templateUrl: './key-filter-list.component.html',
@@ -58,10 +64,7 @@ import { EntityId } from '@shared/models/id/entity-id';
       multi: true
     }
   ],
-  standalone: false
-/**
- * Angular component: key filter list UI.
- */
+standalone: false
 })
 export class KeyFilterListComponent implements ControlValueAccessor, Validator, OnInit {
 
@@ -92,6 +95,11 @@ export class KeyFilterListComponent implements ControlValueAccessor, Validator, 
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.keyFiltersFormArray = this.fb.array<FormControl<KeyFilterInfo>>([]);
     this.keyFiltersControl = this.fb.control(null);
@@ -101,9 +109,21 @@ export class KeyFilterListComponent implements ControlValueAccessor, Validator, 
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -119,11 +139,23 @@ export class KeyFilterListComponent implements ControlValueAccessor, Validator, 
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.keyFiltersFormArray.valid && this.keyFiltersControl.valid ? null : {
       keyFilterList: {valid: false}
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param keyFilters key filters (Array<KeyFilterInfo>)
+   */
 
   writeValue(keyFilters: Array<KeyFilterInfo>): void {
     if (keyFilters?.length === this.keyFiltersFormArray.length) {
@@ -148,9 +180,20 @@ export class KeyFilterListComponent implements ControlValueAccessor, Validator, 
     this.keyFiltersControl.patchValue(keyFiltersArray, {emitEvent: false});
   }
 
+  /**
+   * DELETE — remove key filter.
+   *
+   * @param index index (number)
+   */
+
   removeKeyFilter(index: number) {
     this.keyFiltersFormArray.removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add key filter.
+   *
+   */
 
   addKeyFilter() {
     this.openKeyFilterDialog(null).subscribe((result) => {
@@ -159,6 +202,12 @@ export class KeyFilterListComponent implements ControlValueAccessor, Validator, 
       }
     });
   }
+
+  /**
+   * edit key filter.
+   *
+   * @param index index (number)
+   */
 
   editKeyFilter(index: number) {
     const keyFilter = this.keyFiltersFormArray.at(index).value;
@@ -170,6 +219,13 @@ export class KeyFilterListComponent implements ControlValueAccessor, Validator, 
       }
     );
   }
+
+  /**
+   * open key filter dialog.
+   *
+   * @param keyFilter key filter (KeyFilterInfo)
+   * @returns Observable<KeyFilterInfo> observable or value
+   */
 
   private openKeyFilterDialog(keyFilter?: KeyFilterInfo): Observable<KeyFilterInfo> {
     const isAdd = !keyFilter;
@@ -199,6 +255,11 @@ export class KeyFilterListComponent implements ControlValueAccessor, Validator, 
       }
     }).afterClosed();
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const keyFilters = this.keyFiltersFormArray.getRawValue();

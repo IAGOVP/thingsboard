@@ -31,14 +31,17 @@ import { Authority } from '@shared/models/authority.enum';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { ActivatedRoute } from '@angular/router';
 
+
+/**
+ * Angular component: audit log table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-audit-log-table`.
+ */
 @Component({
     selector: 'tb-audit-log-table',
     templateUrl: './audit-log-table.component.html',
     styleUrls: ['./audit-log-table.component.scss'],
-    standalone: false
-/**
- * Angular component: audit log table UI.
- */
+standalone: false
 })
 export class AuditLogTableComponent implements OnInit {
 
@@ -112,6 +115,11 @@ export class AuditLogTableComponent implements OnInit {
               private store: Store<AppState>,
               private route: ActivatedRoute) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     let updateOnInit = this.activeValue;

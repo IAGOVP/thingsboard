@@ -42,6 +42,12 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 // @dynamic
+
+/**
+ * Angular component: audit log filter (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-audit-log-filter`.
+ */
 @Component({
     selector: 'tb-audit-log-filter',
     templateUrl: './audit-log-filter.component.html',
@@ -53,10 +59,7 @@ import { TranslateService } from '@ngx-translate/core';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: audit log filter UI.
- */
+standalone: false
 })
 export class AuditLogFilterComponent implements OnInit, ControlValueAccessor {
 
@@ -91,6 +94,11 @@ export class AuditLogFilterComponent implements OnInit, ControlValueAccessor {
               private cd: ChangeDetectorRef,
               private destroyRef: DestroyRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.auditLogFilterForm = this.fb.group({
       actionTypes: [[]]
@@ -104,12 +112,30 @@ export class AuditLogFilterComponent implements OnInit, ControlValueAccessor {
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -120,6 +146,12 @@ export class AuditLogFilterComponent implements OnInit, ControlValueAccessor {
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param auditLogFilter audit log filter (AuditLogFilter)
+   */
 
   writeValue(auditLogFilter?: AuditLogFilter): void {
     this.auditLogFilter = auditLogFilter;
@@ -137,8 +169,18 @@ export class AuditLogFilterComponent implements OnInit, ControlValueAccessor {
     }));
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
   }
+
+  /**
+   * toggle audit log filter panel.
+   *
+   */
 
   toggleAuditLogFilterPanel($event: Event) {
     if ($event) {
@@ -165,17 +207,32 @@ export class AuditLogFilterComponent implements OnInit, ControlValueAccessor {
       this.viewContainerRef));
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.updateAuditLogFilterForm(this.auditLogFilter);
     this.auditLogFilterForm.markAsPristine();
     this.auditLogOverlayRef.dispose();
   }
 
+  /**
+   * update.
+   *
+   */
+
   update() {
     this.auditLogFilterUpdated(this.auditLogFilterForm.value);
     this.auditLogFilterForm.markAsPristine();
     this.auditLogOverlayRef.dispose();
   }
+
+  /**
+   * reset.
+   *
+   */
 
   reset() {
     if (this.initialAuditLogFilter) {
@@ -186,6 +243,12 @@ export class AuditLogFilterComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * update audit log filter form.
+   *
+   * @param auditLogFilter audit log filter (AuditLogFilter)
+   */
+
   private updateAuditLogFilterForm(auditLogFilter?: AuditLogFilter) {
     this.auditLogFilterForm.patchValue({
       actionTypes: auditLogFilter?.actionTypes,
@@ -193,11 +256,22 @@ export class AuditLogFilterComponent implements OnInit, ControlValueAccessor {
     this.updateValidators();
   }
 
+  /**
+   * audit log filter updated.
+   *
+   * @param auditLogFilter audit log filter (AuditLogFilter)
+   */
+
   private auditLogFilterUpdated(auditLogFilter: AuditLogFilter) {
     this.auditLogFilter = auditLogFilter;
     this.updateButtonDisplayValue();
     this.propagateChange(this.auditLogFilter);
   }
+
+  /**
+   * update button display value.
+   *
+   */
 
   private updateButtonDisplayValue() {
     const filterTextParts: string[] = [];

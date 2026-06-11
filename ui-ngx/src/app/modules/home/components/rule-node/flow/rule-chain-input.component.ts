@@ -19,14 +19,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
+/**
+ * Angular component: rule chain input (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flow-node-rule-chain-input-config`.
+ */
 @Component({
     selector: 'tb-flow-node-rule-chain-input-config',
     templateUrl: './rule-chain-input.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: rule chain input UI.
- */
+standalone: false
 })
 export class RuleChainInputComponent extends RuleNodeConfigurationComponent {
 
@@ -38,9 +41,21 @@ export class RuleChainInputComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.ruleChainInputConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.ruleChainInputConfigForm = this.fb.group({

@@ -48,5 +48,8 @@ export const aiModelRoutes: Routes = [
     AiModelsTableConfigResolver
   ],
   imports: [RouterModule.forChild(aiModelRoutes)],
+/**
+ * Angular NgModule bundling ai model routing (home/ai-model pages).
+ */
   exports: [RouterModule],})
 export class AiModelRoutingModule { }

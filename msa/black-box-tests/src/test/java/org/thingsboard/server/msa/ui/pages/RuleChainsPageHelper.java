@@ -25,19 +25,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 /**
- * Rule chains page helper.
+ * Page object helper for rule chains page UI actions (page object element locators and helpers — Selenium page objects).
  */
+
 
 @Slf4j
 public class RuleChainsPageHelper extends RuleChainsPageElements {
     public RuleChainsPageHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Open create rule chain view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void openCreateRuleChainView() {
         plusBtn().click();
         createRuleChainBtn().click();
     }
+    /**
+     * Open import rule chain view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void openImportRuleChainView() {
         plusBtn().click();
@@ -51,31 +64,76 @@ public class RuleChainsPageHelper extends RuleChainsPageElements {
 
     private String ruleChainName;
     private String description;
+    /**
+     * Set rule chain name without root.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setRuleChainNameWithoutRoot() {
         this.ruleChainName = notRootRuleChainsNames().get(getRandomNumberFromRuleChainsCount()).getText();
     }
+    /**
+     * Set rule chain name without root.
+     *
+     * @param number number
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setRuleChainNameWithoutRoot(int number) {
         this.ruleChainName = notRootRuleChainsNames().get(number).getText();
     }
+    /**
+     * Set description.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setDescription() {
         scrollToElement(descriptionEntityView());
         this.description = descriptionEntityView().getAttribute("value");
     }
+    /**
+     * Set rule chain name.
+     *
+     * @param number number
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setRuleChainName(int number) {
         this.ruleChainName = allNames().get(number).getText();
     }
+    /**
+     * Returns rule chain name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getRuleChainName() {
         return this.ruleChainName;
     }
+    /**
+     * Returns description.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getDescription() {
         return description;
     }
+    /**
+     * Deletes rule chain from view.
+     *
+     * @param ruleChainName rule chain name ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String deleteRuleChainFromView(String ruleChainName) {
         String s = "";
@@ -100,25 +158,57 @@ public class RuleChainsPageHelper extends RuleChainsPageElements {
         }
         return s;
     }
+    /**
+     * Assert check box is not displayed.
+     *
+     * @param entityName entity name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void assertCheckBoxIsNotDisplayed(String entityName) {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("(//mat-checkbox)[2]")));
         Assert.assertFalse(driver.findElement(By.xpath(getCheckbox(entityName))).isDisplayed());
     }
+    /**
+     * Deletes btn in root rule chain is not displayed.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean deleteBtnInRootRuleChainIsNotDisplayed() {
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(getDeleteRuleChainFromViewBtn())));
     }
+    /**
+     * Assert rule chains is not present.
+     *
+     * @param ruleChainName rule chain name ({@link String})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean assertRuleChainsIsNotPresent(String ruleChainName) {
         return elementsIsNotPresent(getEntity(ruleChainName));
     }
+    /**
+     * Sort by name down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void sortByNameDown() {
         doubleClick(sortByNameBtn());
     }
 
     ArrayList<String> sort;
+    /**
+     * Set sort.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setSort() {
         ArrayList<String> createdTime = new ArrayList<>();
@@ -126,6 +216,12 @@ public class RuleChainsPageHelper extends RuleChainsPageElements {
         Collections.sort(createdTime);
         sort = createdTime;
     }
+    /**
+     * Returns sort.
+     *
+     * @return {@link ArrayList}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ArrayList<String> getSort() {
         return sort;

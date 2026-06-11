@@ -24,14 +24,17 @@ import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { Authority } from '@shared/models/authority.enum';
 import { of } from 'rxjs';
 
+
+/**
+ * Angular component: version info (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-version-info`.
+ */
 @Component({
     selector: 'tb-version-info',
     templateUrl: './version-info.component.html',
     styleUrls: ['./home-page-widget.scss', './version-info.component.scss'],
-    standalone: false
-/**
- * Angular component: version info UI.
- */
+standalone: false
 })
 export class VersionInfoComponent extends PageComponent implements OnInit {
 
@@ -43,6 +46,11 @@ export class VersionInfoComponent extends PageComponent implements OnInit {
               private adminService: AdminService) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     (this.authUser.authority === Authority.SYS_ADMIN ?

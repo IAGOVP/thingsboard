@@ -32,14 +32,17 @@ import { Authority } from '@shared/models/authority.enum';
 import { AuthUser } from '@shared/models/user.model';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 
+
+/**
+ * Angular component: sms provider (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-sms-provider`.
+ */
 @Component({
     selector: 'tb-sms-provider',
     templateUrl: './sms-provider.component.html',
     styleUrls: ['./sms-provider.component.scss', './settings-card.scss'],
-    standalone: false
-/**
- * Angular component: sms provider UI.
- */
+standalone: false
 })
 export class SmsProviderComponent extends PageComponent implements HasConfirmForm {
 
@@ -84,12 +87,22 @@ export class SmsProviderComponent extends PageComponent implements HasConfirmFor
     }
   }
 
+  /**
+   * build sms provider form.
+   *
+   */
+
   private buildSmsProviderForm() {
     this.smsProvider = this.fb.group({
       configuration: [null, [Validators.required]]
     });
     this.registerDisableOnLoadFormControl(this.smsProvider.get('configuration'));
   }
+
+  /**
+   * send test sms.
+   *
+   */
 
   sendTestSms(): void {
     this.dialog.open<SendTestSmsDialogComponent, SendTestSmsDialogData>(SendTestSmsDialogComponent, {
@@ -101,6 +114,11 @@ export class SmsProviderComponent extends PageComponent implements HasConfirmFor
     });
   }
 
+  /**
+   * POST/PUT entity — save.
+   *
+   */
+
   save(): void {
     this.adminSettings.jsonValue = this.smsProvider.value.configuration;
     this.adminService.saveAdminSettings(this.adminSettings).subscribe(
@@ -111,9 +129,20 @@ export class SmsProviderComponent extends PageComponent implements HasConfirmFor
     );
   }
 
+  /**
+   * confirm form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   confirmForm(): FormGroup {
     return this.smsProvider.dirty ? this.smsProvider : this.notificationSettingsForm;
   }
+
+  /**
+   * build general server settings form.
+   *
+   */
 
   private buildGeneralServerSettingsForm() {
     this.notificationSettingsForm = this.fb.group({
@@ -129,6 +158,11 @@ export class SmsProviderComponent extends PageComponent implements HasConfirmFor
     });
     this.registerDisableOnLoadFormControl(this.notificationSettingsForm.get('deliveryMethodsConfigs'));
   }
+
+  /**
+   * POST/PUT entity — save notification.
+   *
+   */
 
   saveNotification(): void {
     this.notificationSettings = deepTrim({
@@ -149,6 +183,12 @@ export class SmsProviderComponent extends PageComponent implements HasConfirmFor
       this.notificationSettingsForm.reset(this.notificationSettings);
     });
   }
+
+  /**
+   * is sys admin.
+   *
+   * @returns boolean observable or value
+   */
 
   isSysAdmin(): boolean {
     return this.authUser.authority === Authority.SYS_ADMIN;

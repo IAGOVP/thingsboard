@@ -21,11 +21,11 @@ export enum LoadActionTypes {
   FINISH_LOAD = '[Load] Finish'
 }
 
+
 /**
-
- * action load start.
-
+ * Action load start (HTTP interceptors).
  */
+
 
 export class ActionLoadStart implements Action {
   readonly type = LoadActionTypes.START_LOAD;

@@ -58,8 +58,9 @@ import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb clear alarm node rule node.
+ * Unit test for tb clear alarm node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbClearAlarmNodeTest {

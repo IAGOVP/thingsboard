@@ -20,14 +20,17 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 
 type Channel = 'H' | 'S' | 'L';
 
+
+/**
+ * Angular component: hsla input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-hsla-input`.
+ */
 @Component({
   selector: 'tb-hsla-input',
   templateUrl: './hsla-input.component.html',
   styleUrl: './color-input.base.scss',
-  standalone: false
-/**
- * Angular component: hsla input UI.
- */
+standalone: false
 })
 export class HslaInputComponent {
 
@@ -52,6 +55,12 @@ export class HslaInputComponent {
     return this.color ? Math.round(this.color.getHsla().getAlpha() * 100) : 0;
   }
 
+  /**
+   * Event handler for alpha input change.
+   *
+   * @param inputValue input value (number)
+   */
+
   public onAlphaInputChange(inputValue: number): void {
     if (!this.color) return;
     const hsla = this.color.getHsla();
@@ -61,6 +70,13 @@ export class HslaInputComponent {
       this.colorChange.emit(newColor);
     }
   }
+
+  /**
+   * Event handler for input change.
+   *
+   * @param newValue new value (number)
+   * @param channel channel (Channel)
+   */
 
   public onInputChange(newValue: number, channel: Channel): void {
     if (!this.color) return;

@@ -29,14 +29,17 @@ interface NavigationCardsWidgetSettings {
   filter: string[];
 }
 
+
+/**
+ * Angular component: navigation cards widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-navigation-cards-widget`.
+ */
 @Component({
     selector: 'tb-navigation-cards-widget',
     templateUrl: './navigation-cards-widget.component.html',
     styleUrls: ['./navigation-cards-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: navigation cards widget UI.
- */
+standalone: false
 })
 export class NavigationCardsWidgetComponent extends PageComponent implements OnInit {
 
@@ -59,14 +62,29 @@ export class NavigationCardsWidgetComponent extends PageComponent implements OnI
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.navigationCardsWidget = this;
     this.settings = this.ctx.settings;
   }
 
+  /**
+   * resize.
+   *
+   */
+
   resize() {
     this.updateColumnCount();
   }
+
+  /**
+   * update column count.
+   *
+   */
 
   private updateColumnCount() {
     this.cols = 2;
@@ -80,6 +98,12 @@ export class NavigationCardsWidgetComponent extends PageComponent implements OnI
     this.ctx.detectChanges();
   }
 
+  /**
+   * navigate.
+   *
+   * @param path path (string)
+   */
+
   navigate($event: Event, path: string) {
     $event.preventDefault();
     this.ngZone.run(() => {
@@ -87,9 +111,23 @@ export class NavigationCardsWidgetComponent extends PageComponent implements OnI
     });
   }
 
+  /**
+   * section places.
+   *
+   * @param section section (HomeSection)
+   * @returns MenuSection[] observable or value
+   */
+
   sectionPlaces(section: HomeSection): MenuSection[] {
     return section && section.places ? section.places.filter((place) => this.filterPlace(place)) : [];
   }
+
+  /**
+   * filter place.
+   *
+   * @param place place (MenuSection)
+   * @returns boolean observable or value
+   */
 
   private filterPlace(place: MenuSection): boolean {
     if (this.settings.filterType === 'include') {
@@ -99,6 +137,13 @@ export class NavigationCardsWidgetComponent extends PageComponent implements OnI
     }
     return true;
   }
+
+  /**
+   * section colspan.
+   *
+   * @param section section (HomeSection)
+   * @returns number observable or value
+   */
 
   sectionColspan(section: HomeSection): number {
     if (this.ctx.width >= 960) {

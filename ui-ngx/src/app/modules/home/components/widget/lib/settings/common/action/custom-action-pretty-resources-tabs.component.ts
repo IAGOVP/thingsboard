@@ -40,15 +40,18 @@ import { map, tap } from 'rxjs/operators';
 import { getAce } from '@shared/models/ace/ace.models';
 import { beautifyCss, beautifyHtml } from '@shared/models/beautify.models';
 
+
+/**
+ * Angular component: custom action pretty resources tabs (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-custom-action-pretty-resources-tabs`.
+ */
 @Component({
     selector: 'tb-custom-action-pretty-resources-tabs',
     templateUrl: './custom-action-pretty-resources-tabs.component.html',
     styleUrls: ['./custom-action-pretty-resources-tabs.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: custom action pretty resources tabs UI.
- */
+standalone: false
 })
 export class CustomActionPrettyResourcesTabsComponent extends PageComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -86,6 +89,11 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.initAceEditors().subscribe(() => {
       if (this.setValuesPending) {
@@ -94,6 +102,11 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
       }
     });
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     this.aceEditors.forEach(editor => editor.destroy());
@@ -112,9 +125,20 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
     }
   }
 
+  /**
+   * notify action updated.
+   *
+   */
+
   public notifyActionUpdated() {
     this.actionUpdated.emit(this.validate() ? this.action : null);
   }
+
+  /**
+   * validate.
+   *
+   * @returns boolean observable or value
+   */
 
   private validate(): boolean {
     if (this.action.customResources) {
@@ -127,6 +151,11 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
     return true;
   }
 
+  /**
+   * POST/PUT entity — add resource.
+   *
+   */
+
   public addResource() {
     if (!this.action.customResources) {
       this.action.customResources = [];
@@ -135,6 +164,12 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
     this.notifyActionUpdated();
   }
 
+  /**
+   * DELETE — remove resource.
+   *
+   * @param index index (number)
+   */
+
   public removeResource(index: number) {
     if (index > -1) {
       if (this.action.customResources.splice(index, 1).length > 0) {
@@ -142,6 +177,11 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
       }
     }
   }
+
+  /**
+   * beautify css.
+   *
+   */
 
   public beautifyCss(): void {
     beautifyCss(this.action.customCss, {indent_size: 4}).subscribe(
@@ -155,6 +195,11 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
     );
   }
 
+  /**
+   * beautify html.
+   *
+   */
+
   public beautifyHtml(): void {
     beautifyHtml(this.action.customHtml, {indent_size: 4, wrap_line_length: 60}).subscribe(
       (res) => {
@@ -166,6 +211,12 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
       }
     );
   }
+
+  /**
+   * init ace editors.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   private initAceEditors(): Observable<any> {
     this.aceResize$ = new ResizeObserver((entries) => {
@@ -204,6 +255,14 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
     return forkJoin(editorsObservables);
   }
 
+  /**
+   * POST/PUT entity — create ace editor.
+   *
+   * @param editorElementRef editor element ref (ElementRef)
+   * @param mode mode (string)
+   * @returns Observable<Ace.Editor> observable or value
+   */
+
   private createAceEditor(editorElementRef: ElementRef, mode: string): Observable<Ace.Editor> {
     const editorElement = editorElementRef.nativeElement;
     let editorOptions: Partial<Ace.EditorOptions> = {
@@ -228,10 +287,21 @@ export class CustomActionPrettyResourcesTabsComponent extends PageComponent impl
     );
   }
 
+  /**
+   * set ace editor values.
+   *
+   */
+
   private setAceEditorValues() {
     this.htmlEditor.setValue(this.action.customHtml ? this.action.customHtml : '', -1);
     this.cssEditor.setValue(this.action.customCss ? this.action.customCss : '', -1);
   }
+
+  /**
+   * Event handler for ace editor resize.
+   *
+   * @param aceEditor ace editor (Ace.Editor)
+   */
 
   private onAceEditorResize(aceEditor: Ace.Editor) {
     if (this.editorsResizeCafs[aceEditor.id]) {

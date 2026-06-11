@@ -23,6 +23,12 @@ import { ComplexFilterPredicateDialogData } from '@home/components/filter/filter
 import { COMPLEX_FILTER_PREDICATE_DIALOG_COMPONENT_TOKEN } from '@home/components/tokens';
 import { ComponentType } from '@angular/cdk/portal';
 
+
+/**
+ * Angular component: complex filter predicate (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-complex-filter-predicate`.
+ */
 @Component({
     selector: 'tb-complex-filter-predicate',
     templateUrl: './complex-filter-predicate.component.html',
@@ -34,10 +40,7 @@ import { ComponentType } from '@angular/cdk/portal';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: complex filter predicate UI.
- */
+standalone: false
 })
 export class ComplexFilterPredicateComponent implements ControlValueAccessor, OnInit {
 
@@ -61,23 +64,57 @@ export class ComplexFilterPredicateComponent implements ControlValueAccessor, On
               private dialog: MatDialog) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param predicate predicate (ComplexFilterPredicateInfo)
+   */
+
   writeValue(predicate: ComplexFilterPredicateInfo): void {
     this.complexFilterPredicate = predicate;
   }
+
+  /**
+   * open complex filter dialog.
+   *
+   */
 
   public openComplexFilterDialog() {
     this.dialog.open<any, ComplexFilterPredicateDialogData,
@@ -103,6 +140,11 @@ export class ComplexFilterPredicateComponent implements ControlValueAccessor, On
       }
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.propagateChange(this.complexFilterPredicate);

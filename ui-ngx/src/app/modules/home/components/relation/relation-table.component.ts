@@ -51,15 +51,18 @@ import { RelationDialogComponent, RelationDialogData } from '@home/components/re
 import { hidePageSizePixelValue } from '@shared/models/constants';
 import { FormBuilder } from '@angular/forms';
 
+
+/**
+ * Angular component: relation table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-relation-table`.
+ */
 @Component({
     selector: 'tb-relation-table',
     templateUrl: './relation-table.component.html',
     styleUrls: ['./relation-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: relation table UI.
- */
+standalone: false
 })
 export class RelationTableComponent extends PageComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -136,6 +139,11 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
     this.updateColumns();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.widgetResize$ = new ResizeObserver(() => {
       this.zone.run(() => {
@@ -149,6 +157,11 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
     this.widgetResize$.observe(this.elementRef.nativeElement);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.widgetResize$) {
       this.widgetResize$.disconnect();
@@ -156,6 +169,11 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * update columns.
+   *
+   */
 
   updateColumns() {
     if (this.direction === EntitySearchDirection.FROM) {
@@ -165,12 +183,23 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
     }
   }
 
+  /**
+   * direction changed.
+   *
+   * @param direction direction (EntitySearchDirection)
+   */
+
   directionChanged(direction: EntitySearchDirection) {
     this.direction = direction;
     this.updateColumns();
     this.paginator.pageIndex = 0;
     this.updateData(true);
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.textSearch.valueChanges.pipe(
@@ -195,6 +224,12 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
     }
   }
 
+  /**
+   * update data.
+   *
+   * @param reload reload (boolean)
+   */
+
   updateData(reload: boolean = false) {
     this.pageLink.page = this.paginator.pageIndex;
     this.pageLink.pageSize = this.paginator.pageSize;
@@ -202,6 +237,11 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
     this.pageLink.sortOrder.direction = Direction[this.sort.direction.toUpperCase()];
     this.dataSource.loadRelations(this.direction, this.entityIdValue, this.pageLink, reload);
   }
+
+  /**
+   * enter filter mode.
+   *
+   */
 
   enterFilterMode() {
     this.textSearchMode = true;
@@ -211,10 +251,21 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
   }
+
+  /**
+   * reset sort and filter.
+   *
+   * @param update update (boolean)
+   */
 
   resetSortAndFilter(update: boolean = true) {
     this.direction = EntitySearchDirection.FROM;
@@ -230,17 +281,39 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
     }
   }
 
+  /**
+   * reload relations.
+   *
+   */
+
   reloadRelations() {
     this.updateData(true);
   }
+
+  /**
+   * POST/PUT entity — add relation.
+   *
+   */
 
   addRelation($event: Event) {
     this.openRelationDialog($event);
   }
 
+  /**
+   * edit relation.
+   *
+   * @param relation relation (EntityRelationInfo)
+   */
+
   editRelation($event: Event, relation: EntityRelationInfo) {
     this.openRelationDialog($event, relation);
   }
+
+  /**
+   * DELETE — delete relation.
+   *
+   * @param relation relation (EntityRelationInfo)
+   */
 
   deleteRelation($event: Event, relation: EntityRelationInfo) {
     if ($event) {
@@ -276,6 +349,11 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
       }
     });
   }
+
+  /**
+   * DELETE — delete relations.
+   *
+   */
 
   deleteRelations($event: Event) {
     if ($event) {
@@ -318,6 +396,12 @@ export class RelationTableComponent extends PageComponent implements AfterViewIn
       });
     }
   }
+
+  /**
+   * open relation dialog.
+   *
+   * @param relation relation (EntityRelation)
+   */
 
   openRelationDialog($event: Event, relation: EntityRelation = null) {
     if ($event) {

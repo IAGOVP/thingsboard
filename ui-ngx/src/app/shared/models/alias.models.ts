@@ -63,11 +63,11 @@ export const aliasFilterTypeTranslationMap = new Map<AliasFilterType, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for single entity filter.
-
+ * TypeScript interfaces, types, and enums for single entity filter (shared TypeScript models).
  */
+
 
 export interface SingleEntityFilter {
   singleEntity?: EntityId;

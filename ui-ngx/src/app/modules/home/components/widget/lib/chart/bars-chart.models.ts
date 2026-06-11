@@ -25,11 +25,11 @@ import {
 } from '@home/components/widget/lib/chart/chart.models';
 import { Font } from '@shared/models/widget-settings.models';
 
+
 /**
-
- * TypeScript models and enums for bars chart settings.
-
+ * Bars chart settings (ThingsBoard web UI).
  */
+
 
 export interface BarsChartSettings extends LatestChartSettings {
   polar: boolean;

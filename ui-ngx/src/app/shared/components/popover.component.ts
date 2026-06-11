@@ -71,6 +71,10 @@ import {
 
 export type TbPopoverTrigger = 'click' | 'focus' | 'hover' | null;
 
+
+/**
+ * Angular directive: tb popover.
+ */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[tb-popover]',
@@ -79,10 +83,10 @@ export type TbPopoverTrigger = 'click' | 'focus' | 'hover' | null;
     host: {
         '[class.tb-popover-open]': 'visible'
     },
-    standalone: false
 /**
- * Angular directive: tb popover.
+ * Angular directive: tb popover (shared UI components).
  */
+    standalone: false
 })
 export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
 
@@ -128,9 +132,19 @@ export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     this.registerTriggers();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -139,6 +153,11 @@ export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
     this.removeTriggerListeners();
   }
 
+  /**
+   * show.
+   *
+   */
+
   show(): void {
     if (!this.component) {
       this.createComponent();
@@ -146,15 +165,30 @@ export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
     this.component?.show();
   }
 
+  /**
+   * hide.
+   *
+   */
+
   hide(): void {
     this.component?.hide();
   }
+
+  /**
+   * update position.
+   *
+   */
 
   updatePosition(): void {
     if (this.component) {
       this.component.updatePosition();
     }
   }
+
+  /**
+   * POST/PUT entity — create component.
+   *
+   */
 
   private createComponent(): void {
     const componentRef = this.hostView.createComponent(TbPopoverComponent);
@@ -176,6 +210,11 @@ export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
         this.visibleChange.emit(visible);
       });
   }
+
+  /**
+   * register triggers.
+   *
+   */
 
   private registerTriggers(): void {
     // When the method gets invoked, all properties has been synced to the dynamic component.
@@ -228,9 +267,21 @@ export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
     // Else do nothing because user wants to control the visibility programmatically.
   }
 
+  /**
+   * update properties by changes.
+   *
+   * @param changes changes (SimpleChanges)
+   */
+
   private updatePropertiesByChanges(changes: SimpleChanges): void {
     this.updatePropertiesByKeys(Object.keys(changes));
   }
+
+  /**
+   * update properties by keys.
+   *
+   * @param keys keys (string[])
+   */
 
   private updatePropertiesByKeys(keys?: string[]): void {
     const mappingProperties: PropertyMapping = {
@@ -261,9 +312,28 @@ export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
   }
 
 
+  /**
+
+
+   * init properties.
+
+
+   *
+
+
+   */
+
+
   private initProperties(): void {
     this.updatePropertiesByKeys();
   }
+
+  /**
+   * update component value.
+   *
+   * @param key key (string)
+   * @param value value (any)
+   */
 
   private updateComponentValue(key: string, value: any): void {
     if (typeof value !== 'undefined') {
@@ -271,6 +341,14 @@ export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
       this.component[key] = value;
     }
   }
+
+  /**
+   * delay enter leave.
+   *
+   * @param isOrigin is origin (boolean)
+   * @param isEnter is enter (boolean)
+   * @param delay delay (number)
+   */
 
   private delayEnterLeave(isOrigin: boolean, isEnter: boolean, delay: number = -1): void {
     if (this.delayTimer) {
@@ -295,10 +373,20 @@ export class TbPopoverDirective implements OnChanges, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * DELETE — remove trigger listeners.
+   *
+   */
+
   private removeTriggerListeners(): void {
     this.triggerDisposables.forEach(dispose => dispose());
     this.triggerDisposables.length = 0;
   }
+
+  /**
+   * clear toggling timer.
+   *
+   */
 
   private clearTogglingTimer(): void {
     if (this.delayTimer) {

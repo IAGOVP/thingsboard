@@ -34,14 +34,22 @@ import { ItemBufferService, MenuId } from '@core/public-api';
 import { MODULES_MAP } from '@shared/public-api';
 import { IModulesMap } from '@modules/common/modules-map.models';
 /**
- * Route resolver: loads rule chain before activate.
+ * Route resolver: preloads data for rule chain (home/rulechain pages).
  */
+
 
 @Injectable()
 export class RuleChainResolver  {
 
   constructor(private ruleChainService: RuleChainService) {
   }
+
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<RuleChain> observable or value
+   */
 
   resolve(route: ActivatedRouteSnapshot): Observable<RuleChain> {
     const ruleChainId = route.params.ruleChainId;

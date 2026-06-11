@@ -41,6 +41,12 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 
+
+/**
+ * Angular component: escalation form (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-escalation-form`.
+ */
 @Component({
     selector: 'tb-escalation-form',
     templateUrl: './escalation-form.component.html',
@@ -57,10 +63,7 @@ import { MatButton } from '@angular/material/button';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: escalation form UI.
- */
+standalone: false
 })
 export class EscalationFormComponent implements ControlValueAccessor, OnInit, OnDestroy, Validator {
 
@@ -84,6 +87,12 @@ export class EscalationFormComponent implements ControlValueAccessor, OnInit, On
               private dialog: MatDialog) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (this.propagateChangePending) {
@@ -94,8 +103,19 @@ export class EscalationFormComponent implements ControlValueAccessor, OnInit, On
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.escalationFormGroup = this.fb.group(
@@ -108,10 +128,21 @@ export class EscalationFormComponent implements ControlValueAccessor, OnInit, On
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -121,6 +152,12 @@ export class EscalationFormComponent implements ControlValueAccessor, OnInit, On
       this.escalationFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (NonConfirmedNotificationEscalation)
+   */
 
   writeValue(value: NonConfirmedNotificationEscalation): void {
     this.propagateChangePending = false;
@@ -133,6 +170,12 @@ export class EscalationFormComponent implements ControlValueAccessor, OnInit, On
       this.updateModel();
     }
   }
+
+  /**
+   * POST/PUT entity — create target.
+   *
+   * @param button button (MatButton)
+   */
 
   createTarget($event: Event, button: MatButton) {
     if ($event) {
@@ -157,6 +200,12 @@ export class EscalationFormComponent implements ControlValueAccessor, OnInit, On
       });
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (FormControl)
+   */
+
   public validate(c: FormControl) {
     return (this.escalationFormGroup.valid) ? null : {
       escalation: {
@@ -164,6 +213,11 @@ export class EscalationFormComponent implements ControlValueAccessor, OnInit, On
       },
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.escalationFormGroup.value;

@@ -16,11 +16,11 @@
 
 import { Authority } from '@shared/models/authority.enum';
 
+
 /**
-
- * TypeScript models and enums for login request.
-
+ * TypeScript interfaces, types, and enums for login request (shared TypeScript models).
  */
+
 
 export interface LoginRequest {
   username: string;

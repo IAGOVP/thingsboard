@@ -29,14 +29,17 @@ import {
   MultipleInputWidgetDataKeyValueType
 } from '@home/components/widget/lib/multiple-input-widget.component';
 
+
+/**
+ * Angular component: update multiple attributes key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-multiple-attributes-key-settings`.
+ */
 @Component({
     selector: 'tb-update-multiple-attributes-key-settings',
     templateUrl: './update-multiple-attributes-key-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update multiple attributes key settings UI.
- */
+standalone: false
 })
 export class UpdateMultipleAttributesKeySettingsComponent extends WidgetSettingsComponent {
 
@@ -47,9 +50,21 @@ export class UpdateMultipleAttributesKeySettingsComponent extends WidgetSettings
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateMultipleAttributesKeySettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -91,6 +106,12 @@ export class UpdateMultipleAttributesKeySettingsComponent extends WidgetSettings
       setValueFunctionBody: ''
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateMultipleAttributesKeySettingsForm = this.fb.group({
@@ -157,9 +178,21 @@ export class UpdateMultipleAttributesKeySettingsComponent extends WidgetSettings
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['dataKeyHidden', 'dataKeyValueType', 'required', 'isEditable', 'useCustomIcon', 'useGetValueFunction', 'useSetValueFunction'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const dataKeyHidden: boolean = this.updateMultipleAttributesKeySettingsForm.get('dataKeyHidden').value;
@@ -233,9 +266,23 @@ export class UpdateMultipleAttributesKeySettingsComponent extends WidgetSettings
     this.updateMultipleAttributesKeySettingsForm.updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * do update settings.
+   *
+   * @param settingsForm settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
+
   protected doUpdateSettings(settingsForm: UntypedFormGroup, settings: WidgetSettings) {
     settingsForm.setControl('selectOptions', this.prepareSelectOptionsFormArray(settings.selectOptions), {emitEvent: false});
   }
+
+  /**
+   * prepare select options form array.
+   *
+   * @param selectOptions select options (DataKeySelectOption[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareSelectOptionsFormArray(selectOptions: DataKeySelectOption[] | undefined): UntypedFormArray {
     const selectOptionsControls: Array<AbstractControl> = [];
@@ -255,6 +302,12 @@ export class UpdateMultipleAttributesKeySettingsComponent extends WidgetSettings
     }]);
   }
 
+  /**
+   * select options form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   selectOptionsFormArray(): UntypedFormArray {
     return this.updateMultipleAttributesKeySettingsForm.get('selectOptions') as UntypedFormArray;
   }
@@ -263,13 +316,32 @@ export class UpdateMultipleAttributesKeySettingsComponent extends WidgetSettings
     return this.selectOptionsFormArray().controls as (AbstractControl & { new?: boolean })[];
   }
 
+  /**
+   * track by select option.
+   *
+   * @param index index (number)
+   * @param selectOptionControl select option control (AbstractControl)
+   * @returns any observable or value
+   */
+
   public trackBySelectOption(index: number, selectOptionControl: AbstractControl): any {
     return selectOptionControl;
   }
 
+  /**
+   * DELETE — remove select option.
+   *
+   * @param index index (number)
+   */
+
   public removeSelectOption(index: number) {
     (this.updateMultipleAttributesKeySettingsForm.get('selectOptions') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add select option.
+   *
+   */
 
   public addSelectOption() {
     const selectOption: DataKeySelectOption = {
@@ -286,12 +358,24 @@ export class UpdateMultipleAttributesKeySettingsComponent extends WidgetSettings
     }
   }
 
+  /**
+   * select option drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   selectOptionDrop(event: CdkDragDrop<any[]>) {
     const selectOptionsArray = this.updateMultipleAttributesKeySettingsForm.get('selectOptions') as UntypedFormArray;
     const selectOption = selectOptionsArray.at(event.previousIndex);
     selectOptionsArray.removeAt(event.previousIndex);
     selectOptionsArray.insert(event.currentIndex, selectOption);
   }
+
+  /**
+   * display error messages section.
+   *
+   * @returns boolean observable or value
+   */
 
   displayErrorMessagesSection(): boolean {
     const dataKeyHidden: boolean = this.updateMultipleAttributesKeySettingsForm.get('dataKeyHidden').value;

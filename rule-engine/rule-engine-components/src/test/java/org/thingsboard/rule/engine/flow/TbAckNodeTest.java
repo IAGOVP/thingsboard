@@ -36,8 +36,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.BDDMockito.then;
 /**
- * Unit test for tb ack node rule node.
+ * Unit test for tb ack node (rule chain flow control (input, output, ack, checkpoint)).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbAckNodeTest {
@@ -48,6 +49,11 @@ public class TbAckNodeTest {
 
     @Mock
     private TbContext ctxMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -55,16 +61,31 @@ public class TbAckNodeTest {
         config = new EmptyNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
         assertThat(config.getVersion()).isEqualTo(0);
     }
+    /**
+     * Given default config when init then ok.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenInit_thenOk() {
         assertThatNoException().isThrownBy(() -> node.init(ctxMock, nodeConfiguration));
     }
+    /**
+     * Given msg when on msg then ack and tell success.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenMsg_whenOnMsg_thenAckAndTellSuccess() throws TbNodeException {

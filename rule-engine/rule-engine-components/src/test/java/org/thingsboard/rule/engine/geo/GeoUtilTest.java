@@ -22,8 +22,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.thingsboard.common.util.geo.Coordinates;
 import org.thingsboard.common.util.geo.GeoUtil;
 /**
- * Unit test for geo util rule node.
+ * Unit test for geo util (GPS geofencing filter and action nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class GeoUtilTest {
@@ -48,6 +49,11 @@ public class GeoUtilTest {
     public static final Coordinates POINT_OUTSIDE_SELF_INTERSECTING_1 = new Coordinates(49.66777277299077, 33.26651158529272);
     public static final Coordinates POINT_OUTSIDE_SELF_INTERSECTING_2 = new Coordinates(47.10052840114779, 32.16800731166027);
     public static final Coordinates POINT_OUTSIDE_SELF_INTERSECTING_3 = new Coordinates(78.76578380252519, 15.646485040786361);
+    /**
+     * Test points in simple polygons.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Test
@@ -76,6 +82,11 @@ public class GeoUtilTest {
                                 + POINT_INSIDE_SIMPLE_RECT_CENTER
                 );
     }
+    /**
+     * Test points in complex polygons.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testPointsInComplexPolygons() {
@@ -111,6 +122,11 @@ public class GeoUtilTest {
                                 + POINT_OUTSIDE_SAND_CLOCK_2
                 );
     }
+    /**
+     * Test points in self intersecting polygons.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testPointsInSelfIntersectingPolygons() {

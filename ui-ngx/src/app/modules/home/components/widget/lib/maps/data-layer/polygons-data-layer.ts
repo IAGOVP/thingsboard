@@ -32,11 +32,11 @@ import {
 } from '@home/components/widget/lib/maps/data-layer/latest-map-data-layer';
 import { map } from 'rxjs/operators';
 
+
 /**
-
- * tb polygon data layer item.
-
+ * Tb polygon data layer item (ThingsBoard web UI).
  */
+
 
 class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSettings, TbPolygonsDataLayer> {
 
@@ -52,13 +52,28 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     super(data, dsData, settings, dataLayer);
   }
 
+  /**
+   * is editing.
+   *
+   */
+
   public isEditing() {
     return this.editing;
   }
 
+  /**
+   * update bubbling mouse events.
+   *
+   */
+
   public updateBubblingMouseEvents() {
     this.polygon.options.bubblingMouseEvents = !this.dataLayer.isEditMode();
   }
+
+  /**
+   * DELETE — remove.
+   *
+   */
 
   public remove() {
     super.remove();
@@ -66,6 +81,14 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
       this.dataLayer.getMap().unUseShapePattern(this.polygonStyleInfo.patternId);
     }
   }
+
+  /**
+   * POST/PUT entity — create.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   * @returns L.Layer observable or value
+   */
 
   protected create(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): L.Layer {
     const polyData = this.dataLayer.extractPolygonCoordinates(data);
@@ -90,14 +113,32 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     return this.polygonContainer;
   }
 
+  /**
+   * unbind label.
+   *
+   */
+
   protected unbindLabel() {
     this.polygonContainer.unbindTooltip();
   }
+
+  /**
+   * bind label.
+   *
+   * @param content content (L.Content)
+   */
 
   protected bindLabel(content: L.Content): void {
     this.polygonContainer.bindTooltip(content, {className: 'tb-polygon-label', permanent: true, direction: 'center'})
     .openTooltip(this.polygonContainer.getBounds().getCenter());
   }
+
+  /**
+   * do update.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
 
   protected doUpdate(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): void {
     this.dataLayer.getShapeStyle(data, dsData, this.polygonStyleInfo?.patternId).subscribe((styleInfo) => {
@@ -111,10 +152,23 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     });
   }
 
+  /**
+   * do invalidate coordinates.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
+
   protected doInvalidateCoordinates(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): void {
     this.updatePolygonShape(data);
     this.updateLabel(data, dsData);
   }
+
+  /**
+   * POST/PUT entity — add item class.
+   *
+   * @param clazz clazz (string)
+   */
 
   protected addItemClass(clazz: string): void {
     if ((this.polygon as any)._path) {
@@ -122,11 +176,22 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     }
   }
 
+  /**
+   * DELETE — remove item class.
+   *
+   * @param clazz clazz (string)
+   */
+
   protected removeItemClass(clazz: string): void {
     if ((this.polygon as any)._path) {
       L.DomUtil.removeClass((this.polygon as any)._path, clazz);
     }
   }
+
+  /**
+   * enable drag.
+   *
+   */
 
   protected enableDrag(): void {
     this.polygon.pm.setOptions({
@@ -147,11 +212,22 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     });
   }
 
+  /**
+   * disable drag.
+   *
+   */
+
   protected disableDrag(): void {
     this.polygon.pm.disableLayerDrag();
     this.polygon.off('pm:dragstart');
     this.polygon.off('pm:dragend');
   }
+
+  /**
+   * Event handler for selected.
+   *
+   * @returns L.TB.ToolbarButtonOptions[] observable or value
+   */
 
   protected onSelected(): L.TB.ToolbarButtonOptions[] {
     const buttons:  L.TB.ToolbarButtonOptions[] = [];
@@ -194,6 +270,11 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     return buttons;
   }
 
+  /**
+   * Event handler for deselected.
+   *
+   */
+
   protected onDeselected(): void {
     if (this.dataLayer.isEditEnabled()) {
      this.disablePolygonEditMode();
@@ -201,6 +282,12 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
      this.disablePolygonRotateMode();
     }
   }
+
+  /**
+   * can deselect.
+   *
+   * @returns boolean observable or value
+   */
 
   protected canDeselect(cancel = false): boolean {
     const map = this.dataLayer.getMap().getMap();
@@ -220,13 +307,30 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     return true;
   }
 
+  /**
+   * DELETE — remove data item title.
+   *
+   * @returns string observable or value
+   */
+
   protected removeDataItemTitle(): string {
     return this.dataLayer.getCtx().translate.instant('widgets.maps.data-layer.polygon.remove-polygon-for', {entityName: this.data.entityName});
   }
 
+  /**
+   * DELETE — remove data item.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   protected removeDataItem(): Observable<any> {
     return this.dataLayer.savePolygonCoordinates(this.data, null);
   }
+
+  /**
+   * enable polygon edit mode.
+   *
+   */
 
   private enablePolygonEditMode() {
     this.polygon.on('pm:markerdragstart', () => this.editing = true);
@@ -239,6 +343,11 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     map.getEditToolbar().getButton('remove')?.setDisabled(false);
   }
 
+  /**
+   * disable polygon edit mode.
+   *
+   */
+
   private disablePolygonEditMode() {
     this.polygon.pm.disable();
     this.polygon.off('pm:markerdragstart');
@@ -247,6 +356,12 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     const map = this.dataLayer.getMap();
     map.getEditToolbar().getButton('remove')?.setDisabled(true);
   }
+
+  /**
+   * enable polygon cut mode.
+   *
+   * @param cutButton cut button (L.TB.ToolbarButton)
+   */
 
   private enablePolygonCutMode(cutButton?: L.TB.ToolbarButton) {
     this.polygonContainer.closePopup();
@@ -303,6 +418,12 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     });
   }
 
+  /**
+   * disable polygon cut mode.
+   *
+   * @param cutButton cut button (L.TB.ToolbarButton)
+   */
+
   private disablePolygonCutMode(cutButton?: L.TB.ToolbarButton) {
     this.editing = false;
     this.polygon.options.bubblingMouseEvents = !this.dataLayer.isEditMode();
@@ -313,6 +434,12 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     map.pm.disableGlobalCutMode();
     cutButton?.setActive(false);
   }
+
+  /**
+   * enable polygon rotate mode.
+   *
+   * @param rotateButton rotate button (L.TB.ToolbarButton)
+   */
 
   private enablePolygonRotateMode(rotateButton?: L.TB.ToolbarButton) {
     this.polygonContainer.closePopup();
@@ -328,6 +455,12 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     });
   }
 
+  /**
+   * disable polygon rotate mode.
+   *
+   * @param rotateButton rotate button (L.TB.ToolbarButton)
+   */
+
   private disablePolygonRotateMode(rotateButton?: L.TB.ToolbarButton) {
     this.editing = false;
     this.polygon.pm.disableRotate();
@@ -335,6 +468,11 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     this.polygon.off('pm:rotatedisable');
     rotateButton?.setActive(false);
   }
+
+  /**
+   * POST/PUT entity — save polygon coordinates.
+   *
+   */
 
   private savePolygonCoordinates() {
     let coordinates: TbPolygonCoordinates = this.polygon.getLatLngs();
@@ -350,6 +488,12 @@ class TbPolygonDataLayerItem extends TbLatestDataLayerItem<PolygonsDataLayerSett
     }
     this.dataLayer.savePolygonCoordinates(this.data, coordinates).subscribe();
   }
+
+  /**
+   * update polygon shape.
+   *
+   * @param data dialog or route input data
+   */
 
   private updatePolygonShape(data: FormattedData<TbMapDatasource>) {
     if (this.editing) {

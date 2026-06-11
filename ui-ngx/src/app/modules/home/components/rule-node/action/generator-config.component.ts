@@ -27,14 +27,17 @@ import type { JsFuncComponent } from '@app/shared/components/js-func.component';
 import { EntityType } from '@app/shared/models/entity-type.models';
 import { DebugRuleNodeEventBody } from '@shared/models/event.models';
 
+
+/**
+ * Angular component: generator config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-generator-config`.
+ */
 @Component({
     selector: 'tb-action-node-generator-config',
     templateUrl: './generator-config.component.html',
     styleUrls: ['generator-config.component.scss'],
-    standalone: false
-/**
- * Angular component: generator config UI.
- */
+standalone: false
 })
 export class GeneratorConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -69,9 +72,21 @@ export class GeneratorConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.generatorConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.generatorConfigForm = this.fb.group({
@@ -84,9 +99,21 @@ export class GeneratorConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['scriptLang'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     let scriptLang: ScriptLanguage = this.generatorConfigForm.get('scriptLang').value;
@@ -100,6 +127,13 @@ export class GeneratorConfigComponent extends RuleNodeConfigurationComponent {
     this.generatorConfigForm.get('tbelScript').setValidators(scriptLang === ScriptLanguage.TBEL ? [Validators.required] : []);
     this.generatorConfigForm.get('tbelScript').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
@@ -115,6 +149,13 @@ export class GeneratorConfigComponent extends RuleNodeConfigurationComponent {
     };
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (configuration.originator) {
       configuration.originatorId = configuration.originator.id;
@@ -126,6 +167,12 @@ export class GeneratorConfigComponent extends RuleNodeConfigurationComponent {
     delete configuration.originator;
     return configuration;
   }
+
+  /**
+   * test script.
+   *
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   */
 
   testScript(debugEventBody?: DebugRuleNodeEventBody) {
     const scriptLang: ScriptLanguage = this.generatorConfigForm.get('scriptLang').value;
@@ -149,6 +196,11 @@ export class GeneratorConfigComponent extends RuleNodeConfigurationComponent {
       }
     });
   }
+
+  /**
+   * Event handler for validate.
+   *
+   */
 
   protected onValidate() {
     const scriptLang: ScriptLanguage = this.generatorConfigForm.get('scriptLang').value;

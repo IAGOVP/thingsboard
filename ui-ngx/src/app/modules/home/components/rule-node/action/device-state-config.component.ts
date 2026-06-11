@@ -24,14 +24,17 @@ import {
   RuleNodeConfigurationComponent
 } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: device state config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-device-state-config`.
+ */
 @Component({
     selector: 'tb-action-node-device-state-config',
     templateUrl: './device-state-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device state config UI.
- */
+standalone: false
 })
 export class DeviceStateConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -49,15 +52,34 @@ export class DeviceStateConfigComponent extends RuleNodeConfigurationComponent {
         super();
     }
 
+    /**
+     * config form.
+     *
+     * @returns FormGroup observable or value
+     */
+
     protected configForm(): FormGroup {
         return this.deviceState;
     }
+
+    /**
+     * prepare input config.
+     *
+     * @param configuration configuration (RuleNodeConfiguration)
+     * @returns RuleNodeConfiguration observable or value
+     */
 
     protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
         return {
             event: isDefinedAndNotNull(configuration?.event) ? configuration.event : MessageType.ACTIVITY_EVENT
         };
     }
+
+    /**
+     * Event handler for configuration set.
+     *
+     * @param configuration configuration (RuleNodeConfiguration)
+     */
 
     protected onConfigurationSet(configuration: RuleNodeConfiguration) {
         this.deviceState = this.fb.group({

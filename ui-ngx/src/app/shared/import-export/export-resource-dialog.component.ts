@@ -34,14 +34,17 @@ export interface ExportResourceDialogDialogResult {
   include: boolean;
 }
 
+
+/**
+ * Angular component: export resource dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-export-resource-dialog`.
+ */
 @Component({
     selector: 'tb-export-resource-dialog',
     templateUrl: './export-resource-dialog.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: export resource dialog UI.
- */
+standalone: false
 })
 export class ExportResourceDialogComponent extends DialogComponent<ExportResourceDialogComponent, ExportResourceDialogDialogResult> {
 
@@ -65,9 +68,19 @@ export class ExportResourceDialogComponent extends DialogComponent<ExportResourc
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * export.
+   *
+   */
 
   export(): void {
     this.dialogRef.close({

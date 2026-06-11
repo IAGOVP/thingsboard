@@ -50,11 +50,11 @@ export enum MapType {
   image = 'image'
 }
 
+
 /**
-
- * TypeScript models and enums for map data source settings.
-
+ * TypeScript interfaces, types, and enums for map data source settings (shared TypeScript models).
  */
+
 
 export interface MapDataSourceSettings {
   dsType: DatasourceType;

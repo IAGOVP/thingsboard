@@ -16,11 +16,11 @@
 
 import { HasUUID } from '@shared/models/id/has-uuid';
 
+
 /**
-
- * TypeScript models and enums for audit log id.
-
+ * TypeScript interfaces, types, and enums for audit log id (shared TypeScript models).
  */
+
 
 export class AuditLogId implements HasUUID {
   id: string;

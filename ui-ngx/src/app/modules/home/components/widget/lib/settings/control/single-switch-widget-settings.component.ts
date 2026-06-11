@@ -27,14 +27,17 @@ import {
 } from '@home/components/widget/lib/rpc/single-switch-widget.models';
 import { ValueType } from '@shared/models/constants';
 
+
+/**
+ * Angular component: single switch widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-single-switch-widget-settings`.
+ */
 @Component({
     selector: 'tb-single-switch-widget-settings',
     templateUrl: './single-switch-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: single switch widget settings UI.
- */
+standalone: false
 })
 export class SingleSwitchWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -62,13 +65,31 @@ export class SingleSwitchWidgetSettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.singleSwitchWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return singleSwitchDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.singleSwitchWidgetSettingsForm = this.fb.group({
@@ -113,9 +134,21 @@ export class SingleSwitchWidgetSettingsComponent extends WidgetSettingsComponent
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showLabel', 'showIcon', 'showOnLabel', 'showOffLabel'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param _emitEvent  emit event (boolean)
+   */
 
   protected updateValidators(_emitEvent: boolean): void {
     const showLabel: boolean = this.singleSwitchWidgetSettingsForm.get('showLabel').value;

@@ -38,8 +38,9 @@ import { EntityAction } from '@home/models/entity/entity-component.models';
 import { FileSizePipe } from '@shared/pipe/file-size.pipe';
 import { OtaUpdateTabsComponent } from '@home/pages/ota-update/ota-update-tabs.component';
 /**
- * ota update table config resolve.
+ * Ota update table config resolve (home/ota-update pages).
  */
+
 
 @Injectable()
 export class OtaUpdateTableConfigResolve  {
@@ -131,10 +132,22 @@ export class OtaUpdateTableConfigResolve  {
     this.config.onEntityAction = action => this.onPackageAction(action);
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<OtaPackage, PageLink, OtaPackageInfo> observable or value
+   */
+
   resolve(): EntityTableConfig<OtaPackage, PageLink, OtaPackageInfo> {
     this.config.tableTitle = this.translate.instant('ota-update.packages-repository');
     return this.config;
   }
+
+  /**
+   * open ota package.
+   *
+   * @param otaPackage ota package (OtaPackageInfo)
+   */
 
   private openOtaPackage($event: Event, otaPackage: OtaPackageInfo) {
     if ($event) {
@@ -143,6 +156,12 @@ export class OtaUpdateTableConfigResolve  {
     const url = this.router.createUrlTree(['otaUpdates', otaPackage.id.id]);
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * export package.
+   *
+   * @param otaPackageInfo ota package info (OtaPackageInfo)
+   */
 
   exportPackage($event: Event, otaPackageInfo: OtaPackageInfo) {
     if ($event) {
@@ -155,6 +174,13 @@ export class OtaUpdateTableConfigResolve  {
     }
   }
 
+  /**
+   * checksum text.
+   *
+   * @param entity entity (OtaPackageInfo)
+   * @returns string observable or value
+   */
+
   checksumText(entity: OtaPackageInfo): string {
     let text = `${ChecksumAlgorithmTranslationMap.get(entity.checksumAlgorithm)}: ${entity.checksum}`;
     if (text.length > 20) {
@@ -162,6 +188,13 @@ export class OtaUpdateTableConfigResolve  {
     }
     return text;
   }
+
+  /**
+   * Event handler for package action.
+   *
+   * @param action action (EntityAction<OtaPackageInfo>)
+   * @returns boolean observable or value
+   */
 
   onPackageAction(action: EntityAction<OtaPackageInfo>): boolean {
     switch (action.action) {

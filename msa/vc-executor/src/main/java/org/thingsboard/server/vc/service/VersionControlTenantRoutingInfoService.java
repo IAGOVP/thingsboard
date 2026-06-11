@@ -21,12 +21,23 @@ import org.thingsboard.server.queue.discovery.TenantRoutingInfo;
 import org.thingsboard.server.queue.discovery.TenantRoutingInfoService;
 
 /**
- * Stub {@link TenantRoutingInfoService} for VC: no rule-engine queue routing required.
+ * Stub {@link org.thingsboard.server.queue.discovery.TenantRoutingInfoService} for VC executor.
+ *
+ * <p>Returns tenant id without rule-engine queue routing.
  */
+
 @Service
 public class VersionControlTenantRoutingInfoService implements TenantRoutingInfoService {
 
-    /** Returns tenant id with no queue name (VC does not publish to rule engine). */
+    
+    /**
+     * Returns tenant routing info without queue name for VC executor.
+     *
+     * @param tenantId target tenant UUID in the test environment
+     * @return {@link TenantRoutingInfo}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public TenantRoutingInfo getRoutingInfo(TenantId tenantId) {
         return new TenantRoutingInfo(tenantId, null, false);

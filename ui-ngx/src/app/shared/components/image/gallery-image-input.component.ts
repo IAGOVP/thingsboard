@@ -44,6 +44,12 @@ export enum ImageLinkType {
   resource = 'resource'
 }
 
+
+/**
+ * Angular component: gallery image input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-gallery-image-input`.
+ */
 @Component({
     selector: 'tb-gallery-image-input',
     templateUrl: './gallery-image-input.component.html',
@@ -55,10 +61,7 @@ export enum ImageLinkType {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: gallery image input UI.
- */
+standalone: false
 })
 export class GalleryImageInputComponent extends PageComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
@@ -94,6 +97,11 @@ export class GalleryImageInputComponent extends PageComponent implements OnInit,
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.externalLinkControl.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
@@ -104,15 +112,38 @@ export class GalleryImageInputComponent extends PageComponent implements OnInit,
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -123,6 +154,12 @@ export class GalleryImageInputComponent extends PageComponent implements OnInit,
       this.externalLinkControl.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
 
   writeValue(value: string): void {
     value = removeTbImagePrefix(value);
@@ -161,6 +198,11 @@ export class GalleryImageInputComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * detect link type.
+   *
+   */
+
   private detectLinkType() {
     if (this.imageUrl) {
       if (isImageResourceUrl(this.imageUrl)) {
@@ -175,6 +217,12 @@ export class GalleryImageInputComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * update model.
+   *
+   * @param value value (string)
+   */
+
   private updateModel(value: string, forcedToUpdate = false): void {
     this.cd.markForCheck();
     if (this.imageUrl !== value || forcedToUpdate) {
@@ -183,16 +231,31 @@ export class GalleryImageInputComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   private reset() {
     this.linkType = ImageLinkType.none;
     this.imageResource = null;
     this.externalLinkControl.setValue(null, {emitEvent: false});
   }
 
+  /**
+   * clear image.
+   *
+   */
+
   clearImage() {
     this.reset();
     this.updateModel(null);
   }
+
+  /**
+   * set link.
+   *
+   */
 
   setLink($event: Event) {
     if ($event) {
@@ -200,6 +263,11 @@ export class GalleryImageInputComponent extends PageComponent implements OnInit,
     }
     this.linkType = ImageLinkType.external;
   }
+
+  /**
+   * open gallery.
+   *
+   */
 
   openGallery($event: Event): void {
     if ($event) {

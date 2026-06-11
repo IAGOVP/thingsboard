@@ -35,6 +35,12 @@ import {
 import { WidgetService } from '@core/http/widget.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: markers settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-markers-settings`.
+ */
 @Component({
     selector: 'tb-markers-settings',
     templateUrl: './markers-settings.component.html',
@@ -51,10 +57,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: markers settings UI.
- */
+standalone: false
 })
 export class MarkersSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator, OnChanges {
 
@@ -85,6 +88,11 @@ export class MarkersSettingsComponent extends PageComponent implements OnInit, C
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.markersSettingsFormGroup = this.fb.group({
@@ -162,12 +170,30 @@ export class MarkersSettingsComponent extends PageComponent implements OnInit, C
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -178,6 +204,12 @@ export class MarkersSettingsComponent extends PageComponent implements OnInit, C
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MarkersSettings)
+   */
+
   writeValue(value: MarkersSettings): void {
     this.modelValue = value;
     this.markersSettingsFormGroup.patchValue(
@@ -185,6 +217,12 @@ export class MarkersSettingsComponent extends PageComponent implements OnInit, C
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.markersSettingsFormGroup.valid ? null : {
@@ -194,11 +232,22 @@ export class MarkersSettingsComponent extends PageComponent implements OnInit, C
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: MarkersSettings = this.markersSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const showLabel: boolean = this.markersSettingsFormGroup.get('showLabel').value;

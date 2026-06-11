@@ -24,8 +24,11 @@ import org.thingsboard.server.common.data.relation.EntitySearchDirection;
  * Created by ashvayka on 19.01.18.
  */
 /**
- * JSON configuration for TbCheckRelation rule node.
+ * JSON configuration POJO for {@link TbCheckRelation} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 @Data
 public class TbCheckRelationNodeConfiguration implements NodeConfiguration<TbCheckRelationNodeConfiguration> {
 
@@ -34,6 +37,12 @@ public class TbCheckRelationNodeConfiguration implements NodeConfiguration<TbChe
     private String entityType;
     private String relationType;
     private boolean checkForSingleEntity;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbCheckRelationNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbCheckRelationNodeConfiguration defaultConfiguration() {

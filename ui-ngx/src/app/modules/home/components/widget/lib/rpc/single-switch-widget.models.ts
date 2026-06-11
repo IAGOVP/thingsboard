@@ -49,11 +49,11 @@ export const singleSwitchLayoutImages = new Map<SingleSwitchLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for single switch widget settings.
-
+ * Single switch widget settings (ThingsBoard web UI).
  */
+
 
 export interface SingleSwitchWidgetSettings {
   initialState: GetValueSettings<boolean>;

@@ -25,6 +25,9 @@ import { AssetProfileRoutingModule } from './asset-profile-routing.module';
 /**
  * Angular NgModule: asset profile feature area.
  */
+/**
+ * Angular NgModule bundling asset profile (home/asset-profile pages).
+ */
 @NgModule({
   declarations: [
     AssetProfileTabsComponent
@@ -34,5 +37,5 @@ import { AssetProfileRoutingModule } from './asset-profile-routing.module';
     SharedModule,
     HomeComponentsModule,
     AssetProfileRoutingModule,
-  ]})
+]})
 export class AssetProfileModule { }

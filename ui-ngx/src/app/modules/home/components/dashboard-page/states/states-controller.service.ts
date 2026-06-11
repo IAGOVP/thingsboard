@@ -22,8 +22,11 @@ export interface StateControllerData {
   component: Type<IStateControllerComponent>;
 }
 /**
- * Angular HTTP service: states controller REST wrappers (`@core/http`).
+ * Angular injectable service: states controller (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 @Injectable()
 export class StatesControllerService {
@@ -35,29 +38,67 @@ export class StatesControllerService {
   constructor() {
   }
 
+  /**
+   * register states controller.
+   *
+   * @param stateControllerId state controller id (string)
+   * @param stateControllerComponent state controller component (Type<IStateControllerComponent>)
+   */
+
   public registerStatesController(stateControllerId: string, stateControllerComponent: Type<IStateControllerComponent>): void {
     this.statesControllers[stateControllerId] = {
       component: stateControllerComponent
     };
   }
 
+  /**
+   * get state controllers.
+   *
+   */
+
   public getStateControllers(): {[stateControllerId: string]: StateControllerData} {
     return this.statesControllers;
   }
+
+  /**
+   * get state controller.
+   *
+   * @param stateControllerId state controller id (string)
+   * @returns StateControllerData observable or value
+   */
 
   public getStateController(stateControllerId: string): StateControllerData {
     return this.statesControllers[stateControllerId];
   }
 
+  /**
+   * preserve state controller state.
+   *
+   * @param stateControllerInstanceId state controller instance id (string)
+   * @param state state (any)
+   */
+
   public preserveStateControllerState(stateControllerInstanceId: string, state: any) {
     this.statesControllerStates[stateControllerInstanceId] = deepClone(state);
   }
+
+  /**
+   * withdraw state controller state.
+   *
+   * @param stateControllerInstanceId state controller instance id (string)
+   * @returns any observable or value
+   */
 
   public withdrawStateControllerState(stateControllerInstanceId: string): any {
     const state = this.statesControllerStates[stateControllerInstanceId];
     delete this.statesControllerStates[stateControllerInstanceId];
     return state;
   }
+
+  /**
+   * cleanup preserved states.
+   *
+   */
 
   public cleanupPreservedStates() {
     this.statesControllerStates = {};

@@ -19,11 +19,11 @@ import { WidgetConfigCallbacks } from '@home/components/widget/config/widget-con
 import { DataKey, Widget, widgetType } from '@shared/models/widget.models';
 import { Observable } from 'rxjs';
 
+
 /**
-
- * TypeScript models and enums for map settings context.
-
+ * Map settings context (ThingsBoard web UI).
  */
+
 
 export interface MapSettingsContext {
   functionsOnly: boolean;

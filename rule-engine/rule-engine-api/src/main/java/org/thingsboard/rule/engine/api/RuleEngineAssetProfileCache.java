@@ -28,15 +28,48 @@ import java.util.function.Consumer;
  * Created by ashvayka on 02.04.18.
  */
 /**
- * Rule engine rule engine asset profile cache API.
+ * rule engine asset profile cache contract (rule engine public API contracts and services).
  */
+
 public interface RuleEngineAssetProfileCache {
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant UUID
+     * @param assetProfileId asset profile id ({@link AssetProfileId})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfile get(TenantId tenantId, AssetProfileId assetProfileId);
+    /**
+     * Returns the requested data.
+     *
+     * @param tenantId tenant UUID
+     * @param assetId asset id ({@link AssetId})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     AssetProfile get(TenantId tenantId, AssetId assetId);
+    /**
+     * Add listener.
+     *
+     * @param tenantId tenant UUID
+     * @param listenerId listener id ({@link EntityId})
+     * @param profileListener profile listener ({@link Consumer})
+     * @param assetlistener assetlistener ({@link BiConsumer})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void addListener(TenantId tenantId, EntityId listenerId, Consumer<AssetProfile> profileListener, BiConsumer<AssetId, AssetProfile> assetlistener);
+    /**
+     * Removes listener.
+     *
+     * @param tenantId tenant UUID
+     * @param listenerId listener id ({@link EntityId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void removeListener(TenantId tenantId, EntityId listenerId);
 

@@ -35,15 +35,18 @@ import {
 } from '@home/pages/scada-symbol/scada-symbol-editor.models';
 import { JsFuncComponent } from '@shared/components/js-func.component';
 
+
+/**
+ * Angular component: scada symbol metadata tag function panel (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-metadata-tag-function-panel`.
+ */
 @Component({
     selector: 'tb-scada-symbol-metadata-tag-function-panel',
     templateUrl: './scada-symbol-metadata-tag-function-panel.component.html',
     styleUrls: ['./scada-symbol-metadata-tag-function-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol metadata tag function panel UI.
- */
+standalone: false
 })
 export class ScadaSymbolMetadataTagFunctionPanelComponent implements OnInit, AfterViewInit {
 
@@ -87,6 +90,11 @@ export class ScadaSymbolMetadataTagFunctionPanelComponent implements OnInit, Aft
               private widgetService: WidgetService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.tagFunctionFormGroup = this.fb.group(
       {
@@ -109,13 +117,28 @@ export class ScadaSymbolMetadataTagFunctionPanelComponent implements OnInit, Aft
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.tagFunctionComponent.focus();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply tag function.
+   *
+   */
 
   applyTagFunction() {
     const tagFunction: string = this.tagFunctionFormGroup.get('tagFunction').value;

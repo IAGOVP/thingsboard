@@ -30,15 +30,27 @@ const defaultPrecisionMap: unitPrecisionMap = {
   PB: 2
 };
 
-@Pipe({
-    name: 'fileSize',
-    standalone: false
+
 /**
  * Angular pipe: file size.
  */
+@Pipe({
+    name: 'fileSize',
+/**
+ * Angular pipe: file size (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class FileSizePipe implements PipeTransform {
   private readonly units: unit[] = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+
+  /**
+   * transform.
+   *
+   * @param bytes bytes (number)
+   * @param precision precision (number | unitPrecisionMap)
+   * @returns string observable or value
+   */
 
   transform(bytes: number = 0, precision: number | unitPrecisionMap = defaultPrecisionMap): string {
     if (isNaN(parseFloat(String(bytes))) || !isFinite(bytes)) {

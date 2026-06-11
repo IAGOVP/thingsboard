@@ -30,15 +30,23 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultDeviceProfile;
 
+
 /**
 
- * Delete several device profiles test.
+ * Black-box test: delete several device profiles (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class DeleteSeveralDeviceProfilesTest extends AbstractDriverBaseTest {
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -46,6 +54,12 @@ public class DeleteSeveralDeviceProfilesTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Can delete several device profiles by top btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete several device profiles")
@@ -66,6 +80,12 @@ public class DeleteSeveralDeviceProfilesTest extends AbstractDriverBaseTest {
         Assert.assertTrue(profilesPage.profileIsNotPresent(name1));
         Assert.assertTrue(profilesPage.profileIsNotPresent(name2));
     }
+    /**
+     * Select all device profiles.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete several device profiles")
@@ -80,6 +100,12 @@ public class DeleteSeveralDeviceProfilesTest extends AbstractDriverBaseTest {
         Assert.assertTrue(profilesPage.warningPopUpTitle().isDisplayed());
         Assert.assertTrue(profilesPage.warningPopUpTitle().getText().contains(String.valueOf(profilesPage.markCheckbox().size())));
     }
+    /**
+     * Removes default device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete several device profiles")
@@ -92,6 +118,12 @@ public class DeleteSeveralDeviceProfilesTest extends AbstractDriverBaseTest {
         Assert.assertFalse(profilesPage.checkBoxIsDisplayed("default"));
         Assert.assertFalse(profilesPage.deleteBtn("default").isEnabled());
     }
+    /**
+     * Deletes several device profiles by top btn without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete several device profiles")

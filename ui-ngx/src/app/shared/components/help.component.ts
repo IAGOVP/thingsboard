@@ -17,17 +17,25 @@
 import { Component, Input } from '@angular/core';
 import { HelpLinks } from '@shared/models/constants';
 
+
+/**
+ * Angular component: help (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `[tb-help]`.
+ */
 @Component({
     selector: '[tb-help]',
     templateUrl: './help.component.html',
-    standalone: false
-/**
- * Angular component: help UI.
- */
+standalone: false
 })
 export class HelpComponent {
 
   @Input('tb-help') helpLinkId: string;
+
+  /**
+   * goto help page.
+   *
+   */
 
   gotoHelpPage(): void {
     let helpUrl = HelpLinks.linksMap[this.helpLinkId];

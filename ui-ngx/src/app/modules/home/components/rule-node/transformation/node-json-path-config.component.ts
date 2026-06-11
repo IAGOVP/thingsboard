@@ -18,17 +18,19 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+
+/**
+ * Angular component: node json path config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-transformation-node-json-path-config`.
+ */
 @Component({
     selector: 'tb-transformation-node-json-path-config',
     templateUrl: './node-json-path-config.component.html',
     styleUrls: [],
-    standalone: false
 
-/**
-
- * Angular component: node json path config UI.
-
- */
+standalone: false
 })
 
 export class NodeJsonPathConfigComponent extends RuleNodeConfigurationComponent {
@@ -39,9 +41,21 @@ export class NodeJsonPathConfigComponent extends RuleNodeConfigurationComponent 
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.jsonPathConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.jsonPathConfigForm = this.fb.group({

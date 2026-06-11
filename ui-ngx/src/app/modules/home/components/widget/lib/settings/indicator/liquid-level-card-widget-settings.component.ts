@@ -55,14 +55,17 @@ import { UtilsService } from '@core/services/utils.service';
 import { EntityService } from '@core/http/entity.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: liquid level card widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-liquid-level-card-widget-settings`.
+ */
 @Component({
     selector: 'tb-liquid-level-card-widget-settings',
     templateUrl: './liquid-level-card-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: liquid level card widget settings UI.
- */
+standalone: false
 })
 export class LiquidLevelCardWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -129,9 +132,21 @@ export class LiquidLevelCardWidgetSettingsComponent extends WidgetSettingsCompon
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected settingsForm(): FormGroup {
     return this.levelCardWidgetSettingsForm;
   }
+
+  /**
+   * Event handler for widget config set.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected onWidgetConfigSet(widgetConfig: WidgetConfigComponentData) {
     this.createSvgShapesMapping();
@@ -144,9 +159,21 @@ export class LiquidLevelCardWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return levelCardDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.levelCardWidgetSettingsForm = this.fb.group({
@@ -200,12 +227,25 @@ export class LiquidLevelCardWidgetSettingsComponent extends WidgetSettingsCompon
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return [
       'showBackgroundOverlay', 'showTooltip', 'showTooltipLevel', 'tankSelectionType', 'datasourceUnits',
       'showTooltipDate', 'layout', 'volumeSource', 'widgetUnitsSource', 'volumeUnitsSource'
     ];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     updatedFormSettingsValidators(this.levelCardWidgetSettingsForm);
@@ -217,6 +257,11 @@ export class LiquidLevelCardWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * POST/PUT entity — create svg shapes mapping.
+   *
+   */
+
   private createSvgShapesMapping(): void {
     loadSvgShapesMapping(this.resourcesService).subscribe(shapeMap => {
       this.shapesImageMap = shapeMap;
@@ -226,6 +271,14 @@ export class LiquidLevelCardWidgetSettingsComponent extends WidgetSettingsCompon
       this.shapesImageCardsSelect?.imageCardsSelectOptions.notifyOnChanges();
     });
   }
+
+  /**
+   * POST/PUT entity — create shape.
+   *
+   * @param svg svg (string)
+   * @param layout layout (LevelCardLayout)
+   * @returns SafeUrl observable or value
+   */
 
   createShape(svg: string, layout: LevelCardLayout): SafeUrl {
     return createShapeLayout(svg, layout, this.sanitizer);
@@ -263,6 +316,13 @@ export class LiquidLevelCardWidgetSettingsComponent extends WidgetSettingsCompon
     return processor.formatted;
   }
 
+  /**
+   * fetch options.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   public fetchOptions(searchText: string): Observable<Array<string>> {
     if (this.keySearchText !== searchText) {
       this.keySearchText = searchText;
@@ -275,6 +335,12 @@ export class LiquidLevelCardWidgetSettingsComponent extends WidgetSettingsCompon
     }
     return of(this.latestKeySearchTextResult);
   }
+
+  /**
+   * get keys.
+   *
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   private getKeys(): Observable<Array<DataKey>> {
     let fetchObservable: Observable<Array<DataKey>>;

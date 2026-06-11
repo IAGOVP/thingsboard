@@ -23,14 +23,17 @@ import { passwordsMatchValidator, passwordStrengthValidator } from '@shared/mode
 import { finalize } from 'rxjs/operators';
 import { PageComponent } from '@shared/components/page.component';
 
+
+/**
+ * Angular component: create password (login pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-create-password`.
+ */
 @Component({
     selector: 'tb-create-password',
     templateUrl: './create-password.component.html',
     styleUrls: ['./password.component.scss'],
-    standalone: false
-/**
- * Angular component: create password UI.
- */
+standalone: false
 })
 export class CreatePasswordComponent extends PageComponent {
 
@@ -51,6 +54,11 @@ export class CreatePasswordComponent extends PageComponent {
     this.buildCreatePasswordForm();
   }
 
+  /**
+   * build create password form.
+   *
+   */
+
   private buildCreatePasswordForm() {
     this.createPassword = this.fb.group({
       newPassword: ['', [Validators.required, passwordStrengthValidator(this.passwordPolicy)]],
@@ -61,6 +69,11 @@ export class CreatePasswordComponent extends PageComponent {
       ]
     });
   }
+
+  /**
+   * Event handler for create password.
+   *
+   */
 
   onCreatePassword() {
     if (this.createPassword.invalid) {

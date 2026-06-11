@@ -15,15 +15,35 @@
  */
 package org.thingsboard.mqtt;
 
+
 /**
 
- * Cancellable pending MQTT operation (subscribe, publish, unsubscribe).
+ * Cancellable pending MQTT operation (subscribe, publish, or unsubscribe).
 
  */
 
+
 public interface PendingOperation {
+    
+    
+    
+    /**
+     * Is cancelled.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
+
 
     boolean isCancelled();
+    /**
+     * Handles max retransmission attempts reached.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void onMaxRetransmissionAttemptsReached();
 

@@ -37,11 +37,11 @@ import {
 } from '@home/components/widget/lib/maps/data-layer/latest-map-data-layer';
 import { map } from 'rxjs/operators';
 
+
 /**
-
- * tb polyline data layer item.
-
+ * Tb polyline data layer item (ThingsBoard web UI).
  */
+
 
 class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSettings, TbPolylineDataLayer> {
 
@@ -57,13 +57,28 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     super(data, dsData, settings, dataLayer);
   }
 
+  /**
+   * is editing.
+   *
+   */
+
   public isEditing() {
     return this.editing;
   }
 
+  /**
+   * update bubbling mouse events.
+   *
+   */
+
   public updateBubblingMouseEvents() {
     this.polyline.options.bubblingMouseEvents = !this.dataLayer.isEditMode();
   }
+
+  /**
+   * DELETE — remove.
+   *
+   */
 
   public remove() {
     super.remove();
@@ -71,6 +86,14 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
       this.dataLayer.getMap().unUseShapePattern(this.polylineStyleInfo.patternId);
     }
   }
+
+  /**
+   * POST/PUT entity — create.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   * @returns L.Layer observable or value
+   */
 
   protected create(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): L.Layer {
     const polyData = this.dataLayer.extractPolylineCoordinates(data);
@@ -95,14 +118,32 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     return this.polylineContainer;
   }
 
+  /**
+   * unbind label.
+   *
+   */
+
   protected unbindLabel() {
     this.polylineContainer.unbindTooltip();
   }
+
+  /**
+   * bind label.
+   *
+   * @param content content (L.Content)
+   */
 
   protected bindLabel(content: L.Content): void {
     this.polylineContainer.bindTooltip(content, {className: 'tb-polyline-label', permanent: true, direction: 'center'})
       .openTooltip(this.polylineContainer.getBounds().getCenter());
   }
+
+  /**
+   * do update.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
 
   protected doUpdate(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): void {
     this.dataLayer.getStrokeStyle(data, dsData, this.polylineStyleInfo?.patternId).subscribe((styleInfo) => {
@@ -117,9 +158,22 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     });
   }
 
+  /**
+   * do invalidate coordinates.
+   *
+   * @param data dialog or route input data
+   * @param _dsData  ds data (FormattedData<TbMapDatasource>[])
+   */
+
   protected doInvalidateCoordinates(data: FormattedData<TbMapDatasource>, _dsData: FormattedData<TbMapDatasource>[]): void {
     this.updatePolylineShape(data);
   }
+
+  /**
+   * POST/PUT entity — add item class.
+   *
+   * @param clazz clazz (string)
+   */
 
   protected addItemClass(clazz: string): void {
     if ((this.polyline as any)._path) {
@@ -127,11 +181,22 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     }
   }
 
+  /**
+   * DELETE — remove item class.
+   *
+   * @param clazz clazz (string)
+   */
+
   protected removeItemClass(clazz: string): void {
     if ((this.polyline as any)._path) {
       L.DomUtil.removeClass((this.polyline as any)._path, clazz);
     }
   }
+
+  /**
+   * enable drag.
+   *
+   */
 
   protected enableDrag(): void {
     this.polyline.pm.setOptions({
@@ -152,11 +217,22 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     });
   }
 
+  /**
+   * disable drag.
+   *
+   */
+
   protected disableDrag(): void {
     this.polyline.pm.disableLayerDrag();
     this.polyline.off('pm:dragstart');
     this.polyline.off('pm:dragend');
   }
+
+  /**
+   * Event handler for selected.
+   *
+   * @returns L.TB.ToolbarButtonOptions[] observable or value
+   */
 
   protected onSelected(): L.TB.ToolbarButtonOptions[] {
     const buttons: L.TB.ToolbarButtonOptions[] = [];
@@ -199,12 +275,23 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     return buttons;
   }
 
+  /**
+   * Event handler for deselected.
+   *
+   */
+
   protected onDeselected(): void {
     if (this.dataLayer.isEditEnabled()) {
       this.disablePolylineEditMode();
       this.disablePolylineRotateMode();
     }
   }
+
+  /**
+   * can deselect.
+   *
+   * @returns boolean observable or value
+   */
 
   protected canDeselect(cancel = false): boolean {
     const map = this.dataLayer.getMap().getMap();
@@ -224,13 +311,30 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     return true;
   }
 
+  /**
+   * DELETE — remove data item title.
+   *
+   * @returns string observable or value
+   */
+
   protected removeDataItemTitle(): string {
     return this.dataLayer.getCtx().translate.instant('widgets.maps.data-layer.polyline.remove-polyline-for', {entityName: this.data.entityName});
   }
 
+  /**
+   * DELETE — remove data item.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   protected removeDataItem(): Observable<any> {
     return this.dataLayer.savePolylineCoordinates(this.data, null);
   }
+
+  /**
+   * enable polyline edit mode.
+   *
+   */
 
   private enablePolylineEditMode() {
     this.polyline.on('pm:markerdragstart', () => this.editing = true);
@@ -243,6 +347,11 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     map.getEditToolbar().getButton('remove')?.setDisabled(false);
   }
 
+  /**
+   * disable polyline edit mode.
+   *
+   */
+
   private disablePolylineEditMode() {
     this.polyline.pm.disable();
     this.polyline.off('pm:markerdragstart');
@@ -251,6 +360,12 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     const map = this.dataLayer.getMap();
     map.getEditToolbar().getButton('remove')?.setDisabled(true);
   }
+
+  /**
+   * enable polyline cut mode.
+   *
+   * @param cutButton cut button (L.TB.ToolbarButton)
+   */
 
   private enablePolylineCutMode(cutButton?: L.TB.ToolbarButton) {
     this.polylineContainer.closePopup();
@@ -323,6 +438,12 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     });
   }
 
+  /**
+   * disable polyline cut mode.
+   *
+   * @param cutButton cut button (L.TB.ToolbarButton)
+   */
+
   private disablePolylineCutMode(cutButton?: L.TB.ToolbarButton) {
     this.editing = false;
     this.polyline.options.bubblingMouseEvents = !this.dataLayer.isEditMode();
@@ -333,6 +454,12 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     map.pm.disableGlobalCutMode();
     cutButton?.setActive(false);
   }
+
+  /**
+   * enable polyline rotate mode.
+   *
+   * @param rotateButton rotate button (L.TB.ToolbarButton)
+   */
 
   private enablePolylineRotateMode(rotateButton?: L.TB.ToolbarButton) {
     this.polylineContainer.closePopup();
@@ -348,6 +475,12 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     });
   }
 
+  /**
+   * disable polyline rotate mode.
+   *
+   * @param rotateButton rotate button (L.TB.ToolbarButton)
+   */
+
   private disablePolylineRotateMode(rotateButton?: L.TB.ToolbarButton) {
     this.editing = false;
     this.polyline.pm.disableRotate();
@@ -355,6 +488,11 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     this.polyline.off('pm:rotatedisable');
     rotateButton?.setActive(false);
   }
+
+  /**
+   * POST/PUT entity — save polyline coordinates.
+   *
+   */
 
   private savePolylineCoordinates() {
     let coordinates: TbPolylineCoordinates = this.polyline.getLatLngs();
@@ -370,6 +508,12 @@ class TbPolylineDataLayerItem extends TbLatestDataLayerItem<PolylinesDataLayerSe
     }
     this.dataLayer.savePolylineCoordinates(this.data, coordinates).subscribe();
   }
+
+  /**
+   * update polyline shape.
+   *
+   * @param data dialog or route input data
+   */
 
   private updatePolylineShape(data: FormattedData<TbMapDatasource>) {
     if (this.editing) {

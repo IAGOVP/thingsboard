@@ -28,6 +28,14 @@ import {
 } from '@shared/models/query/query.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+
+/**
+ * alarm dynamic value.
+ */
+/**
+ * Alarm dynamic value (ThingsBoard web UI).
+ */
 @Component({
     selector: 'tb-alarm-dynamic-value',
     templateUrl: './alarm-dynamic-value.component.html',
@@ -36,13 +44,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => AlarmDynamicValue),
             multi: true
         }],
-    standalone: false
 
-/**
-
- * alarm dynamic value.
-
- */
+standalone: false
 })
 
 export class AlarmDynamicValue implements ControlValueAccessor, OnInit{
@@ -60,6 +63,11 @@ export class AlarmDynamicValue implements ControlValueAccessor, OnInit{
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.dynamicValue = this.fb.group({
@@ -84,18 +92,43 @@ export class AlarmDynamicValue implements ControlValueAccessor, OnInit{
     })
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param dynamicValue dynamic value ({sourceType: string)
+   * @param sourceAttribute source attribute (string})
+   */
 
   writeValue(dynamicValue: {sourceType: string, sourceAttribute: string}): void {
     if(dynamicValue) {
       this.dynamicValue.patchValue(dynamicValue, {emitEvent: false});
     }
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -105,6 +138,11 @@ export class AlarmDynamicValue implements ControlValueAccessor, OnInit{
       this.dynamicValue.enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.propagateChange(this.dynamicValue.value);

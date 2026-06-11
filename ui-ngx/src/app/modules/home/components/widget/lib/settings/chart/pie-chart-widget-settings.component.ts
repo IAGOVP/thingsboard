@@ -27,14 +27,17 @@ import {
   LatestChartWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/latest-chart-widget-settings.component';
 
+
+/**
+ * Angular component: pie chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-pie-chart-widget-settings`.
+ */
 @Component({
     selector: 'tb-pie-chart-widget-settings',
     templateUrl: './latest-chart-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: pie chart widget settings UI.
- */
+standalone: false
 })
 export class PieChartWidgetSettingsComponent extends LatestChartWidgetSettingsComponent<PieChartWidgetSettings> {
 
@@ -46,13 +49,31 @@ export class PieChartWidgetSettingsComponent extends LatestChartWidgetSettingsCo
     super(store, fb);
   }
 
+  /**
+   * default latest chart settings.
+   *
+   */
+
   protected defaultLatestChartSettings() {
     return pieChartWidgetDefaultSettings;
   }
 
+  /**
+   * latest chart config template.
+   *
+   * @returns TemplateRef<any> observable or value
+   */
+
   public latestChartConfigTemplate(): TemplateRef<any> {
     return this.pieChartConfigTemplate;
   }
+
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
 
   protected setupLatestChartControls(latestChartWidgetSettingsForm: UntypedFormGroup, settings: WidgetSettings) {
     latestChartWidgetSettingsForm.addControl('showLabel', this.fb.control(settings.showLabel, []));
@@ -65,9 +86,23 @@ export class PieChartWidgetSettingsComponent extends LatestChartWidgetSettingsCo
     latestChartWidgetSettingsForm.addControl('clockwise', this.fb.control(settings.clockwise, []));
   }
 
+  /**
+   * latest chart validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected latestChartValidatorTriggers(): string[] {
     return ['showLabel'];
   }
+
+  /**
+   * update latest chart validators.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateLatestChartValidators(latestChartWidgetSettingsForm: UntypedFormGroup, emitEvent: boolean, trigger?: string) {
     const showLabel: boolean = latestChartWidgetSettingsForm.get('showLabel').value;

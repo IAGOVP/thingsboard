@@ -36,8 +36,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
 /**
- * template configuration.
+ * Template configuration (home/notification pages).
  */
+
 export abstract class TemplateConfiguration<T, R = any> extends DialogComponent<T, R> implements OnDestroy{
 
   templateNotificationForm: FormGroup;
@@ -85,10 +86,20 @@ export abstract class TemplateConfiguration<T, R = any> extends DialogComponent<
     this.deliveryConfiguration = this.templateNotificationForm.get('configuration.deliveryMethodsTemplates').value;
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * at least one.
+   *
+   */
 
   atLeastOne() {
     return (group: FormGroup): ValidationErrors | null => {
@@ -100,6 +111,12 @@ export abstract class TemplateConfiguration<T, R = any> extends DialogComponent<
       return hasAtLeastOne ? null : {atLeastOne: true};
     };
   }
+
+  /**
+   * get notification template value.
+   *
+   * @returns NotificationTemplate observable or value
+   */
 
   protected getNotificationTemplateValue(): NotificationTemplate {
     const template = deepClone(this.templateNotificationForm.value);

@@ -23,8 +23,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.notification.targets.slack.SlackConversation;
 import org.thingsboard.server.common.data.notification.targets.slack.SlackConversationType;
 /**
- * JSON configuration for TbSlack rule node.
+ * JSON configuration POJO for {@link TbSlack} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbSlackNodeConfiguration implements NodeConfiguration<TbSlackNodeConfiguration> {
@@ -38,6 +41,12 @@ public class TbSlackNodeConfiguration implements NodeConfiguration<TbSlackNodeCo
     @NotNull
     @Valid
     private SlackConversation conversation;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbSlackNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbSlackNodeConfiguration defaultConfiguration() {

@@ -17,11 +17,13 @@ package org.thingsboard.server.msa.ui.utils;
 
 import static org.thingsboard.server.msa.TestProperties.getBaseUrl;
 
+
 /**
 
- * Const.
+ * UI test constants: timeouts, CSS selectors, and label text fragments.
 
  */
+
 
 public class Const {
 

@@ -25,6 +25,9 @@ import { TenantProfileTabsComponent } from './tenant-profile-tabs.component';
 /**
  * Angular NgModule: tenant profile feature area.
  */
+/**
+ * Angular NgModule bundling tenant profile (home/tenant-profile pages).
+ */
 @NgModule({
   declarations: [
     TenantProfileTabsComponent
@@ -34,5 +37,5 @@ import { TenantProfileTabsComponent } from './tenant-profile-tabs.component';
     SharedModule,
     HomeComponentsModule,
     TenantProfileRoutingModule
-  ]})
+]})
 export class TenantProfileModule { }

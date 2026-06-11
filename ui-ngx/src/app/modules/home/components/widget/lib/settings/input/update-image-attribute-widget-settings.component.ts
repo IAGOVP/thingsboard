@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: update image attribute widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-image-attribute-widget-settings`.
+ */
 @Component({
     selector: 'tb-update-image-attribute-widget-settings',
     templateUrl: './update-image-attribute-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update image attribute widget settings UI.
- */
+standalone: false
 })
 export class UpdateImageAttributeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class UpdateImageAttributeWidgetSettingsComponent extends WidgetSettingsC
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateImageAttributeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -54,6 +69,12 @@ export class UpdateImageAttributeWidgetSettingsComponent extends WidgetSettingsC
       displayDiscardButton: true
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateImageAttributeWidgetSettingsForm = this.fb.group({

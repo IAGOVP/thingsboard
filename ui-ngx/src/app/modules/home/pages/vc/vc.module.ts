@@ -23,6 +23,9 @@ import { VcRoutingModule } from '@home/pages/vc/vc-routing.module';
 /**
  * Angular NgModule: vc feature area.
  */
+/**
+ * Angular NgModule bundling vc (home/vc pages).
+ */
 @NgModule({
   declarations: [
   ],
@@ -30,5 +33,5 @@ import { VcRoutingModule } from '@home/pages/vc/vc-routing.module';
     CommonModule,
     SharedModule,
     VcRoutingModule
-  ]})
+]})
 export class VcModule { }

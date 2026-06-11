@@ -35,14 +35,17 @@ import { TbPopoverComponent } from '@shared/components/popover.component';
 import { share } from 'rxjs/operators';
 import { parseHttpErrorMessage } from '@core/utils';
 
+
+/**
+ * Angular component: entity version create (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-version-create`.
+ */
 @Component({
     selector: 'tb-entity-version-create',
     templateUrl: './entity-version-create.component.html',
     styleUrls: ['./version-control.scss'],
-    standalone: false
-/**
- * Angular component: entity version create UI.
- */
+standalone: false
 })
 export class EntityVersionCreateComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -86,6 +89,11 @@ export class EntityVersionCreateComponent extends PageComponent implements OnIni
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.createVersionFormGroup = this.fb.group({
       branch: [this.branch, [Validators.required]],
@@ -98,6 +106,11 @@ export class EntityVersionCreateComponent extends PageComponent implements OnIni
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     if (this.versionCreateResultSubscription) {
@@ -105,11 +118,21 @@ export class EntityVersionCreateComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     if (this.onClose) {
       this.onClose(null, null);
     }
   }
+
+  /**
+   * export.
+   *
+   */
 
   export(): void {
     const before = this.onBeforeCreateVersion ? this.onBeforeCreateVersion() : of(null);

@@ -25,14 +25,17 @@ import {
   aggregatedValueCardKeyPositionTranslations
 } from '@home/components/widget/lib/cards/aggregated-value-card.models';
 
+
+/**
+ * Angular component: aggregated value card key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aggregated-value-card-key-settings`.
+ */
 @Component({
     selector: 'tb-aggregated-value-card-key-settings',
     templateUrl: './aggregated-value-card-key-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: aggregated value card key settings UI.
- */
+standalone: false
 })
 export class AggregatedValueCardKeySettingsComponent extends WidgetSettingsComponent {
 
@@ -48,13 +51,31 @@ export class AggregatedValueCardKeySettingsComponent extends WidgetSettingsCompo
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.aggregatedValueCardKeySettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return aggregatedValueCardDefaultKeySettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.aggregatedValueCardKeySettingsForm = this.fb.group({

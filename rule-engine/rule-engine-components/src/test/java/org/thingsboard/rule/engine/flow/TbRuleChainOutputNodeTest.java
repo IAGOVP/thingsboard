@@ -39,8 +39,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.spy;
 import static org.mockito.BDDMockito.then;
 /**
- * Unit test for tb rule chain output node rule node.
+ * Unit test for tb rule chain output node (rule chain flow control (input, output, ack, checkpoint)).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbRuleChainOutputNodeTest {
@@ -51,6 +52,11 @@ public class TbRuleChainOutputNodeTest {
 
     @Mock
     private TbContext ctxMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -58,16 +64,31 @@ public class TbRuleChainOutputNodeTest {
         config = new EmptyNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
         assertThat(config.getVersion()).isEqualTo(0);
     }
+    /**
+     * Given default config when init then ok.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenInit_thenOk() {
         assertThatNoException().isThrownBy(() -> node.init(ctxMock, nodeConfiguration));
     }
+    /**
+     * Given rule node name when on msg then forward msg to the caller rule chain with relation type matches with rule node name.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenRuleNodeName_whenOnMsg_thenForwardMsgToTheCallerRuleChainWithRelationTypeMatchesWithRuleNodeName() throws TbNodeException {

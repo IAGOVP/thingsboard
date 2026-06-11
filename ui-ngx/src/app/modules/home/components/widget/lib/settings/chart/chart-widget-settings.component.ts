@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-chart-widget-settings`.
+ */
 @Component({
     selector: 'tb-chart-widget-settings',
     templateUrl: './chart-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: chart widget settings UI.
- */
+standalone: false
 })
 export class ChartWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,15 +41,33 @@ export class ChartWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.chartWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
       showTooltip: true
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.chartWidgetSettingsForm = this.fb.group({

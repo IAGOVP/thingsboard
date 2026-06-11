@@ -25,14 +25,17 @@ import { validateEmail } from '@app/core/utils';
 import { PageComponent } from '@shared/components/page.component';
 import { finalize } from 'rxjs/operators';
 
+
+/**
+ * Angular component: login (login pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-login`.
+ */
 @Component({
     selector: 'tb-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
-    standalone: false
-/**
- * Angular component: login UI.
- */
+standalone: false
 })
 export class LoginComponent extends PageComponent implements OnInit {
 
@@ -51,9 +54,19 @@ export class LoginComponent extends PageComponent implements OnInit {
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.oauth2Clients = this.authService.oauth2Clients;
   }
+
+  /**
+   * login.
+   *
+   */
 
   login(): void {
     if (this.loginFormGroup.valid) {
@@ -75,6 +88,13 @@ export class LoginComponent extends PageComponent implements OnInit {
       this.loginFormGroup.markAllAsTouched();
     }
   }
+
+  /**
+   * get oauth2uri.
+   *
+   * @param oauth2Client oauth2client (OAuth2ClientLoginInfo)
+   * @returns string observable or value
+   */
 
   getOAuth2Uri(oauth2Client: OAuth2ClientLoginInfo): string {
     let result = "";

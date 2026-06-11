@@ -36,8 +36,9 @@ import { DatePipe } from '@angular/common';
 import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 import { Observable } from 'rxjs';
 /**
- * Route resolver: loads rule table config before activate.
+ * Route resolver: preloads data for rule table config (home/notification pages).
  */
+
 
 @Injectable()
 export class RuleTableConfigResolver  {
@@ -89,9 +90,22 @@ export class RuleTableConfigResolver  {
     );
   }
 
+  /**
+   * resolve.
+   *
+   * @param _route  route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<NotificationRule> observable or value
+   */
+
   resolve(_route: ActivatedRouteSnapshot): EntityTableConfig<NotificationRule> {
     return this.config;
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<NotificationRule>> observable or value
+   */
 
   private configureCellActions(): Array<CellActionDescriptor<NotificationRule>> {
     return [{
@@ -111,10 +125,23 @@ export class RuleTableConfigResolver  {
     }];
   }
 
+  /**
+   * edit rule.
+   *
+   * @param rule rule (NotificationRule)
+   */
+
   private editRule($event: Event, rule: NotificationRule, isCopy = false): void{
     $event?.stopPropagation();
     this.notificationRuleDialog(rule, false, isCopy).subscribe(res => res ? this.config.updateData() : null);
   }
+
+  /**
+   * notification rule dialog.
+   *
+   * @param rule rule (NotificationRule)
+   * @returns Observable<NotificationRule> observable or value
+   */
 
   private notificationRuleDialog(rule: NotificationRule, isAdd = false, isCopy = false): Observable<NotificationRule> {
     return this.dialog.open<RuleNotificationDialogComponent, RuleNotificationDialogData,
@@ -128,6 +155,12 @@ export class RuleTableConfigResolver  {
       }
     }).afterClosed();
   }
+
+  /**
+   * toggle enable mode.
+   *
+   * @param rule rule (NotificationRule)
+   */
 
   private toggleEnableMode($event: Event, rule: NotificationRule): void {
     if ($event) {

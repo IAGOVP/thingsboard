@@ -46,14 +46,17 @@ export interface ResourcesInUseDialogData {
   configuration: ResourcesInUseDialogDataConfiguration;
 }
 
+
+/**
+ * Angular component: resources in use dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-resources-in-use-dialog`.
+ */
 @Component({
     selector: 'tb-resources-in-use-dialog',
     templateUrl: './resources-in-use-dialog.component.html',
     styleUrls: ['./resources-in-use-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: resources in use dialog UI.
- */
+standalone: false
 })
 export class ResourcesInUseDialogComponent extends
   DialogComponent<ResourcesInUseDialogComponent, ResourceInfo[]> implements OnInit {
@@ -75,6 +78,11 @@ export class ResourcesInUseDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.configuration = this.data.configuration;
     this.displayPreview = this.data.configuration.columns.includes('preview');
@@ -85,9 +93,19 @@ export class ResourcesInUseDialogComponent extends
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.dialogRef.close(null);
   }
+
+  /**
+   * DELETE — delete.
+   *
+   */
 
   delete() {
     if (this.data.multiple) {
@@ -96,6 +114,13 @@ export class ResourcesInUseDialogComponent extends
       this.dialogRef.close(this.data.resources);
     }
   }
+
+  /**
+   * toggle show references.
+   *
+   * @param resource resource (ResourceInfoWithReferences)
+   * @param referencesButton references button (MatButton)
+   */
 
   toggleShowReferences($event: Event, resource: ResourceInfoWithReferences, referencesButton: MatButton) {
     if ($event) {

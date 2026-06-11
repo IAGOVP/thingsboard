@@ -21,26 +21,51 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 /**
 
- * Alarm details entity tab helper.
+ * Page object helper for alarm details entity tab UI actions (page object element locators and helpers — Selenium page objects).
 
  */
+
 
 public class AlarmDetailsEntityTabHelper extends AlarmDetailsEntityTabElements {
     public AlarmDetailsEntityTabHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Assigns alarm to.
+     *
+     * @param alarmType alarm type ({@link String})
+     * @param user authenticated user performing the action
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void assignAlarmTo(String alarmType, String user) {
         jsClick(assignBtn(alarmType));
         userFromAssignDropDown(user).click();
     }
+    /**
+     * Unassigns ed alarm.
+     *
+     * @param alarmType alarm type ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void unassignedAlarm(String alarmType) {
         jsClick(assignBtn(alarmType));
         unassignedBtn().click();
     }
+    /**
+     * Search alarm.
+     *
+     * @param alarmType alarm type ({@link String})
+     * @param emailOrName email or name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void searchAlarm(String alarmType, String emailOrName) {
         jsClick(assignBtn(alarmType));
@@ -48,6 +73,12 @@ public class AlarmDetailsEntityTabHelper extends AlarmDetailsEntityTabElements {
     }
 
     private List<String> users;
+    /**
+     * Set users.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setUsers() {
         users = assignUsers()
@@ -55,10 +86,22 @@ public class AlarmDetailsEntityTabHelper extends AlarmDetailsEntityTabElements {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
     }
+    /**
+     * Returns users.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<String> getUsers() {
         return users;
     }
+    /**
+     * Assert users for assign is not present.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void assertUsersForAssignIsNotPresent() {
         sleep(1);

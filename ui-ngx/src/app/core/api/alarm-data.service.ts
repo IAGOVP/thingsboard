@@ -38,7 +38,9 @@ export interface AlarmDataListener {
 }
 
 /**
- * Angular HTTP service: alarm data REST wrappers (`@core/http`).
+ * Angular injectable service: alarm data (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -46,6 +48,27 @@ export interface AlarmDataListener {
 export class AlarmDataService {
 
   constructor(private telemetryService: TelemetryWebsocketService) {}
+
+
+  /**
+
+
+   * subscribe for alarms.
+
+
+   *
+
+
+   * @param listener listener (AlarmDataListener)
+
+
+   * @param pageLink pagination and sort parameters
+
+
+   * @param keyFilters key filters (KeyFilter[])
+
+
+   */
 
 
   public subscribeForAlarms(listener: AlarmDataListener,
@@ -61,11 +84,26 @@ export class AlarmDataService {
     return listener.subscription.subscribe();
   }
 
+  /**
+   * stop subscription.
+   *
+   * @param listener listener (AlarmDataListener)
+   */
+
   public stopSubscription(listener: AlarmDataListener) {
     if (listener.subscription) {
       listener.subscription.unsubscribe();
     }
   }
+
+  /**
+   * POST/PUT entity — create alarm subscription options.
+   *
+   * @param listener listener (AlarmDataListener)
+   * @param pageLink pagination and sort parameters
+   * @param additionalKeyFilters additional key filters (KeyFilter[])
+   * @returns AlarmDataSubscriptionOptions observable or value
+   */
 
   private createAlarmSubscriptionOptions(listener: AlarmDataListener,
                                          pageLink: AlarmDataPageLink,

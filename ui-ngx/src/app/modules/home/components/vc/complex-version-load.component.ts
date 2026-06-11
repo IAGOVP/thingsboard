@@ -34,14 +34,17 @@ import { Observable, Subscription } from 'rxjs';
 import { share } from 'rxjs/operators';
 import { parseHttpErrorMessage } from '@core/utils';
 
+
+/**
+ * Angular component: complex version load (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-complex-version-load`.
+ */
 @Component({
     selector: 'tb-complex-version-load',
     templateUrl: './complex-version-load.component.html',
     styleUrls: ['./version-control.scss'],
-    standalone: false
-/**
- * Angular component: complex version load UI.
- */
+standalone: false
 })
 export class ComplexVersionLoadComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -80,6 +83,11 @@ export class ComplexVersionLoadComponent extends PageComponent implements OnInit
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.loadVersionFormGroup = this.fb.group({
       entityTypes: [createDefaultEntityTypesVersionLoad(), []],
@@ -87,12 +95,24 @@ export class ComplexVersionLoadComponent extends PageComponent implements OnInit
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     if (this.versionLoadResultSubscription) {
       this.versionLoadResultSubscription.unsubscribe();
     }
   }
+
+  /**
+   * entity type load result message.
+   *
+   * @param result result (EntityTypeLoadResult)
+   * @returns string observable or value
+   */
 
   entityTypeLoadResultMessage(result: EntityTypeLoadResult): string {
     const entityType = result.entityType;
@@ -111,11 +131,21 @@ export class ComplexVersionLoadComponent extends PageComponent implements OnInit
     return message;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     if (this.onClose) {
       this.onClose(this.versionLoadResult);
     }
   }
+
+  /**
+   * restore.
+   *
+   */
 
   restore(): void {
     const request: EntityTypeVersionLoadRequest = {

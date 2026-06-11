@@ -30,7 +30,13 @@ import org.thingsboard.server.common.data.util.TbPair;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine enrichment node 'originator attributes': Adds attributes and/or latest timeseries data for the message originator to the message or message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>originator attributes</b>.
+ *
+ * <p>Adds attributes and/or latest timeseries data for the message originator to the message or message metadata
+ * <br>Useful when you need to retrieve some attributes or the latest telemetry readings from the message originator 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGetAttributesNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/originator-attributes/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/originator-attributes/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -46,16 +52,39 @@ import org.thingsboard.server.common.msg.TbMsg;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/originator-attributes/"
 )
 public class TbGetAttributesNode extends TbAbstractGetAttributesNode<TbGetAttributesNodeConfiguration, EntityId> {
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbGetAttributesNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbGetAttributesNodeConfiguration loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbGetAttributesNodeConfiguration.class);
     }
+    /**
+     * Finds entity id async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link EntityId}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected ListenableFuture<EntityId> findEntityIdAsync(TbContext ctx, TbMsg msg) {
         return Futures.immediateFuture(msg.getOriginator());
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

@@ -32,7 +32,9 @@ import { EntitySubtype } from '@shared/models/entity-type.models';
 import { PageLink } from '@shared/models/page/page-link';
 
 /**
- * Alarm search, acknowledge, clear via `/api/alarm*`.
+ * Alarm search, acknowledge, clear, and assign.
+ *
+ * <p>REST base: `/api/alarm*`, `/api/v2/alarm*`.
  */
 @Injectable({
   providedIn: 'root'
@@ -43,55 +45,128 @@ export class AlarmService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}, ...`. */
+  
+  /**
+   * get alarm.
+   *
+   * @param alarmId alarm UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Alarm> observable or value
+   */
+
 
   public getAlarm(alarmId: string, config?: RequestConfig): Observable<Alarm> {
     return this.http.get<Alarm>(`/api/alarm/${alarmId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/info/${alarmId}, ...`. */
+  
+  /**
+   * get alarm info.
+   *
+   * @param alarmId alarm UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AlarmInfo> observable or value
+   */
+
 
   public getAlarmInfo(alarmId: string, config?: RequestConfig): Observable<AlarmInfo> {
     return this.http.get<AlarmInfo>(`/api/alarm/info/${alarmId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm, ...`. */
+  
+  /**
+   * POST/PUT entity — save alarm.
+   *
+   * @param alarm alarm (Alarm)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Alarm> observable or value
+   */
+
 
   public saveAlarm(alarm: Alarm, config?: RequestConfig): Observable<Alarm> {
     return this.http.post<Alarm>('/api/alarm', alarm, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}/ack, ...`. */
+  
+  /**
+   * ack alarm.
+   *
+   * @param alarmId alarm UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AlarmInfo> observable or value
+   */
+
 
   public ackAlarm(alarmId: string, config?: RequestConfig): Observable<AlarmInfo> {
     return this.http.post<AlarmInfo>(`/api/alarm/${alarmId}/ack`, null, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}/clear, ...`. */
+  
+  /**
+   * clear alarm.
+   *
+   * @param alarmId alarm UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AlarmInfo> observable or value
+   */
+
 
   public clearAlarm(alarmId: string, config?: RequestConfig): Observable<AlarmInfo> {
     return this.http.post<AlarmInfo>(`/api/alarm/${alarmId}/clear`, null, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}/assign/${assigneeId}, ...`. */
+  
+  /**
+   * assign alarm.
+   *
+   * @param alarmId alarm UUID
+   * @param assigneeId assignee id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public assignAlarm(alarmId: string, assigneeId: string, config?: RequestConfig): Observable<void> {
     return this.http.post<void>(`/api/alarm/${alarmId}/assign/${assigneeId}`, null, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}/assign, ...`. */
+  
+  /**
+   * unassign alarm.
+   *
+   * @param alarmId alarm UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public unassignAlarm(alarmId: string, config?: RequestConfig): Observable<void> {
     return this.http.delete<void>(`/api/alarm/${alarmId}/assign`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/${alarmId}, ...`. */
+  
+  /**
+   * DELETE — delete alarm.
+   *
+   * @param alarmId alarm UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<boolean> observable or value
+   */
+
 
   public deleteAlarm(alarmId: string, config?: RequestConfig): Observable<boolean> {
     return this.http.delete<boolean>(`/api/alarm/${alarmId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm${query.toQuery()}, ...`. */
+  
+  /**
+   * get alarms.
+   *
+   * @param query query (AlarmQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AlarmInfo>> observable or value
+   */
+
 
   public getAlarms(query: AlarmQuery,
                    config?: RequestConfig): Observable<PageData<AlarmInfo>> {
@@ -99,7 +174,15 @@ export class AlarmService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/v2/alarm${query.toQuery()}, ...`. */
+  
+  /**
+   * get alarms v2.
+   *
+   * @param query query (AlarmQueryV2)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AlarmInfo>> observable or value
+   */
+
 
   public getAlarmsV2(query: AlarmQueryV2,
                      config?: RequestConfig): Observable<PageData<AlarmInfo>> {
@@ -107,7 +190,15 @@ export class AlarmService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarms${query.toQuery()}, ...`. */
+  
+  /**
+   * get all alarms.
+   *
+   * @param query query (AlarmQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AlarmInfo>> observable or value
+   */
+
 
   public getAllAlarms(query: AlarmQuery,
                       config?: RequestConfig): Observable<PageData<AlarmInfo>> {
@@ -115,7 +206,15 @@ export class AlarmService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/v2/alarms${query.toQuery()}, ...`. */
+  
+  /**
+   * get all alarms v2.
+   *
+   * @param query query (AlarmQueryV2)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AlarmInfo>> observable or value
+   */
+
 
   public getAllAlarmsV2(query: AlarmQueryV2,
       config?: RequestConfig): Observable<PageData<AlarmInfo>> {
@@ -123,7 +222,17 @@ export class AlarmService {
         defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/highestSeverity/${entityId.entityType}/${entityId.id}, ...`. */
+  
+  /**
+   * get highest alarm severity.
+   *
+   * @param entityId entity UUID
+   * @param alarmSearchStatus alarm search status (AlarmSearchStatus)
+   * @param alarmStatus alarm status (AlarmStatus)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AlarmSeverity> observable or value
+   */
+
 
   public getHighestAlarmSeverity(entityId: EntityId, alarmSearchStatus: AlarmSearchStatus, alarmStatus: AlarmStatus,
                                  config?: RequestConfig): Observable<AlarmSeverity> {
@@ -137,7 +246,15 @@ export class AlarmService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/types${pageLink.toQuery()}`. */
+  
+  /**
+   * get alarm types.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EntitySubtype>> observable or value
+   */
+
 
   public getAlarmTypes(pageLink: PageLink, config?: RequestConfig): Observable<PageData<EntitySubtype>> {
     return this.http.get<PageData<EntitySubtype>>(`/api/alarm/types${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));

@@ -23,14 +23,17 @@ import type {
 } from '@home/components/calculated-fields/calculated-fields-table-config';
 import { debugCfActionEnabled } from '@shared/models/calculated-field.models';
 
+
+/**
+ * Angular component: calculated fields tabs (home/calculated-fields pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-fields-tabs`.
+ */
 @Component({
     selector: 'tb-calculated-fields-tabs',
     templateUrl: './calculated-fields-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: calculated fields tabs UI.
- */
+standalone: false
 })
 export class CalculatedFieldsTabsComponent extends EntityTabsComponent<CalculatedFieldsTableEntity> {
 
@@ -44,6 +47,12 @@ export class CalculatedFieldsTabsComponent extends EntityTabsComponent<Calculate
   get debugActionDisabled(): boolean {
     return !debugCfActionEnabled(this.entity);
   };
+
+  /**
+   * Event handler for debug event selected.
+   *
+   * @param event DOM or Angular event object
+   */
 
   onDebugEventSelected(event: CalculatedFieldEventBody) {
     (this.entitiesTableConfig as CalculatedFieldsTableConfig).getTestScriptDialog(this.entity, JSON.parse(event.arguments), false)

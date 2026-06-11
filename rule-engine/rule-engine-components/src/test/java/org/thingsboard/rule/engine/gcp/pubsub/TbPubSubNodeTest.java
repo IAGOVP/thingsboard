@@ -61,8 +61,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 /**
- * Unit test for tb pub sub node rule node.
+ * Unit test for tb pub sub node (Google Cloud integration nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbPubSubNodeTest {
@@ -77,12 +78,22 @@ class TbPubSubNodeTest {
     private Publisher pubSubClientMock;
     @Mock
     private TbContext ctxMock;
+    /**
+     * Set up.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws IOException {
         node = spy(new TbPubSubNode());
         config = new TbPubSubNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -92,6 +103,11 @@ class TbPubSubNodeTest {
         assertThat(config.getServiceAccountKey()).isNull();
         assertThat(config.getServiceAccountKeyFileName()).isNull();
     }
+    /**
+     * Given valid config when init then ok.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     @Test
     public void givenValidConfig_whenInit_thenOk() throws IOException {
@@ -99,6 +115,11 @@ class TbPubSubNodeTest {
 
         assertThatNoException().isThrownBy(() -> node.init(ctxMock, new TbNodeConfiguration(JacksonUtil.valueToTree(config))));
     }
+    /**
+     * Given error occurs during init client when init then throws exception.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     @Test
     public void givenErrorOccursDuringInitClient_whenInit_thenThrowsException() throws IOException {
@@ -107,6 +128,16 @@ class TbPubSubNodeTest {
         assertThatThrownBy(() -> node.init(ctxMock, new TbNodeConfiguration(JacksonUtil.valueToTree(config))))
                 .isInstanceOf(TbNodeException.class).hasMessage("java.lang.RuntimeException: Could not initialize client!");
     }
+    /**
+     * Given force ack is true and message attributes patterns when on msg then enqueue for tell next.
+     *
+     * @param attributeName attribute name ({@link String})
+     * @param attributeValue attribute value ({@link String})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @throws IOException if ioexception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -162,6 +193,12 @@ class TbPubSubNodeTest {
                         "{\"msgAttrName\": \"msgAttributeName\", \"msgAttrValue\": \"mdAttributeValue\"}")
         );
     }
+    /**
+     * Given force ack is false when on msg then tell success.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForceAckIsFalse_whenOnMsg_thenTellSuccess() throws IOException, TbNodeException {
@@ -197,6 +234,12 @@ class TbPubSubNodeTest {
                 .ignoringFields("ctx")
                 .isEqualTo(expectedMsg);
     }
+    /**
+     * Given force ack is false and error occurs on the gcp when on msg then tell failure.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForceAckIsFalseAndErrorOccursOnTheGCP_whenOnMsg_thenTellFailure() throws IOException, TbNodeException {
@@ -232,6 +275,12 @@ class TbPubSubNodeTest {
                 .isEqualTo(expectedMsg);
         assertThat(actualError.getValue()).isInstanceOf(RuntimeException.class).hasMessage(errorMsg);
     }
+    /**
+     * Given force ack is true and error occurs on the gcp when on msg then enqueue for tell failure.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForceAckIsTrueAndErrorOccursOnTheGCP_whenOnMsg_thenEnqueueForTellFailure() throws IOException, TbNodeException {
@@ -267,6 +316,11 @@ class TbPubSubNodeTest {
                 .isEqualTo(expectedMsg);
         assertThat(actualError.getValue()).isInstanceOf(RuntimeException.class).hasMessage(errorMsg);
     }
+    /**
+     * Given pub sub client is not null when destroy then shut down and await termination.
+     *
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenPubSubClientIsNotNull_whenDestroy_thenShutDownAndAwaitTermination() throws InterruptedException {
@@ -275,6 +329,11 @@ class TbPubSubNodeTest {
         then(pubSubClientMock).should().shutdown();
         then(pubSubClientMock).should().awaitTermination(1, TimeUnit.SECONDS);
     }
+    /**
+     * Given pub sub client is null when destroy then shut down and await termination.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenPubSubClientIsNull_whenDestroy_thenShutDownAndAwaitTermination() {

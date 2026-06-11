@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: simple card widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-simple-card-widget-settings`.
+ */
 @Component({
     selector: 'tb-simple-card-widget-settings',
     templateUrl: './simple-card-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: simple card widget settings UI.
- */
+standalone: false
 })
 export class SimpleCardWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,15 +41,33 @@ export class SimpleCardWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.simpleCardWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
       labelPosition: 'left'
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.simpleCardWidgetSettingsForm = this.fb.group({

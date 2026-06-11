@@ -33,15 +33,18 @@ export interface ResourcesDialogData {
   isAdd?: boolean;
 }
 
+
+/**
+ * Angular component: resources dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-resources-dialog`.
+ */
 @Component({
     selector: 'tb-resources-dialog',
     templateUrl: './resources-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: ResourcesDialogComponent }],
     styleUrls: ['./resources-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: resources dialog UI.
- */
+standalone: false
 })
 export class ResourcesDialogComponent extends DialogComponent<ResourcesDialogComponent, Resource> implements ErrorStateMatcher, AfterViewInit {
 
@@ -74,6 +77,11 @@ export class ResourcesDialogComponent extends DialogComponent<ResourcesDialogCom
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.isAdd) {
       setTimeout(() => {
@@ -82,15 +90,33 @@ export class ResourcesDialogComponent extends DialogComponent<ResourcesDialogCom
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

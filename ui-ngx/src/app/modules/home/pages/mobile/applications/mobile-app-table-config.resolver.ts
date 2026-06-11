@@ -44,8 +44,9 @@ import {
   RemoveAppDialogComponent
 } from '@home/pages/mobile/applications/remove-app-dialog.component';
 /**
- * Route resolver: loads mobile app table config before activate.
+ * Route resolver: preloads data for mobile app table config (home/mobile pages).
  */
+
 
 @Injectable()
 export class MobileAppTableConfigResolver  {
@@ -124,9 +125,22 @@ export class MobileAppTableConfigResolver  {
     this.config.cellActionDescriptors = this.configureCellActions();
   }
 
+  /**
+   * resolve.
+   *
+   * @param _route  route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<MobileApp> observable or value
+   */
+
   resolve(_route: ActivatedRouteSnapshot): EntityTableConfig<MobileApp> {
     return this.config;
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<MobileApp>> observable or value
+   */
 
   private configureCellActions(): Array<CellActionDescriptor<MobileApp>> {
     return [
@@ -138,6 +152,12 @@ export class MobileAppTableConfigResolver  {
       }
     ];
   }
+
+  /**
+   * DELETE — delete entity.
+   *
+   * @param entity entity (MobileApp)
+   */
 
   private deleteEntity($event: Event, entity: MobileApp) {
     if ($event) {
@@ -162,6 +182,13 @@ export class MobileAppTableConfigResolver  {
     }
   }
 
+  /**
+   * mobile status.
+   *
+   * @param status status (MobileAppStatus)
+   * @returns string observable or value
+   */
+
   private mobileStatus(status: MobileAppStatus): string {
     const translateKey = mobileAppStatusTranslations.get(status);
     let backgroundColor = 'rgba(25, 128, 56, 0.06)';
@@ -181,6 +208,13 @@ export class MobileAppTableConfigResolver  {
                 ${this.translate.instant(translateKey)}
             </div>`;
   }
+
+  /**
+   * mobile status style.
+   *
+   * @param status status (MobileAppStatus)
+   * @returns object observable or value
+   */
 
   private mobileStatusStyle(status: MobileAppStatus): object {
     const styleObj = {

@@ -18,12 +18,21 @@ import { Injectable } from '@angular/core';
 import { InterpolateFunction, InterpolationParameters, TranslateParser } from '@ngx-translate/core';
 import { isDefinedAndNotNull } from '@core/utils';
 /**
- * translate default parser.
+ * Translate default parser (ThingsBoard web UI).
  */
+
 
 @Injectable({ providedIn: 'root' })
 export class TranslateDefaultParser extends TranslateParser {
   templateMatcher: RegExp = /{{\s?([^{}\s]*)\s?}}/g;
+
+  /**
+   * interpolate.
+   *
+   * @param expr expr (string | InterpolateFunction)
+   * @param params params (InterpolationParameters)
+   * @returns string observable or value
+   */
 
   public interpolate(expr: string | InterpolateFunction, params?: InterpolationParameters): string {
     let result: string;
@@ -41,6 +50,14 @@ export class TranslateDefaultParser extends TranslateParser {
 
     return result;
   }
+
+  /**
+   * get value.
+   *
+   * @param target target (any)
+   * @param key key (string)
+   * @returns any observable or value
+   */
 
   getValue(target: any, key: string): any {
     const keys = typeof key === 'string' ? key.split('.') : [key];
@@ -60,9 +77,23 @@ export class TranslateDefaultParser extends TranslateParser {
     return target;
   }
 
+  /**
+   * interpolate function.
+   *
+   * @param fn fn (InterpolateFunction)
+   * @param params params (InterpolationParameters)
+   */
+
   private interpolateFunction(fn: InterpolateFunction, params?: InterpolationParameters) {
     return fn(params);
   }
+
+  /**
+   * interpolate string.
+   *
+   * @param expr expr (string)
+   * @param params params (InterpolationParameters)
+   */
 
   private interpolateString(expr: string, params?: InterpolationParameters) {
     if (!params) {

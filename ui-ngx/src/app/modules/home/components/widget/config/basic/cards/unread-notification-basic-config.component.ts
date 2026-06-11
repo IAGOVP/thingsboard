@@ -29,14 +29,17 @@ import {
   UnreadNotificationWidgetSettings
 } from '@home/components/widget/lib/cards/unread-notification-widget.models';
 
+
+/**
+ * Angular component: unread notification basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-unread-notification-basic-config`.
+ */
 @Component({
     selector: 'tb-unread-notification-basic-config',
     templateUrl: './unread-notification-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: unread notification basic config UI.
- */
+standalone: false
 })
 export class UnreadNotificationBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -50,9 +53,21 @@ export class UnreadNotificationBasicConfigComponent extends BasicWidgetConfigCom
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.unreadNotificationWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const iconSize = resolveCssSize(configData.config.iconSize);
@@ -84,9 +99,21 @@ export class UnreadNotificationBasicConfigComponent extends BasicWidgetConfigCom
       actions: [configData.config.actions || {}, []]
     });
   }
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
   protected validatorTriggers(): string[] {
     return ['showCounter', 'showTitle', 'showIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showCounter: boolean = this.unreadNotificationWidgetConfigForm.get('showCounter').value;
@@ -140,6 +167,13 @@ export class UnreadNotificationBasicConfigComponent extends BasicWidgetConfigCom
     }
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
 
     this.widgetConfig.config.showTitle = config.showTitle;
@@ -169,6 +203,13 @@ export class UnreadNotificationBasicConfigComponent extends BasicWidgetConfigCom
     return this.widgetConfig;
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.settings?.enableViewAll) || config.settings?.enableViewAll) {
@@ -185,6 +226,13 @@ export class UnreadNotificationBasicConfigComponent extends BasicWidgetConfigCom
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.settings.enableViewAll = buttons.includes('viewAll');

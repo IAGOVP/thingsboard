@@ -37,6 +37,12 @@ import { TimeUnit } from '@shared/models/time/time.models';
 import { EntityId } from '@shared/models/id/entity-id';
 import { dynamicValueSourceTypeTranslationMap } from '@shared/models/query/query.models';
 
+
+/**
+ * Angular component: alarm rule condition (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-condition`.
+ */
 @Component({
     selector: 'tb-alarm-rule-condition',
     templateUrl: './alarm-rule-condition.component.html',
@@ -53,10 +59,7 @@ import { dynamicValueSourceTypeTranslationMap } from '@shared/models/query/query
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm rule condition UI.
- */
+standalone: false
 })
 export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -79,12 +82,29 @@ export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit
               private translate: TranslateService) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.alarmRuleConditionFormGroup = this.fb.group({
@@ -92,6 +112,12 @@ export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit
       spec: [null, Validators.required]
     });
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -102,6 +128,12 @@ export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (AlarmCondition)
+   */
+
   writeValue(value: AlarmCondition): void {
     this.modelValue = value;
     if (this.modelValue !== null && !isDefinedAndNotNull(this.modelValue?.spec?.predicate)) {
@@ -110,9 +142,20 @@ export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit
     this.updateConditionInfo();
   }
 
+  /**
+   * condition set.
+   *
+   */
+
   public conditionSet() {
     return this.modelValue && this.modelValue.condition.length;
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.conditionSet() ? null : {
@@ -121,6 +164,11 @@ export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit
       },
     };
   }
+
+  /**
+   * open filter dialog.
+   *
+   */
 
   public openFilterDialog($event: Event) {
     if ($event) {
@@ -143,6 +191,11 @@ export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit
     });
   }
 
+  /**
+   * update condition info.
+   *
+   */
+
   private updateConditionInfo() {
     this.alarmRuleConditionFormGroup.patchValue(
       {
@@ -152,6 +205,11 @@ export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit
     );
     this.updateSpecText();
   }
+
+  /**
+   * update spec text.
+   *
+   */
 
   private updateSpecText() {
     this.specText = '';
@@ -205,6 +263,11 @@ export class AlarmRuleConditionComponent implements ControlValueAccessor, OnInit
       }
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.updateConditionInfo();

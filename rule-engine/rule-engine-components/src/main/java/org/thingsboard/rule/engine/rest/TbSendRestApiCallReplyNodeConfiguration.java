@@ -19,8 +19,11 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.StringUtils;
 /**
- * JSON configuration for TbSendRestApiCallReply rule node.
+ * JSON configuration POJO for {@link TbSendRestApiCallReply} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbSendRestApiCallReplyNodeConfiguration implements NodeConfiguration<TbSendRestApiCallReplyNodeConfiguration> {
@@ -29,6 +32,12 @@ public class TbSendRestApiCallReplyNodeConfiguration implements NodeConfiguratio
 
     private String serviceIdMetaDataAttribute;
     private String requestIdMetaDataAttribute;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbSendRestApiCallReplyNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbSendRestApiCallReplyNodeConfiguration defaultConfiguration() {
@@ -37,10 +46,22 @@ public class TbSendRestApiCallReplyNodeConfiguration implements NodeConfiguratio
         configuration.setServiceIdMetaDataAttribute(SERVICE_ID);
         return configuration;
     }
+    /**
+     * Returns service id meta data attribute.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getServiceIdMetaDataAttribute() {
         return !StringUtils.isEmpty(serviceIdMetaDataAttribute) ? serviceIdMetaDataAttribute : SERVICE_ID;
     }
+    /**
+     * Returns request id meta data attribute.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getRequestIdMetaDataAttribute() {
         return !StringUtils.isEmpty(requestIdMetaDataAttribute) ? requestIdMetaDataAttribute : REQUEST_UUID;

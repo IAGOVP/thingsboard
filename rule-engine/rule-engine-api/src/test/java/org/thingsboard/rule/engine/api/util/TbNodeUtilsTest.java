@@ -31,14 +31,20 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 /**
- * Unit test for tb node utils rule node.
+ * Unit test for tb node utils (rule engine public API contracts and services).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbNodeUtilsTest {
 
     private static final String DATA_VARIABLE_TEMPLATE = "$[%s]";
     private static final String METADATA_VARIABLE_TEMPLATE = "${%s}";
+    /**
+     * Test simple replacement.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSimpleReplacement() {
@@ -58,6 +64,11 @@ public class TbNodeUtilsTest {
         String result = TbNodeUtils.processPattern(pattern, msg);
         Assertions.assertEquals("ABC metadata_value data_value", result);
     }
+    /**
+     * Test no replacement.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testNoReplacement() {
@@ -77,6 +88,11 @@ public class TbNodeUtilsTest {
         String result = TbNodeUtils.processPattern(pattern, msg);
         Assertions.assertEquals(pattern, result);
     }
+    /**
+     * Test same keys replacement.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSameKeysReplacement() {
@@ -96,6 +112,11 @@ public class TbNodeUtilsTest {
         String result = TbNodeUtils.processPattern(pattern, msg);
         Assertions.assertEquals("ABC metadata_value data_value", result);
     }
+    /**
+     * Test complex object replacement.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testComplexObjectReplacement() {
@@ -122,6 +143,11 @@ public class TbNodeUtilsTest {
         String result = TbNodeUtils.processPattern(pattern, msg);
         Assertions.assertEquals("ABC metadata_value value3", result);
     }
+    /**
+     * Test array replacement does not work.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testArrayReplacementDoesNotWork() {
@@ -148,6 +174,11 @@ public class TbNodeUtilsTest {
         String result = TbNodeUtils.processPattern(pattern, msg);
         Assertions.assertEquals("ABC metadata_value $[key1.key2[0].key3]", result);
     }
+    /**
+     * Given key when format data var template then return the same string as format.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenKey_whenFormatDataVarTemplate_thenReturnTheSameStringAsFormat() {
@@ -160,6 +191,11 @@ public class TbNodeUtilsTest {
         assertThat(TbNodeUtils.formatDataVarTemplate(null), is("$[null]"));
         assertThat(TbNodeUtils.formatDataVarTemplate(null), is(String.format(DATA_VARIABLE_TEMPLATE, (String) null)));
     }
+    /**
+     * Given key when format metadata var template then return the same string as format.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenKey_whenFormatMetadataVarTemplate_thenReturnTheSameStringAsFormat() {
@@ -172,6 +208,11 @@ public class TbNodeUtilsTest {
         assertThat(TbNodeUtils.formatMetadataVarTemplate(null), is("${null}"));
         assertThat(TbNodeUtils.formatMetadataVarTemplate(null), is(String.format(METADATA_VARIABLE_TEMPLATE, (String) null)));
     }
+    /**
+     * Test all metadata template replacement.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAllMetadataTemplateReplacement() {
@@ -192,6 +233,11 @@ public class TbNodeUtilsTest {
         String expected = "META {\"meta_key\":\"meta_value\"}";
         assertThat(actual, is(expected));
     }
+    /**
+     * Test multiple all metadata templates replacement.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testMultipleAllMetadataTemplatesReplacement() {
@@ -212,6 +258,11 @@ public class TbNodeUtilsTest {
         String expected = "{\"meta_key\":\"meta_value\"} then again {\"meta_key\":\"meta_value\"}";
         assertThat(actual, is(expected));
     }
+    /**
+     * Test all data template replacement.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAllDataTemplateReplacement() {
@@ -231,6 +282,11 @@ public class TbNodeUtilsTest {
         String expected = "DATA {\"data_key\":\"data_value\"}";
         assertThat(actual, is(expected));
     }
+    /**
+     * Test multiple all data templates replacement.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testMultipleAllDataTemplatesReplacement() {
@@ -250,6 +306,11 @@ public class TbNodeUtilsTest {
         String expected = "{\"data_key\":\"data_value\"} then again {\"data_key\":\"data_value\"}";
         assertThat(actual, is(expected));
     }
+    /**
+     * Test all data and all metadata templates simultaneously.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAllDataAndAllMetadataTemplatesSimultaneously() {
@@ -271,6 +332,11 @@ public class TbNodeUtilsTest {
         String expected = "META {\"meta_key\":\"meta_value\"} DATA {\"data_key\":\"data_value\"}";
         assertThat(actual, is(expected));
     }
+    /**
+     * Test all data and all metadata templates simultaneously empty.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAllDataAndAllMetadataTemplatesSimultaneouslyEmpty() {
@@ -289,6 +355,11 @@ public class TbNodeUtilsTest {
         String expected = "META {} DATA {}";
         assertThat(actual, is(expected));
     }
+    /**
+     * Test all data template array.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAllDataTemplateArray() {
@@ -307,6 +378,11 @@ public class TbNodeUtilsTest {
         String expected = "DATA [1,\"two\",true]";
         assertThat(actual, is(expected));
     }
+    /**
+     * Test process pattern with json escaping.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testProcessPatternWithJsonEscaping() {
@@ -330,6 +406,11 @@ public class TbNodeUtilsTest {
         // Verify the result is valid JSON
         Assertions.assertDoesNotThrow(() -> JacksonUtil.toJsonNode(result));
     }
+    /**
+     * Test process pattern without json escaping.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testProcessPatternWithoutJsonEscaping() {
@@ -351,6 +432,11 @@ public class TbNodeUtilsTest {
         String result = TbNodeUtils.processPattern(pattern, msg, false);
         Assertions.assertEquals("Hello John \"Doe\", desc: line1\nline2", result);
     }
+    /**
+     * Test mixed all data metadata and normal templates.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testMixedAllDataMetadataAndNormalTemplates() {

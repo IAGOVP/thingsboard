@@ -57,6 +57,12 @@ import { IAliasController } from '@core/api/widget-api.models';
 import { WidgetActionCallbacks } from '@home/components/widget/action/manage-widget-actions.component.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: scada symbol metadata (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-metadata`.
+ */
 @Component({
     selector: 'tb-scada-symbol-metadata',
     templateUrl: './scada-symbol-metadata.component.html',
@@ -74,10 +80,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol metadata UI.
- */
+standalone: false
 })
 export class ScadaSymbolMetadataComponent extends PageComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
@@ -137,6 +140,11 @@ export class ScadaSymbolMetadataComponent extends PageComponent implements OnIni
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.metadataFormGroup = this.fb.group({
       title: [null, [Validators.required]],
@@ -169,12 +177,30 @@ export class ScadaSymbolMetadataComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -184,6 +210,12 @@ export class ScadaSymbolMetadataComponent extends PageComponent implements OnIni
       this.metadataFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ScadaSymbolMetadata)
+   */
 
   writeValue(value: ScadaSymbolMetadata): void {
     this.modelValue = value;
@@ -203,15 +235,33 @@ export class ScadaSymbolMetadataComponent extends PageComponent implements OnIni
     this.updateFunctionCompleters(value);
   }
 
+  /**
+   * edit tag state render function.
+   *
+   * @param tag tag (string)
+   */
+
   editTagStateRenderFunction(tag: string): void {
     this.selectedOption = 'tags';
     this.symbolMetadataTags.editTagStateRenderFunction(tag);
   }
 
+  /**
+   * edit tag click action.
+   *
+   * @param tag tag (string)
+   */
+
   editTagClickAction(tag: string): void {
     this.selectedOption = 'tags';
     this.symbolMetadataTags.editTagClickAction(tag);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     const valid = this.metadataFormGroup.valid;
@@ -222,12 +272,23 @@ export class ScadaSymbolMetadataComponent extends PageComponent implements OnIni
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const metadata: ScadaSymbolMetadata = this.metadataFormGroup.getRawValue();
     this.modelValue = metadata;
     this.propagateChange(this.modelValue);
     this.updateFunctionCompleters(metadata);
   }
+
+  /**
+   * update function completers.
+   *
+   * @param metadata metadata (ScadaSymbolMetadata)
+   */
 
   private updateFunctionCompleters(metadata: ScadaSymbolMetadata) {
     const contextCompleter = scadaSymbolContextCompletion(metadata, this.tags, this.customTranslate);

@@ -42,15 +42,18 @@ export interface AddAttributeDialogData {
   datasource?: AttributeDatasource;
 }
 
+
+/**
+ * Angular component: add attribute dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-attribute-dialog`.
+ */
 @Component({
     selector: 'tb-add-attribute-dialog',
     templateUrl: './add-attribute-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: AddAttributeDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: add attribute dialog UI.
- */
+standalone: false
 })
 export class AddAttributeDialogComponent extends DialogComponent<AddAttributeDialogComponent, boolean>
   implements OnInit, ErrorStateMatcher {
@@ -74,6 +77,11 @@ export class AddAttributeDialogComponent extends DialogComponent<AddAttributeDia
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.attributeFormGroup = this.fb.group({
       key: ['', this.keyValidators],
@@ -82,20 +90,44 @@ export class AddAttributeDialogComponent extends DialogComponent<AddAttributeDia
     this.isTelemetry = this.data.attributeScope === LatestTelemetry.LATEST_TELEMETRY;
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (FormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * invalid.
+   *
+   * @returns boolean observable or value
+   */
+
   invalid(): boolean {
     const value = this.attributeFormGroup.get('value').value;
     return !Array.isArray(value) && this.attributeFormGroup.invalid;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(false);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     this.submitted = true;
@@ -114,6 +146,13 @@ export class AddAttributeDialogComponent extends DialogComponent<AddAttributeDia
     }
     task.subscribe(() => this.dialogRef.close(true));
   }
+
+  /**
+   * fetch options.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   fetchOptions(searchText: string): Observable<Array<string>> {
     const search = searchText ? searchText?.toLowerCase() : '';

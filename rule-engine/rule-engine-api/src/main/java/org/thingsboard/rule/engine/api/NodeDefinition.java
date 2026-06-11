@@ -18,8 +18,9 @@ package org.thingsboard.rule.engine.api;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 /**
- * Rule engine component: node definition.
+ * Node definition (rule engine public API contracts and services).
  */
+
 
 @Data
 public class NodeDefinition {

@@ -35,14 +35,17 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type WidgetTypeBundle = WithOptional<WidgetTypeInfo, 'widgetType'>;
 
+
+/**
+ * Angular component: widgets bundle widgets (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widgets-bundle-widget`.
+ */
 @Component({
     selector: 'tb-widgets-bundle-widget',
     templateUrl: './widgets-bundle-widgets.component.html',
     styleUrls: ['./widgets-bundle-widgets.component.scss'],
-    standalone: false
-/**
- * Angular component: widgets bundle widgets UI.
- */
+standalone: false
 })
 export class WidgetsBundleWidgetsComponent extends PageComponent implements OnInit {
 
@@ -87,12 +90,31 @@ export class WidgetsBundleWidgetsComponent extends PageComponent implements OnIn
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * track by widget.
+   *
+   * @param index index (number)
+   * @param widget widget (WidgetTypeBundle)
+   * @returns any observable or value
+   */
 
   trackByWidget(index: number, widget: WidgetTypeBundle): any {
     return widget;
   }
+
+  /**
+   * widget drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   widgetDrop(event: CdkDragDrop<string[]>) {
     const widget = this.widgets[event.previousIndex];
@@ -101,21 +123,43 @@ export class WidgetsBundleWidgetsComponent extends PageComponent implements OnIn
     this.isDirty = true;
   }
 
+  /**
+   * POST/PUT entity — add widget mode.
+   *
+   */
+
   addWidgetMode() {
     this.addWidgetFormControl.patchValue(null, {emitEvent: false});
     this.excludeWidgetTypeIds = this.widgets.map(w => w.id.id);
     this.addMode = true;
   }
 
+  /**
+   * cancel add widget mode.
+   *
+   */
+
   cancelAddWidgetMode() {
     this.addMode = false;
   }
+
+  /**
+   * POST/PUT entity — add widget.
+   *
+   * @param newWidget new widget (WidgetTypeBundle)
+   */
 
   private addWidget(newWidget: WidgetTypeBundle) {
     this.widgets.push(newWidget);
     this.isDirty = true;
     this.addMode = false;
   }
+
+  /**
+   * open widget editor.
+   *
+   * @param widgetType widget type (WidgetTypeBundle)
+   */
 
   openWidgetEditor($event: Event, widgetType: WidgetTypeBundle) {
     if ($event) {
@@ -124,12 +168,24 @@ export class WidgetsBundleWidgetsComponent extends PageComponent implements OnIn
     this.router.navigate([widgetType.id.id], {relativeTo: this.route}).then(()=> {});
   }
 
+  /**
+   * export widget type.
+   *
+   * @param widgetType widget type (WidgetTypeBundle)
+   */
+
   exportWidgetType($event: Event, widgetType: WidgetTypeBundle) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExport.exportWidgetType(widgetType.id.id);
   }
+
+  /**
+   * DELETE — remove widget type.
+   *
+   * @param widgetType widget type (WidgetTypeBundle)
+   */
 
   removeWidgetType($event: Event, widgetType: WidgetTypeBundle) {
     if ($event) {
@@ -140,17 +196,37 @@ export class WidgetsBundleWidgetsComponent extends PageComponent implements OnIn
     this.isDirty = true;
   }
 
+  /**
+   * go back.
+   *
+   */
+
   goBack() {
     this.router.navigate(['..'], { relativeTo: this.route });
   }
+
+  /**
+   * export widgets bundle.
+   *
+   */
 
   exportWidgetsBundle() {
     this.importExport.exportWidgetsBundle(this.widgetsBundle.id.id);
   }
 
+  /**
+   * edit.
+   *
+   */
+
   edit() {
     this.editMode = true;
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel() {
     if (this.isDirty) {
@@ -169,6 +245,11 @@ export class WidgetsBundleWidgetsComponent extends PageComponent implements OnIn
     }
   }
 
+  /**
+   * POST/PUT entity — save.
+   *
+   */
+
   save() {
     const widgetTypeIds = this.widgets.map(w => w.id.id);
     this.widgetsService.updateWidgetsBundleWidgetTypes(this.widgetsBundle.id.id, widgetTypeIds).subscribe(() => {
@@ -177,6 +258,11 @@ export class WidgetsBundleWidgetsComponent extends PageComponent implements OnIn
       this.addMode = false;
     });
   }
+
+  /**
+   * POST/PUT entity — add widget type.
+   *
+   */
 
   addWidgetType($event: Event): void {
     if ($event) {
@@ -194,6 +280,11 @@ export class WidgetsBundleWidgetsComponent extends PageComponent implements OnIn
       }
     );
   }
+
+  /**
+   * import widget type.
+   *
+   */
 
   importWidgetType() {
     this.importExport.importWidgetType().subscribe(

@@ -26,8 +26,9 @@ import java.util.Optional;
  * Created by ashvayka on 02.04.18.
  */
 /**
- * Rule engine component: rule engine device rpc response.
+ * Rule engine device rpc response (rule engine public API contracts and services).
  */
+
 @Data
 @Builder
 public final class RuleEngineDeviceRpcResponse {

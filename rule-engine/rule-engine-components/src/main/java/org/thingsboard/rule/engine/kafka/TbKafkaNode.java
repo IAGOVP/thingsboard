@@ -49,7 +49,13 @@ import java.util.Properties;
 
 @Slf4j
 /**
- * Rule engine external node 'kafka': Publish messages to Kafka server Implements org.thingsboard.rule.engine.api.TbNode.
+ * External rule node — <b>kafka</b>.
+ *
+ * <p>Publish messages to Kafka server
+ * <br>Will send record via Kafka producer to Kafka server. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbKafkaNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/kafka/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/kafka/</a>
  */
 @RuleNode(
         type = ComponentType.EXTERNAL,
@@ -83,6 +89,13 @@ public class TbKafkaNode extends TbAbstractExternalNode {
 
     private Producer<String, String> producer;
     private Throwable initError;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -128,6 +141,13 @@ public class TbKafkaNode extends TbAbstractExternalNode {
     KafkaProducer<String, String> getKafkaProducer(Properties properties) {
         return new KafkaProducer<>(properties);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -154,6 +174,15 @@ public class TbKafkaNode extends TbAbstractExternalNode {
             ctx.tellFailure(tbMsg, e);
         }
     }
+    /**
+     * Publish.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param topic topic ({@link String})
+     * @param key key ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void publish(TbContext ctx, TbMsg msg, String topic, String key) {
         try {
@@ -171,6 +200,10 @@ public class TbKafkaNode extends TbAbstractExternalNode {
             log.debug("[{}] Failed to process message: {}", ctx.getSelfId(), msg, e);
         }
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {
@@ -208,6 +241,14 @@ public class TbKafkaNode extends TbAbstractExternalNode {
                 .metaData(metaData)
                 .build();
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

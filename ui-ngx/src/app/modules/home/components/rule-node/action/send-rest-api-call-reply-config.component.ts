@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: send rest api call reply config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-send-rest-api-call-reply-config`.
+ */
 @Component({
     selector: 'tb-action-node-send-rest-api-call-reply-config',
     templateUrl: './send-rest-api-call-reply-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: send rest api call reply config UI.
- */
+standalone: false
 })
 export class SendRestApiCallReplyConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class SendRestApiCallReplyConfigComponent extends RuleNodeConfigurationCo
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.sendRestApiCallReplyConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.sendRestApiCallReplyConfigForm = this.fb.group({

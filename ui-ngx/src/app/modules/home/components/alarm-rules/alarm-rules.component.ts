@@ -50,14 +50,17 @@ import { DeviceInfo } from '@shared/models/device.models';
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 import { EntityService } from '@core/http/entity.service';
 
+
+/**
+ * Angular component: alarm rules (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rules`.
+ */
 @Component({
     selector: 'tb-alarm-rules',
     templateUrl: './alarm-rules.component.html',
     styleUrls: ['./alarm-rule-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm rules UI.
- */
+standalone: false
 })
 export class AlarmRulesComponent extends EntityComponent<AlarmRuleTableEntity> {
 
@@ -86,6 +89,11 @@ export class AlarmRulesComponent extends EntityComponent<AlarmRuleTableEntity> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -107,13 +115,32 @@ export class AlarmRulesComponent extends EntityComponent<AlarmRuleTableEntity> {
     return this.entitiesTableConfigValue;
   }
 
+  /**
+   * change entity.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   */
+
   changeEntity(entity: BaseData<EntityId>): void {
     this.entityName = entity?.name;
   }
 
+  /**
+   * build form.
+   *
+   * @param _entity  entity (CalculatedFieldAlarmRuleInfo)
+   * @returns FormGroup observable or value
+   */
+
   buildForm(_entity?: CalculatedFieldAlarmRuleInfo): FormGroup {
     return inject(CalculatedFieldFormService).buildAlarmRuleForm();
   }
+
+  /**
+   * update form.
+   *
+   * @param entity entity (CalculatedFieldAlarmRuleInfo)
+   */
 
   updateForm(entity: CalculatedFieldAlarmRuleInfo) {
     const { configuration = {} as CalculatedFieldAlarmRuleConfiguration, type = CalculatedFieldType.ALARM, debugSettings = { failuresEnabled: true, allEnabled: true }, entityId = this.entityId, ...value } = entity ?? {};
@@ -122,6 +149,13 @@ export class AlarmRulesComponent extends EntityComponent<AlarmRuleTableEntity> {
       this.entityForm.get('configuration').disable({emitEvent: false});
     }
   }
+
+  /**
+   * Event handler for test script.
+   *
+   * @param expression expression (string)
+   * @returns Observable<string> observable or value
+   */
 
   onTestScript(expression?: string): Observable<string> {
     return this.cfFormService.testScript(
@@ -132,6 +166,11 @@ export class AlarmRulesComponent extends EntityComponent<AlarmRuleTableEntity> {
       expression
     );
   }
+
+  /**
+   * update form state.
+   *
+   */
 
   updateFormState() {
     if (this.entityForm) {
@@ -160,10 +199,20 @@ export class AlarmRulesComponent extends EntityComponent<AlarmRuleTableEntity> {
     return this.entityForm.get('configuration') as FormGroup;
   }
 
+  /**
+   * DELETE — remove clear alarm rule.
+   *
+   */
+
   public removeClearAlarmRule() {
     this.configFormGroup.patchValue({clearRule: null});
     this.entityForm.markAsDirty();
   }
+
+  /**
+   * POST/PUT entity — add clear alarm rule.
+   *
+   */
 
   public addClearAlarmRule() {
     const clearAlarmRule: AlarmRule = {
@@ -178,6 +227,12 @@ export class AlarmRulesComponent extends EntityComponent<AlarmRuleTableEntity> {
     this.configFormGroup.patchValue({clearRule: clearAlarmRule});
   }
 
+  /**
+   * get owner id.
+   *
+   * @param entityId entity UUID
+   */
+
   getOwnerId(entityId: EntityId) {
     if (entityId?.entityType === EntityType.DEVICE || entityId?.entityType === EntityType.ASSET) {
       this.entityService.getEntity(entityId.entityType, entityId.id, { ignoreLoading: true, ignoreErrors: true }).subscribe(
@@ -189,6 +244,13 @@ export class AlarmRulesComponent extends EntityComponent<AlarmRuleTableEntity> {
       );
     }
   }
+
+  /**
+   * is assigned to customer.
+   *
+   * @param entity entity (AssetInfo | DeviceInfo)
+   * @returns boolean observable or value
+   */
 
   private isAssignedToCustomer(entity: AssetInfo | DeviceInfo): boolean {
     return entity && entity.customerId && entity.customerId.id !== NULL_UUID;

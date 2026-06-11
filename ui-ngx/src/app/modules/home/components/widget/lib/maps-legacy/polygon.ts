@@ -22,11 +22,11 @@ import { FormattedData } from '@shared/models/widget.models';
 import { fillDataPattern, processDataPattern, safeExecuteTbFunction } from '@core/utils';
 import LeafletMap from '@home/components/widget/lib/maps-legacy/leaflet-map';
 
+
 /**
-
- * polygon.
-
+ * Polygon (ThingsBoard web UI).
  */
+
 
 export class Polygon {
 
@@ -68,6 +68,11 @@ export class Polygon {
         this.createEventListeners();
     }
 
+    /**
+     * POST/PUT entity — create event listeners.
+     *
+     */
+
     private createEventListeners() {
       if (this.settings.editablePolygon && this.onDragendListener) {
         // Change position (call in drag drop mode)
@@ -93,12 +98,24 @@ export class Polygon {
       }
     }
 
+    /**
+     * update tooltip.
+     *
+     * @param data dialog or route input data
+     */
+
     updateTooltip(data: FormattedData) {
         const pattern = this.settings.usePolygonTooltipFunction ?
           safeExecuteTbFunction(this.settings.parsedPolygonTooltipFunction, [this.data, this.dataSources, this.data.dsIndex]) :
             this.settings.polygonTooltipPattern;
         this.tooltip.setContent(parseWithTranslation.parseTemplate(pattern, data, true));
     }
+
+    /**
+     * update label.
+     *
+     * @param settings settings (Partial<WidgetPolygonSettings>)
+     */
 
     updateLabel(settings: Partial<WidgetPolygonSettings>) {
         this.leafletPoly.unbindTooltip();
@@ -117,6 +134,14 @@ export class Polygon {
               .openTooltip(this.leafletPoly.getBounds().getCenter());
         }
     }
+
+    /**
+     * update polygon.
+     *
+     * @param data dialog or route input data
+     * @param dataSources data sources (FormattedData[])
+     * @param settings settings (Partial<WidgetPolygonSettings>)
+     */
 
     updatePolygon(data: FormattedData, dataSources: FormattedData[], settings: Partial<WidgetPolygonSettings>) {
       if (this.editing) {
@@ -161,9 +186,20 @@ export class Polygon {
       this.updatePolygonColor(settings);
     }
 
+    /**
+     * DELETE — remove polygon.
+     *
+     */
+
     removePolygon() {
         this.map.map.removeLayer(this.leafletPoly);
     }
+
+    /**
+     * update polygon color.
+     *
+     * @param settings settings (Partial<WidgetPolygonSettings>)
+     */
 
     updatePolygonColor(settings: Partial<WidgetPolygonSettings>) {
         const polygonColor = this.getPolygonColor(settings);
@@ -175,19 +211,44 @@ export class Polygon {
         this.leafletPoly.setStyle(style);
     }
 
+    /**
+     * get polygon lat lngs.
+     *
+     */
+
     getPolygonLatLngs() {
         return this.leafletPoly.getLatLngs();
     }
+
+    /**
+     * set polygon lat lngs.
+     *
+     * @param latLngs lat lngs (LatLngExpression[])
+     */
 
     setPolygonLatLngs(latLngs: LatLngExpression[]) {
         this.leafletPoly.setLatLngs(latLngs);
         this.leafletPoly.redraw();
     }
 
+    /**
+     * get polygon color.
+     *
+     * @param settings settings (Partial<WidgetPolygonSettings>)
+     * @returns string | null observable or value
+     */
+
     private getPolygonColor(settings: Partial<WidgetPolygonSettings>): string | null {
       return functionValueCalculator(settings.usePolygonColorFunction, settings.parsedPolygonColorFunction,
         [this.data, this.dataSources, this.data.dsIndex], settings.polygonColor);
     }
+
+  /**
+   * get polygon stroke color.
+   *
+   * @param settings settings (Partial<WidgetPolygonSettings>)
+   * @returns string | null observable or value
+   */
 
   private getPolygonStrokeColor(settings: Partial<WidgetPolygonSettings>): string | null {
     return functionValueCalculator(settings.usePolygonStrokeColorFunction, settings.parsedPolygonStrokeColorFunction,

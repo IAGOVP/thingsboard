@@ -19,10 +19,24 @@ package org.thingsboard.mqtt;
  */
 
 /**
- * Computes delay (seconds) before the next reconnect attempt.
+ * Computes delay in milliseconds before the next TCP reconnect attempt.
  */
+
 @FunctionalInterface
 public interface ReconnectStrategy {
-    /** @return seconds to wait before calling {@link MqttClientImpl#connect} again */
+    
+    
+    
+    
+    /**
+     * Returns next reconnect delay.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
+
+
     long getNextReconnectDelay();
 }

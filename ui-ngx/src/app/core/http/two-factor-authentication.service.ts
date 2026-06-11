@@ -27,7 +27,9 @@ import {
 import { isDefinedAndNotNull } from '@core/utils';
 
 /**
- * Angular HTTP service: two factor authentication REST wrappers (`@core/http`).
+ * Angular injectable service: two factor authentication (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -39,26 +41,72 @@ export class TwoFactorAuthenticationService {
   ) {
   }
 
+  /**
+   * get two fa settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TwoFactorAuthSettings> observable or value
+   */
+
   getTwoFaSettings(config?: RequestConfig): Observable<TwoFactorAuthSettings> {
     return this.http.get<TwoFactorAuthSettings>(`/api/2fa/settings`, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * POST/PUT entity — save two fa settings.
+   *
+   * @param settings settings (TwoFactorAuthSettings)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TwoFactorAuthSettings> observable or value
+   */
 
   saveTwoFaSettings(settings: TwoFactorAuthSettings, config?: RequestConfig): Observable<TwoFactorAuthSettings> {
     return this.http.post<TwoFactorAuthSettings>(`/api/2fa/settings`, settings, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * get available two fa providers.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<TwoFactorAuthProviderType>> observable or value
+   */
+
   getAvailableTwoFaProviders(config?: RequestConfig): Observable<Array<TwoFactorAuthProviderType>> {
     return this.http.get<Array<TwoFactorAuthProviderType>>(`/api/2fa/providers`, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * generate two fa account config.
+   *
+   * @param providerType provider type (TwoFactorAuthProviderType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TwoFactorAuthAccountConfig> observable or value
+   */
 
   generateTwoFaAccountConfig(providerType: TwoFactorAuthProviderType, config?: RequestConfig): Observable<TwoFactorAuthAccountConfig> {
     return this.http.post<TwoFactorAuthAccountConfig>(`/api/2fa/account/config/generate?providerType=${providerType}`,
       defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * get account two fa settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AccountTwoFaSettings> observable or value
+   */
+
   getAccountTwoFaSettings(config?: RequestConfig): Observable<AccountTwoFaSettings> {
     return this.http.get<AccountTwoFaSettings>(`/api/2fa/account/settings`, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * update two fa account config.
+   *
+   * @param providerType provider type (TwoFactorAuthProviderType)
+   * @param useByDefault use by default (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AccountTwoFaSettings> observable or value
+   */
 
   updateTwoFaAccountConfig(providerType: TwoFactorAuthProviderType, useByDefault: boolean,
                            config?: RequestConfig): Observable<AccountTwoFaSettings> {
@@ -66,9 +114,26 @@ export class TwoFactorAuthenticationService {
       defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * submit two fa account config.
+   *
+   * @param authConfig auth config (TwoFactorAuthAccountConfig)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
   submitTwoFaAccountConfig(authConfig: TwoFactorAuthAccountConfig, config?: RequestConfig): Observable<any> {
     return this.http.post(`/api/2fa/account/config/submit`, authConfig, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * verify and save two fa account config.
+   *
+   * @param authConfig auth config (TwoFactorAuthAccountConfig)
+   * @param verificationCode verification code (number)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AccountTwoFaSettings> observable or value
+   */
 
   verifyAndSaveTwoFaAccountConfig(authConfig: TwoFactorAuthAccountConfig, verificationCode?: number,
                                   config?: RequestConfig): Observable<AccountTwoFaSettings> {
@@ -79,10 +144,25 @@ export class TwoFactorAuthenticationService {
     return this.http.post<AccountTwoFaSettings>(url, authConfig, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete two fa account config.
+   *
+   * @param providerType provider type (TwoFactorAuthProviderType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AccountTwoFaSettings> observable or value
+   */
+
   deleteTwoFaAccountConfig(providerType: TwoFactorAuthProviderType, config?: RequestConfig): Observable<AccountTwoFaSettings> {
     return this.http.delete<AccountTwoFaSettings>(`/api/2fa/account/config?providerType=${providerType}`,
       defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * request two fa verification code send.
+   *
+   * @param providerType provider type (TwoFactorAuthProviderType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   requestTwoFaVerificationCodeSend(providerType: TwoFactorAuthProviderType, config?: RequestConfig) {
     return this.http.post(`/api/auth/2fa/verification/send?providerType=${providerType}`, defaultHttpOptionsFromConfig(config));

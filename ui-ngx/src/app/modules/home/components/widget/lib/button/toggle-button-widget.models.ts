@@ -30,11 +30,11 @@ import {
 import { BackgroundSettings, BackgroundType } from '@shared/models/widget-settings.models';
 import { AttributeScope } from '@shared/models/telemetry/telemetry.models';
 
+
 /**
-
- * TypeScript models and enums for toggle button widget settings.
-
+ * Toggle button widget settings (ThingsBoard web UI).
  */
+
 
 export interface ToggleButtonWidgetSettings {
   initialState: GetValueSettings<boolean>;

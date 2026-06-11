@@ -35,15 +35,18 @@ export interface AssignToCustomerDialogData {
   entityType: EntityType;
 }
 
+
+/**
+ * Angular component: assign to customer dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-assign-to-customer-dialog`.
+ */
 @Component({
     selector: 'tb-assign-to-customer-dialog',
     templateUrl: './assign-to-customer-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: AssignToCustomerDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: assign to customer dialog UI.
- */
+standalone: false
 })
 export class AssignToCustomerDialogComponent extends
   DialogComponent<AssignToCustomerDialogComponent, boolean> implements OnInit, ErrorStateMatcher {
@@ -70,6 +73,11 @@ export class AssignToCustomerDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.assignToCustomerFormGroup = this.fb.group({
       customerId: [null, [Validators.required]]
@@ -94,15 +102,33 @@ export class AssignToCustomerDialogComponent extends
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(false);
   }
+
+  /**
+   * assign.
+   *
+   */
 
   assign(): void {
     this.submitted = true;
@@ -119,6 +145,14 @@ export class AssignToCustomerDialogComponent extends
       }
     );
   }
+
+  /**
+   * get assign to customer task.
+   *
+   * @param customerId customer UUID
+   * @param entityId entity UUID
+   * @returns Observable<any> observable or value
+   */
 
   private getAssignToCustomerTask(customerId: string, entityId: string): Observable<any> {
     switch (this.data.entityType) {

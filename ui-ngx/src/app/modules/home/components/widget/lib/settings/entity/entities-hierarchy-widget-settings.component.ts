@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: entities hierarchy widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entities-hierarchy-widget-settings`.
+ */
 @Component({
     selector: 'tb-entities-hierarchy-widget-settings',
     templateUrl: './entities-hierarchy-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: entities hierarchy widget settings UI.
- */
+standalone: false
 })
 export class EntitiesHierarchyWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class EntitiesHierarchyWidgetSettingsComponent extends WidgetSettingsComp
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.entitiesHierarchyWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -53,6 +68,12 @@ export class EntitiesHierarchyWidgetSettingsComponent extends WidgetSettingsComp
       nodesSortFunction: '',
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.entitiesHierarchyWidgetSettingsForm = this.fb.group({

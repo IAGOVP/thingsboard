@@ -30,6 +30,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { isDefinedAndNotNull } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: css size input (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-css-size-input`.
+ */
 @Component({
     selector: 'tb-css-size-input',
     templateUrl: './css-size-input.component.html',
@@ -46,10 +52,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: css size input UI.
- */
+standalone: false
 })
 export class CssSizeInputComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -90,6 +93,11 @@ export class CssSizeInputComponent implements OnInit, ControlValueAccessor, Vali
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.cssSizeFormGroup = this.fb.group({
       size: [null, this.required ? [Validators.required, Validators.min(0)] : [Validators.min(0)]],
@@ -102,12 +110,30 @@ export class CssSizeInputComponent implements OnInit, ControlValueAccessor, Vali
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -118,6 +144,12 @@ export class CssSizeInputComponent implements OnInit, ControlValueAccessor, Vali
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string): void {
     this.modelValue = value;
     const size = resolveCssSize(value);
@@ -127,6 +159,12 @@ export class CssSizeInputComponent implements OnInit, ControlValueAccessor, Vali
     }, {emitEvent: false});
   }
 
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
+
   validate(_c: UntypedFormControl) {
     return this.cssSizeFormGroup.valid ? null : {
       cssSize: {
@@ -134,6 +172,12 @@ export class CssSizeInputComponent implements OnInit, ControlValueAccessor, Vali
       }
     };
   }
+
+  /**
+   * update model.
+   *
+   * @param value value ({size: number; unit: cssUnit})
+   */
 
   private updateModel(value: {size: number; unit: cssUnit}): void {
     const result: string = isDefinedAndNotNull(value?.size) && isDefinedAndNotNull(value?.unit)

@@ -15,15 +15,28 @@
  */
 package org.thingsboard.rule.engine.transform;
 
+
 /**
 
- * Rule engine tb msg callback wrapper API.
+ * tb msg callback wrapper contract (message transformation and originator change nodes).
 
  */
 
+
 public interface TbMsgCallbackWrapper {
+    /**
+     * Handles success.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void onSuccess();
+    /**
+     * Handles failure.
+     *
+     * @param t t ({@link Throwable})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void onFailure(Throwable t);
 }

@@ -27,7 +27,9 @@ import { ScriptLanguage } from '@shared/models/rule-node.models';
 import { DebugRuleNodeEventBody } from '@shared/models/event.models';
 
 /**
- * Angular HTTP service: node script test REST wrappers (`@core/http`).
+ * Angular injectable service: node script test (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -37,6 +39,21 @@ export class NodeScriptTestService {
   constructor(private ruleChainService: RuleChainService,
               public dialog: MatDialog) {
   }
+
+  /**
+   * test node script.
+   *
+   * @param script script (string)
+   * @param scriptType script type (string)
+   * @param functionTitle function title (string)
+   * @param functionName function name (string)
+   * @param argNames arg names (string[])
+   * @param ruleNodeId rule node id (string)
+   * @param helpId help id (string)
+   * @param scriptLang script lang (ScriptLanguage)
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   * @returns Observable<string> observable or value
+   */
 
   testNodeScript(script: string, scriptType: string, functionTitle: string,
                  functionName: string, argNames: string[], ruleNodeId: string, helpId?: string,
@@ -53,6 +70,20 @@ export class NodeScriptTestService {
         functionName, argNames, debugEventBody, helpId, scriptLang);
     }
   }
+
+  /**
+   * open test script dialog.
+   *
+   * @param script script (string)
+   * @param scriptType script type (string)
+   * @param functionTitle function title (string)
+   * @param functionName function name (string)
+   * @param argNames arg names (string[])
+   * @param eventBody event body (DebugRuleNodeEventBody)
+   * @param helpId help id (string)
+   * @param scriptLang script lang (ScriptLanguage)
+   * @returns Observable<string> observable or value
+   */
 
   private openTestScriptDialog(script: string, scriptType: string, functionTitle: string, functionName: string,
                                argNames: string[], eventBody: DebugRuleNodeEventBody, helpId?: string,

@@ -122,14 +122,17 @@ interface EntitiesTableWidgetSettings extends TableWidgetSettings {
   displayEntityType: boolean;
 }
 
+
+/**
+ * Angular component: entities table widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entities-table-widget`.
+ */
 @Component({
     selector: 'tb-entities-table-widget',
     templateUrl: './entities-table-widget.component.html',
     styleUrls: ['./entities-table-widget.component.scss', './../table-widget.scss'],
-    standalone: false
-/**
- * Angular component: entities table widget UI.
- */
+standalone: false
 })
 export class EntitiesTableWidgetComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -218,6 +221,11 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     };
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.entitiesTableWidget = this;
     this.settings = this.ctx.settings;
@@ -240,11 +248,23 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * is actions configured.
+   *
+   * @param actionSourceIds action source ids (Array<string>)
+   * @returns boolean observable or value
+   */
+
   private isActionsConfigured(actionSourceIds: Array<string>): boolean {
     let configured = false;
     actionSourceIds.forEach(id => configured = configured || this.ctx.actionsApi.getActionDescriptors(id).length > 0 );
     return configured;
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.widgetResize$) {
@@ -253,6 +273,11 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.textSearch.valueChanges.pipe(
@@ -285,11 +310,21 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     this.updateData();
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.entityDatasource.dataUpdated();
     this.clearCache();
     this.ctx.detectChanges();
   }
+
+  /**
+   * Event handler for edit mode changed.
+   *
+   */
 
   public onEditModeChanged() {
     if (this.textSearchMode) {
@@ -298,9 +333,20 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * page link sort direction.
+   *
+   * @returns SortDirection observable or value
+   */
+
   public pageLinkSortDirection(): SortDirection {
     return entityDataPageLinkSortDirection(this.pageLink);
   }
+
+  /**
+   * initialize config.
+   *
+   */
 
   private initializeConfig() {
     this.ctx.widgetActions = [this.searchAction, this.columnDisplayAction];
@@ -359,6 +405,11 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     cssParser.createStyleElement(namespace, cssString);
     $(this.elementRef.nativeElement).addClass(namespace);
   }
+
+  /**
+   * update datasources.
+   *
+   */
 
   private updateDatasources() {
 
@@ -524,6 +575,11 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     this.entityDatasource = new EntityDatasource(this.translate, dataKeys, this.subscription, this.ngZone, this.ctx);
   }
 
+  /**
+   * edit columns to display.
+   *
+   */
+
   private editColumnsToDisplay($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -586,6 +642,11 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     this.ctx.detectChanges();
   }
 
+  /**
+   * enter filter mode.
+   *
+   */
+
   private enterFilterMode() {
     this.textSearchMode = true;
     this.ctx.hideTitlePanel = true;
@@ -596,12 +657,22 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
     this.ctx.hideTitlePanel = false;
     this.ctx.detectChanges(true);
   }
+
+  /**
+   * update data.
+   *
+   */
 
   private updateData() {
     if (this.displayPagination) {
@@ -625,28 +696,67 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     this.ctx.detectChanges();
   }
 
+  /**
+   * track by column def.
+   *
+   * @param column column (EntityColumn)
+   */
+
   public trackByColumnDef(index, column: EntityColumn) {
     return column.def;
   }
+
+  /**
+   * track by entity id.
+   *
+   * @param index index (number)
+   * @param entity entity (EntityData)
+   */
 
   public trackByEntityId(index: number, entity: EntityData) {
     return entity.id.id;
   }
 
+  /**
+   * track by action cell description id.
+   *
+   * @param index index (number)
+   * @param action action (WidgetActionDescriptor)
+   */
+
   public trackByActionCellDescriptionId(index: number, action: WidgetActionDescriptor) {
     return action.id;
   }
+
+  /**
+   * header style.
+   *
+   * @param key key (EntityColumn)
+   * @returns any observable or value
+   */
 
   public headerStyle(key: EntityColumn): any {
     const columnWidth = this.columnWidth[key.def];
     return widthStyle(columnWidth);
   }
 
+  /**
+   * row style.
+   *
+   * @param entity entity (EntityData)
+   * @param row row (number)
+   * @returns Observable<any> observable or value
+   */
+
   public rowStyle(entity: EntityData, row: number): Observable<any> {
     let style$: Observable<any>;
     const res = this.rowStyleCache[row];
     if (!res) {
       style$ = this.rowStylesInfo.pipe(
+        /**
+         * map.
+         *
+         */
         map(styleInfo => {
           if (styleInfo.useRowStyleFunction && styleInfo.rowStyleFunction) {
             const style = styleInfo.rowStyleFunction.execute(entity, this.ctx);
@@ -677,6 +787,15 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     }
     return style$;
   }
+
+  /**
+   * cell style.
+   *
+   * @param entity entity (EntityData)
+   * @param key key (EntityColumn)
+   * @param row row (number)
+   * @returns Observable<any> observable or value
+   */
 
   public cellStyle(entity: EntityData, key: EntityColumn, row: number): Observable<any> {
     let style$: Observable<any>;
@@ -728,6 +847,15 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     return style$;
   }
 
+  /**
+   * cell content.
+   *
+   * @param entity entity (EntityData)
+   * @param key key (EntityColumn)
+   * @param row row (number)
+   * @returns Observable<SafeHtml> observable or value
+   */
+
   public cellContent(entity: EntityData, key: EntityColumn, row: number): Observable<SafeHtml> {
     let content$: Observable<SafeHtml>;
     const col = this.columns.indexOf(key);
@@ -773,6 +901,15 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     return content$;
   }
 
+  /**
+   * default content.
+   *
+   * @param key key (EntityColumn)
+   * @param contentInfo content info (WithOptional<CellContentInfo, 'valueFormat'>)
+   * @param value value (any)
+   * @returns any observable or value
+   */
+
   private defaultContent(key: EntityColumn, contentInfo: WithOptional<CellContentInfo, 'valueFormat'>, value: any): any {
     if (isDefined(value)) {
       const entityField = entityFields[key.name];
@@ -786,6 +923,14 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
       return '';
     }
   }
+
+  /**
+   * Event handler for cell click.
+   *
+   * @param entity entity (EntityData)
+   * @param key key (EntityColumn)
+   * @param columnIndex column index (number)
+   */
 
   public onCellClick($event: Event, entity: EntityData, key: EntityColumn, columnIndex: number) {
     this.entityDatasource.toggleCurrentEntity(entity);
@@ -808,11 +953,24 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * column has cell click.
+   *
+   * @param index index (number)
+   */
+
   public columnHasCellClick(index: number) {
     if (this.columnsWithCellClick.length) {
       return this.columnsWithCellClick.includes(index);
     }
   }
+
+  /**
+   * Event handler for row click.
+   *
+   * @param entity entity (EntityData)
+   * @param isDouble is double (boolean)
+   */
 
   public onRowClick($event: Event, entity: EntityData, isDouble?: boolean) {
     if ($event) {
@@ -834,6 +992,13 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * Event handler for action button click.
+   *
+   * @param entity entity (EntityData)
+   * @param actionDescriptor action descriptor (WidgetActionDescriptor)
+   */
+
   public onActionButtonClick($event: Event, entity: EntityData, actionDescriptor: WidgetActionDescriptor) {
     if ($event) {
       $event.stopPropagation();
@@ -848,6 +1013,11 @@ export class EntitiesTableWidgetComponent extends PageComponent implements OnIni
     }
     this.ctx.actionsApi.handleWidgetAction($event, actionDescriptor, entityId, entityName, {entity}, entityLabel);
   }
+
+  /**
+   * clear cache.
+   *
+   */
 
   private clearCache() {
     this.cellContentCache.length = 0;

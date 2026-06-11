@@ -46,14 +46,17 @@ export interface AlarmDetailsDialogData {
   allowAssign: boolean;
 }
 
+
+/**
+ * Angular component: alarm details dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-details-dialog`.
+ */
 @Component({
     selector: 'tb-alarm-details-dialog',
     templateUrl: './alarm-details-dialog.component.html',
     styleUrls: ['./alarm-details-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm details dialog UI.
- */
+standalone: false
 })
 export class AlarmDetailsDialogComponent extends DialogComponent<AlarmDetailsDialogComponent, boolean> {
 
@@ -117,11 +120,22 @@ export class AlarmDetailsDialogComponent extends DialogComponent<AlarmDetailsDia
     }
   }
 
+  /**
+   * load alarm.
+   *
+   */
+
   loadAlarm() {
     this.alarmService.getAlarmInfo(this.alarmId, {ignoreLoading: true}).subscribe(
       alarm => this.loadAlarmSubject.next(alarm)
     );
   }
+
+  /**
+   * load alarm fields.
+   *
+   * @param alarm alarm (AlarmInfo)
+   */
 
   loadAlarmFields(alarm: AlarmInfo) {
     this.alarmFormGroup.get('originatorName')
@@ -147,9 +161,19 @@ export class AlarmDetailsDialogComponent extends DialogComponent<AlarmDetailsDia
     this.alarmFormGroup.get('alarmDetails').patchValue(alarm.details);
   }
 
+  /**
+   * close.
+   *
+   */
+
   close(): void {
     this.dialogRef.close(this.alarmUpdated);
   }
+
+  /**
+   * acknowledge.
+   *
+   */
 
   acknowledge(): void {
     if (this.alarmId) {
@@ -163,6 +187,11 @@ export class AlarmDetailsDialogComponent extends DialogComponent<AlarmDetailsDia
     }
   }
 
+  /**
+   * clear.
+   *
+   */
+
   clear(): void {
     if (this.alarmId) {
       this.alarmService.clearAlarm(this.alarmId).subscribe(
@@ -174,6 +203,11 @@ export class AlarmDetailsDialogComponent extends DialogComponent<AlarmDetailsDia
       );
     }
   }
+
+  /**
+   * Event handler for reassign.
+   *
+   */
 
   onReassign(): void {
     this.alarmUpdated = true;

@@ -34,11 +34,13 @@ import static org.thingsboard.server.msa.ui.utils.Const.IMPORT_ASSET_PROFILE_NAM
 import static org.thingsboard.server.msa.ui.utils.Const.IMPORT_TXT_FILE_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.SAME_NAME_WARNING_ASSET_PROFILE_MESSAGE;
 
+
 /**
 
- * Create asset profile import test.
+ * Black-box test: create asset profile import (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class CreateAssetProfileImportTest extends AbstractDriverBaseTest {
 
@@ -47,6 +49,12 @@ public class CreateAssetProfileImportTest extends AbstractDriverBaseTest {
     private final String absolutePathToFileImportAssetProfile = getClass().getClassLoader().getResource(IMPORT_ASSET_PROFILE_FILE_NAME).getPath();
     private final String absolutePathToFileImportTxt = getClass().getClassLoader().getResource(IMPORT_TXT_FILE_NAME).getPath();
     private String name;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -54,6 +62,12 @@ public class CreateAssetProfileImportTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -62,6 +76,12 @@ public class CreateAssetProfileImportTest extends AbstractDriverBaseTest {
             name = null;
         }
     }
+    /**
+     * Imports asset profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Import asset profile")
@@ -78,6 +98,12 @@ public class CreateAssetProfileImportTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.entity(IMPORT_ASSET_PROFILE_NAME));
         Assert.assertTrue(profilesPage.entity(IMPORT_ASSET_PROFILE_NAME).isDisplayed());
     }
+    /**
+     * Imports txt file.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Import asset profile")
@@ -91,6 +117,12 @@ public class CreateAssetProfileImportTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.importingFile(EMPTY_IMPORT_MESSAGE));
         Assert.assertTrue(profilesPage.importingFile(EMPTY_IMPORT_MESSAGE).isDisplayed());
     }
+    /**
+     * Add file to import and remove.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Import asset profile")
@@ -106,6 +138,12 @@ public class CreateAssetProfileImportTest extends AbstractDriverBaseTest {
         Assert.assertTrue(profilesPage.importingFile(EMPTY_IMPORT_MESSAGE).isDisplayed());
         Assert.assertTrue(profilesPage.assertEntityIsNotPresent(IMPORT_ASSET_PROFILE_NAME));
     }
+    /**
+     * Imports asset profile with same name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Import asset profile")
@@ -126,6 +164,12 @@ public class CreateAssetProfileImportTest extends AbstractDriverBaseTest {
         Assert.assertTrue(profilesPage.warningMessage().isDisplayed());
         Assert.assertEquals(profilesPage.warningMessage().getText(), SAME_NAME_WARNING_ASSET_PROFILE_MESSAGE);
     }
+    /**
+     * Imports asset profile without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Import asset profile")

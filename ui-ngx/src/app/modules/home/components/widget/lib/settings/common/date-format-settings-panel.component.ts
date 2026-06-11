@@ -24,16 +24,19 @@ import { AppState } from '@core/core.state';
 import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: date format settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-date-format-settings-panel`.
+ */
 @Component({
     selector: 'tb-date-format-settings-panel',
     templateUrl: './date-format-settings-panel.component.html',
     providers: [],
     styleUrls: ['./date-format-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: date format settings panel UI.
- */
+standalone: false
 })
 export class DateFormatSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -56,6 +59,11 @@ export class DateFormatSettingsPanelComponent extends PageComponent implements O
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.dateFormatFormControl = new UntypedFormControl(this.dateFormat.format, [Validators.required]);
     this.dateFormatFormControl.valueChanges.pipe(
@@ -66,9 +74,19 @@ export class DateFormatSettingsPanelComponent extends PageComponent implements O
     this.previewText = this.date.transform(Date.now(), this.dateFormat.format);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply date format.
+   *
+   */
 
   applyDateFormat() {
     this.dateFormat.format = this.dateFormatFormControl.value;

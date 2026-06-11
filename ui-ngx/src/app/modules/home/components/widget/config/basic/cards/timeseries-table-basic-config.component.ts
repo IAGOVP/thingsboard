@@ -29,14 +29,17 @@ import {
   setTimewindowConfig
 } from '@home/components/widget/config/timewindow-config-panel.component';
 
+
+/**
+ * Angular component: timeseries table basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timeseries-table-basic-config`.
+ */
 @Component({
     selector: 'tb-timeseries-table-basic-config',
     templateUrl: './timeseries-table-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: timeseries table basic config UI.
- */
+standalone: false
 })
 export class TimeseriesTableBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -59,13 +62,32 @@ export class TimeseriesTableBasicConfigComponent extends BasicWidgetConfigCompon
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.timeseriesTableWidgetConfigForm;
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'temperature', label: 'Temperature', type: DataKeyType.timeseries, units: '°C', decimals: 0 }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     this.timeseriesTableWidgetConfigForm = this.fb.group({
@@ -86,6 +108,13 @@ export class TimeseriesTableBasicConfigComponent extends BasicWidgetConfigCompon
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -105,9 +134,22 @@ export class TimeseriesTableBasicConfigComponent extends BasicWidgetConfigCompon
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showTitleIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.timeseriesTableWidgetConfigForm.get('showTitle').value;
@@ -140,6 +182,13 @@ export class TimeseriesTableBasicConfigComponent extends BasicWidgetConfigCompon
     this.timeseriesTableWidgetConfigForm.get('iconColor').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * get columns.
+   *
+   * @param datasources datasources (Datasource[])
+   * @returns DataKey[] observable or value
+   */
+
   private getColumns(datasources?: Datasource[]): DataKey[] {
     if (datasources && datasources.length) {
       const dataKeys = deepClone(datasources[0].dataKeys) || [];
@@ -155,6 +204,13 @@ export class TimeseriesTableBasicConfigComponent extends BasicWidgetConfigCompon
     return [];
   }
 
+  /**
+   * set columns.
+   *
+   * @param columns columns (DataKey[])
+   * @param datasources datasources (Datasource[])
+   */
+
   private setColumns(columns: DataKey[], datasources?: Datasource[]) {
     if (datasources && datasources.length) {
       const dataKeys = deepClone(columns.filter(c => !(c as any).latest));
@@ -165,6 +221,13 @@ export class TimeseriesTableBasicConfigComponent extends BasicWidgetConfigCompon
       datasources[0].latestDataKeys = latestDataKeys;
     }
   }
+
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
 
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
@@ -179,6 +242,13 @@ export class TimeseriesTableBasicConfigComponent extends BasicWidgetConfigCompon
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.settings.enableSearch = buttons.includes('search');

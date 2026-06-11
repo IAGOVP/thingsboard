@@ -64,6 +64,12 @@ import { forkJoin, Observable } from 'rxjs';
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 import { BaseData } from '@shared/models/base-data';
 
+
+/**
+ * Angular component: calculated field arguments table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-arguments-table`.
+ */
 @Component({
     selector: 'tb-calculated-field-arguments-table',
     templateUrl: './calculated-field-arguments-table.component.html',
@@ -80,10 +86,7 @@ import { BaseData } from '@shared/models/base-data';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: calculated field arguments table UI.
- */
+standalone: false
 })
 export class CalculatedFieldArgumentsTableComponent implements ControlValueAccessor, Validator, OnChanges, AfterViewInit {
 
@@ -143,6 +146,11 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     this.sort.sortChange.asObservable().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.sortOrder.property = this.sort.active;
@@ -155,16 +163,40 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _   (any)
+   */
+
   registerOnTouched(_: any): void {}
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     this.updateErrorText();
     return this.errorText || !this.argumentsFormArray.controls.length ? { argumentsFormArray: false } : null;
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disable = isDisabled;
   }
+
+  /**
+   * Event handler for delete.
+   *
+   * @param argument argument (CalculatedFieldArgumentValue)
+   */
 
   onDelete($event: Event, argument: CalculatedFieldArgumentValue): void {
     $event.stopPropagation();
@@ -172,6 +204,13 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
     this.argumentsFormArray.removeAt(index);
     this.argumentsFormArray.markAsDirty();
   }
+
+  /**
+   * manage argument.
+   *
+   * @param matButton mat button (MatIconButton)
+   * @param readonly readonly (boolean)
+   */
 
   manageArgument($event: Event, matButton: MatIconButton, argument = {} as CalculatedFieldArgumentValue, readonly: boolean = false): void {
     $event?.stopPropagation();
@@ -221,10 +260,21 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
     }
   }
 
+  /**
+   * update data source.
+   *
+   * @param value value (CalculatedFieldArgumentValue[])
+   */
+
   private updateDataSource(value: CalculatedFieldArgumentValue[]): void {
     const sortedValue = this.sortData(value);
     this.dataSource.loadData(sortedValue);
   }
+
+  /**
+   * update error text.
+   *
+   */
 
   protected updateErrorText(): void {
     if (!this.isScript && this.argumentsFormArray.controls.some(control => control.value.refEntityKey.type === ArgumentType.Rolling)) {
@@ -236,6 +286,13 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
     }
   }
 
+  /**
+   * get arguments object.
+   *
+   * @param value value (CalculatedFieldArgumentValue[])
+   * @returns Record<string, CalculatedFieldArgument> observable or value
+   */
+
   private getArgumentsObject(value: CalculatedFieldArgumentValue[]): Record<string, CalculatedFieldArgument> {
     return value.reduce((acc, argumentValue) => {
       const { argumentName, ...argument } = argumentValue as CalculatedFieldArgumentValue;
@@ -244,23 +301,55 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
     }, {} as Record<string, CalculatedFieldArgument>);
   }
 
+  /**
+   * write value.
+   *
+   * @param argumentsObj arguments obj (Record<string, CalculatedFieldArgument>)
+   */
+
   writeValue(argumentsObj: Record<string, CalculatedFieldArgument>): void {
     this.argumentsFormArray.clear({emitEvent: false});
     this.populateArgumentsFormArray(argumentsObj);
     this.updateEntityNameMap(this.argumentsFormArray.value);
   }
 
+  /**
+   * get entity details page url.
+   *
+   * @param id id (string)
+   * @param type type (EntityType)
+   * @returns string observable or value
+   */
+
   getEntityDetailsPageURL(id: string, type: EntityType): string {
     return getEntityDetailsPageURL(id, type);
   }
+
+  /**
+   * change is script mode.
+   *
+   */
 
   protected changeIsScriptMode(): void {
     this.argumentsFormArray.updateValueAndValidity({emitEvent: !this.disable});
   }
 
+  /**
+   * is edit button show badge.
+   *
+   * @param argument argument (CalculatedFieldArgumentValue)
+   * @returns boolean observable or value
+   */
+
   protected isEditButtonShowBadge(argument: CalculatedFieldArgumentValue): boolean {
     return !(argument.refEntityKey.type === ArgumentType.Rolling && !this.isScript) && argument.refEntityId?.id !== NULL_UUID
   }
+
+  /**
+   * populate arguments form array.
+   *
+   * @param argumentsObj arguments obj (Record<string, CalculatedFieldArgument>)
+   */
 
   private populateArgumentsFormArray(argumentsObj: Record<string, CalculatedFieldArgument>): void {
     Object.keys(argumentsObj).forEach(key => {
@@ -272,6 +361,12 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
     });
     this.updateDataSource(this.argumentsFormArray.value);
   }
+
+  /**
+   * update entity name map.
+   *
+   * @param values values (CalculatedFieldArgumentValue[])
+   */
 
   private updateEntityNameMap(values: CalculatedFieldArgumentValue[]): void {
     const entitiesByType = values.reduce((acc, { refEntityId = {}}) => {
@@ -290,6 +385,13 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
     }
     this.fetchEntityNames(tasks, values);
   }
+
+  /**
+   * fetch entity names.
+   *
+   * @param tasks tasks (Observable<BaseData<EntityId>[]>[])
+   * @param values values (CalculatedFieldArgumentValue[])
+   */
 
   private fetchEntityNames(tasks: Observable<BaseData<EntityId>[]>[], values: CalculatedFieldArgumentValue[]): void {
     forkJoin(tasks as Observable<BaseData<EntityId>[]>[])
@@ -312,6 +414,14 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
       });
   }
 
+  /**
+   * get sort value.
+   *
+   * @param argument argument (CalculatedFieldArgumentValue)
+   * @param column column (string)
+   * @returns string observable or value
+   */
+
   private getSortValue(argument: CalculatedFieldArgumentValue, column: string): string {
     switch (column) {
       case 'entityType':
@@ -330,6 +440,13 @@ export class CalculatedFieldArgumentsTableComponent implements ControlValueAcces
         return argument.argumentName;
     }
   }
+
+  /**
+   * sort data.
+   *
+   * @param data dialog or route input data
+   * @returns CalculatedFieldArgumentValue[] observable or value
+   */
 
   private sortData(data: CalculatedFieldArgumentValue[]): CalculatedFieldArgumentValue[] {
     return data.sort((a, b) => {

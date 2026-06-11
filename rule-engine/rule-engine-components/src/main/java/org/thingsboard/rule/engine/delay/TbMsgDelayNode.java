@@ -34,7 +34,13 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Rule engine action node 'delay (deprecated)': Delays incoming message (deprecated) Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>delay (deprecated)</b>.
+ *
+ * <p>Delays incoming message (deprecated)
+ * <br>Delays messages for a configurable period. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgDelayNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/delay/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/delay/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -53,12 +59,26 @@ public class TbMsgDelayNode implements TbNode {
 
     private TbMsgDelayNodeConfiguration config;
     private Map<UUID, TbMsg> pendingMsgs;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, TbMsgDelayNodeConfiguration.class);
         this.pendingMsgs = new HashMap<>();
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -98,6 +118,10 @@ public class TbMsgDelayNode implements TbNode {
     private boolean isParsable(TbMsg msg, String pattern) {
         return NumberUtils.isParsable(TbNodeUtils.processPattern(pattern, msg));
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {

@@ -70,15 +70,18 @@ import {
 import { UnitService } from '@core/services/unit.service';
 import ITooltipsterInstance = JQueryTooltipster.ITooltipsterInstance;
 
+
+/**
+ * Angular component: liquid level widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-liquid-level-widget`.
+ */
 @Component({
     selector: 'tb-liquid-level-widget',
     templateUrl: './liquid-level-widget.component.html',
     styleUrls: ['./liquid-level-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: liquid level widget UI.
- */
+standalone: false
 })
 export class LiquidLevelWidgetComponent implements OnInit {
 
@@ -135,6 +138,11 @@ export class LiquidLevelWidgetComponent implements OnInit {
               private unitService: UnitService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.liquidLevelWidget = this;
     this.settings = {...levelCardDefaultSettings, ...this.ctx.settings};
@@ -184,6 +192,11 @@ export class LiquidLevelWidgetComponent implements OnInit {
     });
   }
 
+  /**
+   * declare styles.
+   *
+   */
+
   private declareStyles(): void {
     this.tankColor = ColorProcessor.fromSettings(this.settings.tankColor);
     this.valueColor = ColorProcessor.fromSettings(this.settings.valueColor);
@@ -193,6 +206,12 @@ export class LiquidLevelWidgetComponent implements OnInit {
 
     this.tooltipDateFormat = DateFormatProcessor.fromSettings(this.ctx.$injector, this.settings.tooltipDateFormat);
   }
+
+  /**
+   * get data.
+   *
+   * @returns Observable< observable or value
+   */
 
   private getData(): Observable<{ svg: string; volume: number; units: TbUnit; volumeUnits: string}> {
     if (this.ctx.datasources?.length) {
@@ -221,11 +240,22 @@ export class LiquidLevelWidgetComponent implements OnInit {
     return of(null);
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * update.
+   *
+   * @param ignoreAnimation ignore animation (boolean)
+   */
 
   public update(ignoreAnimation?: boolean) {
     if (this.svg) {
@@ -233,9 +263,19 @@ export class LiquidLevelWidgetComponent implements OnInit {
     }
   }
 
+  /**
+   * destroy.
+   *
+   */
+
   public destroy() {
 
   }
+
+  /**
+   * POST/PUT entity — create svg.
+   *
+   */
 
   private createSVG() {
     if (this.svg) {
@@ -245,6 +285,12 @@ export class LiquidLevelWidgetComponent implements OnInit {
         .css('height', '100%');
     }
   }
+
+  /**
+   * update data.
+   *
+   * @param ignoreAnimation ignore animation (boolean)
+   */
 
   private updateData(ignoreAnimation?: boolean) {
     const data = this.ctx.data[0]?.data[0];
@@ -258,6 +304,11 @@ export class LiquidLevelWidgetComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * POST/PUT entity — create tooltip.
+   *
+   */
 
   private createTooltip(): void {
     this.tooltipContent = this.getTooltipContent();
@@ -304,6 +355,11 @@ export class LiquidLevelWidgetComponent implements OnInit {
     });
   }
 
+  /**
+   * POST/PUT entity — create value element.
+   *
+   */
+
   private createValueElement(): void {
     const jQueryContainerElement = $(this.liquidLevelContent.nativeElement);
     const containerOverlay = jQueryContainerElement.find('.container-overlay');
@@ -332,6 +388,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
     }
   }
 
+  /**
+   * get shape.
+   *
+   * @param entityId entity UUID
+   * @returns Observable<Shapes> observable or value
+   */
+
   private getShape(entityId: EntityId): Observable<Shapes> {
     if (this.settings.tankSelectionType === LiquidWidgetDataSourceType.attribute && entityId.id !== NULL_UUID) {
       return this.ctx.attributeService.getEntityAttributes(entityId, null, [this.settings.shapeAttributeName])
@@ -347,6 +410,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
     }
     return of(this.settings.selectedShape);
   }
+
+  /**
+   * get tankers params.
+   *
+   * @param entityId entity UUID
+   * @returns Observable< observable or value
+   */
 
   private getTankersParams(entityId: EntityId): Observable<{ volume: number; units: TbUnit; volumeUnits: string }> {
     const isVolumeStatic = this.settings.layout !== LevelCardLayout.absolute
@@ -426,6 +496,12 @@ export class LiquidLevelWidgetComponent implements OnInit {
     );
   }
 
+  /**
+   * POST/PUT entity — created error msg.
+   *
+   * @param attributeName attribute name (string)
+   */
+
   private createdErrorMsg(attributeName: string, isEmpty = false) {
     if (isEmpty) {
       this.errorsMsg.push(this.translate.instant('widgets.liquid-level-card.attribute-key-not-set', {attributeName}));
@@ -434,6 +510,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
     }
     this.cd.markForCheck();
   }
+
+  /**
+   * update svg.
+   *
+   * @param percentage percentage (number)
+   * @param ignoreAnimation ignore animation (boolean)
+   */
 
   private updateSvg(percentage: number, ignoreAnimation?: boolean) {
     const yLimits: SvgLimits = {
@@ -446,6 +529,14 @@ export class LiquidLevelWidgetComponent implements OnInit {
     this.updateLevel(newYPos, percentage, ignoreAnimation);
   }
 
+  /**
+   * calculate position.
+   *
+   * @param percentage percentage (number)
+   * @param limits limits (SvgLimits)
+   * @returns number observable or value
+   */
+
   private calculatePosition(percentage: number, limits: SvgLimits): number {
     if (percentage >= 100) {
       return limits.max;
@@ -455,6 +546,12 @@ export class LiquidLevelWidgetComponent implements OnInit {
     return limits.min + (percentage / 100) * (limits.max - limits.min);
   }
 
+  /**
+   * update tooltip.
+   *
+   * @param value value (DataEntry)
+   */
+
   private updateTooltip(value: DataEntry): void {
     this.tooltipContent = this.getTooltipContent(value);
 
@@ -462,6 +559,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
       this.tooltip.content(this.tooltipContent);
     }
   }
+
+  /**
+   * update level.
+   *
+   * @param newY new y (number)
+   * @param percentage percentage (number)
+   */
 
   private updateLevel(newY: number, percentage: number, ignoreAnimation = false): void {
     this.liquidColor.update(percentage);
@@ -493,6 +597,12 @@ export class LiquidLevelWidgetComponent implements OnInit {
     });
   }
 
+  /**
+   * update shape color.
+   *
+   * @param value value (number)
+   */
+
   private updateShapeColor(value: number): void {
     const jQueryContainerElement = $(this.liquidLevelContent.nativeElement);
     const shapeStrokes = jQueryContainerElement.find('.tb-shape-stroke');
@@ -509,6 +619,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
       $(element).attr('fill', shapeColor);
     });
   }
+
+  /**
+   * update value element.
+   *
+   * @param data dialog or route input data
+   * @param percentage percentage (number)
+   */
 
   private updateValueElement(data: any, percentage: number): void {
     let content: string;
@@ -551,6 +668,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
       container.html(content);
     }
   }
+
+  /**
+   * get tooltip content.
+   *
+   * @param value value (DataEntry)
+   * @returns string observable or value
+   */
 
   private getTooltipContent(value?: DataEntry): string {
     const contentValue = value || [0, ''];
@@ -596,6 +720,15 @@ export class LiquidLevelWidgetComponent implements OnInit {
     return content;
   }
 
+  /**
+   * POST/PUT entity — create tooltip content.
+   *
+   * @param labelText label text (string)
+   * @param contentValue content value (string)
+   * @param textStyle text style (string)
+   * @returns string observable or value
+   */
+
   private createTooltipContent(labelText: string, contentValue: string, textStyle: string): string {
     return `<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline">
                 <label style="color: rgba(0, 0, 0, 0.38); font-size: 12px; font-weight: 400; white-space: nowrap;">
@@ -607,6 +740,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
             </div>`;
   }
 
+  /**
+   * convert input data.
+   *
+   * @param value value (any)
+   * @returns number observable or value
+   */
+
   private convertInputData(value: any): number {
     if (this.settings.datasourceUnits !== CapacityUnits.percent) {
       return (convertLiters(Number(value), this.settings.datasourceUnits, ConversionType.to) /
@@ -616,6 +756,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
     return Number(value);
   }
 
+  /**
+   * convert output data.
+   *
+   * @param value value (number)
+   * @returns number observable or value
+   */
+
   private convertOutputData(value: number): number {
     if (this.widgetUnits !== CapacityUnits.percent) {
       return convertLiters(this.volume * (value / 100), this.volumeUnits as CapacityUnits, ConversionType.to);
@@ -623,6 +770,13 @@ export class LiquidLevelWidgetComponent implements OnInit {
 
     return value;
   }
+
+  /**
+   * convert tooltip data.
+   *
+   * @param value value (number)
+   * @returns number observable or value
+   */
 
   private convertTooltipData(value: number): number {
     const percentage = this.convertInputData(value);
@@ -633,6 +787,11 @@ export class LiquidLevelWidgetComponent implements OnInit {
       return percentage;
     }
   }
+
+  /**
+   * card click.
+   *
+   */
 
   public cardClick($event: Event) {
     this.ctx.actionsApi.cardClick($event);

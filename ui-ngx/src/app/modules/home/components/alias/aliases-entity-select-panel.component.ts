@@ -25,14 +25,17 @@ export interface AliasesEntitySelectPanelData {
   entityAliasesInfo: {[aliasId: string]: AliasInfo};
 }
 
+
+/**
+ * Angular component: aliases entity select panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aliases-entity-select-panel`.
+ */
 @Component({
     selector: 'tb-aliases-entity-select-panel',
     templateUrl: './aliases-entity-select-panel.component.html',
     styleUrls: ['./aliases-entity-select-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: aliases entity select panel UI.
- */
+standalone: false
 })
 export class AliasesEntitySelectPanelComponent {
 
@@ -41,6 +44,13 @@ export class AliasesEntitySelectPanelComponent {
   constructor(@Inject(ALIASES_ENTITY_SELECT_PANEL_DATA) public data: AliasesEntitySelectPanelData) {
     this.entityAliasesInfo = this.data.entityAliasesInfo;
   }
+
+  /**
+   * current alias entity changed.
+   *
+   * @param aliasId alias id (string)
+   * @param selected selected (EntityInfo | null)
+   */
 
   public currentAliasEntityChanged(aliasId: string, selected: EntityInfo | null) {
     if (selected) {

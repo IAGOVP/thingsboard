@@ -31,8 +31,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 /**
- * JSON configuration for TbRestApiCall rule node.
+ * JSON configuration POJO for {@link TbRestApiCall} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestApiCallNodeConfiguration> {
@@ -56,6 +59,12 @@ public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestA
     private boolean ignoreRequestBody;
     private String requestBodyTemplate;
     private int maxInMemoryBufferSizeInKb;
+    /**
+     * Is valid.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @JsonIgnore
     @AssertTrue(message = "query parameter names and values must be non-null")
@@ -70,6 +79,12 @@ public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestA
         }
         return true;
     }
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbRestApiCallNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbRestApiCallNodeConfiguration defaultConfiguration() {
@@ -87,6 +102,12 @@ public class TbRestApiCallNodeConfiguration implements NodeConfiguration<TbRestA
         configuration.setMaxInMemoryBufferSizeInKb(256);
         return configuration;
     }
+    /**
+     * Returns credentials.
+     *
+     * @return {@link ClientCredentials}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public ClientCredentials getCredentials() {
         return Objects.requireNonNullElseGet(credentials, AnonymousCredentials::new);

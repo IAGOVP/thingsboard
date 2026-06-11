@@ -75,11 +75,11 @@ import { CalculatedFieldsTabsComponent } from '@home/pages/calculated-fields/cal
 
 export type CalculatedFieldsTableEntity = CalculatedField | CalculatedFieldInfo;
 
+
 /**
-
- * calculated fields table config.
-
+ * Calculated fields table config (ThingsBoard web UI).
  */
+
 
 export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFieldsTableEntity> {
 
@@ -205,11 +205,24 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
     }
   }
 
+  /**
+   * fetch calculated fields.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<CalculatedFieldsTableEntity>> observable or value
+   */
+
   fetchCalculatedFields(pageLink: PageLink): Observable<PageData<CalculatedFieldsTableEntity>> {
     return this.pageMode ?
       this.calculatedFieldsService.getCalculatedFields(pageLink, this.calculatedFieldFilterConfig):
       this.calculatedFieldsService.getCalculatedFieldsByEntityId(this.entityId, pageLink);
   }
+
+  /**
+   * Event handler for open debug config.
+   *
+   * @param calculatedField calculated field (CalculatedFieldsTableEntity)
+   */
 
   private onOpenDebugConfig($event: Event, calculatedField: CalculatedFieldsTableEntity): void {
     $event?.stopPropagation();
@@ -235,6 +248,12 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
     }, $event.target as Element);
   }
 
+  /**
+   * open debug tab.
+   *
+   * @param calculatedField calculated field (CalculatedFieldsTableEntity)
+   */
+
   private openDebugTab($event: Event, calculatedField: CalculatedFieldsTableEntity) {
     const table = this.getTable();
     if (!table.isDetailsOpen) {
@@ -251,6 +270,12 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
     }
   }
 
+  /**
+   * edit calculated field.
+   *
+   * @param calculatedField calculated field (CalculatedFieldsTableEntity)
+   */
+
   private editCalculatedField($event: Event, calculatedField: CalculatedFieldsTableEntity, isDirty = false): void {
     $event?.stopPropagation();
     this.getCalculatedFieldDialog(calculatedField, 'action.apply', isDirty)
@@ -260,6 +285,13 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
         }
       });
   }
+
+  /**
+   * get calculated field dialog.
+   *
+   * @param value value (CalculatedFieldsTableEntity)
+   * @returns Observable<CalculatedField> observable or value
+   */
 
   private getCalculatedFieldDialog(value?: CalculatedFieldsTableEntity, buttonTitle = 'action.add', isDirty = false, disabledSelectType = false): Observable<CalculatedField> {
     const entityId = this.entityId || value?.entityId;
@@ -315,10 +347,22 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
       });
   }
 
+  /**
+   * export calculated field.
+   *
+   * @param calculatedField calculated field (CalculatedFieldsTableEntity)
+   */
+
   private exportCalculatedField($event: Event, calculatedField: CalculatedFieldsTableEntity): void {
     $event?.stopPropagation();
     this.importExportService.exportCalculatedField(calculatedField.id.id);
   }
+
+  /**
+   * copy calculated field.
+   *
+   * @param calculatedField calculated field (CalculatedField)
+   */
 
   private copyCalculatedField($event: Event, calculatedField: CalculatedField): void {
     $event?.stopPropagation();
@@ -336,10 +380,19 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
       });
   }
 
+  /**
+   * import calculated field.
+   *
+   */
+
   private importCalculatedField(): void {
     this.importExportService.openCalculatedFieldImportDialog()
       .pipe(
         filter(Boolean),
+        /**
+         * switch map.
+         *
+         */
         switchMap(calculatedField => {
           if (calculatedField.type === CalculatedFieldType.ALARM || !CalculatedFieldType[calculatedField.type]) {
             this.store.dispatch(new ActionNotificationShow({
@@ -361,6 +414,13 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
       )
       .subscribe(() => this.updateData());
   }
+
+  /**
+   * update imported calculated field.
+   *
+   * @param calculatedField calculated field (CalculatedField)
+   * @returns CalculatedField observable or value
+   */
 
   private updateImportedCalculatedField(calculatedField: CalculatedField): CalculatedField {
     if (calculatedField.type === CalculatedFieldType.GEOFENCING) {
@@ -384,6 +444,13 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
     return calculatedField;
   }
 
+  /**
+   * Event handler for debug config changed.
+   *
+   * @param id id (string)
+   * @param debugSettings debug settings (EntityDebugSettings)
+   */
+
   private onDebugConfigChanged(id: string, debugSettings: EntityDebugSettings): void {
     this.calculatedFieldsService.getCalculatedFieldById(id).pipe(
       switchMap(field => this.calculatedFieldsService.saveCalculatedField({ ...field, debugSettings })),
@@ -391,6 +458,15 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => this.updateData());
   }
+
+  /**
+   * get test script dialog.
+   *
+   * @param calculatedField calculated field (CalculatedFieldsTableEntity)
+   * @param argumentsObj arguments obj (CalculatedFieldEventArguments)
+   * @param expression expression (string)
+   * @returns Observable<string> observable or value
+   */
 
   getTestScriptDialog(calculatedField: CalculatedFieldsTableEntity, argumentsObj?: CalculatedFieldEventArguments, openCalculatedFieldEdit = true, expression?: string): Observable<string> {
     if (
@@ -419,6 +495,10 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
         }).afterClosed()
         .pipe(
           filter(Boolean),
+          /**
+           * tap.
+           *
+           */
           tap(expression => {
             if (openCalculatedFieldEdit) {
               this.editCalculatedField(null, {
@@ -433,11 +513,24 @@ export class CalculatedFieldsTableConfig extends EntityTableConfig<CalculatedFie
     }
   }
 
+  /**
+   * open calculated field.
+   *
+   * @param entity entity (CalculatedFieldsTableEntity)
+   */
+
   private openCalculatedField($event: Event, entity: CalculatedFieldsTableEntity) {
     $event?.stopPropagation();
     const url = this.router.createUrlTree(['calculatedFields', entity.id.id]);
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * Event handler for cfaction.
+   *
+   * @param action action (EntityAction<CalculatedFieldsTableEntity>)
+   * @returns boolean observable or value
+   */
 
   private onCFAction(action: EntityAction<CalculatedFieldsTableEntity>): boolean {
     switch (action.action) {

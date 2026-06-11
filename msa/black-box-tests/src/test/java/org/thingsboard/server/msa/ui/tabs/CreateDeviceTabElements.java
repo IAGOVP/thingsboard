@@ -19,11 +19,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.thingsboard.server.msa.ui.base.AbstractBasePage;
 
+
 /**
 
- * Create device tab elements.
+ * Selenium element locators for create device tab page (modal/tab page fragments for UI tests).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class CreateDeviceTabElements extends AbstractBasePage {
     public CreateDeviceTabElements(WebDriver driver) {
@@ -44,58 +50,144 @@ public class CreateDeviceTabElements extends AbstractBasePage {
     private static final String CHECKBOX_GATEWAY = "//tb-device-wizard//mat-checkbox[@formcontrolname='gateway']//label";
     private static final String CHECKBOX_OVERWRITE_ACTIVITY_TIME = "//tb-device-wizard//mat-checkbox[@formcontrolname='overwriteActivityTime']//label";
     private static final String DESCRIPTION_FIELD = "//tb-device-wizard//textarea[@formcontrolname='description']";
+    /**
+     * Name field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement nameField() {
         return waitUntilElementToBeClickable(CREATE_DEVICE_NAME_FIELD);
     }
+    /**
+     * Creates new device profile radio btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement createNewDeviceProfileRadioBtn() {
         return waitUntilElementToBeClickable(CREATE_NEW_DEVICE_PROFILE_RADIO_BTN);
     }
+    /**
+     * Select existing device profile radio btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement selectExistingDeviceProfileRadioBtn() {
         return waitUntilElementToBeClickable(SELECT_EXISTING_DEVICE_PROFILE_RADIO_BTN);
     }
+    /**
+     * Device profile title field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement deviceProfileTitleField() {
         return waitUntilElementToBeClickable(DEVICE_PROFILE_TITLE_FIELD);
     }
+    /**
+     * Add btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement addBtn() {
         return waitUntilElementToBeClickable(ADD_BTN);
     }
+    /**
+     * Clear profile field btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement clearProfileFieldBtn() {
         return waitUntilElementToBeClickable(CLEAR_PROFILE_FIELD_BTN);
     }
+    /**
+     * Entity from dropdown.
+     *
+     * @param customerTitle customer title ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement entityFromDropdown(String customerTitle) {
         return waitUntilElementToBeClickable(String.format(ENTITY_FROM_DROPDOWN, customerTitle));
     }
+    /**
+     * Assigns on customer field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assignOnCustomerField() {
         return waitUntilElementToBeClickable(ASSIGN_ON_CUSTOMER_FIELD);
     }
+    /**
+     * Customer option btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement customerOptionBtn() {
         return waitUntilElementToBeClickable(CUSTOMER_OPTION_BNT);
     }
+    /**
+     * Customer from drop down.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement customerFromDropDown(String entityName) {
         return waitUntilVisibilityOfElementLocated(String.format(CUSTOMER_FROM_DROPDOWN, entityName));
     }
+    /**
+     * Device label field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement deviceLabelField() {
         return waitUntilElementToBeClickable(DEVICE_LABEL_FIELD);
     }
+    /**
+     * Checks box gateway.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement checkboxGateway() {
         return waitUntilElementToBeClickable(CHECKBOX_GATEWAY);
     }
+    /**
+     * Checks box overwrite activity time.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement checkboxOverwriteActivityTime() {
         return waitUntilElementToBeClickable(CHECKBOX_OVERWRITE_ACTIVITY_TIME);
     }
+    /**
+     * Description field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement descriptionField() {
         return waitUntilElementToBeClickable(DESCRIPTION_FIELD);

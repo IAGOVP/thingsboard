@@ -96,8 +96,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb create relation node rule node.
+ * Unit test for tb create relation node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbCreateRelationNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -170,6 +171,11 @@ public class TbCreateRelationNodeTest extends AbstractRuleNodeUpgradeTest {
 
     private TbCreateRelationNode node;
     private TbCreateRelationNodeConfiguration config;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
@@ -699,6 +705,12 @@ public class TbCreateRelationNodeTest extends AbstractRuleNodeUpgradeTest {
         metaData.putValue("name", "EntityName");
         return metaData;
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

@@ -34,14 +34,17 @@ import { ActionSettingsChangeLanguage } from '@core/settings/settings.actions';
 import { SETTINGS_KEY } from '@core/settings/settings.effects';
 import { initCustomJQueryEvents } from '@shared/models/jquery-event.models';
 
+
+/**
+ * Angular component: app (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-root`.
+ */
 @Component({
     selector: 'tb-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
-/**
- * Angular component: app UI.
- */
+standalone: false
 })
 export class AppComponent {
 
@@ -83,6 +86,11 @@ export class AppComponent {
     initCustomJQueryEvents();
   }
 
+  /**
+   * setup translate.
+   *
+   */
+
   setupTranslate() {
     if (!env.production) {
       console.log(`Supported Langs: ${env.supportedLangs}`);
@@ -93,6 +101,11 @@ export class AppComponent {
     }
     this.translate.setFallbackLang(env.defaultLang);
   }
+
+  /**
+   * setup auth.
+   *
+   */
 
   setupAuth() {
     this.store.select(selectUserReady).pipe(
@@ -112,12 +125,23 @@ export class AppComponent {
     this.authService.reloadUser();
   }
 
+  /**
+   * Event handler for activate component.
+   *
+   */
+
   onActivateComponent(_$event: any) {
     const loadingElement = $('div#tb-loading-spinner');
     if (loadingElement.length) {
       loadingElement.remove();
     }
   }
+
+  /**
+   * notify user lang.
+   *
+   * @param userLang user lang (string)
+   */
 
   private notifyUserLang(userLang: string) {
     this.store.dispatch(new ActionSettingsChangeLanguage({userLang}));

@@ -28,6 +28,12 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { isDefinedAndNotNull } from '@core/utils';
 
+
+/**
+ * Angular component: lwm2m device transport configuration (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-lwm2m-device-transport-configuration`.
+ */
 @Component({
     selector: 'tb-lwm2m-device-transport-configuration',
     templateUrl: './lwm2m-device-transport-configuration.component.html',
@@ -37,10 +43,7 @@ import { isDefinedAndNotNull } from '@core/utils';
             useExisting: forwardRef(() => Lwm2mDeviceTransportConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: lwm2m device transport configuration UI.
- */
+standalone: false
 })
 export class Lwm2mDeviceTransportConfigurationComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
@@ -65,12 +68,29 @@ export class Lwm2mDeviceTransportConfigurationComponent implements ControlValueA
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.lwm2mDeviceTransportConfigurationFormGroup = this.fb.group({
@@ -86,10 +106,21 @@ export class Lwm2mDeviceTransportConfigurationComponent implements ControlValueA
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -101,6 +132,12 @@ export class Lwm2mDeviceTransportConfigurationComponent implements ControlValueA
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (Lwm2mDeviceTransportConfiguration | null)
+   */
+
   writeValue(value: Lwm2mDeviceTransportConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
       this.lwm2mDeviceTransportConfigurationFormGroup.patchValue(value, {emitEvent: false});
@@ -111,6 +148,11 @@ export class Lwm2mDeviceTransportConfigurationComponent implements ControlValueA
       this.lwm2mDeviceTransportConfigurationFormGroup.get('powerMode').updateValueAndValidity({onlySelf: true});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: DeviceTransportConfiguration = null;

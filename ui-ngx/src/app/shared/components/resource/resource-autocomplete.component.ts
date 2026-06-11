@@ -34,6 +34,12 @@ import { ResourceService } from '@core/http/resource.service';
 import { PageLink } from '@shared/models/page/page-link';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: resource autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-resource-autocomplete`.
+ */
 @Component({
     selector: 'tb-resource-autocomplete',
     templateUrl: './resource-autocomplete.component.html',
@@ -43,10 +49,7 @@ import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-
             useExisting: forwardRef(() => ResourceAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: resource autocomplete UI.
- */
+standalone: false
 })
 export class ResourceAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -104,6 +107,11 @@ export class ResourceAutocompleteComponent implements ControlValueAccessor, OnIn
               private resourceService: ResourceService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if(this.required) {
       this.resourceFormGroup.get('resource').setValidators(Validators.required);
@@ -135,12 +143,30 @@ export class ResourceAutocompleteComponent implements ControlValueAccessor, OnIn
       );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -150,6 +176,12 @@ export class ResourceAutocompleteComponent implements ControlValueAccessor, OnIn
       this.resourceFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | TbResourceId)
+   */
 
   writeValue(value: string | TbResourceId) {
     if (isDefinedAndNotNull(value)) {
@@ -190,9 +222,21 @@ export class ResourceAutocompleteComponent implements ControlValueAccessor, OnIn
     }
   }
 
+  /**
+   * display resource fn.
+   *
+   * @param resource resource (ResourceInfo | string)
+   * @returns string observable or value
+   */
+
   displayResourceFn(resource?: ResourceInfo | string): string {
     return isObject(resource) ? (resource as ResourceInfo).title : resource as string;
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.resourceFormGroup.get('resource').patchValue('', {emitEvent: true});
@@ -202,12 +246,23 @@ export class ResourceAutocompleteComponent implements ControlValueAccessor, OnIn
     }, 0);
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.resourceFormGroup.get('resource').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (string)
+   */
 
   private updateView(value: string) {
     if (!isEqual(this.modelValue, value)) {
@@ -216,9 +271,23 @@ export class ResourceAutocompleteComponent implements ControlValueAccessor, OnIn
     }
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * fetch resources.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<ResourceInfo>> observable or value
+   */
 
   private fetchResources(searchText?: string): Observable<Array<ResourceInfo>> {
     this.searchText = searchText;

@@ -23,6 +23,12 @@ import { EntitySearchDirection, entitySearchDirectionTranslations } from '@share
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: entity filter (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-filter`.
+ */
 @Component({
     selector: 'tb-entity-filter',
     templateUrl: './entity-filter.component.html',
@@ -34,10 +40,7 @@ import { takeUntil } from 'rxjs/operators';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity filter UI.
- */
+standalone: false
 })
 export class EntityFilterComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
@@ -73,6 +76,11 @@ export class EntityFilterComponent implements ControlValueAccessor, OnInit, OnDe
               private fb: FormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
 
     this.aliasFilterTypes = this.entityService.getAliasFilterTypesByEntityTypes(this.allowedEntityTypes);
@@ -98,15 +106,32 @@ export class EntityFilterComponent implements ControlValueAccessor, OnInit, OnDe
     this.filterFormGroup = this.fb.group({});
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
     this.subscriptions.unsubscribe();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -114,6 +139,12 @@ export class EntityFilterComponent implements ControlValueAccessor, OnInit, OnDe
   setDisabledState?(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param filter filter (EntityAliasFilter)
+   */
 
   writeValue(filter: EntityAliasFilter): void {
     if (!filter) {
@@ -127,6 +158,13 @@ export class EntityFilterComponent implements ControlValueAccessor, OnInit, OnDe
       this.updateFilterFormGroup(filter.type, filter);
     }
   }
+
+  /**
+   * update filter form group.
+   *
+   * @param type type (AliasFilterType)
+   * @param filter filter (EntityAliasFilter)
+   */
 
   private updateFilterFormGroup(type: AliasFilterType, filter?: EntityAliasFilter) {
     this.subscriptions.unsubscribe();
@@ -243,6 +281,12 @@ export class EntityFilterComponent implements ControlValueAccessor, OnInit, OnDe
     this.subscriptions.add(filterFormSubscription);
   }
 
+  /**
+   * filter type changed.
+   *
+   * @param type type (AliasFilterType)
+   */
+
   private filterTypeChanged(type: AliasFilterType) {
     let resolveMultiple = true;
     if (type === AliasFilterType.singleEntity || type === AliasFilterType.stateEntity || type === AliasFilterType.apiUsageState) {
@@ -253,6 +297,11 @@ export class EntityFilterComponent implements ControlValueAccessor, OnInit, OnDe
     }
     this.updateFilterFormGroup(type);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let filter = null;

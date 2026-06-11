@@ -35,6 +35,12 @@ import { EntityAliasSelectCallbacks } from '@home/components/widget/lib/settings
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: target device (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-target-device`.
+ */
 @Component({
     selector: 'tb-target-device',
     templateUrl: './target-device.component.html',
@@ -51,10 +57,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: target device UI.
- */
+standalone: false
 })
 export class TargetDeviceComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -93,6 +96,12 @@ export class TargetDeviceComponent implements ControlValueAccessor, OnInit, Vali
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (!this.targetDeviceFormGroup.valid) {
@@ -102,8 +111,20 @@ export class TargetDeviceComponent implements ControlValueAccessor, OnInit, Vali
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -114,6 +135,11 @@ export class TargetDeviceComponent implements ControlValueAccessor, OnInit, Vali
       this.updateValidators();
     }
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.targetDeviceFormGroup = this.fb.group({
@@ -135,6 +161,12 @@ export class TargetDeviceComponent implements ControlValueAccessor, OnInit, Vali
     );
   }
 
+  /**
+   * write value.
+   *
+   * @param targetDevice target device (TargetDevice)
+   */
+
   writeValue(targetDevice?: TargetDevice): void {
     this.targetDeviceFormGroup.patchValue({
       type: targetDevice?.type || TargetDeviceType.device,
@@ -153,6 +185,12 @@ export class TargetDeviceComponent implements ControlValueAccessor, OnInit, Vali
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   validate(c: UntypedFormControl) {
     return (this.targetDeviceFormGroup.valid) ? null : {
       targetDevice: {
@@ -161,9 +199,20 @@ export class TargetDeviceComponent implements ControlValueAccessor, OnInit, Vali
     };
   }
 
+  /**
+   * target device updated.
+   *
+   * @param targetDevice target device (TargetDevice)
+   */
+
   private targetDeviceUpdated(targetDevice: TargetDevice) {
     this.propagateChange(targetDevice);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const type: TargetDeviceType = this.targetDeviceFormGroup.get('type').value;

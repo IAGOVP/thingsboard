@@ -24,8 +24,11 @@ import org.thingsboard.server.common.data.id.NotificationTemplateId;
 import java.util.List;
 import java.util.UUID;
 /**
- * JSON configuration for TbNotification rule node.
+ * JSON configuration POJO for {@link TbNotification} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbNotificationNodeConfiguration implements NodeConfiguration<TbNotificationNodeConfiguration> {
@@ -34,6 +37,12 @@ public class TbNotificationNodeConfiguration implements NodeConfiguration<TbNoti
     private List<UUID> targets;
     @NotNull
     private NotificationTemplateId templateId;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbNotificationNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbNotificationNodeConfiguration defaultConfiguration() {

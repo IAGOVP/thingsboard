@@ -44,6 +44,12 @@ interface FormGroupModel {
   unit: FullTimeUnit;
 }
 
+
+/**
+ * Angular component: time unit select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-unit-select`.
+ */
 @Component({
     selector: 'tb-time-unit-select',
     templateUrl: './time-unit-select.component.html',
@@ -60,10 +66,7 @@ interface FormGroupModel {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: time unit select UI.
- */
+standalone: false
 })
 export class TimeUnitSelectComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
@@ -118,6 +121,11 @@ export class TimeUnitSelectComponent implements OnInit, OnDestroy, ControlValueA
   constructor(private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.timeUnitSelectFormGroup = this.fb.group({
       time: [0, [Validators.required, Validators.min(this.minTime), Validators.pattern('[0-9]*')]],
@@ -140,17 +148,40 @@ export class TimeUnitSelectComponent implements OnInit, OnDestroy, ControlValueA
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any) {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -160,6 +191,12 @@ export class TimeUnitSelectComponent implements OnInit, OnDestroy, ControlValueA
       this.timeUnitSelectFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (number)
+   */
 
   writeValue(value: number) {
     const formValue: FormGroupModel = {
@@ -174,16 +211,35 @@ export class TimeUnitSelectComponent implements OnInit, OnDestroy, ControlValueA
     this.timeUnitSelectFormGroup.get('unit').updateValueAndValidity({onlySelf: true});
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.timeUnitSelectFormGroup.valid ? null : {
       timeUnitSelect: false
     };
   }
 
+  /**
+   * update model.
+   *
+   * @param value value (FormGroupModel)
+   */
+
   private updateModel(value: FormGroupModel) {
     const time = value.time * this.timeUnitToTimeMap.get(value.unit);
     this.propagateChange(time);
   }
+
+  /**
+   * calculate time unit.
+   *
+   * @param value value (number)
+   * @returns FullTimeUnit observable or value
+   */
 
   private calculateTimeUnit(value: number): FullTimeUnit {
     if (value === 0) {

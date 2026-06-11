@@ -26,14 +26,17 @@ export interface PersistentFilterPanelData {
   rpcStatus: RpcStatus;
 }
 
+
+/**
+ * Angular component: persistent filter panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-persistent-filter-panel`.
+ */
 @Component({
     selector: 'tb-persistent-filter-panel',
     templateUrl: './persistent-filter-panel.component.html',
     styleUrls: ['./persistent-filter-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: persistent filter panel UI.
- */
+standalone: false
 })
 export class PersistentFilterPanelComponent {
 
@@ -57,12 +60,22 @@ export class PersistentFilterPanelComponent {
     this.rpcSearchPlaceholder = this.translate.instant('widgets.persistent-table.any-status');
   }
 
+  /**
+   * update.
+   *
+   */
+
   update() {
     this.result = {
       rpcStatus: this.persistentFilterFormGroup.get('rpcStatus').value
     };
     this.overlayRef.dispose();
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel() {
     this.overlayRef.dispose();

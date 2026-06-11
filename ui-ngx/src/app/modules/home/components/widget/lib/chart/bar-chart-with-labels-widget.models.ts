@@ -51,11 +51,11 @@ import {
   TimeSeriesChartTooltipWidgetSettings
 } from '@home/components/widget/lib/chart/time-series-chart-tooltip.models';
 
+
 /**
-
- * TypeScript models and enums for bar chart with labels widget settings.
-
+ * Bar chart with labels widget settings (ThingsBoard web UI).
  */
+
 
 export interface BarChartWithLabelsWidgetSettings extends TimeSeriesChartTooltipWidgetSettings {
   dataZoom: boolean;

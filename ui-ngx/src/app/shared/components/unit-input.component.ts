@@ -47,6 +47,12 @@ import { TbPopoverService } from '@shared/components/popover.service';
 import { UnitSettingsPanelComponent } from '@shared/components/unit-settings-panel.component';
 import { isDefinedAndNotNull, isEqual } from '@core/utils';
 
+
+/**
+ * Angular component: unit input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-unit-input`.
+ */
 @Component({
     selector: 'tb-unit-input',
     templateUrl: './unit-input.component.html',
@@ -59,10 +65,7 @@ import { isDefinedAndNotNull, isEqual } from '@core/utils';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: unit input UI.
- */
+standalone: false
 })
 export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -114,6 +117,11 @@ export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChang
               private elementRef: ElementRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.unitsFormControl = this.fb.control<TbUnit | UnitInfo>('', this.required ? [Validators.required] : []);
     this.filteredUnits$ = this.unitsFormControl.valueChanges.pipe(
@@ -137,6 +145,12 @@ export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChang
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param symbol symbol (TbUnit)
+   */
+
   writeValue(symbol?: TbUnit): void {
     this.searchText = '';
     this.modelValue = symbol;
@@ -150,12 +164,24 @@ export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChang
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.unitsFormControl.updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * display unit fn.
+   *
+   * @param unit unit (TbUnit | UnitInfo)
+   * @returns string | undefined observable or value
+   */
 
   displayUnitFn(unit?: TbUnit | UnitInfo): string | undefined {
     if (unit) {
@@ -164,12 +190,30 @@ export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChang
     return undefined;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -180,6 +224,11 @@ export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChang
     }
   }
 
+  /**
+   * clear.
+   *
+   */
+
   clear($event: Event) {
     $event.stopPropagation();
     this.unitsFormControl.patchValue(null, {emitEvent: true});
@@ -188,6 +237,11 @@ export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChang
       this.unitInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * open unit settings popup.
+   *
+   */
 
   openUnitSettingsPopup($event: Event) {
     if (!this.supportsUnitConversion) {
@@ -222,6 +276,12 @@ export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChang
     }
   }
 
+  /**
+   * update model.
+   *
+   * @param value value (UnitInfo | TbUnit)
+   */
+
   private updateModel(value: UnitInfo | TbUnit ) {
     let res = getTbUnitFromSearch(value);
     if (this.onlySystemUnits && !isTbUnitMapping(res)) {
@@ -241,12 +301,25 @@ export class UnitInputComponent implements ControlValueAccessor, OnInit, OnChang
     }
   }
 
+  /**
+   * fetch units.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<[AllMeasures, Array<UnitInfo>]>> observable or value
+   */
+
   private fetchUnits(searchText?: string): Observable<Array<[AllMeasures, Array<UnitInfo>]>> {
     this.searchText = searchText;
     return this.getGroupedUnits().pipe(
       map(unit => searchUnit(unit, searchText))
     );
   }
+
+  /**
+   * get grouped units.
+   *
+   * @returns Observable<Array<[AllMeasures, Array<UnitInfo>]>> observable or value
+   */
 
   private getGroupedUnits(): Observable<Array<[AllMeasures, Array<UnitInfo>]>> {
     if (this.fetchUnits$ === null) {

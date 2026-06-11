@@ -25,13 +25,24 @@ import org.thingsboard.server.common.data.relation.EntityRelationsQuery;
 import org.thingsboard.server.common.data.relation.EntitySearchDirection;
 import org.thingsboard.server.common.data.relation.RelationsSearchParameters;
 
+
 /**
 
- * Rule engine component: entities related entity id async loader.
+ * Entities related entity id async loader (shared rule-engine utilities and async loaders).
 
  */
 
+
 public class EntitiesRelatedEntityIdAsyncLoader {
+    /**
+     * Finds entity async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originator message originator entity id
+     * @param relationsQuery relations query ({@link RelationsQuery})
+     * @return future completing with {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ListenableFuture<EntityId> findEntityAsync(
             TbContext ctx,

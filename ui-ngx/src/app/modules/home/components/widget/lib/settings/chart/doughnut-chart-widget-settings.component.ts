@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: doughnut chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-doughnut-chart-widget-settings`.
+ */
 @Component({
     selector: 'tb-doughnut-chart-widget-settings',
     templateUrl: './doughnut-chart-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: doughnut chart widget settings UI.
- */
+standalone: false
 })
 export class DoughnutChartWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class DoughnutChartWidgetSettingsComponent extends WidgetSettingsComponen
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.doughnutChartWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -53,6 +68,12 @@ export class DoughnutChartWidgetSettingsComponent extends WidgetSettingsComponen
       }
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.doughnutChartWidgetSettingsForm = this.fb.group({
@@ -75,9 +96,21 @@ export class DoughnutChartWidgetSettingsComponent extends WidgetSettingsComponen
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['legend.display'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const displayLegend: boolean = this.doughnutChartWidgetSettingsForm.get('legend.display').value;

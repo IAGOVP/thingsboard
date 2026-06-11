@@ -33,15 +33,18 @@ import { interval, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: map timeline panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-timeline-panel`.
+ */
 @Component({
     selector: 'tb-map-timeline-panel',
     templateUrl: './map-timeline-panel.component.html',
     styleUrls: ['./map-timeline-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map timeline panel UI.
- */
+standalone: false
 })
 export class MapTimelinePanelComponent implements OnInit, OnDestroy {
 
@@ -141,6 +144,11 @@ export class MapTimelinePanelComponent implements OnInit, OnDestroy {
               private injector: Injector) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (this.settings.showTimestamp) {
       this.timestampFormat = DateFormatProcessor.fromSettings(this.injector, this.settings.timestampFormat);
@@ -149,16 +157,32 @@ export class MapTimelinePanelComponent implements OnInit, OnDestroy {
     this.speed = this.settings.speedOptions[0];
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
     }
   }
 
+  /**
+   * Event handler for index change.
+   *
+   * @param index index (number)
+   */
+
   public onIndexChange(index: number) {
     this.index = index;
     this.updateCurrentTime();
   }
+
+  /**
+   * play.
+   *
+   */
 
   public play() {
     this.playing = true;
@@ -188,20 +212,40 @@ export class MapTimelinePanelComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * pause.
+   *
+   */
+
   public pause() {
     this.playing = false;
     this.updateCurrentTime();
   }
+
+  /**
+   * fast rewind.
+   *
+   */
 
   public fastRewind() {
     this.index = this.minTimeIndex;
     this.pause();
   }
 
+  /**
+   * fast forward.
+   *
+   */
+
   public fastForward() {
     this.index = this.maxTimeIndex;
     this.pause();
   }
+
+  /**
+   * move next.
+   *
+   */
 
   public moveNext() {
     if (this.index < this.maxTimeIndex) {
@@ -218,6 +262,11 @@ export class MapTimelinePanelComponent implements OnInit, OnDestroy {
     this.pause();
   }
 
+  /**
+   * move prev.
+   *
+   */
+
   public movePrev() {
     if (this.index > this.minTimeIndex) {
       if (this.settings.snapToRealLocation) {
@@ -233,6 +282,11 @@ export class MapTimelinePanelComponent implements OnInit, OnDestroy {
     this.pause();
   }
 
+  /**
+   * speed updated.
+   *
+   */
+
   public speedUpdated() {
     if (this.interval) {
       this.interval.unsubscribe();
@@ -243,6 +297,11 @@ export class MapTimelinePanelComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * resize.
+   *
+   */
+
   private resize(): void {
     const width = this.panelElement.getBoundingClientRect().width;
     const column = width <= 400;
@@ -251,6 +310,11 @@ export class MapTimelinePanelComponent implements OnInit, OnDestroy {
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * update current time.
+   *
+   */
 
   private updateCurrentTime() {
     const newTime = this.minValue + this.index * this.settings.timeStep;
@@ -261,12 +325,25 @@ export class MapTimelinePanelComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * update timestamp display value.
+   *
+   */
+
   private updateTimestampDisplayValue() {
     if (this.settings.showTimestamp && this.hasData) {
       this.timestampFormat.update(this.currentTime);
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * find index.
+   *
+   * @param value value (number)
+   * @param array array (number[])
+   * @returns number observable or value
+   */
 
   private findIndex(value: number, array: number[]): number {
     let i = 0;

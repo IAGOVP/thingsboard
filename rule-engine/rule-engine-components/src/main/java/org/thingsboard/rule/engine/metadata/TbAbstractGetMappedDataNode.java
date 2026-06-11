@@ -38,17 +38,34 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 /**
- * Base implementation for get mapped data node rule nodes.
+ * Abstract base class for get mapped data node rule nodes (entity metadata and related-data fetch nodes).
  */
+
 
 @Slf4j
 public abstract class TbAbstractGetMappedDataNode<T extends EntityId, C extends TbGetMappedDataNodeConfiguration> extends TbAbstractNodeWithFetchTo<C> {
+    /**
+     * Checks if mapping is not empty or else throw.
+     *
+     * @param dataMapping data mapping ({@link Map})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected void checkIfMappingIsNotEmptyOrElseThrow(Map<String, String> dataMapping) throws TbNodeException {
         if (dataMapping == null || dataMapping.isEmpty()) {
             throw new TbNodeException("At least one mapping entry should be specified!");
         }
     }
+    /**
+     * Processes fields data.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param entityId target entity identifier
+     * @param msgDataAsJsonNode msg data as json node ({@link ObjectNode})
+     * @param ignoreNullStrings ignore null strings
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void processFieldsData(TbContext ctx, TbMsg msg, T entityId, ObjectNode msgDataAsJsonNode, boolean ignoreNullStrings) {
         var mappingsMap = processFieldsMappingPatterns(msg);
@@ -57,6 +74,15 @@ public abstract class TbAbstractGetMappedDataNode<T extends EntityId, C extends 
                 t -> ctx.tellFailure(msg, t),
                 MoreExecutors.directExecutor());
     }
+    /**
+     * Processes attributes kv entry data.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param entityId target entity identifier
+     * @param msgDataAsJsonNode msg data as json node ({@link ObjectNode})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void processAttributesKvEntryData(TbContext ctx, TbMsg msg, T entityId, ObjectNode msgDataAsJsonNode) {
         var mappingsMap = processKvEntryMappingPatterns(msg);
@@ -66,6 +92,15 @@ public abstract class TbAbstractGetMappedDataNode<T extends EntityId, C extends 
                 t -> ctx.tellFailure(msg, t),
                 MoreExecutors.directExecutor());
     }
+    /**
+     * Processes ts kv entry data.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param entityId target entity identifier
+     * @param msgDataAsJsonNode msg data as json node ({@link ObjectNode})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void processTsKvEntryData(TbContext ctx, TbMsg msg, T entityId, ObjectNode msgDataAsJsonNode) {
         var mappingsMap = processKvEntryMappingPatterns(msg);

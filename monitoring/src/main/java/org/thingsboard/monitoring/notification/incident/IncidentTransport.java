@@ -15,17 +15,42 @@
  */
 package org.thingsboard.monitoring.notification.incident;
 
+
 /**
 
- * Contract for creating/updating external incident tickets (Slack, etc.).
+ * Contract for creating and updating external incident tickets (Slack, etc.).
 
  */
 
+
 public interface IncidentTransport {
+    /**
+     * Post incident.
+     *
+     * @param text text ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String postIncident(String text);
+    /**
+     * Post thread reply.
+     *
+     * @param threadId thread id ({@link String})
+     * @param text text ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void postThreadReply(String threadId, String text);
+    /**
+     * Updates incident.
+     *
+     * @param threadId thread id ({@link String})
+     * @param text text ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void updateIncident(String threadId, String text);
 

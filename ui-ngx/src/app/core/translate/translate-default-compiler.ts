@@ -22,8 +22,9 @@ import {
 import { Inject, Injectable, Optional } from '@angular/core';
 import { parse } from '@messageformat/parser';
 /**
- * translate default compiler.
+ * Translate default compiler (ThingsBoard web UI).
  */
+
 
 @Injectable({ providedIn: 'root' })
 export class TranslateDefaultCompiler extends TranslateMessageFormatCompiler {
@@ -36,13 +37,37 @@ export class TranslateDefaultCompiler extends TranslateMessageFormatCompiler {
     super(config);
   }
 
+  /**
+   * compile.
+   *
+   * @param value value (string)
+   * @param lang lang (string)
+   * @returns any observable or value
+   */
+
   public compile(value: string, lang: string): any {
     return this.defaultCompile(value, lang);
   }
 
+  /**
+   * compile translations.
+   *
+   * @param translations translations (any)
+   * @param lang lang (string)
+   * @returns any observable or value
+   */
+
   public compileTranslations(translations: any, lang: string): any {
     return this.defaultCompile(translations, lang);
   }
+
+  /**
+   * default compile.
+   *
+   * @param src src (any)
+   * @param lang lang (string)
+   * @returns any observable or value
+   */
 
   private defaultCompile(src: any, lang: string): any {
     if (typeof src !== 'object') {
@@ -64,6 +89,13 @@ export class TranslateDefaultCompiler extends TranslateMessageFormatCompiler {
       return result;
     }
   }
+
+  /**
+   * check is plural.
+   *
+   * @param src src (string)
+   * @returns boolean observable or value
+   */
 
   private checkIsPlural(src: string): boolean {
     let tokens: any[];

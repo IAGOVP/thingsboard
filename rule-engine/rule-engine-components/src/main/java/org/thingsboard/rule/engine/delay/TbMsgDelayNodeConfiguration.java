@@ -18,8 +18,11 @@ package org.thingsboard.rule.engine.delay;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbMsgDelay rule node.
+ * JSON configuration POJO for {@link TbMsgDelay} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMsgDelayNodeConfiguration implements NodeConfiguration<TbMsgDelayNodeConfiguration> {
@@ -28,6 +31,12 @@ public class TbMsgDelayNodeConfiguration implements NodeConfiguration<TbMsgDelay
     private int maxPendingMsgs;
     private String periodInSecondsPattern;
     private boolean useMetadataPeriodInSecondsPatterns;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgDelayNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgDelayNodeConfiguration defaultConfiguration() {

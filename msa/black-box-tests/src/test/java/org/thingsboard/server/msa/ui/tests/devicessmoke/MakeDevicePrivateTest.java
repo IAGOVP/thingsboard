@@ -29,13 +29,20 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.PUBLIC_CUSTOMER_NAME;
 /**
- * Make device private test.
+ * Black-box test: make device private (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Make device private")
 public class MakeDevicePrivateTest extends AbstractDeviceTest {
 
     private CustomerPageHelper customerPage;
+    /**
+     * Creates public device.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void createPublicDevice() {
@@ -44,11 +51,23 @@ public class MakeDevicePrivateTest extends AbstractDeviceTest {
         testRestClient.setDevicePublic(device.getId());
         deviceName = device.getName();
     }
+    /**
+     * Deletes public customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterClass
     public void deletePublicCustomer() {
         deleteCustomerByName(PUBLIC_CUSTOMER_NAME);
     }
+    /**
+     * Make device private by right side btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Make device private by right side btn")
@@ -63,6 +82,12 @@ public class MakeDevicePrivateTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(PUBLIC_CUSTOMER_NAME).click();
         devicePage.assertEntityIsNotPresent(deviceName);
     }
+    /**
+     * Make device private from details tab.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Make device public by btn on details tab")

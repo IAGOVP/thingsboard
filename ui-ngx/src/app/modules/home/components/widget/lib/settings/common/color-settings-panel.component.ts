@@ -36,16 +36,19 @@ import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/k
 import { Datasource } from '@shared/models/widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: color settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-color-settings-panel`.
+ */
 @Component({
     selector: 'tb-color-settings-panel',
     templateUrl: './color-settings-panel.component.html',
     providers: [],
     styleUrls: ['./color-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: color settings panel UI.
- */
+standalone: false
 })
 export class ColorSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -101,6 +104,11 @@ export class ColorSettingsPanelComponent extends PageComponent implements OnInit
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.colorSettingsFormGroup = this.fb.group(
       {
@@ -120,6 +128,11 @@ export class ColorSettingsPanelComponent extends PageComponent implements OnInit
     this.updateValidators();
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   updateValidators() {
     const type: ColorType = this.colorSettingsFormGroup.get('type').value;
     this.colorSettingsFormGroup.get('gradient').disable({emitEvent: false});
@@ -138,6 +151,12 @@ export class ColorSettingsPanelComponent extends PageComponent implements OnInit
     }
   }
 
+  /**
+   * copy color settings.
+   *
+   * @param comp comp (ColorSettingsComponent)
+   */
+
   copyColorSettings(comp: ColorSettingsComponent) {
     this.colorSettings = deepClone(comp.modelValue);
     this.colorSettingsFormGroup.patchValue({
@@ -150,9 +169,19 @@ export class ColorSettingsPanelComponent extends PageComponent implements OnInit
     this.colorSettingsFormGroup.markAsDirty();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply color settings.
+   *
+   */
 
   applyColorSettings() {
     const colorSettings: ColorSettings = this.colorSettingsFormGroup.getRawValue();

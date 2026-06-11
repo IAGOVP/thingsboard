@@ -19,14 +19,17 @@ import { isDefinedAndNotNull } from '@core/public-api';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 
+
+/**
+ * Angular component: unassign customer config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-un-assign-to-customer-config`.
+ */
 @Component({
     selector: 'tb-action-node-un-assign-to-customer-config',
     templateUrl: './unassign-customer-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: unassign customer config UI.
- */
+standalone: false
 })
 export class UnassignCustomerConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -36,9 +39,22 @@ export class UnassignCustomerConfigComponent extends RuleNodeConfigurationCompon
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.unassignCustomerConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
@@ -47,6 +63,12 @@ export class UnassignCustomerConfigComponent extends RuleNodeConfigurationCompon
     };
   }
 
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
+
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.unassignCustomerConfigForm = this.fb.group({
       customerNamePattern: [configuration.customerNamePattern , []],
@@ -54,9 +76,21 @@ export class UnassignCustomerConfigComponent extends RuleNodeConfigurationCompon
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['unassignFromCustomer'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const unassignFromCustomer: boolean = this.unassignCustomerConfigForm.get('unassignFromCustomer').value;
@@ -67,6 +101,13 @@ export class UnassignCustomerConfigComponent extends RuleNodeConfigurationCompon
     }
     this.unassignCustomerConfigForm.get('customerNamePattern').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {

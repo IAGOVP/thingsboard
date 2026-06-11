@@ -17,13 +17,22 @@ package org.thingsboard.rule.engine.api;
 
 import lombok.Data;
 /**
- * JSON configuration for Empty rule node.
+ * JSON configuration POJO for {@link Empty} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class EmptyNodeConfiguration implements NodeConfiguration<EmptyNodeConfiguration> {
 
     private int version;
+    /**
+     * Default configuration.
+     *
+     * @return {@link EmptyNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public EmptyNodeConfiguration defaultConfiguration() {

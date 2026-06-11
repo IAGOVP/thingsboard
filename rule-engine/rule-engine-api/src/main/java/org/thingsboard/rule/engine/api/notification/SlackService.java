@@ -22,19 +22,56 @@ import org.thingsboard.server.common.data.notification.targets.slack.SlackFile;
 
 import java.util.List;
 
+
 /**
 
- * Rule engine facade for slack operations.
+ * Rule engine service facade for slack (rule engine public API contracts and services).
 
  */
 
+
 public interface SlackService {
+    /**
+     * Send message.
+     *
+     * @param tenantId tenant UUID
+     * @param token token ({@link String})
+     * @param conversationId conversation id ({@link String})
+     * @param message message ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendMessage(TenantId tenantId, String token, String conversationId, String message);
+    /**
+     * Send message.
+     *
+     * @param tenantId tenant UUID
+     * @param token token ({@link String})
+     * @param conversationId conversation id ({@link String})
+     * @param message message ({@link String})
+     * @param files files ({@link List})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendMessage(TenantId tenantId, String token, String conversationId, String message, List<SlackFile> files);
+    /**
+     * Lists conversations.
+     *
+     * @param tenantId tenant UUID
+     * @param token token ({@link String})
+     * @param conversationType conversation type ({@link SlackConversationType})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<SlackConversation> listConversations(TenantId tenantId, String token, SlackConversationType conversationType);
+    /**
+     * Returns token.
+     *
+     * @param tenantId tenant UUID
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String getToken(TenantId tenantId);
 

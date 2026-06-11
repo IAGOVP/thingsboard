@@ -17,11 +17,11 @@
 import { BaseData, HasId } from '@shared/models/base-data';
 import { EntityTableConfig } from './entities-table-config.models';
 
+
 /**
-
- * TypeScript models and enums for add entity dialog data.
-
+ * TypeScript interfaces, types, and enums for add entity dialog data (ThingsBoard web UI).
  */
+
 
 export interface AddEntityDialogData<T extends BaseData<HasId>> {
   entitiesTableConfig: EntityTableConfig<T>;

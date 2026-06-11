@@ -21,15 +21,18 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { ActionPreferencesUpdateOpenedMenuSection } from '@core/auth/auth.actions';
 
+
+/**
+ * Angular component: menu toggle (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-menu-toggle`.
+ */
 @Component({
     selector: 'tb-menu-toggle',
     templateUrl: './menu-toggle.component.html',
     styleUrls: ['./menu-toggle.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: menu toggle UI.
- */
+standalone: false
 })
 export class MenuToggleComponent implements OnInit {
 
@@ -39,8 +42,19 @@ export class MenuToggleComponent implements OnInit {
               private store: Store<AppState>) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * section height.
+   *
+   * @returns string observable or value
+   */
 
   sectionHeight(): string {
     if (this.section.opened) {
@@ -50,11 +64,24 @@ export class MenuToggleComponent implements OnInit {
     }
   }
 
+  /**
+   * toggle section.
+   *
+   * @param event DOM or Angular event object
+   */
+
   toggleSection(event: MouseEvent) {
     event.stopPropagation();
     this.section.opened = !this.section.opened;
     this.store.dispatch(new ActionPreferencesUpdateOpenedMenuSection({path: this.section.path, opened: this.section.opened}));
   }
+
+  /**
+   * track by section pages.
+   *
+   * @param index index (number)
+   * @param section section (MenuSection)
+   */
 
   trackBySectionPages(index: number, section: MenuSection){
     return section.id;

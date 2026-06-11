@@ -55,15 +55,18 @@ export interface MapDataLayerDialogData {
   context: MapSettingsContext;
 }
 
+
+/**
+ * Angular component: map data layer dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-data-layer-dialog`.
+ */
 @Component({
     selector: 'tb-map-data-layer-dialog',
     templateUrl: './map-data-layer-dialog.component.html',
     styleUrls: ['./map-data-layer-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map data layer dialog UI.
- */
+standalone: false
 })
 export class MapDataLayerDialogComponent extends DialogComponent<MapDataLayerDialogComponent, MapDataLayerSettings> {
 
@@ -320,6 +323,12 @@ export class MapDataLayerDialogComponent extends DialogComponent<MapDataLayerDia
     this.updateValidators();
   }
 
+  /**
+   * Event handler for ds type changed.
+   *
+   * @param newDsType new ds type (DatasourceType)
+   */
+
   private onDsTypeChanged(newDsType: DatasourceType) {
     switch (this.dataLayerType) {
       case 'trips':
@@ -364,6 +373,11 @@ export class MapDataLayerDialogComponent extends DialogComponent<MapDataLayerDia
     }
     this.updateValidators();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const dsType: DatasourceType = this.dataLayerFormGroup.get('dsType').value;
@@ -462,6 +476,11 @@ export class MapDataLayerDialogComponent extends DialogComponent<MapDataLayerDia
     }
   }
 
+  /**
+   * update marker type validators.
+   *
+   */
+
   private updateMarkerTypeValidators(): void {
     const markerType: MarkerType = this.dataLayerFormGroup.get('markerType').value;
     if (markerType === MarkerType.shape) {
@@ -478,6 +497,11 @@ export class MapDataLayerDialogComponent extends DialogComponent<MapDataLayerDia
       this.dataLayerFormGroup.get('markerImage').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update fill type validators.
+   *
+   */
 
   private updateFillTypeValidators(): void {
     const fillType: ShapeFillType = this.dataLayerFormGroup.get('fillType').value;
@@ -496,6 +520,12 @@ export class MapDataLayerDialogComponent extends DialogComponent<MapDataLayerDia
     }
   }
 
+  /**
+   * edit key.
+   *
+   * @param keyType key type ('xKey' | 'yKey' | 'polygonKey' | 'circleKey' | 'polylineKey')
+   */
+
   editKey(keyType: 'xKey' | 'yKey' | 'polygonKey' | 'circleKey' | 'polylineKey') {
     const targetDataKey: DataKey = this.dataLayerFormGroup.get(keyType).value;
     this.context.editKey(targetDataKey,
@@ -509,6 +539,13 @@ export class MapDataLayerDialogComponent extends DialogComponent<MapDataLayerDia
       }
     );
   }
+
+  /**
+   * generate data key.
+   *
+   * @param key key (DataKey)
+   * @returns DataKey observable or value
+   */
 
   private generateDataKey(key: DataKey): DataKey {
     const dataKey = this.context.callbacks.generateDataKey(key.name, key.type, null, false, null);
@@ -552,9 +589,19 @@ export class MapDataLayerDialogComponent extends DialogComponent<MapDataLayerDia
     return dataKey;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const settings: MapDataLayerSettings = this.dataLayerFormGroup.getRawValue();

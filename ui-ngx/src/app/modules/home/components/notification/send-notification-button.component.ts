@@ -29,13 +29,16 @@ import { AppState } from '@core/core.state';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { Authority } from '@shared/models/authority.enum';
 
+
+/**
+ * Angular component: send notification button (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-send-notification-button`.
+ */
 @Component({
     selector: 'tb-send-notification-button',
     templateUrl: './send-notification-button.component.html',
-    standalone: false
-/**
- * Angular component: send notification button UI.
- */
+standalone: false
 })
 export class SendNotificationButtonComponent {
 
@@ -45,6 +48,11 @@ export class SendNotificationButtonComponent {
               private store: Store<AppState>,
               private activeComponentService: ActiveComponentService) {
   }
+
+  /**
+   * send notification.
+   *
+   */
 
   sendNotification($event: Event) {
     if ($event) {
@@ -69,6 +77,12 @@ export class SendNotificationButtonComponent {
       }
     });
   }
+
+  /**
+   * show.
+   *
+   * @returns boolean observable or value
+   */
 
   public show(): boolean {
     return this.authUser.authority !== Authority.CUSTOMER_USER;

@@ -29,15 +29,18 @@ import {
   PieChartWidgetSettings
 } from '@home/components/widget/lib/chart/pie-chart-widget.models';
 
+
+/**
+ * Angular component: pie chart widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-pie-chart-widget`.
+ */
 @Component({
     selector: 'tb-pie-chart-widget',
     templateUrl: './latest-chart-widget.component.html',
     styleUrls: [],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: pie chart widget UI.
- */
+standalone: false
 })
 export class PieChartWidgetComponent implements OnInit {
 
@@ -57,6 +60,11 @@ export class PieChartWidgetComponent implements OnInit {
   constructor(private widgetComponent: WidgetComponent,
               private translate: TranslateService) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.ctx.$scope.pieChartWidget = this;
@@ -80,9 +88,19 @@ export class PieChartWidgetComponent implements OnInit {
     };
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     this.latestChart?.onInit();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     this.latestChart?.onDataUpdated();

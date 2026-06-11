@@ -49,11 +49,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+
 /**
 
- * Unit test for tb copy keys node rule node.
+ * Unit test for tb copy keys node (message transformation and originator change nodes).
 
  */
+
 
 public class TbCopyKeysNodeTest {
     DeviceId deviceId;

@@ -60,14 +60,17 @@ enum BackupCodeState {
   SUCCESS = 'SUCCESS',
 }
 
+
+/**
+ * Angular component: force two factor auth login (login pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-force-two-factor-auth-login`.
+ */
 @Component({
     selector: 'tb-force-two-factor-auth-login',
     templateUrl: './force-two-factor-auth-login.component.html',
     styleUrls: ['./force-two-factor-auth-login.component.scss'],
-    standalone: false
-/**
- * Angular component: force two factor auth login UI.
- */
+standalone: false
 })
 export class ForceTwoFactorAuthLoginComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -113,6 +116,11 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.providersInfo = this.authService.forceTwoFactorAuthProviders;
     this.allowedProviders();
@@ -141,6 +149,12 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
     });
   }
 
+  /**
+   * go back by type.
+   *
+   * @param type type (TwoFactorAuthProviderType)
+   */
+
   goBackByType(type: TwoFactorAuthProviderType) {
     switch (type) {
       case TwoFactorAuthProviderType.TOTP:
@@ -160,6 +174,11 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
     return this.config?.configs ? Object.keys(this.config?.configs)?.length < this.allowProviders?.length : true;
   }
 
+  /**
+   * allowed providers.
+   *
+   */
+
   private allowedProviders() {
     if (isDefinedAndNotNull(this.config)) {
       this.allowProviders = this.providersInfo;
@@ -167,6 +186,12 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
       this.allowProviders = this.providersInfo.filter(provider => provider !== TwoFactorAuthProviderType.BACKUP_CODE);
     }
   }
+
+  /**
+   * update state.
+   *
+   * @param type type (TwoFactorAuthProviderType)
+   */
 
   updateState(type: TwoFactorAuthProviderType) {
     switch (type) {
@@ -199,6 +224,11 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
     }
   }
 
+  /**
+   * send sms code.
+   *
+   */
+
   sendSmsCode() {
     if (this.smsConfigForm.valid) {
       this.authAccountConfig = {
@@ -211,6 +241,11 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
     }
   }
 
+  /**
+   * send email code.
+   *
+   */
+
   sendEmailCode() {
     if (this.emailConfigForm.valid) {
       this.authAccountConfig = {
@@ -222,6 +257,12 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
       this.twoFaService.submitTwoFaAccountConfig(this.authAccountConfig).subscribe(() => this.emailState.set(ProvidersState.ENTER_CODE));
     }
   }
+
+  /**
+   * try another way.
+   *
+   * @param type type (TwoFactorAuthProviderType)
+   */
 
   tryAnotherWay(type: TwoFactorAuthProviderType) {
     this.state.set(ForceTwoFAState.SETUP);
@@ -240,6 +281,12 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
         break;
     }
   }
+
+  /**
+   * POST/PUT entity — save config.
+   *
+   * @param type type (TwoFactorAuthProviderType)
+   */
 
   saveConfig(type: TwoFactorAuthProviderType) {
     if (this.configForm.valid) {
@@ -279,6 +326,11 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
     }
   }
 
+  /**
+   * update qrcode.
+   *
+   */
+
   private updateQRCode() {
     import('qrcode').then((QRCode) => {
       unwrapModule(QRCode).toCanvas(this.canvasRef.nativeElement, this.totpAuthURL);
@@ -287,17 +339,37 @@ export class ForceTwoFactorAuthLoginComponent extends PageComponent implements O
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }
+
+  /**
+   * cancel login.
+   *
+   */
 
   cancelLogin() {
     this.authService.logout();
   }
 
+  /**
+   * download file.
+   *
+   */
+
   downloadFile() {
     this.importExportService.exportText(this.backupCode.codes, 'backup-codes');
   }
+
+  /**
+   * print code.
+   *
+   */
 
   printCode() {
     const codeTemplate = deepClone(this.backupCode.codes)

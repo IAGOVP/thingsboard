@@ -46,6 +46,12 @@ import { JsonObjectEditComponent } from '@shared/components/json-object-edit.com
 import { deepClone } from '@core/utils';
 import { RuleChainType } from '@shared/models/rule-chain.models';
 
+
+/**
+ * Angular component: rule node config (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-node-config`.
+ */
 @Component({
     selector: 'tb-rule-node-config',
     templateUrl: './rule-node-config.component.html',
@@ -56,10 +62,7 @@ import { RuleChainType } from '@shared/models/rule-chain.models';
             multi: true
         }],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: rule node config UI.
- */
+standalone: false
 })
 export class RuleNodeConfigComponent implements ControlValueAccessor, OnDestroy {
 
@@ -135,12 +138,29 @@ export class RuleNodeConfigComponent implements ControlValueAccessor, OnDestroy 
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.definedConfigComponentRef) {
@@ -156,6 +176,12 @@ export class RuleNodeConfigComponent implements ControlValueAccessor, OnDestroy 
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -167,6 +193,12 @@ export class RuleNodeConfigComponent implements ControlValueAccessor, OnDestroy 
       this.definedConfigComponent.disabled = this.disabled;
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (RuleNodeConfiguration)
+   */
 
   writeValue(value: RuleNodeConfiguration): void {
     this.configuration = deepClone(value);
@@ -189,11 +221,23 @@ export class RuleNodeConfigComponent implements ControlValueAccessor, OnDestroy 
     }
   }
 
+  /**
+   * use defined directive.
+   *
+   * @returns boolean observable or value
+   */
+
   useDefinedDirective(): boolean {
     return this.nodeDefinition &&
       (this.nodeDefinition.configDirective &&
        this.nodeDefinition.configDirective.length) && !this.definedDirectiveError;
   }
+
+  /**
+   * update model.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   private updateModel(configuration: RuleNodeConfiguration) {
     if (this.definedConfigComponent || this.ruleNodeConfigFormGroup.valid) {
@@ -202,6 +246,11 @@ export class RuleNodeConfigComponent implements ControlValueAccessor, OnDestroy 
       this.propagateChange(this.required ? null : configuration);
     }
   }
+
+  /**
+   * validate defined directive.
+   *
+   */
 
   private validateDefinedDirective() {
     if (this.definedConfigComponentRef) {
@@ -235,6 +284,11 @@ export class RuleNodeConfigComponent implements ControlValueAccessor, OnDestroy 
       }
     }
   }
+
+  /**
+   * validate.
+   *
+   */
 
   validate() {
     if (this.useDefinedDirective()) {

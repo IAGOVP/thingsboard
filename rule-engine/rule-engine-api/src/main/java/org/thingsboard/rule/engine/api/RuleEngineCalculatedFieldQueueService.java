@@ -17,15 +17,31 @@ package org.thingsboard.rule.engine.api;
 
 import com.google.common.util.concurrent.FutureCallback;
 
+
 /**
 
- * Rule engine facade for rule engine calculated field queue operations.
+ * Rule engine service facade for rule engine calculated field queue (rule engine public API contracts and services).
 
  */
 
+
 public interface RuleEngineCalculatedFieldQueueService {
+    /**
+     * Pushes request to queue.
+     *
+     * @param request async service request DTO
+     * @param callback completion callback for async rule engine operations
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void pushRequestToQueue(TimeseriesSaveRequest request, FutureCallback<Void> callback);
+    /**
+     * Pushes request to queue.
+     *
+     * @param request async service request DTO
+     * @param callback completion callback for async rule engine operations
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void pushRequestToQueue(AttributesSaveRequest request, FutureCallback<Void> callback);
 

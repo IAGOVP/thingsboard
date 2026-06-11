@@ -23,14 +23,17 @@ import {
   AnalogueGaugeWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/gauge/analogue-gauge-widget-settings.component';
 
+
+/**
+ * Angular component: analogue radial gauge widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-analogue-radial-gauge-widget-settings`.
+ */
 @Component({
     selector: 'tb-analogue-radial-gauge-widget-settings',
     templateUrl: './analogue-gauge-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: analogue radial gauge widget settings UI.
- */
+standalone: false
 })
 export class AnalogueRadialGaugeWidgetSettingsComponent extends AnalogueGaugeWidgetSettingsComponent {
 
@@ -41,6 +44,12 @@ export class AnalogueRadialGaugeWidgetSettingsComponent extends AnalogueGaugeWid
     super(store, fb);
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     const settings = super.defaultSettings();
     settings.startAngle = 45;
@@ -48,6 +57,12 @@ export class AnalogueRadialGaugeWidgetSettingsComponent extends AnalogueGaugeWid
     settings.needleCircleSize = 10;
     return settings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     super.onSettingsSet(settings);

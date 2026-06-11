@@ -51,7 +51,12 @@ import static org.thingsboard.server.common.data.msg.TbMsgType.POST_TELEMETRY_RE
 import static org.thingsboard.server.dao.util.KvUtils.toTsKvEntryList;
 
 /**
- * Rule engine component: tb msg timeseries node.
+ * Action rule node — <b>save time series</b>.
+ *
+ * <p>
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgTimeseriesNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/save-timeseries/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/save-timeseries/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -113,6 +118,13 @@ public class TbMsgTimeseriesNode implements TbNode {
     private long tenantProfileDefaultStorageTtl;
 
     private TimeseriesProcessingSettings processingSettings;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -127,6 +139,13 @@ public class TbMsgTimeseriesNode implements TbNode {
         DefaultTenantProfileConfiguration configuration = (DefaultTenantProfileConfiguration) tenantProfile.getProfileData().getConfiguration();
         tenantProfileDefaultStorageTtl = TimeUnit.DAYS.toSeconds(configuration.getDefaultStorageTtlDays());
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -169,6 +188,14 @@ public class TbMsgTimeseriesNode implements TbNode {
                 .callback(new TelemetryNodeCallback(ctx, msg))
                 .build());
     }
+    /**
+     * Compute ts.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @param ignoreMetadataTs ignore metadata ts
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static long computeTs(TbMsg msg, boolean ignoreMetadataTs) {
         return ignoreMetadataTs ? System.currentTimeMillis() : msg.getMetaDataTs();
@@ -196,11 +223,24 @@ public class TbMsgTimeseriesNode implements TbNode {
         // should not happen
         throw new IllegalArgumentException("Unknown processing settings type: " + processingSettings.getClass().getSimpleName());
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void destroy() {
         ctx.removeListeners();
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

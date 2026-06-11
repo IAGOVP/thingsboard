@@ -24,8 +24,11 @@ import { StatesControllerService } from '@home/components/dashboard-page/states/
 import { EntityId } from '@app/shared/models/id/entity-id';
 import { StateObject, StateParams } from '@app/core/api/widget-api.models';
 /**
- * Angular component: state controller UI.
+ * Angular component: state controller (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 
 @Directive()
 export abstract class StateControllerComponent implements IStateControllerComponent, OnInit, OnDestroy {
@@ -105,6 +108,11 @@ export abstract class StateControllerComponent implements IStateControllerCompon
                         protected statesControllerService: StatesControllerService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.syncStateWithQueryParam) {
       this.rxSubscriptions.push(this.route.queryParamMap.subscribe((paramMap) => {
@@ -125,6 +133,11 @@ export abstract class StateControllerComponent implements IStateControllerCompon
     this.inited = true;
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.rxSubscriptions.forEach((subscription) => {
       subscription.unsubscribe();
@@ -133,6 +146,12 @@ export abstract class StateControllerComponent implements IStateControllerCompon
     this.stateIdSubject.complete();
     this.stateChangedSubject.complete();
   }
+
+  /**
+   * update state param.
+   *
+   * @param newState new state (string)
+   */
 
   protected updateStateParam(newState: string, replaceCurrentHistoryUrl = false) {
     this.currentState = newState;
@@ -153,25 +172,57 @@ export abstract class StateControllerComponent implements IStateControllerCompon
     this.stateChangedSubject.next(this.currentState);
   }
 
+  /**
+   * state changed.
+   *
+   * @returns Observable<string> observable or value
+   */
+
   public stateChanged(): Observable<string> {
     return this.stateChangedSubject.asObservable();
   }
+
+  /**
+   * state id.
+   *
+   * @returns Observable<string> observable or value
+   */
 
   public stateId(): Observable<string> {
     return this.stateIdSubject.asObservable();
   }
 
+  /**
+   * open right layout.
+   *
+   */
+
   public openRightLayout(): void {
     this.dashboardCtrl.openRightLayout();
   }
+
+  /**
+   * preserve state.
+   *
+   */
 
   public preserveState() {
     this.statesControllerService.preserveStateControllerState(this.stateControllerInstanceId, this.stateObject);
   }
 
+  /**
+   * cleanup preserved states.
+   *
+   */
+
   public cleanupPreservedStates() {
     this.statesControllerService.cleanupPreservedStates();
   }
+
+  /**
+   * re init.
+   *
+   */
 
   public reInit() {
     this.preservedState = null;
@@ -179,6 +230,13 @@ export abstract class StateControllerComponent implements IStateControllerCompon
     this.stateChangedSubject.next(this.currentState);
     this.init();
   }
+
+  /**
+   * decode state param.
+   *
+   * @param stateURI state uri (string)
+   * @returns string observable or value
+   */
 
   private decodeStateParam(stateURI: string): string{
     return stateURI !== null ? decodeURIComponent(stateURI) : null;

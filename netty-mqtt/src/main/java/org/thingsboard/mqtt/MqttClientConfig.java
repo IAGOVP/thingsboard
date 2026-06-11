@@ -27,8 +27,11 @@ import lombok.Setter;
 import java.util.Random;
 
 /**
- * Connection options: SSL, credentials, last will, reconnect, and retransmission settings.
+ * MQTT connection configuration.
+ *
+ * <p>SSL/TLS, credentials, last will ({@link MqttLastWill}), reconnect strategy, retransmission limits, and Netty channel class.
  */
+
 @SuppressWarnings({"WeakerAccess", "unused"})
 public final class MqttClientConfig {
 
@@ -78,6 +81,18 @@ public final class MqttClientConfig {
     @Setter
     private RetransmissionConfig retransmissionConfig;
 
+    
+    /**
+     * Retransmission config.
+     *
+     * @param maxAttempts max attempts
+     * @param initialDelayMillis initial delay millis
+     * @param jitterFactor jitter factor
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
     public record RetransmissionConfig(int maxAttempts, long initialDelayMillis, double jitterFactor) {
 
         public RetransmissionConfig {
@@ -109,6 +124,13 @@ public final class MqttClientConfig {
         this.clientId = id.toString();
         this.randomClientId = id.toString();
     }
+    /**
+     * Set client id.
+     *
+     * @param clientId client id ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setClientId(@Nullable String clientId) {
         if (clientId == null) {
@@ -117,6 +139,13 @@ public final class MqttClientConfig {
             this.clientId = clientId;
         }
     }
+    /**
+     * Set timeout seconds.
+     *
+     * @param timeoutSeconds timeout seconds
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setTimeoutSeconds(int timeoutSeconds) {
         if (timeoutSeconds != -1 && timeoutSeconds <= 0) {
@@ -124,6 +153,13 @@ public final class MqttClientConfig {
         }
         this.timeoutSeconds = timeoutSeconds;
     }
+    /**
+     * Set protocol version.
+     *
+     * @param protocolVersion protocol version ({@link MqttVersion})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setProtocolVersion(MqttVersion protocolVersion) {
         if (protocolVersion == null) {
@@ -132,11 +168,15 @@ public final class MqttClientConfig {
         this.protocolVersion = protocolVersion;
     }
 
-    /**
-     * Sets the reconnect delay in seconds. Defaults to 1 second.
-     * @param reconnectDelay
-     * @throws IllegalArgumentException if reconnectDelay is smaller than 1.
-     */
+    
+   /**
+    * Set reconnect delay.
+    *
+    * @param reconnectDelay reconnect delay
+    * @return nothing
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
     public void setReconnectDelay(long reconnectDelay) {
         if (reconnectDelay <= 0) {
             throw new IllegalArgumentException("reconnectDelay must be > 0");
@@ -144,13 +184,15 @@ public final class MqttClientConfig {
         this.reconnectDelay = reconnectDelay;
     }
 
+    
     /**
-     * Sets the maximum number of bytes in the message for the {@link io.netty.handler.codec.mqtt.MqttDecoder}.
-     * Default value is 8092 as specified by Netty. The absolute maximum size is 256MB as set by the MQTT spec.
+     * Set max bytes in message.
      *
-     * @param maxBytesInMessage
-     * @throws IllegalArgumentException if maxBytesInMessage is smaller than 1 or greater than 256_000_000.
+     * @param maxBytesInMessage max bytes in message
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public void setMaxBytesInMessage(int maxBytesInMessage) {
         if (maxBytesInMessage <= 0 || maxBytesInMessage > 256_000_000) {
             throw new IllegalArgumentException("maxBytesInMessage must be > 0 or < 256_000_000");

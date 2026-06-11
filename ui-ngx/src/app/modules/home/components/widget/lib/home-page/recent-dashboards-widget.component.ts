@@ -56,14 +56,17 @@ import { AliasFilterType } from '@shared/models/alias.models';
 import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
+/**
+ * Angular component: recent dashboards widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-recent-dashboards-widget`.
+ */
 @Component({
     selector: 'tb-recent-dashboards-widget',
     templateUrl: './recent-dashboards-widget.component.html',
     styleUrls: ['./home-page-widget.scss', './recent-dashboards-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: recent dashboards widget UI.
- */
+standalone: false
 })
 export class RecentDashboardsWidgetComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -101,6 +104,11 @@ export class RecentDashboardsWidgetComponent extends PageComponent implements On
               private userSettingService: UserSettingsService) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     if (this.authUser.authority === Authority.CUSTOMER_USER) {
@@ -140,12 +148,22 @@ export class RecentDashboardsWidgetComponent extends PageComponent implements On
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     if (this.subscription) {
       this.ctx.subscriptionApi.removeSubscription(this.subscription.id);
     }
   }
+
+  /**
+   * reload.
+   *
+   */
 
   reload() {
     this.userDashboardsInfo = null;
@@ -166,10 +184,23 @@ export class RecentDashboardsWidgetComponent extends PageComponent implements On
     );
   }
 
+  /**
+   * POST/PUT entity — create dashboard url.
+   *
+   * @param id id (string)
+   * @returns string observable or value
+   */
+
   public createDashboardUrl(id: string): string {
     const baseUrl = this.isFullscreenMode ? '/dashboard/' : '/dashboards/';
     return baseUrl + id;
   }
+
+  /**
+   * toggle value change.
+   *
+   * @param value value ('last' | 'starred')
+   */
 
   toggleValueChange(value: 'last' | 'starred') {
     this.toggleValue = value;
@@ -183,6 +214,11 @@ export class RecentDashboardsWidgetComponent extends PageComponent implements On
     }
   }
 
+  /**
+   * init last visited dashboards data source.
+   *
+   */
+
   private initLastVisitedDashboardsDataSource() {
     this.lastVisitedDashboardsDataSource = new LastVisitedDashboardsDataSource(this.userDashboardsInfo.last);
     const sortOrder: SortOrder = {
@@ -193,6 +229,11 @@ export class RecentDashboardsWidgetComponent extends PageComponent implements On
     this.lastVisitedDashboardsDataSource.loadData(this.lastVisitedDashboardsPageLink);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.lastVisitedDashboardsSort.changes.subscribe(() => {
       if (this.lastVisitedDashboardsSort.length) {
@@ -202,15 +243,33 @@ export class RecentDashboardsWidgetComponent extends PageComponent implements On
     });
   }
 
+  /**
+   * update last visited dashboards data.
+   *
+   * @param sort sort (MatSort)
+   */
+
   updateLastVisitedDashboardsData(sort: MatSort) {
     this.lastVisitedDashboardsPageLink.sortOrder.property = sort.active;
     this.lastVisitedDashboardsPageLink.sortOrder.direction = Direction[sort.direction.toUpperCase()];
     this.lastVisitedDashboardsDataSource.loadData(this.lastVisitedDashboardsPageLink);
   }
 
+  /**
+   * has last visited dashboards.
+   *
+   * @returns boolean observable or value
+   */
+
   hasLastVisitedDashboards(): boolean {
     return !!(this.userDashboardsInfo && this.userDashboardsInfo.last && this.userDashboardsInfo.last.length);
   }
+
+  /**
+   * toggle dashboard star.
+   *
+   * @param dashboard dashboard (AbstractUserDashboardInfo)
+   */
 
   toggleDashboardStar(dashboard: AbstractUserDashboardInfo): void {
     const action: UserDashboardAction = dashboard.starred ? UserDashboardAction.UNSTAR : UserDashboardAction.STAR;
@@ -225,6 +284,12 @@ export class RecentDashboardsWidgetComponent extends PageComponent implements On
       }
     }
   }
+
+  /**
+   * Event handler for star dashboard.
+   *
+   * @param dashboard dashboard (DashboardInfo)
+   */
 
   onStarDashboard(dashboard: DashboardInfo) {
     if (dashboard) {

@@ -36,6 +36,9 @@ import { Lwm2mBootstrapAddConfigServerDialogComponent } from '@home/components/p
 /**
  * Angular NgModule: lwm2m profile components feature area.
  */
+/**
+ * Angular NgModule bundling lwm2m profile components (ThingsBoard web UI).
+ */
 @NgModule({
   declarations:
     [
@@ -74,5 +77,5 @@ import { Lwm2mBootstrapAddConfigServerDialogComponent } from '@home/components/p
     Lwm2mObserveAttrTelemetryInstancesComponent
   ],
   providers: [
-  ]})
+]})
 export class Lwm2mProfileComponentsModule { }

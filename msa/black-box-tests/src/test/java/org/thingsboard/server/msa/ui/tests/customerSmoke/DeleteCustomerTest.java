@@ -31,17 +31,25 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultCustomerPrototype;
 
+
 /**
 
- * Delete customer test.
+ * Black-box test: delete customer (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class DeleteCustomerTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewElements sideBarMenuView;
     private CustomerPageHelper customerPage;
     private RuleChainsPageHelper ruleChainsPage;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -50,6 +58,12 @@ public class DeleteCustomerTest extends AbstractDriverBaseTest {
         customerPage = new CustomerPageHelper(driver);
         ruleChainsPage = new RuleChainsPageHelper(driver);
     }
+    /**
+     * Removes customer by right side btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Delete customer")
@@ -65,6 +79,12 @@ public class DeleteCustomerTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(customerPage.assertEntityIsNotPresent(deletedCustomer));
     }
+    /**
+     * Removes selected customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Delete customer")
@@ -80,6 +100,12 @@ public class DeleteCustomerTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(ruleChainsPage.assertEntityIsNotPresent(deletedCustomer));
     }
+    /**
+     * Removes from customer view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Delete customer")
@@ -97,6 +123,12 @@ public class DeleteCustomerTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(customerPage.assertEntityIsNotPresent(customerName));
     }
+    /**
+     * Removes customer by right side btn without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Delete customer")

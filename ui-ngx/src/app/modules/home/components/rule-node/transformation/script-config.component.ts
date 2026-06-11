@@ -26,14 +26,17 @@ import {
 } from '@app/shared/models/rule-node.models';
 import { DebugRuleNodeEventBody } from '@shared/models/event.models';
 
+
+/**
+ * Angular component: transform script config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-transformation-node-script-config`.
+ */
 @Component({
     selector: 'tb-transformation-node-script-config',
     templateUrl: './script-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: transform script config UI.
- */
+standalone: false
 })
 export class TransformScriptConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -58,9 +61,21 @@ export class TransformScriptConfigComponent extends RuleNodeConfigurationCompone
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.scriptConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.scriptConfigForm = this.fb.group({
@@ -70,9 +85,21 @@ export class TransformScriptConfigComponent extends RuleNodeConfigurationCompone
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['scriptLang'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     let scriptLang: ScriptLanguage = this.scriptConfigForm.get('scriptLang').value;
@@ -89,6 +116,13 @@ export class TransformScriptConfigComponent extends RuleNodeConfigurationCompone
     this.scriptConfigForm.get('tbelScript').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (configuration) {
       if (!configuration.scriptLang) {
@@ -97,6 +131,12 @@ export class TransformScriptConfigComponent extends RuleNodeConfigurationCompone
     }
     return configuration;
   }
+
+  /**
+   * test script.
+   *
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   */
 
   testScript(debugEventBody?: DebugRuleNodeEventBody) {
     const scriptLang: ScriptLanguage = this.scriptConfigForm.get('scriptLang').value;
@@ -122,6 +162,11 @@ export class TransformScriptConfigComponent extends RuleNodeConfigurationCompone
       }
     });
   }
+
+  /**
+   * Event handler for validate.
+   *
+   */
 
   protected onValidate() {
     const scriptLang: ScriptLanguage = this.scriptConfigForm.get('scriptLang').value;

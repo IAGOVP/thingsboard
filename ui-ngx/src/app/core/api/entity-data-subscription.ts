@@ -118,11 +118,11 @@ export interface EntityDataSubscriptionOptions {
   latestTsOffset?: number;
 }
 
+
 /**
-
- * entity data subscription.
-
+ * Entity data subscription (ThingsBoard web UI).
  */
+
 
 export class EntityDataSubscription {
 
@@ -175,12 +175,27 @@ export class EntityDataSubscription {
   private dataResolved = false;
   private started = false;
 
+  /**
+   * convert value.
+   *
+   * @param val val (string)
+   * @returns any observable or value
+   */
+
   private static convertValue(val: string): any {
     if (val && isNumeric(val) && Number(val).toString() === val) {
       return Number(val);
     }
     return val;
   }
+
+  /**
+   * calculate comparison value.
+   *
+   * @param key key (SubscriptionDataKey)
+   * @param comparisonTsValue comparison ts value (ComparisonTsValue)
+   * @returns DataSet observable or value
+   */
 
   private static calculateComparisonValue(key: SubscriptionDataKey, comparisonTsValue: ComparisonTsValue): DataSet {
     let timestamp: number;
@@ -212,6 +227,11 @@ export class EntityDataSubscription {
     }
     return [[timestamp, value]];
   }
+
+  /**
+   * initialize subscription.
+   *
+   */
 
   private async initializeSubscription() {
     for (let i = 0; i < this.entityDataSubscriptionOptions.dataKeys.length; i++) {
@@ -254,6 +274,11 @@ export class EntityDataSubscription {
     }
   }
 
+  /**
+   * unsubscribe.
+   *
+   */
+
   public unsubscribe() {
     if (this.subscribeSubscription) {
       this.subscribeSubscription.unsubscribe();
@@ -288,6 +313,12 @@ export class EntityDataSubscription {
     }
     this.pageData = null;
   }
+
+  /**
+   * subscribe.
+   *
+   * @returns Observable<EntityDataLoadResult> observable or value
+   */
 
   public subscribe(): Observable<EntityDataLoadResult> {
     this.entityDataResolveSubject = new ReplaySubject(1);
@@ -656,6 +687,11 @@ export class EntityDataSubscription {
     );
   }
 
+  /**
+   * start.
+   *
+   */
+
   public start() {
     if (this.entityDataSubscriptionOptions.isPaginatedDataSubscription) {
       return;
@@ -694,6 +730,11 @@ export class EntityDataSubscription {
     this.started = true;
   }
 
+  /**
+   * prepare subscription timewindow.
+   *
+   */
+
   private prepareSubscriptionTimewindow() {
     this.subsTw = this.entityDataSubscriptionOptions.subscriptionTimewindow;
     this.latestTsOffset = this.entityDataSubscriptionOptions.latestTsOffset;
@@ -704,6 +745,12 @@ export class EntityDataSubscription {
     this.isFloatingTimewindow = this.entityDataSubscriptionOptions.subscriptionTimewindow &&
       !this.entityDataSubscriptionOptions.subscriptionTimewindow.quickInterval && !this.history;
   }
+
+  /**
+   * prepare subscription commands.
+   *
+   * @param cmd cmd (EntityDataCmd)
+   */
 
   private prepareSubscriptionCommands(cmd: EntityDataCmd) {
     let latestValuesKeys: EntityKey[] = [];
@@ -782,6 +829,11 @@ export class EntityDataSubscription {
     }
   }
 
+  /**
+   * start function.
+   *
+   */
+
   private startFunction() {
     this.frequency = 1000;
     this.latestFrequency = 1000;
@@ -792,6 +844,12 @@ export class EntityDataSubscription {
     this.tickScheduledTime = this.utils.currentPerfTime();
     this.generateData(true);
   }
+
+  /**
+   * prepare data.
+   *
+   * @param isUpdate is update (boolean)
+   */
 
   private prepareData(isUpdate: boolean) {
     if (this.timeseriesTimer) {
@@ -854,6 +912,13 @@ export class EntityDataSubscription {
     }
   }
 
+  /**
+   * report not supported.
+   *
+   * @param keys keys (AggKey[])
+   * @param isUpdate is update (boolean)
+   */
+
   private reportNotSupported(keys: AggKey[], isUpdate: boolean) {
     const indexedData: IndexedData = [];
     for (const key of keys) {
@@ -873,6 +938,11 @@ export class EntityDataSubscription {
         });
     }
   }
+
+  /**
+   * reset data.
+   *
+   */
 
   private resetData() {
     this.data = [];
@@ -915,6 +985,12 @@ export class EntityDataSubscription {
       }
     }
   }
+
+  /**
+   * Event handler for page data.
+   *
+   * @param pageData page data (PageData<EntityData>)
+   */
 
   private onPageData(pageData: PageData<EntityData>) {
     const isInitialData = !this.pageData;
@@ -977,6 +1053,12 @@ export class EntityDataSubscription {
     }
   }
 
+  /**
+   * Event handler for data update.
+   *
+   * @param update update (Array<EntityData>)
+   */
+
   private onDataUpdate(update: Array<EntityData>) {
     for (const entityData of update) {
       const dataIndex = this.entityIdToDataIndex[entityData.entityId.id];
@@ -986,11 +1068,30 @@ export class EntityDataSubscription {
     }
   }
 
+  /**
+   * notify listener.
+   *
+   * @param data dialog or route input data
+   * @param dataIndex data index (number)
+   * @param dataKeyIndex data key index (number)
+   * @param detectChanges detect changes (boolean)
+   * @param isLatest is latest (boolean)
+   */
+
   private notifyListener(data: DataSetHolder, dataIndex: number, dataKeyIndex: number, detectChanges: boolean, isLatest: boolean) {
     this.listener.dataUpdated(data,
       this.listener.configDatasourceIndex,
         dataIndex, dataKeyIndex, detectChanges, isLatest);
   }
+
+  /**
+   * process entity data.
+   *
+   * @param entityData entity data (EntityData)
+   * @param dataIndex data index (number)
+   * @param isUpdate is update (boolean)
+   * @param dataUpdatedCb data updated cb (DataUpdatedCb)
+   */
 
   private processEntityData(entityData: EntityData, dataIndex: number, isUpdate: boolean,
                             dataUpdatedCb: DataUpdatedCb) {
@@ -1082,6 +1183,17 @@ export class EntityDataSubscription {
     }
   }
 
+  /**
+   * Event handler for data.
+   *
+   * @param sourceData source data (SubscriptionData)
+   * @param type type (DataKeyType)
+   * @param dataIndex data index (number)
+   * @param detectChanges detect changes (boolean)
+   * @param isTsLatest is ts latest (boolean)
+   * @param dataUpdatedCb data updated cb (DataUpdatedCb)
+   */
+
   private onData(sourceData: SubscriptionData, type: DataKeyType, dataIndex: number, detectChanges: boolean,
                  isTsLatest: boolean, dataUpdatedCb: DataUpdatedCb) {
     for (const key of Object.keys(sourceData)) {
@@ -1090,6 +1202,16 @@ export class EntityDataSubscription {
         dataIndex, detectChanges, isTsLatest, false, dataUpdatedCb);
     }
   }
+
+  /**
+   * Event handler for indexed data.
+   *
+   * @param sourceData source data (IndexedData)
+   * @param dataIndex data index (number)
+   * @param detectChanges detect changes (boolean)
+   * @param isTsLatest is ts latest (boolean)
+   * @param dataUpdatedCb data updated cb (DataUpdatedCb)
+   */
 
   private onIndexedData(sourceData: IndexedData,  dataIndex: number, detectChanges: boolean,
                         isTsLatest: boolean, dataUpdatedCb: DataUpdatedCb) {
@@ -1106,6 +1228,20 @@ export class EntityDataSubscription {
         dataIndex, detectChanges, isTsLatest, isAggLatest, dataUpdatedCb);
     }
   }
+
+  /**
+   * Event handler for key data.
+   *
+   * @param keyData key data (DataSet)
+   * @param keyName key name (string)
+   * @param id id (number)
+   * @param type type (DataKeyType)
+   * @param dataIndex data index (number)
+   * @param detectChanges detect changes (boolean)
+   * @param isTsLatest is ts latest (boolean)
+   * @param isAggLatest is agg latest (boolean)
+   * @param dataUpdatedCb data updated cb (DataUpdatedCb)
+   */
 
   private onKeyData(keyData: DataSet, keyName: string, id: number, type: DataKeyType,
                     dataIndex: number, detectChanges: boolean,
@@ -1175,6 +1311,14 @@ export class EntityDataSubscription {
     }
   }
 
+  /**
+   * to subscription data.
+   *
+   * @param sourceData source data ({[key: string]: TsValue | TsValue[]})
+   * @param isTs is ts (boolean)
+   * @returns SubscriptionData observable or value
+   */
+
   private toSubscriptionData(sourceData: {[key: string]: TsValue | TsValue[]}, isTs: boolean): SubscriptionData {
     const subsData: SubscriptionData = {};
     for (const keyName of Object.keys(sourceData)) {
@@ -1192,6 +1336,17 @@ export class EntityDataSubscription {
     }
     return subsData;
   }
+
+  /**
+   * POST/PUT entity — create realtime data aggregator.
+   *
+   * @param subsTw subs tw (SubscriptionTimewindow)
+   * @param tsKeys ts keys (Array<AggKey>)
+   * @param isLatestDataAgg is latest data agg (boolean)
+   * @param dataIndex data index (number)
+   * @param dataUpdatedCb data updated cb (DataUpdatedCb)
+   * @returns DataAggregator observable or value
+   */
 
   private createRealtimeDataAggregator(subsTw: SubscriptionTimewindow,
                                        tsKeys: Array<AggKey>,
@@ -1211,9 +1366,23 @@ export class EntityDataSubscription {
     );
   }
 
+  /**
+   * data key by index.
+   *
+   * @param index index (number)
+   * @returns SubscriptionDataKey observable or value
+   */
+
   private dataKeyByIndex(index: number): SubscriptionDataKey {
     return this.dataKeysList.find(key => key.index === index);
   }
+
+  /**
+   * timeseries data keys by key names.
+   *
+   * @param keyNames key names (string[])
+   * @returns SubscriptionDataKey[] observable or value
+   */
 
   private timeseriesDataKeysByKeyNames(keyNames: string[]): SubscriptionDataKey[] {
     const result: SubscriptionDataKey[] = [];
@@ -1224,6 +1393,15 @@ export class EntityDataSubscription {
     }
     return result;
   }
+
+  /**
+   * generate series.
+   *
+   * @param dataKey data key (SubscriptionDataKey)
+   * @param startTime start time (number)
+   * @param endTime end time (number)
+   * @returns SubscriptionDataEntry[] observable or value
+   */
 
   private generateSeries(dataKey: SubscriptionDataKey, startTime: number, endTime: number): SubscriptionDataEntry[] {
     const data: SubscriptionDataEntry[] = [];
@@ -1248,6 +1426,13 @@ export class EntityDataSubscription {
     return data;
   }
 
+  /**
+   * generate latest.
+   *
+   * @param dataKey data key (SubscriptionDataKey)
+   * @param detectChanges detect changes (boolean)
+   */
+
   private generateLatest(dataKey: SubscriptionDataKey, detectChanges: boolean) {
     let prevSeries: DataEntry;
     const datasourceKey = dataKey.latest ? `${dataKey.key}_${dataKey.listIndex}` : dataKey.key;
@@ -1266,6 +1451,12 @@ export class EntityDataSubscription {
       0,
       dataKey.index, detectChanges, dataKey.latest);
   }
+
+  /**
+   * generate data.
+   *
+   * @param detectChanges detect changes (boolean)
+   */
 
   private generateData(detectChanges: boolean) {
     let key: string;
@@ -1293,6 +1484,13 @@ export class EntityDataSubscription {
       this.onLatestTick(latestDataKeys, detectChanges);
     }
   }
+
+  /**
+   * Event handler for timeseries tick.
+   *
+   * @param tsDataKeys ts data keys (SubscriptionDataKey[])
+   * @param detectChanges detect changes (boolean)
+   */
 
   private onTimeseriesTick(tsDataKeys: SubscriptionDataKey[], detectChanges: boolean) {
     const now = this.utils.currentPerfTime();
@@ -1347,6 +1545,13 @@ export class EntityDataSubscription {
       this.timeseriesTimer = setTimeout(this.onTimeseriesTick.bind(this, tsDataKeys, true), this.frequency);
     }
   }
+
+  /**
+   * Event handler for latest tick.
+   *
+   * @param latestDataKeys latest data keys (SubscriptionDataKey[])
+   * @param detectChanges detect changes (boolean)
+   */
 
   private onLatestTick(latestDataKeys: SubscriptionDataKey[], detectChanges: boolean) {
     if (this.latestTimer) {

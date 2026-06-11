@@ -33,6 +33,12 @@ import { RuleChainType } from '@app/shared/models/rule-chain.models';
 import { getEntityDetailsPageURL } from '@core/utils';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: rule chain autocomplete (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-chain-autocomplete`.
+ */
 @Component({
     selector: 'tb-rule-chain-autocomplete',
     templateUrl: './rule-chain-autocomplete.component.html',
@@ -42,10 +48,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             useExisting: forwardRef(() => RuleChainAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: rule chain autocomplete UI.
- */
+standalone: false
 })
 export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -100,17 +103,38 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredRuleChains = this.selectRuleChainFormGroup.get('ruleChainId').valueChanges
       .pipe(
         debounceTime(150),
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue;
           if (typeof value === 'string' || !value) {
@@ -130,7 +154,18 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {}
+
+  /**
+   * get current entity.
+   *
+   * @returns BaseData<EntityId> | null observable or value
+   */
 
   getCurrentEntity(): BaseData<EntityId> | null {
     const currentRuleChain = this.selectRuleChainFormGroup.get('ruleChainId').value;
@@ -141,6 +176,12 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -150,9 +191,22 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
     }
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.searchText = '';
@@ -182,6 +236,11 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectRuleChainFormGroup.get('ruleChainId').updateValueAndValidity({onlySelf: true, emitEvent: true});
@@ -189,9 +248,20 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   reset() {
     this.selectRuleChainFormGroup.get('ruleChainId').patchValue('', {emitEvent: false});
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (string | null)
+   */
 
   updateView(value: string | null) {
     if (this.modelValue !== value) {
@@ -200,9 +270,23 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
     }
   }
 
+  /**
+   * display rule chain fn.
+   *
+   * @param ruleChain rule chain (BaseData<EntityId>)
+   * @returns string | undefined observable or value
+   */
+
   displayRuleChainFn(ruleChain?: BaseData<EntityId>): string | undefined {
     return ruleChain ? ruleChain.name : undefined;
   }
+
+  /**
+   * fetch rule chain.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<BaseData<EntityId>>> observable or value
+   */
 
   fetchRuleChain(searchText?: string): Observable<Array<BaseData<EntityId>>> {
     this.searchText = searchText;
@@ -212,6 +296,11 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
     );
   }
 
+  /**
+   * clear.
+   *
+   */
+
   clear() {
     this.selectRuleChainFormGroup.get('ruleChainId').patchValue('', {emitEvent: true});
     setTimeout(() => {
@@ -219,6 +308,12 @@ export class RuleChainAutocompleteComponent implements ControlValueAccessor, OnI
       this.ruleChainInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * POST/PUT entity — create default rule chain.
+   *
+   * @param ruleChainName rule chain name (string)
+   */
 
   createDefaultRuleChain($event: Event, ruleChainName: string) {
     $event.preventDefault();

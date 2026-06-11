@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: send email config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-send-email-config`.
+ */
 @Component({
     selector: 'tb-external-node-send-email-config',
     templateUrl: './send-email-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: send email config UI.
- */
+standalone: false
 })
 export class SendEmailConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -42,9 +45,21 @@ export class SendEmailConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.sendEmailConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.sendEmailConfigForm = this.fb.group({
@@ -65,9 +80,21 @@ export class SendEmailConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useSystemSmtpSettings', 'enableProxy'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const useSystemSmtpSettings: boolean = this.sendEmailConfigForm.get('useSystemSmtpSettings').value;

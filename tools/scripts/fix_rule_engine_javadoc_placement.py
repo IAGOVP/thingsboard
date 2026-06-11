@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 PATTERN = re.compile(
-    r"(@RuleNode\s*\()(.*?)(/\*\*[\s\S]*?\*/)\s*(\)\s*\n(\s*public\s+(?:class|abstract\s+class)))",
+    r"(@RuleNode\s*\()(.*?)(/\*\*[\s\S]*?\*/)\s*(\)\s*\n(\s*public\s+(?:abstract\s+)?class\s+\w+[^\n]*))",
     re.DOTALL,
 )
 

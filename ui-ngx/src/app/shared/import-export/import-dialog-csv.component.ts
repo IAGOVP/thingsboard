@@ -47,15 +47,18 @@ export interface ImportDialogCsvData {
   importFileLabel: string;
 }
 
+
+/**
+ * Angular component: import dialog csv (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-import-csv-dialog`.
+ */
 @Component({
     selector: 'tb-import-csv-dialog',
     templateUrl: './import-dialog-csv.component.html',
     providers: [],
     styleUrls: ['./import-dialog-csv.component.scss'],
-    standalone: false
-/**
- * Angular component: import dialog csv UI.
- */
+standalone: false
 })
 export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvComponent, boolean>
   implements AfterViewInit, OnDestroy {
@@ -129,6 +132,11 @@ export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvCom
     });
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     let columns = this.columnsAssignmentComponent.columnTypes;
     if (this.entityType === EntityType.DEVICE) {
@@ -137,6 +145,11 @@ export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvCom
     this.allowAssignColumn = columns.map(column => column.value);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.aceEditor) {
       this.aceEditor.destroy();
@@ -144,13 +157,29 @@ export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvCom
     super.ngOnDestroy();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(false);
   }
 
+  /**
+   * previous step.
+   *
+   */
+
   previousStep() {
     this.importStepper.previous();
   }
+
+  /**
+   * next step.
+   *
+   * @param step step (number)
+   */
 
   nextStep(step: number) {
     switch (step) {
@@ -181,6 +210,13 @@ export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvCom
     }
   }
 
+  /**
+   * parse csv.
+   *
+   * @param importData import data (string)
+   * @returns CsvToJsonResult | number observable or value
+   */
+
   private parseCSV(importData: string): CsvToJsonResult | number {
     const config: CsvToJsonConfig = {
       delim: this.importParametersFormGroup.get('delim').value,
@@ -196,6 +232,12 @@ export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvCom
       }
     );
   }
+
+  /**
+   * POST/PUT entity — create columns data.
+   *
+   * @returns CsvColumnParam[] observable or value
+   */
 
   private createColumnsData(): CsvColumnParam[] {
     const columnsParam: CsvColumnParam[] = [];
@@ -226,6 +268,18 @@ export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvCom
   }
 
 
+  /**
+
+
+   * POST/PUT entity — add entities.
+
+
+   *
+
+
+   */
+
+
   private addEntities() {
     const entitiesData: BulkImportRequest = {
       file: this.selectFileFormGroup.get('importData').value,
@@ -245,6 +299,12 @@ export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvCom
     );
   }
 
+  /**
+   * processing columns params.
+   *
+   * @returns Array<ColumnMapping> observable or value
+   */
+
   private processingColumnsParams(): Array<ColumnMapping> {
     const parameterColumns: CsvColumnParam[] = this.columnTypesFormGroup.get('columnsParam').value;
     const allowKeyForTypeColumns: ImportEntityColumnType[] = [
@@ -258,11 +318,23 @@ export class ImportDialogCsvComponent extends DialogComponent<ImportDialogCsvCom
     }));
   }
 
+  /**
+   * init editor.
+   *
+   */
+
   initEditor() {
     if (!this.initEditorComponent) {
       this.createEditor(this.failureDetailsEditorElmRef, this.statistical.errorsList);
     }
   }
+
+  /**
+   * POST/PUT entity — create editor.
+   *
+   * @param editorElementRef editor element ref (ElementRef)
+   * @param contents contents (string[])
+   */
 
   private createEditor(editorElementRef: ElementRef, contents: string[]): void {
     const editorElement = editorElementRef.nativeElement;

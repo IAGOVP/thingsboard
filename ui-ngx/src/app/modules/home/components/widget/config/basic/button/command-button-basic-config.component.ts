@@ -28,14 +28,17 @@ import {
   CommandButtonWidgetSettings
 } from '@home/components/widget/lib/button/command-button-widget.models';
 
+
+/**
+ * Angular component: command button basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-command-button-basic-config`.
+ */
 @Component({
     selector: 'tb-command-button-basic-config',
     templateUrl: './command-button-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: command button basic config UI.
- */
+standalone: false
 })
 export class CommandButtonBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -53,9 +56,21 @@ export class CommandButtonBasicConfigComponent extends BasicWidgetConfigComponen
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.commandButtonWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: CommandButtonWidgetSettings = {...commandButtonDefaultSettings, ...(configData.config.settings || {})};
@@ -70,6 +85,13 @@ export class CommandButtonBasicConfigComponent extends BasicWidgetConfigComponen
       borderRadius: [configData.config.borderRadius, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
 

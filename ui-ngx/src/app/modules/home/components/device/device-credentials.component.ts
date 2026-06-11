@@ -38,6 +38,12 @@ import { generateSecret, isDefinedAndNotNull } from '@core/utils';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { DeviceId } from "@shared/models/id/device-id";
 
+
+/**
+ * Angular component: device credentials (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-credentials`.
+ */
 @Component({
     selector: 'tb-device-credentials',
     templateUrl: './device-credentials.component.html',
@@ -54,10 +60,7 @@ import { DeviceId } from "@shared/models/id/device-id";
         }
     ],
     styleUrls: ['./device-credentials.component.scss'],
-    standalone: false
-/**
- * Angular component: device credentials UI.
- */
+standalone: false
 })
 export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit, Validator, OnDestroy {
 
@@ -117,6 +120,11 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.disabled) {
       this.deviceCredentialsFormGroup.disable({emitEvent: false});
@@ -127,10 +135,21 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DeviceCredentials | null)
+   */
 
   writeValue(value: DeviceCredentials | null): void {
     if (isDefinedAndNotNull(value)) {
@@ -145,6 +164,11 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   updateView() {
     const deviceCredentialsValue = this.deviceCredentialsFormGroup.value;
     if (this.propagateChange) {
@@ -153,6 +177,12 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
       this.propagateChangePending = true;
     }
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
@@ -164,7 +194,19 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {}
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -176,6 +218,12 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (FormControl)
+   */
+
   public validate(c: FormControl) {
     return this.deviceCredentialsFormGroup.valid ? null : {
       deviceCredentials: {
@@ -183,6 +231,12 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
       },
     };
   }
+
+  /**
+   * credentials type changed.
+   *
+   * @param type type (DeviceCredentialsType)
+   */
 
   credentialsTypeChanged(type: DeviceCredentialsType): void {
     this.deviceCredentialsFormGroup.patchValue({
@@ -194,6 +248,11 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
       this.deviceCredentialsFormGroup.get('credentialsId').patchValue(generateSecret(20));
     }
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   updateValidators(): void {
     const credentialsType = this.deviceCredentialsFormGroup.get('credentialsType').value as DeviceCredentialsType;
@@ -212,6 +271,12 @@ export class DeviceCredentialsComponent implements ControlValueAccessor, OnInit,
         break;
     }
   }
+
+  /**
+   * generate.
+   *
+   * @param formControlName form control name (string)
+   */
 
   public generate(formControlName: string) {
     this.deviceCredentialsFormGroup.get(formControlName).patchValue(generateSecret(20));

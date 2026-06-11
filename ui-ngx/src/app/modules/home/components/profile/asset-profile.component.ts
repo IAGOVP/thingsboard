@@ -30,14 +30,17 @@ import { DashboardId } from '@shared/models/id/dashboard-id';
 import { AssetProfile } from '@shared/models/asset.models';
 import { RuleChainType } from '@shared/models/rule-chain.models';
 
+
+/**
+ * Angular component: asset profile (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-asset-profile`.
+ */
 @Component({
     selector: 'tb-asset-profile',
     templateUrl: './asset-profile.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: asset profile UI.
- */
+standalone: false
 })
 export class AssetProfileComponent extends EntityComponent<AssetProfile> {
 
@@ -61,6 +64,11 @@ export class AssetProfileComponent extends EntityComponent<AssetProfile> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -68,6 +76,13 @@ export class AssetProfileComponent extends EntityComponent<AssetProfile> {
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (AssetProfile)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: AssetProfile): UntypedFormGroup {
     this.assetProfileId = entity?.id ? entity.id : null;
@@ -85,6 +100,12 @@ export class AssetProfileComponent extends EntityComponent<AssetProfile> {
     return form;
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (AssetProfile)
+   */
+
   updateForm(entity: AssetProfile) {
     this.assetProfileId = entity.id;
     this.entityForm.patchValue({name: entity.name});
@@ -95,6 +116,13 @@ export class AssetProfileComponent extends EntityComponent<AssetProfile> {
     this.entityForm.patchValue({defaultEdgeRuleChainId: entity.defaultEdgeRuleChainId ? entity.defaultEdgeRuleChainId.id : null}, {emitEvent: false});
     this.entityForm.patchValue({description: entity.description}, {emitEvent: false});
   }
+
+  /**
+   * prepare form value.
+   *
+   * @param formValue form value (any)
+   * @returns any observable or value
+   */
 
   prepareFormValue(formValue: any): any {
     if (formValue.defaultRuleChainId) {
@@ -108,6 +136,11 @@ export class AssetProfileComponent extends EntityComponent<AssetProfile> {
     }
     return super.prepareFormValue(formValue);
   }
+
+  /**
+   * Event handler for asset profile id copied.
+   *
+   */
 
   onAssetProfileIdCopied(event) {
     this.store.dispatch(new ActionNotificationShow(

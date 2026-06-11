@@ -30,14 +30,17 @@ import {
   LatestChartBasicConfigComponent
 } from '@home/components/widget/config/basic/chart/latest-chart-basic-config.component';
 
+
+/**
+ * Angular component: pie chart basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-pie-chart-basic-config`.
+ */
 @Component({
     selector: 'tb-pie-chart-basic-config',
     templateUrl: './latest-chart-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: pie chart basic config UI.
- */
+standalone: false
 })
 export class PieChartBasicConfigComponent extends LatestChartBasicConfigComponent<PieChartWidgetSettings> {
 
@@ -52,19 +55,44 @@ export class PieChartBasicConfigComponent extends LatestChartBasicConfigComponen
     super(store, widgetConfigComponent, fb);
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'windPower', label: 'Wind', type: DataKeyType.timeseries, units: '', decimals: 0, color: '#08872B' },
             { name: 'solarPower', label: 'Solar', type: DataKeyType.timeseries, units: '', decimals: 0, color: '#FF4D5A' },
             { name: 'hydroelectricPower', label: 'Hydroelectric', type: DataKeyType.timeseries, units: '', decimals: 0, color: '#FFDE30' }];
   }
 
+  /**
+   * default settings.
+   *
+   */
+
   protected defaultSettings() {
     return pieChartWidgetDefaultSettings;
   }
 
+  /**
+   * latest chart config template.
+   *
+   * @returns TemplateRef<any> observable or value
+   */
+
   public latestChartConfigTemplate(): TemplateRef<any> {
     return this.pieChartConfigTemplate;
   }
+
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetConfigForm latest chart widget config form (UntypedFormGroup)
+   * @param settings settings (PieChartWidgetSettings)
+   */
 
   protected setupLatestChartControls(latestChartWidgetConfigForm: UntypedFormGroup, settings: PieChartWidgetSettings) {
     latestChartWidgetConfigForm.addControl('showLabel', this.fb.control(settings.showLabel, []));
@@ -79,6 +107,12 @@ export class PieChartBasicConfigComponent extends LatestChartBasicConfigComponen
     latestChartWidgetConfigForm.addControl('clockwise', this.fb.control(settings.clockwise, []));
   }
 
+  /**
+   * prepare output latest chart config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   protected prepareOutputLatestChartConfig(config: any) {
     this.widgetConfig.config.settings.showLabel = config.showLabel;
     this.widgetConfig.config.settings.labelPosition = config.labelPosition;
@@ -92,9 +126,23 @@ export class PieChartBasicConfigComponent extends LatestChartBasicConfigComponen
     this.widgetConfig.config.settings.clockwise = config.clockwise;
   }
 
+  /**
+   * latest chart validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected latestChartValidatorTriggers(): string[] {
     return ['showLabel'];
   }
+
+  /**
+   * update latest chart validators.
+   *
+   * @param latestChartWidgetConfigForm latest chart widget config form (UntypedFormGroup)
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateLatestChartValidators(latestChartWidgetConfigForm: UntypedFormGroup, emitEvent: boolean, trigger?: string) {
     const showLabel: boolean = latestChartWidgetConfigForm.get('showLabel').value;

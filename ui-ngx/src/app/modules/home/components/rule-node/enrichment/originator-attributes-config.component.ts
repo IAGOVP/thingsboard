@@ -21,14 +21,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { FetchTo } from '@home/components/rule-node/rule-node-config.models';
 
+
+/**
+ * Angular component: originator attributes config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-originator-attributes-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-originator-attributes-config',
     templateUrl: './originator-attributes-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: originator attributes config UI.
- */
+standalone: false
 })
 export class OriginatorAttributesConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -39,9 +42,21 @@ export class OriginatorAttributesConfigComponent extends RuleNodeConfigurationCo
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.originatorAttributesConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.originatorAttributesConfigForm = this.fb.group({
@@ -50,6 +65,13 @@ export class OriginatorAttributesConfigComponent extends RuleNodeConfigurationCo
       attributesControl: [configuration.attributesControl, []]
     });
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (isObject(configuration)) {
@@ -68,6 +90,13 @@ export class OriginatorAttributesConfigComponent extends RuleNodeConfigurationCo
       attributesControl: isDefinedAndNotNull(configuration?.attributesControl) ? configuration.attributesControl : null
     };
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     for (const key of Object.keys(configuration.attributesControl)) {

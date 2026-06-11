@@ -44,8 +44,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 /**
- * Rule engine component: profile state.
+ * Profile state (device profile state nodes).
  */
+
 
 
 @Deprecated

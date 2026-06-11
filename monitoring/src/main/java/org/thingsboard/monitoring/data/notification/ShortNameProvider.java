@@ -15,13 +15,21 @@
  */
 package org.thingsboard.monitoring.data.notification;
 
+
 /**
 
- * Short display names for monitored services in notifications.
+ * Short display names for monitored services in Slack and log output.
 
  */
 
+
 public interface ShortNameProvider {
+    /**
+     * Returns a compact display name for the monitored service key.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String getShortName();
 

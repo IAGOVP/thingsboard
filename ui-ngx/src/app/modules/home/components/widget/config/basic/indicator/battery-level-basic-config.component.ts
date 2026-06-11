@@ -46,14 +46,17 @@ import {
 } from '@home/components/widget/lib/indicator/battery-level-widget.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: battery level basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-battery-level-basic-config`.
+ */
 @Component({
     selector: 'tb-battery-level-basic-config',
     templateUrl: './battery-level-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: battery level basic config UI.
- */
+standalone: false
 })
 export class BatteryLevelBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -61,6 +64,12 @@ export class BatteryLevelBasicConfigComponent extends BasicWidgetConfigComponent
     const datasources = this.batteryLevelWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.batteryLevelWidgetConfigForm.get('datasources').value;
@@ -98,13 +107,32 @@ export class BatteryLevelBasicConfigComponent extends BasicWidgetConfigComponent
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.batteryLevelWidgetConfigForm;
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'batteryLevel', label: 'batteryLevel', type: DataKeyType.timeseries }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: BatteryLevelWidgetSettings = {...batteryLevelDefaultSettings, ...(configData.config.settings || {})};
@@ -145,6 +173,13 @@ export class BatteryLevelBasicConfigComponent extends BasicWidgetConfigComponent
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -182,9 +217,22 @@ export class BatteryLevelBasicConfigComponent extends BasicWidgetConfigComponent
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon', 'showValue', 'layout'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.batteryLevelWidgetConfigForm.get('showTitle').value;
@@ -236,6 +284,13 @@ export class BatteryLevelBasicConfigComponent extends BasicWidgetConfigComponent
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -243,6 +298,13 @@ export class BatteryLevelBasicConfigComponent extends BasicWidgetConfigComponent
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

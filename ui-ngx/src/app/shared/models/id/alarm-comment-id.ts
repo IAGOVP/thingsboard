@@ -16,11 +16,11 @@
 
 import { HasUUID } from '@shared/models/id/has-uuid';
 
+
 /**
-
- * TypeScript models and enums for alarm comment id.
-
+ * TypeScript interfaces, types, and enums for alarm comment id (shared TypeScript models).
  */
+
 
 export class AlarmCommentId implements HasUUID {
   id: string;

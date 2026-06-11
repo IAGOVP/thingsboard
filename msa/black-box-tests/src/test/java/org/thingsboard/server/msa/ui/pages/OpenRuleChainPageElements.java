@@ -19,11 +19,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.thingsboard.server.msa.ui.base.AbstractBasePage;
 
+
 /**
 
- * Open rule chain page elements.
+ * Selenium element locators for open rule chain page page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class OpenRuleChainPageElements extends AbstractBasePage {
     public OpenRuleChainPageElements(WebDriver driver) {
@@ -33,14 +39,32 @@ public class OpenRuleChainPageElements extends AbstractBasePage {
     private static final String DONE_BTN = "//mat-icon[contains(text(),'done')]/parent::button";
     private static final String INPUT_NODE = "//div[@class='tb-rule-node tb-input-type']";
     private static final String HEAD_RULE_CHAIN_NAME = "//div[@class='tb-breadcrumb']/span[2]";
+    /**
+     * Input node.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement inputNode() {
         return waitUntilVisibilityOfElementLocated(INPUT_NODE);
     }
+    /**
+     * Head rule chain name.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement headRuleChainName() {
         return waitUntilVisibilityOfElementLocated(HEAD_RULE_CHAIN_NAME);
     }
+    /**
+     * Done btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement doneBtn() {
         return waitUntilElementToBeClickable(DONE_BTN);

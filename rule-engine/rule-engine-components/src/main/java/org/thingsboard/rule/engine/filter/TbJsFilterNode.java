@@ -30,7 +30,14 @@ import org.thingsboard.server.common.msg.TbMsg;
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 
 /**
- * Rule engine filter node 'script': Filter incoming messages using TBEL or JS script Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>script</b>.
+ *
+ * <p>Filter incoming messages using TBEL or JS script
+ * <br>Evaluates boolean function using incoming message. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbJsFilterNodeConfiguration}.
+ * <br>Output relations: {@code TbNodeConnectionType.TRUE, TbNodeConnectionType.FALSE}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/script/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/script/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -52,14 +59,30 @@ public class TbJsFilterNode implements TbNode {
 
     private ScriptEngine scriptEngine;
 
-    /** Compiles TBEL/JS filter script via {@link TbContext#createScriptEngine}. */
+    
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
+
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         var config = TbNodeUtils.convert(configuration, TbJsFilterNodeConfiguration.class);
         scriptEngine = ctx.createScriptEngine(config.getScriptLang(), ScriptLanguage.TBEL.equals(config.getScriptLang()) ? config.getTbelScript() : config.getJsScript());
     }
 
-    /** Routes message to True/False relation based on script result. */
+    
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
+
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
         withCallback(scriptEngine.executeFilterAsync(msg),
@@ -70,6 +93,10 @@ public class TbJsFilterNode implements TbNode {
                     ctx.tellFailure(msg, t);
                 }, ctx.getDbCallbackExecutor());
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {

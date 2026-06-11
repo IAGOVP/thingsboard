@@ -49,15 +49,18 @@ export interface KeyFilterDialogData {
   entityId?: EntityId;
 }
 
+
+/**
+ * Angular component: key filter dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-key-filter-dialog`.
+ */
 @Component({
     selector: 'tb-key-filter-dialog',
     templateUrl: './key-filter-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: KeyFilterDialogComponent }],
     styleUrls: ['./key-filter-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: key filter dialog UI.
- */
+standalone: false
 })
 export class KeyFilterDialogComponent extends
   DialogComponent<KeyFilterDialogComponent, KeyFilterInfo>
@@ -198,11 +201,24 @@ export class KeyFilterDialogComponent extends
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -210,9 +226,19 @@ export class KeyFilterDialogComponent extends
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.keyFilterFormGroup.get('key.key').patchValue('', {emitEvent: true});
@@ -222,12 +248,22 @@ export class KeyFilterDialogComponent extends
     }, 0);
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (!this.dirty && this.showAutocomplete) {
       this.keyFilterFormGroup.get('key.key').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = true;
     }
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;
@@ -241,12 +277,25 @@ export class KeyFilterDialogComponent extends
     return this.keyFilterFormGroup.get('key.type').value === EntityKeyType.CONSTANT;
   }
 
+  /**
+   * fetch entity name.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   private fetchEntityName(searchText?: string): Observable<Array<string>> {
     this.searchText = searchText;
     return this.getEntityKeys().pipe(
       map(keys => searchText ? keys.filter(key => key.toUpperCase().startsWith(searchText.toUpperCase())) : keys)
     );
   }
+
+  /**
+   * get entity keys.
+   *
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private getEntityKeys(): Observable<Array<string>> {
     if (!this.entityKeysName) {

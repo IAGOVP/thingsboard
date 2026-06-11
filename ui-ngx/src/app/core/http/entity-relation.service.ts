@@ -22,7 +22,9 @@ import { EntityRelation, EntityRelationInfo, EntityRelationsQuery } from '@share
 import { EntityId } from '@app/shared/models/id/entity-id';
 
 /**
- * Angular HTTP service: entity relation REST wrappers (`@core/http`).
+ * Angular injectable service: entity relation (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -33,11 +35,28 @@ export class EntityRelationService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/relation, ...`. */
+  
+  /**
+   * POST/PUT entity — save relation.
+   *
+   * @param relation relation (EntityRelation)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntityRelation> observable or value
+   */
+
 
   public saveRelation(relation: EntityRelation, config?: RequestConfig): Observable<EntityRelation> {
     return this.http.post<EntityRelation>('/api/relation', relation, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * DELETE — delete relation.
+   *
+   * @param fromId from id (EntityId)
+   * @param relationType relation type (string)
+   * @param toId to id (EntityId)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public deleteRelation(fromId: EntityId, relationType: string, toId: EntityId,
                         config?: RequestConfig) {
@@ -46,13 +65,30 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete relations.
+   *
+   * @param entityId entity UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteRelations(entityId: EntityId,
                          config?: RequestConfig) {
     return this.http.delete(`/api/relations?entityId=${entityId.id}&entityType=${entityId.entityType}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relation?fromId=${fromId.id}&fromType=${fromId.entityType}, ...`. */
+  
+  /**
+   * get relation.
+   *
+   * @param fromId from id (EntityId)
+   * @param relationType relation type (string)
+   * @param toId to id (EntityId)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntityRelation> observable or value
+   */
+
 
   public getRelation(fromId: EntityId, relationType: string, toId: EntityId,
                      config?: RequestConfig): Observable<EntityRelation> {
@@ -61,7 +97,15 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relations?fromId=${fromId.id}&fromType=${fromId.entityType}, ...`. */
+  
+  /**
+   * find by from.
+   *
+   * @param fromId from id (EntityId)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityRelation>> observable or value
+   */
+
 
   public findByFrom(fromId: EntityId,
                     config?: RequestConfig): Observable<Array<EntityRelation>> {
@@ -70,7 +114,15 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relations/info?fromId=${fromId.id}&fromType=${fromId.entityType}, ...`. */
+  
+  /**
+   * find info by from.
+   *
+   * @param fromId from id (EntityId)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityRelationInfo>> observable or value
+   */
+
 
   public findInfoByFrom(fromId: EntityId,
                         config?: RequestConfig): Observable<Array<EntityRelationInfo>> {
@@ -79,7 +131,16 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relations?fromId=${fromId.id}&fromType=${fromId.entityType}&relationType=${relationType}, ...`. */
+  
+  /**
+   * find by from and type.
+   *
+   * @param fromId from id (EntityId)
+   * @param relationType relation type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityRelation>> observable or value
+   */
+
 
   public findByFromAndType(fromId: EntityId, relationType: string,
                            config?: RequestConfig): Observable<Array<EntityRelation>> {
@@ -88,7 +149,15 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relations?toId=${toId.id}&toType=${toId.entityType}, ...`. */
+  
+  /**
+   * find by to.
+   *
+   * @param toId to id (EntityId)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityRelation>> observable or value
+   */
+
 
   public findByTo(toId: EntityId,
                   config?: RequestConfig): Observable<Array<EntityRelation>> {
@@ -97,7 +166,15 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relations/info?toId=${toId.id}&toType=${toId.entityType}, ...`. */
+  
+  /**
+   * find info by to.
+   *
+   * @param toId to id (EntityId)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityRelationInfo>> observable or value
+   */
+
 
   public findInfoByTo(toId: EntityId,
                       config?: RequestConfig): Observable<Array<EntityRelationInfo>> {
@@ -106,7 +183,16 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relations?toId=${toId.id}&toType=${toId.entityType}&relationType=${relationType}, ...`. */
+  
+  /**
+   * find by to and type.
+   *
+   * @param toId to id (EntityId)
+   * @param relationType relation type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityRelation>> observable or value
+   */
+
 
   public findByToAndType(toId: EntityId, relationType: string,
                          config?: RequestConfig): Observable<Array<EntityRelation>> {
@@ -115,7 +201,15 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relations, ...`. */
+  
+  /**
+   * find by query.
+   *
+   * @param query query (EntityRelationsQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityRelation>> observable or value
+   */
+
 
   public findByQuery(query: EntityRelationsQuery,
                      config?: RequestConfig): Observable<Array<EntityRelation>> {
@@ -124,7 +218,15 @@ export class EntityRelationService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/relations/info`. */
+  
+  /**
+   * find info by query.
+   *
+   * @param query query (EntityRelationsQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityRelationInfo>> observable or value
+   */
+
 
   public findInfoByQuery(query: EntityRelationsQuery,
                          config?: RequestConfig): Observable<Array<EntityRelationInfo>> {

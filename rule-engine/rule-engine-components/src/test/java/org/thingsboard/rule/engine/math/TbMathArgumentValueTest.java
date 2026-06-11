@@ -25,13 +25,20 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+
 /**
 
- * Unit test for tb math argument value rule node.
+ * Unit test for tb math argument value (expression evaluation nodes).
 
  */
 
+
 public class TbMathArgumentValueTest {
+    /**
+     * Test from message body then default value.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromMessageBody_then_defaultValue() {
@@ -40,6 +47,11 @@ public class TbMathArgumentValueTest {
         TbMathArgumentValue result = TbMathArgumentValue.fromMessageBody(tbMathArgument, tbMathArgument.getKey(), Optional.ofNullable(JacksonUtil.newObjectNode()));
         Assertions.assertEquals(5.0, result.getValue(), 0d);
     }
+    /**
+     * Test from message body then empty body.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromMessageBody_then_emptyBody() {
@@ -49,6 +61,11 @@ public class TbMathArgumentValueTest {
         });
         Assertions.assertNotNull(thrown.getMessage());
     }
+    /**
+     * Test from message body then no key.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromMessageBody_then_noKey() {
@@ -56,6 +73,11 @@ public class TbMathArgumentValueTest {
         Throwable thrown = assertThrows(RuntimeException.class, () -> TbMathArgumentValue.fromMessageBody(tbMathArgument, tbMathArgument.getKey(), Optional.ofNullable(JacksonUtil.newObjectNode())));
         Assertions.assertNotNull(thrown.getMessage());
     }
+    /**
+     * Test from message body then value empty.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromMessageBody_then_valueEmpty() {
@@ -72,6 +94,11 @@ public class TbMathArgumentValueTest {
         thrown = assertThrows(RuntimeException.class, () -> TbMathArgumentValue.fromMessageBody(tbMathArgument, tbMathArgument.getKey(), Optional.of(msgData)));
         Assertions.assertNotNull(thrown.getMessage());
     }
+    /**
+     * Test from message body then value cant convert to double.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromMessageBody_then_valueCantConvert_to_double() {
@@ -88,6 +115,11 @@ public class TbMathArgumentValueTest {
         thrown = assertThrows(RuntimeException.class, () -> TbMathArgumentValue.fromMessageBody(tbMathArgument, tbMathArgument.getKey(), Optional.of(msgData)));
         Assertions.assertNotNull(thrown.getMessage());
     }
+    /**
+     * Test from message metadata then no key.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromMessageMetadata_then_noKey() {
@@ -95,6 +127,11 @@ public class TbMathArgumentValueTest {
         Throwable thrown = assertThrows(RuntimeException.class, () -> TbMathArgumentValue.fromMessageMetadata(tbMathArgument, tbMathArgument.getKey(), new TbMsgMetaData()));
         Assertions.assertNotNull(thrown.getMessage());
     }
+    /**
+     * Test from message metadata then value empty.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromMessageMetadata_then_valueEmpty() {
@@ -102,6 +139,11 @@ public class TbMathArgumentValueTest {
         Throwable thrown = assertThrows(RuntimeException.class, () -> TbMathArgumentValue.fromMessageMetadata(tbMathArgument, tbMathArgument.getKey(), null));
         Assertions.assertNotNull(thrown.getMessage());
     }
+    /**
+     * Test from string then ok.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromString_thenOK() {
@@ -110,6 +152,11 @@ public class TbMathArgumentValueTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(5.0, result.getValue(), 0d);
     }
+    /**
+     * Test from string then failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_fromString_then_failure() {

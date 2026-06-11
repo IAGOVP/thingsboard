@@ -275,10 +275,13 @@ const routes: Routes = [
 /**
  * Angular NgModule: customer routing feature area.
  */
+/**
+ * Angular NgModule bundling customer routing (home/customer pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     CustomersTableConfigResolver
-  ]})
+]})
 export class CustomerRoutingModule { }

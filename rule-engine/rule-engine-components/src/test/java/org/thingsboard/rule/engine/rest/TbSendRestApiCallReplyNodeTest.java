@@ -44,8 +44,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb send rest api call reply node rule node.
+ * Unit test for tb send rest api call reply node (outbound REST API call nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbSendRestApiCallReplyNodeTest {
@@ -59,6 +60,11 @@ public class TbSendRestApiCallReplyNodeTest {
     private TbContext ctxMock;
     @Mock
     private RuleEngineRpcService rpcServiceMock;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
@@ -67,12 +73,24 @@ public class TbSendRestApiCallReplyNodeTest {
         var configuration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctxMock, configuration);
     }
+    /**
+     * Given default config when init then does not throw exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenInit_thenDoesNotThrowException() {
         var configuration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         assertThatNoException().isThrownBy(() -> node.init(ctxMock, configuration));
     }
+    /**
+     * Given valid rest api request when on msg then tell success.
+     *
+     * @param requestIdAttribute request id attribute ({@link String})
+     * @param serviceIdAttribute service id attribute ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -113,6 +131,14 @@ public class TbSendRestApiCallReplyNodeTest {
                 Arguments.of("some_custom_request_id_field", "some_custom_service_id_field")
         );
     }
+    /**
+     * Given invalid request when on msg then tell failure.
+     *
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @param errorMsg error msg ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource

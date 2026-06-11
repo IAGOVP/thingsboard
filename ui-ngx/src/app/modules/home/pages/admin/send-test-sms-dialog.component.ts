@@ -30,14 +30,17 @@ export interface SendTestSmsDialogData {
   smsProviderConfiguration: SmsProviderConfiguration;
 }
 
+
+/**
+ * Angular component: send test sms dialog (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-send-test-sms-dialog`.
+ */
 @Component({
     selector: 'tb-send-test-sms-dialog',
     templateUrl: './send-test-sms-dialog.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: send test sms dialog UI.
- */
+standalone: false
 })
 export class SendTestSmsDialogComponent extends
   DialogComponent<SendTestSmsDialogComponent> implements OnInit {
@@ -58,6 +61,11 @@ export class SendTestSmsDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.sendTestSmsFormGroup = this.fb.group({
       numberTo: [null, [Validators.required, Validators.pattern(phoneNumberPattern)]],
@@ -65,9 +73,19 @@ export class SendTestSmsDialogComponent extends
     });
   }
 
+  /**
+   * close.
+   *
+   */
+
   close(): void {
     this.dialogRef.close();
   }
+
+  /**
+   * send test sms.
+   *
+   */
 
   sendTestSms(): void {
     const request: TestSmsRequest =  {

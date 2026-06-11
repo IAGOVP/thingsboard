@@ -42,6 +42,12 @@ import { ComponentType } from '@angular/cdk/portal';
 import { COMPLEX_FILTER_PREDICATE_DIALOG_COMPONENT_TOKEN } from '@home/components/tokens';
 import { ComplexFilterPredicateDialogData } from '@home/components/filter/filter-component.models';
 
+
+/**
+ * Angular component: filter predicate list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-predicate-list`.
+ */
 @Component({
     selector: 'tb-filter-predicate-list',
     templateUrl: './filter-predicate-list.component.html',
@@ -58,10 +64,7 @@ import { ComplexFilterPredicateDialogData } from '@home/components/filter/filter
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: filter predicate list UI.
- */
+standalone: false
 })
 export class FilterPredicateListComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
 
@@ -93,6 +96,11 @@ export class FilterPredicateListComponent implements ControlValueAccessor, Valid
               private dialog: MatDialog) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.filterListFormGroup = this.fb.group({
       predicates: this.fb.array([])
@@ -101,6 +109,11 @@ export class FilterPredicateListComponent implements ControlValueAccessor, Valid
       takeUntil(this.destroy$)
     ).subscribe(() => this.updateModel());
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -111,9 +124,21 @@ export class FilterPredicateListComponent implements ControlValueAccessor, Valid
     return this.filterListFormGroup.get('predicates') as UntypedFormArray;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -127,11 +152,24 @@ export class FilterPredicateListComponent implements ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(control: AbstractControl): ValidationErrors | null {
     return this.filterListFormGroup.valid ? null : {
       filterList: {valid: false}
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param predicates predicates (Array<KeyFilterPredicateInfo>)
+   */
 
   writeValue(predicates: Array<KeyFilterPredicateInfo>): void {
     if (predicates.length === this.predicatesFormArray.length) {
@@ -152,9 +190,21 @@ export class FilterPredicateListComponent implements ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * DELETE — remove predicate.
+   *
+   * @param index index (number)
+   */
+
   public removePredicate(index: number) {
     this.predicatesFormArray.removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add predicate.
+   *
+   * @param complex complex (boolean)
+   */
 
   public addPredicate(complex: boolean) {
     const predicatesFormArray = this.filterListFormGroup.get('predicates') as UntypedFormArray;
@@ -171,6 +221,13 @@ export class FilterPredicateListComponent implements ControlValueAccessor, Valid
       }
     });
   }
+
+  /**
+   * open complex filter dialog.
+   *
+   * @param predicate predicate (KeyFilterPredicateInfo)
+   * @returns Observable<KeyFilterPredicateInfo> observable or value
+   */
 
   private openComplexFilterDialog(predicate: KeyFilterPredicateInfo): Observable<KeyFilterPredicateInfo> {
     return this.dialog.open<any, ComplexFilterPredicateDialogData,
@@ -198,6 +255,11 @@ export class FilterPredicateListComponent implements ControlValueAccessor, Valid
       })
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const predicates: Array<KeyFilterPredicateInfo> = this.filterListFormGroup.getRawValue().predicates;

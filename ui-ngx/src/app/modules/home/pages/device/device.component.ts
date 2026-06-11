@@ -38,14 +38,17 @@ import { OtaUpdateType } from '@shared/models/ota-package.models';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: device (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device`.
+ */
 @Component({
     selector: 'tb-device',
     templateUrl: './device.component.html',
     styleUrls: ['./device.component.scss'],
-    standalone: false
-/**
- * Angular component: device UI.
- */
+standalone: false
 })
 export class DeviceComponent extends EntityComponent<DeviceInfo> {
 
@@ -67,11 +70,21 @@ export class DeviceComponent extends EntityComponent<DeviceInfo> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.deviceScope = this.entitiesTableConfig.componentsData.deviceScope;
     this.deviceCredentials$ = this.entitiesTableConfigValue.componentsData.deviceCredentials$;
     super.ngOnInit();
   }
+
+  /**
+   * hide delete.
+   *
+   */
 
   hideDelete() {
     if (this.entitiesTableConfig) {
@@ -81,9 +94,23 @@ export class DeviceComponent extends EntityComponent<DeviceInfo> {
     }
   }
 
+  /**
+   * is assigned to customer.
+   *
+   * @param entity entity (DeviceInfo)
+   * @returns boolean observable or value
+   */
+
   isAssignedToCustomer(entity: DeviceInfo): boolean {
     return entity && entity.customerId && entity.customerId.id !== NULL_UUID;
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (DeviceInfo)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: DeviceInfo): UntypedFormGroup {
     const form = this.fb.group(
@@ -117,6 +144,12 @@ export class DeviceComponent extends EntityComponent<DeviceInfo> {
     return form;
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (DeviceInfo)
+   */
+
   updateForm(entity: DeviceInfo) {
     this.entityForm.patchValue({
       name: entity.name,
@@ -134,6 +167,18 @@ export class DeviceComponent extends EntityComponent<DeviceInfo> {
   }
 
 
+  /**
+
+
+   * Event handler for device id copied.
+
+
+   *
+
+
+   */
+
+
   onDeviceIdCopied($event) {
     this.store.dispatch(new ActionNotificationShow(
       {
@@ -145,9 +190,20 @@ export class DeviceComponent extends EntityComponent<DeviceInfo> {
       }));
   }
 
+  /**
+   * Event handler for device profile updated.
+   *
+   */
+
   onDeviceProfileUpdated() {
     this.entitiesTableConfig.updateData(false, false);
   }
+
+  /**
+   * Event handler for device profile changed.
+   *
+   * @param deviceProfile device profile (DeviceProfileInfo)
+   */
 
   onDeviceProfileChanged(deviceProfile: DeviceProfileInfo) {
     if (deviceProfile && this.isEdit) {

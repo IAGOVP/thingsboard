@@ -17,14 +17,17 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+
+/**
+ * Angular component: link expired (login pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-link-expired`.
+ */
 @Component({
     selector: 'tb-link-expired',
     templateUrl: './link-expired.component.html',
     styleUrls: ['./link-expired.component.scss'],
-    standalone: false
-/**
- * Angular component: link expired UI.
- */
+standalone: false
 })
 export class LinkExpiredComponent {
 

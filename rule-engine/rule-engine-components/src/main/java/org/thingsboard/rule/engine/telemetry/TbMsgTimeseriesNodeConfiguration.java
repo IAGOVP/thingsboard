@@ -22,8 +22,11 @@ import org.thingsboard.rule.engine.telemetry.settings.TimeseriesProcessingSettin
 
 import static org.thingsboard.rule.engine.telemetry.settings.TimeseriesProcessingSettings.OnEveryMessage;
 /**
- * JSON configuration for TbMsgTimeseries rule node.
+ * JSON configuration POJO for {@link TbMsgTimeseries} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMsgTimeseriesNodeConfiguration implements NodeConfiguration<TbMsgTimeseriesNodeConfiguration> {
@@ -32,6 +35,12 @@ public class TbMsgTimeseriesNodeConfiguration implements NodeConfiguration<TbMsg
     private boolean useServerTs;
     @NotNull
     private TimeseriesProcessingSettings processingSettings;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgTimeseriesNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgTimeseriesNodeConfiguration defaultConfiguration() {

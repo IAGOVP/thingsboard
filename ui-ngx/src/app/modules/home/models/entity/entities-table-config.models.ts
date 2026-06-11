@@ -83,11 +83,11 @@ export interface HeaderActionDescriptor {
 
 export type EntityTableColumnType = 'content' | 'action' | 'link' | 'entityChips';
 
+
 /**
-
- * TypeScript models and enums for base entity table column.
-
+ * TypeScript interfaces, types, and enums for base entity table column (ThingsBoard web UI).
  */
+
 
 export class BaseEntityTableColumn<T extends BaseData<HasId>> {
   constructor(public type: EntityTableColumnType,

@@ -39,6 +39,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { TranslateService } from '@ngx-translate/core';
 import { EditorOptions } from 'tinymce';
 
+
+/**
+ * Angular component: notification template configuration (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-template-configuration`.
+ */
 @Component({
     selector: 'tb-template-configuration',
     templateUrl: './notification-template-configuration.component.html',
@@ -55,10 +61,7 @@ import { EditorOptions } from 'tinymce';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: notification template configuration UI.
- */
+standalone: false
 })
 export class NotificationTemplateConfigurationComponent implements OnDestroy, ControlValueAccessor, Validator {
 
@@ -149,10 +152,21 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Partial<DeliveryMethodsTemplates>)
+   */
 
   writeValue(value: Partial<DeliveryMethodsTemplates>) {
     const settings = deepClone(value);
@@ -167,6 +181,12 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
     this.updateExpandedForm();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (this.propagateChangePending) {
@@ -177,8 +197,20 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
@@ -187,6 +219,12 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
       this.updateDisabledForms();
     }
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors observable or value
+   */
 
   validate(): ValidationErrors {
     return this.templateConfigurationForm.valid ? null : {
@@ -206,9 +244,22 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
     return '';
   }
 
+  /**
+   * expanded form.
+   *
+   * @param name name (NotificationDeliveryMethod)
+   * @returns boolean observable or value
+   */
+
   expandedForm(name: NotificationDeliveryMethod): boolean {
     return this.expendedBlocks.includes(name);
   }
+
+  /**
+   * update model.
+   *
+   * @param value value (Partial<DeliveryMethodsTemplates>)
+   */
 
   private updateModel(value: Partial<DeliveryMethodsTemplates>) {
     if (this.propagateChange) {
@@ -218,6 +269,11 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
     }
   }
 
+  /**
+   * update expanded form.
+   *
+   */
+
   private updateExpandedForm() {
     this.expendedBlocks = [];
     Object.keys(this.templateConfigurationForm.controls).forEach((name: NotificationDeliveryMethod) => {
@@ -226,6 +282,11 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
       }
     });
   }
+
+  /**
+   * update disabled forms.
+   *
+   */
 
   private updateDisabledForms(){
     Object.values(NotificationDeliveryMethod).forEach((method) => {
@@ -246,6 +307,12 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
     });
   }
 
+  /**
+   * build form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   private buildForm(): FormGroup {
     const form = this.fb.group({});
 
@@ -255,6 +322,13 @@ export class NotificationTemplateConfigurationComponent implements OnDestroy, Co
 
     return form;
   }
+
+  /**
+   * build delivery method control.
+   *
+   * @param deliveryMethod delivery method (NotificationDeliveryMethod)
+   * @returns FormGroup observable or value
+   */
 
   private buildDeliveryMethodControl(deliveryMethod: NotificationDeliveryMethod): FormGroup {
     let deliveryMethodForm: FormGroup;

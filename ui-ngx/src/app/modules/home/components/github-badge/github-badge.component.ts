@@ -26,14 +26,17 @@ import { Subject } from 'rxjs';
 
 const SETTINGS_KEY = 'HIDE_GITHUB_STAR_BUTTON';
 
+
+/**
+ * Angular component: github badge (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-github-badge`.
+ */
 @Component({
     selector: 'tb-github-badge',
     templateUrl: './github-badge.component.html',
     styleUrl: './github-badge.component.scss',
-    standalone: false
-/**
- * Angular component: github badge UI.
- */
+standalone: false
 })
 export class GithubBadgeComponent implements OnDestroy {
 
@@ -67,6 +70,11 @@ export class GithubBadgeComponent implements OnDestroy {
     }
   }
 
+  /**
+   * hide github star.
+   *
+   */
+
   hideGithubStar($event: Event) {
     $event?.stopPropagation();
     this.localStorageService.setItem(SETTINGS_KEY, true);
@@ -75,6 +83,11 @@ export class GithubBadgeComponent implements OnDestroy {
     this.stopWatch$.next();
     this.stopWatch$.complete();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.stopWatch$.next();

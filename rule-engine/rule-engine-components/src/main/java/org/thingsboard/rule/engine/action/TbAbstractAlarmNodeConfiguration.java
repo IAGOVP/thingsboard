@@ -19,8 +19,11 @@ import lombok.Data;
 import org.thingsboard.server.common.data.script.ScriptLanguage;
 import org.thingsboard.server.common.data.validation.NoXss;
 /**
- * JSON configuration for TbAbstractAlarm rule node.
+ * JSON configuration POJO for {@link TbAbstractAlarm} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public abstract class TbAbstractAlarmNodeConfiguration {

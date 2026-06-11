@@ -60,15 +60,18 @@ export interface DataKeyConfigDialogData {
   supportsUnitConversion?: boolean
 }
 
+
+/**
+ * Angular component: data key config dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-data-key-config-dialog`.
+ */
 @Component({
     selector: 'tb-data-key-config-dialog',
     templateUrl: './data-key-config-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: DataKeyConfigDialogComponent }],
     styleUrls: ['./data-key-config-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: data key config dialog UI.
- */
+standalone: false
 })
 export class DataKeyConfigDialogComponent extends DialogComponent<DataKeyConfigDialogComponent, DataKey>
   implements OnInit, ErrorStateMatcher {
@@ -95,6 +98,11 @@ export class DataKeyConfigDialogComponent extends DialogComponent<DataKeyConfigD
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.dataKeyFormGroup = this.fb.group({
       dataKey: [this.data.dataKey, [Validators.required]]
@@ -118,15 +126,33 @@ export class DataKeyConfigDialogComponent extends DialogComponent<DataKeyConfigD
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

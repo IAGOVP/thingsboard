@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { buildPageStepSizeValues } from '@home/components/widget/lib/table-widget.models';
 
+
+/**
+ * Angular component: alarms table widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarms-table-widget-settings`.
+ */
 @Component({
     selector: 'tb-alarms-table-widget-settings',
     templateUrl: './alarms-table-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: alarms table widget settings UI.
- */
+standalone: false
 })
 export class AlarmsTableWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class AlarmsTableWidgetSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.alarmsTableWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -70,11 +85,24 @@ export class AlarmsTableWidgetSettingsComponent extends WidgetSettingsComponent 
     };
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     settings.pageStepIncrement = settings.pageStepIncrement ?? settings.defaultPageSize;
     this.pageStepSizeValues = buildPageStepSizeValues(settings.pageStepCount, settings.pageStepIncrement);
     return settings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.alarmsTableWidgetSettingsForm = this.fb.group({
@@ -103,9 +131,22 @@ export class AlarmsTableWidgetSettingsComponent extends WidgetSettingsComponent 
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useRowStyleFunction', 'displayPagination', 'pageStepCount', 'pageStepIncrement'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger: string) {
     if (trigger === 'pageStepCount' || trigger === 'pageStepIncrement') {

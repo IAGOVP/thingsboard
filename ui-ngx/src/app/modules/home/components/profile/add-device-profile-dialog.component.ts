@@ -53,15 +53,18 @@ export interface AddDeviceProfileDialogData {
   transportType: DeviceTransportType;
 }
 
+
+/**
+ * Angular component: add device profile dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-device-profile-dialog`.
+ */
 @Component({
     selector: 'tb-add-device-profile-dialog',
     templateUrl: './add-device-profile-dialog.component.html',
     providers: [],
     styleUrls: ['./add-device-profile-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: add device profile dialog UI.
- */
+standalone: false
 })
 export class AddDeviceProfileDialogComponent extends
   DialogComponent<AddDeviceProfileDialogComponent, DeviceProfile> {
@@ -143,19 +146,39 @@ export class AddDeviceProfileDialogComponent extends
     );
   }
 
+  /**
+   * device profile transport type changed.
+   *
+   */
+
   private deviceProfileTransportTypeChanged() {
     const deviceTransportType: DeviceTransportType = this.transportConfigFormGroup.get('transportType').value;
     this.transportConfigFormGroup.patchValue(
       {transportConfiguration: createDeviceProfileTransportConfiguration(deviceTransportType)});
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
 
+  /**
+   * previous step.
+   *
+   */
+
   previousStep() {
     this.addDeviceProfileStepper.previous();
   }
+
+  /**
+   * next step.
+   *
+   */
 
   nextStep() {
     if (this.selectedIndex < 3) {
@@ -164,6 +187,12 @@ export class AddDeviceProfileDialogComponent extends
       this.add();
     }
   }
+
+  /**
+   * selected form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
 
   selectedForm(): UntypedFormGroup {
     switch (this.selectedIndex) {
@@ -175,6 +204,11 @@ export class AddDeviceProfileDialogComponent extends
         return this.provisionConfigFormGroup;
     }
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     if (this.allValid()) {
@@ -213,6 +247,13 @@ export class AddDeviceProfileDialogComponent extends
     }
   }
 
+  /**
+   * get form label.
+   *
+   * @param index index (number)
+   * @returns string observable or value
+   */
+
   getFormLabel(index: number): string {
     switch (index) {
       case 0:
@@ -223,6 +264,11 @@ export class AddDeviceProfileDialogComponent extends
         return 'device-profile.device-provisioning';
     }
   }
+
+  /**
+   * change step.
+   *
+   */
 
   changeStep($event: StepperSelectionEvent): void {
     this.selectedIndex = $event.selectedIndex;
@@ -236,6 +282,12 @@ export class AddDeviceProfileDialogComponent extends
   private get maxStepperIndex(): number {
     return this.addDeviceProfileStepper?._steps?.length - 1;
   }
+
+  /**
+   * all valid.
+   *
+   * @returns boolean observable or value
+   */
 
   allValid(): boolean {
     return !this.addDeviceProfileStepper.steps.find((item, index) => {

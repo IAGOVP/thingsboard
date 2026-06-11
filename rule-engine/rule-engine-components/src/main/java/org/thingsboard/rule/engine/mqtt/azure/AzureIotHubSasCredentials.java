@@ -28,14 +28,21 @@ import org.thingsboard.rule.engine.credentials.CredentialsType;
 
 import java.security.Security;
 /**
- * Rule engine component: azure iot hub sas credentials.
+ * Azure iot hub sas credentials (MQTT publish/subscribe nodes).
  */
+
 
 @Data
 @Slf4j
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AzureIotHubSasCredentials extends CertPemCredentials {
     private String sasKey;
+    /**
+     * Init ssl context.
+     *
+     * @return {@link SslContext}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public SslContext initSslContext() {
@@ -53,6 +60,12 @@ public class AzureIotHubSasCredentials extends CertPemCredentials {
             throw new RuntimeException("Creating TLS factory failed!", e);
         }
     }
+    /**
+     * Returns type.
+     *
+     * @return {@link CredentialsType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CredentialsType getType() {

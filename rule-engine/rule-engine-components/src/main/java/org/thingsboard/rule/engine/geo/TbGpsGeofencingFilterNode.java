@@ -23,7 +23,14 @@ import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine filter node 'gps geofencing filter': Filter incoming messages by GPS based geofencing Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>gps geofencing filter</b>.
+ *
+ * <p>Filter incoming messages by GPS based geofencing
+ * <br>Extracts latitude and longitude parameters from the incoming message and checks them according to configured perimeter. </br>
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGpsGeofencingFilterNodeConfiguration}.
+ * <br>Output relations: {@code TbNodeConnectionType.TRUE, TbNodeConnectionType.FALSE}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/gps-geofencing-filter/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/gps-geofencing-filter/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -62,11 +69,24 @@ import org.thingsboard.server.common.msg.TbMsg;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/gps-geofencing-filter/"
 )
 public class TbGpsGeofencingFilterNode extends AbstractGeofencingNode<TbGpsGeofencingFilterNodeConfiguration> {
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
         ctx.tellNext(msg, checkMatches(msg) ? TbNodeConnectionType.TRUE : TbNodeConnectionType.FALSE);
     }
+    /**
+     * Returns config clazz.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<TbGpsGeofencingFilterNodeConfiguration> getConfigClazz() {

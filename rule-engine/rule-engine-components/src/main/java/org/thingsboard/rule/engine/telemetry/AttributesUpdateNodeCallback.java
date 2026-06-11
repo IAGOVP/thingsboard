@@ -22,11 +22,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 
 import java.util.List;
 
+
 /**
 
- * Rule engine component: attributes update node callback.
+ * Attributes update node callback (telemetry and attribute persistence nodes).
 
  */
+
 
 public class AttributesUpdateNodeCallback extends TelemetryNodeCallback {
 
@@ -38,6 +40,12 @@ public class AttributesUpdateNodeCallback extends TelemetryNodeCallback {
         this.scope = scope;
         this.attributes = attributes;
     }
+    /**
+     * Handles success.
+     *
+     * @param result result ({@link Void})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onSuccess(@Nullable Void result) {

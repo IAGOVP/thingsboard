@@ -61,15 +61,18 @@ import { DeepPartial } from '@shared/models/common';
 const layoutHeight = 56;
 const valueRelativeWidth = 0.35;
 
+
+/**
+ * Angular component: value chart card widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-chart-card-widget`.
+ */
 @Component({
     selector: 'tb-value-chart-card-widget',
     templateUrl: './value-chart-card-widget.component.html',
     styleUrls: ['./value-chart-card-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: value chart card widget UI.
- */
+standalone: false
 })
 export class ValueChartCardWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -116,6 +119,11 @@ export class ValueChartCardWidgetComponent implements OnInit, AfterViewInit, OnD
               private renderer: Renderer2,
               private cd: ChangeDetectorRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.ctx.$scope.valueChartCardWidget = this;
@@ -165,6 +173,11 @@ export class ValueChartCardWidgetComponent implements OnInit, AfterViewInit, OnD
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   public ngAfterViewInit() {
     const settings: DeepPartial<TimeSeriesChartSettings> = {
       dataZoom: false,
@@ -189,11 +202,21 @@ export class ValueChartCardWidgetComponent implements OnInit, AfterViewInit, OnD
     this.onResize();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.contentResize$) {
       this.contentResize$.disconnect();
     }
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
@@ -201,11 +224,21 @@ export class ValueChartCardWidgetComponent implements OnInit, AfterViewInit, OnD
     this.cd.detectChanges();
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     if (this.lineChart) {
       this.lineChart.update();
     }
   }
+
+  /**
+   * Event handler for latest data updated.
+   *
+   */
 
   public onLatestDataUpdated() {
     if (this.showValue && this.valueKey) {
@@ -225,14 +258,29 @@ export class ValueChartCardWidgetComponent implements OnInit, AfterViewInit, OnD
     }
   }
 
+  /**
+   * Event handler for edit mode changed.
+   *
+   */
+
   public onEditModeChanged() {
   }
+
+  /**
+   * Event handler for destroy.
+   *
+   */
 
   public onDestroy() {
     if (this.lineChart) {
       this.lineChart.destroy();
     }
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize(fitTargetWidth = true) {
     if (this.settings.autoScale && this.showValue) {
@@ -249,6 +297,13 @@ export class ValueChartCardWidgetComponent implements OnInit, AfterViewInit, OnD
     }
     this.lineChart.resize();
   }
+
+  /**
+   * set value font size.
+   *
+   * @param targetWidth target width (number)
+   * @param maxHeight max height (number)
+   */
 
   private setValueFontSize(targetWidth: number, maxHeight: number, fitTargetWidth = true) {
     const fontSize = getComputedStyle(this.valueChartCardValue.nativeElement).fontSize;

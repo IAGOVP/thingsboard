@@ -46,8 +46,9 @@ import { AppState } from '@core/core.state';
 import { selectUserSettingsProperty } from '@core/auth/auth.selectors';
 import { forkJoin, Observable, of, switchMap } from 'rxjs';
 /**
- * Route resolver: loads mobile bundle table config before activate.
+ * Route resolver: preloads data for mobile bundle table config (home/mobile pages).
  */
+
 
 @Injectable()
 export class MobileBundleTableConfigResolver {
@@ -92,6 +93,10 @@ export class MobileBundleTableConfigResolver {
     this.config.deleteEntity = id => this.mobileAppService.deleteMobileAppBundle(id.id);
 
     this.config.entitiesFetchFunction = pageLink => this.mobileAppService.getTenantMobileAppBundleInfos(pageLink).pipe(
+      /**
+       * map.
+       *
+       */
       map(bundles => {
         bundles.data.map(data => {
           if (data.androidPkgName) {
@@ -141,9 +146,22 @@ export class MobileBundleTableConfigResolver {
     this.config.cellActionDescriptors = this.configureCellActions();
   }
 
+  /**
+   * resolve.
+   *
+   * @param _route  route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<MobileAppBundleInfo> observable or value
+   */
+
   resolve(_route: ActivatedRouteSnapshot): EntityTableConfig<MobileAppBundleInfo> {
     return this.config;
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<MobileAppBundleInfo>> observable or value
+   */
 
   private configureCellActions(): Array<CellActionDescriptor<MobileAppBundleInfo>> {
     return [
@@ -156,6 +174,13 @@ export class MobileBundleTableConfigResolver {
     ];
   }
 
+  /**
+   * edit bundle.
+   *
+   * @param bundle bundle (MobileAppBundleInfo)
+   * @returns Observable<MobileAppBundleInfo> observable or value
+   */
+
   private editBundle(bundle: MobileAppBundleInfo, isAdd = false): Observable<MobileAppBundleInfo> {
     return this.dialog.open<MobileBundleDialogComponent, MobileBundleDialogData,
       MobileAppBundleInfo>(MobileBundleDialogComponent, {
@@ -167,6 +192,12 @@ export class MobileBundleTableConfigResolver {
       }
     }).afterClosed();
   }
+
+  /**
+   * configuration app.
+   *
+   * @param entity entity (MobileAppBundleInfo)
+   */
 
   private configurationApp($event: Event, entity: MobileAppBundleInfo, afterAdd = false) {
     if ($event) {

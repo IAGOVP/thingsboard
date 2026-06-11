@@ -50,14 +50,17 @@ interface SwitchSettings {
   sliderColor: ThemePalette;
 }
 
+
+/**
+ * Angular component: switch (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-switch`.
+ */
 @Component({
     selector: 'tb-switch',
     templateUrl: './switch.component.html',
     styleUrls: ['./switch.component.scss'],
-    standalone: false
-/**
- * Angular component: switch UI.
- */
+standalone: false
 })
 export class SwitchComponent extends PageComponent implements AfterViewInit, OnDestroy {
 
@@ -123,6 +126,11 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     if (this.switchType === 'switch') {
       this.switchElement = $(this.switchElementRef.nativeElement);
@@ -145,6 +153,11 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
     this.init();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.valueSubscription) {
       this.ctx.subscriptionApi.removeSubscription(this.valueSubscription.id);
@@ -154,6 +167,11 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
     }
     this.ctx.controlApi.completedCommand();
   }
+
+  /**
+   * init.
+   *
+   */
 
   private init() {
     const settings: SwitchSettings = this.ctx.settings;
@@ -228,6 +246,11 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
 
   }
 
+  /**
+   * resize.
+   *
+   */
+
   private resize() {
     let width = this.switchContainer.width();
     let height = this.switchContainer.height();
@@ -256,6 +279,15 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
     this.setFontSize(this.switchError, this.error, this.switchErrorContainer.height(), this.switchErrorContainer.width());
   }
 
+  /**
+   * set font size.
+   *
+   * @param element element (JQuery<HTMLElement>)
+   * @param text text (string)
+   * @param fontSize font size (number)
+   * @param maxWidth max width (number)
+   */
+
   private setFontSize(element: JQuery<HTMLElement>, text: string, fontSize: number, maxWidth: number) {
     let textWidth = this.measureTextWidth(text, fontSize);
     while (textWidth > maxWidth) {
@@ -265,11 +297,25 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
     element.css({fontSize: fontSize + 'px', lineHeight: fontSize + 'px'});
   }
 
+  /**
+   * measure text width.
+   *
+   * @param text text (string)
+   * @param fontSize font size (number)
+   * @returns number observable or value
+   */
+
   private measureTextWidth(text: string, fontSize: number): number {
     this.textMeasure.css({fontSize: fontSize + 'px', lineHeight: fontSize + 'px'});
     this.textMeasure.text(text);
     return this.textMeasure.width();
   }
+
+  /**
+   * Event handler for error.
+   *
+   * @param error error (string)
+   */
 
   private onError(error: string) {
     this.error = error;
@@ -279,13 +325,29 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
     this.ctx.detectChanges();
   }
 
+  /**
+   * set value.
+   *
+   * @param value value (boolean)
+   */
+
   private setValue(value: boolean) {
     this.value = value ? true : false;
   }
 
+  /**
+   * Event handler for value.
+   *
+   */
+
   public onValue() {
     this.rpcUpdateValue(this.value);
   }
+
+  /**
+   * rpc request value.
+   *
+   */
 
   private rpcRequestValue() {
     this.error = '';
@@ -305,6 +367,11 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
       }
     );
   }
+
+  /**
+   * rpc update value.
+   *
+   */
 
   private rpcUpdateValue(value) {
     if (this.executingUpdateValue) {
@@ -335,6 +402,11 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
       }
     );
   }
+
+  /**
+   * subscribe for value.
+   *
+   */
 
   private subscribeForValue() {
     const valueSubscriptionInfo: SubscriptionInfo[] = [{
@@ -369,6 +441,13 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
     );
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   * @param detectChanges detect changes (boolean)
+   */
+
   private onDataUpdated(subscription: IWidgetSubscription, detectChanges: boolean) {
     let value = false;
     const data = subscription.data;
@@ -395,6 +474,13 @@ export class SwitchComponent extends PageComponent implements AfterViewInit, OnD
       this.ctx.detectChanges();
     }
   }
+
+  /**
+   * Event handler for data update error.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   * @param e e (any)
+   */
 
   private onDataUpdateError(subscription: IWidgetSubscription, e: any) {
     const exceptionData = this.utils.parseException(e);

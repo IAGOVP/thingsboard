@@ -18,11 +18,11 @@ import { AuthUser, User } from '@shared/models/user.model';
 import { UserSettings } from '@shared/models/user-settings.models';
 import { TrendzSettings } from '@shared/models/trendz-settings.models';
 
+
 /**
-
- * TypeScript models and enums for sys params state.
-
+ * Sys params state (authentication).
  */
+
 
 export interface SysParamsState {
   userTokenAccessEnabled: boolean;

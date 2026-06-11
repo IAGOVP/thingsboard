@@ -32,6 +32,13 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { combineLatest, Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
 
+
+
+/**
+ * Angular component: lwm2m observe attr telemetry resources (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-observe-attr-telemetry-resource`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-observe-attr-telemetry-resource',
     templateUrl: './lwm2m-observe-attr-telemetry-resources.component.html',
@@ -48,13 +55,8 @@ import { startWith, takeUntil } from 'rxjs/operators';
             multi: true
         }
     ],
-    standalone: false
 
-/**
-
- * Angular component: lwm2m observe attr telemetry resources UI.
-
- */
+standalone: false
 })
 
 export class Lwm2mObserveAttrTelemetryResourcesComponent implements ControlValueAccessor, OnDestroy, Validator {
@@ -90,21 +92,50 @@ export class Lwm2mObserveAttrTelemetryResourcesComponent implements ControlValue
     ).subscribe(() => this.updateModel(this.resourcesFormGroup.getRawValue().resources));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ResourceLwM2M[])
+   */
+
   writeValue(value: ResourceLwM2M[]): void {
     this.updatedResources(value);
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -122,6 +153,12 @@ export class Lwm2mObserveAttrTelemetryResourcesComponent implements ControlValue
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.resourcesFormGroup.valid ? null : {
       resources: false
@@ -132,9 +169,22 @@ export class Lwm2mObserveAttrTelemetryResourcesComponent implements ControlValue
     return this.resourcesFormGroup.get('resources') as UntypedFormArray;
   }
 
+  /**
+   * get name resource lwm2m.
+   *
+   * @param resourceLwM2M resource lw m2m (ResourceLwM2M)
+   * @returns string observable or value
+   */
+
   getNameResourceLwm2m(resourceLwM2M: ResourceLwM2M): string {
     return `#${resourceLwM2M.id} ${resourceLwM2M.name}`;
   }
+
+  /**
+   * updated resources.
+   *
+   * @param resources resources (ResourceLwM2M[])
+   */
 
   private updatedResources(resources: ResourceLwM2M[]): void {
     if (resources.length === this.resourcesFormArray.length) {
@@ -152,6 +202,13 @@ export class Lwm2mObserveAttrTelemetryResourcesComponent implements ControlValue
       }
     }
   }
+
+  /**
+   * POST/PUT entity — created resource form group.
+   *
+   * @param resource resource (ResourceLwM2M)
+   * @returns UntypedFormGroup observable or value
+   */
 
   private createdResourceFormGroup(resource: ResourceLwM2M): UntypedFormGroup {
     const form = this.fb.group( {
@@ -180,6 +237,12 @@ export class Lwm2mObserveAttrTelemetryResourcesComponent implements ControlValue
     return form;
   }
 
+  /**
+   * update model.
+   *
+   * @param value value (ResourceLwM2M[])
+   */
+
   private updateModel(value: ResourceLwM2M[]) {
     if (value && this.resourcesFormGroup.valid) {
       this.propagateChange(value);
@@ -188,9 +251,24 @@ export class Lwm2mObserveAttrTelemetryResourcesComponent implements ControlValue
     }
   }
 
+  /**
+   * track by params.
+   *
+   * @param index index (number)
+   * @param resource resource (ResourceLwM2M)
+   * @returns number observable or value
+   */
+
   trackByParams(index: number, resource: ResourceLwM2M): number {
     return resource.id;
   }
+
+  /**
+   * is disabled observe.
+   *
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
 
   isDisabledObserve(index: number): boolean{
     return this.resourcesFormArray.at(index).get('observe').disabled;

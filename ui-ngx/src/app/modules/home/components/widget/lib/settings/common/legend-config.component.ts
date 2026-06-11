@@ -28,6 +28,12 @@ import { Subscription } from 'rxjs';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
 // @dynamic
+
+/**
+ * Angular component: legend config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-legend-config`.
+ */
 @Component({
     selector: 'tb-legend-config',
     templateUrl: './legend-config.component.html',
@@ -39,10 +45,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: legend config UI.
- */
+standalone: false
 })
 export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
@@ -67,6 +70,11 @@ export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAcc
   constructor(private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.legendConfigForm = this.fb.group({
       position: [null, []],
@@ -85,6 +93,12 @@ export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAcc
     );
   }
 
+  /**
+   * Event handler for direction changed.
+   *
+   * @param direction direction (LegendDirection)
+   */
+
   private onDirectionChanged(direction: LegendDirection) {
     if (direction === LegendDirection.row) {
       let position: LegendPosition = this.legendConfigForm.get('position').value;
@@ -95,6 +109,11 @@ export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAcc
       );
     }
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.legendSettingsFormDirectionChanges$) {
@@ -107,12 +126,30 @@ export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAcc
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -122,6 +159,12 @@ export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAcc
       this.legendConfigForm.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param legendConfig legend config (LegendConfig)
+   */
 
   writeValue(legendConfig: LegendConfig): void {
     if (legendConfig) {
@@ -140,6 +183,11 @@ export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAcc
     }
   }
 
+  /**
+   * legend config updated.
+   *
+   */
+
   private legendConfigUpdated() {
     const configValue = this.legendConfigForm.value;
     const legendConfig: Partial<LegendConfig> = {
@@ -152,6 +200,13 @@ export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAcc
     this.setShowValues(configValue.showValues, legendConfig);
     this.propagateChange(legendConfig);
   }
+
+  /**
+   * get show values.
+   *
+   * @param legendConfig legend config (LegendConfig)
+   * @returns string[] observable or value
+   */
 
   private getShowValues(legendConfig: LegendConfig): string[] {
     const showValues: string[] = [];
@@ -172,6 +227,13 @@ export class LegendConfigComponent implements OnInit, OnDestroy, ControlValueAcc
     }
     return showValues;
   }
+
+  /**
+   * set show values.
+   *
+   * @param showValues show values (string[])
+   * @param legendConfig legend config (Partial<LegendConfig>)
+   */
 
   private setShowValues(showValues: string[], legendConfig: Partial<LegendConfig>) {
     legendConfig.showMin = showValues.includes('min');

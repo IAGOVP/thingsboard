@@ -22,11 +22,11 @@ import { createTooltip } from '@home/components/widget/lib/maps-legacy/maps-util
 import { FormattedData } from '@shared/models/widget.models';
 import { fillDataPattern, processDataPattern, safeExecuteTbFunction } from '@core/utils';
 
+
 /**
-
- * circle.
-
+ * Circle (ThingsBoard web UI).
  */
+
 
 export class Circle {
 
@@ -70,6 +70,11 @@ export class Circle {
     this.createEventListeners();
   }
 
+  /**
+   * POST/PUT entity — create event listeners.
+   *
+   */
+
   private createEventListeners() {
     if (this.settings.editableCircle && this.onDragendListener) {
       // Change center position (call in drag drop mode)
@@ -92,6 +97,11 @@ export class Circle {
     }
   }
 
+  /**
+   * update label.
+   *
+   */
+
   private updateLabel() {
     this.leafletCircle.unbindTooltip();
     if (this.settings.showCircleLabel) {
@@ -110,12 +120,22 @@ export class Circle {
     }
   }
 
+  /**
+   * update tooltip.
+   *
+   */
+
   private updateTooltip() {
     const pattern = this.settings.useCircleTooltipFunction ?
       safeExecuteTbFunction(this.settings.parsedCircleTooltipFunction, [this.data, this.dataSources, this.data.dsIndex]) :
       this.settings.circleTooltipPattern;
     this.tooltip.setContent(parseWithTranslation.parseTemplate(pattern, this.data, true));
   }
+
+  /**
+   * update circle color.
+   *
+   */
 
   private updateCircleColor() {
     const circleFillColor = this.getFillColor();
@@ -126,6 +146,13 @@ export class Circle {
     };
     this.leafletCircle.setStyle(style);
   }
+
+  /**
+   * update circle.
+   *
+   * @param data dialog or route input data
+   * @param dataSources data sources (FormattedData[])
+   */
 
   updateCircle(data: FormattedData, dataSources: FormattedData[]) {
     if (this.editing) {
@@ -152,14 +179,32 @@ export class Circle {
     }
   }
 
+  /**
+   * POST/PUT entity — create center position.
+   *
+   * @returns L.LatLng observable or value
+   */
+
   private createCenterPosition(): L.LatLng {
     return new L.LatLng(this.circleData.latitude, this.circleData.longitude);
   }
+
+  /**
+   * get fill color.
+   *
+   * @returns string | null observable or value
+   */
 
   private getFillColor(): string | null {
     return functionValueCalculator(this.settings.useCircleFillColorFunction, this.settings.parsedCircleFillColorFunction,
       [this.data, this.dataSources, this.data.dsIndex], this.settings.circleFillColor);
   }
+
+  /**
+   * get stroke color.
+   *
+   * @returns string | null observable or value
+   */
 
   private getStrokeColor(): string | null {
     return functionValueCalculator(this.settings.useCircleStrokeColorFunction, this.settings.parsedCircleStrokeColorFunction,

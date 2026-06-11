@@ -19,8 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for CalculateDelta rule node.
+ * JSON configuration POJO for {@link CalculateDelta} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -34,6 +37,12 @@ public class CalculateDeltaNodeConfiguration implements NodeConfiguration<Calcul
     private Integer round;
     private boolean tellFailureIfDeltaIsNegative;
     private boolean excludeZeroDeltas;
+    /**
+     * Default configuration.
+     *
+     * @return {@link CalculateDeltaNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CalculateDeltaNodeConfiguration defaultConfiguration() {

@@ -31,15 +31,18 @@ export interface TenantProfileDialogData {
   isAdd: boolean;
 }
 
+
+/**
+ * Angular component: tenant profile dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tenant-profile-dialog`.
+ */
 @Component({
     selector: 'tb-tenant-profile-dialog',
     templateUrl: './tenant-profile-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: TenantProfileDialogComponent }],
     styleUrls: ['tenant-profile-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: tenant profile dialog UI.
- */
+standalone: false
 })
 export class TenantProfileDialogComponent extends
   DialogComponent<TenantProfileDialogComponent, TenantProfile> implements ErrorStateMatcher, AfterViewInit {
@@ -62,6 +65,11 @@ export class TenantProfileDialogComponent extends
     this.tenantProfile = this.data.tenantProfile;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.isAdd) {
       setTimeout(() => {
@@ -70,15 +78,33 @@ export class TenantProfileDialogComponent extends
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

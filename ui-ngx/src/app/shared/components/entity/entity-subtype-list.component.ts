@@ -34,6 +34,12 @@ import { EntityService } from '@core/http/entity.service';
 import { CalculatedFieldType } from "@shared/models/calculated-field.models";
 import { CalculatedFieldsService } from "@core/http/calculated-fields.service";
 
+
+/**
+ * Angular component: entity sub type list (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-subtype-list`.
+ */
 @Component({
     selector: 'tb-entity-subtype-list',
     templateUrl: './entity-subtype-list.component.html',
@@ -45,10 +51,7 @@ import { CalculatedFieldsService } from "@core/http/calculated-fields.service";
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity sub type list UI.
- */
+standalone: false
 })
 export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
@@ -144,17 +147,46 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
   }
 
 
+  /**
+
+
+   * update validators.
+
+
+   *
+
+
+   */
+
+
   updateValidators() {
     this.entitySubtypeListFormGroup.get('entitySubtypeList').setValidators(this.required ? [Validators.required] : []);
     this.entitySubtypeListFormGroup.get('entitySubtypeList').updateValueAndValidity();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     switch (this.entityType) {
@@ -229,11 +261,22 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.broadcastSubscription) {
       this.broadcastSubscription.unsubscribe();
     }
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -243,6 +286,12 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
       this.entitySubtypeListFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<string> | null)
+   */
 
   writeValue(value: Array<string> | null): void {
     this.searchText = '';
@@ -258,6 +307,12 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
     this.dirty = true;
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param entitySubtype entity subtype (string)
+   */
+
   private add(entitySubtype: string): void {
     if (!this.modelValue || this.modelValue.indexOf(entitySubtype) === -1) {
       if (!this.modelValue) {
@@ -270,6 +325,12 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
     this.propagateChange(this.modelValue);
   }
 
+  /**
+   * chip add.
+   *
+   * @param event DOM or Angular event object
+   */
+
   chipAdd(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     if (value) {
@@ -278,6 +339,12 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * POST/PUT entity — add on blur.
+   *
+   * @param event DOM or Angular event object
+   */
+
   addOnBlur(event: FocusEvent) {
     if (!event.relatedTarget) {
       return;
@@ -285,6 +352,12 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
     const value = this.entitySubtypeInput.nativeElement.value;
     this.chipAdd({value} as MatChipInputEvent);
   }
+
+  /**
+   * DELETE — remove.
+   *
+   * @param entitySubtype entity subtype (string)
+   */
 
   remove(entitySubtype: string) {
     const index = this.entitySubtypeList.indexOf(entitySubtype);
@@ -299,14 +372,34 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * selected.
+   *
+   * @param event DOM or Angular event object
+   */
+
   selected(event: MatAutocompleteSelectedEvent): void {
     this.add(event.option.value);
     this.clear('');
   }
 
+  /**
+   * display entity subtype fn.
+   *
+   * @param entitySubtype entity subtype (string)
+   * @returns string | undefined observable or value
+   */
+
   displayEntitySubtypeFn(entitySubtype?: string): string | undefined {
     return entitySubtype ? entitySubtype : undefined;
   }
+
+  /**
+   * fetch entity subtypes.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchEntitySubtypes(searchText?: string): Observable<Array<string>> {
     this.searchText = searchText;
@@ -325,6 +418,13 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
       })
     );
   }
+
+  /**
+   * get entity subtypes.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private getEntitySubtypes(searchText?: string): Observable<Array<string>> {
     if (this.hasPageDataEntitySubTypes.has(this.entityType)) {
@@ -368,12 +468,23 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
     return this.entitySubtypes;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.entitySubtypeListFormGroup.get('entitySubtype').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   clear(value: string = '') {
     this.entitySubtypeInput.nativeElement.value = value;
@@ -383,6 +494,12 @@ export class EntitySubTypeListComponent implements ControlValueAccessor, OnInit,
       this.entitySubtypeInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * custom translate.
+   *
+   * @param entity entity (string)
+   */
 
   customTranslate(entity: string) {
     return this.utils.customTranslation(entity, entity);

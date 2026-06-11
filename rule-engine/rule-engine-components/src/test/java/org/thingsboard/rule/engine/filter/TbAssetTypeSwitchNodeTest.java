@@ -48,11 +48,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
 
- * Unit test for tb asset type switch node rule node.
+ * Unit test for tb asset type switch node (message filtering and branching rule nodes).
 
  */
+
 
 class TbAssetTypeSwitchNodeTest {
 

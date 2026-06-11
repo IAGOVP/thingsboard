@@ -37,15 +37,18 @@ export interface AddEntitiesToEdgeDialogData {
   entityType: EntityType;
 }
 
+
+/**
+ * Angular component: add entities to edge dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-entities-to-edge-dialog`.
+ */
 @Component({
     selector: 'tb-add-entities-to-edge-dialog',
     templateUrl: './add-entities-to-edge-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: AddEntitiesToEdgeDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: add entities to edge dialog UI.
- */
+standalone: false
 })
 export class AddEntitiesToEdgeDialogComponent extends
   DialogComponent<AddEntitiesToEdgeDialogComponent, boolean> implements OnInit, ErrorStateMatcher {
@@ -75,6 +78,11 @@ export class AddEntitiesToEdgeDialogComponent extends
     super(store, router, dialogRef);
     this.entityType = this.data.entityType;
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.addEntitiesToEdgeFormGroup = this.fb.group({
@@ -106,15 +114,33 @@ export class AddEntitiesToEdgeDialogComponent extends
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(false);
   }
+
+  /**
+   * assign.
+   *
+   */
 
   assign(): void {
     this.submitted = true;
@@ -131,6 +157,15 @@ export class AddEntitiesToEdgeDialogComponent extends
       }
     );
   }
+
+  /**
+   * get assign to edge task.
+   *
+   * @param edgeId edge id (string)
+   * @param entityId entity UUID
+   * @param entityType entity type (EntityType)
+   * @returns Observable<any> observable or value
+   */
 
   private getAssignToEdgeTask(edgeId: string, entityId: string, entityType: EntityType): Observable<any> {
     switch (entityType) {

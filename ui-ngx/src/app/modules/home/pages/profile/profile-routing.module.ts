@@ -27,8 +27,9 @@ import { UserService } from '@core/http/user.service';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { Observable } from 'rxjs';
 /**
- * Route resolver: loads user profile before activate.
+ * Route resolver: preloads data for user profile (home/profile pages).
  */
+
 
 @Injectable()
 export class UserProfileResolver  {
@@ -36,6 +37,12 @@ export class UserProfileResolver  {
   constructor(private store: Store<AppState>,
               private userService: UserService) {
   }
+
+  /**
+   * resolve.
+   *
+   * @returns Observable<User> observable or value
+   */
 
   resolve(): Observable<User> {
     const userId = getCurrentAuthUser(this.store).userId;

@@ -77,8 +77,11 @@ import java.util.stream.Collectors;
 import static org.thingsboard.monitoring.service.BaseHealthChecker.TEST_CF_TELEMETRY_KEY;
 import static org.thingsboard.monitoring.service.BaseHealthChecker.TEST_TELEMETRY_KEY;
 /**
- * Ensures monitoring devices, assets, dashboard, and rule chain exist on the target ThingsBoard tenant.
+ * Provisions monitoring devices, assets, dashboard, and rule chain on the target ThingsBoard tenant.
+ *
+ * <p>Called once at startup before health checks begin.
  */
+
 
 @Service
 @Slf4j
@@ -94,6 +97,12 @@ public class MonitoringEntityService {
     private boolean calculatedFieldsMonitoringEnabled;
 
     DashboardId dashboardId = null;
+    /**
+     * Creates or verifies monitoring devices, assets, dashboard, and rule chain exist.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void checkEntities() {
         RuleChain ruleChain = tbClient.getRuleChains(RuleChainType.CORE, new PageLink(10)).getData().stream()
@@ -138,6 +147,12 @@ public class MonitoringEntityService {
 
         this.dashboardId = Optional.ofNullable(dashboard).map(Dashboard::getId).orElse(null);
     }
+    /**
+     * Returns or create monitoring asset.
+     *
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Asset getOrCreateMonitoringAsset() {
         String assetName = "[Monitoring] Latencies";
@@ -150,6 +165,14 @@ public class MonitoringEntityService {
             return asset;
         });
     }
+    /**
+     * Creates or verifies monitoring devices, assets, dashboard, and rule chain exist.
+     *
+     * @param config monitoring configuration for this transport or domain
+     * @param target monitoring target URL and device configuration
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void checkEntities(TransportMonitoringConfig config, TransportMonitoringTarget target) {
         Device device = getOrCreateDevice(config, target);
@@ -267,6 +290,12 @@ public class MonitoringEntityService {
         calculatedField.setDebugMode(true);
         tbClient.saveCalculatedField(calculatedField);
     }
+    /**
+     * Returns the public URL of the monitoring latency dashboard.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getDashboardPublicLink() {
         String link = "";

@@ -35,14 +35,17 @@ import {
   setTimewindowConfig
 } from '@home/components/widget/config/timewindow-config-panel.component';
 
+
+/**
+ * Angular component: entities table basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entities-table-basic-config`.
+ */
 @Component({
     selector: 'tb-entities-table-basic-config',
     templateUrl: './entities-table-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: entities table basic config UI.
- */
+standalone: false
 })
 export class EntitiesTableBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -50,6 +53,12 @@ export class EntitiesTableBasicConfigComponent extends BasicWidgetConfigComponen
     const datasources = this.entitiesTableWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.entitiesTableWidgetConfigForm.get('datasources').value;
@@ -75,13 +84,32 @@ export class EntitiesTableBasicConfigComponent extends BasicWidgetConfigComponen
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.entitiesTableWidgetConfigForm;
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'name', type: DataKeyType.entityField }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     this.entitiesTableWidgetConfigForm = this.fb.group({
@@ -102,6 +130,13 @@ export class EntitiesTableBasicConfigComponent extends BasicWidgetConfigComponen
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -121,9 +156,22 @@ export class EntitiesTableBasicConfigComponent extends BasicWidgetConfigComponen
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showTitleIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.entitiesTableWidgetConfigForm.get('showTitle').value;
@@ -156,6 +204,13 @@ export class EntitiesTableBasicConfigComponent extends BasicWidgetConfigComponen
     this.entitiesTableWidgetConfigForm.get('iconColor').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * get columns.
+   *
+   * @param datasources datasources (Datasource[])
+   * @returns DataKey[] observable or value
+   */
+
   private getColumns(datasources?: Datasource[]): DataKey[] {
     if (datasources && datasources.length) {
       return datasources[0].dataKeys || [];
@@ -163,11 +218,25 @@ export class EntitiesTableBasicConfigComponent extends BasicWidgetConfigComponen
     return [];
   }
 
+  /**
+   * set columns.
+   *
+   * @param columns columns (DataKey[])
+   * @param datasources datasources (Datasource[])
+   */
+
   private setColumns(columns: DataKey[], datasources?: Datasource[]) {
     if (datasources && datasources.length) {
       datasources[0].dataKeys = columns;
     }
   }
+
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
 
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
@@ -182,6 +251,13 @@ export class EntitiesTableBasicConfigComponent extends BasicWidgetConfigComponen
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.settings.enableSearch = buttons.includes('search');

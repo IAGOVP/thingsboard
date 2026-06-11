@@ -23,11 +23,14 @@ import { EntitiesRoutingModule } from '@home/pages/entities/entities-routing.mod
 /**
  * Angular NgModule: entities feature area.
  */
+/**
+ * Angular NgModule bundling entities (home/entities pages).
+ */
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     SharedModule,
     EntitiesRoutingModule
-  ]})
+]})
 export class EntitiesModule { }

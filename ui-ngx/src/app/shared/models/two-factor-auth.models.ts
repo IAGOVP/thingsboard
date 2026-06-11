@@ -16,11 +16,11 @@
 
 import { UsersFilter } from '@shared/models/notification.models';
 
+
 /**
-
- * TypeScript models and enums for two factor auth settings.
-
+ * TypeScript interfaces, types, and enums for two factor auth settings (shared TypeScript models).
  */
+
 
 export interface TwoFactorAuthSettings {
   enforceTwoFa: boolean;

@@ -20,39 +20,65 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 /**
- * Test listener.
+ * TestNG listener that logs test start/finish and captures failures for CI artifacts.
  */
+
 
 @Slf4j
 public class TestListener implements ITestListener {
 
     WebDriver driver;
+    /**
+     * Handles test start.
+     *
+     * @param result TestNG test result for failure capture
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onTestStart(ITestResult result) {
         log.info("===>>> Test started: " + result.getName());
     }
 
+    
     /**
-     * Invoked when a test succeeds
+     * Handles test success.
+     *
+     * @param result TestNG test result for failure capture
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Override
     public void onTestSuccess(ITestResult result) {
         log.info("<<<=== Test completed successfully: " + result.getName());
 
     }
 
+    
     /**
-     * Invoked when a test fails
+     * Handles test failure.
+     *
+     * @param result TestNG test result for failure capture
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Override
     public void onTestFailure(ITestResult result) {
         log.info("<<<=== Test failed: " + result.getName());
     }
 
+    
     /**
-     * Invoked when a test skipped
+     * Handles test skipped.
+     *
+     * @param result TestNG test result for failure capture
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Override
     public void onTestSkipped(ITestResult result) {
         log.info("<<<=== Test skipped: " + result.getName());

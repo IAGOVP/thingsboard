@@ -86,7 +86,9 @@ export interface RuleNodesReference {
 }
 
 /**
- * Angular HTTP service: item buffer REST wrappers (`@core/http`).
+ * Angular injectable service: item buffer (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -99,6 +101,17 @@ export class ItemBufferService {
   constructor(private dashboardUtils: DashboardUtilsService,
               private ruleChainService: RuleChainService,
               private utils: UtilsService) {}
+
+  /**
+   * prepare widget item.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param sourceState source state (string)
+   * @param sourceLayout source layout (DashboardLayoutId)
+   * @param widget widget (Widget)
+   * @param breakpoint breakpoint (BreakpointId)
+   * @returns WidgetItem observable or value
+   */
 
   public prepareWidgetItem(dashboard: Dashboard, sourceState: string, sourceLayout: DashboardLayoutId,
                            widget: Widget, breakpoint: BreakpointId): WidgetItem {
@@ -168,10 +181,30 @@ export class ItemBufferService {
     };
   }
 
+  /**
+   * copy widget.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param sourceState source state (string)
+   * @param sourceLayout source layout (DashboardLayoutId)
+   * @param widget widget (Widget)
+   * @param breakpoint breakpoint (BreakpointId)
+   */
+
   public copyWidget(dashboard: Dashboard, sourceState: string, sourceLayout: DashboardLayoutId, widget: Widget, breakpoint: BreakpointId) {
     const widgetItem = this.prepareWidgetItem(dashboard, sourceState, sourceLayout, widget, breakpoint);
     this.storeSet(WIDGET_ITEM, widgetItem);
   }
+
+  /**
+   * copy widget reference.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param sourceState source state (string)
+   * @param sourceLayout source layout (DashboardLayoutId)
+   * @param widget widget (Widget)
+   * @param breakpoint breakpoint (BreakpointId)
+   */
 
   public copyWidgetReference(dashboard: Dashboard, sourceState: string, sourceLayout: DashboardLayoutId,
                              widget: Widget, breakpoint: BreakpointId): void {
@@ -179,9 +212,25 @@ export class ItemBufferService {
     this.storeSet(WIDGET_REFERENCE, widgetReference);
   }
 
+  /**
+   * has widget.
+   *
+   * @returns boolean observable or value
+   */
+
   public hasWidget(): boolean {
     return this.storeHas(WIDGET_ITEM);
   }
+
+  /**
+   * can paste widget reference.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param state state (string)
+   * @param layout layout (DashboardLayoutId)
+   * @param breakpoint breakpoint (string)
+   * @returns boolean observable or value
+   */
 
   public canPasteWidgetReference(dashboard: Dashboard, state: string, layout: DashboardLayoutId, breakpoint: string): boolean {
     const widgetReference: WidgetReference = this.storeGet(WIDGET_REFERENCE);
@@ -227,6 +276,17 @@ export class ItemBufferService {
       return throwError('Failed to read widget from buffer!');
     }
   }
+
+  /**
+   * paste widget reference.
+   *
+   * @param targetDashboard target dashboard (Dashboard)
+   * @param targetState target state (string)
+   * @param targetLayout target layout (DashboardLayoutId)
+   * @param breakpoint breakpoint (string)
+   * @param position position (WidgetPosition)
+   * @returns Observable<Widget> observable or value
+   */
 
   public pasteWidgetReference(targetDashboard: Dashboard,
                               targetState: string,
@@ -324,6 +384,14 @@ export class ItemBufferService {
     return of(theDashboard);
   }
 
+  /**
+   * copy rule chain objects.
+   *
+   * @param nodes nodes (FcRuleNode[])
+   * @param connections connections (RuleNodeConnection[])
+   * @param notes notes (FcRuleNote[])
+   */
+
   public copyRuleChainObjects(nodes: FcRuleNode[], connections: RuleNodeConnection[], notes: FcRuleNote[] = []) {
     const ruleNodes: RuleNodesReference = {
       nodes: [],
@@ -413,9 +481,23 @@ export class ItemBufferService {
     this.storeSet(RULE_NODES, ruleNodes);
   }
 
+  /**
+   * has rule chain objects.
+   *
+   * @returns boolean observable or value
+   */
+
   public hasRuleChainObjects(): boolean {
     return this.storeHas(RULE_NODES);
   }
+
+  /**
+   * paste rule chain objects.
+   *
+   * @param x x (number)
+   * @param y y (number)
+   * @returns RuleNodesReference observable or value
+   */
 
   public pasteRuleChainObjects(x: number, y: number): RuleNodesReference {
     const ruleNodes: RuleNodesReference = this.storeGet(RULE_NODES);
@@ -454,19 +536,44 @@ export class ItemBufferService {
     return null;
   }
 
+  /**
+   * has rule chain import.
+   *
+   * @returns boolean observable or value
+   */
+
   public hasRuleChainImport(): boolean {
     return this.storeHas(RULE_CHAIN_IMPORT);
   }
 
+  /**
+   * store rule chain import.
+   *
+   * @param ruleChainImport rule chain import (RuleChainImport)
+   */
+
   public storeRuleChainImport(ruleChainImport: RuleChainImport): void {
     this.storeSet(RULE_CHAIN_IMPORT, ruleChainImport);
   }
+
+  /**
+   * get rule chain import.
+   *
+   * @returns RuleChainImport observable or value
+   */
 
   public getRuleChainImport(): RuleChainImport {
     const ruleChainImport: RuleChainImport = this.storeGet(RULE_CHAIN_IMPORT);
     this.storeRemove(RULE_CHAIN_IMPORT);
     return ruleChainImport;
   }
+
+  /**
+   * prepare alias info.
+   *
+   * @param entityAlias entity alias (EntityAlias)
+   * @returns EntityAliasInfo observable or value
+   */
 
   private prepareAliasInfo(entityAlias: EntityAlias): EntityAliasInfo {
     return {
@@ -475,6 +582,13 @@ export class ItemBufferService {
     };
   }
 
+  /**
+   * prepare filter info.
+   *
+   * @param filter filter (Filter)
+   * @returns FilterInfo observable or value
+   */
+
   private prepareFilterInfo(filter: Filter): FilterInfo {
     return {
       filter: filter.filter,
@@ -482,6 +596,17 @@ export class ItemBufferService {
       editable: filter.editable
     };
   }
+
+  /**
+   * prepare widget reference.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param sourceState source state (string)
+   * @param sourceLayout source layout (DashboardLayoutId)
+   * @param widget widget (Widget)
+   * @param breakpoint breakpoint (BreakpointId)
+   * @returns WidgetReference observable or value
+   */
 
   private prepareWidgetReference(dashboard: Dashboard, sourceState: string,
                                  sourceLayout: DashboardLayoutId, widget: Widget, breakpoint: BreakpointId): WidgetReference {
@@ -497,6 +622,14 @@ export class ItemBufferService {
       breakpoint
     };
   }
+
+  /**
+   * update aliases.
+   *
+   * @param widget widget (Widget)
+   * @param entityAliases entity aliases (EntityAliases)
+   * @param aliasesInfo aliases info (AliasesInfo)
+   */
 
   private updateAliases(widget: Widget, entityAliases: EntityAliases, aliasesInfo: AliasesInfo): void {
     let aliasInfo: EntityAliasInfo;
@@ -523,6 +656,14 @@ export class ItemBufferService {
     }
   }
 
+  /**
+   * update filters.
+   *
+   * @param widget widget (Widget)
+   * @param filters filters (Filters)
+   * @param filtersInfo filters info (FiltersInfo)
+   */
+
   private updateFilters(widget: Widget, filters: Filters, filtersInfo: FiltersInfo): void {
     let filterInfo: FilterInfo;
     let newFilterId: string;
@@ -538,9 +679,23 @@ export class ItemBufferService {
     }
   }
 
+  /**
+   * store set.
+   *
+   * @param key key (string)
+   * @param elem elem (any)
+   */
+
   private storeSet(key: string, elem: any) {
     localStorage.setItem(this.getNamespacedKey(key), JSON.stringify(elem));
   }
+
+  /**
+   * store get.
+   *
+   * @param key key (string)
+   * @returns any observable or value
+   */
 
   private storeGet(key: string): any {
     let obj = null;
@@ -557,14 +712,34 @@ export class ItemBufferService {
     return obj;
   }
 
+  /**
+   * store has.
+   *
+   * @param key key (string)
+   * @returns boolean observable or value
+   */
+
   private storeHas(key: string): boolean {
     const saved = localStorage.getItem(this.getNamespacedKey(key));
     return typeof saved !== 'undefined' && saved !== 'undefined' && saved !== null;
   }
 
+  /**
+   * store remove.
+   *
+   * @param key key (string)
+   */
+
   private storeRemove(key: string) {
     localStorage.removeItem(this.getNamespacedKey(key));
   }
+
+  /**
+   * get namespaced key.
+   *
+   * @param key key (string)
+   * @returns string observable or value
+   */
 
   private getNamespacedKey(key: string): string {
     return [this.namespace, key].join(this.delimiter);

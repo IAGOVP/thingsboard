@@ -44,6 +44,12 @@ export const dataKeySelectOptionValidator = (control: AbstractControl) => {
     return null;
 };
 
+
+/**
+ * Angular component: data key select option (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-datakey-select-option`.
+ */
 @Component({
     selector: 'tb-datakey-select-option',
     templateUrl: './datakey-select-option.component.html',
@@ -55,10 +61,7 @@ export const dataKeySelectOptionValidator = (control: AbstractControl) => {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: data key select option UI.
- */
+standalone: false
 })
 export class DataKeySelectOptionComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -84,6 +87,11 @@ export class DataKeySelectOptionComponent extends PageComponent implements OnIni
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.selectOptionFormGroup = this.fb.group({
       value: [null, [Validators.required]],
@@ -96,12 +104,30 @@ export class DataKeySelectOptionComponent extends PageComponent implements OnIni
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -112,12 +138,23 @@ export class DataKeySelectOptionComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DataKeySelectOption)
+   */
+
   writeValue(value: DataKeySelectOption): void {
     this.modelValue = value;
     this.selectOptionFormGroup.patchValue(
       value, {emitEvent: false}
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: DataKeySelectOption = this.selectOptionFormGroup.value;

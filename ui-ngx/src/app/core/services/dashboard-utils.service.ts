@@ -78,7 +78,9 @@ import {
 } from '@shared/models/widget/widget-model.definition';
 
 /**
- * Angular HTTP service: dashboard utils REST wrappers (`@core/http`).
+ * Angular injectable service: dashboard utils (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -91,6 +93,13 @@ export class DashboardUtilsService {
               private timeService: TimeService,
               private translate: TranslateService) {
   }
+
+  /**
+   * validate and update dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @returns Dashboard observable or value
+   */
 
   public validateAndUpdateDashboard(dashboard: Dashboard): Dashboard {
     if (!dashboard.configuration) {
@@ -233,6 +242,13 @@ export class DashboardUtilsService {
     return dashboard;
   }
 
+  /**
+   * POST/PUT entity — create single widget dashboard.
+   *
+   * @param widget widget (Widget)
+   * @returns Dashboard observable or value
+   */
+
   public createSingleWidgetDashboard(widget: Widget): Dashboard {
     if (!widget.id) {
       widget.id = this.utils.guid();
@@ -249,6 +265,13 @@ export class DashboardUtilsService {
     dashboard.configuration.timewindow = initModelFromDefaultTimewindow(null, false, false, this.timeService, true, false);
     return dashboard;
   }
+
+  /**
+   * validate and update widget.
+   *
+   * @param widget widget (Widget)
+   * @returns Widget observable or value
+   */
 
   public validateAndUpdateWidget(widget: Widget): Widget {
     const widgetDefinition = widget.config ? findWidgetModelDefinition(widget) : null;
@@ -290,6 +313,13 @@ export class DashboardUtilsService {
     return widget;
   }
 
+  /**
+   * validate and update widget type fqn.
+   *
+   * @param widget widget (Widget)
+   * @returns Widget observable or value
+   */
+
   private validateAndUpdateWidgetTypeFqn(widget: Widget): Widget {
     const w = widget as any;
     if (!isValidWidgetFullFqn(widget.typeFullFqn)) {
@@ -312,6 +342,14 @@ export class DashboardUtilsService {
     }
     return widget;
   }
+
+  /**
+   * validate and update widget config.
+   *
+   * @param widgetConfig widget config (WidgetConfig | undefined)
+   * @param type type (widgetType)
+   * @returns WidgetConfig observable or value
+   */
 
   public validateAndUpdateWidgetConfig(widgetConfig: WidgetConfig | undefined, type: widgetType): WidgetConfig {
     if (!widgetConfig) {
@@ -376,6 +414,14 @@ export class DashboardUtilsService {
     return deepClean(widgetConfig, {cleanKeys: ['_hash'], cleanOnlyKey: true});
   }
 
+  /**
+   * validate and update widget config with model definition.
+   *
+   * @param widget widget (Widget)
+   * @param widgetDefinition widget definition (WidgetModelDefinition)
+   * @returns WidgetConfig observable or value
+   */
+
   public validateAndUpdateWidgetConfigWithModelDefinition(widget: Widget, widgetDefinition: WidgetModelDefinition): WidgetConfig {
     const widgetConfig = widget.config;
     if (widget.type === widgetType.latest && widgetDefinition.hasTimewindow(widget)) {
@@ -384,6 +430,12 @@ export class DashboardUtilsService {
     }
     return deepClean(widgetConfig, {cleanKeys: ['_hash'], cleanOnlyKey: true});
   }
+
+  /**
+   * DELETE — remove timewindow config if unused.
+   *
+   * @param widget widget (Widget)
+   */
 
   private removeTimewindowConfigIfUnused(widget: Widget) {
     const hasTimewindow = widgetHasTimewindow(widget);
@@ -397,11 +449,26 @@ export class DashboardUtilsService {
     }
   }
 
+  /**
+   * prepare widget for saving.
+   *
+   * @param widget widget (Widget)
+   * @returns Widget observable or value
+   */
+
   public prepareWidgetForSaving(widget: Widget): Widget {
     this.removeTimewindowConfigIfUnused(widget);
     widget = deepClean(widget, {cleanKeys: ['_hash'], cleanOnlyKey: true});
     return widget;
   }
+
+  /**
+   * prepare widget for scada layout.
+   *
+   * @param widget widget (Widget)
+   * @param isScada is scada (boolean)
+   * @returns Widget observable or value
+   */
 
   public prepareWidgetForScadaLayout(widget: Widget, isScada: boolean): Widget {
     const config = widget.config;
@@ -425,6 +492,13 @@ export class DashboardUtilsService {
     config.settings = settings;
     return widget;
   }
+
+  /**
+   * validate and update datasources.
+   *
+   * @param datasources datasources (Datasource[])
+   * @returns Datasource[] observable or value
+   */
 
   public validateAndUpdateDatasources(datasources?: Datasource[]): Datasource[] {
     if (!datasources) {
@@ -455,6 +529,13 @@ export class DashboardUtilsService {
     return datasources;
   }
 
+  /**
+   * get widget datasources.
+   *
+   * @param widget widget (Widget)
+   * @returns Datasource[] observable or value
+   */
+
   public getWidgetDatasources(widget: Widget): Datasource[] {
     const widgetDefinition = findWidgetModelDefinition(widget);
     if (widgetDefinition) {
@@ -463,12 +544,24 @@ export class DashboardUtilsService {
     return this.validateAndUpdateDatasources(widget.config.datasources);
   }
 
+  /**
+   * POST/PUT entity — create default layout data.
+   *
+   * @returns DashboardLayout observable or value
+   */
+
   public createDefaultLayoutData(): DashboardLayout {
     return {
       widgets: {},
       gridSettings: this.createDefaultGridSettings()
     };
   }
+
+  /**
+   * POST/PUT entity — create default grid settings.
+   *
+   * @returns GridSettings observable or value
+   */
 
   private createDefaultGridSettings(): GridSettings {
     return {
@@ -481,11 +574,25 @@ export class DashboardUtilsService {
     };
   }
 
+  /**
+   * POST/PUT entity — create default layouts.
+   *
+   * @returns DashboardStateLayouts observable or value
+   */
+
   public createDefaultLayouts(): DashboardStateLayouts {
     return {
       main: this.createDefaultLayoutData()
     };
   }
+
+  /**
+   * POST/PUT entity — create default state.
+   *
+   * @param name name (string)
+   * @param root root (boolean)
+   * @returns DashboardState observable or value
+   */
 
   public createDefaultState(name: string, root: boolean): DashboardState {
     return {
@@ -495,6 +602,13 @@ export class DashboardUtilsService {
     };
   }
 
+  /**
+   * POST/PUT entity — create single entity filter.
+   *
+   * @param entityId entity UUID
+   * @returns EntityAliasFilter observable or value
+   */
+
   public createSingleEntityFilter(entityId: EntityId): EntityAliasFilter {
     return {
       type: AliasFilterType.singleEntity,
@@ -502,6 +616,13 @@ export class DashboardUtilsService {
       resolveMultiple: false
     };
   }
+
+  /**
+   * widget config from widget type.
+   *
+   * @param widgetTypeDescriptor widget type descriptor (WidgetTypeDescriptor)
+   * @returns WidgetConfig observable or value
+   */
 
   public widgetConfigFromWidgetType(widgetTypeDescriptor: WidgetTypeDescriptor): WidgetConfig {
     const config: WidgetConfig = JSON.parse(widgetTypeDescriptor.defaultConfig);
@@ -512,6 +633,15 @@ export class DashboardUtilsService {
     return config;
   }
 
+  /**
+   * convert datasources from widget type.
+   *
+   * @param widgetTypeDescriptor widget type descriptor (WidgetTypeDescriptor)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @param datasources datasources (Datasource[])
+   * @returns Datasource[] observable or value
+   */
+
   private convertDatasourcesFromWidgetType(widgetTypeDescriptor: WidgetTypeDescriptor,
                                            config: WidgetConfig, datasources?: Datasource[]): Datasource[] {
     const newDatasources: Datasource[] = [];
@@ -520,6 +650,15 @@ export class DashboardUtilsService {
     }
     return newDatasources;
   }
+
+  /**
+   * convert datasource from widget type.
+   *
+   * @param widgetTypeDescriptor widget type descriptor (WidgetTypeDescriptor)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @param datasource datasource (Datasource)
+   * @returns Datasource observable or value
+   */
 
   private convertDatasourceFromWidgetType(widgetTypeDescriptor: WidgetTypeDescriptor, config: WidgetConfig,
                                           datasource: Datasource): Datasource {
@@ -544,6 +683,12 @@ export class DashboardUtilsService {
     return newDatasource;
   }
 
+  /**
+   * validate and update state.
+   *
+   * @param state state (DashboardState)
+   */
+
   private validateAndUpdateState(state: DashboardState) {
     if (!state.layouts) {
       state.layouts = this.createDefaultLayouts();
@@ -553,6 +698,12 @@ export class DashboardUtilsService {
       this.validateAndUpdateLayout(layout);
     }
   }
+
+  /**
+   * validate and update layout.
+   *
+   * @param layout layout (DashboardLayout)
+   */
 
   private validateAndUpdateLayout(layout: DashboardLayout) {
     if (!layout.gridSettings) {
@@ -568,6 +719,14 @@ export class DashboardUtilsService {
       layout.gridSettings.layoutType = LayoutType.default;
     }
   }
+
+  /**
+   * set layouts.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param targetState target state (string)
+   * @param newLayouts new layouts (DashboardStateLayouts)
+   */
 
   public setLayouts(dashboard: Dashboard, targetState: string, newLayouts: DashboardStateLayouts) {
     const dashboardConfiguration = dashboard.configuration;
@@ -607,6 +766,14 @@ export class DashboardUtilsService {
     this.removeUnusedWidgets(dashboard);
   }
 
+  /**
+   * is reference widget.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param widgetId widget id (string)
+   * @returns boolean observable or value
+   */
+
   public isReferenceWidget(dashboard: Dashboard, widgetId: string): boolean {
     const states = dashboard.configuration.states;
     let foundWidgetRefs = 0;
@@ -629,6 +796,13 @@ export class DashboardUtilsService {
     return foundWidgetRefs > 1;
   }
 
+  /**
+   * get root state id.
+   *
+   * @param states states ({[id: string]: DashboardState })
+   * @returns string observable or value
+   */
+
   public getRootStateId(states: {[id: string]: DashboardState }): string {
     for (const stateId of Object.keys(states)) {
       const state = states[stateId];
@@ -638,6 +812,14 @@ export class DashboardUtilsService {
     }
     return Object.keys(states)[0];
   }
+
+  /**
+   * get state layouts data.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param targetState target state (string)
+   * @returns DashboardLayoutsInfo observable or value
+   */
 
   public getStateLayoutsData(dashboard: Dashboard, targetState: string): DashboardLayoutsInfo {
     const dashboardConfiguration = dashboard.configuration;
@@ -664,6 +846,13 @@ export class DashboardUtilsService {
     }
   }
 
+  /**
+   * get breakpoint layout data.
+   *
+   * @param layout layout (DashboardLayout)
+   * @returns BreakpointLayoutInfo observable or value
+   */
+
   private getBreakpointLayoutData(layout: DashboardLayout): BreakpointLayoutInfo {
     const result: BreakpointLayoutInfo = {
       widgetIds: [],
@@ -678,6 +867,13 @@ export class DashboardUtilsService {
     return result;
   }
 
+  /**
+   * get widgets array.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @returns Array<Widget> observable or value
+   */
+
   public getWidgetsArray(dashboard: Dashboard): Array<Widget> {
     const widgetsArray: Array<Widget> = [];
     const dashboardConfiguration = dashboard.configuration;
@@ -689,6 +885,13 @@ export class DashboardUtilsService {
     return widgetsArray;
   }
 
+  /**
+   * is empty dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @returns boolean observable or value
+   */
+
   public isEmptyDashboard(dashboard: Dashboard): boolean {
     if (dashboard?.configuration?.widgets) {
       return Object.keys(dashboard?.configuration?.widgets).length === 0;
@@ -696,6 +899,19 @@ export class DashboardUtilsService {
       return true;
     }
   }
+
+  /**
+   * POST/PUT entity — add widget to layout.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param targetState target state (string)
+   * @param targetLayout target layout (DashboardLayoutId)
+   * @param widget widget (Widget)
+   * @param originalColumns original columns (number)
+   * @param originalSize original size (WidgetSize)
+   * @param row row (number)
+   * @param column column (number)
+   */
 
   public addWidgetToLayout(dashboard: Dashboard,
                            targetState: string,
@@ -773,6 +989,13 @@ export class DashboardUtilsService {
     layout.widgets[widget.id] = widgetLayout;
   }
 
+  /**
+   * widget possible position.
+   *
+   * @param widgetLayout widget layout (WidgetLayout)
+   * @param layout layout (DashboardLayout)
+   */
+
   private widgetPossiblePosition(widgetLayout: WidgetLayout, layout: DashboardLayout) {
     let bestRow = 0;
     let bestCol = 0;
@@ -808,6 +1031,16 @@ export class DashboardUtilsService {
     }
   }
 
+  /**
+   * has widget collision.
+   *
+   * @param row row (number)
+   * @param col col (number)
+   * @param sizeX size x (number)
+   * @param sizeY size y (number)
+   * @param widgetLayouts widget layouts (WidgetLayout[])
+   */
+
   private hasWidgetCollision(row: number, col: number, sizeX: number, sizeY: number, widgetLayouts: WidgetLayout[]) {
     const left = col;
     const right = col + sizeX;
@@ -827,6 +1060,16 @@ export class DashboardUtilsService {
     return false;
   }
 
+  /**
+   * DELETE — remove widget from layout.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param targetState target state (string)
+   * @param targetLayout target layout (DashboardLayoutId)
+   * @param widgetId widget id (string)
+   * @param breakpoint breakpoint (BreakpointId)
+   */
+
   public removeWidgetFromLayout(dashboard: Dashboard,
                                 targetState: string,
                                 targetLayout: DashboardLayoutId,
@@ -836,6 +1079,12 @@ export class DashboardUtilsService {
     delete layout.widgets[widgetId];
     this.removeUnusedWidgets(dashboard);
   }
+
+  /**
+   * is single layout dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   */
 
   public isSingleLayoutDashboard(dashboard: Dashboard): {state: string; layout: DashboardLayoutId} {
     const dashboardConfiguration = dashboard.configuration;
@@ -854,6 +1103,13 @@ export class DashboardUtilsService {
     }
     return null;
   }
+
+  /**
+   * update layout settings.
+   *
+   * @param layout layout (DashboardLayout)
+   * @param gridSettings grid settings (GridSettings)
+   */
 
   public updateLayoutSettings(layout: DashboardLayout, gridSettings: GridSettings) {
     const prevGridSettings = layout.gridSettings;
@@ -927,6 +1183,14 @@ export class DashboardUtilsService {
     }
   }
 
+  /**
+   * move widgets.
+   *
+   * @param layout layout (DashboardLayout)
+   * @param cols cols (number)
+   * @param rows rows (number)
+   */
+
   public moveWidgets(layout: DashboardLayout, cols: number, rows: number) {
     cols = isDefinedAndNotNull(cols) ? Math.round(cols) : 0;
     rows = isDefinedAndNotNull(rows) ? Math.round(rows) : 0;
@@ -951,6 +1215,12 @@ export class DashboardUtilsService {
       widget.row += rows;
     }
   }
+
+  /**
+   * DELETE — remove unused widgets.
+   *
+   * @param dashboard dashboard (Dashboard)
+   */
 
   public removeUnusedWidgets(dashboard: Dashboard) {
     const dashboardConfiguration = dashboard.configuration;
@@ -982,6 +1252,15 @@ export class DashboardUtilsService {
     }
   }
 
+  /**
+   * validate and update entity aliases.
+   *
+   * @param configuration configuration (DashboardConfiguration)
+   * @param datasourcesByAliasId datasources by alias id ({[aliasId: string]: Array<Datasource>})
+   * @param targetDevicesByAliasId target devices by alias id ({[aliasId: string]: Array<TargetDevice>})
+   * @returns DashboardConfiguration observable or value
+   */
+
   private validateAndUpdateEntityAliases(configuration: DashboardConfiguration,
                                          datasourcesByAliasId: {[aliasId: string]: Array<Datasource>},
                                          targetDevicesByAliasId: {[aliasId: string]: Array<TargetDevice>}): DashboardConfiguration {
@@ -1010,6 +1289,16 @@ export class DashboardUtilsService {
     }
     return configuration;
   }
+
+  /**
+   * validate and update device alias.
+   *
+   * @param aliasId alias id (string)
+   * @param deviceAlias device alias (any)
+   * @param datasourcesByAliasId datasources by alias id ({[aliasId: string]: Array<Datasource>})
+   * @param targetDevicesByAliasId target devices by alias id ({[aliasId: string]: Array<TargetDevice>})
+   * @returns EntityAlias observable or value
+   */
 
   private validateAndUpdateDeviceAlias(aliasId: string,
                                        deviceAlias: any,
@@ -1041,6 +1330,16 @@ export class DashboardUtilsService {
     return entityAlias;
   }
 
+  /**
+   * validate and update entity alias.
+   *
+   * @param aliasId alias id (string)
+   * @param entityAlias entity alias (EntityAlias)
+   * @param datasourcesByAliasId datasources by alias id ({[aliasId: string]: Array<Datasource>})
+   * @param targetDevicesByAliasId target devices by alias id ({[aliasId: string]: Array<TargetDevice>})
+   * @returns EntityAlias observable or value
+   */
+
   private validateAndUpdateEntityAlias(aliasId: string, entityAlias: EntityAlias,
                                        datasourcesByAliasId: {[aliasId: string]: Array<Datasource>},
                                        targetDevicesByAliasId: {[aliasId: string]: Array<TargetDevice>}): EntityAlias {
@@ -1062,6 +1361,13 @@ export class DashboardUtilsService {
     entityAlias = this.validateAndUpdateEntityAliasSingleTypeFilters(entityAlias);
     return entityAlias;
   }
+
+  /**
+   * validate and update entity alias single type filters.
+   *
+   * @param entityAlias entity alias (EntityAlias)
+   * @returns EntityAlias observable or value
+   */
 
   private validateAndUpdateEntityAliasSingleTypeFilters(entityAlias: EntityAlias): EntityAlias {
     if (entityAlias.filter.type === AliasFilterType.deviceType) {
@@ -1103,6 +1409,15 @@ export class DashboardUtilsService {
     return entityAlias;
   }
 
+  /**
+   * validate alias id.
+   *
+   * @param aliasId alias id (string)
+   * @param datasourcesByAliasId datasources by alias id ({[aliasId: string]: Array<Datasource>})
+   * @param targetDevicesByAliasId target devices by alias id ({[aliasId: string]: Array<TargetDevice>})
+   * @returns string observable or value
+   */
+
   private validateAliasId(aliasId: string,
                           datasourcesByAliasId: {[aliasId: string]: Array<Datasource>},
                           targetDevicesByAliasId: {[aliasId: string]: Array<TargetDevice>}): string {
@@ -1129,6 +1444,18 @@ export class DashboardUtilsService {
       return aliasId;
     }
   }
+
+  /**
+   * replace reference with widget copy.
+   *
+   * @param widget widget (Widget)
+   * @param dashboard dashboard (Dashboard)
+   * @param targetState target state (string)
+   * @param targetLayout target layout (DashboardLayoutId)
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @param isRemoveWidget is remove widget (boolean)
+   * @returns Widget observable or value
+   */
 
   replaceReferenceWithWidgetCopy(widget: Widget,
                                  dashboard: Dashboard,
@@ -1158,12 +1485,30 @@ export class DashboardUtilsService {
     return newWidget;
   }
 
+  /**
+   * get dashboard layout config.
+   *
+   * @param layout layout (DashboardLayout)
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns DashboardLayout observable or value
+   */
+
   getDashboardLayoutConfig(layout: DashboardLayout, breakpointId: BreakpointId): DashboardLayout {
     if (breakpointId !== 'default' && layout.breakpoints) {
       return layout.breakpoints[breakpointId];
     }
     return layout;
   }
+
+  /**
+   * get original columns.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param sourceState source state (string)
+   * @param sourceLayout source layout (DashboardLayoutId)
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns number observable or value
+   */
 
   getOriginalColumns(dashboard: Dashboard, sourceState: string, sourceLayout: DashboardLayoutId, breakpointId: BreakpointId): number {
     let originalColumns = 24;
@@ -1183,6 +1528,17 @@ export class DashboardUtilsService {
     return originalColumns;
   }
 
+  /**
+   * get original size.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param sourceState source state (string)
+   * @param sourceLayout source layout (DashboardLayoutId)
+   * @param widget widget (Widget)
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns WidgetSize observable or value
+   */
+
   getOriginalSize(dashboard: Dashboard, sourceState: string, sourceLayout: DashboardLayoutId,
                   widget: Widget, breakpointId: BreakpointId): WidgetSize {
     const layout = this.getDashboardLayoutConfig(dashboard.configuration.states[sourceState].layouts[sourceLayout], breakpointId);
@@ -1194,6 +1550,11 @@ export class DashboardUtilsService {
       resizable: widgetLayout.resizable
     };
   }
+
+  /**
+   * load system breakpoints.
+   *
+   */
 
   private loadSystemBreakpoints() {
     this.systemBreakpoints = {};
@@ -1211,6 +1572,12 @@ export class DashboardUtilsService {
     });
   }
 
+  /**
+   * get list breakpoint.
+   *
+   * @returns BreakpointInfo[] observable or value
+   */
+
   getListBreakpoint(): BreakpointInfo[] {
     if(!this.systemBreakpoints) {
       this.loadSystemBreakpoints();
@@ -1220,12 +1587,25 @@ export class DashboardUtilsService {
     return breakpointsList;
   }
 
+  /**
+   * get breakpoints.
+   *
+   * @returns string[] observable or value
+   */
+
   getBreakpoints(): string[] {
     if(!this.systemBreakpoints) {
       this.loadSystemBreakpoints();
     }
     return Object.values(this.systemBreakpoints).map(item => item.value);
   }
+
+  /**
+   * get breakpoint info by value.
+   *
+   * @param breakpointValue breakpoint value (string)
+   * @returns BreakpointInfo observable or value
+   */
 
   getBreakpointInfoByValue(breakpointValue: string): BreakpointInfo {
     if(!this.systemBreakpoints) {
@@ -1234,12 +1614,26 @@ export class DashboardUtilsService {
     return Object.values(this.systemBreakpoints).find(item => item.value === breakpointValue);
   }
 
+  /**
+   * get breakpoint info by id.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns BreakpointInfo observable or value
+   */
+
   getBreakpointInfoById(breakpointId: BreakpointId): BreakpointInfo {
     if(!this.systemBreakpoints) {
       this.loadSystemBreakpoints();
     }
     return this.systemBreakpoints[breakpointId];
   }
+
+  /**
+   * get breakpoint name.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
 
   getBreakpointName(breakpointId: BreakpointId): string {
     if (breakpointIdTranslationMap.has(breakpointId)) {
@@ -1248,6 +1642,13 @@ export class DashboardUtilsService {
     return breakpointId;
   }
 
+  /**
+   * get breakpoint icon.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
+
   getBreakpointIcon(breakpointId: BreakpointId): string {
     if (breakpointIdIconMap.has(breakpointId)) {
       return breakpointIdIconMap.get(breakpointId);
@@ -1255,12 +1656,26 @@ export class DashboardUtilsService {
     return 'desktop_windows';
   }
 
+  /**
+   * get breakpoint size description.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
+
   getBreakpointSizeDescription(breakpointId: BreakpointId): string {
     const currentData = this.getBreakpointInfoById(breakpointId);
     const minStr = isDefined(currentData?.minWidth) ? `min ${currentData.minWidth}px` : '';
     const maxStr = isDefined(currentData?.maxWidth) ? `max ${currentData.maxWidth}px` : '';
     return minStr && maxStr ? `${minStr} - ${maxStr}` : `${minStr}${maxStr}`;
   }
+
+  /**
+   * updated layout for breakpoint.
+   *
+   * @param layout layout (DashboardPageLayout)
+   * @param breakpointId breakpoint id (BreakpointId)
+   */
 
   updatedLayoutForBreakpoint(layout: DashboardPageLayout, breakpointId: BreakpointId) {
     let selectBreakpointId: BreakpointId = 'default';

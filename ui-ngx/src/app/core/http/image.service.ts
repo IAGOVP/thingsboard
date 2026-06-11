@@ -37,7 +37,9 @@ import { blobToBase64, blobToText } from '@core/utils';
 import { ResourcesService } from '@core/services/resources.service';
 
 /**
- * Angular HTTP service: image REST wrappers (`@core/http`).
+ * Angular injectable service: image (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -53,7 +55,17 @@ export class ImageService {
   ) {
   }
 
-  /** Calls ThingsBoard REST `/api/image, ...`. */
+  
+  /**
+   * upload image.
+   *
+   * @param file file (File)
+   * @param title title (string)
+   * @param imageSubType image sub type (ResourceSubType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ImageResourceInfo> observable or value
+   */
+
 
   public uploadImage(file: File, title: string, imageSubType: ResourceSubType = ResourceSubType.IMAGE,
                      config?: RequestConfig): Observable<ImageResourceInfo> {
@@ -68,7 +80,17 @@ export class ImageService {
       defaultHttpUploadOptions(config.ignoreLoading, config.ignoreErrors, config.resendRequest));
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * update image.
+   *
+   * @param type type (ImageResourceType)
+   * @param key key (string)
+   * @param file file (File)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ImageResourceInfo> observable or value
+   */
+
 
   public updateImage(type: ImageResourceType, key: string, file: File, config?: RequestConfig): Observable<ImageResourceInfo> {
     if (!config) {
@@ -80,7 +102,15 @@ export class ImageService {
       defaultHttpUploadOptions(config.ignoreLoading, config.ignoreErrors, config.resendRequest));
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * update image info.
+   *
+   * @param imageInfo image info (ImageResourceInfo)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ImageResourceInfo> observable or value
+   */
+
 
   public updateImageInfo(imageInfo: ImageResourceInfo, config?: RequestConfig): Observable<ImageResourceInfo> {
     const type = imageResourceType(imageInfo);
@@ -89,7 +119,16 @@ export class ImageService {
       imageInfo, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * update image public status.
+   *
+   * @param imageInfo image info (ImageResourceInfo)
+   * @param isPublic is public (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ImageResourceInfo> observable or value
+   */
+
 
   public updateImagePublicStatus(imageInfo: ImageResourceInfo, isPublic: boolean, config?: RequestConfig): Observable<ImageResourceInfo> {
     const type = imageResourceType(imageInfo);
@@ -98,7 +137,16 @@ export class ImageService {
       imageInfo, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * get images.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param imageSubType image sub type (ResourceSubType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<ImageResourceInfo>> observable or value
+   */
+
 
   public getImages(pageLink: PageLink, includeSystemImages = false,
                    imageSubType: ResourceSubType = ResourceSubType.IMAGE, config?: RequestConfig): Observable<PageData<ImageResourceInfo>> {
@@ -107,14 +155,30 @@ export class ImageService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * get image info.
+   *
+   * @param type type (ImageResourceType)
+   * @param key key (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ImageResourceInfo> observable or value
+   */
+
 
   public getImageInfo(type: ImageResourceType, key: string, config?: RequestConfig): Observable<ImageResourceInfo> {
     return this.http.get<ImageResourceInfo>(`${IMAGES_URL_PREFIX}/${type}/${encodeURIComponent(key)}/info`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * get image data url.
+   *
+   * @param imageUrl image url (string)
+   * @returns Observable<SafeUrl | string> observable or value
+   */
+
 
   public getImageDataUrl(imageUrl: string, preview = false, asString = false, emptyUrl = NO_IMAGE_DATA_URI): Observable<SafeUrl | string> {
     const parts = imageUrl.split('/');
@@ -124,6 +188,13 @@ export class ImageService {
     const imageLink = preview ? (encodedUrl + '/preview') : encodedUrl;
     return this.loadImageDataUrl(imageLink, asString, emptyUrl);
   }
+
+  /**
+   * load image data url.
+   *
+   * @param imageLink image link (string)
+   * @returns Observable<SafeUrl | string> observable or value
+   */
 
   private loadImageDataUrl(imageLink: string, asString = false, emptyUrl = NO_IMAGE_DATA_URI): Observable<SafeUrl | string> {
     let request: ReplaySubject<Blob>;
@@ -153,7 +224,14 @@ export class ImageService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * get image string.
+   *
+   * @param imageUrl image url (string)
+   * @returns Observable<string> observable or value
+   */
+
 
   public getImageString(imageUrl: string): Observable<string> {
     imageUrl = removeTbImagePrefix(imageUrl);
@@ -182,7 +260,14 @@ export class ImageService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * resolve image url.
+   *
+   * @param imageUrl image url (string)
+   * @returns Observable<SafeUrl | string> observable or value
+   */
+
 
   public resolveImageUrl(imageUrl: string, preview = false, asString = false, emptyUrl = NO_IMAGE_DATA_URI): Observable<SafeUrl | string> {
     imageUrl = removeTbImagePrefix(imageUrl);
@@ -193,24 +278,57 @@ export class ImageService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * download image.
+   *
+   * @param type type (ImageResourceType)
+   * @param key key (string)
+   * @returns Observable<any> observable or value
+   */
+
 
   public downloadImage(type: ImageResourceType, key: string): Observable<any> {
     return this.resourcesService.downloadResource(`${IMAGES_URL_PREFIX}/${type}/${encodeURIComponent(key)}`);
   }
 
+  /**
+   * DELETE — delete image.
+   *
+   * @param type type (ImageResourceType)
+   * @param key key (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteImage(type: ImageResourceType, key: string, force = false, config?: RequestConfig) {
     return this.http.delete(`${IMAGES_URL_PREFIX}/${type}/${encodeURIComponent(key)}?force=${force}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * export image.
+   *
+   * @param type type (ImageResourceType)
+   * @param key key (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ImageExportData> observable or value
+   */
+
 
   public exportImage(type: ImageResourceType, key: string, config?: RequestConfig): Observable<ImageExportData> {
     return this.http.get<ImageExportData>(`${IMAGES_URL_PREFIX}/${type}/${encodeURIComponent(key)}/export`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/image/import`. */
+  
+  /**
+   * import image.
+   *
+   * @param imageData image data (ImageExportData)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ImageResourceInfo> observable or value
+   */
+
 
   public importImage(imageData: ImageExportData, config?: RequestConfig): Observable<ImageResourceInfo> {
     return this.http.put<ImageResourceInfo>('/api/image/import',

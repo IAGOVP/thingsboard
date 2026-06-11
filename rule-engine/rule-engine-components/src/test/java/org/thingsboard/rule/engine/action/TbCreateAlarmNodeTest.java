@@ -72,8 +72,9 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 /**
- * Unit test for tb create alarm node rule node.
+ * Unit test for tb create alarm node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbCreateAlarmNodeTest {

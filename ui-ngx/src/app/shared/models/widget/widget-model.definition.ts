@@ -28,11 +28,11 @@ import { Filters } from '@shared/models/query/query.models';
 import { MapModelDefinition } from '@shared/models/widget/maps/map-model.definition';
 import { ApiUsageModelDefinition } from '@shared/models/widget/home-widgets/api-usage-model.definition';
 
+
 /**
-
- * TypeScript models and enums for widget model definition.
-
+ * TypeScript interfaces, types, and enums for widget model definition (shared TypeScript models).
  */
+
 
 export interface WidgetModelDefinition<T = any> {
   testWidget(widget: Widget): boolean;

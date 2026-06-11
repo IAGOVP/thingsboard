@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: device claiming widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-claiming-widget-settings`.
+ */
 @Component({
     selector: 'tb-device-claiming-widget-settings',
     templateUrl: './device-claiming-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: device claiming widget settings UI.
- */
+standalone: false
 })
 export class DeviceClaimingWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class DeviceClaimingWidgetSettingsComponent extends WidgetSettingsCompone
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.deviceClaimingWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -57,6 +72,12 @@ export class DeviceClaimingWidgetSettingsComponent extends WidgetSettingsCompone
       requiredErrorSecretKey: ''
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.deviceClaimingWidgetSettingsForm = this.fb.group({
@@ -83,9 +104,21 @@ export class DeviceClaimingWidgetSettingsComponent extends WidgetSettingsCompone
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['deviceSecret', 'showLabel'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const deviceSecret: boolean = this.deviceClaimingWidgetSettingsForm.get('deviceSecret').value;

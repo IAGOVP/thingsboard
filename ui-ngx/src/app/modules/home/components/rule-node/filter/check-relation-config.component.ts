@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { EntitySearchDirection, entitySearchDirectionTranslations } from '@app/shared/models/relation.models';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 
+
+/**
+ * Angular component: check relation config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-node-check-relation-config`.
+ */
 @Component({
     selector: 'tb-filter-node-check-relation-config',
     templateUrl: './check-relation-config.component.html',
     styleUrls: ['./check-relation-config.component.scss'],
-    standalone: false
-/**
- * Angular component: check relation config UI.
- */
+standalone: false
 })
 export class CheckRelationConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -40,9 +43,22 @@ export class CheckRelationConfigComponent extends RuleNodeConfigurationComponent
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.checkRelationConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
@@ -54,6 +70,12 @@ export class CheckRelationConfigComponent extends RuleNodeConfigurationComponent
     };
   }
 
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
+
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.checkRelationConfigForm = this.fb.group({
       checkForSingleEntity: [configuration.checkForSingleEntity, []],
@@ -64,9 +86,22 @@ export class CheckRelationConfigComponent extends RuleNodeConfigurationComponent
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['checkForSingleEntity', 'entityType'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param _emitEvent  emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(_emitEvent: boolean, trigger: string) {
     if (trigger === 'entityType') {

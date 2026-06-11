@@ -75,14 +75,17 @@ export interface TimewindowPanelData {
 
 export const TIMEWINDOW_PANEL_DATA = new InjectionToken<any>('TimewindowPanelData');
 
+
+/**
+ * Angular component: timewindow panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timewindow-panel`.
+ */
 @Component({
     selector: 'tb-timewindow-panel',
     templateUrl: './timewindow-panel.component.html',
     styleUrls: ['./timewindow-panel.component.scss', './timewindow-form.scss'],
-    standalone: false
-/**
- * Angular component: timewindow panel UI.
- */
+standalone: false
 })
 export class TimewindowPanelComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -231,6 +234,11 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
 
     this.saveAsDefaultAvailable = this.data.showSaveAsDefault && (!this.timewindow.hideSaveAsDefault || this.isEdit);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     const hideAggregation = this.timewindow.hideAggregation || false;
@@ -402,10 +410,21 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * update validators.
+   *
+   * @param aggType agg type (AggregationType)
+   */
 
   private updateValidators(aggType: AggregationType) {
     if (aggType !== AggregationType.NONE) {
@@ -416,6 +435,12 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
     this.timewindowForm.get('aggregation.limit').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * Event handler for timewindow type change.
+   *
+   * @param selectedTab selected tab (TimewindowType)
+   */
+
   private onTimewindowTypeChange(selectedTab: TimewindowType) {
     updateFormValuesOnTimewindowTypeChange(selectedTab, this.timewindowForm,
       this.realtimeDisableCustomInterval, this.historyDisableCustomInterval,
@@ -423,11 +448,22 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
       this.realtimeTimewindowOptions, this.historyTimewindowOptions);
   }
 
+  /**
+   * update.
+   *
+   */
+
   update() {
     this.result = this.prepareTimewindowConfig();
     this.saveTimewindow = this.saveAsDefaultAvailable && this.saveTimewindowControl.enabled && this.saveTimewindowControl.value;
     this.overlayRef?.dispose();
   }
+
+  /**
+   * prepare timewindow config.
+   *
+   * @returns Timewindow observable or value
+   */
 
   private prepareTimewindowConfig(clearConfig = true): Timewindow {
     const timewindowFormValue = this.timewindowForm.getRawValue();
@@ -465,6 +501,11 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
       return deepClone(this.timewindow);
     }
   }
+
+  /**
+   * update timewindow form.
+   *
+   */
 
   private updateTimewindowForm() {
     this.timewindowForm.patchValue(this.timewindow, {emitEvent: false});
@@ -536,6 +577,11 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
     this.timewindowForm.markAsDirty();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.overlayRef?.dispose();
   }
@@ -547,6 +593,12 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
   get maxRealtimeAggInterval() {
     return this.timeService.maxIntervalLimit(this.currentRealtimeTimewindow());
   }
+
+  /**
+   * current realtime timewindow.
+   *
+   * @returns number observable or value
+   */
 
   private currentRealtimeTimewindow(): number {
     return currentRealtimeTimewindow(this.timewindowForm.getRawValue());
@@ -560,6 +612,12 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
     return this.timeService.maxIntervalLimit(this.currentHistoryTimewindow());
   }
 
+  /**
+   * current history timewindow.
+   *
+   * @returns number observable or value
+   */
+
   private currentHistoryTimewindow(): number {
     return currentHistoryTimewindow(this.timewindowForm.getRawValue());
   }
@@ -571,6 +629,11 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
   get historyAllowedAggIntervals(): Array<Interval> {
     return historyAllowedAggIntervals(this.timewindowForm.getRawValue(), this.historyAdvancedParams);
   }
+
+  /**
+   * open timewindow config.
+   *
+   */
 
   openTimewindowConfig() {
     this.dialog.open<TimewindowConfigDialogComponent, TimewindowConfigDialogData, Timewindow>(
@@ -593,6 +656,11 @@ export class TimewindowPanelComponent extends PageComponent implements OnInit, O
         }
       });
   }
+
+  /**
+   * update timewindow advanced params.
+   *
+   */
 
   private updateTimewindowAdvancedParams() {
     this.realtimeDisableCustomInterval = this.timewindow.realtime?.disableCustomInterval;

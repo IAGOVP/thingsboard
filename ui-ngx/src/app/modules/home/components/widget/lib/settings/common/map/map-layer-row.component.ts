@@ -61,6 +61,12 @@ import {
   MapLayerSettingsPanelComponent
 } from '@home/components/widget/lib/settings/common/map/map-layer-settings-panel.component';
 
+
+/**
+ * Angular component: map layer row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-layer-row`.
+ */
 @Component({
     selector: 'tb-map-layer-row',
     templateUrl: './map-layer-row.component.html',
@@ -73,10 +79,7 @@ import {
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map layer row UI.
- */
+standalone: false
 })
 export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
 
@@ -127,6 +130,11 @@ export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.layerFormGroup = this.fb.group({
       label: [null, []],
@@ -150,12 +158,30 @@ export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -167,6 +193,12 @@ export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MapLayerSettings)
+   */
+
   writeValue(value: MapLayerSettings): void {
     this.modelValue = value;
     this.layerFormGroup.patchValue(
@@ -176,6 +208,12 @@ export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
     this.cd.markForCheck();
   }
 
+  /**
+   * label placeholder.
+   *
+   * @returns string observable or value
+   */
+
   labelPlaceholder(): string {
     let translationKey = defaultLayerTitle(this.modelValue);
     if (!translationKey) {
@@ -183,6 +221,12 @@ export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
     }
     return this.translate.instant(translationKey);
   }
+
+  /**
+   * edit layer.
+   *
+   * @param matButton mat button (MatIconButton)
+   */
 
   editLayer($event: Event, matButton: MatIconButton) {
     if ($event) {
@@ -215,6 +259,12 @@ export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * Event handler for provider changed.
+   *
+   * @param newProvider new provider (MapProvider)
+   */
+
   private onProviderChanged(newProvider: MapProvider) {
     this.modelValue = {...defaultMapLayerSettings(newProvider), label: this.modelValue.label};
     this.layerFormGroup.patchValue(
@@ -222,6 +272,11 @@ export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
     );
     this.updateValidators();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const provider: MapProvider = this.layerFormGroup.get('provider').value;
@@ -242,6 +297,11 @@ export class MapLayerRowComponent implements ControlValueAccessor, OnInit {
       this.layerFormGroup.get('apiKey').disable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.layerFormGroup.value;

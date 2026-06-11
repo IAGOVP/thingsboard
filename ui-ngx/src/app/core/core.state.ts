@@ -55,11 +55,11 @@ export const effects: Type<any>[] = [
   NotificationEffects
 ];
 
+
 /**
-
- * app state.
-
+ * App state (ThingsBoard web UI).
  */
+
 
 export interface AppState {
   load: LoadState;

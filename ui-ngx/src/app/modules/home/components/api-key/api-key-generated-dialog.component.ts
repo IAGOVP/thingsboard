@@ -27,14 +27,17 @@ export interface ApiKeyGeneratedDialogData {
   apiKey: ApiKey;
 }
 
+
+/**
+ * Angular component: api key generated dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-api-key-generated-dialog`.
+ */
 @Component({
     selector: 'tb-api-key-generated-dialog',
     templateUrl: './api-key-generated-dialog.component.html',
     styleUrls: ['api-key-generated-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: api key generated dialog UI.
- */
+standalone: false
 })
 export class ApiKeyGeneratedDialogComponent extends DialogComponent<ApiKeyGeneratedDialogComponent, void> {
 
@@ -52,9 +55,21 @@ export class ApiKeyGeneratedDialogComponent extends DialogComponent<ApiKeyGenera
     this.selectTabIndexForUserOS();
   }
 
+  /**
+   * close.
+   *
+   */
+
   close(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — create mark down command.
+   *
+   * @param command command (string)
+   * @returns string observable or value
+   */
 
   createMarkDownCommand(command: string): string {
     return '```bash\n' +
@@ -62,6 +77,11 @@ export class ApiKeyGeneratedDialogComponent extends DialogComponent<ApiKeyGenera
       '{:copy-code}\n' +
       '```';
   }
+
+  /**
+   * select tab index for user os.
+   *
+   */
 
   private selectTabIndexForUserOS() {
     const currentOS = getOS();

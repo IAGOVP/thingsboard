@@ -30,15 +30,18 @@ export interface WidgetsBundleDialogData {
   widgetsBundle: WidgetsBundle;
 }
 
+
+/**
+ * Angular component: widgets bundle dialog (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widgets-bundle-dialog`.
+ */
 @Component({
     selector: 'tb-widgets-bundle-dialog',
     templateUrl: './widgets-bundle-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: WidgetsBundleDialogComponent }],
     styleUrls: ['widgets-bundle-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: widgets bundle dialog UI.
- */
+standalone: false
 })
 export class WidgetsBundleDialogComponent extends
   DialogComponent<WidgetsBundleDialogComponent, WidgetsBundle> implements ErrorStateMatcher {
@@ -59,15 +62,33 @@ export class WidgetsBundleDialogComponent extends
     this.widgetsBundle = this.data.widgetsBundle;
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

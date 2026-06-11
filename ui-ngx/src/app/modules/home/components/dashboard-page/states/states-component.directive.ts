@@ -30,13 +30,17 @@ import { StatesControllerService } from '@home/components/dashboard-page/states/
 import { IStateControllerComponent } from '@home/components/dashboard-page/states/state-controller.models';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-@Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: 'tb-states-component',
-    standalone: false
+
 /**
  * Angular directive: states component.
  */
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: 'tb-states-component',
+/**
+ * Angular directive: states component (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class StatesComponentDirective implements OnInit, OnDestroy, OnChanges {
 
@@ -74,10 +78,20 @@ export class StatesComponentDirective implements OnInit, OnDestroy, OnChanges {
               private statesControllerService: StatesControllerService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.stateIdSubject = new BehaviorSubject<string>(this.dashboardCtrl.dashboardCtx.state);
     this.init();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     this.destroy();
@@ -117,10 +131,20 @@ export class StatesComponentDirective implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  /**
+   * re init.
+   *
+   */
+
   private reInit() {
     this.destroy();
     this.init();
   }
+
+  /**
+   * init.
+   *
+   */
 
   private init() {
     this.viewContainerRef.clear();
@@ -151,6 +175,11 @@ export class StatesComponentDirective implements OnInit, OnDestroy, OnChanges {
     this.stateControllerComponent.states = this.states;
     this.stateControllerComponent.dashboardId = this.dashboardId;
   }
+
+  /**
+   * destroy.
+   *
+   */
 
   private destroy() {
     if (this.stateControllerComponentRef) {

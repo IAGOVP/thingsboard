@@ -40,6 +40,12 @@ import {
 import { isDefined, isUndefinedOrNull } from '@core/utils';
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 
+
+/**
+ * Angular component: propagate arguments table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-propagate-arguments-table`.
+ */
 @Component({
     selector: 'tb-propagate-arguments-table',
     templateUrl: './calculated-field-arguments-table.component.html',
@@ -56,10 +62,7 @@ import { NULL_UUID } from '@shared/models/id/has-uuid';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: propagate arguments table UI.
- */
+standalone: false
 })
 export class PropagateArgumentsTableComponent extends CalculatedFieldArgumentsTableComponent implements OnInit {
 
@@ -76,14 +79,29 @@ export class PropagateArgumentsTableComponent extends CalculatedFieldArgumentsTa
     super(fb, popoverService, viewContainerRef, cd, renderer, entityService, destroyRef, store)
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.updatedValue();
   }
+
+  /**
+   * change is script mode.
+   *
+   */
 
   protected changeIsScriptMode(): void {
     this.updatedValue();
     super.changeIsScriptMode();
   }
+
+  /**
+   * updated value.
+   *
+   */
 
   private updatedValue() {
     if (this.isScript) {
@@ -111,12 +129,24 @@ export class PropagateArgumentsTableComponent extends CalculatedFieldArgumentsTa
     }
   }
 
+  /**
+   * is edit button show badge.
+   *
+   * @param argument argument (CalculatedFieldArgumentValue)
+   * @returns boolean observable or value
+   */
+
   protected isEditButtonShowBadge(argument: CalculatedFieldArgumentValue): boolean {
     if (!this.isScript && (isDefined(argument?.refEntityId) || isDefined(argument?.refDynamicSourceConfiguration))) {
       return false;
     }
     return super.isEditButtonShowBadge(argument);
   }
+
+  /**
+   * update error text.
+   *
+   */
 
   protected updateErrorText(): void {
     if (!this.isScript && this.argumentsFormArray.controls.some(control => isDefined(control.value?.refEntityId) || isDefined(control.value.refDynamicSourceConfiguration))) {

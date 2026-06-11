@@ -43,6 +43,12 @@ import { MediaBreakpoints } from '@shared/models/constants';
 import { MatDialog } from '@angular/material/dialog';
 import { AddMobilePageDialogComponent } from '@home/pages/mobile/bundes/layout/add-mobile-page-dialog.component';
 
+
+/**
+ * Angular component: mobile layout (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-layout`.
+ */
 @Component({
     selector: 'tb-mobile-layout',
     templateUrl: './mobile-layout.component.html',
@@ -59,10 +65,7 @@ import { AddMobilePageDialogComponent } from '@home/pages/mobile/bundes/layout/a
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: mobile layout UI.
- */
+standalone: false
 })
 export class MobileLayoutComponent implements ControlValueAccessor, Validator {
 
@@ -104,12 +107,30 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     this.computeMaxIconNameBlockWidth();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any) {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
@@ -119,10 +140,22 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param layout layout (MobileLayoutConfig)
+   */
+
   writeValue(layout: MobileLayoutConfig) {
     const processLayout = this.prepareMobilePages(layout);
     this.pagesForm.setControl('pages', this.prepareMobilePagesFormArray(processLayout));
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (FormControl)
+   */
 
   validate(_c: FormControl) {
     if (!this.pagesForm.valid) {
@@ -133,12 +166,22 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     return null;
   }
 
+  /**
+   * hide all.
+   *
+   */
+
   hideAll() {
     this.hideItemsSubject.next();
     if (this.showHiddenPages.value) {
       this.showHiddenPages.setValue(false);
     }
   }
+
+  /**
+   * reset to default.
+   *
+   */
 
   resetToDefault() {
     if (!isDefaultMobilePagesConfig(this.pagesForm.value.pages as MobilePage[])) {
@@ -151,9 +194,21 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     return !this.readonly && this.visibleMobilePagesControls().length > 1;
   }
 
+  /**
+   * visible mobile pages controls.
+   *
+   * @returns Array<AbstractControl> observable or value
+   */
+
   visibleMobilePagesControls(): Array<AbstractControl> {
     return this.pagesFormArray().controls.filter(c => this.showHiddenPages.value || c.value.visible);
   }
+
+  /**
+   * mobile item drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   mobileItemDrop(event: CdkDragDrop<string[]>) {
     const menuItemsArray = this.pagesFormArray();
@@ -165,9 +220,23 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     this.pagesForm.markAsDirty();
   }
 
+  /**
+   * track by menu item.
+   *
+   * @param _index  index (number)
+   * @param menuItemControl menu item control (AbstractControl)
+   * @returns any observable or value
+   */
+
   trackByMenuItem(_index: number, menuItemControl: AbstractControl): any {
     return menuItemControl;
   }
+
+  /**
+   * POST/PUT entity — add custom mobile page.
+   *
+   * @param index index (number)
+   */
 
   addCustomMobilePage(index?: number) {
     this.dialog.open<AddMobilePageDialogComponent, null,
@@ -192,22 +261,54 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     });
   }
 
+  /**
+   * is custom.
+   *
+   * @param menuItemControl menu item control (AbstractControl)
+   * @returns boolean observable or value
+   */
+
   isCustom(menuItemControl: AbstractControl): boolean {
     return menuItemControl.value.type !== MobilePageType.DEFAULT;
   }
+
+  /**
+   * DELETE — remove custom page.
+   *
+   * @param index index (number)
+   */
 
   removeCustomPage(index: number) {
     this.pagesFormArray().removeAt(this.actualMobilePageIndex(index));
     this.pagesForm.markAsDirty();
   }
 
+  /**
+   * show menu divider.
+   *
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   showMenuDivider(index: number): boolean {
     return mobileMenuDividers.has(index);
   }
 
+  /**
+   * get divider label.
+   *
+   * @param index index (number)
+   * @returns string observable or value
+   */
+
   getDividerLabel(index: number): string {
     return mobileMenuDividers.get(index);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     if (isDefaultMobilePagesConfig(this.pagesForm.value.pages as MobilePage[])) {
@@ -217,12 +318,25 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     }
   }
 
+  /**
+   * prepare mobile pages.
+   *
+   * @param layout layout (MobileLayoutConfig)
+   */
+
   private prepareMobilePages(layout: MobileLayoutConfig) {
     if (!layout?.pages?.length) {
       return getDefaultMobileMenuItem();
     }
     return layout.pages;
   }
+
+  /**
+   * prepare mobile pages form array.
+   *
+   * @param items items (MobilePage[])
+   * @returns FormArray<FormControl<MobilePage>> observable or value
+   */
 
   private prepareMobilePagesFormArray(items: MobilePage[]): FormArray<FormControl<MobilePage>> {
     const menuItemsControls: Array<FormControl<MobilePage>> = [];
@@ -231,6 +345,11 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     });
     return this.fb.array(menuItemsControls);
   }
+
+  /**
+   * compute max icon name block width.
+   *
+   */
 
   private computeMaxIconNameBlockWidth() {
     if (this.breakpointObserver.isMatched(MediaBreakpoints['gt-sm'])) {
@@ -242,9 +361,22 @@ export class MobileLayoutComponent implements ControlValueAccessor, Validator {
     }
   }
 
+  /**
+   * pages form array.
+   *
+   * @returns FormArray observable or value
+   */
+
   private pagesFormArray(): FormArray {
     return this.pagesForm.get('pages') as FormArray;
   }
+
+  /**
+   * actual mobile page index.
+   *
+   * @param index index (number)
+   * @returns number observable or value
+   */
 
   private actualMobilePageIndex(index: number): number {
     const menuItem = this.visibleMobilePagesControls()[index];

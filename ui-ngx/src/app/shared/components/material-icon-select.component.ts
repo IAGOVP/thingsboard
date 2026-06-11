@@ -38,6 +38,12 @@ import { MatButton } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: material icon select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-material-icon-select`.
+ */
 @Component({
     selector: 'tb-material-icon-select',
     templateUrl: './material-icon-select.component.html',
@@ -49,10 +55,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: material icon select UI.
- */
+standalone: false
 })
 export class MaterialIconSelectComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -110,6 +113,11 @@ export class MaterialIconSelectComponent extends PageComponent implements OnInit
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.materialIconFormGroup = this.fb.group({
       icon: [null, []]
@@ -122,12 +130,30 @@ export class MaterialIconSelectComponent extends PageComponent implements OnInit
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -138,12 +164,23 @@ export class MaterialIconSelectComponent extends PageComponent implements OnInit
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string): void {
     this.modelValue = value;
     this.materialIconFormGroup.patchValue(
       { icon: this.modelValue }, {emitEvent: false}
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const icon: string = this.materialIconFormGroup.get('icon').value;
@@ -152,6 +189,11 @@ export class MaterialIconSelectComponent extends PageComponent implements OnInit
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * open icon dialog.
+   *
+   */
 
   openIconDialog() {
     if (!this.disabled) {
@@ -168,6 +210,12 @@ export class MaterialIconSelectComponent extends PageComponent implements OnInit
       );
     }
   }
+
+  /**
+   * open icon popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openIconPopup($event: Event, matButton: MatButton) {
     if ($event) {
@@ -196,6 +244,11 @@ export class MaterialIconSelectComponent extends PageComponent implements OnInit
       });
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.materialIconFormGroup.get('icon').patchValue(null, {emitEvent: true});

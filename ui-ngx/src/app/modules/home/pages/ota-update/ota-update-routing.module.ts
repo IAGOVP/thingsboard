@@ -81,10 +81,13 @@ const routes: Routes = [
 /**
  * Angular NgModule: ota update routing feature area.
  */
+/**
+ * Angular NgModule bundling ota update routing (home/ota-update pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     OtaUpdateTableConfigResolve
-  ]})
+]})
 export class OtaUpdateRoutingModule { }

@@ -30,6 +30,9 @@ import {
 /**
  * Angular NgModule: scada symbol feature area.
  */
+/**
+ * Angular NgModule bundling scada symbol (home/scada-symbol pages).
+ */
 @NgModule({
   declarations:
     [
@@ -43,5 +46,5 @@ import {
     ScadaSymbolMetadataComponentsModule,
     ScadaSymbolTooltipComponentsModule,
     WidgetSettingsCommonModule
-  ]})
+]})
 export class ScadaSymbolModule { }

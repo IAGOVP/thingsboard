@@ -141,5 +141,8 @@ const routes: Routes = [
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling home links routing (home/home-links pages).
+ */
   exports: [RouterModule]})
 export class HomeLinksRoutingModule { }

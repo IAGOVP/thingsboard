@@ -45,7 +45,13 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 /**
- * Rule engine external node 'gcp pubsub': Publish message to the Google Cloud PubSub Implements org.thingsboard.rule.engine.api.TbNode.
+ * External rule node — <b>gcp pubsub</b>.
+ *
+ * <p>Publish message to the Google Cloud PubSub
+ * <br>Will publish message payload to the Google Cloud Platform PubSub topic. Outbound message will contain response fields 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbPubSubNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/gcp-pubsub/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/gcp-pubsub/</a>
  */
 @RuleNode(
         type = ComponentType.EXTERNAL,
@@ -66,6 +72,13 @@ public class TbPubSubNode extends TbAbstractExternalNode {
 
     private TbPubSubNodeConfiguration config;
     private Publisher pubSubClient;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -77,12 +90,23 @@ public class TbPubSubNode extends TbAbstractExternalNode {
             throw new TbNodeException(e);
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
         msg = ackIfNeeded(ctx, msg);
         publishMessage(ctx, msg);
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {

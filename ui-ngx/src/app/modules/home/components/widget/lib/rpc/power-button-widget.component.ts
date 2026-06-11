@@ -41,15 +41,18 @@ import {
 import { SVG, Svg } from '@svgdotjs/svg.js';
 import { MatIconRegistry } from '@angular/material/icon';
 
+
+/**
+ * Angular component: power button widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-power-button-widget`.
+ */
 @Component({
     selector: 'tb-power-button-widget',
     templateUrl: './power-button-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './power-button-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: power button widget UI.
- */
+standalone: false
 })
 export class PowerButtonWidgetComponent extends
   BasicActionWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -83,6 +86,11 @@ export class PowerButtonWidgetComponent extends
               protected zone: NgZone) {
     super(cd);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -118,6 +126,11 @@ export class PowerButtonWidgetComponent extends
     });
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.drawSvgShapePending) {
       this.drawSvg();
@@ -125,12 +138,22 @@ export class PowerButtonWidgetComponent extends
     super.ngAfterViewInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.shapeResize$) {
       this.shapeResize$.disconnect();
     }
     super.ngOnDestroy();
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     super.onInit();
@@ -144,6 +167,12 @@ export class PowerButtonWidgetComponent extends
     this.cd.detectChanges();
   }
 
+  /**
+   * Event handler for value.
+   *
+   * @param value value (boolean)
+   */
+
   private onValue(value: boolean): void {
     const newValue = !!value;
     if (this.value !== newValue) {
@@ -153,6 +182,12 @@ export class PowerButtonWidgetComponent extends
     }
   }
 
+  /**
+   * Event handler for disabled.
+   *
+   * @param value value (boolean)
+   */
+
   private onDisabled(value: boolean): void {
     const newDisabled = !!value;
     if (this.disabled !== newDisabled) {
@@ -161,6 +196,11 @@ export class PowerButtonWidgetComponent extends
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * Event handler for click.
+   *
+   */
 
   private onClick() {
     if (!this.ctx.isEdit && !this.ctx.isPreview && !this.disabledState) {
@@ -181,6 +221,11 @@ export class PowerButtonWidgetComponent extends
     }
   }
 
+  /**
+   * draw svg.
+   *
+   */
+
   private drawSvg() {
     this.svgShape = SVG().addTo(this.powerButtonShape.nativeElement).size(powerButtonShapeSize, powerButtonShapeSize);
     this.renderer.setStyle(this.svgShape.node, 'overflow', 'visible');
@@ -198,10 +243,21 @@ export class PowerButtonWidgetComponent extends
     this.onResize();
   }
 
+  /**
+   * update disabled state.
+   *
+   * @param disabled disabled (boolean)
+   */
+
   private updateDisabledState(disabled: boolean) {
     this.disabledState = disabled;
     this.powerButtonSvgShape?.setDisabled(this.disabledState);
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const shapeWidth = this.powerButtonShape.nativeElement.getBoundingClientRect().width;

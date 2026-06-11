@@ -42,5 +42,8 @@ const routes: Routes = [
   imports: [
     StoreModule,
     RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling dashboard routing (dashboard module).
+ */
   exports: [RouterModule]})
 export class DashboardRoutingModule { }

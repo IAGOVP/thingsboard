@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: lambda config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-lambda-config`.
+ */
 @Component({
     selector: 'tb-external-node-lambda-config',
     templateUrl: './lambda-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: lambda config UI.
- */
+standalone: false
 })
 export class LambdaConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class LambdaConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.lambdaConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.lambdaConfigForm = this.fb.group({

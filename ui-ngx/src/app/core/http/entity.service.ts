@@ -103,7 +103,9 @@ import { AiModelService } from '@core/http/ai-model.service';
 import { ResourceType } from "@shared/models/resource.models";
 
 /**
- * Generic entity queries and telemetry/attribute reads via `/api/entitiesQuery`, timeseries APIs.
+ * Generic entity query and telemetry/attribute reads.
+ *
+ * <p>Uses `/api/entitiesQuery`, `/api/plugins/telemetry`, and related entity APIs.
  */
 @Injectable({
   providedIn: 'root'
@@ -138,6 +140,15 @@ export class EntityService {
     private mobileAppService: MobileAppService,
     private aiModelService: AiModelService,
   ) { }
+
+  /**
+   * get entity observable.
+   *
+   * @param entityType entity type (EntityType)
+   * @param entityId entity UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<BaseData<EntityId>> observable or value
+   */
 
   private getEntityObservable(entityType: EntityType, entityId: string,
                               config?: RequestConfig): Observable<BaseData<EntityId>> {
@@ -201,6 +212,14 @@ export class EntityService {
     }
     return observable;
   }
+  /**
+   * get entity.
+   *
+   * @param entityType entity type (EntityType)
+   * @param entityId entity UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<BaseData<EntityId>> observable or value
+   */
   public getEntity(entityType: EntityType, entityId: string,
                    config?: RequestConfig): Observable<BaseData<EntityId>> {
     const entityObservable = this.getEntityObservable(entityType, entityId, config);
@@ -232,6 +251,30 @@ export class EntityService {
       })
     );
   }
+
+
+  /**
+
+
+   * get entities observable.
+
+
+   *
+
+
+   * @param entityType entity type (EntityType)
+
+
+   * @param entityIds entity ids (Array<string>)
+
+
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+
+
+   * @returns Observable<Array<BaseData<EntityId>>> observable or value
+
+
+   */
 
 
   private getEntitiesObservable(entityType: EntityType, entityIds: Array<string>,
@@ -296,6 +339,15 @@ export class EntityService {
     return observable;
   }
 
+  /**
+   * get entities.
+   *
+   * @param entityType entity type (EntityType)
+   * @param entityIds entity ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<BaseData<EntityId>>> observable or value
+   */
+
   public getEntities(entityType: EntityType, entityIds: Array<string>,
                      config?: RequestConfig): Observable<Array<BaseData<EntityId>>> {
     const entitiesObservable = this.getEntitiesObservable(entityType, entityIds, config);
@@ -305,6 +357,14 @@ export class EntityService {
       return throwError(null);
     }
   }
+
+  /**
+   * get single tenant by page link observable.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<Tenant>> observable or value
+   */
 
   private getSingleTenantByPageLinkObservable(pageLink: PageLink,
                                               config?: RequestConfig): Observable<PageData<Tenant>> {
@@ -328,6 +388,14 @@ export class EntityService {
     );
   }
 
+  /**
+   * get single customer by page link observable.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<Customer>> observable or value
+   */
+
   private getSingleCustomerByPageLinkObservable(pageLink: PageLink,
                                                 config?: RequestConfig): Observable<PageData<Customer>> {
     const authUser = getCurrentAuthUser(this.store);
@@ -349,6 +417,16 @@ export class EntityService {
       })
     );
   }
+
+  /**
+   * get entities by page link observable.
+   *
+   * @param entityType entity type (EntityType)
+   * @param pageLink pagination and sort parameters
+   * @param subType sub type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<BaseData<EntityId>>> observable or value
+   */
 
   private getEntitiesByPageLinkObservable(entityType: EntityType, pageLink: PageLink, subType: string = '',
                                           config?: RequestConfig): Observable<PageData<BaseData<EntityId>>> {
@@ -493,6 +571,16 @@ export class EntityService {
     return entitiesObservable;
   }
 
+  /**
+   * get entities by page link.
+   *
+   * @param entityType entity type (EntityType)
+   * @param pageLink pagination and sort parameters
+   * @param subType sub type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<BaseData<EntityId>>> observable or value
+   */
+
   private getEntitiesByPageLink(entityType: EntityType, pageLink: PageLink, subType: string = '',
                                 config?: RequestConfig): Observable<Array<BaseData<EntityId>>> {
     const entitiesObservable: Observable<PageData<BaseData<EntityId>>> =
@@ -516,7 +604,18 @@ export class EntityService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/entitiesQuery/find, ...`. */
+  
+  /**
+   * get entities by name filter.
+   *
+   * @param entityType entity type (EntityType)
+   * @param entityNameFilter entity name filter (string)
+   * @param pageSize page size (number)
+   * @param subType sub type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<BaseData<EntityId>>> observable or value
+   */
+
 
   public getEntitiesByNameFilter(entityType: EntityType, entityNameFilter: string,
                                  pageSize: number, subType: string = '',
@@ -543,13 +642,30 @@ export class EntityService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/entitiesQuery/find, ...`. */
+  
+  /**
+   * find entity data by query.
+   *
+   * @param query query (EntityDataQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EntityData>> observable or value
+   */
+
 
   public findEntityDataByQuery(query: EntityDataQuery, config?: RequestConfig): Observable<PageData<EntityData>> {
     return this.http.post<PageData<EntityData>>('/api/entitiesQuery/find', query, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/entitiesQuery/find/keys?attributes=${attributes}&timeseries=${timeseries}, ...`. */
+  
+  /**
+   * find entity keys by query.
+   *
+   * @param query query (EntityDataQuery)
+   * @param scope scope (AttributeScope)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntitiesKeysByQuery> observable or value
+   */
+
 
   public findEntityKeysByQuery(query: EntityDataQuery, attributes = true, timeseries = true,
                                scope?: AttributeScope, config?: RequestConfig): Observable<EntitiesKeysByQuery> {
@@ -562,11 +678,28 @@ export class EntityService {
       query, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarmsQuery/find`. */
+  
+  /**
+   * find alarm data by query.
+   *
+   * @param query query (AlarmDataQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AlarmData>> observable or value
+   */
+
 
   public findAlarmDataByQuery(query: AlarmDataQuery, config?: RequestConfig): Observable<PageData<AlarmData>> {
     return this.http.post<PageData<AlarmData>>('/api/alarmsQuery/find', query, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * find entity infos by filter and name.
+   *
+   * @param filter filter (EntityFilter)
+   * @param searchText search text (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EntityInfo>> observable or value
+   */
 
   public findEntityInfosByFilterAndName(filter: EntityFilter,
                                         searchText: string, config?: RequestConfig): Observable<PageData<EntityInfo>> {
@@ -614,6 +747,14 @@ export class EntityService {
     );
   }
 
+  /**
+   * find single entity info by entity filter.
+   *
+   * @param filter filter (EntityFilter)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntityInfo> observable or value
+   */
+
   public findSingleEntityInfoByEntityFilter(filter: EntityFilter, config?: RequestConfig): Observable<EntityInfo> {
     const query: EntityDataQuery = {
       entityFilter: filter,
@@ -632,6 +773,13 @@ export class EntityService {
     );
   }
 
+  /**
+   * get alias filter types by entity types.
+   *
+   * @param entityTypes entity types (Array<EntityType | AliasEntityType>)
+   * @returns Array<AliasFilterType> observable or value
+   */
+
   public getAliasFilterTypesByEntityTypes(entityTypes: Array<EntityType | AliasEntityType>): Array<AliasFilterType> {
     const authState = getCurrentAuthState(this.store);
     let allAliasFilterTypes: Array<AliasFilterType> = Object.values(AliasFilterType);
@@ -649,6 +797,14 @@ export class EntityService {
     }
     return result;
   }
+
+  /**
+   * filter alias by entity types.
+   *
+   * @param entityAlias entity alias (EntityAlias)
+   * @param entityTypes entity types (Array<EntityType | AliasEntityType>)
+   * @returns boolean observable or value
+   */
 
   public filterAliasByEntityTypes(entityAlias: EntityAlias, entityTypes: Array<EntityType | AliasEntityType>): boolean {
     const filter = entityAlias.filter;
@@ -705,6 +861,14 @@ export class EntityService {
     return false;
   }
 
+  /**
+   * filter alias filter type by entity types.
+   *
+   * @param aliasFilterType alias filter type (AliasFilterType)
+   * @param entityTypes entity types (Array<EntityType | AliasEntityType>)
+   * @returns boolean observable or value
+   */
+
   private filterAliasFilterTypeByEntityTypes(aliasFilterType: AliasFilterType,
                                              entityTypes: Array<EntityType | AliasEntityType>): boolean {
     if (!entityTypes || !entityTypes.length) {
@@ -716,6 +880,14 @@ export class EntityService {
     });
     return valid;
   }
+
+  /**
+   * filter alias filter type by entity type.
+   *
+   * @param aliasFilterType alias filter type (AliasFilterType)
+   * @param entityType entity type (EntityType | AliasEntityType)
+   * @returns boolean observable or value
+   */
 
   private filterAliasFilterTypeByEntityType(aliasFilterType: AliasFilterType, entityType: EntityType | AliasEntityType): boolean {
     switch (aliasFilterType) {
@@ -752,6 +924,14 @@ export class EntityService {
     }
     return false;
   }
+
+  /**
+   * prepare allowed entity types list.
+   *
+   * @param allowedEntityTypes allowed entity types (Array<EntityType | AliasEntityType>)
+   * @param useAliasEntityTypes use alias entity types (boolean)
+   * @returns Array<EntityType | AliasEntityType> observable or value
+   */
 
   public prepareAllowedEntityTypesList(allowedEntityTypes: Array<EntityType | AliasEntityType>,
                                        useAliasEntityTypes?: boolean): Array<EntityType | AliasEntityType> {
@@ -809,6 +989,14 @@ export class EntityService {
     }
     return entityTypes;
   }
+
+  /**
+   * get entity field keys.
+   *
+   * @param entityType entity type (EntityType)
+   * @param searchText search text (string)
+   * @returns Array<string> observable or value
+   */
 
   private getEntityFieldKeys(entityType: EntityType, searchText: string = ''): Array<string> {
     const entityFieldKeys: string[] = [entityFields.createdTime.keyName];
@@ -868,13 +1056,30 @@ export class EntityService {
     return query ? entityFieldKeys.filter((entityField) => entityField.toLowerCase().indexOf(query) === 0) : entityFieldKeys;
   }
 
+  /**
+   * get alarm keys.
+   *
+   * @param searchText search text (string)
+   * @returns Array<string> observable or value
+   */
+
   private getAlarmKeys(searchText: string = ''): Array<string> {
     const alarmKeys: string[] = Object.keys(alarmFields);
     const query = searchText.toLowerCase();
     return query ? alarmKeys.filter((alarmField) => alarmField.toLowerCase().indexOf(query) === 0) : alarmKeys;
   }
 
-  /** Calls ThingsBoard REST `/api/plugins/telemetry/${entityId.entityType}/${entityId.id}/keys/`. */
+  
+  /**
+   * get entity keys.
+   *
+   * @param entityId entity UUID
+   * @param query query (string)
+   * @param type type (DataKeyType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<string>> observable or value
+   */
+
 
   public getEntityKeys(entityId: EntityId, query: string, type: DataKeyType,
                        config?: RequestConfig): Observable<Array<string>> {
@@ -905,11 +1110,32 @@ export class EntityService {
     );
   }
 
+  /**
+   * get entity keys by entity filter.
+   *
+   * @param filter filter (EntityFilter)
+   * @param types types (DataKeyType[])
+   * @param entityTypes entity types (EntityType[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
+
   public getEntityKeysByEntityFilter(filter: EntityFilter, types: DataKeyType[],
                                      entityTypes?: EntityType[],
                                      config?: RequestConfig): Observable<Array<DataKey>> {
     return this.getEntityKeysByEntityFilterAndScope(filter, types, entityTypes, null, config);
   }
+
+  /**
+   * get entity keys by entity filter and scope.
+   *
+   * @param filter filter (EntityFilter)
+   * @param types types (DataKeyType[])
+   * @param entityTypes entity types (EntityType[])
+   * @param scope scope (AttributeScope)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   public getEntityKeysByEntityFilterAndScope(filter: EntityFilter, types: DataKeyType[],
                                              entityTypes?: EntityType[], scope?: AttributeScope,
@@ -966,11 +1192,25 @@ export class EntityService {
     );
   }
 
+  /**
+   * POST/PUT entity — create datasources from subscriptions info.
+   *
+   * @param subscriptionsInfo subscriptions info (Array<SubscriptionInfo>)
+   * @returns Array<Datasource> observable or value
+   */
+
   public createDatasourcesFromSubscriptionsInfo(subscriptionsInfo: Array<SubscriptionInfo>): Array<Datasource> {
     const datasources = subscriptionsInfo.map(subscriptionInfo => this.createDatasourceFromSubscriptionInfo(subscriptionInfo));
     this.utils.generateColors(datasources);
     return datasources;
   }
+
+  /**
+   * POST/PUT entity — create alarm source from subscription info.
+   *
+   * @param subscriptionInfo subscription info (SubscriptionInfo)
+   * @returns Datasource observable or value
+   */
 
   public createAlarmSourceFromSubscriptionInfo(subscriptionInfo: SubscriptionInfo): Datasource {
     if (subscriptionInfo.entityId && subscriptionInfo.entityType) {
@@ -981,6 +1221,14 @@ export class EntityService {
       throw new Error('Can\'t crate alarm source without entityId information!');
     }
   }
+
+  /**
+   * resolve alias.
+   *
+   * @param entityAlias entity alias (EntityAlias)
+   * @param stateParams state params (StateParams)
+   * @returns Observable<AliasInfo> observable or value
+   */
 
   public resolveAlias(entityAlias: EntityAlias, stateParams: StateParams): Observable<AliasInfo> {
     const filter = entityAlias.filter;
@@ -1025,6 +1273,14 @@ export class EntityService {
       })
     );
   }
+
+  /**
+   * resolve alias filter.
+   *
+   * @param filter filter (EntityAliasFilter)
+   * @param stateParams state params (StateParams)
+   * @returns Observable<EntityAliasFilterResult> observable or value
+   */
 
   public resolveAliasFilter(filter: EntityAliasFilter, stateParams: StateParams): Observable<EntityAliasFilterResult> {
     const result: EntityAliasFilterResult = {
@@ -1098,6 +1354,13 @@ export class EntityService {
     }
   }
 
+  /**
+   * check entity alias.
+   *
+   * @param entityAlias entity alias (EntityAlias)
+   * @returns Observable<boolean> observable or value
+   */
+
   public checkEntityAlias(entityAlias: EntityAlias): Observable<boolean> {
     return this.resolveAliasFilter(entityAlias.filter, null).pipe(
       map((result) => {
@@ -1110,6 +1373,13 @@ export class EntityService {
       catchError(err => of(false))
     );
   }
+
+  /**
+   * resolve alarm filter.
+   *
+   * @param alarmFilterConfig alarm filter config (AlarmFilterConfig)
+   * @returns AlarmFilter observable or value
+   */
 
   public resolveAlarmFilter(alarmFilterConfig?: AlarmFilterConfig, searchPropagatedByDefault = true): AlarmFilter {
     const alarmFilter: AlarmFilter = {};
@@ -1129,6 +1399,16 @@ export class EntityService {
     return alarmFilter;
   }
 
+  /**
+   * POST/PUT entity — save entity parameters.
+   *
+   * @param entityType entity type (EntityType)
+   * @param entityData entity data (ImportEntityData)
+   * @param update update (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ImportEntitiesResultInfo> observable or value
+   */
+
   public saveEntityParameters(entityType: EntityType, entityData: ImportEntityData, update: boolean,
                               config?: RequestConfig): Observable<ImportEntitiesResultInfo> {
     const saveEntityObservable: Observable<BaseData<EntityId>> = this.getSaveEntityObservable(entityType, entityData, config);
@@ -1146,6 +1426,10 @@ export class EntityService {
           } as ImportEntitiesResultInfo))
         );
       }),
+      /**
+       * catch error.
+       *
+       */
       catchError(err => {
         if (update) {
           let findEntityObservable: Observable<BaseData<EntityId>>;
@@ -1193,6 +1477,15 @@ export class EntityService {
       })
     );
   }
+
+  /**
+   * get save entity observable.
+   *
+   * @param entityType entity type (EntityType)
+   * @param entityData entity data (ImportEntityData)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<BaseData<EntityId>> observable or value
+   */
 
   private getSaveEntityObservable(entityType: EntityType, entityData: ImportEntityData,
                                   config?: RequestConfig): Observable<BaseData<EntityId>> {
@@ -1243,6 +1536,16 @@ export class EntityService {
     }
     return saveEntityObservable;
   }
+
+  /**
+   * get update entity tasks.
+   *
+   * @param entityType entity type (EntityType)
+   * @param entityData entity data (ImportEntityData | EdgeImportEntityData)
+   * @param entity entity (BaseData<EntityId>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any>[] observable or value
+   */
 
   private getUpdateEntityTasks(entityType: EntityType,  entityData: ImportEntityData | EdgeImportEntityData,
                                entity: BaseData<EntityId>, config?: RequestConfig): Observable<any>[] {
@@ -1302,6 +1605,15 @@ export class EntityService {
     }
     return tasks;
   }
+
+  /**
+   * POST/PUT entity — save entity data.
+   *
+   * @param entityId entity UUID
+   * @param entityData entity data (ImportEntityData)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
 
   public saveEntityData(entityId: EntityId, entityData: ImportEntityData, config?: RequestConfig): Observable<any> {
     const observables: Observable<string>[] = [];
@@ -1375,6 +1687,13 @@ export class EntityService {
     }
   }
 
+  /**
+   * get state entity info.
+   *
+   * @param filter filter (EntityAliasFilter)
+   * @param stateParams state params (StateParams)
+   */
+
   private getStateEntityInfo(filter: EntityAliasFilter, stateParams: StateParams): {entityId: EntityId} {
     let entityId: EntityId = null;
     if (stateParams) {
@@ -1391,6 +1710,13 @@ export class EntityService {
     }
     return {entityId};
   }
+
+  /**
+   * POST/PUT entity — create datasource from subscription info.
+   *
+   * @param subscriptionInfo subscription info (SubscriptionInfo)
+   * @returns Datasource observable or value
+   */
 
   private createDatasourceFromSubscriptionInfo(subscriptionInfo: SubscriptionInfo): Datasource {
     subscriptionInfo = this.validateSubscriptionInfo(subscriptionInfo);
@@ -1434,6 +1760,13 @@ export class EntityService {
     return datasource;
   }
 
+  /**
+   * validate subscription info.
+   *
+   * @param subscriptionInfo subscription info (SubscriptionInfo)
+   * @returns SubscriptionInfo observable or value
+   */
+
   private validateSubscriptionInfo(subscriptionInfo: SubscriptionInfo): SubscriptionInfo {
     // @ts-ignore
     if (subscriptionInfo.type === 'device') {
@@ -1451,6 +1784,13 @@ export class EntityService {
     }
     return subscriptionInfo;
   }
+
+  /**
+   * prepare entity filter from subscription info.
+   *
+   * @param datasource datasource (Datasource)
+   * @param subscriptionInfo subscription info (SubscriptionInfo)
+   */
 
   private prepareEntityFilterFromSubscriptionInfo(datasource: Datasource, subscriptionInfo: SubscriptionInfo) {
     if (subscriptionInfo.entityId) {
@@ -1490,12 +1830,29 @@ export class EntityService {
     }
   }
 
+  /**
+   * POST/PUT entity — create datasource keys.
+   *
+   * @param keyInfos key infos (Array<KeyInfo>)
+   * @param type type (DataKeyType)
+   * @param datasource datasource (Datasource)
+   */
+
   private createDatasourceKeys(keyInfos: Array<KeyInfo>, type: DataKeyType, datasource: Datasource) {
     keyInfos.forEach((keyInfo) => {
       const dataKey = this.utils.createKey(keyInfo, type);
       datasource.dataKeys.push(dataKey);
     });
   }
+
+  /**
+   * get assigned to edge entities by type.
+   *
+   * @param edgeId edge id (string)
+   * @param entityType entity type (EntityType)
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<any>> observable or value
+   */
 
   public getAssignedToEdgeEntitiesByType(edgeId: string, entityType: EntityType, pageLink: PageLink): Observable<PageData<any>> {
     let entitiesObservable: Observable<PageData<any>>;
@@ -1518,6 +1875,13 @@ export class EntityService {
     }
     return entitiesObservable;
   }
+
+  /**
+   * get edge event content.
+   *
+   * @param entity entity (EdgeEvent)
+   * @returns Observable<BaseData<HasId> | RuleChainMetaData | string> observable or value
+   */
 
   public getEdgeEventContent(entity: EdgeEvent): Observable<BaseData<HasId> | RuleChainMetaData | string> {
     let entityObservable: Observable<BaseData<HasId> | RuleChainMetaData | string>;
@@ -1561,6 +1925,13 @@ export class EntityService {
     }
     return entityObservable;
   }
+
+  /**
+   * get entity subtypes observable.
+   *
+   * @param entityType entity type (EntityType)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   public getEntitySubtypesObservable(entityType: EntityType): Observable<Array<string>> {
     let observable: Observable<Array<string>>;

@@ -68,24 +68,44 @@ export const historyWindowTypeTranslations = new Map<HistoryWindowType, string>(
 
 export type Interval = number | IntervalType;
 
+
 /**
-
- * TypeScript models and enums for interval math.
-
+ * TypeScript interfaces, types, and enums for interval math (shared TypeScript models).
  */
 
+
 export class IntervalMath {
+  /**
+   * max.
+   *
+   * @param values values (Interval[])
+   * @returns Interval observable or value
+   */
   public static max(...values: Interval[]): Interval {
     const numberArr = values.map(v => IntervalMath.numberValue(v));
     const index = numberArr.indexOf(Math.max(...numberArr));
     return values[index];
   }
 
+  /**
+   * min.
+   *
+   * @param values values (Interval[])
+   * @returns Interval observable or value
+   */
+
   public static min(...values: Interval[]): Interval {
     const numberArr = values.map(v => IntervalMath.numberValue(v));
     const index = numberArr.indexOf(Math.min(...numberArr));
     return values[index];
   }
+
+  /**
+   * number value.
+   *
+   * @param value value (Interval)
+   * @returns number observable or value
+   */
 
   public static numberValue(value: Interval): number {
     return typeof value === 'number' ? value : IntervalTypeValuesMap.get(value);

@@ -33,6 +33,12 @@ import examples from 'libphonenumber-js/examples.mobile.json';
 import { Subscription } from 'rxjs';
 import { FloatLabelType, MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: phone input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-phone-input`.
+ */
 @Component({
     selector: 'tb-phone-input',
     templateUrl: './phone-input.component.html',
@@ -50,10 +56,7 @@ import { FloatLabelType, MatFormFieldAppearance } from '@angular/material/form-f
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: phone input UI.
- */
+standalone: false
 })
 export class PhoneInputComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -137,6 +140,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor, Valida
     }).then(() => this.isLoad = false);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.required) {
       this.validators.push(Validators.required);
@@ -170,11 +178,21 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor, Valida
     }));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     for (const subscription of this.changeSubscriptions) {
       subscription.unsubscribe();
     }
   }
+
+  /**
+   * focus.
+   *
+   */
 
   focus() {
     const phoneNumber = this.phoneFormGroup.get('phoneNumber');
@@ -183,12 +201,22 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor, Valida
     }
   }
 
+  /**
+   * get flag and phone number data.
+   *
+   */
+
   private getFlagAndPhoneNumberData(country) {
     if (this.enableFlagsSelect) {
       this.flagIcon = this.getFlagIcon(country);
     }
     this.getPhoneNumberData(country);
   }
+
+  /**
+   * get phone number data.
+   *
+   */
 
   private getPhoneNumberData(country): void {
     if (this.getExampleNumber) {
@@ -198,13 +226,30 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor, Valida
     }
   }
 
+  /**
+   * get flag icon.
+   *
+   */
+
   private getFlagIcon(countryCode) {
     return String.fromCodePoint(...countryCode.split('').map(country => this.baseCode + country.charCodeAt(0)));
   }
 
+  /**
+   * update model value in format.
+   *
+   * @param parsedPhoneNumber parsed phone number (any)
+   */
+
   private updateModelValueInFormat(parsedPhoneNumber: any) {
     this.modelValue = parsedPhoneNumber.format('E.164');
   }
+
+  /**
+   * validate phone number.
+   *
+   * @returns ValidatorFn observable or value
+   */
 
   validatePhoneNumber(): ValidatorFn {
     return (c: UntypedFormControl) => {
@@ -223,12 +268,23 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor, Valida
     };
   }
 
+  /**
+   * define country from number.
+   *
+   */
+
   private defineCountryFromNumber(parsedPhoneNumber) {
     const country = this.phoneFormGroup.get('country').value;
     if (parsedPhoneNumber?.country && parsedPhoneNumber?.country !== country) {
       this.phoneFormGroup.get('country').patchValue(parsedPhoneNumber.country, {emitEvent: true});
     }
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     const phoneNumber = this.phoneFormGroup.get('phoneNumber');
@@ -237,12 +293,30 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor, Valida
     };
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -252,6 +326,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor, Valida
       this.phoneFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   */
 
   writeValue(phoneNumber): void {
     this.modelValue = phoneNumber;
@@ -281,6 +360,11 @@ export class PhoneInputComponent implements OnInit, ControlValueAccessor, Valida
     }
     this.phoneFormGroup.reset({phoneNumber, country}, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel(parsedPhoneNumber?) {
     const phoneNumber = this.phoneFormGroup.get('phoneNumber');

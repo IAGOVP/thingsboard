@@ -36,6 +36,12 @@ import { Subject } from 'rxjs';
 import { EntityId } from '@shared/models/id/entity-id';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: device profile alarms (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile-alarms`.
+ */
 @Component({
     selector: 'tb-device-profile-alarms',
     templateUrl: './device-profile-alarms.component.html',
@@ -52,10 +58,7 @@ import { takeUntil } from 'rxjs/operators';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: device profile alarms UI.
- */
+standalone: false
 })
 export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnInit, Validator, OnDestroy {
 
@@ -83,12 +86,29 @@ export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnIni
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.deviceProfileAlarmsFormGroup = this.fb.group({
@@ -99,6 +119,11 @@ export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnIni
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -108,6 +133,12 @@ export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnIni
     return this.deviceProfileAlarmsFormGroup.get('alarms') as UntypedFormArray;
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -116,6 +147,12 @@ export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnIni
       this.deviceProfileAlarmsFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param alarms alarms (Array<DeviceProfileAlarm> | null)
+   */
 
   writeValue(alarms: Array<DeviceProfileAlarm> | null): void {
     if (alarms?.length === this.alarmsFormArray.length) {
@@ -136,6 +173,14 @@ export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * track by alarm.
+   *
+   * @param index index (number)
+   * @param alarmControl alarm control (AbstractControl)
+   * @returns string observable or value
+   */
+
   public trackByAlarm(index: number, alarmControl: AbstractControl): string {
     if (alarmControl) {
       return alarmControl.value.id;
@@ -144,9 +189,20 @@ export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * DELETE — remove alarm.
+   *
+   * @param index index (number)
+   */
+
   public removeAlarm(index: number) {
     (this.deviceProfileAlarmsFormGroup.get('alarms') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add alarm.
+   *
+   */
 
   public addAlarm() {
     const alarm: DeviceProfileAlarm = {
@@ -168,6 +224,12 @@ export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return (this.deviceProfileAlarmsFormGroup.valid) ? null : {
       alarms: {
@@ -175,6 +237,11 @@ export class DeviceProfileAlarmsComponent implements ControlValueAccessor, OnIni
       },
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const alarms: Array<DeviceProfileAlarm> = this.deviceProfileAlarmsFormGroup.get('alarms').value;

@@ -19,11 +19,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.thingsboard.server.msa.ui.base.AbstractBasePage;
 
+
 /**
 
- * Side bar menu view elements.
+ * Selenium element locators for side bar menu view page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class SideBarMenuViewElements extends AbstractBasePage {
     public SideBarMenuViewElements(WebDriver driver) {
@@ -41,46 +47,112 @@ public class SideBarMenuViewElements extends AbstractBasePage {
     private static final String DEVICES_BTN = "//ul[@id='docs-menu-entity.entities']//span[text()='Devices']";
     private static final String ASSETS_BTN = "//ul[@id='docs-menu-entity.entities']//span[text()='Assets']";
     private static final String ENTITY_VIEWS_BTN = "//ul[@id='docs-menu-entity.entities']//span[text()='Entity Views']";
+    /**
+     * Entities dropdown.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement entitiesDropdown() {
         return waitUntilElementToBeClickable(ENTITIES_DROPDOWN);
     }
+    /**
+     * Rule chains btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement ruleChainsBtn() {
         return waitUntilElementToBeClickable(RULE_CHAINS_BTN);
     }
+    /**
+     * Customer btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement customerBtn() {
         return waitUntilElementToBeClickable(CUSTOMER_BTN);
     }
+    /**
+     * Dashboard btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement dashboardBtn() {
         return waitUntilElementToBeClickable(DASHBOARD_BTN);
     }
+    /**
+     * Profiles dropdown.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement profilesDropdown() {
         return waitUntilElementToBeClickable(PROFILES_DROPDOWN);
     }
+    /**
+     * Device profile btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement deviceProfileBtn() {
         return waitUntilElementToBeClickable(DEVICE_PROFILE_BTN);
     }
+    /**
+     * Asset profile btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assetProfileBtn() {
         return waitUntilElementToBeClickable(ASSET_PROFILE_BTN);
     }
+    /**
+     * Alarms btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement alarmsBtn() {
         return waitUntilElementToBeClickable(ALARMS_BTN);
     }
+    /**
+     * Devices btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement devicesBtn() {
         return waitUntilElementToBeClickable(DEVICES_BTN);
     }
+    /**
+     * Assets btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assetsBtn() {
         return waitUntilElementToBeClickable(ASSETS_BTN);
     }
+    /**
+     * Entity views btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement entityViewsBtn() {
         return waitUntilElementToBeClickable(ENTITY_VIEWS_BTN);

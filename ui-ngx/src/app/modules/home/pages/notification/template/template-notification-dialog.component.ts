@@ -43,14 +43,17 @@ export interface TemplateNotificationDialogData {
   name?: string;
 }
 
+
+/**
+ * Angular component: template notification dialog (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-template-notification-dialog`.
+ */
 @Component({
     selector: 'tb-template-notification-dialog',
     templateUrl: './template-notification-dialog.component.html',
     styleUrls: ['./template-notification-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: template notification dialog UI.
- */
+standalone: false
 })
 export class TemplateNotificationDialogComponent
   extends TemplateConfiguration<TemplateNotificationDialogComponent, NotificationTemplate> implements OnDestroy {
@@ -114,15 +117,30 @@ export class TemplateNotificationDialogComponent
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * change step.
+   *
+   */
 
   changeStep($event: StepperSelectionEvent) {
     this.selectedIndex = $event.selectedIndex;
@@ -131,9 +149,19 @@ export class TemplateNotificationDialogComponent
     }
   }
 
+  /**
+   * back step.
+   *
+   */
+
   backStep() {
     this.notificationTemplateStepper.previous();
   }
+
+  /**
+   * next step.
+   *
+   */
 
   nextStep() {
     if (this.selectedIndex >= this.maxStepperIndex) {
@@ -142,6 +170,12 @@ export class TemplateNotificationDialogComponent
       this.notificationTemplateStepper.next();
     }
   }
+
+  /**
+   * next step label.
+   *
+   * @returns string observable or value
+   */
 
   nextStepLabel(): string {
     if (this.selectedIndex >= this.maxStepperIndex && this.selectedIndex !== 0) {
@@ -153,6 +187,11 @@ export class TemplateNotificationDialogComponent
   private get maxStepperIndex(): number {
     return this.notificationTemplateStepper?._steps?.length - 1;
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   private add(): void {
     if (this.allValid()) {
@@ -166,6 +205,12 @@ export class TemplateNotificationDialogComponent
     }
   }
 
+  /**
+   * all valid.
+   *
+   * @returns boolean observable or value
+   */
+
   private allValid(): boolean {
     return !this.notificationTemplateStepper.steps.find((item, index) => {
       if (item.stepControl.invalid) {
@@ -178,9 +223,21 @@ export class TemplateNotificationDialogComponent
     });
   }
 
+  /**
+   * is sys admin.
+   *
+   * @returns boolean observable or value
+   */
+
   private isSysAdmin(): boolean {
     return this.authUser.authority === Authority.SYS_ADMIN;
   }
+
+  /**
+   * allow notification type.
+   *
+   * @returns NotificationType[] observable or value
+   */
 
   private allowNotificationType(): NotificationType[] {
     const sysAdminAllowNotificationTypes = new Set([

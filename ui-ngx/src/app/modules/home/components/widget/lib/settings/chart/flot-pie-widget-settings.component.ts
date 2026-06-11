@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: flot pie widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flot-pie-widget-settings`.
+ */
 @Component({
     selector: 'tb-flot-pie-widget-settings',
     templateUrl: './flot-pie-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: flot pie widget settings UI.
- */
+standalone: false
 })
 export class FlotPieWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class FlotPieWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.flotPieWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -56,6 +71,12 @@ export class FlotPieWidgetSettingsComponent extends WidgetSettingsComponent {
       animatedPie: false
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
 

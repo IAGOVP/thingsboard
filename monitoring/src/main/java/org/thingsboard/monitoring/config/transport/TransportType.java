@@ -23,8 +23,9 @@ import org.thingsboard.monitoring.service.transport.impl.HttpTransportHealthChec
 import org.thingsboard.monitoring.service.transport.impl.Lwm2mTransportHealthChecker;
 import org.thingsboard.monitoring.service.transport.impl.MqttTransportHealthChecker;
 /**
- * Enum of supported transports and their health-checker Spring bean class.
+ * Supported transport protocols and their health-checker Spring bean classes.
  */
+
 
 @AllArgsConstructor
 @Getter

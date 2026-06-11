@@ -27,16 +27,19 @@ import { DataKey, DatasourceType, widgetType } from '@shared/models/widget.model
 import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 
+
+/**
+ * Angular component: data layer color settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-data-layer-color-settings-panel`.
+ */
 @Component({
     selector: 'tb-data-layer-color-settings-panel',
     templateUrl: './data-layer-color-settings-panel.component.html',
     providers: [],
     styleUrls: ['./data-layer-color-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: data layer color settings panel UI.
- */
+standalone: false
 })
 export class DataLayerColorSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -81,6 +84,11 @@ export class DataLayerColorSettingsPanelComponent extends PageComponent implemen
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.colorSettingsFormGroup = this.fb.group(
       {
@@ -100,14 +108,29 @@ export class DataLayerColorSettingsPanelComponent extends PageComponent implemen
     this.updateValidators();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply color settings.
+   *
+   */
 
   applyColorSettings() {
     const colorSettings: DataLayerColorSettings = this.colorSettingsFormGroup.getRawValue();
     this.colorSettingsApplied.emit(colorSettings);
   }
+
+  /**
+   * edit range key.
+   *
+   */
 
   public editRangeKey() {
     const targetDataKey: DataKey = this.colorSettingsFormGroup.get('rangeKey').value;
@@ -121,6 +144,11 @@ export class DataLayerColorSettingsPanelComponent extends PageComponent implemen
       }
     );
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const type: DataLayerColorType = this.colorSettingsFormGroup.get('type').value;

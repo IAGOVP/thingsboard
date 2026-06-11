@@ -41,14 +41,17 @@ import { isNotEmptyStr } from '@core/utils';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: event table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-event-table`.
+ */
 @Component({
     selector: 'tb-event-table',
     templateUrl: './event-table.component.html',
     styleUrls: ['./event-table.component.scss'],
-    standalone: false
-/**
- * Angular component: event table UI.
- */
+standalone: false
 })
 export class EventTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -153,6 +156,11 @@ export class EventTableComponent implements OnInit, AfterViewInit, OnDestroy {
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.dirtyValue = !this.activeValue;
     this.eventTableConfig = new EventTableConfig(
@@ -177,9 +185,19 @@ export class EventTableComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.isEmptyData$ = this.entitiesTable.dataSource.isEmpty().subscribe(value => this.eventTableConfig.hideClearEventAction = value || this.hideClearEventAction);
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     if (this.isEmptyData$) {

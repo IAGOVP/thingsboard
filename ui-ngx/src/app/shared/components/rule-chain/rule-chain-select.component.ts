@@ -28,6 +28,12 @@ import {
 import { ComponentPortal } from '@angular/cdk/portal';
 import { POSITION_MAP } from '@shared/models/overlay.models';
 
+
+/**
+ * Angular component: rule chain select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-chain-select`.
+ */
 @Component({
     selector: 'tb-rule-chain-select',
     templateUrl: './rule-chain-select.component.html',
@@ -37,10 +43,7 @@ import { POSITION_MAP } from '@shared/models/overlay.models';
             useExisting: forwardRef(() => RuleChainSelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: rule chain select UI.
- */
+standalone: false
 })
 export class RuleChainSelectComponent implements ControlValueAccessor {
 
@@ -68,16 +71,40 @@ export class RuleChainSelectComponent implements ControlValueAccessor {
               private viewContainerRef: ViewContainerRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (RuleChain)
+   */
 
   writeValue(value: RuleChain): void {
     if (isDefinedAndNotNull(value)) {
@@ -85,9 +112,19 @@ export class RuleChainSelectComponent implements ControlValueAccessor {
     }
   }
 
+  /**
+   * rule chain id changed.
+   *
+   */
+
   ruleChainIdChanged() {
     this.updateView();
   }
+
+  /**
+   * open rule chain select panel.
+   *
+   */
 
   openRuleChainSelectPanel($event: Event) {
     if ($event) {
@@ -134,6 +171,11 @@ export class RuleChainSelectComponent implements ControlValueAccessor {
       });
     }
   }
+
+  /**
+   * update view.
+   *
+   */
 
   private updateView() {
     this.propagateChange(this.ruleChain);

@@ -24,11 +24,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import java.util.Arrays;
 
 /**
- * Spring Boot entry point for the Version Control executor microservice.
+ * Spring Boot entry point for the Version Control (VC) executor microservice.
  *
- * <p>Runs Git operations for entity version control (dashboards, widgets, etc.) requested by the core
- * via queue. Config file: {@code tb-vc-executor.yml}.
+ * <p>Runs Git operations for entity version control (dashboards, widgets, rule chains) requested by tb-core via Kafka queue. Config: {@code tb-vc-executor.yml}.
  */
+
 @SpringBootApplication
 @EnableAsync
 @EnableScheduling
@@ -38,7 +38,13 @@ public class ThingsboardVersionControlExecutorApplication {
     private static final String SPRING_CONFIG_NAME_KEY = "--spring.config.name";
     private static final String DEFAULT_SPRING_CONFIG_PARAM = SPRING_CONFIG_NAME_KEY + "=" + "tb-vc-executor";
 
-    /** Starts VC executor; adds {@code --spring.config.name=tb-vc-executor} if missing. */
+    /**
+     * Starts the Version Control executor Spring Boot application.
+     *
+     * <p>Appends {@code --spring.config.name=tb-vc-executor} when not provided so {@code tb-vc-executor.yml} is loaded.
+     *
+     * @param args standard Spring Boot command-line arguments
+     */
     public static void main(String[] args) {
         SpringApplication.run(ThingsboardVersionControlExecutorApplication.class, updateArguments(args));
     }

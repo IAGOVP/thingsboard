@@ -20,11 +20,17 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
+
 /**
 
- * Dashboard page elements.
+ * Selenium element locators for dashboard page page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class DashboardPageElements extends OtherPageElementsHelper {
     public DashboardPageElements(WebDriver driver) {
@@ -42,46 +48,114 @@ public class DashboardPageElements extends OtherPageElementsHelper {
     private static final String ALARM_TABLE_WIDGET = "//img[@alt='Alarms table']/ancestor::mat-card";
     private static final String WIDGET_SE_CORNER = "//div[contains(@class,'handle-se')]";
     private static final String SAVE_BTN = "//mat-icon[text() = 'done']/parent::button[@fxhide.lt-lg]";
+    /**
+     * Entity titles.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<WebElement> entityTitles() {
         return waitUntilVisibilityOfElementsLocated(TITLES);
     }
+    /**
+     * Assigns ed btn.
+     *
+     * @param title title ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assignedBtn(String title) {
         return waitUntilElementToBeClickable(String.format(ASSIGNED_BTN, title));
     }
+    /**
+     * Manage assigned entity list field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement manageAssignedEntityListField() {
         return waitUntilElementToBeClickable(MANAGE_ASSIGNED_ENTITY_LIST_FIELD);
     }
+    /**
+     * Manage assigned entity.
+     *
+     * @param title title ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement manageAssignedEntity(String title) {
         return waitUntilElementToBeClickable(String.format(MANAGE_ASSIGNED_ENTITY, title));
     }
+    /**
+     * Manage assigned update btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement manageAssignedUpdateBtn() {
         return waitUntilElementToBeClickable(MANAGE_ASSIGNED_UPDATE_BTN);
     }
+    /**
+     * Edit btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement editBtn() {
         return waitUntilElementToBeClickable(EDIT_BTN);
     }
+    /**
+     * Add btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement addBtn() {
         return waitUntilElementToBeClickable(ADD_BTN);
     }
+    /**
+     * Alarm widget bundle.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement alarmWidgetBundle() {
         return waitUntilElementToBeClickable(ALARM_WIDGET_BUNDLE);
     }
+    /**
+     * Alarm table widget.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement alarmTableWidget() {
         return waitUntilElementToBeClickable(ALARM_TABLE_WIDGET);
     }
+    /**
+     * Widget secorner.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement widgetSECorner() {
         return waitUntilElementToBeClickable(WIDGET_SE_CORNER);
     }
+    /**
+     * Saves or persists btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement saveBtn() {
         return waitUntilVisibilityOfElementLocated(SAVE_BTN);

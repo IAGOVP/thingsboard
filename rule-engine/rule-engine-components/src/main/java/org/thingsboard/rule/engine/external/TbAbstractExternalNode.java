@@ -20,19 +20,34 @@ import org.thingsboard.rule.engine.api.TbNode;
 import org.thingsboard.server.common.data.msg.TbNodeConnectionType;
 import org.thingsboard.server.common.msg.TbMsg;
 
+
 /**
 
- * Base implementation for external node rule nodes.
+ * Abstract base class for external node rule nodes (ThingsBoard rule engine).
 
  */
+
 
 public abstract class TbAbstractExternalNode implements TbNode {
 
     protected boolean forceAck;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     public void init(TbContext ctx) {
         this.forceAck = ctx.isExternalNodeForceAck();
     }
+    /**
+     * Routes the message to the Success connection of the current node.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param tbMsg rule engine message being processed
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void tellSuccess(TbContext ctx, TbMsg tbMsg) {
         if (forceAck) {
@@ -41,6 +56,14 @@ public abstract class TbAbstractExternalNode implements TbNode {
             ctx.tellSuccess(tbMsg);
         }
     }
+    /**
+     * Routes the message to the Failure connection with an error message.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param tbMsg rule engine message being processed
+     * @param t t ({@link Throwable})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void tellFailure(TbContext ctx, TbMsg tbMsg, Throwable t) {
         if (forceAck) {
@@ -57,6 +80,14 @@ public abstract class TbAbstractExternalNode implements TbNode {
             }
         }
     }
+    /**
+     * Ack if needed.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TbMsg ackIfNeeded(TbContext ctx, TbMsg msg) {
         if (forceAck) {

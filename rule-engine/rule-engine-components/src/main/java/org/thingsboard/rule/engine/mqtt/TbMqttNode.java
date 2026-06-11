@@ -49,7 +49,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Rule engine external node 'mqtt': Publish messages to the MQTT broker Implements org.thingsboard.rule.engine.api.TbNode.
+ * External rule node — <b>mqtt</b>.
+ *
+ * <p>Publish messages to the MQTT broker
+ * <br>Will publish message payload to the MQTT broker with QoS AT_LEAST_ONCE.
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMqttNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/mqtt/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/mqtt/</a>
  */
 @RuleNode(
         type = ComponentType.EXTERNAL,
@@ -70,6 +76,13 @@ public class TbMqttNode extends TbAbstractExternalNode {
 
     protected TbMqttNodeConfiguration mqttNodeConfiguration;
     protected MqttClient mqttClient;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -83,6 +96,13 @@ public class TbMqttNode extends TbAbstractExternalNode {
             throw new TbNodeException(e);
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -107,6 +127,10 @@ public class TbMqttNode extends TbAbstractExternalNode {
                 .metaData(metaData)
                 .build();
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {
@@ -118,6 +142,13 @@ public class TbMqttNode extends TbAbstractExternalNode {
     String getOwnerId(TbContext ctx) {
         return "Tenant[" + ctx.getTenantId().getId() + "]RuleNode[" + ctx.getSelf().getId().getId() + "]";
     }
+    /**
+     * Init client.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @return {@link MqttClient}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected MqttClient initClient(TbContext ctx) throws Exception {
         MqttClientConfig config = new MqttClientConfig(getSslContext());
@@ -171,6 +202,12 @@ public class TbMqttNode extends TbAbstractExternalNode {
     MqttClient getMqttClient(TbContext ctx, MqttClientConfig config) {
         return MqttClient.create(config, null, ctx.getExternalCallExecutor());
     }
+    /**
+     * Prepare mqtt client config.
+     *
+     * @param config deserialized node configuration POJO
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void prepareMqttClientConfig(MqttClientConfig config) {
         ClientCredentials credentials = mqttNodeConfiguration.getCredentials();
@@ -191,6 +228,14 @@ public class TbMqttNode extends TbAbstractExternalNode {
         }
         return tbMsg.getData();
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

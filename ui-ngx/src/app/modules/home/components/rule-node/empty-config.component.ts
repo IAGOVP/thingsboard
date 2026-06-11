@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: empty config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-node-empty-config`.
+ */
 @Component({
     selector: 'tb-node-empty-config',
     template: '<div></div>',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: empty config UI.
- */
+standalone: false
 })
 export class EmptyConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class EmptyConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.emptyConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.emptyConfigForm = this.fb.group({});

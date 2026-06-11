@@ -35,8 +35,9 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
 /**
- * Route resolver: loads template table config before activate.
+ * Route resolver: preloads data for template table config (home/notification pages).
  */
+
 
 @Injectable()
 export class TemplateTableConfigResolver  {
@@ -82,9 +83,22 @@ export class TemplateTableConfigResolver  {
     );
   }
 
+  /**
+   * resolve.
+   *
+   * @param _route  route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<NotificationTemplate> observable or value
+   */
+
   resolve(_route: ActivatedRouteSnapshot): EntityTableConfig<NotificationTemplate> {
     return this.config;
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<NotificationTemplate>> observable or value
+   */
 
   private configureCellActions(): Array<CellActionDescriptor<NotificationTemplate>> {
     return [
@@ -97,10 +111,23 @@ export class TemplateTableConfigResolver  {
     ];
   }
 
+  /**
+   * edit template.
+   *
+   * @param template template (NotificationTemplate)
+   */
+
   private editTemplate($event: Event, template: NotificationTemplate, isCopy = false) {
     $event?.stopPropagation();
     this.notificationTemplateDialog(template, false, isCopy).subscribe((res) => res ? this.config.updateData() : null);
   }
+
+  /**
+   * notification template dialog.
+   *
+   * @param template template (NotificationTemplate)
+   * @returns Observable<NotificationTemplate> observable or value
+   */
 
   private notificationTemplateDialog(template: NotificationTemplate, isAdd = false, isCopy = false): Observable<NotificationTemplate> {
     return this.dialog.open<TemplateNotificationDialogComponent, TemplateNotificationDialogData,

@@ -15,11 +15,11 @@
 ///
 
 
+
 /**
-
- * TypeScript models and enums for settings state.
-
+ * Settings state (ThingsBoard web UI).
  */
+
 
 export interface SettingsState {
   userLang: string;

@@ -36,16 +36,19 @@ interface MarkerShapeInfo {
   url$: Observable<SafeUrl>;
 }
 
+
+/**
+ * Angular component: marker shapes (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-marker-shapes`.
+ */
 @Component({
     selector: 'tb-marker-shapes',
     templateUrl: './marker-shapes.component.html',
     providers: [],
     styleUrls: ['./marker-shapes.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: marker shapes UI.
- */
+standalone: false
 })
 export class MarkerShapesComponent extends PageComponent implements OnInit {
 
@@ -73,6 +76,11 @@ export class MarkerShapesComponent extends PageComponent implements OnInit {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.shapes = (this.trip ? tripMarkerShapes : markerShapes).map((shape) => {
       return {
@@ -87,9 +95,20 @@ export class MarkerShapesComponent extends PageComponent implements OnInit {
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * select shape.
+   *
+   * @param shape shape (MarkerShape)
+   */
 
   selectShape(shape: MarkerShape) {
     this.markerShapeSelected.emit(shape);

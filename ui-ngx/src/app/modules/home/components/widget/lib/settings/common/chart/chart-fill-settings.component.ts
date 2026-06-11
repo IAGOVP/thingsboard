@@ -32,6 +32,12 @@ import {
 } from '@home/components/widget/lib/chart/chart.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: chart fill settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-chart-fill-settings`.
+ */
 @Component({
     selector: 'tb-chart-fill-settings',
     templateUrl: './chart-fill-settings.component.html',
@@ -43,10 +49,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: chart fill settings UI.
- */
+standalone: false
 })
 export class ChartFillSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -75,6 +78,11 @@ export class ChartFillSettingsComponent implements OnInit, ControlValueAccessor 
               private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.fillSettingsFormGroup = this.fb.group({
@@ -106,12 +114,30 @@ export class ChartFillSettingsComponent implements OnInit, ControlValueAccessor 
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -123,6 +149,12 @@ export class ChartFillSettingsComponent implements OnInit, ControlValueAccessor 
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ChartFillSettings)
+   */
+
   writeValue(value: ChartFillSettings): void {
     this.modelValue = value;
     this.fillSettingsFormGroup.patchValue(
@@ -130,6 +162,11 @@ export class ChartFillSettingsComponent implements OnInit, ControlValueAccessor 
     );
     this.updateValidators();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const type: ChartFillType = this.fillSettingsFormGroup.get('type').value;
@@ -144,6 +181,11 @@ export class ChartFillSettingsComponent implements OnInit, ControlValueAccessor 
       this.fillSettingsFormGroup.get('gradient').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: ChartFillSettings = this.fillSettingsFormGroup.getRawValue();

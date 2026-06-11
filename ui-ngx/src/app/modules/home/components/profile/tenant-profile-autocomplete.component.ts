@@ -37,6 +37,12 @@ import { emptyPageData } from '@shared/models/page/page-data';
 import { getEntityDetailsPageURL } from '@core/utils';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: tenant profile autocomplete (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tenant-profile-autocomplete`.
+ */
 @Component({
     selector: 'tb-tenant-profile-autocomplete',
     templateUrl: './tenant-profile-autocomplete.component.html',
@@ -46,10 +52,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             useExisting: forwardRef(() => TenantProfileAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: tenant profile autocomplete UI.
- */
+standalone: false
 })
 export class TenantProfileAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -103,12 +106,29 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredTenantProfiles = this.selectTenantProfileFormGroup.get('tenantProfile').valueChanges
@@ -130,6 +150,11 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
       );
   }
 
+  /**
+   * select default tenant profile if needed.
+   *
+   */
+
   selectDefaultTenantProfileIfNeeded(): void {
     if (this.selectDefaultProfile && !this.modelValue) {
       this.tenantProfileService.getDefaultTenantProfileInfo().subscribe(
@@ -144,6 +169,12 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -152,6 +183,12 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
       this.selectTenantProfileFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TenantProfileId | null)
+   */
 
   writeValue(value: TenantProfileId | null): void {
     this.searchText = '';
@@ -171,12 +208,23 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectTenantProfileFormGroup.get('tenantProfile').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (TenantProfileId | null)
+   */
 
   updateView(value: TenantProfileId | null) {
     if (!entityIdEquals(this.modelValue, value)) {
@@ -185,9 +233,23 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * display tenant profile fn.
+   *
+   * @param profile profile (EntityInfoData)
+   * @returns string | undefined observable or value
+   */
+
   displayTenantProfileFn(profile?: EntityInfoData): string | undefined {
     return profile ? profile.name : undefined;
   }
+
+  /**
+   * fetch tenant profiles.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<EntityInfoData>> observable or value
+   */
 
   fetchTenantProfiles(searchText?: string): Observable<Array<EntityInfoData>> {
     this.searchText = searchText;
@@ -203,6 +265,11 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
     );
   }
 
+  /**
+   * clear.
+   *
+   */
+
   clear() {
     this.selectTenantProfileFormGroup.get('tenantProfile').patchValue(null, {emitEvent: true});
     setTimeout(() => {
@@ -211,9 +278,21 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
     }, 0);
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * tenant profile enter.
+   *
+   */
 
   tenantProfileEnter($event: KeyboardEvent) {
     if ($event.keyCode === ENTER) {
@@ -224,6 +303,12 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * POST/PUT entity — create tenant profile.
+   *
+   * @param profileName profile name (string)
+   */
+
   createTenantProfile($event: Event, profileName: string) {
     $event.preventDefault();
     $event.stopPropagation();
@@ -233,6 +318,11 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
     this.openTenantProfileDialog(tenantProfile, true);
   }
 
+  /**
+   * edit tenant profile.
+   *
+   */
+
   editTenantProfile($event: Event) {
     $event.preventDefault();
     this.tenantProfileService.getTenantProfile(this.modelValue.id).subscribe(
@@ -241,6 +331,13 @@ export class TenantProfileAutocompleteComponent implements ControlValueAccessor,
       }
     );
   }
+
+  /**
+   * open tenant profile dialog.
+   *
+   * @param tenantProfile tenant profile (TenantProfile)
+   * @param isAdd is add (boolean)
+   */
 
   openTenantProfileDialog(tenantProfile: TenantProfile, isAdd: boolean) {
     this.dialog.open<TenantProfileDialogComponent, TenantProfileDialogData,

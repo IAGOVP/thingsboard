@@ -30,14 +30,17 @@ import { EntityType } from '@shared/models/entity-type.models';
 import { map, tap } from 'rxjs/operators';
 import { MobileService } from '@core/services/mobile.service';
 
+
+/**
+ * Angular component: entity state controller (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-state-controller`.
+ */
 @Component({
     selector: 'tb-entity-state-controller',
     templateUrl: './entity-state-controller.component.html',
     styleUrls: ['./entity-state-controller.component.scss'],
-    standalone: false
-/**
- * Angular component: entity state controller UI.
- */
+standalone: false
 })
 export class EntityStateControllerComponent extends StateControllerComponent implements OnInit, OnDestroy {
 
@@ -54,13 +57,28 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     super(router, route, ngZone, statesControllerService);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     super.ngOnDestroy();
   }
+
+  /**
+   * init.
+   *
+   */
 
   public init() {
     if (this.preservedState) {
@@ -79,14 +97,34 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
   }
 
+  /**
+   * Event handler for mobile changed.
+   *
+   */
+
   protected onMobileChanged() {
   }
+
+  /**
+   * Event handler for state id changed.
+   *
+   */
 
   protected onStateIdChanged() {
   }
 
+  /**
+   * Event handler for states changed.
+   *
+   */
+
   protected onStatesChanged() {
   }
+
+  /**
+   * Event handler for state changed.
+   *
+   */
 
   protected onStateChanged() {
     this.stateObject = this.parseState(this.currentState);
@@ -94,9 +132,21 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     this.gotoState(this.stateObject[this.stateObject.length - 1].id, false);
   }
 
+  /**
+   * state controller id.
+   *
+   * @returns string observable or value
+   */
+
   protected stateControllerId(): string {
     return 'entity';
   }
+
+  /**
+   * get state params.
+   *
+   * @returns StateParams observable or value
+   */
 
   public getStateParams(): StateParams {
     if (this.stateObject && this.stateObject.length) {
@@ -105,6 +155,14 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
       return {};
     }
   }
+
+  /**
+   * open state.
+   *
+   * @param id id (string)
+   * @param params params (StateParams)
+   * @param openRightLayout open right layout (boolean)
+   */
 
   public openState(id: string, params?: StateParams, openRightLayout?: boolean): void {
     if (this.states && this.states[id]) {
@@ -121,6 +179,13 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
       );
     }
   }
+
+  /**
+   * push and open state.
+   *
+   * @param states states (Array<StateObject>)
+   * @param openRightLayout open right layout (boolean)
+   */
 
   public pushAndOpenState(states: Array<StateObject>, openRightLayout?: boolean): void {
     if (this.states) {
@@ -139,6 +204,14 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
   }
 
+  /**
+   * update state.
+   *
+   * @param id id (string)
+   * @param params params (StateParams)
+   * @param openRightLayout open right layout (boolean)
+   */
+
   public updateState(id: string, params?: StateParams, openRightLayout?: boolean): void {
     if (!id) {
       id = this.getStateId();
@@ -156,6 +229,13 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
   }
 
+  /**
+   * get entity id.
+   *
+   * @param entityParamName entity param name (string)
+   * @returns EntityId observable or value
+   */
+
   public getEntityId(entityParamName: string): EntityId {
     const stateParams = this.getStateParams();
     if (!entityParamName || !entityParamName.length) {
@@ -166,6 +246,12 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     return null;
   }
 
+  /**
+   * get state id.
+   *
+   * @returns string observable or value
+   */
+
   public getStateId(): string {
     if (this.stateObject && this.stateObject.length) {
       return this.stateObject[this.stateObject.length - 1].id;
@@ -173,6 +259,13 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
       return '';
     }
   }
+
+  /**
+   * get state id at index.
+   *
+   * @param index index (number)
+   * @returns string observable or value
+   */
 
   public getStateIdAtIndex(index: number): string {
     if (this.stateObject && this.stateObject[index]) {
@@ -182,6 +275,12 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
   }
 
+  /**
+   * get state index.
+   *
+   * @returns number observable or value
+   */
+
   public getStateIndex(): number {
     if (this.stateObject && this.stateObject.length) {
       return this.stateObject.length - 1;
@@ -189,6 +288,13 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
       return -1;
     }
   }
+
+  /**
+   * get state params by state id.
+   *
+   * @param stateId state id (string)
+   * @returns StateParams observable or value
+   */
 
   public getStateParamsByStateId(stateId: string): StateParams {
     const stateObj = this.getStateObjById(stateId);
@@ -198,6 +304,13 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
       return null;
     }
   }
+
+  /**
+   * navigate prev state.
+   *
+   * @param index index (number)
+   * @param params params (StateParams)
+   */
 
   public navigatePrevState(index: number, params?: StateParams): void {
     if (index < this.stateObject.length - 1) {
@@ -210,11 +323,23 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
   }
 
+  /**
+   * reset state.
+   *
+   */
+
   public resetState(): void {
     const rootStateId = this.dashboardUtils.getRootStateId(this.states);
     this.stateObject = [ { id: rootStateId, params: {} } ];
     this.gotoState(rootStateId, true);
   }
+
+  /**
+   * get state name.
+   *
+   * @param index index (number)
+   * @returns string observable or value
+   */
 
   public getStateName(index: number): string {
     let result = '';
@@ -242,13 +367,31 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     return result;
   }
 
+  /**
+   * get current state name.
+   *
+   * @returns string observable or value
+   */
+
   public getCurrentStateName(): string {
     return this.getStateName(this.stateObject.length - 1);
   }
 
+  /**
+   * selected state index changed.
+   *
+   */
+
   public selectedStateIndexChanged() {
     this.navigatePrevState(this.selectedStateIndex);
   }
+
+  /**
+   * parse state.
+   *
+   * @param stateBase64 state base64 (string)
+   * @returns StateControllerState observable or value
+   */
 
   private parseState(stateBase64: string): StateControllerState {
     let result: StateControllerState;
@@ -281,6 +424,14 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     return result;
   }
 
+  /**
+   * goto state.
+   *
+   * @param stateId state id (string)
+   * @param update update (boolean)
+   * @param openRightLayout open right layout (boolean)
+   */
+
   private gotoState(stateId: string, update: boolean, openRightLayout?: boolean) {
     const isStateIdChanged = this.dashboardCtrl.dashboardCtx.state !== stateId;
     this.dashboardCtrl.openDashboardState(stateId, openRightLayout);
@@ -295,6 +446,12 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
   }
 
+  /**
+   * update location.
+   *
+   * @param isStateIdChanged is state id changed (boolean)
+   */
+
   private updateLocation(isStateIdChanged: boolean) {
     if (this.stateObject[this.stateObject.length - 1].id) {
       let newState;
@@ -307,6 +464,12 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
   }
 
+  /**
+   * is default state.
+   *
+   * @returns boolean observable or value
+   */
+
   private isDefaultState(): boolean {
     if (this.stateObject.length === 1) {
       const state = this.stateObject[0];
@@ -317,6 +480,13 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
     return false;
   }
+
+  /**
+   * resolve entity.
+   *
+   * @param params params (StateParams)
+   * @returns Observable<void> observable or value
+   */
 
   private resolveEntity(params: StateParams): Observable<void> {
     if (params && params.targetEntityParamName) {
@@ -340,9 +510,23 @@ export class EntityStateControllerComponent extends StateControllerComponent imp
     }
   }
 
+  /**
+   * is entity resolved.
+   *
+   * @param params params (StateParams)
+   * @returns boolean observable or value
+   */
+
   private isEntityResolved(params: StateParams): boolean {
     return !(!params.entityName || !params.entityName.length);
   }
+
+  /**
+   * get state obj by id.
+   *
+   * @param id id (string)
+   * @returns StateObject observable or value
+   */
 
   private getStateObjById(id: string): StateObject {
     return this.stateObject.find((stateObj) => stateObj.id === id);

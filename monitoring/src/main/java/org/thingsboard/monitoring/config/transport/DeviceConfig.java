@@ -21,8 +21,9 @@ import org.thingsboard.server.common.data.security.DeviceCredentials;
 
 import java.util.UUID;
 /**
- * Monitoring component: device config.
+ * Per-device transport credentials and naming used by health checkers.
  */
+
 
 @Data
 public class DeviceConfig {
@@ -30,6 +31,13 @@ public class DeviceConfig {
     private UUID id;
     private String name;
     private DeviceCredentials credentials;
+    /**
+     * Set id.
+     *
+     * @param id id ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setId(String id) {
         this.id = StringUtils.isNotEmpty(id) ? UUID.fromString(id) : null;

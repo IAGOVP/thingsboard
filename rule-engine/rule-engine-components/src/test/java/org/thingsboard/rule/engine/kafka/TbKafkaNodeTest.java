@@ -74,8 +74,9 @@ import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
 /**
- * Unit test for tb kafka node rule node.
+ * Unit test for tb kafka node (Apache Kafka producer/consumer nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -102,6 +103,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
     private KafkaThread ioThreadMock;
     @Mock
     private RecordMetadata recordMetadataMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -110,6 +116,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         config.setTopicPattern(TEST_TOPIC);
         config.setKeyPattern(TEST_KEY);
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -126,6 +137,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(config.isAddMetadataKeyValuesAsKafkaHeaders()).isFalse();
         assertThat(config.getKafkaHeadersCharset()).isEqualTo("UTF-8");
     }
+    /**
+     * Given exception during kafka initialization when init then destroy.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenExceptionDuringKafkaInitialization_whenInit_thenDestroy() throws TbNodeException {
@@ -146,6 +162,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         then(producerMock).should().close();
         then(producerMock).shouldHaveNoMoreInteractions();
     }
+    /**
+     * Verify kafka properties.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void verifyKafkaProperties() throws TbNodeException {
@@ -182,6 +203,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         then(node).should().getKafkaProducer(properties.capture());
         assertThat(properties.getValue()).isEqualTo(expectedProperties);
     }
+    /**
+     * Given init error is not null when on msg then tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenInitErrorIsNotNull_whenOnMsg_thenTellFailure() {
@@ -206,6 +232,12 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Failed to initialize Kafka rule node producer: " + errorMsg);
     }
+    /**
+     * Given force ack and exception was thrown when on msg then tell failure.
+     *
+     * @param forceAck force ack
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
@@ -236,6 +268,15 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(actualMsg.getValue()).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(msg);
         assertThat(actualError.getValue()).isInstanceOf(RuntimeException.class).hasMessage(errorMsg);
     }
+    /**
+     * Given force ack is true topic and key patterns and add metadata key values as kafka headers is false when on msg then enqueue for tell next.
+     *
+     * @param topicPattern topic pattern ({@link String})
+     * @param keyPattern key pattern ({@link String})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -282,6 +323,12 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
                         "{\"msgTopicPattern\":\"msg-test-topic\",\"msgKeyPattern\":\"msg-test-key\"}")
         );
     }
+    /**
+     * Given force ack is false and key is null or empty and error occurs during publishing when on msg then tell failure.
+     *
+     * @param key key ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -312,6 +359,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         then(ctxMock).should().tellFailure(actualMsg.capture(), actualError.capture());
         verifyOutgoingFailureMsg(errorMsg, actualMsg.getValue(), msg);
     }
+    /**
+     * Given force ack is true and add kafka headers is true and to bytes charset is null and error occurs during publishing when on msg then enqueue for tell failure.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForceAckIsTrueAndAddKafkaHeadersIsTrueAndToBytesCharsetIsNullAndErrorOccursDuringPublishing_whenOnMsg_thenEnqueueForTellFailure() throws TbNodeException {
@@ -344,6 +396,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         then(ctxMock).should().enqueueForTellFailure(actualMsg.capture(), actualError.capture());
         verifyOutgoingFailureMsg(errorMsg, actualMsg.getValue(), msg);
     }
+    /**
+     * Given force ack is false and add metadata key values as kafka headers is true and to bytes charset is set when on msg then tell success.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForceAckIsFalseAndAddMetadataKeyValuesAsKafkaHeadersIsTrueAndToBytesCharsetIsSet_whenOnMsg_thenTellSuccess() throws TbNodeException {
@@ -376,6 +433,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         then(ctxMock).should().tellSuccess(actualMsg.capture());
         verifyOutgoingSuccessMsg(TEST_TOPIC, actualMsg.getValue(), msg);
     }
+    /**
+     * Given producer is not null when destroy then should close.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenProducerIsNotNull_whenDestroy_thenShouldClose() {
@@ -383,6 +445,11 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
         node.destroy();
         then(producerMock).should().close();
     }
+    /**
+     * Given producer is null when destroy then do nothing.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenProducerIsNull_whenDestroy_thenDoNothing() {
@@ -523,6 +590,12 @@ public class TbKafkaNodeTest extends AbstractRuleNodeUpgradeTest {
                 )
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

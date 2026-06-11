@@ -19,8 +19,9 @@ import lombok.Data;
 
 import java.util.Map;
 /**
- * Attributes response.
+ * Test DTO for deserializing attributes response (black-box test infrastructure).
  */
+
 
 @Data
 public class AttributesResponse {

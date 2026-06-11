@@ -67,8 +67,9 @@ import static org.thingsboard.server.common.data.msg.TbMsgType.ATTRIBUTES_UPDATE
 import static org.thingsboard.server.common.data.msg.TbMsgType.INACTIVITY_EVENT;
 import static org.thingsboard.server.common.data.msg.TbMsgType.POST_ATTRIBUTES_REQUEST;
 /**
- * Unit test for tb copy attributes to entity view node rule node.
+ * Unit test for tb copy attributes to entity view node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbCopyAttributesToEntityViewNodeTest {
@@ -104,6 +105,11 @@ public class TbCopyAttributesToEntityViewNodeTest {
         var configuration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctxMock, configuration);
     }
+    /**
+     * Given existing client attributes when on msg then copy attributes to view.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenExistingClientAttributes_whenOnMsg_thenCopyAttributesToView() {
@@ -143,6 +149,11 @@ public class TbCopyAttributesToEntityViewNodeTest {
         verify(ctxMock).enqueueForTellNext(eq(newMsg), eq(TbNodeConnectionType.SUCCESS));
         verifyNoMoreInteractions(ctxMock, entityViewServiceMock, telemetryServiceMock);
     }
+    /**
+     * Given existing server attributes and msg type attributes deleted when on msg then delete attributes from view.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenExistingServerAttributesAndMsgTypeAttributesDeleted_whenOnMsg_thenDeleteAttributesFromView() {
@@ -179,6 +190,11 @@ public class TbCopyAttributesToEntityViewNodeTest {
         verify(ctxMock).enqueueForTellNext(eq(newMsg), eq(TbNodeConnectionType.SUCCESS));
         verifyNoMoreInteractions(ctxMock, entityViewServiceMock, telemetryServiceMock);
     }
+    /**
+     * Given non matched shared attributes and msg type is attributes deleted when on msg then no attributes delete from view.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenNonMatchedSharedAttributesAndMsgTypeIsAttributesDeleted_whenOnMsg_thenNoAttributesDeleteFromView() {
@@ -199,6 +215,11 @@ public class TbCopyAttributesToEntityViewNodeTest {
         verify(ctxMock).ack(eq(msg));
         verifyNoMoreInteractions(ctxMock, entityViewServiceMock);
     }
+    /**
+     * Given non matched attributes and msg type is post attributes request when on msg then copy no attributes to view.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenNonMatchedAttributesAndMsgTypeIsPostAttributesRequest_whenOnMsg_thenCopyNoAttributesToView() {
@@ -234,6 +255,11 @@ public class TbCopyAttributesToEntityViewNodeTest {
         verify(ctxMock).enqueueForTellNext(eq(newMsg), eq(TbNodeConnectionType.SUCCESS));
         verifyNoMoreInteractions(ctxMock, entityViewServiceMock, telemetryServiceMock);
     }
+    /**
+     * Given attributes validity period out of start date and end date when on msg then do nothing.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenAttributesValidityPeriodOutOfStartDateAndEndDate_whenOnMsg_thenDoNothing() {
@@ -256,6 +282,12 @@ public class TbCopyAttributesToEntityViewNodeTest {
         verify(ctxMock).ack(eq(msg));
         verifyNoMoreInteractions(ctxMock, entityViewServiceMock);
     }
+    /**
+     * Given msg type and empty metadata when on msg then verify failure msg.
+     *
+     * @param msgType msg type ({@link TbMsgType})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @EnumSource(TbMsgType.class)

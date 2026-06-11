@@ -23,6 +23,12 @@ import {
   ShapeFillImageSettingsPanelComponent
 } from '@home/components/widget/lib/settings/common/map/shape-fill-image-settings-panel.component';
 
+
+/**
+ * Angular component: shape fill image settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-shape-fill-image-settings`.
+ */
 @Component({
     selector: 'tb-shape-fill-image-settings',
     templateUrl: './shape-fill-image-settings.component.html',
@@ -34,10 +40,7 @@ import {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: shape fill image settings UI.
- */
+standalone: false
 })
 export class ShapeFillImageSettingsComponent implements ControlValueAccessor {
 
@@ -55,22 +58,52 @@ export class ShapeFillImageSettingsComponent implements ControlValueAccessor {
               private cd: ChangeDetectorRef,
               private viewContainerRef: ViewContainerRef) {}
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ShapeFillImageSettings)
+   */
 
   writeValue(value: ShapeFillImageSettings): void {
     if (value) {
       this.modelValue = value;
     }
   }
+
+  /**
+   * open image settings popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openImageSettingsPopup($event: Event, matButton: MatButton) {
     if ($event) {

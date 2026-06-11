@@ -72,11 +72,11 @@ export const ResourceSubTypeTranslationMap = new Map<ResourceSubType, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for tb resource info.
-
+ * TypeScript interfaces, types, and enums for tb resource info (shared TypeScript models).
  */
+
 
 export interface TbResourceInfo<D> extends Omit<BaseData<TbResourceId>, 'name' | 'label'>, HasTenantId, ExportableEntity<TbResourceId> {
   tenantId?: TenantId;

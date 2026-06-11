@@ -37,8 +37,11 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/key/data-keys.component.models';
 import { Datasource } from '@shared/models/widget.models';
 /**
- * Angular HTTP service: color settings component REST wrappers (`@core/http`).
+ * Angular injectable service: color settings component (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 @Injectable()
 export class ColorSettingsComponentService {
@@ -47,13 +50,32 @@ export class ColorSettingsComponentService {
 
   constructor() {}
 
+  /**
+   * register color settings component.
+   *
+   * @param comp comp (ColorSettingsComponent)
+   */
+
   public registerColorSettingsComponent(comp: ColorSettingsComponent) {
     this.colorSettingsComponents.add(comp);
   }
 
+  /**
+   * unregister color settings component.
+   *
+   * @param comp comp (ColorSettingsComponent)
+   */
+
   public unregisterColorSettingsComponent(comp: ColorSettingsComponent) {
     this.colorSettingsComponents.delete(comp);
   }
+
+  /**
+   * get other color settings components.
+   *
+   * @param comp comp (ColorSettingsComponent)
+   * @returns ColorSettingsComponent[] observable or value
+   */
 
   public getOtherColorSettingsComponents(comp: ColorSettingsComponent): ColorSettingsComponent[] {
     const result: ColorSettingsComponent[] = [];

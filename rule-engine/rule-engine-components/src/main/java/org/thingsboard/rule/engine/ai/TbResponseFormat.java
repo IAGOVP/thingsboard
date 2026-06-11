@@ -32,8 +32,9 @@ import static org.thingsboard.rule.engine.ai.TbResponseFormat.TbTextResponseForm
         include = JsonTypeInfo.As.PROPERTY,
         property = "type"
 /**
- * Rule engine tb response format API.
+ * tb response format contract (AI/LLM integration nodes).
  */
+
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = TbTextResponseFormat.class, name = "TEXT"),
@@ -41,10 +42,28 @@ import static org.thingsboard.rule.engine.ai.TbResponseFormat.TbTextResponseForm
         @JsonSubTypes.Type(value = TbJsonSchemaResponseFormat.class, name = "JSON_SCHEMA")
 })
 public sealed interface TbResponseFormat permits TbTextResponseFormat, TbJsonResponseFormat, TbJsonSchemaResponseFormat {
+    /**
+     * Type.
+     *
+     * @return {@link TbResponseFormatType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TbResponseFormatType type();
+    /**
+     * To lang chain response format.
+     *
+     * @return {@link ResponseFormat}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ResponseFormat toLangChainResponseFormat();
+
+    /**
+
+     * Enumerates tb response format type values used by rule engine AI/LLM integration nodes.
+
+     */
 
     enum TbResponseFormatType {
 
@@ -54,12 +73,33 @@ public sealed interface TbResponseFormat permits TbTextResponseFormat, TbJsonRes
 
     }
 
+    
+    /**
+     * Tb text response format.
+     *
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
     record TbTextResponseFormat() implements TbResponseFormat {
+    /**
+     * Type.
+     *
+     * @return {@link TbResponseFormatType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public TbResponseFormatType type() {
             return TbResponseFormatType.TEXT;
         }
+    /**
+     * To lang chain response format.
+     *
+     * @return {@link ResponseFormat}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public ResponseFormat toLangChainResponseFormat() {
@@ -67,6 +107,15 @@ public sealed interface TbResponseFormat permits TbTextResponseFormat, TbJsonRes
         }
 
     }
+
+    
+    /**
+     * Tb json response format.
+     *
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     record TbJsonResponseFormat() implements TbResponseFormat {
 
@@ -81,6 +130,16 @@ public sealed interface TbResponseFormat permits TbTextResponseFormat, TbJsonRes
         }
 
     }
+
+    
+    /**
+     * Tb json schema response format.
+     *
+     * @param schema schema ({@link ObjectNode})
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     record TbJsonSchemaResponseFormat(@NotNull @ValidJsonSchema ObjectNode schema) implements TbResponseFormat {
 

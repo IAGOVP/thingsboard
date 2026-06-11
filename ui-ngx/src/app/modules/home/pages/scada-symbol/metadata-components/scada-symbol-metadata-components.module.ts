@@ -44,6 +44,9 @@ import {
 /**
  * Angular NgModule: scada symbol metadata components feature area.
  */
+/**
+ * Angular NgModule bundling scada symbol metadata components (home/scada-symbol pages).
+ */
 @NgModule({
   declarations:
     [
@@ -62,5 +65,5 @@ import {
   ],
   exports: [
     ScadaSymbolMetadataComponent
-  ]})
+]})
 export class ScadaSymbolMetadataComponentsModule { }

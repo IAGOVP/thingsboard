@@ -105,6 +105,12 @@ export const flotDefaultSettings = (chartType: ChartType): Partial<TbFlotSetting
   return settings;
 };
 
+
+/**
+ * Angular component: flot widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flot-widget-settings`.
+ */
 @Component({
     selector: 'tb-flot-widget-settings',
     templateUrl: './flot-widget-settings.component.html',
@@ -121,10 +127,7 @@ export const flotDefaultSettings = (chartType: ChartType): Partial<TbFlotSetting
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: flot widget settings UI.
- */
+standalone: false
 })
 export class FlotWidgetSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -149,6 +152,11 @@ export class FlotWidgetSettingsComponent extends PageComponent implements OnInit
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.flotSettingsFormGroup = this.fb.group({
@@ -294,12 +302,30 @@ export class FlotWidgetSettingsComponent extends PageComponent implements OnInit
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -310,6 +336,12 @@ export class FlotWidgetSettingsComponent extends PageComponent implements OnInit
       this.updateValidators(false);
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TbFlotSettings)
+   */
 
   writeValue(value: TbFlotSettings): void {
     const dataKeysListForLabels = value?.dataKeysListForLabels;
@@ -327,6 +359,12 @@ export class FlotWidgetSettingsComponent extends PageComponent implements OnInit
     this.updateValidators(false);
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   validate(c: UntypedFormControl) {
     return (this.flotSettingsFormGroup.valid) ? null : {
       flotSettings: {
@@ -335,11 +373,22 @@ export class FlotWidgetSettingsComponent extends PageComponent implements OnInit
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: TbFlotSettings = this.flotSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const showTooltip: boolean = this.flotSettingsFormGroup.get('showTooltip').value;
@@ -423,6 +472,12 @@ export class FlotWidgetSettingsComponent extends PageComponent implements OnInit
     }
   }
 
+  /**
+   * data keys list for labels form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   dataKeysListForLabelsFormArray(): UntypedFormArray {
     return this.flotSettingsFormGroup.get('dataKeysListForLabels') as UntypedFormArray;
   }
@@ -431,13 +486,32 @@ export class FlotWidgetSettingsComponent extends PageComponent implements OnInit
     return this.dataKeysListForLabelsFormArray().controls as (AbstractControl & { new?: boolean })[];
   }
 
+  /**
+   * track by label data key.
+   *
+   * @param index index (number)
+   * @param labelDataKeyControl label data key control (AbstractControl)
+   * @returns any observable or value
+   */
+
   public trackByLabelDataKey(index: number, labelDataKeyControl: AbstractControl): any {
     return labelDataKeyControl;
   }
 
+  /**
+   * DELETE — remove label data key.
+   *
+   * @param index index (number)
+   */
+
   public removeLabelDataKey(index: number) {
     (this.flotSettingsFormGroup.get('dataKeysListForLabels') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add label data key.
+   *
+   */
 
   public addLabelDataKey() {
     const labelDataKey: LabelDataKey = {
@@ -450,6 +524,12 @@ export class FlotWidgetSettingsComponent extends PageComponent implements OnInit
     dataKeysListForLabelsArray.push(labelDataKeyControl);
     this.flotSettingsFormGroup.updateValueAndValidity();
   }
+
+  /**
+   * label data key drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   labelDataKeyDrop(event: CdkDragDrop<string[]>) {
     const dataKeysListForLabelsArray = this.flotSettingsFormGroup.get('dataKeysListForLabels') as UntypedFormArray;

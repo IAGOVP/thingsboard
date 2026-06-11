@@ -30,15 +30,18 @@ export interface EditAlarmDetailsDialogData {
   readonly: boolean;
 }
 
+
+/**
+ * Angular component: edit alarm details dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edit-alarm-details-dialog`.
+ */
 @Component({
     selector: 'tb-edit-alarm-details-dialog',
     templateUrl: './edit-alarm-details-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: EditAlarmDetailsDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: edit alarm details dialog UI.
- */
+standalone: false
 })
 export class EditAlarmDetailsDialogComponent extends DialogComponent<EditAlarmDetailsDialogComponent, string>
   implements OnInit, ErrorStateMatcher {
@@ -67,8 +70,21 @@ export class EditAlarmDetailsDialogComponent extends DialogComponent<EditAlarmDe
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -76,9 +92,19 @@ export class EditAlarmDetailsDialogComponent extends DialogComponent<EditAlarmDe
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

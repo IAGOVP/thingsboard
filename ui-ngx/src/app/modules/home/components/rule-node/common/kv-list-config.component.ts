@@ -25,6 +25,10 @@ import {
 } from '@angular/forms';
 import { KvMapConfigOldComponent } from '@home/components/rule-node/common/kv-map-config-old.component';
 
+
+/**
+ * Angular component: kv list config UI.
+ */
 @Component({
   selector: 'tb-kv-list-config',
   templateUrl: './kv-map-config-old.component.html',
@@ -41,12 +45,19 @@ import { KvMapConfigOldComponent } from '@home/components/rule-node/common/kv-ma
       useExisting: forwardRef(() => KvListConfigComponent),
       multi: true,
     }
-  ]
 /**
- * Angular component: kv list config UI.
+ * Angular component: kv list config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-kv-list-config`.
  */
-})
+  ]})
 export class KvListConfigComponent extends KvMapConfigOldComponent implements ControlValueAccessor, OnInit, Validator {
+
+  /**
+   * write value.
+   *
+   * @param kvList kv list (any)
+   */
 
   override writeValue(kvList: any): void {
     const keyValsControls: Array<AbstractControl> = [];
@@ -60,6 +71,11 @@ export class KvListConfigComponent extends KvMapConfigOldComponent implements Co
     }
     this.kvListFormGroup.setControl('keyVals', this.fb.array(keyValsControls), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   */
 
   public override validate() {
     const kvList: { key: string; value: string }[] = this.kvListFormGroup.get('keyVals').value;
@@ -75,6 +91,11 @@ export class KvListConfigComponent extends KvMapConfigOldComponent implements Co
     }
     return null;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   protected override updateModel() {
     const kvList: { key: string; value: string }[] = this.kvListFormGroup.get('keyVals').value;

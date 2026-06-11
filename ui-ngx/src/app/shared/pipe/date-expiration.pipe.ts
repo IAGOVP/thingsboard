@@ -19,17 +19,29 @@ import { DatePipe } from '@angular/common';
 import { MillisecondsToTimeStringPipe } from '@shared/pipe/milliseconds-to-time-string.pipe';
 import { isDefined } from '@core/utils';
 
-@Pipe({
-    name: 'dateExpiration',
-    standalone: false
+
 /**
  * Angular pipe: date expiration.
  */
+@Pipe({
+    name: 'dateExpiration',
+/**
+ * Angular pipe: date expiration (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class DateExpirationPipe implements PipeTransform {
 
   constructor(private millisecondsToTimeString: MillisecondsToTimeStringPipe, private datePipe: DatePipe) {
   }
+
+  /**
+   * transform.
+   *
+   * @param expirationMs expiration ms (number)
+   * @param arg arg (any)
+   * @returns string observable or value
+   */
 
   transform(expirationMs: number, arg?: any): string {
     const displayDate = isDefined(arg?.displayDate) ? arg.displayDate : true;

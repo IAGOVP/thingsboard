@@ -41,16 +41,19 @@ interface MarkerIconContainerInfo {
   html$: Observable<SafeHtml>;
 }
 
+
+/**
+ * Angular component: marker icon shapes (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-marker-icon-shapes`.
+ */
 @Component({
     selector: 'tb-marker-icon-shapes',
     templateUrl: './marker-icon-shapes.component.html',
     providers: [],
     styleUrls: ['./marker-icon-shapes.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: marker icon shapes UI.
- */
+standalone: false
 })
 export class MarkerIconShapesComponent extends PageComponent implements OnInit {
 
@@ -83,13 +86,29 @@ export class MarkerIconShapesComponent extends PageComponent implements OnInit {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.updateIconContainers();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * select icon.
+   *
+   * @param icon icon (string)
+   */
 
   selectIcon(icon: string) {
     if (this.icon !== icon) {
@@ -99,12 +118,23 @@ export class MarkerIconShapesComponent extends PageComponent implements OnInit {
     }
   }
 
+  /**
+   * select icon container.
+   *
+   * @param iconContainer icon container (MarkerIconContainer)
+   */
+
   selectIconContainer(iconContainer: MarkerIconContainer) {
     if (this.iconContainer !== iconContainer) {
       this.iconContainer = iconContainer;
       this.dirty = true;
     }
   }
+
+  /**
+   * apply.
+   *
+   */
 
   apply() {
     const iconInfo: MarkerIconInfo = {
@@ -113,6 +143,11 @@ export class MarkerIconShapesComponent extends PageComponent implements OnInit {
     };
     this.markerIconSelected.emit(iconInfo);
   }
+
+  /**
+   * update icon containers.
+   *
+   */
 
   private updateIconContainers() {
     const containersList = [...(this.trip ? tripMarkerIconContainers : markerIconContainers),null];

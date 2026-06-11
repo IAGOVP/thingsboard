@@ -39,11 +39,13 @@ import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.PHONE_NUMBER_ERROR_MESSAGE;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultCustomerPrototype;
 
+
 /**
 
- * Customer edit menu test.
+ * Black-box test: customer edit menu (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class CustomerEditMenuTest extends AbstractDriverBaseTest {
 
@@ -52,6 +54,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
     private CustomerPageHelper customerPage;
     private DashboardPageHelper dashboardPage;
     private String customerName;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -61,6 +69,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
         dashboardPage = new DashboardPageHelper(driver);
         loginPage.authorizationTenant();
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -69,6 +83,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
             customerName = null;
         }
     }
+    /**
+     * Re login.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void reLogin() {
@@ -76,6 +96,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
             loginPage.authorizationTenant();
         }
     }
+    /**
+     * Change title.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -99,6 +125,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertNotEquals(titleBefore, titleAfter);
         Assert.assertEquals(titleAfter, customerName);
     }
+    /**
+     * Deletes title.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -112,6 +144,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
 
         Assert.assertFalse(customerPage.doneBtnEditViewVisible().isEnabled());
     }
+    /**
+     * Saves or persists only with space.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -131,6 +169,15 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertEquals(customerPage.warningMessage().getText(), EMPTY_CUSTOMER_MESSAGE);
         Assert.assertEquals(customerPage.getCustomerName(), customerPage.getHeaderName());
     }
+    /**
+     * Edit description.
+     *
+     * @param description description ({@link String})
+     * @param newDescription new description ({@link String})
+     * @param finalDescription final description ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -150,6 +197,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
 
         Assert.assertEquals(customerPage.getDescription(), finalDescription);
     }
+    /**
+     * Assigns ed dashboard from dashboard.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -179,6 +232,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertTrue(customerPage.usersWidget().isDisplayed());
         Assert.assertEquals(customerPage.getDashboardFromView(), dashboardPage.getDashboardTitle());
     }
+    /**
+     * Assigns ed dashboard.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -207,6 +266,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertTrue(customerPage.usersWidget().isDisplayed());
         Assert.assertEquals(customerPage.getDashboard(), customerPage.getDashboardFromView());
     }
+    /**
+     * Assigns ed dashboard without hide.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -243,6 +308,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertTrue(customerPage.filterBtn().isDisplayed());
         Assert.assertTrue(customerPage.timeBtn().isDisplayed());
     }
+    /**
+     * Add phone number.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -262,6 +333,13 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(customerPage.phoneNumberEntityView().getAttribute("value").contains(number));
     }
+    /**
+     * Add incorrect phone number.
+     *
+     * @param number number ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -278,6 +356,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertTrue(customerPage.errorMessage().isDisplayed());
         Assert.assertEquals(customerPage.errorMessage().getText(), PHONE_NUMBER_ERROR_MESSAGE);
     }
+    /**
+     * Add all information.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")
@@ -315,6 +399,12 @@ public class CustomerEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertEquals(customerPage.phoneNumberEntityView().getAttribute("value"), "+1" + number);
         Assert.assertEquals(customerPage.emailEntityView().getAttribute("value"), email);
     }
+    /**
+     * Deletes phone number.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Edit customer")

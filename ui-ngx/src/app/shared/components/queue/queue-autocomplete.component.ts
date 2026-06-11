@@ -33,6 +33,12 @@ import { Direction } from '@shared/models/page/sort-order';
 import { emptyPageData } from '@shared/models/page/page-data';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: queue autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-queue-autocomplete`.
+ */
 @Component({
     selector: 'tb-queue-autocomplete',
     templateUrl: './queue-autocomplete.component.html',
@@ -42,10 +48,7 @@ import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-
             useExisting: forwardRef(() => QueueAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: queue autocomplete UI.
- */
+standalone: false
 })
 export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -104,17 +107,38 @@ export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit 
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredQueues = this.selectQueueFormGroup.get('queueName').valueChanges
       .pipe(
         debounceTime(150),
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue;
           if (typeof value === 'string' || !value) {
@@ -134,6 +158,12 @@ export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit 
       );
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -143,9 +173,22 @@ export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit 
     }
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.searchText = '';
@@ -170,6 +213,11 @@ export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit 
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectQueueFormGroup.get('queueName').updateValueAndValidity({onlySelf: true, emitEvent: true});
@@ -177,9 +225,20 @@ export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit 
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   reset() {
     this.selectQueueFormGroup.get('queueName').patchValue('', {emitEvent: false});
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (string | null)
+   */
 
   updateView(value: string | null) {
     if (this.modelValue !== value) {
@@ -188,9 +247,23 @@ export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit 
     }
   }
 
+  /**
+   * display queue fn.
+   *
+   * @param queue queue (BaseData<EntityId>)
+   * @returns string | undefined observable or value
+   */
+
   displayQueueFn(queue?: BaseData<EntityId>): string | undefined {
     return queue ? queue.name : undefined;
   }
+
+  /**
+   * fetch queue.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<QueueInfo>> observable or value
+   */
 
   fetchQueue(searchText?: string): Observable<Array<QueueInfo>> {
     this.searchText = searchText;
@@ -204,6 +277,11 @@ export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit 
     );
   }
 
+  /**
+   * get description.
+   *
+   */
+
   getDescription(value) {
     return value.additionalInfo?.description ? value.additionalInfo.description :
       this.translate.instant(
@@ -211,6 +289,11 @@ export class QueueAutocompleteComponent implements ControlValueAccessor, OnInit 
         {submitStrategy: value.submitStrategy.type, processingStrategy: value.processingStrategy.type}
       );
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectQueueFormGroup.get('queueName').patchValue('', {emitEvent: true});

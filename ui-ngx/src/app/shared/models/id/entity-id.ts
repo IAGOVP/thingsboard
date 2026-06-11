@@ -18,11 +18,11 @@ import { AliasEntityType, EntityType } from '@shared/models/entity-type.models';
 import { HasUUID } from '@shared/models/id/has-uuid';
 import { isDefinedAndNotNull } from '@core/utils';
 
+
 /**
-
- * TypeScript models and enums for entity id.
-
+ * TypeScript interfaces, types, and enums for entity id (shared TypeScript models).
  */
+
 
 export interface EntityId extends HasUUID {
   entityType: EntityType | AliasEntityType;

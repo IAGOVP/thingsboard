@@ -35,15 +35,18 @@ export interface DeviceCredentialsDialogData {
   deviceProfileId: string;
 }
 
+
+/**
+ * Angular component: device credentials dialog (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-credentials-dialog`.
+ */
 @Component({
     selector: 'tb-device-credentials-dialog',
     templateUrl: './device-credentials-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: DeviceCredentialsDialogComponent }],
     styleUrls: ['./device-credentials-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: device credentials dialog UI.
- */
+standalone: false
 })
 export class DeviceCredentialsDialogComponent extends
   DialogComponent<DeviceCredentialsDialogComponent, DeviceCredentials> implements OnInit, ErrorStateMatcher {
@@ -69,6 +72,11 @@ export class DeviceCredentialsDialogComponent extends
     this.isReadOnly = data.isReadOnly;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.deviceCredentialsFormGroup = this.fb.group({
       credential: [null]
@@ -79,11 +87,24 @@ export class DeviceCredentialsDialogComponent extends
     this.loadDeviceCredentials();
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * load device credentials.
+   *
+   */
 
   loadDeviceCredentials() {
     const task = [
@@ -100,9 +121,19 @@ export class DeviceCredentialsDialogComponent extends
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

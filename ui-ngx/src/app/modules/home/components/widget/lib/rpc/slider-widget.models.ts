@@ -50,11 +50,11 @@ export const sliderLayoutImages = new Map<SliderLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for slider widget settings.
-
+ * Slider widget settings (ThingsBoard web UI).
  */
+
 
 export interface SliderWidgetSettings {
   initialState: GetValueSettings<number>;

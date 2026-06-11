@@ -47,11 +47,11 @@ import { TbMap } from '@home/components/widget/lib/maps/map';
 import { WidgetContext } from '@home/models/widget-component.models';
 import { ColorRange } from '@shared/models/widget-settings.models';
 
+
 /**
-
- * data layer pattern processor.
-
+ * Data layer pattern processor (ThingsBoard web UI).
  */
+
 
 export class DataLayerPatternProcessor {
 
@@ -60,6 +60,12 @@ export class DataLayerPatternProcessor {
 
   constructor(private dataLayer: TbMapDataLayer,
               private settings: DataLayerPatternSettings) {}
+
+  /**
+   * setup.
+   *
+   * @returns Observable<void> observable or value
+   */
 
   public setup(): Observable<void> {
     if (this.settings.type === DataLayerPatternType.function) {
@@ -74,6 +80,14 @@ export class DataLayerPatternProcessor {
       return of(null)
     }
   }
+
+  /**
+   * process pattern.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   * @returns string observable or value
+   */
 
   public processPattern(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): string {
     let pattern: string;

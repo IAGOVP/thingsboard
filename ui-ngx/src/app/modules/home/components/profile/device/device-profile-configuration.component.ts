@@ -23,6 +23,12 @@ import { deepClone } from '@core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: device profile configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile-configuration`.
+ */
 @Component({
     selector: 'tb-device-profile-configuration',
     templateUrl: './device-profile-configuration.component.html',
@@ -32,10 +38,7 @@ import { takeUntil } from 'rxjs/operators';
             useExisting: forwardRef(() => DeviceProfileConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: device profile configuration UI.
- */
+standalone: false
 })
 export class DeviceProfileConfigurationComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
@@ -56,12 +59,29 @@ export class DeviceProfileConfigurationComponent implements ControlValueAccessor
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.deviceProfileConfigurationFormGroup = this.fb.group({
@@ -74,10 +94,21 @@ export class DeviceProfileConfigurationComponent implements ControlValueAccessor
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -88,6 +119,12 @@ export class DeviceProfileConfigurationComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DeviceProfileConfiguration | null)
+   */
+
   writeValue(value: DeviceProfileConfiguration | null): void {
     this.type = value?.type;
     const configuration = deepClone(value);
@@ -96,6 +133,11 @@ export class DeviceProfileConfigurationComponent implements ControlValueAccessor
     }
     this.deviceProfileConfigurationFormGroup.patchValue({configuration}, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: DeviceProfileConfiguration = null;

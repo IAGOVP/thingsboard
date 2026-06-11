@@ -43,6 +43,12 @@ export enum ScadaSymbolLinkType {
   resource = 'resource'
 }
 
+
+/**
+ * Angular component: scada symbol input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-input`.
+ */
 @Component({
     selector: 'tb-scada-symbol-input',
     templateUrl: './scada-symbol-input.component.html',
@@ -54,10 +60,7 @@ export enum ScadaSymbolLinkType {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: scada symbol input UI.
- */
+standalone: false
 })
 export class ScadaSymbolInputComponent extends PageComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
@@ -96,6 +99,11 @@ export class ScadaSymbolInputComponent extends PageComponent implements OnInit, 
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (this.scadaSymbolContent && this.scadaSymbolMetadata) {
       this.scadaSymbolUrl = IMAGE_BASE64_URL_PREFIX + 'svg+xml;base64,' + stringToBase64(this.scadaSymbolContent);
@@ -103,15 +111,38 @@ export class ScadaSymbolInputComponent extends PageComponent implements OnInit, 
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -119,6 +150,12 @@ export class ScadaSymbolInputComponent extends PageComponent implements OnInit, 
       this.detectLinkType();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
 
   writeValue(value: string): void {
     value = removeTbImagePrefix(value);
@@ -152,6 +189,11 @@ export class ScadaSymbolInputComponent extends PageComponent implements OnInit, 
     }
   }
 
+  /**
+   * detect link type.
+   *
+   */
+
   private detectLinkType() {
     if (this.scadaSymbolUrl) {
       this.linkType = ScadaSymbolLinkType.resource;
@@ -159,6 +201,12 @@ export class ScadaSymbolInputComponent extends PageComponent implements OnInit, 
       this.linkType = ScadaSymbolLinkType.none;
     }
   }
+
+  /**
+   * update model.
+   *
+   * @param value value (string)
+   */
 
   private updateModel(value: string) {
     this.cd.markForCheck();
@@ -168,15 +216,30 @@ export class ScadaSymbolInputComponent extends PageComponent implements OnInit, 
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   private reset() {
     this.linkType = ScadaSymbolLinkType.none;
     this.imageResource = null;
   }
 
+  /**
+   * clear symbol.
+   *
+   */
+
   clearSymbol() {
     this.reset();
     this.updateModel(null);
   }
+
+  /**
+   * open gallery.
+   *
+   */
 
   openGallery($event: Event): void {
     if ($event) {

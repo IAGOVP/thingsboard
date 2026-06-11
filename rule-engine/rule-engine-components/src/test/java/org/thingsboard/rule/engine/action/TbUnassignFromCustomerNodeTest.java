@@ -81,8 +81,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb unassign from customer node rule node.
+ * Unit test for tb unassign from customer node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbUnassignFromCustomerNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -137,12 +138,23 @@ class TbUnassignFromCustomerNodeTest extends AbstractRuleNodeUpgradeTest {
 
     @Mock
     private DashboardService dashboardServiceMock;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
         node = spy(new TbUnassignFromCustomerNode());
         config = new TbUnassignFromCustomerNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

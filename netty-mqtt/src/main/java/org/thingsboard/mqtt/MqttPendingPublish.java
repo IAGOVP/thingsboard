@@ -27,8 +27,11 @@ import lombok.Setter;
 
 import java.util.function.Consumer;
 /**
- * Outbound PUBLISH awaiting PUBACK/PUBCOMP with optional {@link RetransmissionHandler}.
+ * Outbound PUBLISH awaiting broker acknowledgment (PUBACK or QoS2 completion).
+ *
+ * <p>May use {@link RetransmissionHandler} when unacknowledged.
  */
+
 
 @Getter(AccessLevel.PACKAGE)
 final class MqttPendingPublish {
@@ -103,6 +106,12 @@ final class MqttPendingPublish {
     static Builder builder() {
         return new Builder();
     }
+
+    /**
+
+     * Builder (netty-mqtt client library).
+
+     */
 
     static class Builder {
 

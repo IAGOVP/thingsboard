@@ -32,14 +32,17 @@ import {
   CountWidgetSettings
 } from '@home/components/widget/lib/count/count-widget.models';
 
+
+/**
+ * Angular component: alarm count basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-count-basic-config`.
+ */
 @Component({
     selector: 'tb-alarm-count-basic-config',
     templateUrl: './alarm-count-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: alarm count basic config UI.
- */
+standalone: false
 })
 export class AlarmCountBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -54,9 +57,21 @@ export class AlarmCountBasicConfigComponent extends BasicWidgetConfigComponent {
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.alarmCountWidgetConfigForm;
   }
+
+  /**
+   * setup defaults.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected setupDefaults(configData: WidgetConfigComponentData) {
     let datasources = configData.config.datasources;
@@ -68,6 +83,12 @@ export class AlarmCountBasicConfigComponent extends BasicWidgetConfigComponent {
     datasources[0].alarmFilterConfig = {statusList: [AlarmSearchStatus.ACTIVE]};
     datasources[0].dataKeys = [this.utils.createKey({name: 'count'}, DataKeyType.count)];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: CountWidgetSettings = {...countDefaultSettings(true), ...(configData.config.settings || {})};
@@ -85,6 +106,13 @@ export class AlarmCountBasicConfigComponent extends BasicWidgetConfigComponent {
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.datasources = config.datasources;
     setAlarmFilterConfig(config.alarmFilterConfig, this.widgetConfig.config.datasources);
@@ -99,6 +127,13 @@ export class AlarmCountBasicConfigComponent extends BasicWidgetConfigComponent {
     return this.widgetConfig;
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -106,6 +141,13 @@ export class AlarmCountBasicConfigComponent extends BasicWidgetConfigComponent {
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

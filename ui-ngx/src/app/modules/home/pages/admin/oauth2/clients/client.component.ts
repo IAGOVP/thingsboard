@@ -43,14 +43,17 @@ import { coerceBoolean } from '@app/shared/decorators/coercion';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { Authority } from '@shared/models/authority.enum';
 
+
+/**
+ * Angular component: client (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-client`.
+ */
 @Component({
     selector: 'tb-client',
     templateUrl: './client.component.html',
     styleUrls: ['./client.component.scss'],
-    standalone: false
-/**
- * Angular component: client UI.
- */
+standalone: false
 })
 export class ClientComponent extends EntityComponent<OAuth2Client, PageLink, OAuth2ClientInfo> implements OnDestroy {
 
@@ -110,12 +113,24 @@ export class ClientComponent extends EntityComponent<OAuth2Client, PageLink, OAu
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (OAuth2Client)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: OAuth2Client): UntypedFormGroup {
     return this.fb.group({
@@ -147,6 +162,12 @@ export class ClientComponent extends EntityComponent<OAuth2Client, PageLink, OAu
     });
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (OAuth2Client)
+   */
+
   updateForm(entity: OAuth2Client) {
     this.entityForm.patchValue({
       title: entity.title,
@@ -175,13 +196,31 @@ export class ClientComponent extends EntityComponent<OAuth2Client, PageLink, OAu
     this.changeMapperConfigType(this.entityForm, this.entityValue.mapperConfig.type, this.entityValue.mapperConfig);
   }
 
+  /**
+   * get provider name.
+   *
+   * @returns string observable or value
+   */
+
   getProviderName(): string {
     return this.entityForm.get('additionalInfo.providerName').value;
   }
 
+  /**
+   * is custom provider.
+   *
+   * @returns boolean observable or value
+   */
+
   isCustomProvider(): boolean {
     return this.getProviderName() === 'Custom';
   }
+
+  /**
+   * init templates.
+   *
+   * @param templates templates (OAuth2ClientRegistrationTemplate[])
+   */
 
   private initTemplates(templates: OAuth2ClientRegistrationTemplate[]): void {
     templates.map(provider => {
@@ -221,6 +260,14 @@ export class ClientComponent extends EntityComponent<OAuth2Client, PageLink, OAu
     }));
   }
 
+  /**
+   * change mapper config type.
+   *
+   * @param control control (AbstractControl)
+   * @param type type (MapperType)
+   * @param predefinedValue predefined value (OAuth2MapperConfig)
+   */
+
   private changeMapperConfigType(control: AbstractControl, type: MapperType, predefinedValue?: OAuth2MapperConfig) {
     const mapperConfig = control.get('mapperConfig') as UntypedFormGroup;
     if (type === MapperType.CUSTOM) {
@@ -249,6 +296,13 @@ export class ClientComponent extends EntityComponent<OAuth2Client, PageLink, OAu
     }
   }
 
+  /**
+   * form custom group.
+   *
+   * @param mapperConfigCustom mapper config custom (OAuth2CustomMapperConfig)
+   * @returns UntypedFormGroup observable or value
+   */
+
   private formCustomGroup(mapperConfigCustom?: OAuth2CustomMapperConfig): UntypedFormGroup {
     const customGroup = this.fb.group({
       url: [mapperConfigCustom?.url ? mapperConfigCustom.url : null,
@@ -262,6 +316,13 @@ export class ClientComponent extends EntityComponent<OAuth2Client, PageLink, OAu
     }
     return customGroup;
   }
+
+  /**
+   * form basic group.
+   *
+   * @param mapperConfigBasic mapper config basic (OAuth2BasicMapperConfig)
+   * @returns UntypedFormGroup observable or value
+   */
 
   private formBasicGroup(mapperConfigBasic?: OAuth2BasicMapperConfig): UntypedFormGroup {
     let tenantNamePattern;
@@ -300,6 +361,13 @@ export class ClientComponent extends EntityComponent<OAuth2Client, PageLink, OAu
 
     return basicGroup;
   }
+
+  /**
+   * set provider default value.
+   *
+   * @param provider provider (string)
+   * @param clientRegistration client registration (UntypedFormGroup)
+   */
 
   private setProviderDefaultValue(provider: string, clientRegistration: UntypedFormGroup) {
     if (provider === 'Custom') {

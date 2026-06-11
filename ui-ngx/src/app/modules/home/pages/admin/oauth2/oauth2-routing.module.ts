@@ -28,14 +28,21 @@ import { entityDetailsPageBreadcrumbLabelFunction } from '@home/pages/home-pages
 import { BreadCrumbConfig } from '@shared/components/breadcrumb';
 import { MenuId } from '@core/services/menu.models';
 /**
- * Route resolver: loads oauth2login processing url before activate.
+ * Route resolver: preloads data for oauth2login processing url (home/admin pages).
  */
+
 
 @Injectable()
 export class OAuth2LoginProcessingUrlResolver  {
 
   constructor(private oauth2Service: OAuth2Service) {
   }
+
+  /**
+   * resolve.
+   *
+   * @returns Observable<string> observable or value
+   */
 
   resolve(): Observable<string> {
     return this.oauth2Service.getLoginProcessingUrl();

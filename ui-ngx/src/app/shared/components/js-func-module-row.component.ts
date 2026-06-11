@@ -53,6 +53,12 @@ export interface JsFuncModuleRow {
 
 export const moduleValid = (module: JsFuncModuleRow): boolean => !(!module.alias || !module.moduleLink);
 
+
+/**
+ * Angular component: js func module row (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-js-func-module-row`.
+ */
 @Component({
     selector: 'tb-js-func-module-row',
     templateUrl: './js-func-module-row.component.html',
@@ -70,10 +76,7 @@ export const moduleValid = (module: JsFuncModuleRow): boolean => !(!module.alias
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: js func module row UI.
- */
+standalone: false
 })
 export class JsFuncModuleRowComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -105,6 +108,11 @@ export class JsFuncModuleRowComponent implements ControlValueAccessor, OnInit, V
               private translate: TranslateService,
               private destroyRef: DestroyRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.moduleRowFormGroup = this.fb.group({
       alias: [null, [this.moduleAliasValidator(), Validators.pattern(/^[$_\p{ID_Start}][$\p{ID_Continue}]*$/u)]],
@@ -117,12 +125,30 @@ export class JsFuncModuleRowComponent implements ControlValueAccessor, OnInit, V
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (JsFuncModuleRow)
+   */
 
   writeValue(value: JsFuncModuleRow): void {
     this.modelValue = value;
@@ -134,6 +160,12 @@ export class JsFuncModuleRowComponent implements ControlValueAccessor, OnInit, V
     );
     this.cd.markForCheck();
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   public validate(_c: UntypedFormControl) {
     const aliasControl = this.moduleRowFormGroup.get('alias');
@@ -161,6 +193,12 @@ export class JsFuncModuleRowComponent implements ControlValueAccessor, OnInit, V
     return null;
   }
 
+  /**
+   * load module description.
+   *
+   * @returns Observable<string> | null observable or value
+   */
+
   private loadModuleDescription(): Observable<string> | null {
     const moduleLink = this.moduleRowFormGroup.get('moduleLink').value;
     if (moduleLink) {
@@ -171,6 +209,12 @@ export class JsFuncModuleRowComponent implements ControlValueAccessor, OnInit, V
     }
   }
 
+  /**
+   * load module source code.
+   *
+   * @returns Observable<string> | null observable or value
+   */
+
   private loadModuleSourceCode(): Observable<string> | null {
     const moduleLink = this.moduleRowFormGroup.get('moduleLink').value;
     if (moduleLink) {
@@ -180,6 +224,12 @@ export class JsFuncModuleRowComponent implements ControlValueAccessor, OnInit, V
       return null;
     }
   }
+
+  /**
+   * module alias validator.
+   *
+   * @returns ValidatorFn observable or value
+   */
 
   private moduleAliasValidator(): ValidatorFn {
     return control => {
@@ -196,6 +246,11 @@ export class JsFuncModuleRowComponent implements ControlValueAccessor, OnInit, V
       return null;
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: JsFuncModuleRow = this.moduleRowFormGroup.value;

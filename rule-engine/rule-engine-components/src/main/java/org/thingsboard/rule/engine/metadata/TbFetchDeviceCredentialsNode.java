@@ -33,7 +33,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Rule engine enrichment node 'fetch device credentials': Adds device credentials to the message or message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>fetch device credentials</b>.
+ *
+ * <p>Adds device credentials to the message or message metadata
+ * <br>if message originator type is Device and device credentials was successfully fetched, 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbFetchDeviceCredentialsNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/fetch-device-credentials/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/fetch-device-credentials/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -53,11 +59,27 @@ public class TbFetchDeviceCredentialsNode extends TbAbstractNodeWithFetchTo<TbFe
 
     private static final String CREDENTIALS = "credentials";
     private static final String CREDENTIALS_TYPE = "credentialsType";
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbFetchDeviceCredentialsNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbFetchDeviceCredentialsNodeConfiguration loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbFetchDeviceCredentialsNodeConfiguration.class);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
@@ -91,6 +113,14 @@ public class TbFetchDeviceCredentialsNode extends TbAbstractNodeWithFetchTo<TbFe
         TbMsg transformedMsg = transformMessage(msg, msgDataAsObjectNode, metaData);
         ctx.tellSuccess(transformedMsg);
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

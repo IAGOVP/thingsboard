@@ -26,13 +26,21 @@ import BaseGauge = CanvasGauges.BaseGauge;
 
 // @dynamic
 /**
- * tb analogue radial gauge.
+ * Tb analogue radial gauge (ThingsBoard web UI).
  */
+
 export class TbAnalogueRadialGauge extends TbAnalogueGauge<AnalogueRadialGaugeSettings, RadialGaugeOptions>{
 
   constructor(ctx: WidgetContext, canvasId: string) {
     super(ctx, canvasId);
   }
+
+  /**
+   * prepare gauge options.
+   *
+   * @param settings settings (AnalogueRadialGaugeSettings)
+   * @param gaugeData gauge data (RadialGaugeOptions)
+   */
 
   protected prepareGaugeOptions(settings: AnalogueRadialGaugeSettings, gaugeData: RadialGaugeOptions) {
     gaugeData.ticksAngle = settings.ticksAngle || 270;
@@ -53,6 +61,13 @@ export class TbAnalogueRadialGauge extends TbAnalogueGauge<AnalogueRadialGaugeSe
     // custom animations
     gaugeData.animationTarget = 'needle'; // 'needle' or 'plate'
   }
+
+  /**
+   * POST/PUT entity — create gauge.
+   *
+   * @param gaugeData gauge data (RadialGaugeOptions)
+   * @returns BaseGauge observable or value
+   */
 
   protected createGauge(gaugeData: RadialGaugeOptions): BaseGauge {
     return new RadialGauge(gaugeData);

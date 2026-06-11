@@ -75,15 +75,18 @@ const shapeWidth = 149;
 const shapeHeight = 113;
 const shapeAspect = shapeWidth / shapeHeight;
 
+
+/**
+ * Angular component: signal strength widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-signal-strength-widget`.
+ */
 @Component({
     selector: 'tb-signal-strength-widget',
     templateUrl: './signal-strength-widget.component.html',
     styleUrls: ['./signal-strength-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: signal strength widget UI.
- */
+standalone: false
 })
 export class SignalStrengthWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -159,6 +162,11 @@ export class SignalStrengthWidgetComponent implements OnInit, OnDestroy, AfterVi
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.signalStrengthWidget = this;
     this.settings = {...signalStrengthDefaultSettings, ...this.ctx.settings};
@@ -213,17 +221,32 @@ export class SignalStrengthWidgetComponent implements OnInit, OnDestroy, AfterVi
     this.hasCardClickAction = this.ctx.actionsApi.getActionDescriptors('cardClick').length > 0;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     if (this.drawSvgShapePending) {
       this.drawSvg();
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.shapeResize$) {
       this.shapeResize$.disconnect();
     }
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
@@ -235,6 +258,11 @@ export class SignalStrengthWidgetComponent implements OnInit, OnDestroy, AfterVi
     }
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     const tsValue = getSingleTsValue(this.ctx.data);
@@ -278,9 +306,19 @@ export class SignalStrengthWidgetComponent implements OnInit, OnDestroy, AfterVi
     this.renderValues();
   }
 
+  /**
+   * card click.
+   *
+   */
+
   public cardClick($event: Event) {
     this.ctx.actionsApi.cardClick($event);
   }
+
+  /**
+   * draw svg.
+   *
+   */
 
   private drawSvg() {
     this.svgShape = SVG().addTo(this.signalStrengthShape.nativeElement).size(shapeWidth, shapeHeight);
@@ -335,6 +373,11 @@ export class SignalStrengthWidgetComponent implements OnInit, OnDestroy, AfterVi
     this.renderValues();
   }
 
+  /**
+   * render values.
+   *
+   */
+
   private renderValues() {
     if (this.svgShape) {
       const activeBarsColor = tinycolor(this.activeBarsColor.color);
@@ -354,6 +397,12 @@ export class SignalStrengthWidgetComponent implements OnInit, OnDestroy, AfterVi
       this.renderCenterText(centerText);
     }
   }
+
+  /**
+   * render center text.
+   *
+   * @param text text (string)
+   */
 
   private renderCenterText(text: string) {
     if (this.lastCenterText !== text) {
@@ -380,6 +429,11 @@ export class SignalStrengthWidgetComponent implements OnInit, OnDestroy, AfterVi
       this.lastCenterText = text;
     }
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const shapeContainerWidth = this.signalStrengthShape.nativeElement.getBoundingClientRect().width;

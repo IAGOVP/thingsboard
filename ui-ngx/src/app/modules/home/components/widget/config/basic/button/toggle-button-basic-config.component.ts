@@ -32,14 +32,17 @@ import {
 
 type ButtonAppearanceType = 'checked' | 'unchecked';
 
+
+/**
+ * Angular component: toggle button basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-toggle-button-basic-config`.
+ */
 @Component({
     selector: 'tb-toggle-button-basic-config',
     templateUrl: './toggle-button-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: toggle button basic config UI.
- */
+standalone: false
 })
 export class ToggleButtonBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -61,9 +64,21 @@ export class ToggleButtonBasicConfigComponent extends BasicWidgetConfigComponent
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.toggleButtonWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: ToggleButtonWidgetSettings = {...toggleButtonDefaultSettings, ...(configData.config.settings || {})};
@@ -104,6 +119,13 @@ export class ToggleButtonBasicConfigComponent extends BasicWidgetConfigComponent
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.targetDevice = config.targetDevice;
 
@@ -141,9 +163,22 @@ export class ToggleButtonBasicConfigComponent extends BasicWidgetConfigComponent
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon', 'autoScale'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.toggleButtonWidgetConfigForm.get('showTitle').value;
@@ -184,6 +219,13 @@ export class ToggleButtonBasicConfigComponent extends BasicWidgetConfigComponent
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -191,6 +233,13 @@ export class ToggleButtonBasicConfigComponent extends BasicWidgetConfigComponent
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

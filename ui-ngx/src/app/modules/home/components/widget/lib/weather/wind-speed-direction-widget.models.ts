@@ -46,11 +46,11 @@ export const windSpeedDirectionLayoutImages = new Map<WindSpeedDirectionLayout, 
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for wind speed direction widget settings.
-
+ * Wind speed direction widget settings (ThingsBoard web UI).
  */
+
 
 export interface WindSpeedDirectionWidgetSettings {
   layout: WindSpeedDirectionLayout;

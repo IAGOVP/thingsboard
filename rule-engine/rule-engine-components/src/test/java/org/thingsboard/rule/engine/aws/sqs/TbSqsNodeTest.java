@@ -59,8 +59,9 @@ import static org.mockito.BDDMockito.never;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.verifyNoMoreInteractions;
 /**
- * Unit test for tb sqs node rule node.
+ * Unit test for tb sqs node (AWS integration nodes (SQS, SNS, Lambda)).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbSqsNodeTest {

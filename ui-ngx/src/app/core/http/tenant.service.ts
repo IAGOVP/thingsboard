@@ -23,7 +23,9 @@ import { PageData } from '@shared/models/page/page-data';
 import { Tenant, TenantInfo } from '@shared/models/tenant.model';
 
 /**
- * Tenant CRUD and tenant admin users via `/api/tenant*`.
+ * Tenant CRUD and tenant admin user management.
+ *
+ * <p>REST base: `/api/tenant*`.
  */
 @Injectable({
   providedIn: 'root'
@@ -34,41 +36,96 @@ export class TenantService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/tenants${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenants.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<Tenant>> observable or value
+   */
+
 
   public getTenants(pageLink: PageLink, config?: RequestConfig): Observable<PageData<Tenant>> {
     return this.http.get<PageData<Tenant>>(`/api/tenants${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenants?tenantIds=${tenantIds.join(, ...`. */
+  
+  /**
+   * get tenants by ids.
+   *
+   * @param tenantIds tenant ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<Tenant>> observable or value
+   */
+
 
   public getTenantsByIds(tenantIds: Array<string>, config?: RequestConfig): Observable<Array<Tenant>> {
     return this.http.get<Array<Tenant>>(`/api/tenants?tenantIds=${tenantIds.join(',')}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenantInfos${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<TenantInfo>> observable or value
+   */
+
 
   public getTenantInfos(pageLink: PageLink, config?: RequestConfig): Observable<PageData<TenantInfo>> {
     return this.http.get<PageData<TenantInfo>>(`/api/tenantInfos${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/${tenantId}, ...`. */
+  
+  /**
+   * get tenant.
+   *
+   * @param tenantId tenant UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Tenant> observable or value
+   */
+
 
   public getTenant(tenantId: string, config?: RequestConfig): Observable<Tenant> {
     return this.http.get<Tenant>(`/api/tenant/${tenantId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/info/${tenantId}, ...`. */
+  
+  /**
+   * get tenant info.
+   *
+   * @param tenantId tenant UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TenantInfo> observable or value
+   */
+
 
   public getTenantInfo(tenantId: string, config?: RequestConfig): Observable<TenantInfo> {
     return this.http.get<TenantInfo>(`/api/tenant/info/${tenantId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant, ...`. */
+  
+  /**
+   * POST/PUT entity — save tenant.
+   *
+   * @param tenant tenant (Tenant)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Tenant> observable or value
+   */
+
 
   public saveTenant(tenant: Tenant, config?: RequestConfig): Observable<Tenant> {
     return this.http.post<Tenant>('/api/tenant', tenant, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * DELETE — delete tenant.
+   *
+   * @param tenantId tenant UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public deleteTenant(tenantId: string, config?: RequestConfig) {
     return this.http.delete(`/api/tenant/${tenantId}`, defaultHttpOptionsFromConfig(config));

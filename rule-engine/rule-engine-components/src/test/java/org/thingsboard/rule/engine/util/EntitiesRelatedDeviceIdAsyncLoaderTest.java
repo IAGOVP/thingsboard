@@ -44,8 +44,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for entities related device id async loader rule node.
+ * Unit test for entities related device id async loader (shared rule-engine utilities and async loaders).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class EntitiesRelatedDeviceIdAsyncLoaderTest {
@@ -57,6 +58,11 @@ public class EntitiesRelatedDeviceIdAsyncLoaderTest {
     private TbContext ctxMock;
     @Mock
     private DeviceService deviceServiceMock;
+    /**
+     * Given device relations query when find device async should build correct device search query.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDeviceRelationsQuery_whenFindDeviceAsync_ShouldBuildCorrectDeviceSearchQuery() {
@@ -90,6 +96,11 @@ public class EntitiesRelatedDeviceIdAsyncLoaderTest {
         // THEN
         verify(deviceServiceMock, times(1)).findDevicesByQuery(eq(TENANT_ID), eq(expectedDeviceSearchQuery));
     }
+    /**
+     * Given several devices found when find device async should keep one and discard others.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenSeveralDevicesFound_whenFindDeviceAsync_ShouldKeepOneAndDiscardOthers() throws Exception {

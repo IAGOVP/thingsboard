@@ -107,7 +107,9 @@ const extractSelectorFromComponent = (comp: ɵComponentDef<any>): string => {
 }
 
 /**
- * Angular HTTP service: resources REST wrappers (`@core/http`).
+ * Angular injectable service: resources (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -153,6 +155,13 @@ export class ResourcesService {
     return subject.asObservable();
   }
 
+  /**
+   * load resource.
+   *
+   * @param url url (string)
+   * @returns Observable<any> observable or value
+   */
+
   public loadResource(url: string): Observable<any> {
     if (this.loadedResources[url]) {
       return this.loadedResources[url].asObservable();
@@ -170,6 +179,14 @@ export class ResourcesService {
     }
     return this.loadResourceByType(fileType, url);
   }
+
+  /**
+   * download resource.
+   *
+   * @param downloadUrl download url (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
 
   public downloadResource(downloadUrl: string, config?: RequestConfig): Observable<any> {
     return this.http.get(downloadUrl, {...config, ...{
@@ -201,6 +218,14 @@ export class ResourcesService {
       })
     );
   }
+
+  /**
+   * load modules with components.
+   *
+   * @param resourceId resource id (string | TbResourceId)
+   * @param modulesMap modules map (IModulesMap)
+   * @returns Observable<ModulesWithComponents> observable or value
+   */
 
   public loadModulesWithComponents(resourceId: string | TbResourceId, modulesMap: IModulesMap): Observable<ModulesWithComponents> {
     const url = this.getDownloadUrl(resourceId);
@@ -354,6 +379,14 @@ export class ResourcesService {
     return modulesWithComponents;
   }
 
+  /**
+   * load resource by type.
+   *
+   * @param type type ('css' | 'js')
+   * @param url url (string)
+   * @returns Observable<any> observable or value
+   */
+
   private loadResourceByType(type: 'css' | 'js', url: string): Observable<any> {
     const subject = new ReplaySubject<void>();
     this.loadedResources[url] = subject;
@@ -388,12 +421,26 @@ export class ResourcesService {
     return subject.asObservable();
   }
 
+  /**
+   * get download url.
+   *
+   * @param resourceId resource id (string | TbResourceId)
+   * @returns string observable or value
+   */
+
   private getDownloadUrl(resourceId: string | TbResourceId): string {
     if (isObject(resourceId)) {
       return `/api/resource/js/${(resourceId as TbResourceId).id}/download`;
     }
     return removeTbResourcePrefix(resourceId as string);
   }
+
+  /**
+   * get meta info.
+   *
+   * @param resourceId resource id (string | TbResourceId)
+   * @returns object observable or value
+   */
 
   private getMetaInfo(resourceId: string | TbResourceId): object {
     if (isObject(resourceId) || (typeof resourceId === 'string' && isJSResource(resourceId))) {
@@ -404,6 +451,11 @@ export class ResourcesService {
       };
     }
   }
+
+  /**
+   * clear modules with components cache.
+   *
+   */
 
   private clearModulesWithComponentsCache() {
     this.loadedModulesWithComponents = {};

@@ -40,20 +40,34 @@ import java.util.Set;
  * Only wired into {@link TbHttpClient} when SSRF protection is enabled.
  */
 /**
- * Rule engine component: ssrf safe address resolver group.
+ * Ssrf safe address resolver group (outbound REST API call nodes).
  */
+
 public final class SsrfSafeAddressResolverGroup extends AddressResolverGroup<InetSocketAddress> {
 
     public static final SsrfSafeAddressResolverGroup INSTANCE = new SsrfSafeAddressResolverGroup();
 
     private SsrfSafeAddressResolverGroup() {
     }
+    /**
+     * New resolver.
+     *
+     * @param executor executor ({@link EventExecutor})
+     * @return {@link AddressResolver}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected AddressResolver<InetSocketAddress> newResolver(EventExecutor executor) throws Exception {
         AddressResolver<InetSocketAddress> delegate = DefaultAddressResolverGroup.INSTANCE.getResolver(executor);
         return new SsrfValidatingResolver(executor, delegate);
     }
+
+    /**
+
+     * Ssrf validating resolver (outbound REST API call nodes).
+
+     */
 
     private static final class SsrfValidatingResolver implements AddressResolver<InetSocketAddress> {
 
@@ -64,21 +78,50 @@ public final class SsrfSafeAddressResolverGroup extends AddressResolverGroup<Ine
             this.executor = executor;
             this.delegate = delegate;
         }
+    /**
+     * Is supported.
+     *
+     * @param address address ({@link SocketAddress})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public boolean isSupported(SocketAddress address) {
             return delegate.isSupported(address);
         }
+    /**
+     * Is resolved.
+     *
+     * @param address address ({@link SocketAddress})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public boolean isResolved(SocketAddress address) {
             return delegate.isResolved(address);
         }
+    /**
+     * Resolve.
+     *
+     * @param address address ({@link SocketAddress})
+     * @return {@link Future}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public Future<InetSocketAddress> resolve(SocketAddress address) {
             return resolve(address, executor.newPromise());
         }
+    /**
+     * Resolve.
+     *
+     * @param address address ({@link SocketAddress})
+     * @param promise promise ({@link Promise})
+     * @return {@link Future}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public Future<InetSocketAddress> resolve(SocketAddress address, Promise<InetSocketAddress> promise) {
@@ -103,11 +146,26 @@ public final class SsrfSafeAddressResolverGroup extends AddressResolverGroup<Ine
             });
             return promise;
         }
+    /**
+     * Resolve all.
+     *
+     * @param address address ({@link SocketAddress})
+     * @return {@link Future}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public Future<List<InetSocketAddress>> resolveAll(SocketAddress address) {
             return resolveAll(address, executor.newPromise());
         }
+    /**
+     * Resolve all.
+     *
+     * @param address address ({@link SocketAddress})
+     * @param promise promise ({@link Promise})
+     * @return {@link Future}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public Future<List<InetSocketAddress>> resolveAll(SocketAddress address, Promise<List<InetSocketAddress>> promise) {
@@ -151,6 +209,11 @@ public final class SsrfSafeAddressResolverGroup extends AddressResolverGroup<Ine
             });
             return promise;
         }
+    /**
+     * Close.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public void close() {

@@ -30,14 +30,17 @@ export interface MakeDashboardPublicDialogData {
   dashboard: DashboardInfo;
 }
 
+
+/**
+ * Angular component: make dashboard public dialog (home/dashboard pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-make-dashboard-public-dialog`.
+ */
 @Component({
     selector: 'tb-make-dashboard-public-dialog',
     templateUrl: './make-dashboard-public-dialog.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: make dashboard public dialog UI.
- */
+standalone: false
 })
 export class MakeDashboardPublicDialogComponent extends DialogComponent<MakeDashboardPublicDialogComponent> implements OnInit {
 
@@ -58,12 +61,34 @@ export class MakeDashboardPublicDialogComponent extends DialogComponent<MakeDash
     this.publicLink = dashboardService.getPublicDashboardLink(this.dashboard);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     this.dialogRef.close();
   }
+
+
+  /**
+
+
+   * Event handler for public link copied.
+
+
+   *
+
+
+   */
 
 
   onPublicLinkCopied($event) {

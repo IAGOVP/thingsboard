@@ -16,14 +16,17 @@
 
 import { AfterViewInit, Component, ElementRef } from '@angular/core';
 
+
+/**
+ * Angular component: toggle password (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-toggle-password`.
+ */
 @Component({
     selector: 'tb-toggle-password',
     templateUrl: 'toggle-password.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: toggle password UI.
- */
+standalone: false
 })
 export class TogglePasswordComponent implements AfterViewInit {
   showPassword = false;
@@ -33,11 +36,21 @@ export class TogglePasswordComponent implements AfterViewInit {
 
   constructor(private hostElement: ElementRef) { }
 
+  /**
+   * toggle password.
+   *
+   */
+
   togglePassword($event: Event) {
     $event.stopPropagation();
     this.showPassword = !this.showPassword;
     this.input.type = this.showPassword ? 'text' : 'password';
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.input = this.hostElement.nativeElement.closest('mat-form-field').querySelector('input[type="password"]');

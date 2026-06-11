@@ -25,8 +25,9 @@ import org.thingsboard.monitoring.config.transport.TransportMonitoringTarget;
 import org.thingsboard.monitoring.config.transport.TransportType;
 import org.thingsboard.monitoring.service.BaseHealthChecker;
 /**
- * Marker for transport-specific {@link BaseHealthChecker} beans.
+ * Marker interface for transport-specific {@link BaseHealthChecker} Spring beans.
  */
+
 
 @Slf4j
 public abstract class TransportHealthChecker<C extends TransportMonitoringConfig> extends BaseHealthChecker<C, TransportMonitoringTarget> {
@@ -37,28 +38,65 @@ public abstract class TransportHealthChecker<C extends TransportMonitoringConfig
     public TransportHealthChecker(C config, TransportMonitoringTarget target) {
         super(config, target);
     }
+    /**
+     * Initialize.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void initialize() {
         entityService.checkEntities(config, target);
     }
+    /**
+     * Creates test payload.
+     *
+     * @param testValue test value ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String createTestPayload(String testValue) {
         return JacksonUtil.newObjectNode().set(TEST_TELEMETRY_KEY, new TextNode(testValue)).toString();
     }
+    /**
+     * Returns info.
+     *
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Object getInfo() {
         return new TransportInfo(getTransportType(), target);
     }
+    /**
+     * Returns key.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getKey() {
         return getTransportType().name().toLowerCase() + (target.getQueue().equals("Main") ? "" : target.getQueue()) + "Transport";
     }
+    /**
+     * Returns transport type.
+     *
+     * @return {@link TransportType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract TransportType getTransportType();
+    /**
+     * Is cf monitoring enabled.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean isCfMonitoringEnabled() {

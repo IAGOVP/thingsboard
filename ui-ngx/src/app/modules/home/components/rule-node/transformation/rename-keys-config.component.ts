@@ -22,14 +22,17 @@ import { FetchTo, FetchToRenameTranslation } from '../rule-node-config.models';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
 
+
+/**
+ * Angular component: rename keys config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-transformation-node-rename-keys-config`.
+ */
 @Component({
     selector: 'tb-transformation-node-rename-keys-config',
     templateUrl: './rename-keys-config.component.html',
     styleUrls: ['./rename-keys-config.component.scss'],
-    standalone: false
-/**
- * Angular component: rename keys config UI.
- */
+standalone: false
 })
 export class RenameKeysConfigComponent extends RuleNodeConfigurationComponent {
   renameKeysConfigForm: FormGroup;
@@ -47,9 +50,21 @@ export class RenameKeysConfigComponent extends RuleNodeConfigurationComponent {
     }
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.renameKeysConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.renameKeysConfigForm = this.fb.group({
@@ -57,6 +72,13 @@ export class RenameKeysConfigComponent extends RuleNodeConfigurationComponent {
       renameKeysMapping: [configuration ? configuration.renameKeysMapping : null, [Validators.required]]
     });
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     let renameIn: FetchTo;

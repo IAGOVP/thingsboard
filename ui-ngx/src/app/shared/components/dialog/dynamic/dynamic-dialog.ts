@@ -24,8 +24,9 @@ export interface DynamicMatDialogConfig<D> extends MatDialogConfig<D> {
   containerElement?: HTMLElement;
 }
 /**
- * dynamic mat dialog.
+ * Dynamic mat dialog (shared UI components).
  */
+
 
 @Injectable()
 export class DynamicMatDialog extends MatDialog {

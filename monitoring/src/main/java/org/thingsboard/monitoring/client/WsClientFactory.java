@@ -28,8 +28,11 @@ import org.thingsboard.monitoring.util.TbStopWatch;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 /**
- * Creates {@link WsClient} instances authenticated with a JWT from {@link TbClient}.
+ * Factory for authenticated {@link WsClient} instances.
+ *
+ * <p>Uses JWT from {@link TbClient#logIn()} for WebSocket session setup.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -41,6 +44,13 @@ public class WsClientFactory {
     private String baseUrl;
     @Value("${monitoring.ws.request_timeout_ms}")
     private int requestTimeoutMs;
+    /**
+     * Creates client.
+     *
+     * @param accessToken access token ({@link String})
+     * @return {@link WsClient}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WsClient createClient(String accessToken) throws Exception {
         URI uri = new URI(baseUrl + "/api/ws/plugins/telemetry?token=" + accessToken);

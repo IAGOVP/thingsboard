@@ -233,15 +233,23 @@ export interface WidgetButtonToggleCustomStyle {
 
 export type WidgetButtonToggleCustomStyles = Record<WidgetButtonToggleState, WidgetButtonToggleCustomStyle>;
 
+
 /**
-
- * TypeScript models and enums for button toggle state css generator.
-
+ * Button toggle state css generator (ThingsBoard web UI).
  */
+
 
 export abstract class ButtonToggleStateCssGenerator {
 
   constructor() {}
+
+  /**
+   * generate state css.
+   *
+   * @param selectedAppearance selected appearance (SegmentedButtonStyles)
+   * @param unselectedAppearance unselected appearance (SegmentedButtonStyles)
+   * @returns string observable or value
+   */
 
   public generateStateCss(selectedAppearance: SegmentedButtonStyles, unselectedAppearance: SegmentedButtonStyles): string {
     const selectedColor = this.getColors(selectedAppearance);
@@ -254,6 +262,12 @@ export abstract class ButtonToggleStateCssGenerator {
         `${backgroundUncheckedColorVarPrefix}${this.state}: ${unselectedColor.backgroundColor};\n`+
         `${borderUncheckedColorVarPrefix}${this.state}: ${unselectedColor.borderColor};`;
   }
+
+  /**
+   * get colors.
+   *
+   * @param appearance appearance (SegmentedButtonStyles)
+   */
 
   private getColors(appearance: SegmentedButtonStyles) {
     let mainColor = this.getMainColor(appearance);
@@ -278,13 +292,33 @@ export abstract class ButtonToggleStateCssGenerator {
 
   protected abstract get state(): WidgetButtonToggleState;
 
+  /**
+   * get main color.
+   *
+   * @param appearance appearance (SegmentedButtonStyles)
+   * @returns string observable or value
+   */
+
   protected getMainColor(appearance: SegmentedButtonStyles): string {
     return appearance.mainColor || defaultMainColor;
   }
 
+  /**
+   * get background color.
+   *
+   * @param appearance appearance (SegmentedButtonStyles)
+   * @returns string observable or value
+   */
+
   protected getBackgroundColor(appearance: SegmentedButtonStyles): string {
     return appearance.backgroundColor || defaultBackgroundColor;
   }
+
+  /**
+   * get border color.
+   *
+   * @returns string observable or value
+   */
 
   protected getBorderColor(): string {
     return defaultBorderColor;

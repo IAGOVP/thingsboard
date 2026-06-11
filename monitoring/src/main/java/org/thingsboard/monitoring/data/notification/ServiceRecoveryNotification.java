@@ -17,11 +17,13 @@ package org.thingsboard.monitoring.data.notification;
 
 import java.util.List;
 
+
 /**
 
- * Alert when a previously failing service succeeds again.
+ * Alert when a previously failing monitored service succeeds again.
 
  */
+
 
 public class ServiceRecoveryNotification implements Notification {
 
@@ -30,11 +32,23 @@ public class ServiceRecoveryNotification implements Notification {
     public ServiceRecoveryNotification(Object serviceKey) {
         this.serviceKey = serviceKey;
     }
+    /**
+     * Returns text.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getText() {
         return String.format("%s is OK", serviceKey);
     }
+    /**
+     * Returns affected services.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<AffectedService> getAffectedServices() {

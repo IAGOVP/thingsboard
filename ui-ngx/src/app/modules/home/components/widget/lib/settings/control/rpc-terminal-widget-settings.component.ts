@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: rpc terminal widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rpc-terminal-widget-settings`.
+ */
 @Component({
     selector: 'tb-rpc-terminal-widget-settings',
     templateUrl: './rpc-terminal-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: rpc terminal widget settings UI.
- */
+standalone: false
 })
 export class RpcTerminalWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class RpcTerminalWidgetSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.rpcTerminalWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -49,6 +64,12 @@ export class RpcTerminalWidgetSettingsComponent extends WidgetSettingsComponent 
       persistentPollingInterval: 5000
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.rpcTerminalWidgetSettingsForm = this.fb.group({
@@ -63,9 +84,21 @@ export class RpcTerminalWidgetSettingsComponent extends WidgetSettingsComponent 
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['requestPersistent'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean): void {
     const requestPersistent: boolean = this.rpcTerminalWidgetSettingsForm.get('requestPersistent').value;

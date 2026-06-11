@@ -38,6 +38,12 @@ interface TimeUnitInputModel {
   timeUnit: TimeUnit
 }
 
+
+/**
+ * Angular component: time unit input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-unit-input`.
+ */
 @Component({
     selector: 'tb-time-unit-input',
     templateUrl: './time-unit-input.component.html',
@@ -50,10 +56,7 @@ interface TimeUnitInputModel {
             useExisting: forwardRef(() => TimeUnitInputComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: time unit input UI.
- */
+standalone: false
 })
 export class TimeUnitInputComponent implements ControlValueAccessor, Validator, OnInit, OnChanges {
 
@@ -134,6 +137,11 @@ export class TimeUnitInputComponent implements ControlValueAccessor, Validator, 
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (isDefinedAndNotNull(this.maxTime)) {
       this.updatedAllowTimeUnitInterval(this.maxTime);
@@ -188,12 +196,30 @@ export class TimeUnitInputComponent implements ControlValueAccessor, Validator, 
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any) {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
@@ -205,6 +231,12 @@ export class TimeUnitInputComponent implements ControlValueAccessor, Validator, 
       }
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param sec sec (number)
+   */
 
   writeValue(sec: number) {
     if (sec !== this.modelValue) {
@@ -221,11 +253,23 @@ export class TimeUnitInputComponent implements ControlValueAccessor, Validator, 
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.timeInputForm.disabled || this.timeInputForm.valid ? null : {
       timeInput: false
     };
   }
+
+  /**
+   * updated model.
+   *
+   * @param value value (Partial<TimeUnitInputModel>)
+   */
 
   private updatedModel(value: Partial<TimeUnitInputModel>, forceUpdated = false) {
     const time = isDefinedAndNotNull(value.time) ? value.time * this.timeIntervalsInSec.get(value.timeUnit) : null;
@@ -234,6 +278,13 @@ export class TimeUnitInputComponent implements ControlValueAccessor, Validator, 
       this.propagateChange(time);
     }
   }
+
+  /**
+   * parse time.
+   *
+   * @param value value (number)
+   * @returns TimeUnitInputModel observable or value
+   */
 
   private parseTime(value: number): TimeUnitInputModel {
     for (const [timeUnit, timeValue] of this.timeIntervalsInSec) {
@@ -246,6 +297,12 @@ export class TimeUnitInputComponent implements ControlValueAccessor, Validator, 
       }
     }
   }
+
+  /**
+   * POST/PUT entity — create step multiple of validator.
+   *
+   * @returns ValidatorFn observable or value
+   */
 
   private createStepMultipleOfValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -277,6 +334,12 @@ export class TimeUnitInputComponent implements ControlValueAccessor, Validator, 
     };
   }
 
+  /**
+   * updated allow time unit interval.
+   *
+   * @param maxTime max time (number)
+   */
+
   private updatedAllowTimeUnitInterval(maxTime: number) {
     const maxTimeMs = maxTime * SECOND;
     this.timeUnits = Object.values(TimeUnit).filter(item => item !== TimeUnit.MILLISECONDS) as TimeUnit[];
@@ -288,6 +351,11 @@ export class TimeUnitInputComponent implements ControlValueAccessor, Validator, 
       this.timeUnits = this.timeUnits.filter(item => item !== TimeUnit.DAYS);
     }
   }
+
+  /**
+   * refresh time validators.
+   *
+   */
 
   private refreshTimeValidators() {
     const timeControl = this.timeInputForm.get('time');

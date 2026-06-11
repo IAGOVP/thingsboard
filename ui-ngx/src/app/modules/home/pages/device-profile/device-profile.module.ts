@@ -25,6 +25,9 @@ import { DeviceProfileRoutingModule } from './device-profile-routing.module';
 /**
  * Angular NgModule: device profile feature area.
  */
+/**
+ * Angular NgModule bundling device profile (home/device-profile pages).
+ */
 @NgModule({
   declarations: [
     DeviceProfileTabsComponent
@@ -34,5 +37,5 @@ import { DeviceProfileRoutingModule } from './device-profile-routing.module';
     SharedModule,
     HomeComponentsModule,
     DeviceProfileRoutingModule
-  ]})
+]})
 export class DeviceProfileModule { }

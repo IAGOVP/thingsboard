@@ -34,6 +34,9 @@ import {
 /**
  * Angular NgModule: entity aggregation component feature area.
  */
+/**
+ * Angular NgModule bundling entity aggregation component (ThingsBoard web UI).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -47,6 +50,6 @@ import {
   ],
   exports: [
     EntityAggregationComponentComponent,
-  ]})
+]})
 export class EntityAggregationComponentModule {
 }

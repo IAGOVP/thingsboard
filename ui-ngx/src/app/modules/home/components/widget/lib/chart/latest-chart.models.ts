@@ -21,11 +21,11 @@ import { CallbackDataParams } from 'echarts/types/dist/shared';
 import { formatValue, isDefinedAndNotNull, mergeDeep } from '@core/utils';
 import { chartAnimationDefaultSettings, ChartAnimationSettings } from '@home/components/widget/lib/chart/chart.models';
 
+
 /**
-
- * TypeScript models and enums for latest chart data item.
-
+ * Latest chart data item (ThingsBoard web UI).
  */
+
 
 export interface LatestChartDataItem {
   id: number;

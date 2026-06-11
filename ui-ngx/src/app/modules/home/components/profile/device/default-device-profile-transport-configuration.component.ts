@@ -31,6 +31,12 @@ import { AppState } from '@app/core/core.state';
 import { DefaultDeviceProfileTransportConfiguration, DeviceTransportType } from '@shared/models/device.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: default device profile transport configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-default-device-profile-transport-configuration`.
+ */
 @Component({
     selector: 'tb-default-device-profile-transport-configuration',
     templateUrl: './default-device-profile-transport-configuration.component.html',
@@ -47,10 +53,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: default device profile transport configuration UI.
- */
+standalone: false
 })
 export class DefaultDeviceProfileTransportConfigurationComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -66,12 +69,29 @@ export class DefaultDeviceProfileTransportConfigurationComponent implements Cont
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.defaultDeviceProfileTransportConfigurationFormGroup = this.fb.group({
@@ -84,6 +104,12 @@ export class DefaultDeviceProfileTransportConfigurationComponent implements Cont
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -93,9 +119,22 @@ export class DefaultDeviceProfileTransportConfigurationComponent implements Cont
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DefaultDeviceProfileTransportConfiguration | null)
+   */
+
   writeValue(value: DefaultDeviceProfileTransportConfiguration | null): void {
     this.defaultDeviceProfileTransportConfigurationFormGroup.patchValue({configuration: value}, {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(c: UntypedFormControl): ValidationErrors | null {
     return (this.defaultDeviceProfileTransportConfigurationFormGroup.valid) ? null : {
@@ -104,6 +143,11 @@ export class DefaultDeviceProfileTransportConfigurationComponent implements Cont
       }
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const configuration = this.defaultDeviceProfileTransportConfigurationFormGroup.getRawValue().configuration;

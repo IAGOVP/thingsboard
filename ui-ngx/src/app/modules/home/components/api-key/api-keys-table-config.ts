@@ -41,8 +41,9 @@ import {
   ApiKeyGeneratedDialogData
 } from '@home/components/api-key/api-key-generated-dialog.component';
 /**
- * api keys table config.
+ * Api keys table config (ThingsBoard web UI).
  */
+
 
 @Injectable()
 export class ApiKeysTableConfig extends EntityTableConfig<ApiKeyInfo> {
@@ -100,6 +101,12 @@ export class ApiKeysTableConfig extends EntityTableConfig<ApiKeyInfo> {
     );
   }
 
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<ApiKeyInfo>> observable or value
+   */
+
   private configureCellActions(): Array<CellActionDescriptor<ApiKeyInfo>> {
     const actions: Array<CellActionDescriptor<ApiKeyInfo>> = [];
     actions.push(
@@ -114,6 +121,12 @@ export class ApiKeysTableConfig extends EntityTableConfig<ApiKeyInfo> {
     )
     return actions;
   }
+
+  /**
+   * POST/PUT entity — add api key.
+   *
+   * @returns Observable<ApiKey> observable or value
+   */
 
   private addApiKey(): Observable<ApiKey> {
     return this.dialog.open<AddApiKeyDialogComponent, ApiKeysTableDialogData, ApiKey>(AddApiKeyDialogComponent, {
@@ -131,6 +144,12 @@ export class ApiKeysTableConfig extends EntityTableConfig<ApiKeyInfo> {
     }));
   }
 
+  /**
+   * api key generated.
+   *
+   * @param apiKey api key (ApiKey)
+   */
+
   private apiKeyGenerated(apiKey: ApiKey) {
     this.dialog.open<ApiKeyGeneratedDialogComponent, ApiKeyGeneratedDialogData>(ApiKeyGeneratedDialogComponent, {
       disableClose: true,
@@ -144,6 +163,12 @@ export class ApiKeysTableConfig extends EntityTableConfig<ApiKeyInfo> {
       });
   }
 
+  /**
+   * toggle enable mode.
+   *
+   * @param entity entity (ApiKeyInfo)
+   */
+
   private toggleEnableMode($event: Event, entity: ApiKeyInfo): void {
     if ($event) {
       $event.stopPropagation();
@@ -153,6 +178,13 @@ export class ApiKeysTableConfig extends EntityTableConfig<ApiKeyInfo> {
         () => this.updateData()
       );
   }
+
+  /**
+   * api key status.
+   *
+   * @param apiKey api key (ApiKeyInfo)
+   * @returns string observable or value
+   */
 
   private apiKeyStatus(apiKey: ApiKeyInfo): string {
     let translateKey = 'api-key.status-active';
@@ -170,6 +202,13 @@ export class ApiKeysTableConfig extends EntityTableConfig<ApiKeyInfo> {
             </div>`;
   }
 
+  /**
+   * api key status style.
+   *
+   * @param apiKey api key (ApiKeyInfo)
+   * @returns object observable or value
+   */
+
   private apiKeyStatusStyle(apiKey: ApiKeyInfo): object {
     const styleObj = {
       fontSize: '14px',
@@ -183,6 +222,12 @@ export class ApiKeysTableConfig extends EntityTableConfig<ApiKeyInfo> {
     }
     return styleObj;
   }
+
+  /**
+   * update api key description.
+   *
+   * @param entity entity (ApiKeyInfo)
+   */
 
   private updateApiKeyDescription($event: Event, entity: ApiKeyInfo) {
     if ($event) {

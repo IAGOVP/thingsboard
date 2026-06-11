@@ -28,8 +28,9 @@ import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNullElseGet;
 /**
- * SUBSCRIBE sent, waiting for SUBACK.
+ * SUBSCRIBE message sent; awaiting SUBACK from broker.
  */
+
 
 @Getter(AccessLevel.PACKAGE)
 final class MqttPendingSubscription {
@@ -63,6 +64,12 @@ final class MqttPendingSubscription {
         retransmissionHandler.setOriginalMessage(subscribeMessage);
     }
 
+    /**
+
+     * Configuration record for mqtt pending handler.
+
+     */
+
     record MqttPendingHandler(MqttHandler handler, boolean once) {}
 
     void addHandler(MqttHandler handler, boolean once) {
@@ -88,6 +95,12 @@ final class MqttPendingSubscription {
     static Builder builder() {
         return new Builder();
     }
+
+    /**
+
+     * Builder (netty-mqtt client library).
+
+     */
 
     static class Builder {
 

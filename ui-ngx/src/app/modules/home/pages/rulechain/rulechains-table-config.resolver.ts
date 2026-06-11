@@ -52,8 +52,9 @@ import { mergeMap } from 'rxjs/operators';
 import { PageData } from '@shared/models/page/page-data';
 import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 /**
- * Route resolver: loads rule chains table config before activate.
+ * Route resolver: preloads data for rule chains table config (home/rulechain pages).
  */
+
 
 @Injectable()
 export class RuleChainsTableConfigResolver  {
@@ -97,6 +98,13 @@ export class RuleChainsTableConfigResolver  {
     };
   }
 
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<RuleChain> observable or value
+   */
+
   resolve(route: ActivatedRouteSnapshot): EntityTableConfig<RuleChain> {
     const edgeId = route.params?.edgeId;
     const ruleChainScope = route.data?.ruleChainsType ? route.data?.ruleChainsType : 'tenant';
@@ -124,6 +132,13 @@ export class RuleChainsTableConfigResolver  {
     }
     return this.config;
   }
+
+  /**
+   * configure entity table columns.
+   *
+   * @param ruleChainScope rule chain scope (string)
+   * @returns Array<EntityColumn<RuleChain>> observable or value
+   */
 
   configureEntityTableColumns(ruleChainScope: string): Array<EntityColumn<RuleChain>> {
     const columns: Array<EntityColumn<RuleChain>> = [];
@@ -156,6 +171,13 @@ export class RuleChainsTableConfigResolver  {
     return columns;
   }
 
+  /**
+   * configure add actions.
+   *
+   * @param ruleChainScope rule chain scope (string)
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
+
   configureAddActions(ruleChainScope: string): Array<HeaderActionDescriptor> {
     const actions: Array<HeaderActionDescriptor> = [];
     if (ruleChainScope === 'tenant' || ruleChainScope === 'edges') {
@@ -187,6 +209,14 @@ export class RuleChainsTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * configure entity functions.
+   *
+   * @param ruleChainScope rule chain scope (string)
+   * @param edgeId edge id (string)
+   * @returns (pageLink) => Observable<PageData<RuleChain>> observable or value
+   */
+
   configureEntityFunctions(ruleChainScope: string, edgeId: string): (pageLink) => Observable<PageData<RuleChain>> {
     if (ruleChainScope === 'tenant') {
       return pageLink => this.fetchRuleChains(pageLink);
@@ -197,6 +227,14 @@ export class RuleChainsTableConfigResolver  {
     }
   }
 
+  /**
+   * configure table title.
+   *
+   * @param ruleChainScope rule chain scope (string)
+   * @param edge edge (Edge)
+   * @returns string observable or value
+   */
+
   configureTableTitle(ruleChainScope: string, edge: Edge): string {
     if (ruleChainScope === 'tenant') {
       return this.translate.instant('rulechain.rulechains');
@@ -206,6 +244,13 @@ export class RuleChainsTableConfigResolver  {
       return this.config.tableTitle = edge.name + ': ' + this.translate.instant('rulechain.rulechains');
     }
   }
+
+  /**
+   * configure group actions.
+   *
+   * @param ruleChainScope rule chain scope (string)
+   * @returns Array<GroupActionDescriptor<RuleChain>> observable or value
+   */
 
   configureGroupActions(ruleChainScope: string): Array<GroupActionDescriptor<RuleChain>> {
     const actions: Array<GroupActionDescriptor<RuleChain>> = [];
@@ -221,6 +266,13 @@ export class RuleChainsTableConfigResolver  {
     }
     return actions;
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @param ruleChainScope rule chain scope (string)
+   * @returns Array<CellActionDescriptor<RuleChain>> observable or value
+   */
 
   configureCellActions(ruleChainScope: string): Array<CellActionDescriptor<RuleChain>> {
     const actions: Array<CellActionDescriptor<RuleChain>> = [];
@@ -291,6 +343,11 @@ export class RuleChainsTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * import rule chain.
+   *
+   */
+
   importRuleChain($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -308,6 +365,12 @@ export class RuleChainsTableConfigResolver  {
     });
   }
 
+  /**
+   * open rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
+
   openRuleChain($event: Event, ruleChain: RuleChain) {
     if ($event) {
       $event.stopPropagation();
@@ -320,6 +383,12 @@ export class RuleChainsTableConfigResolver  {
       this.router.navigateByUrl(`ruleChains/${ruleChain.id.id}`);
     }
   }
+
+  /**
+   * POST/PUT entity — save rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
 
   saveRuleChain(ruleChain: RuleChain) {
     if (isUndefined(ruleChain.type)) {
@@ -335,12 +404,24 @@ export class RuleChainsTableConfigResolver  {
     return this.ruleChainService.saveRuleChain(ruleChain);
   }
 
+  /**
+   * export rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
+
   exportRuleChain($event: Event, ruleChain: RuleChain) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExport.exportRuleChain(ruleChain.id.id);
   }
+
+  /**
+   * set root rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
 
   setRootRuleChain($event: Event, ruleChain: RuleChain) {
     if ($event) {
@@ -373,6 +454,13 @@ export class RuleChainsTableConfigResolver  {
     );
   }
 
+  /**
+   * Event handler for rule chain action.
+   *
+   * @param action action (EntityAction<RuleChain>)
+   * @returns boolean observable or value
+   */
+
   onRuleChainAction(action: EntityAction<RuleChain>): boolean {
     switch (action.action) {
       case 'open':
@@ -400,6 +488,12 @@ export class RuleChainsTableConfigResolver  {
     return false;
   }
 
+  /**
+   * set edge template root rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
+
   setEdgeTemplateRootRuleChain($event: Event, ruleChain: RuleChain) {
     if ($event) {
       $event.stopPropagation();
@@ -421,6 +515,11 @@ export class RuleChainsTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * check missing to related rule chains.
+   *
+   */
 
   private checkMissingToRelatedRuleChains() {
     this.edgeService.findMissingToRelatedRuleChains(this.config.componentsData.edgeId).subscribe(
@@ -447,6 +546,11 @@ export class RuleChainsTableConfigResolver  {
     );
   }
 
+  /**
+   * assign rule chains to edge.
+   *
+   */
+
   assignRuleChainsToEdge($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -467,6 +571,12 @@ export class RuleChainsTableConfigResolver  {
         }
       );
   }
+
+  /**
+   * unassign from edge.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
 
   unassignFromEdge($event: Event, ruleChain: RuleChain) {
     if ($event) {
@@ -489,6 +599,12 @@ export class RuleChainsTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * unassign rule chains from edge.
+   *
+   * @param ruleChains rule chains (Array<RuleChain>)
+   */
 
   unassignRuleChainsFromEdge($event: Event, ruleChains: Array<RuleChain>) {
     if ($event) {
@@ -518,6 +634,12 @@ export class RuleChainsTableConfigResolver  {
     );
   }
 
+  /**
+   * set auto assign to edge rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
+
   setAutoAssignToEdgeRuleChain($event: Event, ruleChain: RuleChain) {
     if ($event) {
       $event.stopPropagation();
@@ -539,6 +661,12 @@ export class RuleChainsTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * unset auto assign to edge rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
 
   unsetAutoAssignToEdgeRuleChain($event: Event, ruleChain: RuleChain) {
     if ($event) {
@@ -562,6 +690,12 @@ export class RuleChainsTableConfigResolver  {
     );
   }
 
+  /**
+   * is non root rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   */
+
   isNonRootRuleChain(ruleChain: RuleChain) {
     if (this.config.componentsData.ruleChainScope === 'edge') {
       return this.config.componentsData.edge.rootRuleChainId &&
@@ -570,17 +704,39 @@ export class RuleChainsTableConfigResolver  {
     return !ruleChain.root;
   }
 
+  /**
+   * is auto assign to edge rule chain.
+   *
+   */
+
   isAutoAssignToEdgeRuleChain(ruleChain) {
     return !ruleChain.root && this.config.componentsData.autoAssignToEdgeRuleChainIds.includes(ruleChain.id.id);
   }
+
+  /**
+   * is not auto assign to edge rule chain.
+   *
+   */
 
   isNotAutoAssignToEdgeRuleChain(ruleChain) {
     return !ruleChain.root && !this.config.componentsData.autoAssignToEdgeRuleChainIds.includes(ruleChain.id.id);
   }
 
+  /**
+   * fetch rule chains.
+   *
+   * @param pageLink pagination and sort parameters
+   */
+
   fetchRuleChains(pageLink: PageLink) {
     return this.ruleChainService.getRuleChains(pageLink, RuleChainType.CORE);
   }
+
+  /**
+   * fetch edge rule chains.
+   *
+   * @param pageLink pagination and sort parameters
+   */
 
   fetchEdgeRuleChains(pageLink: PageLink) {
     return this.ruleChainService.getAutoAssignToEdgeRuleChains().pipe(

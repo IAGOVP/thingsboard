@@ -28,14 +28,17 @@ import { WINDOW } from '@core/services/window.service';
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-@Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[tb-ellipsis-chip-list]',
-  standalone: true,
+
 /**
  * Angular directive: ellipsis chip list.
  */
-})
+@Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
+  selector: '[tb-ellipsis-chip-list]',
+/**
+ * Angular directive: ellipsis chip list (ThingsBoard web UI).
+ */
+  standalone: true,})
 export class EllipsisChipListDirective implements OnDestroy {
 
   chipsValue: string[];
@@ -67,6 +70,11 @@ export class EllipsisChipListDirective implements OnDestroy {
     this.observeIntersection();
   }
 
+  /**
+   * observe intersection.
+   *
+   */
+
   private observeIntersection(): void {
     this.intersectionObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -78,6 +86,11 @@ export class EllipsisChipListDirective implements OnDestroy {
 
     this.intersectionObserver.observe(this.el.nativeElement);
   }
+
+  /**
+   * adjust chips.
+   *
+   */
 
   private adjustChips(): void {
     const chipListElement = this.el.nativeElement;
@@ -132,12 +145,24 @@ export class EllipsisChipListDirective implements OnDestroy {
     }
   }
 
+  /**
+   * apply max chip text width.
+   *
+   * @param element element (HTMLElement)
+   * @param widthLimit width limit (number)
+   */
+
   private applyMaxChipTextWidth(element: HTMLElement, widthLimit: number): void {
     this.renderer.setStyle(element, 'max-width', widthLimit + 'px');
     this.renderer.setStyle(element, 'overflow', 'hidden');
     this.renderer.setStyle(element, 'text-overflow', 'ellipsis');
     this.renderer.setStyle(element, 'white-space', 'nowrap');
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     this.destroy$.next();

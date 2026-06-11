@@ -66,8 +66,9 @@ import static org.mockito.BDDMockito.spy;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willReturn;
 /**
- * Unit test for tb get telemetry node rule node.
+ * Unit test for tb get telemetry node (entity metadata and related-data fetch nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -84,6 +85,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
     private TbContext ctxMock;
     @Mock
     private TimeseriesService timeseriesServiceMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -91,6 +97,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
         config = new TbGetTelemetryNodeConfiguration().defaultConfiguration();
         config.setLatestTsKeyNames(List.of("temperature"));
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -108,6 +119,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(config.getLimit()).isEqualTo(1000);
         assertThat(config.getLatestTsKeyNames()).isEmpty();
     }
+    /**
+     * Given empty ts key names when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenEmptyTsKeyNames_whenInit_thenThrowsException() {
@@ -121,6 +137,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(true);
     }
+    /**
+     * Given fetch mode is null when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchModeIsNull_whenInit_thenThrowsException() {
@@ -134,6 +155,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(true);
     }
+    /**
+     * Given fetch mode all and order by is null when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchModeAllAndOrderByIsNull_whenInit_thenThrowsException() {
@@ -148,6 +174,12 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(true);
     }
+    /**
+     * Given fetch mode all and limit is out of range when init then throws exception.
+     *
+     * @param limit limit
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0, 1, 1001, 2000})
@@ -163,6 +195,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(true);
     }
+    /**
+     * Given fetch mode is all and aggregation is null when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchModeIsAllAndAggregationIsNull_whenInit_thenThrowsException() {
@@ -176,6 +213,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(true);
     }
+    /**
+     * Given interval start is greater than interval end when on msg then throws exception.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenIntervalStartIsGreaterThanIntervalEnd_whenOnMsg_thenThrowsException() throws TbNodeException {
@@ -195,6 +237,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Interval start should be less than Interval end");
     }
+    /**
+     * Given use metadata interval patterns is true when on msg then verify start and end ts in query.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenUseMetadataIntervalPatternsIsTrue_whenOnMsg_thenVerifyStartAndEndTsInQuery() throws TbNodeException {
@@ -228,6 +275,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(actualReadTsKvQuery.getStartTs()).isEqualTo(startTs);
         assertThat(actualReadTsKvQuery.getEndTs()).isEqualTo(endTs);
     }
+    /**
+     * Given use metadata interval patterns is false when on msg then verify start and end ts in query.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenUseMetadataIntervalPatternsIsFalse_whenOnMsg_thenVerifyStartAndEndTsInQuery() throws TbNodeException {
@@ -255,6 +307,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(actualReadTsKvQuery.getStartTs()).isEqualTo(ts - TimeUnit.MINUTES.toMillis(config.getStartInterval()));
         assertThat(actualReadTsKvQuery.getEndTs()).isEqualTo(ts - TimeUnit.MINUTES.toMillis(config.getEndInterval()));
     }
+    /**
+     * Given ts key names patterns when on msg then verify ts key names in query.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenTsKeyNamesPatterns_whenOnMsg_thenVerifyTsKeyNamesInQuery() throws TbNodeException {
@@ -283,6 +340,13 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
         List<String> actualKeys = actualReadTsKvQueryList.getValue().stream().map(TsKvQuery::getKey).toList();
         assertThat(actualKeys).containsExactlyInAnyOrder("temperature", "humidity", "pressure");
     }
+    /**
+     * Given aggregation when on msg then verify aggregation step in query.
+     *
+     * @param aggregation aggregation ({@link Aggregation})
+     * @param aggregationStepVerifier aggregation step verifier ({@link Consumer})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -320,6 +384,14 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 Arguments.of(Aggregation.AVG, (Consumer<ReadTsKvQuery>) query -> assertThat(query.getInterval()).isEqualTo(query.getEndTs() - query.getStartTs()))
         );
     }
+    /**
+     * Given fetch mode and limit when on msg then verify limit in query.
+     *
+     * @param fetchMode fetch mode ({@link FetchMode})
+     * @param limit limit
+     * @param limitInQueryVerifier limit in query verifier ({@link Consumer})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -365,6 +437,14 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                         (Consumer<ReadTsKvQuery>) query -> assertThat(query.getLimit()).isEqualTo(1))
         );
     }
+    /**
+     * Given fetch mode and order when on msg then verify order in query.
+     *
+     * @param fetchMode fetch mode ({@link FetchMode})
+     * @param orderBy order by ({@link Direction})
+     * @param orderInQueryVerifier order in query verifier ({@link Consumer})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -410,6 +490,13 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                         (Consumer<ReadTsKvQuery>) query -> assertThat(query.getOrder()).isEqualTo("DESC"))
         );
     }
+    /**
+     * Given invalid interval patterns when on msg then throws exception.
+     *
+     * @param startIntervalPattern start interval pattern ({@link String})
+     * @param errorMsg error msg ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -435,6 +522,11 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 Arguments.of("$[msgStartInterval]", "Message value: 'msgStartInterval' has invalid format")
         );
     }
+    /**
+     * Given fetch mode all when on msg then tell success and verify msg.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenFetchModeAll_whenOnMsg_thenTellSuccessAndVerifyMsg() throws TbNodeException {
@@ -473,6 +565,12 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                 .build();
         assertThat(actualMsg.getValue()).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(expectedMsg);
     }
+    /**
+     * Given fetch mode when on msg then tell success and verify msg.
+     *
+     * @param fetchMode fetch mode ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @ValueSource(strings = {"FIRST", "LAST"})
@@ -729,6 +827,12 @@ public class TbGetTelemetryNodeTest extends AbstractRuleNodeUpgradeTest {
                                 """)
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

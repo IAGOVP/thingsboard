@@ -17,11 +17,11 @@
 export type WindowMessageType = 'widgetException' | 'widgetEditModeInited' | 'widgetEditUpdated' | 'openDashboardMessage'
   | 'reloadUserMessage' | 'toggleDashboardLayout' | 'widgetEditModeToggle';
 
+
 /**
-
- * TypeScript models and enums for window message.
-
+ * TypeScript interfaces, types, and enums for window message (shared TypeScript models).
  */
+
 
 export interface WindowMessage {
   type: WindowMessageType;

@@ -40,6 +40,12 @@ import { MapSettingsComponent } from '@home/components/widget/lib/settings/commo
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
+
+/**
+ * Angular component: map data layers (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-data-layers`.
+ */
 @Component({
     selector: 'tb-map-data-layers',
     templateUrl: './map-data-layers.component.html',
@@ -57,10 +63,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map data layers UI.
- */
+standalone: false
 })
 export class MapDataLayersComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -94,6 +97,11 @@ export class MapDataLayersComponent implements ControlValueAccessor, OnInit, Val
               private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     switch (this.dataLayerType) {
@@ -134,12 +142,30 @@ export class MapDataLayersComponent implements ControlValueAccessor, OnInit, Val
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -150,10 +176,22 @@ export class MapDataLayersComponent implements ControlValueAccessor, OnInit, Val
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MapDataLayerSettings[] | undefined)
+   */
+
   writeValue(value: MapDataLayerSettings[] | undefined): void {
     const dataLayers: MapDataLayerSettings[] = value || [];
     this.dataLayersFormGroup.setControl('dataLayers', this.prepareDataLayersFormArray(dataLayers), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     const valid = this.dataLayersFormGroup.valid;
@@ -164,17 +202,43 @@ export class MapDataLayersComponent implements ControlValueAccessor, OnInit, Val
     };
   }
 
+  /**
+   * data layers form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   dataLayersFormArray(): UntypedFormArray {
     return this.dataLayersFormGroup.get('dataLayers') as UntypedFormArray;
   }
+
+  /**
+   * track by data layer.
+   *
+   * @param index index (number)
+   * @param dataLayerControl data layer control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByDataLayer(index: number, dataLayerControl: AbstractControl): any {
     return dataLayerControl;
   }
 
+  /**
+   * DELETE — remove data layer.
+   *
+   * @param index index (number)
+   */
+
   removeDataLayer(index: number) {
     (this.dataLayersFormGroup.get('dataLayers') as UntypedFormArray).removeAt(index);
   }
+  
+  /**
+   * layer drop.
+   *
+   * @param event DOM or Angular event object
+   */
   
   layerDrop(event: CdkDragDrop<string[]>) {
     const layersArray = this.dataLayersFormArray();
@@ -183,6 +247,11 @@ export class MapDataLayersComponent implements ControlValueAccessor, OnInit, Val
     layersArray.insert(event.currentIndex, layer);
   }
 
+  /**
+   * POST/PUT entity — add data layer.
+   *
+   */
+
   addDataLayer() {
     const dataLayer = mergeDeep<MapDataLayerSettings>({} as MapDataLayerSettings,
       defaultMapDataLayerSettings(this.mapType, this.dataLayerType, this.context.functionsOnly));
@@ -190,6 +259,13 @@ export class MapDataLayersComponent implements ControlValueAccessor, OnInit, Val
     const dataLayerControl = this.fb.control(dataLayer, [mapDataLayerValidator(this.dataLayerType)]);
     dataLayersArray.push(dataLayerControl);
   }
+
+  /**
+   * prepare data layers form array.
+   *
+   * @param dataLayers data layers (MapDataLayerSettings[])
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareDataLayersFormArray(dataLayers: MapDataLayerSettings[]): UntypedFormArray {
     const dataLayersControls: Array<AbstractControl> = [];

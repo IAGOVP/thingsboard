@@ -37,11 +37,11 @@ import { ResourcesService } from '@core/services/resources.service';
 import { FormGroup } from '@angular/forms';
 import { TbUnit } from '@shared/models/unit.models';
 
+
 /**
-
- * TypeScript models and enums for svg info.
-
+ * Svg info (ThingsBoard web UI).
  */
+
 
 export interface SvgInfo {
   svg: string;

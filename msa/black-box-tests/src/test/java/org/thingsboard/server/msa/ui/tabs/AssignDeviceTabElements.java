@@ -19,11 +19,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.thingsboard.server.msa.ui.base.AbstractBasePage;
 
+
 /**
 
- * Assign device tab elements.
+ * Selenium element locators for assign device tab page (modal/tab page fragments for UI tests).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class AssignDeviceTabElements extends AbstractBasePage {
     public AssignDeviceTabElements(WebDriver driver) {
@@ -33,14 +39,33 @@ public class AssignDeviceTabElements extends AbstractBasePage {
     private static final String ASSIGN_ON_CUSTOMER_FIELD = "//input[@formcontrolname='entity']";
     private static final String CUSTOMER_FROM_DROPDOWN = "//div[@role='listbox']/mat-option//span[contains(text(),'%s')]";
     private static final String ASSIGN_BTN = "//button[@type='submit']";
+    /**
+     * Assigns on customer field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assignOnCustomerField() {
         return waitUntilElementToBeClickable(ASSIGN_ON_CUSTOMER_FIELD);
     }
+    /**
+     * Customer from drop down.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement customerFromDropDown(String entityName) {
         return waitUntilVisibilityOfElementLocated(String.format(CUSTOMER_FROM_DROPDOWN, entityName));
     }
+    /**
+     * Assigns btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assignBtn() {
         return waitUntilElementToBeClickable(ASSIGN_BTN);

@@ -194,11 +194,11 @@ const loadModuleCompletion = (http: HttpClient, moduleLink: string): Observable<
 
 export type GenericFunction = (...args: any[]) => any;
 
+
 /**
-
- * TypeScript models and enums for compiled tb function.
-
+ * TypeScript interfaces, types, and enums for compiled tb function (shared TypeScript models).
  */
+
 
 export class CompiledTbFunction<T extends GenericFunction> {
 
@@ -207,6 +207,13 @@ export class CompiledTbFunction<T extends GenericFunction> {
   constructor(private compiledFunction: Function,
               private compiledModules: System.Module[]) {
   }
+
+  /**
+   * execute impl.
+   *
+   * @param args args (any[])
+   * @returns any observable or value
+   */
 
   private executeImpl(...args: any[]): any {
     let functionArgs: any[];
@@ -217,6 +224,14 @@ export class CompiledTbFunction<T extends GenericFunction> {
     }
     return this.compiledFunction(...functionArgs);
   }
+
+  /**
+   * apply.
+   *
+   * @param thisArg this arg (any)
+   * @param argArray arg array (any)
+   * @returns any observable or value
+   */
 
   apply(thisArg: any, argArray?: any): any {
     let functionArgs: any[];

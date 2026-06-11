@@ -16,14 +16,25 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-    name: 'highlight',
-    standalone: false
+
 /**
  * Angular pipe: highlight.
  */
+@Pipe({
+    name: 'highlight',
+/**
+ * Angular pipe: highlight (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class HighlightPipe implements PipeTransform {
+  /**
+   * transform.
+   *
+   * @param text text (string)
+   * @param search search (string)
+   * @returns string observable or value
+   */
   transform(text: string, search: string, includes = false, flags = 'i'): string {
     const pattern = search
       .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');

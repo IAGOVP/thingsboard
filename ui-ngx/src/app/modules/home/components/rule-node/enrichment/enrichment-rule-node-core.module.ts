@@ -33,6 +33,9 @@ import { FetchDeviceCredentialsConfigComponent } from './fetch-device-credential
 /**
  * Angular NgModule: enrichment rule node core feature area.
  */
+/**
+ * Angular NgModule bundling enrichment rule node core (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     CustomerAttributesConfigComponent,
@@ -62,6 +65,6 @@ import { FetchDeviceCredentialsConfigComponent } from './fetch-device-credential
     TenantAttributesConfigComponent,
     CalculateDeltaConfigComponent,
     FetchDeviceCredentialsConfigComponent
-  ]})
+]})
 export class EnrichmentRuleNodeCoreModule {
 }

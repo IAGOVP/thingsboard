@@ -24,14 +24,17 @@ import { DialogComponent } from '@shared/components/dialog.component';
 import { Router } from '@angular/router';
 import { DocumentationLink } from '@shared/models/user-settings.models';
 
+
+/**
+ * Angular component: add doc link dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-doc-link-dialog`.
+ */
 @Component({
     selector: 'tb-add-doc-link-dialog',
     templateUrl: './add-doc-link-dialog.component.html',
     styleUrls: ['./add-doc-link-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: add doc link dialog UI.
- */
+standalone: false
 })
 export class AddDocLinkDialogComponent extends
   DialogComponent<AddDocLinkDialogComponent, DocumentationLink> implements OnInit {
@@ -46,15 +49,31 @@ export class AddDocLinkDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.addDocLinkFormGroup = this.fb.group({
       docLink: [{ icon: 'notifications' }, [Validators.required]]
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param docLink doc link (DocumentationLink)
+   */
 
   add(docLink: DocumentationLink): void {
     this.dialogRef.close(docLink);

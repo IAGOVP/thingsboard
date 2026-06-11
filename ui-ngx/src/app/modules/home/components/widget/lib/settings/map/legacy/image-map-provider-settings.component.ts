@@ -37,6 +37,12 @@ import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 import { EntityService } from '@core/http/entity.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: image map provider settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-image-map-provider-settings`.
+ */
 @Component({
     selector: 'tb-image-map-provider-settings',
     templateUrl: './image-map-provider-settings.component.html',
@@ -53,10 +59,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: image map provider settings UI.
- */
+standalone: false
 })
 export class ImageMapProviderSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -94,6 +97,11 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.providerSettingsFormGroup = this.fb.group({
@@ -134,12 +142,30 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -150,12 +176,24 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ImageMapProviderSettings)
+   */
+
   writeValue(value: ImageMapProviderSettings): void {
     this.modelValue = value;
     this.providerSettingsFormGroup.patchValue(
       value, {emitEvent: false}
     );
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.providerSettingsFormGroup.valid ? null : {
@@ -165,11 +203,21 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: ImageMapProviderSettings = this.providerSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * clear entity alias.
+   *
+   */
 
   clearEntityAlias() {
     this.providerSettingsFormGroup.get('imageEntityAlias').patchValue(null, {emitEvent: true});
@@ -179,9 +227,19 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
     }, 0);
   }
 
+  /**
+   * Event handler for entity alias focus.
+   *
+   */
+
   onEntityAliasFocus() {
     this.providerSettingsFormGroup.get('imageEntityAlias').updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
+
+  /**
+   * clear key.
+   *
+   */
 
   clearKey() {
     this.providerSettingsFormGroup.get('imageUrlAttribute').patchValue(null, {emitEvent: true});
@@ -191,9 +249,21 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
     }, 0);
   }
 
+  /**
+   * Event handler for key focus.
+   *
+   */
+
   onKeyFocus() {
     this.providerSettingsFormGroup.get('imageUrlAttribute').updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
+
+  /**
+   * fetch entity aliases.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchEntityAliases(searchText?: string): Observable<Array<string>> {
     this.aliasSearchText = searchText;
@@ -203,6 +273,13 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
     }
     return of(result);
   }
+
+  /**
+   * fetch keys.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchKeys(searchText?: string): Observable<Array<string>> {
     if (this.keySearchText !== searchText || this.latestKeySearchResult === null) {
@@ -215,6 +292,11 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
     }
     return of(this.latestKeySearchResult);
   }
+
+  /**
+   * get keys.
+   *
+   */
 
   private getKeys() {
     if (this.keysFetchObservable$ === null) {
@@ -239,6 +321,14 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
     return this.keysFetchObservable$;
   }
 
+  /**
+   * fetch entity keys.
+   *
+   * @param entityAliasId entity alias id (string)
+   * @param dataKeyTypes data key types (Array<DataKeyType>)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
+
   private fetchEntityKeys(entityAliasId: string, dataKeyTypes: Array<DataKeyType>): Observable<Array<DataKey>> {
     return this.aliasController.getAliasInfo(entityAliasId).pipe(
       mergeMap((aliasInfo) => {
@@ -253,6 +343,13 @@ export class ImageMapProviderSettingsComponent extends PageComponent implements 
       catchError(() => of([] as Array<DataKey>))
     );
   }
+
+  /**
+   * POST/PUT entity — create key filter.
+   *
+   * @param query query (string)
+   * @returns (key: string) => boolean observable or value
+   */
 
   private createKeyFilter(query: string): (key: string) => boolean {
     const lowercaseQuery = query.toLowerCase();

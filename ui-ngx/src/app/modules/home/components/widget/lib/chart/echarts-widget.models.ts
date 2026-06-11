@@ -54,14 +54,19 @@ import SeriesModel from 'echarts/types/src/model/Series';
 import { MarkLine2DDataItemOption } from 'echarts/types/src/component/marker/MarkLineModel';
 import { measureSymbolOffset } from '@home/components/widget/lib/chart/chart.models';
 
+
 /**
-
- * Angular NgModule: echarts feature area.
-
+ * Angular NgModule bundling echarts (ThingsBoard web UI).
  */
+
 
 class EChartsModule {
   private initialized = false;
+
+  /**
+   * init.
+   *
+   */
 
   init() {
     if (!this.initialized) {

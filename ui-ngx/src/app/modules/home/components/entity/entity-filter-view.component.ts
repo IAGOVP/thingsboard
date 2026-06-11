@@ -20,6 +20,12 @@ import { AliasFilterType, EntityAliasFilter } from '@shared/models/alias.models'
 import { AliasEntityType, EntityType, entityTypeTranslations } from '@shared/models/entity-type.models';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: entity filter view (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-filter-view`.
+ */
 @Component({
     selector: 'tb-entity-filter-view',
     templateUrl: './entity-filter-view.component.html',
@@ -31,10 +37,7 @@ import { TranslateService } from '@ngx-translate/core';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity filter view UI.
- */
+standalone: false
 })
 export class EntityFilterViewComponent implements ControlValueAccessor {
 
@@ -43,14 +46,32 @@ export class EntityFilterViewComponent implements ControlValueAccessor {
   filterDisplayValue: string;
   filter: EntityAliasFilter;
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
 
   setDisabledState?(isDisabled: boolean): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param filter filter (EntityAliasFilter)
+   */
 
   writeValue(filter: EntityAliasFilter): void {
     this.filter = filter;

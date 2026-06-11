@@ -19,14 +19,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { SqsQueueType, sqsQueueTypeTranslations } from '@home/components/rule-node/rule-node-config.models';
 
+
+/**
+ * Angular component: sqs config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-sqs-config`.
+ */
 @Component({
     selector: 'tb-external-node-sqs-config',
     templateUrl: './sqs-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: sqs config UI.
- */
+standalone: false
 })
 export class SqsConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -40,9 +43,21 @@ export class SqsConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.sqsConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.sqsConfigForm = this.fb.group({

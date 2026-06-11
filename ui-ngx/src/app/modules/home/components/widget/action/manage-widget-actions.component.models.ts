@@ -53,11 +53,11 @@ export const toWidgetActionDescriptor = (action: WidgetActionDescriptorInfo): Wi
   return copy;
 };
 
+
 /**
-
- * TypeScript models and enums for widget actions datasource.
-
+ * Widget actions datasource (ThingsBoard web UI).
  */
+
 
 export class WidgetActionsDatasource implements DataSource<WidgetActionDescriptorInfo> {
 
@@ -74,19 +74,46 @@ export class WidgetActionsDatasource implements DataSource<WidgetActionDescripto
   constructor(private translate: TranslateService,
               private utils: UtilsService) {}
 
+  /**
+   * connect.
+   *
+   * @param _collectionViewer  collection viewer (CollectionViewer)
+   * @returns Observable<WidgetActionDescriptorInfo[] | ReadonlyArray<WidgetActionDescriptorInfo>> observable or value
+   */
+
   connect(_collectionViewer: CollectionViewer): Observable<WidgetActionDescriptorInfo[] | ReadonlyArray<WidgetActionDescriptorInfo>> {
     return this.actionsSubject.asObservable();
   }
+
+  /**
+   * disconnect.
+   *
+   * @param _collectionViewer  collection viewer (CollectionViewer)
+   */
 
   disconnect(_collectionViewer: CollectionViewer): void {
     this.actionsSubject.complete();
     this.pageDataSubject.complete();
   }
 
+  /**
+   * set actions.
+   *
+   * @param actionsData actions data (WidgetActionsData)
+   */
+
   setActions(actionsData: WidgetActionsData) {
     this.actionsMap = actionsData.actionsMap;
     this.actionSources = actionsData.actionSources;
   }
+
+  /**
+   * load actions.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param reload reload (boolean)
+   * @returns Observable<PageData<WidgetActionDescriptorInfo>> observable or value
+   */
 
   loadActions(pageLink: PageLink, reload: boolean = false): Observable<PageData<WidgetActionDescriptorInfo>> {
     if (reload) {
@@ -105,11 +132,24 @@ export class WidgetActionsDatasource implements DataSource<WidgetActionDescripto
     return result;
   }
 
+  /**
+   * fetch actions.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<WidgetActionDescriptorInfo>> observable or value
+   */
+
   fetchActions(pageLink: PageLink): Observable<PageData<WidgetActionDescriptorInfo>> {
     return this.getAllActions().pipe(
       map((data) => pageLink.filterData(data))
     );
   }
+
+  /**
+   * get all actions.
+   *
+   * @returns Observable<Array<WidgetActionDescriptorInfo>> observable or value
+   */
 
   getAllActions(): Observable<Array<WidgetActionDescriptorInfo>> {
     if (!this.allActions) {
@@ -127,6 +167,14 @@ export class WidgetActionsDatasource implements DataSource<WidgetActionDescripto
     return this.allActions;
   }
 
+  /**
+   * to widget action descriptor info.
+   *
+   * @param actionSourceId action source id (string)
+   * @param action action (WidgetActionDescriptor)
+   * @returns WidgetActionDescriptorInfo observable or value
+   */
+
   private toWidgetActionDescriptorInfo(actionSourceId: string, action: WidgetActionDescriptor): WidgetActionDescriptorInfo {
     const actionSource = this.actionSources[actionSourceId];
     const actionSourceName = actionSource ? this.utils.customTranslation(actionSource.name, actionSource.name) : actionSourceId;
@@ -134,11 +182,23 @@ export class WidgetActionsDatasource implements DataSource<WidgetActionDescripto
     return { actionSourceId, actionSourceName, typeName, ...action};
   }
 
+  /**
+   * is empty.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isEmpty(): Observable<boolean> {
     return this.actionsSubject.pipe(
       map((actions) => !actions.length)
     );
   }
+
+  /**
+   * total.
+   *
+   * @returns Observable<number> observable or value
+   */
 
   total(): Observable<number> {
     return this.pageDataSubject.pipe(

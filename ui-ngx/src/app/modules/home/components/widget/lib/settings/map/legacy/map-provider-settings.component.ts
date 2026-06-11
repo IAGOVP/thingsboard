@@ -46,6 +46,12 @@ import { extractType } from '@core/utils';
 import { IAliasController } from '@core/api/widget-api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: map provider settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-provider-settings`.
+ */
 @Component({
     selector: 'tb-map-provider-settings',
     templateUrl: './map-provider-settings.component.html',
@@ -62,10 +68,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: map provider settings UI.
- */
+standalone: false
 })
 export class MapProviderSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -97,6 +100,11 @@ export class MapProviderSettingsComponent extends PageComponent implements OnIni
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.ignoreImageMap) {
       this.mapProviders = this.mapProviders.filter((provider) => provider !== MapProviders.image);
@@ -122,12 +130,30 @@ export class MapProviderSettingsComponent extends PageComponent implements OnIni
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -137,6 +163,12 @@ export class MapProviderSettingsComponent extends PageComponent implements OnIni
       this.providerSettingsFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (MapProviderSettings)
+   */
 
   writeValue(value: MapProviderSettings): void {
     this.modelValue = value;
@@ -159,6 +191,12 @@ export class MapProviderSettingsComponent extends PageComponent implements OnIni
     this.updateValidators(false);
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return this.providerSettingsFormGroup.valid ? null : {
       mapProviderSettings: {
@@ -166,6 +204,11 @@ export class MapProviderSettingsComponent extends PageComponent implements OnIni
       },
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: {
@@ -186,6 +229,12 @@ export class MapProviderSettingsComponent extends PageComponent implements OnIni
     };
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const provider: MapProviders = this.providerSettingsFormGroup.get('provider').value;

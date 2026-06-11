@@ -19,8 +19,11 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.script.ScriptLanguage;
 /**
- * JSON configuration for TbLog rule node.
+ * JSON configuration POJO for {@link TbLog} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbLogNodeConfiguration implements NodeConfiguration {
@@ -28,6 +31,12 @@ public class TbLogNodeConfiguration implements NodeConfiguration {
     private ScriptLanguage scriptLang;
     private String jsScript;
     private String tbelScript;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbLogNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbLogNodeConfiguration defaultConfiguration() {

@@ -47,6 +47,9 @@ import {
 /**
  * Angular NgModule: notification feature area.
  */
+/**
+ * Angular NgModule bundling notification (home/notification pages).
+ */
 @NgModule({
   declarations: [
     InboxTableHeaderComponent,
@@ -68,5 +71,5 @@ import {
     SharedModule,
     NotificationRoutingModule,
     HomeComponentsModule
-  ]})
+]})
 export class NotificationModule { }

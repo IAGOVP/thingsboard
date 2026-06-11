@@ -21,21 +21,58 @@ import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.job.Job;
 import org.thingsboard.server.common.msg.queue.TbCallback;
 
+
 /**
 
- * Schedules background jobs from rule nodes.
+ * Schedules and manages background jobs initiated from rule nodes.
 
  */
 
+
 public interface JobManager {
+    /**
+     * Submit job.
+     *
+     * @param job job ({@link Job})
+     * @return future completing with {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<Job> submitJob(Job job); // TODO: rate limits
+    /**
+     * Submit job.
+     *
+     * @param job job ({@link Job})
+     * @param finishCallback finish callback ({@link TbCallback})
+     * @return future completing with {@link Job}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ListenableFuture<Job> submitJob(Job job, TbCallback finishCallback);
+    /**
+     * Cancel job.
+     *
+     * @param tenantId tenant UUID
+     * @param jobId job id ({@link JobId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void cancelJob(TenantId tenantId, JobId jobId);
+    /**
+     * Reprocess job.
+     *
+     * @param tenantId tenant UUID
+     * @param jobId job id ({@link JobId})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void reprocessJob(TenantId tenantId, JobId jobId);
+    /**
+     * Handles job update.
+     *
+     * @param job job ({@link Job})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void onJobUpdate(Job job);
 

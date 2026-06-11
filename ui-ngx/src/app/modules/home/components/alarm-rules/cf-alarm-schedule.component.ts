@@ -46,6 +46,12 @@ import { CalculatedFieldArgument } from "@shared/models/calculated-field.models"
 import { MatChipSelectionChange } from "@angular/material/chips";
 import { coerceBoolean } from "@shared/decorators/coercion";
 
+
+/**
+ * Angular component: cf alarm schedule (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-cf-alarm-schedule`.
+ */
 @Component({
     selector: 'tb-cf-alarm-schedule',
     templateUrl: './cf-alarm-schedule.component.html',
@@ -59,10 +65,7 @@ import { coerceBoolean } from "@shared/decorators/coercion";
             useExisting: forwardRef(() => CfAlarmScheduleComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: cf alarm schedule UI.
- */
+standalone: false
 })
 export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator, OnInit, OnChanges {
 
@@ -111,6 +114,11 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.argumentsList = this.arguments ? Object.keys(this.arguments): [];
     this.alarmScheduleForm.get('staticValue.type').valueChanges.pipe(
@@ -145,6 +153,13 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
     }
   }
 
+  /**
+   * validate items.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   validateItems(control: AbstractControl): ValidationErrors | null {
     const items: any[] = control.value;
     if (!items || !items.length || !items.find(v => v.enabled === true)) {
@@ -155,12 +170,30 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
     return null;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -170,6 +203,12 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
       this.updateModeValidators(this.dynamicMode);
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (AlarmRuleSchedule)
+   */
 
   writeValue(value: AlarmRuleSchedule): void {
     if (value) {
@@ -226,6 +265,13 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param control control (FormGroup)
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(control: FormGroup): ValidationErrors | null {
     return this.alarmScheduleForm.valid ? null : {
       alarmScheduler: {
@@ -233,6 +279,12 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
       }
     };
   }
+
+  /**
+   * update mode validators.
+   *
+   * @param mode mode (boolean)
+   */
 
   private updateModeValidators(mode: boolean) {
     if (mode) {
@@ -244,6 +296,12 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
       this.updateValidators(this.alarmScheduleForm.get('staticValue.type').value);
     }
   }
+
+  /**
+   * update validators.
+   *
+   * @param type type (AlarmRuleScheduleType)
+   */
 
   private updateValidators(type: AlarmRuleScheduleType){
     switch (type){
@@ -271,6 +329,11 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value = this.alarmScheduleForm.value as AlarmRuleSchedule;
     if (!this.dynamicMode) {
@@ -292,6 +355,24 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
   }
 
 
+  /**
+
+
+   * default items scheduler.
+
+
+   *
+
+
+   * @param index index (number)
+
+
+   * @returns FormGroup observable or value
+
+
+   */
+
+
   private defaultItemsScheduler(index: number): FormGroup {
     return this.fb.group({
       enabled: [true],
@@ -301,10 +382,23 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
     });
   }
 
+  /**
+   * change custom scheduler.
+   *
+   * @param index index (number)
+   */
+
   changeCustomScheduler($event: MatChipSelectionChange, index: number) {
     const value = $event.selected;
     this.disabledSelectedTime(value, index, true);
   }
+
+  /**
+   * disabled selected time.
+   *
+   * @param enable enable (boolean)
+   * @param index index (number)
+   */
 
   private disabledSelectedTime(enable: boolean, index: number, emitEvent = false) {
     if (enable) {
@@ -315,6 +409,13 @@ export class CfAlarmScheduleComponent implements ControlValueAccessor, Validator
       this.itemsSchedulerForm.at(index).get('endsOn').disable({emitEvent});
     }
   }
+
+  /**
+   * get scheduler range text.
+   *
+   * @param control control (FormGroup | AbstractControl)
+   * @returns string observable or value
+   */
 
   getSchedulerRangeText(control: FormGroup | AbstractControl): string {
     return getAlarmScheduleRangeText(control.get('startsOn').value, control.get('endsOn').value);

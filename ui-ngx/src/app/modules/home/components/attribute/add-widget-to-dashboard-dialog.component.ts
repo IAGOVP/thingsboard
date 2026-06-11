@@ -48,15 +48,18 @@ export interface AddWidgetToDashboardDialogData {
   widget: Widget;
 }
 
+
+/**
+ * Angular component: add widget to dashboard dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-widget-to-dashboard-dialog`.
+ */
 @Component({
     selector: 'tb-add-widget-to-dashboard-dialog',
     templateUrl: './add-widget-to-dashboard-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: AddWidgetToDashboardDialogComponent }],
     styleUrls: ['./add-widget-to-dashboard-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: add widget to dashboard dialog UI.
- */
+standalone: false
 })
 export class AddWidgetToDashboardDialogComponent extends
   DialogComponent<AddWidgetToDashboardDialogComponent, void>
@@ -111,8 +114,21 @@ export class AddWidgetToDashboardDialogComponent extends
     );
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -120,9 +136,19 @@ export class AddWidgetToDashboardDialogComponent extends
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     this.submitted = true;
@@ -149,6 +175,13 @@ export class AddWidgetToDashboardDialogComponent extends
     }
   }
 
+  /**
+   * select target state.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @returns Observable<string> observable or value
+   */
+
   private selectTargetState(dashboard: Dashboard): Observable<string> {
     const states = dashboard.configuration.states;
     const stateIds = Object.keys(states);
@@ -166,6 +199,14 @@ export class AddWidgetToDashboardDialogComponent extends
     }
   }
 
+  /**
+   * select target layout.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param targetState target state (string)
+   * @returns Observable<DashboardLayoutId> observable or value
+   */
+
   private selectTargetLayout(dashboard: Dashboard, targetState: string): Observable<DashboardLayoutId> {
     const layouts = dashboard.configuration.states[targetState].layouts;
     const layoutIds = Object.keys(layouts);
@@ -179,6 +220,14 @@ export class AddWidgetToDashboardDialogComponent extends
       return of(layoutIds[0] as DashboardLayoutId);
     }
   }
+
+  /**
+   * POST/PUT entity — add widget to dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param targetState target state (string)
+   * @param targetLayout target layout (DashboardLayoutId)
+   */
 
   private addWidgetToDashboard(dashboard: Dashboard, targetState: string, targetLayout: DashboardLayoutId) {
     const aliasesInfo: AliasesInfo = {

@@ -17,11 +17,11 @@
 import { FontSettings } from '@home/components/widget/lib/settings.models';
 import { AnimationRule, AnimationTarget } from '@home/components/widget/lib/analogue-gauge.models';
 
+
 /**
-
- * TypeScript models and enums for analogue compass settings.
-
+ * Analogue compass settings (ThingsBoard web UI).
  */
+
 
 export interface AnalogueCompassSettings {
   majorTicks: string[];

@@ -23,16 +23,29 @@ import org.springframework.stereotype.Component;
  * NanoTime stopwatch for latency measurement in health checks.
  */
 
+
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TbStopWatch {
 
     private final StopWatch internal = new StopWatch();
+    /**
+     * Start.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void start() {
         internal.reset();
         internal.start();
     }
+    /**
+     * Returns time.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public long getTime() {
         internal.stop();

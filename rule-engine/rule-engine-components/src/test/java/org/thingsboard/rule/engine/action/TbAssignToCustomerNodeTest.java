@@ -80,8 +80,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb assign to customer node rule node.
+ * Unit test for tb assign to customer node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbAssignToCustomerNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -135,12 +136,23 @@ class TbAssignToCustomerNodeTest extends AbstractRuleNodeUpgradeTest {
 
     @Mock
     private DashboardService dashboardServiceMock;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
         node = spy(new TbAssignToCustomerNode());
         config = new TbAssignToCustomerNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

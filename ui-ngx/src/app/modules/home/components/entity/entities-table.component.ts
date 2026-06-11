@@ -70,15 +70,18 @@ import { EntitiesTableAction, IEntitiesTableComponent } from '@home/models/entit
 import { EntityDetailsPanelComponent } from '@home/components/entity/entity-details-panel.component';
 import { FormBuilder } from '@angular/forms';
 
+
+/**
+ * Angular component: entities table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entities-table`.
+ */
 @Component({
     selector: 'tb-entities-table',
     templateUrl: './entities-table.component.html',
     styleUrls: ['./entities-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: entities table UI.
- */
+standalone: false
 })
 export class EntitiesTableComponent extends PageComponent implements IEntitiesTableComponent, AfterViewInit, OnInit, OnChanges, OnDestroy {
 
@@ -151,6 +154,11 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (this.entitiesTableConfig) {
       this.init(this.entitiesTableConfig);
@@ -173,6 +181,11 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     this.widgetResize$.observe(this.elementRef.nativeElement);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.widgetResize$) {
       this.widgetResize$.disconnect();
@@ -191,6 +204,12 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
       }
     }
   }
+
+  /**
+   * init.
+   *
+   * @param entitiesTableConfig entities table config (EntityTableConfig<BaseData<HasId>>)
+   */
 
   private init(entitiesTableConfig: EntityTableConfig<BaseData<HasId>>) {
     this.isDetailsOpen = false;
@@ -315,6 +334,11 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.textSearch.valueChanges.pipe(
       debounceTime(150),
@@ -365,6 +389,11 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     this.viewInited = true;
   }
 
+  /**
+   * update pagination subscriptions.
+   *
+   */
+
   private updatePaginationSubscriptions() {
     if (this.updateDataSubscription) {
       this.updateDataSubscription.unsubscribe();
@@ -399,14 +428,31 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     ).subscribe(queryParams => this.updatedRouterParamsAndData(queryParams));
   }
 
+  /**
+   * POST/PUT entity — add enabled.
+   *
+   */
+
   addEnabled() {
     return this.entitiesTableConfig.addEnabled;
   }
+
+  /**
+   * clear selection.
+   *
+   */
 
   clearSelection() {
     this.dataSource.selection.clear();
     this.cd.detectChanges();
   }
+
+  /**
+   * update data.
+   *
+   * @param closeDetails close details (boolean)
+   * @param reloadEntity reload entity (boolean)
+   */
 
   updateData(closeDetails: boolean = true, reloadEntity: boolean = true) {
     if (closeDetails) {
@@ -438,6 +484,13 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     }
   }
 
+  /**
+   * data loaded.
+   *
+   * @param col col (number)
+   * @param row row (number)
+   */
+
   private dataLoaded(col?: number, row?: number) {
     if (isFinite(col) && isFinite(row)) {
       this.clearCellCache(col, row);
@@ -449,11 +502,21 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     }
   }
 
+  /**
+   * Event handler for row click.
+   *
+   */
+
   onRowClick($event: Event, entity) {
     if (!this.entitiesTableConfig.handleRowClick($event, entity)) {
       this.toggleEntityDetails($event, entity);
     }
   }
+
+  /**
+   * toggle entity details.
+   *
+   */
 
   toggleEntityDetails($event: Event, entity) {
     if ($event) {
@@ -466,6 +529,11 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     }
     this.detailsPanelOpened.emit(this.isDetailsOpen);
   }
+
+  /**
+   * POST/PUT entity — add entity.
+   *
+   */
 
   addEntity($event: Event) {
     let entity$: Observable<BaseData<HasId>>;
@@ -491,16 +559,34 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     );
   }
 
+  /**
+   * Event handler for entity updated.
+   *
+   * @param entity entity (BaseData<HasId>)
+   */
+
   onEntityUpdated(entity: BaseData<HasId>) {
     this.updateData(false, false);
     this.entitiesTableConfig.entityUpdated(entity);
   }
+
+  /**
+   * Event handler for entity action.
+   *
+   * @param action action (EntityAction<BaseData<HasId>>)
+   */
 
   onEntityAction(action: EntityAction<BaseData<HasId>>) {
     if (action.action === 'delete') {
       this.deleteEntity(action.event, action.entity);
     }
   }
+
+  /**
+   * DELETE — delete entity.
+   *
+   * @param entity entity (BaseData<HasId>)
+   */
 
   deleteEntity($event: Event, entity: BaseData<HasId>) {
     if ($event) {
@@ -523,6 +609,12 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
       }
     });
   }
+
+  /**
+   * DELETE — delete entities.
+   *
+   * @param entities entities (BaseData<HasId>[])
+   */
 
   deleteEntities($event: Event, entities: BaseData<HasId>[]) {
     if ($event) {
@@ -555,12 +647,22 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     });
   }
 
+  /**
+   * Event handler for timewindow change.
+   *
+   */
+
   onTimewindowChange() {
     if (this.displayPagination) {
       this.paginator.pageIndex = 0;
     }
     this.updateData();
   }
+
+  /**
+   * enter filter mode.
+   *
+   */
 
   enterFilterMode() {
     this.textSearchMode = true;
@@ -570,10 +672,22 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
   }
+
+  /**
+   * reset sort and filter.
+   *
+   * @param update update (boolean)
+   * @param preserveTimewindow preserve timewindow (boolean)
+   */
 
   resetSortAndFilter(update: boolean = true, preserveTimewindow: boolean = false) {
     this.textSearchMode = false;
@@ -592,6 +706,12 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
       this.updatedRouterParamsAndData({}, '');
     }
   }
+
+  /**
+   * columns updated.
+   *
+   * @param resetData reset data (boolean)
+   */
 
   columnsUpdated(resetData: boolean = false) {
     this.entityColumns = this.entitiesTableConfig.columns.filter(
@@ -621,9 +741,20 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     }
   }
 
+  /**
+   * cell action descriptors updated.
+   *
+   */
+
   cellActionDescriptorsUpdated() {
     this.cellActionDescriptors = [...this.entitiesTableConfig.cellActionDescriptors];
   }
+
+  /**
+   * header cell style.
+   *
+   * @param column column (EntityColumnType)
+   */
 
   headerCellStyle(column: EntityColumnType) {
     const index = this.entitiesTableConfig.columns.indexOf(column as EntityColumn<BaseData<HasId>>);
@@ -644,12 +775,27 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     return res;
   }
 
+  /**
+   * clear cell cache.
+   *
+   * @param col col (number)
+   * @param row row (number)
+   */
+
   clearCellCache(col: number, row: number) {
     const index = row * this.entitiesTableConfig.columns.length + col;
     this.cellContentCache[index] = undefined;
     this.cellTooltipCache[index] = undefined;
     this.cellStyleCache[index] = undefined;
   }
+
+  /**
+   * cell content.
+   *
+   * @param entity entity (BaseData<HasId>)
+   * @param column column (EntityColumnType)
+   * @param row row (number)
+   */
 
   cellContent(entity: BaseData<HasId>, column: EntityColumnType, row: number) {
     if (column instanceof EntityTableColumn || column instanceof EntityLinkTableColumn) {
@@ -665,6 +811,14 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
       return '';
     }
   }
+
+  /**
+   * cell tooltip.
+   *
+   * @param entity entity (BaseData<HasId>)
+   * @param column column (EntityColumnType)
+   * @param row row (number)
+   */
 
   cellTooltip(entity: BaseData<HasId>, column: EntityColumnType, row: number) {
     if (column instanceof EntityTableColumn || column instanceof EntityLinkTableColumn) {
@@ -682,6 +836,14 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
       return undefined;
     }
   }
+
+  /**
+   * cell style.
+   *
+   * @param entity entity (BaseData<HasId>)
+   * @param column column (EntityColumnType)
+   * @param row row (number)
+   */
 
   cellStyle(entity: BaseData<HasId>, column: EntityColumnType, row: number) {
     const col = this.entitiesTableConfig.columns.indexOf(column as EntityColumn<BaseData<HasId>>);
@@ -703,13 +865,33 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
     return res;
   }
 
+  /**
+   * track by column key.
+   *
+   * @param column column (EntityTableColumn<BaseData<HasId>> | EntityActionTableColumn<BaseData<HasId>>)
+   */
+
   trackByColumnKey(index, column: EntityTableColumn<BaseData<HasId>> | EntityActionTableColumn<BaseData<HasId>>) {
     return column.key;
   }
 
+  /**
+   * track by entity id.
+   *
+   * @param index index (number)
+   * @param entity entity (BaseData<HasId>)
+   */
+
   trackByEntityId(index: number, entity: BaseData<HasId>) {
     return entity.id.id;
   }
+
+  /**
+   * updated router params and data.
+   *
+   * @param queryParams query params (object)
+   * @param queryParamsHandling query params handling (QueryParamsHandling)
+   */
 
   protected updatedRouterParamsAndData(queryParams: object, queryParamsHandling: QueryParamsHandling = 'merge') {
     if (this.pageMode) {
@@ -725,6 +907,11 @@ export class EntitiesTableComponent extends PageComponent implements IEntitiesTa
       this.updateData();
     }
   }
+
+  /**
+   * detect changes.
+   *
+   */
 
   detectChanges() {
     this.cd.markForCheck();

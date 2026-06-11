@@ -47,14 +47,17 @@ const layoutHeight = 36;
 const layoutHeightWithTitle = 60;
 const layoutPadding = 24;
 
+
+/**
+ * Angular component: count widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-count-widget`.
+ */
 @Component({
     selector: 'tb-count-widget',
     templateUrl: './count-widget.component.html',
     styleUrls: ['./count-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: count widget UI.
- */
+standalone: false
 })
 export class CountWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -112,6 +115,11 @@ export class CountWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.countWidget = this;
     this.settings = {...countDefaultSettings(this.alarmElseEntity), ...this.ctx.settings};
@@ -152,6 +160,11 @@ export class CountWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
     this.hasTitle = this.ctx.widgetConfig.showTitle;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   public ngAfterViewInit() {
     if (this.settings.autoScale) {
       const height = this.hasTitle ? layoutHeightWithTitle : layoutHeight;
@@ -166,14 +179,29 @@ export class CountWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     const tsValue = getSingleTsValue(this.ctx.data);
@@ -191,9 +219,19 @@ export class CountWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cd.detectChanges();
   }
 
+  /**
+   * card click.
+   *
+   */
+
   public cardClick($event: Event) {
     this.ctx.actionsApi.cardClick($event);
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const panelWidth = this.countPanel.nativeElement.getBoundingClientRect().width - layoutPadding;

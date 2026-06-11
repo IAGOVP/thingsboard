@@ -27,14 +27,17 @@ export interface SelectEntityDialogData {
   entities: FormattedData[];
 }
 
+
+/**
+ * Angular component: select entity dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-select-entity-dialog`.
+ */
 @Component({
     selector: 'tb-select-entity-dialog',
     templateUrl: './select-entity-dialog.component.html',
     styleUrls: ['./select-entity-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: select entity dialog UI.
- */
+standalone: false
 })
 export class SelectEntityDialogComponent extends DialogComponent<SelectEntityDialogComponent, FormattedData> {
   selectEntityFormGroup: FormGroup;
@@ -52,6 +55,11 @@ export class SelectEntityDialogComponent extends DialogComponent<SelectEntityDia
       }
     );
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close(this.selectEntityFormGroup.value.entity);

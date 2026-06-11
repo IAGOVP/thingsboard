@@ -26,6 +26,12 @@ import {
 import { AlarmConditionType } from '@shared/models/device.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: alarm duration predicate value (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-duration-predicate-value`.
+ */
 @Component({
     selector: 'tb-alarm-duration-predicate-value',
     templateUrl: './alarm-duration-predicate-value.component.html',
@@ -37,10 +43,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm duration predicate value UI.
- */
+standalone: false
 })
 export class AlarmDurationPredicateValueComponent implements ControlValueAccessor, OnInit {
 
@@ -85,6 +88,11 @@ export class AlarmDurationPredicateValueComponent implements ControlValueAccesso
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.alarmDurationPredicateValueFormGroup = this.fb.group({
       defaultValue: [0, [Validators.required, Validators.min(1), Validators.max(2147483647), Validators.pattern('[0-9]*')]],
@@ -113,12 +121,30 @@ export class AlarmDurationPredicateValueComponent implements ControlValueAccesso
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -127,6 +153,12 @@ export class AlarmDurationPredicateValueComponent implements ControlValueAccesso
       this.alarmDurationPredicateValueFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param predicateValue predicate value (FilterPredicateValue<string | number | boolean>)
+   */
 
   writeValue(predicateValue: FilterPredicateValue<string | number | boolean>): void {
     this.alarmDurationPredicateValueFormGroup.patchValue({
@@ -141,6 +173,11 @@ export class AlarmDurationPredicateValueComponent implements ControlValueAccesso
     this.updateShowInheritMode(this.alarmDurationPredicateValueFormGroup.get('dynamicValue').get('sourceType').value);
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     let predicateValue: FilterPredicateValue<string | number | boolean> = null;
     if (this.alarmDurationPredicateValueFormGroup.valid) {
@@ -153,6 +190,12 @@ export class AlarmDurationPredicateValueComponent implements ControlValueAccesso
     }
     this.propagateChange(predicateValue);
   }
+
+  /**
+   * update show inherit mode.
+   *
+   * @param sourceType source type (DynamicValueSourceType)
+   */
 
   private updateShowInheritMode(sourceType: DynamicValueSourceType) {
     if (this.inheritModeForSources.includes(sourceType)) {

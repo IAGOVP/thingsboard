@@ -17,14 +17,27 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { isString } from '@core/utils';
 
-@Pipe({
-    name: 'truncate',
-    standalone: false
+
 /**
  * Angular pipe: truncate.
  */
+@Pipe({
+    name: 'truncate',
+/**
+ * Angular pipe: truncate (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class TruncatePipe implements PipeTransform {
+  /**
+   * transform.
+   *
+   * @param text text (string)
+   * @param wordwise wordwise (boolean)
+   * @param max max (any)
+   * @param tail tail (string)
+   * @returns string observable or value
+   */
   transform(text: string, wordwise: boolean, max: any, tail: string): string {
     if (!text) { return ''; }
     if (isString(max)) {

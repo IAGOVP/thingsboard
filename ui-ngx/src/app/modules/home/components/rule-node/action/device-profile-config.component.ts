@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: device profile config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-device-profile-config`.
+ */
 @Component({
     selector: 'tb-action-node-device-profile-config',
     templateUrl: './device-profile-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device profile config UI.
- */
+standalone: false
 })
 export class DeviceProfileConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class DeviceProfileConfigComponent extends RuleNodeConfigurationComponent
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.deviceProfile;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.deviceProfile = this.fb.group({
@@ -46,9 +61,21 @@ export class DeviceProfileConfigComponent extends RuleNodeConfigurationComponent
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['persistAlarmRulesState'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     if (this.deviceProfile.get('persistAlarmRulesState').value) {

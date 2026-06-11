@@ -42,6 +42,12 @@ import {
   ScadaSymbolMetadataTagFunctionPanelComponent
 } from '@home/pages/scada-symbol/metadata-components/scada-symbol-metadata-tag-function-panel.component';
 
+
+/**
+ * Angular component: scada symbol metadata tag (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-metadata-tag`.
+ */
 @Component({
     selector: 'tb-scada-symbol-metadata-tag',
     templateUrl: './scada-symbol-metadata-tag.component.html',
@@ -59,10 +65,7 @@ import {
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol metadata tag UI.
- */
+standalone: false
 })
 export class ScadaSymbolMetadataTagComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -93,6 +96,11 @@ export class ScadaSymbolMetadataTagComponent implements ControlValueAccessor, On
               private viewContainerRef: ViewContainerRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.tagFormGroup = this.fb.group({
       tag: [null, []],
@@ -101,12 +109,30 @@ export class ScadaSymbolMetadataTagComponent implements ControlValueAccessor, On
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -116,6 +142,12 @@ export class ScadaSymbolMetadataTagComponent implements ControlValueAccessor, On
       this.tagFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ScadaSymbolTag)
+   */
 
   writeValue(value: ScadaSymbolTag): void {
     this.modelValue = value;
@@ -129,6 +161,12 @@ export class ScadaSymbolMetadataTagComponent implements ControlValueAccessor, On
     );
   }
 
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
+
   public validate(_c: UntypedFormControl) {
     const valid = this.tagFormGroup.valid;
     return valid ? null : {
@@ -138,13 +176,30 @@ export class ScadaSymbolMetadataTagComponent implements ControlValueAccessor, On
     };
   }
 
+  /**
+   * edit tag state render function.
+   *
+   */
+
   editTagStateRenderFunction(): void {
     this.openTagFunction('renderFunction', this.editStateRenderFunctionButton);
   }
 
+  /**
+   * edit click action.
+   *
+   */
+
   editClickAction(): void {
     this.openTagFunction('clickAction', this.editClickActionButton);
   }
+
+  /**
+   * open tag function.
+   *
+   * @param tagFunctionType tag function type ('renderFunction' | 'clickAction')
+   * @param button button (MatButton)
+   */
 
   private openTagFunction(tagFunctionType: 'renderFunction' | 'clickAction',
                           button: MatButton) {
@@ -185,6 +240,11 @@ export class ScadaSymbolMetadataTagComponent implements ControlValueAccessor, On
       });
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.tagFormGroup.value;

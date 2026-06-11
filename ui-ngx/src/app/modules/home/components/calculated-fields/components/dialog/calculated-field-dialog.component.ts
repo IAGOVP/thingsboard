@@ -56,15 +56,18 @@ export interface CalculatedFieldDialogData {
   disabledSelectType?: boolean;
 }
 
+
+/**
+ * Angular component: calculated field dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-dialog`.
+ */
 @Component({
     selector: 'tb-calculated-field-dialog',
     templateUrl: './calculated-field-dialog.component.html',
     styleUrls: ['./calculated-field-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: calculated field dialog UI.
- */
+standalone: false
 })
 export class CalculatedFieldDialogComponent extends DialogComponent<CalculatedFieldDialogComponent, CalculatedField> {
 
@@ -126,9 +129,19 @@ export class CalculatedFieldDialogComponent extends DialogComponent<CalculatedFi
     return deepTrim(this.fieldFormGroup.getRawValue() as CalculatedField);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     if (this.fieldFormGroup.valid) {
@@ -144,6 +157,13 @@ export class CalculatedFieldDialogComponent extends DialogComponent<CalculatedFi
     }
   }
 
+  /**
+   * Event handler for test script.
+   *
+   * @param expression expression (string)
+   * @returns Observable<string> observable or value
+   */
+
   onTestScript(expression?: string): Observable<string> {
     return this.cfFormService.testScript(
       this.data.value?.id?.id,
@@ -153,6 +173,12 @@ export class CalculatedFieldDialogComponent extends DialogComponent<CalculatedFi
       expression
     );
   }
+
+  /**
+   * change entity.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   */
 
   changeEntity(entity: BaseData<EntityId>): void {
     this.entityName = entity.name;
@@ -165,6 +191,11 @@ export class CalculatedFieldDialogComponent extends DialogComponent<CalculatedFi
     return this.data.entityId || this.fieldFormGroup.get('entityId').value;
   }
 
+  /**
+   * apply dialog data.
+   *
+   */
+
   private applyDialogData(): void {
     const { configuration = {} as CalculatedFieldConfiguration, type = CalculatedFieldType.SIMPLE, debugSettings = { failuresEnabled: true, allEnabled: true }, entityId = this.data.entityId, ...value } = this.data.value ?? {};
     const preparedConfig = this.cfFormService.prepareConfig(configuration);
@@ -175,6 +206,13 @@ export class CalculatedFieldDialogComponent extends DialogComponent<CalculatedFi
       this.disabledConfiguration = true;
     }
   }
+
+  /**
+   * is assigned to customer.
+   *
+   * @param entity entity (AssetInfo | DeviceInfo)
+   * @returns boolean observable or value
+   */
 
   private isAssignedToCustomer(entity: AssetInfo | DeviceInfo): boolean {
     return entity && entity.customerId && entity.customerId.id !== NULL_UUID;

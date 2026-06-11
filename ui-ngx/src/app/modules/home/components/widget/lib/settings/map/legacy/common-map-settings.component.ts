@@ -33,6 +33,12 @@ import { CommonMapSettings, MapProviders } from '@home/components/widget/lib/map
 import { Widget } from '@shared/models/widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: common map settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-common-map-settings`.
+ */
 @Component({
     selector: 'tb-common-map-settings',
     templateUrl: './common-map-settings.component.html',
@@ -49,10 +55,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: common map settings UI.
- */
+standalone: false
 })
 export class CommonMapSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator, OnChanges {
 
@@ -79,6 +82,11 @@ export class CommonMapSettingsComponent extends PageComponent implements OnInit,
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.commonMapSettingsFormGroup = this.fb.group({
@@ -114,12 +122,30 @@ export class CommonMapSettingsComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -130,6 +156,12 @@ export class CommonMapSettingsComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (CommonMapSettings)
+   */
+
   writeValue(value: CommonMapSettings): void {
     this.modelValue = value;
     this.commonMapSettingsFormGroup.patchValue(
@@ -137,6 +169,12 @@ export class CommonMapSettingsComponent extends PageComponent implements OnInit,
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.commonMapSettingsFormGroup.valid ? null : {
@@ -146,11 +184,22 @@ export class CommonMapSettingsComponent extends PageComponent implements OnInit,
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: CommonMapSettings = this.commonMapSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     if (this.provider === MapProviders.image) {

@@ -57,14 +57,17 @@ import { NULL_UUID } from '@shared/models/id/has-uuid';
 import { EntitySearchDirection } from '@shared/models/relation.models';
 import { CdkDragDrop } from "@angular/cdk/drag-drop";
 
+
+/**
+ * Angular component: calculated field geofencing zone groups panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-geofencing-zone-groups-panel`.
+ */
 @Component({
     selector: 'tb-calculated-field-geofencing-zone-groups-panel',
     templateUrl: './calculated-field-geofencing-zone-groups-panel.component.html',
     styleUrls: ['../common/calculated-field-panel.scss', './calculated-field-geofencing-zone-groups-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: calculated field geofencing zone groups panel UI.
- */
+standalone: false
 })
 export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit, AfterViewInit {
 
@@ -142,6 +145,11 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
     return this.geofencingFormGroup.get('refDynamicSourceConfiguration') as FormGroup;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.updatedFormValidators();
     this.geofencingFormGroup.patchValue(this.zone, {emitEvent: false});
@@ -171,21 +179,43 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
     }
   }
 
+  /**
+   * fetch options.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   fetchOptions(searchText: string): Observable<Array<string>> {
     const search = searchText ? searchText?.toLowerCase() : '';
     return of(['Contains', 'Manages']).pipe(map(name => name?.filter(option => option.toLowerCase().includes(search))));
   }
+
+  /**
+   * updated form validators.
+   *
+   */
 
   private updatedFormValidators(): void {
     this.geofencingFormGroup.get('name').addValidators(uniqueNameValidator(this.usedNames));
     this.geofencingFormGroup.get('name').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * observe create relation zones changes.
+   *
+   */
+
   private observeCreateRelationZonesChanges(): void {
     this.geofencingFormGroup.get('createRelationsWithMatchedZones').valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe(value => this.validateDirectionAndRelationType(value));
   }
+
+  /**
+   * validate direction and relation type.
+   *
+   */
 
   private validateDirectionAndRelationType(createRelation = false): void {
     if (createRelation) {
@@ -197,6 +227,12 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
     }
   }
 
+  /**
+   * validate ref dynamic source configuration.
+   *
+   * @param type type (ArgumentEntityType)
+   */
+
   private validateRefDynamicSourceConfiguration(type: ArgumentEntityType = ArgumentEntityType.Current): void {
     if (type === ArgumentEntityType.RelationQuery) {
       this.refDynamicSourceFormGroup.enable({emitEvent: false});
@@ -205,11 +241,21 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.zone.refEntityId?.id === NULL_UUID) {
       this.entityAutocomplete.selectEntityFormGroup.get('entity').markAsTouched();
     }
   }
+
+  /**
+   * POST/PUT entity — save zone.
+   *
+   */
 
   saveZone(): void {
     const value = this.geofencingFormGroup.value as CalculatedFieldGeofencingValue;
@@ -235,9 +281,20 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
     this.geofencingDataApplied.emit(value);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.popover.hide();
   }
+
+  /**
+   * update entity filter.
+   *
+   * @param entityType entity type (ArgumentEntityType)
+   */
 
   private updateEntityFilter(entityType: ArgumentEntityType = ArgumentEntityType.Current): void {
     let entityFilter: EntityFilter;
@@ -271,6 +328,11 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
     this.cd.markForCheck();
   }
 
+  /**
+   * observe entity filter changes.
+   *
+   */
+
   private observeEntityFilterChanges(): void {
     merge(
       this.refEntityIdFormGroup.get('entityType').valueChanges,
@@ -279,6 +341,11 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
       .pipe(debounceTime(50), takeUntilDestroyed())
       .subscribe(() => this.updateEntityFilter(this.entityType));
   }
+
+  /**
+   * observe entity type changes.
+   *
+   */
 
   private observeEntityTypeChanges(): void {
     this.refEntityIdFormGroup.get('entityType').valueChanges
@@ -296,24 +363,55 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
       });
   }
 
+  /**
+   * levels required.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private levelsRequired(): ValidatorFn {
     return (control: FormControl) => {
       return control.value.length ? null : { levelsRequired: true };
     };
   }
 
+  /**
+   * levels form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   levelsFormArray(): UntypedFormArray {
     return this.refDynamicSourceFormGroup.get('levels') as UntypedFormArray;
   }
+
+  /**
+   * track by key.
+   *
+   * @param _index  index (number)
+   * @param keyControl key control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByKey(_index: number, keyControl: AbstractControl): any {
     return keyControl;
   }
 
+  /**
+   * DELETE — remove key.
+   *
+   * @param index index (number)
+   */
+
   removeKey(index: number) {
     this.levelsFormArray().removeAt(index);
     this.levelsFormArray().markAsDirty();
   }
+
+  /**
+   * POST/PUT entity — add key.
+   *
+   */
 
   addKey() {
     this.levelsFormArray().push(this.fb.group({
@@ -321,6 +419,12 @@ export class CalculatedFieldGeofencingZoneGroupsPanelComponent implements OnInit
       relationType: ['', [Validators.required]]
     }));
   }
+
+  /**
+   * key drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   keyDrop(event: CdkDragDrop<string[]>) {
     const keysArray = this.levelsFormArray();

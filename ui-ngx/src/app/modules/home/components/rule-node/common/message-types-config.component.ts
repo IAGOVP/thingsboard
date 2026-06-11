@@ -25,6 +25,12 @@ import { map, mergeMap, share, startWith } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
+
+/**
+ * Angular component: message types config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-message-types-config`.
+ */
 @Component({
     selector: 'tb-message-types-config',
     templateUrl: './message-types-config.component.html',
@@ -36,10 +42,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: message types config UI.
- */
+standalone: false
 })
 export class MessageTypesConfigComponent extends PageComponent implements ControlValueAccessor, OnInit {
 
@@ -98,12 +101,29 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredMessageTypes = this.messageTypeConfigForm.get('messageType').valueChanges
@@ -115,6 +135,12 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
       );
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -123,6 +149,12 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
       this.messageTypeConfigForm.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<string> | null)
+   */
 
   writeValue(value: Array<string> | null): void {
     this.searchText = '';
@@ -145,22 +177,55 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
     }
   }
 
+  /**
+   * display message type fn.
+   *
+   * @param messageType message type (LinkLabel)
+   * @returns string | undefined observable or value
+   */
+
   displayMessageTypeFn(messageType?: LinkLabel): string | undefined {
     return messageType ? messageType.name : undefined;
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return text && text.length > 0;
   }
+
+  /**
+   * POST/PUT entity — create message type.
+   *
+   * @param value value (string)
+   */
 
   createMessageType($event: Event, value: string) {
     $event.preventDefault();
     this.transformMessageType(value);
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param event DOM or Angular event object
+   */
+
   add(event: MatChipInputEvent): void {
     this.transformMessageType(event.value);
   }
+
+  /**
+   * fetch message types.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<LinkLabel>> observable or value
+   */
 
   private fetchMessageTypes(searchText?: string): Observable<Array<LinkLabel>> {
     this.searchText = searchText;
@@ -171,6 +236,12 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
       return of(this.messageTypesList);
     }
   }
+
+  /**
+   * transform message type.
+   *
+   * @param value value (string)
+   */
 
   private transformMessageType(value: string) {
     if ((value || '').trim()) {
@@ -195,6 +266,12 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
     this.clear('');
   }
 
+  /**
+   * DELETE — remove.
+   *
+   * @param messageType message type (LinkLabel)
+   */
+
   remove(messageType: LinkLabel) {
     const index = this.messageTypes.indexOf(messageType);
     if (index >= 0) {
@@ -203,10 +280,22 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
     }
   }
 
+  /**
+   * selected.
+   *
+   * @param event DOM or Angular event object
+   */
+
   selected(event: MatAutocompleteSelectedEvent): void {
     this.addMessageType(event.option.value);
     this.clear('');
   }
+
+  /**
+   * POST/PUT entity — add message type.
+   *
+   * @param messageType message type (LinkLabel)
+   */
 
   addMessageType(messageType: LinkLabel): void {
     const index = this.messageTypes.findIndex(existingMessageType => existingMessageType.value === messageType.value);
@@ -216,9 +305,20 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
     }
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     this.messageTypeConfigForm.get('messageType').updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   clear(value: string = '') {
     this.messageTypeInput.nativeElement.value = value;
@@ -228,6 +328,11 @@ export class MessageTypesConfigComponent extends PageComponent implements Contro
       this.messageTypeInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.messageTypes.map((messageType => messageType.value));

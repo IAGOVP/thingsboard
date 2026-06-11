@@ -19,11 +19,11 @@ import { TenantId } from '@shared/models/id/tenant-id';
 import { WidgetsBundleId } from '@shared/models/id/widgets-bundle-id';
 import { HasTenantId, HasVersion } from '@shared/models/entity.models';
 
+
 /**
-
- * TypeScript models and enums for widgets bundle.
-
+ * TypeScript interfaces, types, and enums for widgets bundle (shared TypeScript models).
  */
+
 
 export interface WidgetsBundle extends BaseData<WidgetsBundleId>, HasTenantId, HasVersion, ExportableEntity<WidgetsBundleId> {
   alias?: string;

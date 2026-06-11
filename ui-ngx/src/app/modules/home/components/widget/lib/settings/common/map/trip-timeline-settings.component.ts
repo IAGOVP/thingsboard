@@ -32,6 +32,12 @@ import {
   TripTimelineSettings
 } from '@shared/models/widget/maps/map.models';
 
+
+/**
+ * Angular component: trip timeline settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-trip-timeline-settings`.
+ */
 @Component({
     selector: 'tb-trip-timeline-settings',
     templateUrl: './trip-timeline-settings.component.html',
@@ -48,10 +54,7 @@ import {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: trip timeline settings UI.
- */
+standalone: false
 })
 export class TripTimelineSettingsComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -72,6 +75,11 @@ export class TripTimelineSettingsComponent implements OnInit, ControlValueAccess
               private widgetService: WidgetService,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
 
@@ -100,12 +108,30 @@ export class TripTimelineSettingsComponent implements OnInit, ControlValueAccess
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -116,6 +142,12 @@ export class TripTimelineSettingsComponent implements OnInit, ControlValueAccess
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TripTimelineSettings)
+   */
 
   writeValue(value: TripTimelineSettings): void {
     this.modelValue = value;
@@ -131,6 +163,12 @@ export class TripTimelineSettingsComponent implements OnInit, ControlValueAccess
     });
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     const valid = this.tripTimelineSettingsFormGroup.valid;
     return valid ? null : {
@@ -139,6 +177,11 @@ export class TripTimelineSettingsComponent implements OnInit, ControlValueAccess
       },
     };
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const showTimelineControl: boolean = this.tripTimelineSettingsFormGroup.get('showTimelineControl').value;
@@ -157,6 +200,11 @@ export class TripTimelineSettingsComponent implements OnInit, ControlValueAccess
       this.tripTimelineSettingsFormGroup.get('showTimelineControl').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.tripTimelineSettingsFormGroup.getRawValue();

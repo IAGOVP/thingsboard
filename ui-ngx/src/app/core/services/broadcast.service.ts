@@ -20,7 +20,9 @@ import { BroadcastEvent, BroadcastListener, BroadcastMessage } from '@core/servi
 import { filter } from 'rxjs/operators';
 
 /**
- * Angular HTTP service: broadcast REST wrappers (`@core/http`).
+ * Angular injectable service: broadcast (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,13 @@ export class BroadcastService {
 
   private broadcastSubject: Subject<BroadcastMessage> = new Subject();
 
+  /**
+   * broadcast.
+   *
+   * @param name name (string)
+   * @param args args (Array<any>)
+   */
+
   broadcast(name: string, ...args: Array<any>) {
     const message = {
       name,
@@ -36,6 +45,14 @@ export class BroadcastService {
     } as BroadcastMessage;
     this.broadcastSubject.next(message);
   }
+
+  /**
+   * on.
+   *
+   * @param name name (string)
+   * @param listener listener (BroadcastListener)
+   * @returns Subscription observable or value
+   */
 
   on(name: string, listener: BroadcastListener): Subscription {
     return this.broadcastSubject.asObservable().pipe(

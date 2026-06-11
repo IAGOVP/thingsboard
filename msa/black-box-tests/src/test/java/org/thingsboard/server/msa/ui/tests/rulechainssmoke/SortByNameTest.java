@@ -24,11 +24,19 @@ import org.thingsboard.server.msa.ui.utils.DataProviderCredential;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultRuleChainPrototype;
 /**
- * Sort by name test.
+ * Black-box test: sort by name (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Sort rule chain by name")
 public class SortByNameTest extends AbstractRuleChainTest {
+    /**
+     * Special character up.
+     *
+     * @param name name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "nameForSort")
     @Description("Sort rule chain 'UP'")
@@ -42,6 +50,15 @@ public class SortByNameTest extends AbstractRuleChainTest {
 
         assertThat(ruleChainsPage.getRuleChainName()).as("First rule chain after sort").isEqualTo(ruleChainName);
     }
+    /**
+     * All sort up.
+     *
+     * @param ruleChain rule chain ({@link String})
+     * @param ruleChainSymbol rule chain symbol ({@link String})
+     * @param ruleChainNumber rule chain number ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Rule chains smoke tests")
     @Feature("Sort rule chain by name")
@@ -69,6 +86,13 @@ public class SortByNameTest extends AbstractRuleChainTest {
         assertThat(secondRuleChain).as("Second rule chain with number in name").isEqualTo(ruleChainNumber);
         assertThat(thirdRuleChain).as("Third rule chain with number in name").isEqualTo(ruleChain);
     }
+    /**
+     * Special character down.
+     *
+     * @param ruleChainName rule chain name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Rule chains smoke tests")
     @Feature("Sort rule chain by name")
@@ -84,6 +108,15 @@ public class SortByNameTest extends AbstractRuleChainTest {
 
         assertThat(ruleChainsPage.getRuleChainName()).as("Last rule chain after sort").isEqualTo(ruleChainName);
     }
+    /**
+     * All sort down.
+     *
+     * @param ruleChain rule chain ({@link String})
+     * @param ruleChainSymbol rule chain symbol ({@link String})
+     * @param ruleChainNumber rule chain number ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Rule chains smoke tests")
     @Feature("Sort rule chain by name")

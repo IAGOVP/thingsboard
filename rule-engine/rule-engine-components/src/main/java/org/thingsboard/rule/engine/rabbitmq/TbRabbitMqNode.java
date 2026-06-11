@@ -40,7 +40,13 @@ import static org.thingsboard.common.util.DonAsynchron.withCallback;
 
 @Slf4j
 /**
- * Rule engine external node 'rabbitmq': Publish messages to the RabbitMQ Implements org.thingsboard.rule.engine.api.TbNode.
+ * External rule node — <b>rabbitmq</b>.
+ *
+ * <p>Publish messages to the RabbitMQ
+ * <br>Will publish message payload to RabbitMQ queue.
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbRabbitMqNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/rabbitmq/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/rabbitmq/</a>
  */
 @RuleNode(
         type = ComponentType.EXTERNAL,
@@ -66,6 +72,13 @@ public class TbRabbitMqNode extends TbAbstractExternalNode {
 
     private Connection connection;
     private Channel channel;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -79,6 +92,13 @@ public class TbRabbitMqNode extends TbAbstractExternalNode {
             throw new TbNodeException(e);
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -134,6 +154,10 @@ public class TbRabbitMqNode extends TbAbstractExternalNode {
                 .metaData(metaData)
                 .build();
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {

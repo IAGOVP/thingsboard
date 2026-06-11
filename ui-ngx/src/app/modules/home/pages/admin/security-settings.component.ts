@@ -39,14 +39,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: security settings (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-security-settings`.
+ */
 @Component({
     selector: 'tb-security-settings',
     templateUrl: './security-settings.component.html',
     styleUrls: ['./security-settings.component.scss', './settings-card.scss'],
-    standalone: false
-/**
- * Angular component: security settings UI.
- */
+standalone: false
 })
 export class SecuritySettingsComponent extends PageComponent implements HasConfirmForm {
 
@@ -77,6 +80,11 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
     );
   }
 
+  /**
+   * build security settings form.
+   *
+   */
+
   buildSecuritySettingsForm() {
     this.securitySettingsFormGroup = this.fb.group({
       maxFailedLoginAttempts: [null, [Validators.min(0)]],
@@ -101,6 +109,11 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
     });
   }
 
+  /**
+   * build jwt security settings form.
+   *
+   */
+
   buildJwtSecuritySettingsForm() {
     this.jwtSecuritySettingsFormGroup = this.fb.group({
       tokenIssuer: ['', Validators.required],
@@ -115,12 +128,22 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
     );
   }
 
+  /**
+   * POST/PUT entity — save.
+   *
+   */
+
   save(): void {
     this.securitySettings = {...this.securitySettings, ...this.securitySettingsFormGroup.value};
     this.adminService.saveSecuritySettings(this.securitySettings).subscribe(
       securitySettings => this.processSecuritySettings(securitySettings)
     );
   }
+
+  /**
+   * POST/PUT entity — save jwt settings.
+   *
+   */
 
   saveJwtSettings() {
     const jwtFormSettings = this.jwtSecuritySettingsFormGroup.value;
@@ -136,6 +159,12 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
     })).subscribe(() => {});
   }
 
+  /**
+   * max password validation.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private maxPasswordValidation(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value: string = control.value;
@@ -148,17 +177,38 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
     };
   }
 
+  /**
+   * discard setting.
+   *
+   */
+
   discardSetting() {
     this.securitySettingsFormGroup.reset(this.securitySettings);
   }
+
+  /**
+   * discard jwt setting.
+   *
+   */
 
   discardJwtSetting() {
     this.jwtSecuritySettingsFormGroup.reset(this.jwtSettings);
   }
 
+  /**
+   * mark as touched.
+   *
+   */
+
   markAsTouched() {
     this.jwtSecuritySettingsFormGroup.get('tokenSigningKey').markAsTouched();
   }
+
+  /**
+   * confirm change jwtsettings.
+   *
+   * @returns Observable<boolean> observable or value
+   */
 
   private confirmChangeJWTSettings(): Observable<boolean> {
     if (this.jwtSecuritySettingsFormGroup.get('tokenIssuer').value !== (this.jwtSettings?.tokenIssuer || '') ||
@@ -173,6 +223,11 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
     return of(true);
   }
 
+  /**
+   * generate signing key.
+   *
+   */
+
   generateSigningKey() {
     this.jwtSecuritySettingsFormGroup.get('tokenSigningKey').setValue(btoa(randomAlphanumeric(64)));
     if (this.jwtSecuritySettingsFormGroup.get('tokenSigningKey').pristine) {
@@ -181,15 +236,33 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
     }
   }
 
+  /**
+   * process security settings.
+   *
+   * @param securitySettings security settings (SecuritySettings)
+   */
+
   private processSecuritySettings(securitySettings: SecuritySettings) {
     this.securitySettings = securitySettings;
     this.securitySettingsFormGroup.reset(this.securitySettings);
   }
 
+  /**
+   * process jwt settings.
+   *
+   * @param jwtSettings jwt settings (JwtSettings)
+   */
+
   private processJwtSettings(jwtSettings: JwtSettings) {
     this.jwtSettings = jwtSettings;
     this.jwtSecuritySettingsFormGroup.reset(jwtSettings);
   }
+
+  /**
+   * refresh token time great token time.
+   *
+   * @param formGroup form group (UntypedFormGroup)
+   */
 
   private refreshTokenTimeGreatTokenTime(formGroup: UntypedFormGroup): { [key: string]: boolean } | null {
     if (formGroup) {
@@ -206,6 +279,12 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
     return null;
   }
 
+  /**
+   * base64format.
+   *
+   * @param control control (UntypedFormControl)
+   */
+
   private base64Format(control: UntypedFormControl): { [key: string]: boolean } | null {
     if (control.value === '' || control.value === 'thingsboardDefaultSigningKey') {
       return null;
@@ -220,6 +299,12 @@ export class SecuritySettingsComponent extends PageComponent implements HasConfi
       return {base64: true};
     }
   }
+
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
 
   confirmForm(): UntypedFormGroup {
     return this.securitySettingsFormGroup.dirty ? this.securitySettingsFormGroup : this.jwtSecuritySettingsFormGroup;

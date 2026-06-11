@@ -19,14 +19,17 @@ import { isDefinedAndNotNull } from '@core/public-api';
 import { FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 
+
+/**
+ * Angular component: check message config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-node-check-message-config`.
+ */
 @Component({
     selector: 'tb-filter-node-check-message-config',
     templateUrl: './check-message-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: check message config UI.
- */
+standalone: false
 })
 export class CheckMessageConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -36,9 +39,22 @@ export class CheckMessageConfigComponent extends RuleNodeConfigurationComponent 
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.checkMessageConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
@@ -48,6 +64,13 @@ export class CheckMessageConfigComponent extends RuleNodeConfigurationComponent 
     };
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
       messageNames: isDefinedAndNotNull(configuration?.messageNames) ? configuration.messageNames : [],
@@ -55,6 +78,24 @@ export class CheckMessageConfigComponent extends RuleNodeConfigurationComponent 
       checkAllKeys: configuration.checkAllKeys
     };
   }
+
+
+  /**
+
+
+   * at least one.
+
+
+   *
+
+
+   * @param validator validator (ValidatorFn)
+
+
+   * @param controls controls (string[])
+
+
+   */
 
 
   private atLeastOne(validator: ValidatorFn, controls: string[] = null) {
@@ -67,6 +108,12 @@ export class CheckMessageConfigComponent extends RuleNodeConfigurationComponent 
       return hasAtLeastOne ? null : {atLeastOne: true};
     };
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.checkMessageConfigForm = this.fb.group({

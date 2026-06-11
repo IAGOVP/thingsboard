@@ -22,6 +22,12 @@ import { AppState } from '@core/core.state';
 import { ScriptLanguage } from '@shared/models/rule-node.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: tb script lang (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-script-lang`.
+ */
 @Component({
     selector: 'tb-script-lang',
     templateUrl: './script-lang.component.html',
@@ -34,10 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: tb script lang UI.
- */
+standalone: false
 })
 export class TbScriptLangComponent extends PageComponent implements ControlValueAccessor, OnInit {
 
@@ -59,6 +62,11 @@ export class TbScriptLangComponent extends PageComponent implements ControlValue
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.scriptLangFormGroup.get('scriptLang').valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
@@ -69,12 +77,30 @@ export class TbScriptLangComponent extends PageComponent implements ControlValue
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -85,9 +111,21 @@ export class TbScriptLangComponent extends PageComponent implements ControlValue
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param scriptLang script lang (ScriptLanguage)
+   */
+
   writeValue(scriptLang: ScriptLanguage): void {
     this.scriptLangFormGroup.get('scriptLang').patchValue(scriptLang, {emitEvent: false});
   }
+
+  /**
+   * update view.
+   *
+   * @param scriptLang script lang (ScriptLanguage)
+   */
 
   updateView(scriptLang: ScriptLanguage) {
     this.propagateChange(scriptLang);

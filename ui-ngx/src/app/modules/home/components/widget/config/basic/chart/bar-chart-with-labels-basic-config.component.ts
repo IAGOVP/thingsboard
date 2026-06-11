@@ -51,14 +51,17 @@ import {
 } from '@home/components/widget/lib/chart/time-series-chart.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: bar chart with labels basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-bar-chart-with-labels-basic-config`.
+ */
 @Component({
     selector: 'tb-bar-chart-with-labels-basic-config',
     templateUrl: './bar-chart-with-labels-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: bar chart with labels basic config UI.
- */
+standalone: false
 })
 export class BarChartWithLabelsBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -90,13 +93,32 @@ export class BarChartWithLabelsBasicConfigComponent extends BasicWidgetConfigCom
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.barChartWidgetConfigForm;
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'temperature', label: 'Temperature', type: DataKeyType.timeseries }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: BarChartWithLabelsWidgetSettings = mergeDeep<BarChartWithLabelsWidgetSettings>({} as BarChartWithLabelsWidgetSettings,
@@ -173,10 +195,23 @@ export class BarChartWithLabelsBasicConfigComponent extends BasicWidgetConfigCom
     });
   }
 
+  /**
+   * Event handler for config changed.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
+
   protected onConfigChanged(widgetConfig: WidgetConfigComponentData) {
     updateLatestDataKeys([widgetConfig.config.settings.yAxis], this.datasource, this.callbacks);
     super.onConfigChanged(widgetConfig);
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
@@ -250,9 +285,22 @@ export class BarChartWithLabelsBasicConfigComponent extends BasicWidgetConfigCom
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon', 'showBarLabel', 'showBarValue', 'showBarBorder', 'showLegend', 'showTooltip', 'tooltipShowDate'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.barChartWidgetConfigForm.get('showTitle').value;
@@ -355,6 +403,13 @@ export class BarChartWithLabelsBasicConfigComponent extends BasicWidgetConfigCom
     }
   }
 
+  /**
+   * get series.
+   *
+   * @param datasources datasources (Datasource[])
+   * @returns DataKey[] observable or value
+   */
+
   private getSeries(datasources?: Datasource[]): DataKey[] {
     if (datasources && datasources.length) {
       return datasources[0].dataKeys || [];
@@ -362,11 +417,25 @@ export class BarChartWithLabelsBasicConfigComponent extends BasicWidgetConfigCom
     return [];
   }
 
+  /**
+   * set series.
+   *
+   * @param series series (DataKey[])
+   * @param datasources datasources (Datasource[])
+   */
+
   private setSeries(series: DataKey[], datasources?: Datasource[]) {
     if (datasources && datasources.length) {
       datasources[0].dataKeys = series;
     }
   }
+
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
 
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
@@ -375,6 +444,13 @@ export class BarChartWithLabelsBasicConfigComponent extends BasicWidgetConfigCom
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

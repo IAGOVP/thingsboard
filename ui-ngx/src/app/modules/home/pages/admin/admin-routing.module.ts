@@ -445,6 +445,9 @@ const routes: Routes = [
 /**
  * Angular NgModule: admin routing feature area.
  */
+/**
+ * Angular NgModule bundling admin routing (home/admin pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
@@ -452,5 +455,5 @@ const routes: Routes = [
     ResourcesLibraryTableConfigResolver,
     JsLibraryTableConfigResolver,
     QueuesTableConfigResolver
-  ]})
+]})
 export class AdminRoutingModule { }

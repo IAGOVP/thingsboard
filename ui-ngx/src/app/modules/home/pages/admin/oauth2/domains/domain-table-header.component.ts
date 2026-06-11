@@ -20,14 +20,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { DomainInfo } from '@shared/models/oauth2.models';
 
+
+/**
+ * Angular component: domain table header (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-domain-table-header`.
+ */
 @Component({
     selector: 'tb-domain-table-header',
     templateUrl: './domain-table-header.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: domain table header UI.
- */
+standalone: false
 })
 export class DomainTableHeaderComponent extends EntityTableHeaderComponent<DomainInfo> {
 

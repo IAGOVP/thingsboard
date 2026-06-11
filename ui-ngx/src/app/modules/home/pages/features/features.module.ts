@@ -23,11 +23,14 @@ import { FeaturesRoutingModule } from '@home/pages/features/features-routing.mod
 /**
  * Angular NgModule: features feature area.
  */
+/**
+ * Angular NgModule bundling features (home/features pages).
+ */
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     SharedModule,
     FeaturesRoutingModule
-  ]})
+]})
 export class FeaturesModule { }

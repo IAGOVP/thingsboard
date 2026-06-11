@@ -50,6 +50,12 @@ export interface DeviceFilterConfigData {
 }
 
 // @dynamic
+
+/**
+ * Angular component: device info filter (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-info-filter`.
+ */
 @Component({
     selector: 'tb-device-info-filter',
     templateUrl: './device-info-filter.component.html',
@@ -61,10 +67,7 @@ export interface DeviceFilterConfigData {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: device info filter UI.
- */
+standalone: false
 })
 export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
 
@@ -113,6 +116,11 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.data) {
       this.panelMode = this.data.panelMode;
@@ -140,12 +148,30 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -156,6 +182,12 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param deviceInfoFilter device info filter (DeviceInfoFilter)
+   */
+
   writeValue(deviceInfoFilter?: DeviceInfoFilter): void {
     this.deviceInfoFilter = deviceInfoFilter;
     if (!this.initialDeviceFilterConfig && deviceInfoFilter) {
@@ -164,6 +196,11 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
     this.updateButtonDisplayValue();
     this.updateDeviceInfoFilterForm(deviceInfoFilter);
   }
+
+  /**
+   * toggle device filter panel.
+   *
+   */
 
   toggleDeviceFilterPanel($event: Event) {
     if ($event) {
@@ -198,6 +235,11 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.updateDeviceInfoFilterForm(this.deviceInfoFilter);
     this.deviceInfoFilterForm.markAsPristine();
@@ -208,6 +250,11 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
       this.deviceFilterOverlayRef.dispose();
     }
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     this.deviceFilterUpdated(this.deviceInfoFilterForm.value);
@@ -223,6 +270,11 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   reset() {
     const deviceInfoFilter = this.deviceFilterFromFormValue(this.deviceInfoFilterForm.value);
     if (!this.deviceInfoFilterConfigEquals(deviceInfoFilter, this.initialDeviceFilterConfig)) {
@@ -230,6 +282,12 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
       this.deviceInfoFilterForm.markAsDirty();
     }
   }
+
+  /**
+   * device profile changed.
+   *
+   * @param deviceProfileInfo device profile info (EntityInfoData)
+   */
 
   deviceProfileChanged(deviceProfileInfo: EntityInfoData) {
     this.deviceProfileInfo = deviceProfileInfo;
@@ -251,6 +309,12 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
     return false;
   };
 
+  /**
+   * update device info filter form.
+   *
+   * @param deviceInfoFilter device info filter (DeviceInfoFilter)
+   */
+
   private updateDeviceInfoFilterForm(deviceInfoFilter?: DeviceInfoFilter) {
     this.deviceInfoFilterForm.patchValue({
       deviceProfileId: deviceInfoFilter?.deviceProfileId ?? null,
@@ -258,11 +322,22 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
     }, {emitEvent: false});
   }
 
+  /**
+   * device filter updated.
+   *
+   * @param deviceInfoFilter device info filter (DeviceInfoFilter)
+   */
+
   private deviceFilterUpdated(deviceInfoFilter: DeviceInfoFilter) {
     this.deviceInfoFilter = this.deviceFilterFromFormValue(deviceInfoFilter);
     this.updateButtonDisplayValue();
     this.propagateChange(this.deviceInfoFilter);
   }
+
+  /**
+   * update button display value.
+   *
+   */
 
   private updateButtonDisplayValue() {
     if (this.buttonMode) {
@@ -291,6 +366,13 @@ export class DeviceInfoFilterComponent implements OnInit, ControlValueAccessor {
       this.cd.detectChanges();
     }
   }
+
+  /**
+   * device filter from form value.
+   *
+   * @param formValue form value (any)
+   * @returns DeviceInfoFilter observable or value
+   */
 
   private deviceFilterFromFormValue(formValue: any): DeviceInfoFilter {
     return {

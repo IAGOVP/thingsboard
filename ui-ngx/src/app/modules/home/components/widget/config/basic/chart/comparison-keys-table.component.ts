@@ -26,6 +26,12 @@ import {
 import { DataKey, DatasourceType } from '@shared/models/widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: comparison keys table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-comparison-keys-table`.
+ */
 @Component({
     selector: 'tb-comparison-keys-table',
     templateUrl: './comparison-keys-table.component.html',
@@ -38,10 +44,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: comparison keys table UI.
- */
+standalone: false
 })
 export class ComparisonKeysTableComponent implements ControlValueAccessor, OnInit {
 
@@ -64,6 +67,11 @@ export class ComparisonKeysTableComponent implements ControlValueAccessor, OnIni
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.keysListFormGroup = this.fb.group({
       keys: [this.fb.array([]), []]
@@ -78,12 +86,30 @@ export class ComparisonKeysTableComponent implements ControlValueAccessor, OnIni
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -93,17 +119,44 @@ export class ComparisonKeysTableComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DataKey[] | undefined)
+   */
+
   writeValue(value: DataKey[] | undefined): void {
     this.keysListFormGroup.setControl('keys', this.prepareKeysFormArray(value), {emitEvent: false});
   }
+
+  /**
+   * keys form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
 
   keysFormArray(): UntypedFormArray {
     return this.keysListFormGroup.get('keys') as UntypedFormArray;
   }
 
+  /**
+   * track by key.
+   *
+   * @param _index  index (number)
+   * @param keyControl key control (AbstractControl)
+   * @returns any observable or value
+   */
+
   trackByKey(_index: number, keyControl: AbstractControl): any {
     return keyControl;
   }
+
+  /**
+   * prepare keys form array.
+   *
+   * @param keys keys (DataKey[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareKeysFormArray(keys: DataKey[] | undefined): UntypedFormArray {
     const keysControls: Array<AbstractControl> = [];

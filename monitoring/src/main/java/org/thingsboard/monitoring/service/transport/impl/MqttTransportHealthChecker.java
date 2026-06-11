@@ -30,8 +30,9 @@ import org.thingsboard.monitoring.config.transport.TransportMonitoringTarget;
 import org.thingsboard.monitoring.config.transport.TransportType;
 import org.thingsboard.monitoring.service.transport.TransportHealthChecker;
 /**
- * Publishes test MQTT telemetry and validates WebSocket echo.
+ * Publishes test MQTT telemetry and validates WebSocket echo latency.
  */
+
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -45,6 +46,12 @@ public class MqttTransportHealthChecker extends TransportHealthChecker<MqttTrans
     protected MqttTransportHealthChecker(MqttTransportMonitoringConfig config, TransportMonitoringTarget target) {
         super(config, target);
     }
+    /**
+     * Init client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void initClient() throws Exception {
@@ -64,6 +71,13 @@ public class MqttTransportHealthChecker extends TransportHealthChecker<MqttTrans
             log.debug("Initialized MQTT client for URI {}", mqttClient.getServerURI());
         }
     }
+    /**
+     * Send test payload.
+     *
+     * @param payload payload ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void sendTestPayload(String payload) throws Exception {
@@ -72,6 +86,12 @@ public class MqttTransportHealthChecker extends TransportHealthChecker<MqttTrans
         message.setQos(config.getQos());
         mqttClient.publish(DEVICE_TELEMETRY_TOPIC, message);
     }
+    /**
+     * Destroy client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void destroyClient() throws Exception {
@@ -81,6 +101,12 @@ public class MqttTransportHealthChecker extends TransportHealthChecker<MqttTrans
             log.info("Disconnected MQTT client");
         }
     }
+    /**
+     * Returns transport type.
+     *
+     * @return {@link TransportType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TransportType getTransportType() {

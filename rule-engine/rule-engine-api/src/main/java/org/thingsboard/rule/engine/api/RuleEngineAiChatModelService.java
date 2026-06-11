@@ -20,13 +20,23 @@ import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import org.thingsboard.server.common.data.ai.model.chat.AiChatModelConfig;
 
+
 /**
 
- * Rule engine facade for rule engine ai chat model operations.
+ * Rule engine service facade for rule engine ai chat model (rule engine public API contracts and services).
 
  */
 
+
 public interface RuleEngineAiChatModelService {
+    /**
+     * Send chat request async.
+     *
+     * @param chatModelConfig chat model config ({@link AiChatModelConfig})
+     * @param chatRequest chat request ({@link ChatRequest})
+     * @return the operation result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     <C extends AiChatModelConfig<C>> FluentFuture<ChatResponse> sendChatRequestAsync(AiChatModelConfig<C> chatModelConfig, ChatRequest chatRequest);
 

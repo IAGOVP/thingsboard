@@ -42,6 +42,12 @@ import {
 } from '@home/pages/widget/widgets-bundle-dialog.component';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: widgets bundle select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widgets-bundle-select`.
+ */
 @Component({
     selector: 'tb-widgets-bundle-select',
     templateUrl: './widgets-bundle-select.component.html',
@@ -52,10 +58,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             multi: true
         }],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widgets bundle select UI.
- */
+standalone: false
 })
 export class WidgetsBundleSelectComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -101,13 +104,30 @@ export class WidgetsBundleSelectComponent implements ControlValueAccessor, OnIni
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.widgetsBundles$ = this.getWidgetsBundles().pipe(
@@ -146,21 +166,50 @@ export class WidgetsBundleSelectComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (WidgetsBundle | null)
+   */
 
   writeValue(value: WidgetsBundle | null): void {
     this.widgetsBundle = value;
   }
 
+  /**
+   * widgets bundle changed.
+   *
+   */
+
   widgetsBundleChanged() {
     this.updateView();
   }
 
+  /**
+   * is system.
+   *
+   * @param item item (WidgetsBundle)
+   */
+
   isSystem(item: WidgetsBundle) {
     return item && item.tenantId.id === NULL_UUID;
   }
+
+  /**
+   * select widgets bundle by alias.
+   *
+   * @param alias alias (string)
+   */
 
   private selectWidgetsBundleByAlias(alias: string) {
     if (this.widgetsBundles && alias) {
@@ -175,9 +224,20 @@ export class WidgetsBundleSelectComponent implements ControlValueAccessor, OnIni
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   private updateView() {
     this.propagateChange(this.widgetsBundle);
   }
+
+  /**
+   * get widgets bundles.
+   *
+   * @returns Observable<Array<WidgetsBundle>> observable or value
+   */
 
   private getWidgetsBundles(): Observable<Array<WidgetsBundle>> {
     let widgetsBundlesObservable: Observable<Array<WidgetsBundle>>;
@@ -199,9 +259,22 @@ export class WidgetsBundleSelectComponent implements ControlValueAccessor, OnIni
     return widgetsBundlesObservable;
   }
 
+  /**
+   * compare by id.
+   *
+   * @param f1 f1 (WidgetsBundle)
+   * @param f2 f2 (WidgetsBundle)
+   * @returns boolean observable or value
+   */
+
   compareById(f1: WidgetsBundle, f2: WidgetsBundle): boolean {
     return f1 && f2 && f1.id.id === f2.id.id;
   }
+
+  /**
+   * open widgets bundle dialog.
+   *
+   */
 
   openWidgetsBundleDialog($event) {
     $event.preventDefault();

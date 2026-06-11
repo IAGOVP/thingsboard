@@ -22,14 +22,23 @@ import org.thingsboard.rule.engine.util.TbMsgSource;
 import java.util.Collections;
 import java.util.Set;
 /**
- * JSON configuration for TbDeleteKeys rule node.
+ * JSON configuration POJO for {@link TbDeleteKeys} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbDeleteKeysNodeConfiguration implements NodeConfiguration<TbDeleteKeysNodeConfiguration> {
 
     private TbMsgSource deleteFrom;
     private Set<String> keys;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbDeleteKeysNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbDeleteKeysNodeConfiguration defaultConfiguration() {

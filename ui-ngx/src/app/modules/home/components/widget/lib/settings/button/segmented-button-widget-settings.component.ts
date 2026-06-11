@@ -40,14 +40,17 @@ import {
 } from '@home/components/widget/lib/button/segmented-button-widget.models';
 import { ValueCardLayout } from '@home/components/widget/lib/cards/value-card-widget.models';
 
+
+/**
+ * Angular component: segmented button widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-segmented-button-widget-settings`.
+ */
 @Component({
     selector: 'tb-segmented-button-widget-settings',
     templateUrl: './segmented-button-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: segmented button widget settings UI.
- */
+standalone: false
 })
 export class SegmentedButtonWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -85,13 +88,31 @@ export class SegmentedButtonWidgetSettingsComponent extends WidgetSettingsCompon
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.segmentedButtonWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return segmentedButtonDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.segmentedButtonWidgetSettingsForm = this.fb.group({
@@ -145,9 +166,21 @@ export class SegmentedButtonWidgetSettingsComponent extends WidgetSettingsCompon
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['appearance.leftAppearance.showLabel', 'appearance.leftAppearance.showIcon', 'appearance.rightAppearance.showLabel', 'appearance.rightAppearance.showIcon',];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showLeftLabel: boolean = this.segmentedButtonWidgetSettingsForm.get('appearance.leftAppearance.showLabel').value;

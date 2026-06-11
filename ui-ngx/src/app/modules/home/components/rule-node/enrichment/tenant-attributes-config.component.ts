@@ -21,14 +21,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { DataToFetch, dataToFetchTranslations, FetchTo } from '../rule-node-config.models';
 
+
+/**
+ * Angular component: tenant attributes config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-tenant-attributes-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-tenant-attributes-config',
     templateUrl: './tenant-attributes-config.component.html',
     styleUrls: ['./tenant-attributes-config.component.scss'],
-    standalone: false
-/**
- * Angular component: tenant attributes config UI.
- */
+standalone: false
 })
 export class TenantAttributesConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -48,9 +51,22 @@ export class TenantAttributesConfigComponent extends RuleNodeConfigurationCompon
     }
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.tenantAttributesConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     let dataToFetch: DataToFetch;
@@ -74,6 +90,13 @@ export class TenantAttributesConfigComponent extends RuleNodeConfigurationCompon
     };
   }
 
+  /**
+   * select translation.
+   *
+   * @param latestTelemetryTranslation latest telemetry translation (string)
+   * @param attributesTranslation attributes translation (string)
+   */
+
   public selectTranslation(latestTelemetryTranslation: string, attributesTranslation: string) {
     if (this.tenantAttributesConfigForm.get('dataToFetch').value === DataToFetch.LATEST_TELEMETRY) {
       return latestTelemetryTranslation;
@@ -81,6 +104,21 @@ export class TenantAttributesConfigComponent extends RuleNodeConfigurationCompon
       return attributesTranslation;
     }
   }
+
+
+  /**
+
+
+   * Event handler for configuration set.
+
+
+   *
+
+
+   * @param configuration configuration (RuleNodeConfiguration)
+
+
+   */
 
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {

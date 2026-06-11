@@ -33,6 +33,13 @@ import { deepClone, isDefinedAndNotNull } from '@core/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
+
+
+/**
+ * Angular component: lwm2m observe attr telemetry instances (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-observe-attr-telemetry-instances`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-observe-attr-telemetry-instances',
     templateUrl: './lwm2m-observe-attr-telemetry-instances.component.html',
@@ -49,13 +56,8 @@ import { Subscription } from 'rxjs';
             multi: true
         }
     ],
-    standalone: false
 
-/**
-
- * Angular component: lwm2m observe attr telemetry instances UI.
-
- */
+standalone: false
 })
 
 export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValueAccessor, Validator, OnDestroy {
@@ -91,18 +93,41 @@ export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValue
     this.valueChange$ = this.instancesFormGroup.valueChanges.subscribe(value => this.updateModel(value.instances));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.valueChange$) {
       this.valueChange$.unsubscribe();
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -113,9 +138,22 @@ export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValue
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (Instance[])
+   */
+
   writeValue(value: Instance[]): void {
     this.updateInstances(value);
   }
+
+  /**
+   * validate.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(control: AbstractControl): ValidationErrors | null {
     return this.instancesFormGroup.valid ? null : {
@@ -126,6 +164,12 @@ export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValue
   get instancesFormArray(): UntypedFormArray {
     return this.instancesFormGroup.get('instances') as UntypedFormArray;
   }
+
+  /**
+   * update instances.
+   *
+   * @param instances instances (Instance[])
+   */
 
   private updateInstances(instances: Instance[]): void {
     if (instances.length === this.instancesFormArray.length) {
@@ -144,6 +188,13 @@ export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValue
     }
   }
 
+  /**
+   * POST/PUT entity — create instance form group.
+   *
+   * @param instance instance (Instance)
+   * @returns UntypedFormGroup observable or value
+   */
+
   private createInstanceFormGroup(instance: Instance): UntypedFormGroup {
     return this.fb.group({
       id: [instance.id],
@@ -151,6 +202,12 @@ export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValue
       resources: [instance.resources]
     });
   }
+
+  /**
+   * update model.
+   *
+   * @param instances instances (Instance[])
+   */
 
   private updateModel(instances: Instance[]) {
     if (instances && this.instancesFormGroup.valid) {
@@ -177,6 +234,11 @@ export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValue
     instance.get('resources').patchValue(resources);
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators(): void {
     this.instancesFormArray.setValidators(this.required ? Validators.required : []);
     this.instancesFormArray.updateValueAndValidity();
@@ -200,6 +262,13 @@ export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValue
     return isDefinedAndNotNull(resources) && resources.every(resource => resource[type]);
   }
 
+  /**
+   * disable observe.
+   *
+   * @param instance instance (AbstractControl)
+   * @returns boolean observable or value
+   */
+
   disableObserve(instance: AbstractControl): boolean {
     return this.disabled || !(
       this.getIndeterminate(instance, 'telemetry') ||
@@ -212,6 +281,13 @@ export class Lwm2mObserveAttrTelemetryInstancesComponent implements ControlValue
   get isExpend(): boolean {
     return this.instancesFormArray.length === 1;
   }
+
+  /**
+   * get name instance.
+   *
+   * @param instance instance (Instance)
+   * @returns string observable or value
+   */
 
   getNameInstance(instance: Instance): string {
     return `${this.translate.instant('device-profile.lwm2m.instance')} #${instance.id}`;

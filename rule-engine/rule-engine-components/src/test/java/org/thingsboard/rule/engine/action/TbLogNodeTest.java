@@ -42,8 +42,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 /**
- * Unit test for tb log node rule node.
+ * Unit test for tb log node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @Slf4j
 public class TbLogNodeTest {

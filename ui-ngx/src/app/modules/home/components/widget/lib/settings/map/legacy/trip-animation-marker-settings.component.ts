@@ -33,6 +33,12 @@ import { TripAnimationMarkerSettings } from '@home/components/widget/lib/maps-le
 import { WidgetService } from '@core/http/widget.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: trip animation marker settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-trip-animation-marker-settings`.
+ */
 @Component({
     selector: 'tb-trip-animation-marker-settings',
     templateUrl: './trip-animation-marker-settings.component.html',
@@ -49,10 +55,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: trip animation marker settings UI.
- */
+standalone: false
 })
 export class TripAnimationMarkerSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -74,6 +77,11 @@ export class TripAnimationMarkerSettingsComponent extends PageComponent implemen
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.tripAnimationMarkerSettingsFormGroup = this.fb.group({
@@ -111,12 +119,30 @@ export class TripAnimationMarkerSettingsComponent extends PageComponent implemen
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -127,6 +153,12 @@ export class TripAnimationMarkerSettingsComponent extends PageComponent implemen
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TripAnimationMarkerSettings)
+   */
+
   writeValue(value: TripAnimationMarkerSettings): void {
     this.modelValue = value;
     this.tripAnimationMarkerSettingsFormGroup.patchValue(
@@ -134,6 +166,12 @@ export class TripAnimationMarkerSettingsComponent extends PageComponent implemen
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.tripAnimationMarkerSettingsFormGroup.valid ? null : {
@@ -143,11 +181,22 @@ export class TripAnimationMarkerSettingsComponent extends PageComponent implemen
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: TripAnimationMarkerSettings = this.tripAnimationMarkerSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const showLabel: boolean = this.tripAnimationMarkerSettingsFormGroup.get('showLabel').value;

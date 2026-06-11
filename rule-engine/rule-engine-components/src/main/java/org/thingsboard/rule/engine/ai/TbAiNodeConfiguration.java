@@ -30,8 +30,11 @@ import java.util.UUID;
 
 import static org.thingsboard.rule.engine.ai.TbResponseFormat.TbJsonResponseFormat;
 /**
- * JSON configuration for TbAi rule node.
+ * JSON configuration POJO for {@link TbAi} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbAiNodeConfiguration implements NodeConfiguration<TbAiNodeConfiguration> {
@@ -57,6 +60,12 @@ public class TbAiNodeConfiguration implements NodeConfiguration<TbAiNodeConfigur
     private int timeoutSeconds;
 
     private boolean forceAck;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbAiNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbAiNodeConfiguration defaultConfiguration() {

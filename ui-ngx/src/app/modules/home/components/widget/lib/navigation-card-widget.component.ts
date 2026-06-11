@@ -28,14 +28,17 @@ interface NavigationCardWidgetSettings {
   path: string;
 }
 
+
+/**
+ * Angular component: navigation card widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-navigation-card-widget`.
+ */
 @Component({
     selector: 'tb-navigation-card-widget',
     templateUrl: './navigation-card-widget.component.html',
     styleUrls: ['./navigation-card-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: navigation card widget UI.
- */
+standalone: false
 })
 export class NavigationCardWidgetComponent extends PageComponent implements OnInit {
 
@@ -53,11 +56,31 @@ export class NavigationCardWidgetComponent extends PageComponent implements OnIn
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.navigationCardWidget = this;
     this.settings = this.ctx.settings;
     this.translatedName = this.utils.customTranslation(this.settings.name, this.settings.name);
   }
+
+
+  /**
+
+
+   * navigate.
+
+
+   *
+
+
+   * @param path path (string)
+
+
+   */
 
 
   navigate($event: Event, path: string) {

@@ -21,6 +21,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: filter text (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-text`.
+ */
 @Component({
   selector: 'tb-filter-text',
   templateUrl: './filter-text.component.html',
@@ -32,10 +38,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
       multi: true
     }
   ],
-  standalone: false
-/**
- * Angular component: filter text UI.
- */
+standalone: false
 })
 export class FilterTextComponent implements ControlValueAccessor, OnChanges {
 
@@ -68,8 +71,20 @@ export class FilterTextComponent implements ControlValueAccessor, OnChanges {
               private datePipe: DatePipe) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnChange(_fn: any): void {
   }
+
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
 
   registerOnTouched(_fn: any): void {
   }
@@ -81,14 +96,32 @@ export class FilterTextComponent implements ControlValueAccessor, OnChanges {
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<KeyFilter>)
+   */
 
   writeValue(value: Array<KeyFilter>): void {
     this.currentValue = value;
     this.updateFilterText(value);
   }
+
+  /**
+   * update filter text.
+   *
+   * @param value value (Array<KeyFilter>)
+   */
 
   private updateFilterText(value: Array<KeyFilter>) {
     this.requiredClass = false;

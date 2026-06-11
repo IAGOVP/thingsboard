@@ -44,14 +44,17 @@ export interface MobileBundleDialogData {
   isAdd?: boolean;
 }
 
+
+/**
+ * Angular component: mobile bundle dialog (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-bundle-dialog`.
+ */
 @Component({
     selector: 'tb-mobile-bundle-dialog',
     templateUrl: './mobile-bundle-dialog.component.html',
     styleUrls: ['./mobile-bundle-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: mobile bundle dialog UI.
- */
+standalone: false
 })
 export class MobileBundleDialogComponent extends DialogComponent<MobileBundleDialogComponent, MobileAppBundle> {
 
@@ -122,13 +125,28 @@ export class MobileBundleDialogComponent extends DialogComponent<MobileBundleDia
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
 
+  /**
+   * back step.
+   *
+   */
+
   backStep() {
     this.addMobileBundle.previous();
   }
+
+  /**
+   * next step.
+   *
+   */
 
   nextStep() {
     if (this.selectedIndex >= this.maxStepperIndex) {
@@ -138,6 +156,12 @@ export class MobileBundleDialogComponent extends DialogComponent<MobileBundleDia
     }
   }
 
+  /**
+   * next step label.
+   *
+   * @returns string observable or value
+   */
+
   nextStepLabel(): string {
     if (this.selectedIndex >= this.maxStepperIndex) {
       return this.data.isAdd ? 'action.add' : 'action.save';
@@ -145,12 +169,25 @@ export class MobileBundleDialogComponent extends DialogComponent<MobileBundleDia
     return 'action.next';
   }
 
+  /**
+   * change step.
+   *
+   */
+
   changeStep($event: StepperSelectionEvent) {
     this.selectedIndex = $event.selectedIndex;
     if ($event.previouslySelectedIndex > $event.selectedIndex) {
       $event.previouslySelectedStep.interacted = false;
     }
   }
+
+  /**
+   * POST/PUT entity — create application.
+   *
+   * @param name name (string)
+   * @param formControl form control (string)
+   * @param platformType platform type (PlatformType)
+   */
 
   createApplication(name: string, formControl: string, platformType: PlatformType) {
     this.dialog.open<MobileAppDialogComponent, MobileAppDialogData, MobileApp>(MobileAppDialogComponent, {
@@ -168,6 +205,11 @@ export class MobileBundleDialogComponent extends DialogComponent<MobileBundleDia
         }
       });
   }
+
+  /**
+   * POST/PUT entity — create client.
+   *
+   */
 
   createClient($event: Event) {
     if ($event) {
@@ -194,6 +236,11 @@ export class MobileBundleDialogComponent extends DialogComponent<MobileBundleDia
     return this.addMobileBundle?._steps?.length - 1;
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   */
+
   private add(): void {
     if (this.allValid()) {
       let task = {
@@ -212,6 +259,12 @@ export class MobileBundleDialogComponent extends DialogComponent<MobileBundleDia
       );
     }
   }
+
+  /**
+   * all valid.
+   *
+   * @returns boolean observable or value
+   */
 
   private allValid(): boolean {
     return !this.addMobileBundle.steps.find((item, index) => {

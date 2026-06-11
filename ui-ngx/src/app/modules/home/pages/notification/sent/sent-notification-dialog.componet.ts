@@ -53,14 +53,17 @@ export interface RequestNotificationDialogData {
   isAdd?: boolean;
 }
 
+
+/**
+ * Angular component: sent notification dialog (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-sent-notification-dialog`.
+ */
 @Component({
     selector: 'tb-sent-notification-dialog',
     templateUrl: './sent-notification-dialog.component.html',
     styleUrls: ['./sent-notification-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: sent notification dialog UI.
- */
+standalone: false
 })
 export class SentNotificationDialogComponent extends
   TemplateConfiguration<SentNotificationDialogComponent, NotificationRequest> implements OnDestroy {
@@ -189,13 +192,29 @@ export class SentNotificationDialogComponent extends
     this.refreshAllowDeliveryMethod();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * next step label.
+   *
+   * @returns string observable or value
+   */
 
   nextStepLabel(): string {
     if (this.selectedIndex >= this.maxStepperIndex) {
@@ -203,6 +222,11 @@ export class SentNotificationDialogComponent extends
     }
     return 'action.next';
   }
+
+  /**
+   * change step.
+   *
+   */
 
   changeStep($event: StepperSelectionEvent) {
     this.selectedIndex = $event.selectedIndex;
@@ -214,9 +238,19 @@ export class SentNotificationDialogComponent extends
     }
   }
 
+  /**
+   * back step.
+   *
+   */
+
   backStep() {
     this.createNotification.previous();
   }
+
+  /**
+   * next step.
+   *
+   */
 
   nextStep() {
     if (this.selectedIndex >= this.maxStepperIndex) {
@@ -230,6 +264,11 @@ export class SentNotificationDialogComponent extends
     return this.createNotification?._steps?.length - 1;
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   */
+
   private add(): void {
     if (this.allValid()) {
       this.notificationService.createNotificationRequest(this.notificationFormValue).subscribe(
@@ -238,10 +277,19 @@ export class SentNotificationDialogComponent extends
     }
   }
 
+  /**
+   * get preview.
+   *
+   */
+
   private getPreview() {
     if (this.allValid()) {
       this.preview = null;
       this.notificationService.getNotificationRequestPreview(this.notificationFormValue).pipe(
+        /**
+         * map.
+         *
+         */
         map(data => {
           if (data.processedTemplates.WEB?.enabled) {
             (data.processedTemplates.WEB as any).text = data.processedTemplates.WEB.body;
@@ -270,6 +318,12 @@ export class SentNotificationDialogComponent extends
     return formValue;
   }
 
+  /**
+   * all valid.
+   *
+   * @returns boolean observable or value
+   */
+
   private allValid(): boolean {
     return !this.createNotification.steps.find((item, index) => {
       if (item.stepControl?.invalid) {
@@ -282,23 +336,53 @@ export class SentNotificationDialogComponent extends
     });
   }
 
+  /**
+   * is sys admin.
+   *
+   * @returns boolean observable or value
+   */
+
   private isSysAdmin(): boolean {
     return this.authUser.authority === Authority.SYS_ADMIN;
   }
+
+  /**
+   * is tenant admin.
+   *
+   * @returns boolean observable or value
+   */
 
   private isTenantAdmin(): boolean {
     return this.authUser.authority === Authority.TENANT_ADMIN;
   }
 
+  /**
+   * min date.
+   *
+   * @returns Date observable or value
+   */
+
   minDate(): Date {
     return new Date(getCurrentTime(this.notificationRequestForm.get('additionalConfig.timezone').value).format('lll'));
   }
+
+  /**
+   * max date.
+   *
+   * @returns Date observable or value
+   */
 
   maxDate(): Date {
     const date = this.minDate();
     date.setDate(date.getDate() + 7);
     return date;
   }
+
+  /**
+   * POST/PUT entity — create target.
+   *
+   * @param button button (MatButton)
+   */
 
   createTarget($event: Event, button: MatButton) {
     if ($event) {
@@ -323,9 +407,23 @@ export class SentNotificationDialogComponent extends
       });
   }
 
+  /**
+   * get delivery methods templates control.
+   *
+   * @param deliveryMethod delivery method (NotificationDeliveryMethod)
+   * @returns AbstractControl observable or value
+   */
+
   getDeliveryMethodsTemplatesControl(deliveryMethod: NotificationDeliveryMethod): AbstractControl {
     return this.templateNotificationForm.get('configuration.deliveryMethodsTemplates').get(deliveryMethod).get('enabled');
   }
+
+  /**
+   * get delivery methods tooltip.
+   *
+   * @param deliveryMethod delivery method (NotificationDeliveryMethod)
+   * @returns string observable or value
+   */
 
   getDeliveryMethodsTooltip(deliveryMethod: NotificationDeliveryMethod): string {
     if (this.allowConfigureDeliveryMethod(deliveryMethod)) {
@@ -333,6 +431,13 @@ export class SentNotificationDialogComponent extends
     }
     return this.translate.instant('notification.delivery-method-not-configure-contact');
   }
+
+  /**
+   * allow configure delivery method.
+   *
+   * @param deliveryMethod delivery method (NotificationDeliveryMethod)
+   * @returns boolean observable or value
+   */
 
   allowConfigureDeliveryMethod(deliveryMethod: NotificationDeliveryMethod): boolean {
     const tenantAllowConfigureDeliveryMethod = new Set([
@@ -349,9 +454,21 @@ export class SentNotificationDialogComponent extends
     return false;
   }
 
+  /**
+   * is interact delivery method.
+   *
+   * @param deliveryMethod delivery method (NotificationDeliveryMethod)
+   */
+
   isInteractDeliveryMethod(deliveryMethod: NotificationDeliveryMethod) {
     return this.getDeliveryMethodsTemplatesControl(deliveryMethod).disabled && this.allowConfigureDeliveryMethod(deliveryMethod);
   }
+
+  /**
+   * configuration page.
+   *
+   * @param deliveryMethod delivery method (NotificationDeliveryMethod)
+   */
 
   configurationPage(deliveryMethod: NotificationDeliveryMethod) {
     switch (deliveryMethod) {
@@ -364,6 +481,11 @@ export class SentNotificationDialogComponent extends
     }
   }
 
+  /**
+   * refresh allow delivery method.
+   *
+   */
+
   refreshAllowDeliveryMethod() {
     this.notificationService.getAvailableDeliveryMethods({ignoreLoading: true}).subscribe(allowMethods => {
       this.allowNotificationDeliveryMethods = allowMethods;
@@ -373,6 +495,11 @@ export class SentNotificationDialogComponent extends
       }
     });
   }
+
+  /**
+   * update delivery methods disable state.
+   *
+   */
 
   private updateDeliveryMethodsDisableState() {
     if (this.allowNotificationDeliveryMethods) {

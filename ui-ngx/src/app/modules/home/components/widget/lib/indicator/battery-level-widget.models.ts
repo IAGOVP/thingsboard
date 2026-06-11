@@ -51,11 +51,11 @@ export const batteryLevelLayoutImages = new Map<BatteryLevelLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for battery level widget settings.
-
+ * Battery level widget settings (ThingsBoard web UI).
  */
+
 
 export interface BatteryLevelWidgetSettings {
   layout: BatteryLevelLayout;

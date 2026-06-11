@@ -40,6 +40,12 @@ import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 import { genNextLabelForDataKeys } from '@core/utils';
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 
+
+/**
+ * Angular component: additional map data source row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-additional-map-data-source-row`.
+ */
 @Component({
     selector: 'tb-additional-map-data-source-row',
     templateUrl: './additional-map-data-source-row.component.html',
@@ -52,10 +58,7 @@ import { MapSettingsContext } from '@home/components/widget/lib/settings/common/
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: additional map data source row UI.
- */
+standalone: false
 })
 export class AdditionalMapDataSourceRowComponent implements ControlValueAccessor, OnInit {
 
@@ -91,6 +94,11 @@ export class AdditionalMapDataSourceRowComponent implements ControlValueAccessor
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (this.context.functionsOnly) {
       this.datasourceTypes = [DatasourceType.function];
@@ -116,12 +124,30 @@ export class AdditionalMapDataSourceRowComponent implements ControlValueAccessor
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -132,6 +158,12 @@ export class AdditionalMapDataSourceRowComponent implements ControlValueAccessor
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (AdditionalMapDataSourceSettings)
+   */
 
   writeValue(value: AdditionalMapDataSourceSettings): void {
     this.modelValue = value;
@@ -148,12 +180,25 @@ export class AdditionalMapDataSourceRowComponent implements ControlValueAccessor
     this.cd.markForCheck();
   }
 
+  /**
+   * generate data key.
+   *
+   * @param key key (DataKey)
+   * @returns DataKey observable or value
+   */
+
   private generateDataKey(key: DataKey): DataKey {
     const dataKey = this.context.callbacks.generateDataKey(key.name, key.type, null, false, null);
     const dataKeys: DataKey[] = this.dataSourceFormGroup.get('dataKeys').value || [];
     dataKey.label = genNextLabelForDataKeys(dataKey.label, dataKeys);
     return dataKey;
   }
+
+  /**
+   * Event handler for ds type changed.
+   *
+   * @param newDsType new ds type (DatasourceType)
+   */
 
   private onDsTypeChanged(newDsType: DatasourceType) {
     let updateModel = false;
@@ -172,6 +217,11 @@ export class AdditionalMapDataSourceRowComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     const dsType: DatasourceType = this.dataSourceFormGroup.get('dsType').value;
     if (dsType === DatasourceType.function) {
@@ -188,6 +238,11 @@ export class AdditionalMapDataSourceRowComponent implements ControlValueAccessor
       this.dataSourceFormGroup.get('dsEntityAliasId').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = {...this.modelValue, ...this.dataSourceFormGroup.value};

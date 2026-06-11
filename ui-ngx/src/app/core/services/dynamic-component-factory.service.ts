@@ -21,10 +21,12 @@ import { map } from 'rxjs/operators';
 import { guid } from '@core/utils';
 
 /**
- * Angular HTTP service: dynamic component factory REST wrappers (`@core/http`).
+ * Angular injectable service: dynamic component factory (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class DynamicComponentFactoryService {
 

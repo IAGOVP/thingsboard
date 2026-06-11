@@ -24,8 +24,11 @@ import org.thingsboard.rest.client.RestClient;
 import java.time.Duration;
 
 /**
- * REST client to the monitored ThingsBoard ({@link RestClient}): login, entity query, telemetry save.
+ * REST client to the monitored ThingsBoard instance.
+ *
+ * <p>Extends {@link org.thingsboard.rest.client.RestClient} for login, entity query, and telemetry save.
  */
+
 @Component
 public class TbClient extends RestClient {
 
@@ -47,7 +50,14 @@ public class TbClient extends RestClient {
         logIn();
     }
 
-    /** Authenticates with configured tenant credentials and returns JWT for WebSocket. */
+    
+    /**
+     * Authenticates with configured tenant credentials and returns JWT for WebSocket clients.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     public String logIn() {
         login(username, password);
         return getToken();

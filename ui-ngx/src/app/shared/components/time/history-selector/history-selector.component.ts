@@ -19,14 +19,17 @@ import { interval } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { HistorySelectSettings } from '@app/modules/home/components/widget/lib/maps-legacy/map-models';
 
+
+/**
+ * Angular component: history selector (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-history-selector`.
+ */
 @Component({
     selector: 'tb-history-selector',
     templateUrl: './history-selector.component.html',
     styleUrls: ['./history-selector.component.scss'],
-    standalone: false
-/**
- * Angular component: history selector UI.
- */
+standalone: false
 })
 export class HistorySelectorComponent implements OnChanges {
 
@@ -56,6 +59,11 @@ export class HistorySelectorComponent implements OnChanges {
     this.currentTime = this.minTime === Infinity ? null : this.minTime;
   }
 
+  /**
+   * play.
+   *
+   */
+
   play() {
     this.playing = true;
     if (!this.interval) {
@@ -81,6 +89,11 @@ export class HistorySelectorComponent implements OnChanges {
     }
   }
 
+  /**
+   * re init.
+   *
+   */
+
   reInit() {
     if (this.interval) {
       this.interval.complete();
@@ -90,12 +103,22 @@ export class HistorySelectorComponent implements OnChanges {
     }
   }
 
+  /**
+   * pause.
+   *
+   */
+
   pause() {
     this.playing = false;
     this.currentTime = this.minTime + this.index * this.step;
     this.cd.detectChanges();
     this.timeUpdated.emit(this.currentTime);
   }
+
+  /**
+   * move next.
+   *
+   */
 
   moveNext() {
     if (this.index < this.maxTimeIndex) {
@@ -109,6 +132,11 @@ export class HistorySelectorComponent implements OnChanges {
     this.pause();
   }
 
+  /**
+   * move prev.
+   *
+   */
+
   movePrev() {
     if (this.index > this.minTimeIndex) {
       if (this.useAnchors) {
@@ -121,6 +149,14 @@ export class HistorySelectorComponent implements OnChanges {
     this.pause();
   }
 
+  /**
+   * find index.
+   *
+   * @param value value (number)
+   * @param array array (number[])
+   * @returns number observable or value
+   */
+
   findIndex(value: number, array: number[]): number {
     let i = 0;
     while (array[i] < value) {
@@ -129,15 +165,31 @@ export class HistorySelectorComponent implements OnChanges {
     return i;
   }
 
+  /**
+   * move start.
+   *
+   */
+
   moveStart() {
     this.index = this.minTimeIndex;
     this.pause();
   }
 
+  /**
+   * move end.
+   *
+   */
+
   moveEnd() {
     this.index = this.maxTimeIndex;
     this.pause();
   }
+
+  /**
+   * change index.
+   *
+   * @param index index (number)
+   */
 
   changeIndex(index: number) {
     this.index = index;

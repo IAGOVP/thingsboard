@@ -31,6 +31,12 @@ import { getAce } from '@shared/models/ace/ace.models';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { CancelAnimationFrame, RafService } from '@core/services/raf.service';
 
+
+/**
+ * Angular component: markdown editor (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-markdown-editor`.
+ */
 @Component({
     selector: 'tb-markdown-editor',
     templateUrl: './markdown-editor.component.html',
@@ -43,10 +49,7 @@ import { CancelAnimationFrame, RafService } from '@core/services/raf.service';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: markdown editor UI.
- */
+standalone: false
 })
 export class MarkdownEditorComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
@@ -84,6 +87,11 @@ export class MarkdownEditorComponent implements OnInit, ControlValueAccessor, On
   constructor(private cd: ChangeDetectorRef,
               private raf: RafService) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     if (!this.readonly) {
@@ -123,6 +131,11 @@ export class MarkdownEditorComponent implements OnInit, ControlValueAccessor, On
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.editorResize$) {
       this.editorResize$.disconnect();
@@ -136,16 +149,40 @@ export class MarkdownEditorComponent implements OnInit, ControlValueAccessor, On
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
 
   writeValue(value: string): void {
     this.editorMode = true;
@@ -158,6 +195,11 @@ export class MarkdownEditorComponent implements OnInit, ControlValueAccessor, On
     }
   }
 
+  /**
+   * Event handler for fullscreen.
+   *
+   */
+
   onFullscreen() {
     if (this.markdownEditor) {
       setTimeout(() => {
@@ -165,6 +207,11 @@ export class MarkdownEditorComponent implements OnInit, ControlValueAccessor, On
       }, 0);
     }
   }
+
+  /**
+   * toggle edit mode.
+   *
+   */
 
   toggleEditMode() {
     this.editorMode = !this.editorMode;
@@ -175,6 +222,11 @@ export class MarkdownEditorComponent implements OnInit, ControlValueAccessor, On
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   private updateView() {
     const editorValue = this.markdownEditor.getValue();
     if (this.markdownValue !== editorValue) {
@@ -184,6 +236,11 @@ export class MarkdownEditorComponent implements OnInit, ControlValueAccessor, On
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * Event handler for ace editor resize.
+   *
+   */
 
   private onAceEditorResize() {
     if (this.editorsResizeCaf) {

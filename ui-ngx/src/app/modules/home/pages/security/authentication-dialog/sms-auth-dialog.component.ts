@@ -30,14 +30,17 @@ import {
 import { phoneNumberPattern } from '@shared/models/settings.models';
 import { MatStepper } from '@angular/material/stepper';
 
+
+/**
+ * Angular component: smsauth dialog (home/security pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-sms-auth-dialog`.
+ */
 @Component({
     selector: 'tb-sms-auth-dialog',
     templateUrl: './sms-auth-dialog.component.html',
     styleUrls: ['./authentication-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: smsauth dialog UI.
- */
+standalone: false
 })
 export class SMSAuthDialogComponent extends DialogComponent<SMSAuthDialogComponent> {
 
@@ -72,6 +75,11 @@ export class SMSAuthDialogComponent extends DialogComponent<SMSAuthDialogCompone
     });
   }
 
+  /**
+   * next step.
+   *
+   */
+
   nextStep() {
     switch (this.stepper.selectedIndex) {
       case 0:
@@ -102,9 +110,20 @@ export class SMSAuthDialogComponent extends DialogComponent<SMSAuthDialogCompone
     }
   }
 
+  /**
+   * close dialog.
+   *
+   */
+
   closeDialog() {
     return this.dialogRef.close(this.config);
   }
+
+  /**
+   * show form errors.
+   *
+   * @param form Angular reactive form group
+   */
 
   private showFormErrors(form: UntypedFormGroup) {
     Object.keys(form.controls).forEach(field => {

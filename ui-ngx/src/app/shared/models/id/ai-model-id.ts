@@ -17,11 +17,11 @@
 import { EntityId } from '@shared/models/id/entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for ai model id.
-
+ * TypeScript interfaces, types, and enums for ai model id (shared TypeScript models).
  */
+
 
 export class AiModelId implements EntityId {
   entityType = EntityType.AI_MODEL;

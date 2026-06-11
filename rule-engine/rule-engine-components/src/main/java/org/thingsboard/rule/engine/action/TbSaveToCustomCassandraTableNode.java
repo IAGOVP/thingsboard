@@ -51,7 +51,13 @@ import static org.thingsboard.common.util.DonAsynchron.withCallback;
 
 @Slf4j
 /**
- * Rule engine action node 'save to custom table': Node stores data from incoming Message payload to the Cassandra database into the predefined custom table Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>save to custom table</b>.
+ *
+ * <p>Node stores data from incoming Message payload to the Cassandra database into the predefined custom table
+ * <br>Administrator should set the custom table name without prefix: cs_tb_.  
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbSaveToCustomCassandraTableNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/save-to-custom-table/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/save-to-custom-table/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -82,6 +88,13 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
     private ConsistencyLevel defaultWriteLevel;
     private PreparedStatement saveStmt;
     private Map<String, String> fieldsMap;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -95,11 +108,22 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
         }
         saveStmt = getSaveStmt();
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
         withCallback(save(msg, ctx), success -> ctx.tellSuccess(msg), e -> ctx.tellFailure(msg, e), ctx.getDbCallbackExecutor());
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {
@@ -236,6 +260,14 @@ public class TbSaveToCustomCassandraTableNode implements TbNode {
             return statement.toString();
         }
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

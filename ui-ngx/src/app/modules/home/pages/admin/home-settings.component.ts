@@ -26,14 +26,17 @@ import { HomeDashboardInfo } from '@shared/models/dashboard.models';
 import { isDefinedAndNotNull } from '@core/utils';
 import { DashboardId } from '@shared/models/id/dashboard-id';
 
+
+/**
+ * Angular component: home settings (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-home-settings`.
+ */
 @Component({
     selector: 'tb-home-settings',
     templateUrl: './home-settings.component.html',
     styleUrls: ['./home-settings.component.scss', './settings-card.scss'],
-    standalone: false
-/**
- * Angular component: home settings UI.
- */
+standalone: false
 })
 export class HomeSettingsComponent extends PageComponent implements OnInit, HasConfirmForm {
 
@@ -46,6 +49,11 @@ export class HomeSettingsComponent extends PageComponent implements OnInit, HasC
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.homeSettings = this.fb.group({
       dashboardId: [null],
@@ -57,6 +65,11 @@ export class HomeSettingsComponent extends PageComponent implements OnInit, HasC
       }
     );
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const strDashboardId = this.homeSettings.get('dashboardId').value;
@@ -73,9 +86,21 @@ export class HomeSettingsComponent extends PageComponent implements OnInit, HasC
     );
   }
 
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   confirmForm(): UntypedFormGroup {
     return this.homeSettings;
   }
+
+  /**
+   * set home dashboard info.
+   *
+   * @param homeDashboardInfo home dashboard info (HomeDashboardInfo)
+   */
 
   private setHomeDashboardInfo(homeDashboardInfo: HomeDashboardInfo) {
     this.homeSettings.reset({

@@ -30,14 +30,17 @@ import {
   LatestChartBasicConfigComponent
 } from '@home/components/widget/config/basic/chart/latest-chart-basic-config.component';
 
+
+/**
+ * Angular component: polar area chart basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-polar-area-chart-basic-config`.
+ */
 @Component({
     selector: 'tb-polar-area-chart-basic-config',
     templateUrl: './latest-chart-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: polar area chart basic config UI.
- */
+standalone: false
 })
 export class PolarAreaChartBasicConfigComponent extends LatestChartBasicConfigComponent<PolarAreaChartWidgetSettings> {
 
@@ -52,19 +55,44 @@ export class PolarAreaChartBasicConfigComponent extends LatestChartBasicConfigCo
     super(store, widgetConfigComponent, fb);
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'windPower', label: 'Wind', type: DataKeyType.timeseries, units: '', decimals: 0, color: '#08872B' },
       { name: 'solarPower', label: 'Solar', type: DataKeyType.timeseries, units: '', decimals: 0, color: '#FF4D5A' },
       { name: 'hydroelectricPower', label: 'Hydroelectric', type: DataKeyType.timeseries, units: '', decimals: 0, color: '#FFDE30' }];
   }
 
+  /**
+   * default settings.
+   *
+   */
+
   protected defaultSettings() {
     return polarAreaChartWidgetDefaultSettings;
   }
 
+  /**
+   * latest chart config template.
+   *
+   * @returns TemplateRef<any> observable or value
+   */
+
   public latestChartConfigTemplate(): TemplateRef<any> {
     return this.polarAreaChartConfigTemplate;
   }
+
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetConfigForm latest chart widget config form (UntypedFormGroup)
+   * @param settings settings (PolarAreaChartWidgetSettings)
+   */
 
   protected setupLatestChartControls(latestChartWidgetConfigForm: UntypedFormGroup, settings: PolarAreaChartWidgetSettings) {
     latestChartWidgetConfigForm.addControl('barSettings', this.fb.control(settings.barSettings, []));
@@ -75,6 +103,12 @@ export class PolarAreaChartBasicConfigComponent extends LatestChartBasicConfigCo
     latestChartWidgetConfigForm.addControl('axisTickLabelColor', this.fb.control(settings.axisTickLabelColor, []));
     latestChartWidgetConfigForm.addControl('angleAxisStartAngle', this.fb.control(settings.angleAxisStartAngle, []));
   }
+
+  /**
+   * prepare output latest chart config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   protected prepareOutputLatestChartConfig(config: any) {
     this.widgetConfig.config.settings.barSettings = config.barSettings;

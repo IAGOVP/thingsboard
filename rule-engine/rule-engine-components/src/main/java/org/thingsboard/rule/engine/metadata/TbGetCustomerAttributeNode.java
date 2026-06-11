@@ -33,7 +33,13 @@ import java.util.NoSuchElementException;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 
 /**
- * Rule engine enrichment node 'customer attributes': Adds message originator customer attributes or latest telemetry into message or message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>customer attributes</b>.
+ *
+ * <p>Adds message originator customer attributes or latest telemetry into message or message metadata
+ * <br>Useful in multi-customer solutions where each customer has a different configuration or threshold set 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGetEntityDataNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/customer-attributes/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/customer-attributes/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -49,6 +55,13 @@ import static com.google.common.util.concurrent.Futures.immediateFuture;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/customer-attributes/"
 )
 public class TbGetCustomerAttributeNode extends TbAbstractGetEntityDataNode<CustomerId> {
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbGetEntityDataNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbGetEntityDataNodeConfiguration loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
@@ -57,6 +70,14 @@ public class TbGetCustomerAttributeNode extends TbAbstractGetEntityDataNode<Cust
         checkDataToFetchSupportedOrElseThrow(config.getDataToFetch());
         return config;
     }
+    /**
+     * Finds entity async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originator message originator entity id
+     * @return future completing with {@link CustomerId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<CustomerId> findEntityAsync(TbContext ctx, EntityId originator) {
@@ -74,6 +95,14 @@ public class TbGetCustomerAttributeNode extends TbAbstractGetEntityDataNode<Cust
                     return customerIdOpt.get();
                 }, ctx.getDbCallbackExecutor());
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

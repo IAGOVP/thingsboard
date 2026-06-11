@@ -139,11 +139,11 @@ export function updateEditorSize(editorElement: any, content: string, editor: Ac
   editor.resize();
 }
 
+
 /**
-
- * TypeScript models and enums for range.
-
+ * TypeScript interfaces, types, and enums for range (shared TypeScript models).
  */
+
 
 export class Range implements Ace.Range {
 
@@ -162,9 +162,25 @@ export class Range implements Ace.Range {
     };
   }
 
+  /**
+   * from points.
+   *
+   * @param start start (Ace.Point)
+   * @param end end (Ace.Point)
+   * @returns Ace.Range observable or value
+   */
+
   static fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range {
     return new Range(start.row, start.column, end.row, end.column);
   }
+
+  /**
+   * clip rows.
+   *
+   * @param firstRow first row (number)
+   * @param lastRow last row (number)
+   * @returns Ace.Range observable or value
+   */
 
   clipRows(firstRow: number, lastRow: number): Ace.Range {
     let end: Ace.Point;
@@ -183,9 +199,21 @@ export class Range implements Ace.Range {
     return Range.fromPoints(start || this.start, end || this.end);
   }
 
+  /**
+   * clone.
+   *
+   * @returns Ace.Range observable or value
+   */
+
   clone(): Ace.Range {
     return Range.fromPoints(this.start, this.end);
   }
+
+  /**
+   * collapse rows.
+   *
+   * @returns Ace.Range observable or value
+   */
 
   collapseRows(): Ace.Range {
     if (this.end.column === 0) {
@@ -194,6 +222,14 @@ export class Range implements Ace.Range {
       return new Range(this.start.row, 0, this.end.row, 0);
     }
   }
+
+  /**
+   * compare.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns number observable or value
+   */
 
   compare(row: number, column: number): number {
     if (!this.isMultiLine()) {
@@ -221,6 +257,14 @@ export class Range implements Ace.Range {
     return 0;
   }
 
+  /**
+   * compare end.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns number observable or value
+   */
+
   compareEnd(row: number, column: number): number {
     if (this.end.row === row && this.end.column === column) {
       return 1;
@@ -228,6 +272,14 @@ export class Range implements Ace.Range {
       return this.compare(row, column);
     }
   }
+
+  /**
+   * compare inside.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns number observable or value
+   */
 
   compareInside(row: number, column: number): number {
     if (this.end.row === row && this.end.column === column) {
@@ -239,9 +291,23 @@ export class Range implements Ace.Range {
     }
   }
 
+  /**
+   * compare point.
+   *
+   * @param p p (Ace.Point)
+   * @returns number observable or value
+   */
+
   comparePoint(p: Ace.Point): number {
     return this.compare(p.row, p.column);
   }
+
+  /**
+   * compare range.
+   *
+   * @param range range (Ace.Range)
+   * @returns number observable or value
+   */
 
   compareRange(range: Ace.Range): number {
     let cmp: number;
@@ -272,6 +338,14 @@ export class Range implements Ace.Range {
     }
   }
 
+  /**
+   * compare start.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns number observable or value
+   */
+
   compareStart(row: number, column: number): number {
     if (this.start.row === row && this.start.column === column) {
       return -1;
@@ -280,13 +354,36 @@ export class Range implements Ace.Range {
     }
   }
 
+  /**
+   * contains.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns boolean observable or value
+   */
+
   contains(row: number, column: number): boolean {
     return this.compare(row, column) === 0;
   }
 
+  /**
+   * contains range.
+   *
+   * @param range range (Ace.Range)
+   * @returns boolean observable or value
+   */
+
   containsRange(range: Ace.Range): boolean {
     return this.comparePoint(range.start) === 0 && this.comparePoint(range.end) === 0;
   }
+
+  /**
+   * extend.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns Ace.Range observable or value
+   */
 
   extend(row: number, column: number): Ace.Range {
     const cmp = this.compare(row, column);
@@ -302,6 +399,14 @@ export class Range implements Ace.Range {
     return Range.fromPoints(start || this.start, end || this.end);
   }
 
+  /**
+   * inside.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns boolean observable or value
+   */
+
   inside(row: number, column: number): boolean {
     if (this.compare(row, column) === 0) {
       if (this.isEnd(row, column) || this.isStart(row, column)) {
@@ -312,6 +417,14 @@ export class Range implements Ace.Range {
     }
     return false;
   }
+
+  /**
+   * inside end.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns boolean observable or value
+   */
 
   insideEnd(row: number, column: number): boolean {
     if (this.compare(row, column) === 0) {
@@ -324,6 +437,14 @@ export class Range implements Ace.Range {
     return false;
   }
 
+  /**
+   * inside start.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns boolean observable or value
+   */
+
   insideStart(row: number, column: number): boolean {
     if (this.compare(row, column) === 0) {
       if (this.isEnd(row, column)) {
@@ -335,18 +456,46 @@ export class Range implements Ace.Range {
     return false;
   }
 
+  /**
+   * intersects.
+   *
+   * @param range range (Ace.Range)
+   * @returns boolean observable or value
+   */
+
   intersects(range: Ace.Range): boolean {
     const cmp = this.compareRange(range);
     return (cmp === -1 || cmp === 0 || cmp === 1);
   }
 
+  /**
+   * is empty.
+   *
+   * @returns boolean observable or value
+   */
+
   isEmpty(): boolean {
     return (this.start.row === this.end.row && this.start.column === this.end.column);
   }
 
+  /**
+   * is end.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns boolean observable or value
+   */
+
   isEnd(row: number, column: number): boolean {
     return this.end.row === row && this.end.column === column;
   }
+
+  /**
+   * is equal.
+   *
+   * @param range range (Ace.Range)
+   * @returns boolean observable or value
+   */
 
   isEqual(range: Ace.Range): boolean {
     return this.start.row === range.start.row &&
@@ -355,13 +504,34 @@ export class Range implements Ace.Range {
       this.end.column === range.end.column;
   }
 
+  /**
+   * is multi line.
+   *
+   * @returns boolean observable or value
+   */
+
   isMultiLine(): boolean {
     return (this.start.row !== this.end.row);
   }
 
+  /**
+   * is start.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   * @returns boolean observable or value
+   */
+
   isStart(row: number, column: number): boolean {
     return this.start.row === row && this.start.column === column;
   }
+
+  /**
+   * move by.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   */
 
   moveBy(row: number, column: number): void {
     this.start.row += row;
@@ -369,6 +539,13 @@ export class Range implements Ace.Range {
     this.end.row += row;
     this.end.column += column;
   }
+
+  /**
+   * set end.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   */
 
   setEnd(row: number, column: number): void {
     if (typeof row === 'object') {
@@ -380,6 +557,13 @@ export class Range implements Ace.Range {
     }
   }
 
+  /**
+   * set start.
+   *
+   * @param row row (number)
+   * @param column column (number)
+   */
+
   setStart(row: number, column: number): void {
     if (typeof row === 'object') {
       this.start.column = (row as Ace.Point).column;
@@ -389,6 +573,13 @@ export class Range implements Ace.Range {
       this.start.column = column;
     }
   }
+
+  /**
+   * to screen range.
+   *
+   * @param session session (Ace.EditSession)
+   * @returns Ace.Range observable or value
+   */
 
   toScreenRange(session: Ace.EditSession): Ace.Range {
     const screenPosStart = session.documentToScreenPosition(this.start);

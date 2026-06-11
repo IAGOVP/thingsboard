@@ -44,17 +44,19 @@ import {
 import { ColorSettings, ColorType } from '@shared/models/widget-settings.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+
+/**
+ * Angular component: digital simple gauge basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-digital-simple-gauge-basic-config`.
+ */
 @Component({
     selector: 'tb-digital-simple-gauge-basic-config',
     templateUrl: './digital-simple-gauge-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
 
-/**
-
- * Angular component: digital simple gauge basic config UI.
-
- */
+standalone: false
 })
 
 export class DigitalSimpleGaugeBasicConfigComponent extends BasicWidgetConfigComponent {
@@ -63,6 +65,12 @@ export class DigitalSimpleGaugeBasicConfigComponent extends BasicWidgetConfigCom
     const datasources = this.simpleGaugeWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.simpleGaugeWidgetConfigForm.get('datasources').value;
@@ -95,13 +103,31 @@ export class DigitalSimpleGaugeBasicConfigComponent extends BasicWidgetConfigCom
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.simpleGaugeWidgetConfigForm;
   }
 
+  /**
+   * setup defaults.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
+
   protected setupDefaults(configData: WidgetConfigComponentData) {
     super.setupDefaults(configData);
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: DigitalGaugeSettings = {...defaultDigitalSimpleGaugeOptions, ...(configData.config.settings || {})};
@@ -141,6 +167,13 @@ export class DigitalSimpleGaugeBasicConfigComponent extends BasicWidgetConfigCom
       actions: [configData.config.actions || {}, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
@@ -193,6 +226,12 @@ export class DigitalSimpleGaugeBasicConfigComponent extends BasicWidgetConfigCom
     return this.widgetConfig;
   }
 
+  /**
+   * max value validation.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private maxValueValidation(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value: string = control.value;
@@ -205,9 +244,22 @@ export class DigitalSimpleGaugeBasicConfigComponent extends BasicWidgetConfigCom
     };
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['gaugeType', 'showValue', 'showTitle', 'showMinMax', 'minValue'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     if (trigger === 'minValue') {
@@ -264,6 +316,13 @@ export class DigitalSimpleGaugeBasicConfigComponent extends BasicWidgetConfigCom
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -271,6 +330,13 @@ export class DigitalSimpleGaugeBasicConfigComponent extends BasicWidgetConfigCom
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

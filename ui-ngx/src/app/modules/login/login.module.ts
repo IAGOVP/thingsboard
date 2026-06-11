@@ -31,6 +31,9 @@ import { ForceTwoFactorAuthLoginComponent } from '@modules/login/pages/login/for
 /**
  * Angular NgModule: login feature area.
  */
+/**
+ * Angular NgModule bundling login (login pages).
+ */
 @NgModule({
   declarations: [
     LoginComponent,
@@ -45,5 +48,5 @@ import { ForceTwoFactorAuthLoginComponent } from '@modules/login/pages/login/for
     CommonModule,
     SharedModule,
     LoginRoutingModule
-  ]})
+]})
 export class LoginModule { }

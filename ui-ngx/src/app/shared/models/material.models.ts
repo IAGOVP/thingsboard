@@ -16,11 +16,11 @@
 
 import tinycolor from 'tinycolor2';
 
+
 /**
-
- * TypeScript models and enums for material color item.
-
+ * TypeScript interfaces, types, and enums for material color item (shared TypeScript models).
  */
+
 
 export interface MaterialColorItem {
   value: string;

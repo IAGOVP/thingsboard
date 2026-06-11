@@ -15,15 +15,35 @@
  */
 package org.thingsboard.rule.engine.profile;
 /**
- * Rule engine dynamic predicate value ctx API.
+ * dynamic predicate value ctx contract (device profile state nodes).
  */
+
 
 @Deprecated
 public interface DynamicPredicateValueCtx {
+    /**
+     * Returns tenant value.
+     *
+     * @param key key ({@link String})
+     * @return {@link EntityKeyValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     EntityKeyValue getTenantValue(String key);
+    /**
+     * Returns customer value.
+     *
+     * @param key key ({@link String})
+     * @return {@link EntityKeyValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     EntityKeyValue getCustomerValue(String key);
+    /**
+     * Reset customer.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void resetCustomer();
 }

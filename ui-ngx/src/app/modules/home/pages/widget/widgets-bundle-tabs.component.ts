@@ -21,14 +21,17 @@ import { EntityTabsComponent } from '../../components/entity/entity-tabs.compone
 import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 
+
+/**
+ * Angular component: widgets bundle tabs (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widgets-bundle-tabs`.
+ */
 @Component({
     selector: 'tb-widgets-bundle-tabs',
     templateUrl: './widgets-bundle-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: widgets bundle tabs UI.
- */
+standalone: false
 })
 export class WidgetsBundleTabsComponent extends EntityTabsComponent<WidgetsBundle> {
 
@@ -36,9 +39,19 @@ export class WidgetsBundleTabsComponent extends EntityTabsComponent<WidgetsBundl
     super(store);
   }
 
+  /**
+   * is tenant widgets bundle.
+   *
+   */
+
   isTenantWidgetsBundle() {
     return this.entity && this.entity.tenantId.id !== NULL_UUID;
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     super.ngOnInit();

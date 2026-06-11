@@ -31,6 +31,12 @@ export interface WidgetFont {
   shadowColor?: string;
 }
 
+
+/**
+ * Angular component: widget font (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-font`.
+ */
 @Component({
     selector: 'tb-widget-font',
     templateUrl: './widget-font.component.html',
@@ -42,10 +48,7 @@ export interface WidgetFont {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: widget font UI.
- */
+standalone: false
 })
 export class WidgetFontComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -73,6 +76,11 @@ export class WidgetFontComponent extends PageComponent implements OnInit, Contro
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.widgetFontFormGroup = this.fb.group({
       family: [null, []],
@@ -91,12 +99,30 @@ export class WidgetFontComponent extends PageComponent implements OnInit, Contro
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -107,12 +133,23 @@ export class WidgetFontComponent extends PageComponent implements OnInit, Contro
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (WidgetFont)
+   */
+
   writeValue(value: WidgetFont): void {
     this.modelValue = value;
     this.widgetFontFormGroup.patchValue(
       value, {emitEvent: false}
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: WidgetFont = this.widgetFontFormGroup.value;

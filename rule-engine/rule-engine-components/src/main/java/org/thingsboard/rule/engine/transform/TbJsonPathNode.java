@@ -32,7 +32,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Rule engine transformation node 'json path': Transforms incoming message body using JSONPath expression. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Transformation rule node — <b>json path</b>.
+ *
+ * <p>Transforms incoming message body using JSONPath expression.
+ * <br>JSONPath expression specifies a path to an element or a set of elements in a JSON structure.  
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbJsonPathNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/json-path/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/json-path/</a>
  */
 @RuleNode(
         type = ComponentType.TRANSFORMATION,
@@ -50,6 +56,13 @@ public class TbJsonPathNode implements TbNode {
     private Configuration configurationJsonPath;
     private JsonPath jsonPath;
     private String jsonPathValue;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -62,6 +75,15 @@ public class TbJsonPathNode implements TbNode {
             jsonPath = JsonPath.compile(config.getJsonPath());
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {

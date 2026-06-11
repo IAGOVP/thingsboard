@@ -22,11 +22,13 @@ import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_CONNECTION
 import static org.eclipse.californium.scandium.config.DtlsConfig.DTLS_CONNECTION_ID_NODE_ID;
 import static org.eclipse.leshan.client.object.Security.noSec;
 
+
 /**
 
- * Lwm2m test helper.
+ * Page object helper for lwm2m test UI actions (black-box test infrastructure — LwM2M transport tests).
 
  */
+
 
 public class Lwm2mTestHelper {
 
@@ -98,6 +100,12 @@ public class Lwm2mTestHelper {
                     "    \"clientOnlyObserveAfterConnect\": 1\n" +
                     "  }";
 
+    /**
+
+     * Enumerates lw m2mclient state values (black-box test infrastructure — LwM2M transport tests).
+
+     */
+
     public enum LwM2MClientState {
 
         ON_INIT(0, "onInit"),
@@ -128,6 +136,13 @@ public class Lwm2mTestHelper {
             this.code = code;
             this.type = type;
         }
+    /**
+     * From lw m2mclient state by type.
+     *
+     * @param type type ({@link String})
+     * @return {@link LwM2MClientState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public static LwM2MClientState fromLwM2MClientStateByType(String type) {
             for (LwM2MClientState to : LwM2MClientState.values()) {
@@ -137,6 +152,13 @@ public class Lwm2mTestHelper {
             }
             throw new IllegalArgumentException(String.format("Unsupported Client State type  : %s", type));
         }
+    /**
+     * From lw m2mclient state by code.
+     *
+     * @param code code
+     * @return {@link LwM2MClientState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public static LwM2MClientState fromLwM2MClientStateByCode(int code) {
             for (LwM2MClientState to : LwM2MClientState.values()) {
@@ -147,6 +169,14 @@ public class Lwm2mTestHelper {
             throw new IllegalArgumentException(String.format("Unsupported Client State code : %s", code));
         }
     }
+    /**
+     * Set dtls connector config cid length.
+     *
+     * @param serverCoapConfig server coap config ({@link Configuration})
+     * @param cIdLength c id length ({@link Integer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static void setDtlsConnectorConfigCidLength(Configuration serverCoapConfig, Integer cIdLength) {
         serverCoapConfig.setTransient(DTLS_CONNECTION_ID_LENGTH);

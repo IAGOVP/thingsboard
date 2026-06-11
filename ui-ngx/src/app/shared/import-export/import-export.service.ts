@@ -97,8 +97,11 @@ type SupportEntityResources = 'includeResourcesInExportWidgetTypes' | 'includeRe
 
 // @dynamic
 /**
- * Angular HTTP service: import export REST wrappers (`@core/http`).
+ * Angular injectable service: import export (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 @Injectable()
 export class ImportExportService {
 
@@ -124,9 +127,22 @@ export class ImportExportService {
 
   }
 
+  /**
+   * export form properties.
+   *
+   * @param properties properties (FormProperty[])
+   * @param fileName file name (string)
+   */
+
   public exportFormProperties(properties: FormProperty[], fileName: string) {
     this.exportToPc(properties, fileName);
   }
+
+  /**
+   * import form properties.
+   *
+   * @returns Observable<FormProperty[]> observable or value
+   */
 
   public importFormProperties(): Observable<FormProperty[]> {
     return this.openImportDialog('dynamic-form.import-form',
@@ -145,6 +161,13 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * export image.
+   *
+   * @param type type (ImageResourceType)
+   * @param key key (string)
+   */
+
   public exportImage(type: ImageResourceType, key: string) {
     this.imageService.exportImage(type, key).subscribe(
       {
@@ -158,6 +181,12 @@ export class ImportExportService {
       }
     );
   }
+
+  /**
+   * import image.
+   *
+   * @returns Observable<ImageResourceInfo> observable or value
+   */
 
   public importImage(): Observable<ImageResourceInfo> {
     return this.openImportDialog('image.import-image', 'image.image-json-file').pipe(
@@ -175,6 +204,12 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * export calculated field.
+   *
+   * @param calculatedFieldId calculated field id (string)
+   */
+
   public exportCalculatedField(calculatedFieldId: string): void {
     this.calculatedFieldsService.getCalculatedFieldById(calculatedFieldId).subscribe({
       next: (calculatedField) => {
@@ -186,11 +221,23 @@ export class ImportExportService {
     });
   }
 
+  /**
+   * open calculated field import dialog.
+   *
+   * @returns Observable<CalculatedField> observable or value
+   */
+
   public openCalculatedFieldImportDialog(importTitle = 'calculated-fields.import', importFileLabel = 'calculated-fields.file'): Observable<CalculatedField> {
     return this.openImportDialog(importTitle, importFileLabel).pipe(
       catchError(() => of(null)),
     );
   }
+
+  /**
+   * export dashboard.
+   *
+   * @param dashboardId dashboard UUID
+   */
 
   public exportDashboard(dashboardId: string) {
     this.getIncludeResourcesPreference('includeResourcesInExportDashboard').subscribe(includeResources => {
@@ -209,6 +256,13 @@ export class ImportExportService {
       })
     })
   }
+
+  /**
+   * import dashboard.
+   *
+   * @param onEditMissingAliases on edit missing aliases (editMissingAliasesFunction)
+   * @returns Observable<Dashboard> observable or value
+   */
 
   public importDashboard(onEditMissingAliases: editMissingAliasesFunction): Observable<Dashboard> {
     return this.openImportDialog('dashboard.import', 'dashboard.dashboard-file').pipe(
@@ -253,6 +307,17 @@ export class ImportExportService {
       catchError(() => of(null))
     );
   }
+
+  /**
+   * export widget.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param sourceState source state (string)
+   * @param sourceLayout source layout (DashboardLayoutId)
+   * @param widget widget (Widget)
+   * @param widgetTitle widget title (string)
+   * @param breakpoint breakpoint (BreakpointId)
+   */
 
   public exportWidget(dashboard: Dashboard, sourceState: string, sourceLayout: DashboardLayoutId, widget: Widget,
                       widgetTitle: string, breakpoint: BreakpointId) {
@@ -349,6 +414,12 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * export widget type.
+   *
+   * @param widgetTypeId widget type id (string)
+   */
+
   public exportWidgetType(widgetTypeId: string) {
     this.getIncludeResourcesPreference('includeResourcesInExportWidgetTypes').subscribe(includeResources => {
       this.openExportDialog('widget.export', 'widget.export-prompt', includeResources).subscribe(result => {
@@ -367,10 +438,21 @@ export class ImportExportService {
     });
   }
 
+  /**
+   * export widget types.
+   *
+   * @param widgetTypeIds widget type ids (string[])
+   * @returns Observable<void> observable or value
+   */
+
   public exportWidgetTypes(widgetTypeIds: string[]): Observable<void> {
     return this.getIncludeResourcesPreference('includeResourcesInExportWidgetTypes').pipe(
       mergeMap(includeResources =>
         this.openExportDialog('widget.export-widgets', 'widget.export-widgets-prompt', includeResources).pipe(
+          /**
+           * merge map.
+           *
+           */
           mergeMap(result => {
             if (result) {
               this.updateUserSettingsIncludeResourcesIfNeeded(includeResources, result.include, 'includeResourcesInExportWidgetTypes');
@@ -399,6 +481,12 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * import widget type.
+   *
+   * @returns Observable<WidgetTypeDetails> observable or value
+   */
+
   public importWidgetType(): Observable<WidgetTypeDetails> {
     return this.openImportDialog('widget.import', 'widget-type.widget-file').pipe(
       mergeMap((widgetTypeDetails: WidgetTypeDetails) => {
@@ -415,6 +503,12 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * export widgets bundle.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   */
+
   public exportWidgetsBundle(widgetsBundleId: string) {
     const tasks = {
       includeBundleWidgetsInExport: this.store.pipe(select(selectUserSettingsProperty( 'includeBundleWidgetsInExport'))).pipe(take(1)),
@@ -430,6 +524,12 @@ export class ImportExportService {
       }
     });
   }
+
+  /**
+   * export entity.
+   *
+   * @param entityData entity data (VersionedEntity)
+   */
 
   public exportEntity(entityData: VersionedEntity): void {
     const id = (entityData as EntityInfoData).id ?? (entityData as RuleChainMetaData).ruleChainId;
@@ -469,6 +569,12 @@ export class ImportExportService {
     this.exportToPc(preparedData, fileName);
   }
 
+  /**
+   * export selected widgets bundle.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   */
+
   private exportSelectedWidgetsBundle(widgetsBundle: WidgetsBundle): void {
     this.store.pipe(select(selectUserSettingsProperty( 'includeBundleWidgetsInExport'))).pipe(take(1)).subscribe({
       next: (includeBundleWidgetsInExport) => {
@@ -479,6 +585,14 @@ export class ImportExportService {
       }
     });
   }
+
+  /**
+   * handle export widgets bundle.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   * @param includeBundleWidgetsInExport include bundle widgets in export (boolean)
+   * @param ignoreLoading ignore loading (boolean)
+   */
 
   private handleExportWidgetsBundle(widgetsBundle: WidgetsBundle, includeBundleWidgetsInExport: boolean, ignoreLoading?: boolean): void {
     this.openExportDialog('widgets-bundle.export', 'widgets-bundle.export-widgets-bundle-widgets-prompt',
@@ -494,6 +608,12 @@ export class ImportExportService {
       }
     );
   }
+
+  /**
+   * export widgets bundle with widget types.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   */
 
   private exportWidgetsBundleWithWidgetTypes(widgetsBundle: WidgetsBundle) {
     this.widgetService.exportBundleWidgetTypesDetails(widgetsBundle.id.id).subscribe({
@@ -513,6 +633,12 @@ export class ImportExportService {
     });
   }
 
+  /**
+   * export widgets bundle with widget type fqns.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   */
+
   private exportWidgetsBundleWithWidgetTypeFqns(widgetsBundle: WidgetsBundle) {
     this.widgetService.getBundleWidgetTypeFqns(widgetsBundle.id.id).subscribe({
       next: (widgetTypeFqns) => {
@@ -527,6 +653,12 @@ export class ImportExportService {
       }
     });
   }
+
+  /**
+   * import widgets bundle.
+   *
+   * @returns Observable<WidgetsBundle> observable or value
+   */
 
   public importWidgetsBundle(): Observable<WidgetsBundle> {
     return this.openImportDialog('widgets-bundle.import', 'widgets-bundle.widgets-bundle-file').pipe(
@@ -580,6 +712,14 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * prepare widget type.
+   *
+   * @param widgetType widget type (WidgetTypeDetails & {alias?: string})
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   * @returns WidgetTypeDetails observable or value
+   */
+
   private prepareWidgetType(widgetType: WidgetTypeDetails & {alias?: string}, widgetsBundle: WidgetsBundle): WidgetTypeDetails {
     if (!widgetType.fqn) {
       widgetType.fqn = `${widgetsBundle.alias}.${widgetType.alias
@@ -588,6 +728,15 @@ export class ImportExportService {
     }
     return widgetType;
   }
+
+  /**
+   * bulk import entities.
+   *
+   * @param entitiesData entities data (BulkImportRequest)
+   * @param entityType entity type (EntityType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<BulkImportResult> observable or value
+   */
 
   public bulkImportEntities(entitiesData: BulkImportRequest, entityType: EntityType, config?: RequestConfig): Observable<BulkImportResult> {
     switch (entityType) {
@@ -635,6 +784,12 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * export rule chain.
+   *
+   * @param ruleChainId rule chain UUID
+   */
+
   public exportRuleChain(ruleChainId: string) {
     this.ruleChainService.getRuleChain(ruleChainId).pipe(
       mergeMap(ruleChain => this.ruleChainService.getRuleChainMetadata(ruleChainId).pipe(
@@ -649,6 +804,11 @@ export class ImportExportService {
     ).subscribe(this.onRuleChainExported());
   }
 
+  /**
+   * Event handler for rule chain exported.
+   *
+   */
+
   private onRuleChainExported() {
     return {
       next: (ruleChainExport: RuleChainImport) => {
@@ -659,6 +819,13 @@ export class ImportExportService {
       }
     };
   }
+
+  /**
+   * import rule chain.
+   *
+   * @param expectedRuleChainType expected rule chain type (RuleChainType)
+   * @returns Observable<RuleChainImport> observable or value
+   */
 
   public importRuleChain(expectedRuleChainType: RuleChainType): Observable<RuleChainImport> {
     return this.openImportDialog('rulechain.import', 'rulechain.rulechain-file').pipe(
@@ -680,6 +847,12 @@ export class ImportExportService {
       catchError(() => of(null))
     );
   }
+
+  /**
+   * process old rule chain connections.
+   *
+   * @returns Observable<RuleChainImport> observable or value
+   */
 
   private processOldRuleChainConnections({ruleChain, metadata}: RuleChainImport): Observable<RuleChainImport> {
     ruleChain = this.prepareImport(ruleChain);
@@ -732,6 +905,12 @@ export class ImportExportService {
     }
   }
 
+  /**
+   * export device profile.
+   *
+   * @param deviceProfileId device profile id (string)
+   */
+
   public exportDeviceProfile(deviceProfileId: string) {
     this.deviceProfileService.exportDeviceProfile(deviceProfileId).subscribe({
       next: (deviceProfile) => {
@@ -742,6 +921,12 @@ export class ImportExportService {
       }
     });
   }
+
+  /**
+   * import device profile.
+   *
+   * @returns Observable<DeviceProfile> observable or value
+   */
 
   public importDeviceProfile(): Observable<DeviceProfile> {
     return this.openImportDialog('device-profile.import', 'device-profile.device-profile-file').pipe(
@@ -759,6 +944,12 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * export asset profile.
+   *
+   * @param assetProfileId asset profile id (string)
+   */
+
   public exportAssetProfile(assetProfileId: string) {
     this.assetProfileService.exportAssetProfile(assetProfileId).subscribe({
       next: (assetProfile) => {
@@ -769,6 +960,12 @@ export class ImportExportService {
       }
     });
   }
+
+  /**
+   * import asset profile.
+   *
+   * @returns Observable<AssetProfile> observable or value
+   */
 
   public importAssetProfile(): Observable<AssetProfile> {
     return this.openImportDialog('asset-profile.import', 'asset-profile.asset-profile-file').pipe(
@@ -786,6 +983,12 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * export tenant profile.
+   *
+   * @param tenantProfileId tenant profile id (string)
+   */
+
   public exportTenantProfile(tenantProfileId: string) {
     this.tenantProfileService.getTenantProfile(tenantProfileId).subscribe({
       next: (tenantProfile) => {
@@ -796,6 +999,12 @@ export class ImportExportService {
       }
     });
   }
+
+  /**
+   * import tenant profile.
+   *
+   * @returns Observable<TenantProfile> observable or value
+   */
 
   public importTenantProfile(): Observable<TenantProfile> {
     return this.openImportDialog('tenant-profile.import', 'tenant-profile.tenant-profile-file').pipe(
@@ -813,6 +1022,13 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * process csvcell.
+   *
+   * @param cellData cell data (any)
+   * @returns any observable or value
+   */
+
   private processCSVCell(cellData: any): any {
     if (isString(cellData)) {
       let result = cellData.replace(/"/g, '""');
@@ -823,6 +1039,13 @@ export class ImportExportService {
     }
     return cellData;
   }
+
+  /**
+   * export csv.
+   *
+   * @param data dialog or route input data
+   * @param filename filename (string)
+   */
 
   public exportCsv(data: {[key: string]: any}[], filename: string, normalizeFileName = false) {
     let colsHead: string;
@@ -842,6 +1065,13 @@ export class ImportExportService {
     this.downloadFile(csvData, filename, CSV_TYPE, normalizeFileName);
   }
 
+  /**
+   * export text.
+   *
+   * @param data dialog or route input data
+   * @param filename filename (string)
+   */
+
   public exportText(data: string | Array<string>, filename: string, normalizeFileName = false) {
     let content = data;
     if (Array.isArray(data)) {
@@ -849,6 +1079,14 @@ export class ImportExportService {
     }
     this.downloadFile(content, filename, TEXT_TYPE, normalizeFileName);
   }
+
+  /**
+   * export jszip.
+   *
+   * @param data dialog or route input data
+   * @param filename filename (string)
+   * @returns Observable<void> observable or value
+   */
 
   public exportJSZip(data: object, filename: string, normalizeFileName = false): Observable<void> {
     const exportJsSubjectSubject = new Subject<void>();
@@ -874,6 +1112,13 @@ export class ImportExportService {
     return exportJsSubjectSubject.asObservable();
   }
 
+  /**
+   * prepare rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   * @returns RuleChain observable or value
+   */
+
   private prepareRuleChain(ruleChain: RuleChain): RuleChain {
     ruleChain = this.prepareExport(ruleChain);
     if (ruleChain.firstRuleNodeId) {
@@ -882,6 +1127,12 @@ export class ImportExportService {
     ruleChain.root = false;
     return ruleChain;
   }
+
+  /**
+   * prepare rule chain meta data.
+   *
+   * @param ruleChainMetaData rule chain meta data (RuleChainMetaData)
+   */
 
   private prepareRuleChainMetaData(ruleChainMetaData: RuleChainMetaData) {
     delete ruleChainMetaData.ruleChainId;
@@ -892,6 +1143,13 @@ export class ImportExportService {
     }
     return ruleChainMetaData;
   }
+
+  /**
+   * validate imported rule chain.
+   *
+   * @param ruleChainImport rule chain import (RuleChainImport)
+   * @returns boolean observable or value
+   */
 
   private validateImportedRuleChain(ruleChainImport: RuleChainImport): boolean {
     if (isUndefined(ruleChainImport.ruleChain)
@@ -905,6 +1163,13 @@ export class ImportExportService {
     return true;
   }
 
+  /**
+   * validate imported device profile.
+   *
+   * @param deviceProfile device profile (DeviceProfile)
+   * @returns boolean observable or value
+   */
+
   private validateImportedDeviceProfile(deviceProfile: DeviceProfile): boolean {
     if (isUndefined(deviceProfile.name)
       || isUndefined(deviceProfile.type)
@@ -916,12 +1181,26 @@ export class ImportExportService {
     return true;
   }
 
+  /**
+   * validate imported asset profile.
+   *
+   * @param assetProfile asset profile (AssetProfile)
+   * @returns boolean observable or value
+   */
+
   private validateImportedAssetProfile(assetProfile: AssetProfile): boolean {
     if (isUndefined(assetProfile.name)) {
       return false;
     }
     return true;
   }
+
+  /**
+   * validate imported tenant profile.
+   *
+   * @param tenantProfile tenant profile (TenantProfile)
+   * @returns boolean observable or value
+   */
 
   private validateImportedTenantProfile(tenantProfile: TenantProfile): boolean {
     return isDefined(tenantProfile.name)
@@ -943,6 +1222,13 @@ export class ImportExportService {
     return obj1;
   }
 
+  /**
+   * handle export error.
+   *
+   * @param e e (any)
+   * @param errorDetailsMessageId error details message id (string)
+   */
+
   private handleExportError(e: any, errorDetailsMessageId: string) {
     let message = e;
     if (!message) {
@@ -953,6 +1239,13 @@ export class ImportExportService {
         type: 'error'}));
   }
 
+  /**
+   * validate imported form properties.
+   *
+   * @param properties properties (FormProperty[])
+   * @returns boolean observable or value
+   */
+
   private validateImportedFormProperties(properties: FormProperty[]): boolean {
     if (!properties.length) {
       return false;
@@ -960,6 +1253,13 @@ export class ImportExportService {
       return !properties.some(p => !propertyValid(p));
     }
   }
+
+  /**
+   * validate imported image.
+   *
+   * @param image image (ImageExportData)
+   * @returns boolean observable or value
+   */
 
   private validateImportedImage(image: ImageExportData): boolean {
     return !(!isNotEmptyStr(image.data)
@@ -969,12 +1269,26 @@ export class ImportExportService {
       || !isNotEmptyStr(image.resourceKey));
   }
 
+  /**
+   * validate imported dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @returns boolean observable or value
+   */
+
   private validateImportedDashboard(dashboard: Dashboard): boolean {
     if (isUndefined(dashboard.title) || isUndefined(dashboard.configuration)) {
       return false;
     }
     return true;
   }
+
+  /**
+   * validate imported widget.
+   *
+   * @param widgetItem widget item (WidgetItem)
+   * @returns boolean observable or value
+   */
 
   private validateImportedWidget(widgetItem: WidgetItem): boolean {
     if (isUndefined(widgetItem.widget)
@@ -992,6 +1306,13 @@ export class ImportExportService {
     return true;
   }
 
+  /**
+   * validate imported widget type details.
+   *
+   * @param widgetTypeDetails widget type details (WidgetTypeDetails)
+   * @returns boolean observable or value
+   */
+
   private validateImportedWidgetTypeDetails(widgetTypeDetails: WidgetTypeDetails): boolean {
     if (isUndefined(widgetTypeDetails.name)
       || isUndefined(widgetTypeDetails.descriptor)) {
@@ -999,6 +1320,13 @@ export class ImportExportService {
     }
     return true;
   }
+
+  /**
+   * validate imported widgets bundle.
+   *
+   * @param widgetsBundleItem widgets bundle item (WidgetsBundleItem)
+   * @returns boolean observable or value
+   */
 
   private validateImportedWidgetsBundle(widgetsBundleItem: WidgetsBundleItem): boolean {
     if (isUndefined(widgetsBundleItem.widgetsBundle)) {
@@ -1027,6 +1355,13 @@ export class ImportExportService {
     return true;
   }
 
+  /**
+   * POST/PUT entity — save imported dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @returns Observable<Dashboard> observable or value
+   */
+
   private saveImportedDashboard(dashboard: Dashboard): Observable<Dashboard> {
     return this.dashboardService.saveDashboard(dashboard);
   }
@@ -1046,6 +1381,14 @@ export class ImportExportService {
         )
     ));
   }
+
+  /**
+   * process entity aliases.
+   *
+   * @param entityAliases entity aliases (EntityAliases)
+   * @param aliasIds alias ids (string[])
+   * @returns Observable<EntityAliases> observable or value
+   */
 
   private processEntityAliases(entityAliases: EntityAliases, aliasIds: string[]): Observable<EntityAliases> {
     const tasks: Observable<EntityAlias>[] = [];
@@ -1078,6 +1421,13 @@ export class ImportExportService {
     );
   }
 
+  /**
+   * prepare aliases info.
+   *
+   * @param aliasesInfo aliases info (AliasesInfo)
+   * @returns AliasesInfo observable or value
+   */
+
   private prepareAliasesInfo(aliasesInfo: AliasesInfo): AliasesInfo {
     const datasourceAliases = aliasesInfo.datasourceAliases;
     if (datasourceAliases || aliasesInfo.targetDeviceAlias) {
@@ -1093,6 +1443,13 @@ export class ImportExportService {
     }
     return aliasesInfo;
   }
+
+  /**
+   * prepare entity alias.
+   *
+   * @param aliasInfo alias info (EntityAliasInfo)
+   * @returns EntityAliasInfo observable or value
+   */
 
   private prepareEntityAlias(aliasInfo: EntityAliasInfo): EntityAliasInfo {
     let alias: string;
@@ -1139,6 +1496,15 @@ export class ImportExportService {
     };
   }
 
+  /**
+   * open import dialog.
+   *
+   * @param importTitle import title (string)
+   * @param importFileLabel import file label (string)
+   * @param importContentLabel import content label (string)
+   * @returns Observable<any> observable or value
+   */
+
   private openImportDialog(importTitle: string, importFileLabel: string,
                            enableImportFromContent = false, importContentLabel?: string): Observable<any> {
     return this.dialog.open<ImportDialogComponent, ImportDialogData,
@@ -1162,6 +1528,13 @@ export class ImportExportService {
     ));
   }
 
+  /**
+   * export to pc.
+   *
+   * @param data dialog or route input data
+   * @param filename filename (string)
+   */
+
   private exportToPc(data: any, filename: string, normalizeFileName = false) {
     if (!data) {
       console.error('No data');
@@ -1170,12 +1543,27 @@ export class ImportExportService {
     this.exportJson(data, filename, normalizeFileName);
   }
 
+  /**
+   * export json.
+   *
+   * @param data dialog or route input data
+   * @param filename filename (string)
+   */
+
   public exportJson(data: any, filename: string, normalizeFileName = false) {
     if (isObject(data)) {
       data = JSON.stringify(data, null,  2);
     }
     this.downloadFile(data, filename, JSON_TYPE, normalizeFileName);
   }
+
+  /**
+   * prepare filename.
+   *
+   * @param filename filename (string)
+   * @param extension extension (string)
+   * @returns string observable or value
+   */
 
   private prepareFilename(filename: string, extension: string, normalizeFileName = false): string {
     if (normalizeFileName) {
@@ -1184,6 +1572,14 @@ export class ImportExportService {
     filename = filename.replace(/[\\/<>:"|?*\s]/g, '_');
     return `${filename}.${extension}`;
   }
+
+  /**
+   * download file.
+   *
+   * @param data dialog or route input data
+   * @param fileType file type (FileType)
+   * @param normalizeFileName normalize file name (boolean)
+   */
 
   private downloadFile(data: any, filename = 'download', fileType: FileType, normalizeFileName: boolean) {
     filename = this.prepareFilename(filename, fileType.extension, normalizeFileName);
@@ -1198,6 +1594,13 @@ export class ImportExportService {
     setTimeout(() => URL.revokeObjectURL(url), 0);
   }
 
+  /**
+   * prepare dashboard export.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @returns Dashboard observable or value
+   */
+
   private prepareDashboardExport(dashboard: Dashboard): Dashboard {
     dashboard = this.dashboardUtils.validateAndUpdateDashboard(dashboard);
     dashboard = this.prepareExport(dashboard);
@@ -1211,10 +1614,24 @@ export class ImportExportService {
     return profile;
   }
 
+  /**
+   * prepare calculated field export.
+   *
+   * @param calculatedField calculated field (CalculatedField)
+   * @returns CalculatedField observable or value
+   */
+
   private prepareCalculatedFieldExport(calculatedField: CalculatedField): CalculatedField {
     delete calculatedField.entityId;
     return this.prepareExport(calculatedField);
   }
+
+  /**
+   * prepare export.
+   *
+   * @param data dialog or route input data
+   * @returns any observable or value
+   */
 
   private prepareExport(data: any): any {
     const exportedData = deepClone(data);
@@ -1247,12 +1664,28 @@ export class ImportExportService {
     return importedData;
   }
 
+  /**
+   * get include resources preference.
+   *
+   * @param key key (SupportEntityResources)
+   * @returns Observable<boolean> observable or value
+   */
+
   private getIncludeResourcesPreference(key: SupportEntityResources): Observable<boolean> {
     return this.store.pipe(
       select(selectUserSettingsProperty(key)),
       take(1)
     );
   }
+
+  /**
+   * open export dialog.
+   *
+   * @param title title (string)
+   * @param prompt prompt (string)
+   * @param includeResources include resources (boolean)
+   * @param ignoreLoading ignore loading (boolean)
+   */
 
   private openExportDialog(title: string, prompt: string, includeResources: boolean, ignoreLoading?: boolean) {
     return this.dialog.open<ExportResourceDialogComponent, ExportResourceDialogData, ExportResourceDialogDialogResult>(
@@ -1263,6 +1696,14 @@ export class ImportExportService {
       }
     ).afterClosed();
   }
+
+  /**
+   * update user settings include resources if needed.
+   *
+   * @param currentValue current value (boolean)
+   * @param newValue new value (boolean)
+   * @param key key (SupportEntityResources)
+   */
 
   private updateUserSettingsIncludeResourcesIfNeeded(currentValue: boolean, newValue: boolean, key: SupportEntityResources) {
     if (currentValue !== newValue) {

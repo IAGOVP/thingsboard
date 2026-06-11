@@ -16,11 +16,11 @@
 
 import { BackgroundSettings, BackgroundType, Font } from '@shared/models/widget-settings.models';
 
+
 /**
-
- * TypeScript models and enums for unread notification widget settings.
-
+ * Unread notification widget settings (ThingsBoard web UI).
  */
+
 
 export interface UnreadNotificationWidgetSettings {
   maxNotificationDisplay: number;

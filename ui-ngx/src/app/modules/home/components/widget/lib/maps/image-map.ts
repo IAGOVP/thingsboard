@@ -48,11 +48,11 @@ interface ImageLayerData {
   update?: boolean;
 }
 
+
 /**
-
- * tb image map.
-
+ * Tb image map (ThingsBoard web UI).
  */
+
 
 export class TbImageMap extends TbMap<ImageMapSettings> {
 
@@ -70,9 +70,21 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     super(ctx, inputSettings, containerElement);
   }
 
+  /**
+   * default settings.
+   *
+   * @returns ImageMapSettings observable or value
+   */
+
   protected defaultSettings(): ImageMapSettings {
     return defaultImageMapSettings;
   }
+
+  /**
+   * POST/PUT entity — create map.
+   *
+   * @returns Observable<L.Map> observable or value
+   */
 
   protected createMap(): Observable<L.Map> {
     this.maxZoom = 4;
@@ -93,6 +105,12 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     });
     return this.initMapSubject.asObservable();
   }
+
+  /**
+   * Event handler for resize.
+   *
+   * @param updateImage update image (boolean)
+   */
 
   protected onResize(updateImage?: boolean): void {
     let width = this.mapElement.clientWidth;
@@ -125,13 +143,32 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     }
   }
 
+  /**
+   * fit bounds.
+   *
+   * @param _bounds  bounds (L.LatLngBounds)
+   */
+
   protected fitBounds(_bounds: L.LatLngBounds) {}
+
+  /**
+   * location data to lat lng.
+   *
+   * @param position position ({x: number; y: number})
+   * @returns L.LatLng observable or value
+   */
 
   public locationDataToLatLng(position: {x: number; y: number}): L.LatLng {
     return this.pointToLatLng(
       position.x * this.width,
       position.y * this.height);
   }
+
+  /**
+   * lat lng to location data.
+   *
+   * @param position position (L.LatLng)
+   */
 
   public latLngToLocationData(position: L.LatLng): {x: number; y: number} {
     if (!position) {
@@ -149,6 +186,13 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     };
   }
 
+  /**
+   * polygon data to coordinates.
+   *
+   * @param expression expression (TbPolygonRawCoordinates)
+   * @returns TbPolygonRawCoordinates observable or value
+   */
+
   public polygonDataToCoordinates(expression: TbPolygonRawCoordinates): TbPolygonRawCoordinates {
     return expression.map((el: TbPolygonRawCoordinate) => {
       if (!Array.isArray(el[0]) && !Array.isArray(el[1]) && el.length === 2) {
@@ -165,6 +209,13 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     }).filter(el => !!el);
   }
 
+  /**
+   * coordinates to polygon data.
+   *
+   * @param coordinates coordinates (TbPolygonCoordinates)
+   * @returns TbPolygonRawCoordinates observable or value
+   */
+
   public coordinatesToPolygonData(coordinates: TbPolygonCoordinates): TbPolygonRawCoordinates {
     if (coordinates.length) {
       return coordinates.map((point: TbPolygonCoordinate) => {
@@ -180,6 +231,13 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     }
   }
 
+  /**
+   * circle data to coordinates.
+   *
+   * @param circle circle (TbCircleData)
+   * @returns TbCircleData observable or value
+   */
+
   public circleDataToCoordinates(circle: TbCircleData): TbCircleData {
     const centerPoint = this.pointToLatLng(circle.latitude * this.width, circle.longitude * this.height);
     circle.latitude = centerPoint.lat;
@@ -187,6 +245,14 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     circle.radius = circle.radius * this.width;
     return circle;
   }
+
+  /**
+   * coordinates to circle data.
+   *
+   * @param center center (L.LatLng)
+   * @param radius radius (number)
+   * @returns TbCircleData observable or value
+   */
 
   public coordinatesToCircleData(center: L.LatLng, radius: number): TbCircleData {
     let circleData: TbCircleData = null;
@@ -204,17 +270,44 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     return circleData;
   }
 
+  /**
+   * get aspect.
+   *
+   * @returns number observable or value
+   */
+
   public getAspect(): number {
     return this.imageLayerData.aspect;
   }
+
+  /**
+   * point to lat lng.
+   *
+   * @param x x (number)
+   * @param y y (number)
+   * @returns L.LatLng observable or value
+   */
 
   private pointToLatLng(x: number, y: number): L.LatLng {
     return L.CRS.Simple.pointToLatLng({ x, y } as L.PointExpression, this.maxZoom - 1);
   }
 
+  /**
+   * lat lng to point.
+   *
+   * @param latLng lat lng (L.LatLngLiteral)
+   * @returns L.Point observable or value
+   */
+
   private latLngToPoint(latLng: L.LatLngLiteral): L.Point {
     return L.CRS.Simple.latLngToPoint(latLng, this.maxZoom - 1);
   }
+
+  /**
+   * do create map.
+   *
+   * @param updateImage update image (boolean)
+   */
 
   private doCreateMap(updateImage?: boolean) {
     if (!this.map && this.imageLayerData.aspect > 0) {
@@ -235,6 +328,13 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
       this.initMapSubject.complete();
     }
   }
+
+  /**
+   * update max bounds.
+   *
+   * @param updateImage update image (boolean)
+   * @param lastCenterPos last center pos (L.Point)
+   */
 
   private updateMaxBounds(updateImage?: boolean, lastCenterPos?: L.Point) {
     const w = this.width;
@@ -267,6 +367,12 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     }
     (this.map as any)._enforcingBounds = false;
   }
+
+  /**
+   * load image layer data.
+   *
+   * @returns Observable<ImageLayerData> observable or value
+   */
 
   private loadImageLayerData(): Observable<ImageLayerData> {
     const imageSource = this.settings.imageSource;
@@ -306,8 +412,19 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     }
   }
 
+  /**
+   * image from url.
+   *
+   * @param url url (string)
+   * @returns Observable<ImageLayerData> observable or value
+   */
+
   private imageFromUrl(url: string, update = false): Observable<ImageLayerData> {
     return loadImageWithAspect(this.ctx.$injector.get(ImagePipe), url).pipe(
+      /**
+       * switch map.
+       *
+       */
       switchMap( aspectImage => {
           if (aspectImage) {
             return of({
@@ -323,6 +440,13 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
       catchError(() => this.imageFromUrl(defaultImageMapSourceSettings.url, update))
     );
   }
+
+  /**
+   * image from entity data.
+   *
+   * @param entityData entity data (Observable<[DataSet, boolean]>)
+   * @returns Observable<ImageLayerData> observable or value
+   */
 
   private imageFromEntityData(entityData: Observable<[DataSet, boolean]>): Observable<ImageLayerData> {
     return entityData.pipe(
@@ -350,6 +474,13 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     );
   }
 
+  /**
+   * polyline data to coordinates.
+   *
+   * @param expression expression (TbPolylineRawCoordinates)
+   * @returns TbPolylineRawCoordinates observable or value
+   */
+
   public polylineDataToCoordinates(expression: TbPolylineRawCoordinates): TbPolylineRawCoordinates{
     return expression.map((el: TbPolylineRawCoordinate) => {
     if (!Array.isArray(el[0]) && !Array.isArray(el[1]) && el.length === 2) {
@@ -366,6 +497,13 @@ export class TbImageMap extends TbMap<ImageMapSettings> {
     }
   }).filter(el => !!el);
   }
+
+  /**
+   * coordinates to polyline data.
+   *
+   * @param coordinates coordinates (TbPolylineCoordinates)
+   * @returns TbPolylineRawCoordinates observable or value
+   */
 
   public coordinatesToPolylineData(coordinates: TbPolylineCoordinates): TbPolylineRawCoordinates{
     if (coordinates.length) {

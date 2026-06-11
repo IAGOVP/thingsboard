@@ -39,14 +39,17 @@ export interface AddUserDialogData {
   authority: Authority;
 }
 
+
+/**
+ * Angular component: add user dialog (home/user pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-user-dialog`.
+ */
 @Component({
     selector: 'tb-add-user-dialog',
     templateUrl: './add-user-dialog.component.html',
     styleUrls: ['./add-user-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: add user dialog UI.
- */
+standalone: false
 })
 export class AddUserDialogComponent extends DialogComponent<AddUserDialogComponent, User> implements OnInit {
 
@@ -71,6 +74,11 @@ export class AddUserDialogComponent extends DialogComponent<AddUserDialogCompone
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.user = {} as User;
     this.userComponent.isEdit = true;
@@ -78,9 +86,19 @@ export class AddUserDialogComponent extends DialogComponent<AddUserDialogCompone
     this.detailsForm = this.userComponent.entityForm;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     if (this.detailsForm.valid) {
@@ -114,6 +132,13 @@ export class AddUserDialogComponent extends DialogComponent<AddUserDialogCompone
       );
     }
   }
+
+  /**
+   * display activation link.
+   *
+   * @param activationLinkInfo activation link info (ActivationLinkInfo)
+   * @returns Observable<void> observable or value
+   */
 
   displayActivationLink(activationLinkInfo: ActivationLinkInfo): Observable<void> {
     return this.dialog.open<ActivationLinkDialogComponent, ActivationLinkDialogData,

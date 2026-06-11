@@ -43,19 +43,36 @@ import org.thingsboard.server.common.data.id.UserId;
 import org.thingsboard.server.common.data.rule.RuleChain;
 import org.thingsboard.server.common.data.security.Authority;
 
+
 /**
 
- * Entity prototypes.
+ * Factory methods for test entity names and profile payloads used in UI tests.
 
  */
 
+
 public class EntityPrototypes {
+    /**
+     * Default tenant prototype.
+     *
+     * @param tenantName tenant name ({@link String})
+     * @return {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Tenant defaultTenantPrototype(String tenantName) {
         Tenant tenant = new Tenant();
         tenant.setTitle(tenantName);
         return tenant;
     }
+    /**
+     * Default customer.
+     *
+     * @param tenantId target tenant UUID in the test environment
+     * @param title title ({@link String})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Customer defaultCustomer(TenantId tenantId, String title) {
         Customer customer = new Customer();
@@ -63,12 +80,27 @@ public class EntityPrototypes {
         customer.setTitle(title);
         return customer;
     }
+    /**
+     * Default customer prototype.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Customer defaultCustomerPrototype(String entityName) {
         Customer customer = new Customer();
         customer.setTitle(entityName);
         return customer;
     }
+    /**
+     * Default customer prototype.
+     *
+     * @param entityName entity name ({@link String})
+     * @param description description ({@link String})
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Customer defaultCustomerPrototype(String entityName, String description) {
         Customer customer = new Customer();
@@ -76,6 +108,14 @@ public class EntityPrototypes {
         customer.setAdditionalInfo(JacksonUtil.newObjectNode().put("description", description));
         return customer;
     }
+    /**
+     * Default customer prototype.
+     *
+     * @param entityName entity name ({@link String})
+     * @param number number
+     * @return {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Customer defaultCustomerPrototype(String entityName, int number) {
         Customer customer = new Customer();
@@ -83,12 +123,27 @@ public class EntityPrototypes {
         customer.setPhone("+1" + number);
         return customer;
     }
+    /**
+     * Default rule chain prototype.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static RuleChain defaultRuleChainPrototype(String entityName) {
         RuleChain ruleChain = new RuleChain();
         ruleChain.setName(entityName);
         return ruleChain;
     }
+    /**
+     * Default rule chain prototype.
+     *
+     * @param entityName entity name ({@link String})
+     * @param description description ({@link String})
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static RuleChain defaultRuleChainPrototype(String entityName, String description) {
         RuleChain ruleChain = new RuleChain();
@@ -96,6 +151,14 @@ public class EntityPrototypes {
         ruleChain.setAdditionalInfo(JacksonUtil.newObjectNode().put("description", description));
         return ruleChain;
     }
+    /**
+     * Default rule chain prototype.
+     *
+     * @param entityName entity name ({@link String})
+     * @param debugMode debug mode
+     * @return {@link RuleChain}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static RuleChain defaultRuleChainPrototype(String entityName, boolean debugMode) {
         RuleChain ruleChain = new RuleChain();
@@ -103,6 +166,13 @@ public class EntityPrototypes {
         ruleChain.setDebugMode(debugMode);
         return ruleChain;
     }
+    /**
+     * Default device profile.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static DeviceProfile defaultDeviceProfile(String entityName) {
         DeviceProfile deviceProfile = new DeviceProfile();
@@ -117,6 +187,14 @@ public class EntityPrototypes {
         deviceProfile.setProfileData(deviceProfileData);
         return deviceProfile;
     }
+    /**
+     * Default device profile.
+     *
+     * @param entityName entity name ({@link String})
+     * @param description description ({@link String})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static DeviceProfile defaultDeviceProfile(String entityName, String description) {
         DeviceProfile deviceProfile = new DeviceProfile();
@@ -132,12 +210,27 @@ public class EntityPrototypes {
         deviceProfile.setProfileData(deviceProfileData);
         return deviceProfile;
     }
+    /**
+     * Default asset profile.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static AssetProfile defaultAssetProfile(String entityName) {
         AssetProfile assetProfile = new AssetProfile();
         assetProfile.setName(entityName);
         return assetProfile;
     }
+    /**
+     * Default asset profile.
+     *
+     * @param entityName entity name ({@link String})
+     * @param description description ({@link String})
+     * @return {@link AssetProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static AssetProfile defaultAssetProfile(String entityName, String description) {
         AssetProfile assetProfile = new AssetProfile();
@@ -145,6 +238,14 @@ public class EntityPrototypes {
         assetProfile.setDescription(description);
         return assetProfile;
     }
+    /**
+     * Default alarm.
+     *
+     * @param id id ({@link EntityId})
+     * @param type type ({@link String})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Alarm defaultAlarm(EntityId id, String type) {
         Alarm alarm = new Alarm();
@@ -153,6 +254,15 @@ public class EntityPrototypes {
         alarm.setSeverity(AlarmSeverity.CRITICAL);
         return alarm;
     }
+    /**
+     * Default alarm.
+     *
+     * @param id id ({@link EntityId})
+     * @param type type ({@link String})
+     * @param propagate propagate
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Alarm defaultAlarm(EntityId id, String type, boolean propagate) {
         Alarm alarm = new Alarm();
@@ -162,6 +272,15 @@ public class EntityPrototypes {
         alarm.setPropagate(propagate);
         return alarm;
     }
+    /**
+     * Default alarm.
+     *
+     * @param id id ({@link EntityId})
+     * @param type type ({@link String})
+     * @param userId user id ({@link UserId})
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Alarm defaultAlarm(EntityId id, String type, UserId userId) {
         Alarm alarm = new Alarm();
@@ -171,6 +290,16 @@ public class EntityPrototypes {
         alarm.setAssigneeId(userId);
         return alarm;
     }
+    /**
+     * Default alarm.
+     *
+     * @param id id ({@link EntityId})
+     * @param type type ({@link String})
+     * @param userId user id ({@link UserId})
+     * @param propagate propagate
+     * @return {@link Alarm}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Alarm defaultAlarm(EntityId id, String type, UserId userId, boolean propagate) {
         Alarm alarm = new Alarm();
@@ -181,6 +310,14 @@ public class EntityPrototypes {
         alarm.setPropagate(propagate);
         return alarm;
     }
+    /**
+     * Default user.
+     *
+     * @param email email ({@link String})
+     * @param customerId customer id ({@link CustomerId})
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static User defaultUser(String email, CustomerId customerId) {
         User user = new User();
@@ -189,6 +326,14 @@ public class EntityPrototypes {
         user.setAuthority(Authority.CUSTOMER_USER);
         return user;
     }
+    /**
+     * Default tenant admin.
+     *
+     * @param tenantId target tenant UUID in the test environment
+     * @param email email ({@link String})
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static User defaultTenantAdmin(TenantId tenantId, String email) {
         User user = new User();
@@ -197,6 +342,15 @@ public class EntityPrototypes {
         user.setAuthority(Authority.TENANT_ADMIN);
         return user;
     }
+    /**
+     * Default customer admin.
+     *
+     * @param tenantId target tenant UUID in the test environment
+     * @param customerId customer id ({@link CustomerId})
+     * @param email email ({@link String})
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static User defaultCustomerAdmin(TenantId tenantId, CustomerId customerId, String email) {
         User user = new User();
@@ -206,6 +360,15 @@ public class EntityPrototypes {
         user.setAuthority(Authority.CUSTOMER_USER);
         return user;
     }
+    /**
+     * Default user.
+     *
+     * @param email email ({@link String})
+     * @param customerId customer id ({@link CustomerId})
+     * @param name name ({@link String})
+     * @return {@link User}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static User defaultUser(String email, CustomerId customerId, String name) {
         User user = new User();
@@ -215,6 +378,13 @@ public class EntityPrototypes {
         user.setAuthority(Authority.CUSTOMER_USER);
         return user;
     }
+    /**
+     * Default device prototype.
+     *
+     * @param name name ({@link String})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Device defaultDevicePrototype(String name) {
         Device device = new Device();
@@ -222,6 +392,14 @@ public class EntityPrototypes {
         device.setType("DEFAULT");
         return device;
     }
+    /**
+     * Default device prototype.
+     *
+     * @param name name ({@link String})
+     * @param id id ({@link CustomerId})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Device defaultDevicePrototype(String name, CustomerId id) {
         Device device = new Device();
@@ -230,6 +408,14 @@ public class EntityPrototypes {
         device.setType("DEFAULT");
         return device;
     }
+    /**
+     * Default device prototype.
+     *
+     * @param name name ({@link String})
+     * @param description description ({@link String})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Device defaultDevicePrototype(String name, String description) {
         Device device = new Device();
@@ -238,6 +424,15 @@ public class EntityPrototypes {
         device.setAdditionalInfo(JacksonUtil.newObjectNode().put("description", description));
         return device;
     }
+    /**
+     * Default device prototype.
+     *
+     * @param name name ({@link String})
+     * @param description description ({@link String})
+     * @param label label ({@link String})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Device defaultDevicePrototype(String name, String description, String label) {
         Device device = new Device();
@@ -247,6 +442,14 @@ public class EntityPrototypes {
         device.setLabel(label);
         return device;
     }
+    /**
+     * Default device prototype.
+     *
+     * @param name name ({@link String})
+     * @param gateway gateway
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Device defaultDevicePrototype(String name, boolean gateway) {
         Device device = new Device();
@@ -255,6 +458,15 @@ public class EntityPrototypes {
         device.setAdditionalInfo(JacksonUtil.newObjectNode().put("gateway", gateway));
         return device;
     }
+    /**
+     * Default device prototype.
+     *
+     * @param name name ({@link String})
+     * @param gateway gateway
+     * @param overwriteActivityTime overwrite activity time
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Device defaultDevicePrototype(String name, boolean gateway, boolean overwriteActivityTime) {
         Device device = new Device();
@@ -265,6 +477,14 @@ public class EntityPrototypes {
                 .put("overwriteActivityTime", overwriteActivityTime));
         return device;
     }
+    /**
+     * Default device prototype.
+     *
+     * @param name name ({@link String})
+     * @param deviceProfileId device profile id ({@link DeviceProfileId})
+     * @return {@link Device}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Device defaultDevicePrototype(String name, DeviceProfileId deviceProfileId) {
         Device device = new Device();
@@ -273,6 +493,14 @@ public class EntityPrototypes {
         device.setDeviceProfileId(deviceProfileId);
         return device;
     }
+    /**
+     * Default asset prototype.
+     *
+     * @param name name ({@link String})
+     * @param id id ({@link CustomerId})
+     * @return {@link Asset}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Asset defaultAssetPrototype(String name, CustomerId id) {
         Asset asset = new Asset();
@@ -281,6 +509,15 @@ public class EntityPrototypes {
         asset.setType("DEFAULT");
         return asset;
     }
+    /**
+     * Default entity view prototype.
+     *
+     * @param name name ({@link String})
+     * @param type type ({@link String})
+     * @param entityType entity type ({@link String})
+     * @return {@link EntityView}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityView defaultEntityViewPrototype(String name, String type, String entityType) {
         EntityView entityView = new EntityView();
@@ -289,6 +526,13 @@ public class EntityPrototypes {
         entityView.setAdditionalInfo(JacksonUtil.newObjectNode().put("entityType", entityType));
         return entityView;
     }
+    /**
+     * Default dashboard prototype.
+     *
+     * @param title title ({@link String})
+     * @return {@link Dashboard}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Dashboard defaultDashboardPrototype(String title) {
         Dashboard dashboard = new Dashboard();

@@ -17,11 +17,13 @@ package org.thingsboard.server.msa.ui.pages;
 
 import org.openqa.selenium.WebDriver;
 
+
 /**
 
- * Dashboard page helper.
+ * Page object helper for dashboard page UI actions (page object element locators and helpers — Selenium page objects).
 
  */
+
 
 public class DashboardPageHelper extends DashboardPageElements {
     public DashboardPageHelper(WebDriver driver) {
@@ -29,29 +31,66 @@ public class DashboardPageHelper extends DashboardPageElements {
     }
 
     private String dashboardTitle;
+    /**
+     * Set dashboard title.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setDashboardTitle() {
         this.dashboardTitle = entityTitles().get(0).getText();
     }
+    /**
+     * Returns dashboard title.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getDashboardTitle() {
         return dashboardTitle;
     }
+    /**
+     * Assigns ed customer.
+     *
+     * @param title title ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void assignedCustomer(String title) {
         jsClick(manageAssignedEntityListField());
         jsClick(manageAssignedEntity(title));
         jsClick(manageAssignedUpdateBtn());
     }
+    /**
+     * Open select widgets bundle menu.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void openSelectWidgetsBundleMenu() {
         addBtn().click();
     }
+    /**
+     * Open create widget popup.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void openCreateWidgetPopup() {
         alarmWidgetBundle().click();
         alarmTableWidget().click();
     }
+    /**
+     * Increase size of the widget.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void increaseSizeOfTheWidget() {
         pull(widgetSECorner(), 700, 200);

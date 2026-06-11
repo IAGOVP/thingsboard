@@ -92,8 +92,9 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.thingsboard.server.common.data.ResourceType.GENERAL;
 /**
- * Unit test for tb ai node rule node.
+ * Unit test for tb ai node (AI/LLM integration nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbAiNodeTest {

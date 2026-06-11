@@ -29,15 +29,32 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.willCallRealMethod;
 
+
 /**
 
- * Unit test for abstract rule node upgrade rule node.
+ * Unit test for abstract rule node upgrade (ThingsBoard rule engine).
 
  */
 
+
 public abstract class AbstractRuleNodeUpgradeTest {
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract TbNode getTestNode();
+    /**
+     * Given from version and config when upgrade then verify has changes and config.
+     *
+     * @param givenVersion given version
+     * @param givenConfigStr given config str ({@link String})
+     * @param hasChanges has changes
+     * @param expectedConfigStr expected config str ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource

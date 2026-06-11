@@ -26,16 +26,19 @@ import { IAliasController } from '@core/api/widget-api.models';
 import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/key/data-keys.component.models';
 import { Datasource } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: time series chart axis settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-axis-settings-panel`.
+ */
 @Component({
     selector: 'tb-time-series-chart-axis-settings-panel',
     templateUrl: './time-series-chart-axis-settings-panel.component.html',
     providers: [],
     styleUrls: ['./time-series-chart-axis-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart axis settings panel UI.
- */
+standalone: false
 })
 export class TimeSeriesChartAxisSettingsPanelComponent implements OnInit {
 
@@ -72,6 +75,11 @@ export class TimeSeriesChartAxisSettingsPanelComponent implements OnInit {
   constructor(private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.axisSettingsFormGroup = this.fb.group(
       {
@@ -80,9 +88,19 @@ export class TimeSeriesChartAxisSettingsPanelComponent implements OnInit {
     );
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply axis settings.
+   *
+   */
 
   applyAxisSettings() {
     const axisSettings = this.axisSettingsFormGroup.get('axis').getRawValue();

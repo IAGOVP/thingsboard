@@ -24,7 +24,9 @@ import { PageData } from '@shared/models/page/page-data';
 import { map } from 'rxjs/operators';
 
 /**
- * Angular HTTP service: queue REST wrappers (`@core/http`).
+ * Angular injectable service: queue (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -35,19 +37,44 @@ export class QueueService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/queues/${queueId}, ...`. */
+  
+  /**
+   * get queue by id.
+   *
+   * @param queueId queue id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<QueueInfo> observable or value
+   */
+
 
   public getQueueById(queueId: string, config?: RequestConfig): Observable<QueueInfo> {
     return this.http.get<QueueInfo>(`/api/queues/${queueId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/queues/name/${queueName}, ...`. */
+  
+  /**
+   * get queue by name.
+   *
+   * @param queueName queue name (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<QueueInfo> observable or value
+   */
+
 
   public getQueueByName(queueName: string, config?: RequestConfig): Observable<QueueInfo> {
     return this.http.get<QueueInfo>(`/api/queues/name/${queueName}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/queues${pageLink.toQuery()}&serviceType=${serviceType}, ...`. */
+  
+  /**
+   * get tenant queues by service type.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param serviceType service type (ServiceType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<QueueInfo>> observable or value
+   */
+
 
   public getTenantQueuesByServiceType(pageLink: PageLink,
                                       serviceType: ServiceType,
@@ -56,21 +83,48 @@ export class QueueService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/queues?serviceType=${serviceType}, ...`. */
+  
+  /**
+   * POST/PUT entity — save queue.
+   *
+   * @param queue queue (QueueInfo)
+   * @param serviceType service type (ServiceType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<QueueInfo> observable or value
+   */
+
 
   public saveQueue(queue: QueueInfo, serviceType: ServiceType, config?: RequestConfig): Observable<QueueInfo> {
     return this.http.post<QueueInfo>(`/api/queues?serviceType=${serviceType}`, queue, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * DELETE — delete queue.
+   *
+   * @param queueId queue id (string)
+   */
 
   public deleteQueue(queueId: string) {
     return this.http.delete(`/api/queues/${queueId}`);
   }
 
   private parseQueueStatName = (queueStat: QueueStatisticsInfo) => Object.defineProperty(queueStat, 'name', {
+    /**
+     * get.
+     *
+     */
     get() { return `${this.queueName} (${this.serviceId})`; }
   });
 
-  /** Calls ThingsBoard REST `/api/queueStats${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get queue statistics.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<QueueStatisticsInfo>> observable or value
+   */
+
 
   public getQueueStatistics(pageLink: PageLink, config?: RequestConfig): Observable<PageData<QueueStatisticsInfo>> {
     return this.http.get<PageData<QueueStatisticsInfo>>(`/api/queueStats${pageLink.toQuery()}`,
@@ -82,14 +136,30 @@ export class QueueService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/queueStats/${queueStatId}, ...`. */
+  
+  /**
+   * get queue statistics by id.
+   *
+   * @param queueStatId queue stat id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<QueueStatisticsInfo> observable or value
+   */
+
 
   public getQueueStatisticsById(queueStatId: string, config?: RequestConfig): Observable<QueueStatisticsInfo> {
     return this.http.get<QueueStatisticsInfo>(`/api/queueStats/${queueStatId}`, defaultHttpOptionsFromConfig(config)).pipe(
       map(queueStat => this.parseQueueStatName(queueStat)));
   }
 
-  /** Calls ThingsBoard REST `/api/queueStats?queueStatsIds=${queueStatIds.join(`. */
+  
+  /**
+   * get queue statistics by ids.
+   *
+   * @param queueStatIds queue stat ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<QueueStatisticsInfo>> observable or value
+   */
+
 
   public getQueueStatisticsByIds(queueStatIds: Array<string>, config?: RequestConfig): Observable<Array<QueueStatisticsInfo>> {
     return this.http.get<Array<QueueStatisticsInfo>>(`/api/queueStats?queueStatsIds=${queueStatIds.join(',')}`,

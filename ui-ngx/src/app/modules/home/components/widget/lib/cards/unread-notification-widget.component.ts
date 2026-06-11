@@ -53,15 +53,18 @@ import { selectUserDetails } from '@core/auth/auth.selectors';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: unread notification widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-unread-notification-widget`.
+ */
 @Component({
     selector: 'tb-unread-notification-widget',
     templateUrl: './unread-notification-widget.component.html',
     styleUrls: ['unread-notification-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: unread notification widget UI.
- */
+standalone: false
 })
 export class UnreadNotificationWidgetComponent implements OnInit, OnDestroy {
 
@@ -144,6 +147,11 @@ export class UnreadNotificationWidgetComponent implements OnInit, OnDestroy {
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.unreadNotificationWidget = this;
     this.settings = {...unreadNotificationDefaultSettings, ...this.ctx.settings};
@@ -172,12 +180,29 @@ export class UnreadNotificationWidgetComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+
+
+   * Angular lifecycle hook: unsubscribe and release resources.
+
+
+   *
+
+
+   */
+
+
   ngOnDestroy() {
     if (this.contentResize$) {
       this.contentResize$.disconnect();
     }
     this.unsubscribeSubscription();
   }
+
+  /**
+   * init subscription.
+   *
+   */
 
   private initSubscription() {
     this.notificationSubscriber = NotificationSubscriber.createNotificationsSubscription(
@@ -195,11 +220,21 @@ export class UnreadNotificationWidgetComponent implements OnInit, OnDestroy {
     this.notificationSubscriber.subscribe();
   }
 
+  /**
+   * unsubscribe subscription.
+   *
+   */
+
   private unsubscribeSubscription() {
     this.notificationSubscriber.unsubscribe();
     this.notificationCountSubscriber.unsubscribe();
     this.notification.unsubscribe();
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
@@ -207,12 +242,23 @@ export class UnreadNotificationWidgetComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
+  /**
+   * mark as read.
+   *
+   * @param id id (string)
+   */
+
   markAsRead(id: string) {
     if (!this.ctx.isEdit && !this.ctx.isPreview) {
       const cmd = NotificationSubscriber.createMarkAsReadCommand(this.notificationWsService, [id]);
       cmd.subscribe();
     }
   }
+
+  /**
+   * mark as all read.
+   *
+   */
 
   markAsAllRead($event: Event) {
     if (!this.ctx.isEdit && !this.ctx.isPreview) {
@@ -224,6 +270,11 @@ export class UnreadNotificationWidgetComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * view all.
+   *
+   */
+
   viewAll($event: Event) {
     if (!this.ctx.isEdit && !this.ctx.isPreview) {
       if ($event) {
@@ -232,6 +283,11 @@ export class UnreadNotificationWidgetComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl(this.router.parseUrl('/notification/inbox')).then(() => {});
     }
   }
+
+  /**
+   * edit notification type filter.
+   *
+   */
 
   private editNotificationTypeFilter($event: Event) {
     if ($event) {

@@ -67,11 +67,11 @@ import { UtilsService } from '@core/services/utils.service';
 import { AlarmFilterConfig } from '@shared/models/query/query.models';
 import { EntityService } from '@core/http/entity.service';
 
+
 /**
-
- * alarm table config.
-
+ * Alarm table config (ThingsBoard web UI).
  */
+
 
 export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink> {
 
@@ -181,6 +181,13 @@ export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink>
     );
   }
 
+  /**
+   * fetch alarms.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<AlarmInfo>> observable or value
+   */
+
   fetchAlarms(pageLink: TimePageLink): Observable<PageData<AlarmInfo>> {
     const alarmFilter = this.entityService.resolveAlarmFilter(this.alarmFilterConfig, false);
     const query = new AlarmQueryV2(this.entityId, pageLink, alarmFilter);
@@ -191,6 +198,12 @@ export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink>
         return this.alarmService.getAlarmsV2(query);
     }
   }
+
+  /**
+   * show alarm details.
+   *
+   * @param entity entity (AlarmInfo)
+   */
 
   showAlarmDetails(entity: AlarmInfo) {
     const isPermissionWrite = this.authUser.authority !== Authority.CUSTOMER_USER || entity.customerId?.id === this.authUser.customerId;
@@ -215,6 +228,13 @@ export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink>
       }
     );
   }
+
+  /**
+   * get assignee template.
+   *
+   * @param entity entity (AlarmInfo)
+   * @returns string observable or value
+   */
 
   getAssigneeTemplate(entity: AlarmInfo): string {
     const hasAssigneeId = isDefinedAndNotNull(entity.assigneeId);
@@ -241,9 +261,21 @@ export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink>
     return `<span class="assignee-cell">${templateContent}</span>`;
   }
 
+  /**
+   * get avatar bg color.
+   *
+   * @param alarmAssignee alarm assignee (AlarmAssignee)
+   */
+
   getAvatarBgColor(alarmAssignee: AlarmAssignee) {
     return this.utilsService.stringToHslColor(getUserDisplayName(alarmAssignee), 40, 60);
   }
+
+  /**
+   * open alarm assignee panel.
+   *
+   * @param entity entity (AlarmInfo)
+   */
 
   openAlarmAssigneePanel($event: Event, entity: AlarmInfo) {
     if ($event) {
@@ -289,6 +321,12 @@ export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink>
     });
   }
 
+  /**
+   * ack alarms.
+   *
+   * @param alarms alarms (Array<AlarmInfo>)
+   */
+
   ackAlarms($event: Event, alarms: Array<AlarmInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -323,6 +361,12 @@ export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink>
       });
     }
   }
+
+  /**
+   * clear alarms.
+   *
+   * @param alarms alarms (Array<AlarmInfo>)
+   */
 
   clearAlarms($event: Event, alarms: Array<AlarmInfo>) {
     if ($event) {
@@ -359,6 +403,12 @@ export class AlarmTableConfig extends EntityTableConfig<AlarmInfo, TimePageLink>
       });
     }
   }
+
+  /**
+   * DELETE — delete alarms.
+   *
+   * @param alarms alarms (Array<AlarmInfo>)
+   */
 
   deleteAlarms($event: Event, alarms: Array<AlarmInfo>) {
     if ($event) {

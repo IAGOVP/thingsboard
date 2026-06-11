@@ -23,7 +23,9 @@ import { PageData } from '@shared/models/page/page-data';
 import { ApiKeyInfo, ApiKey } from '@shared/models/api-key.models';
 
 /**
- * Angular HTTP service: api key REST wrappers (`@core/http`).
+ * Angular injectable service: api key (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -35,31 +37,74 @@ export class ApiKeyService {
   ) {
   }
 
-  /** Calls ThingsBoard REST `/api/apiKey, ...`. */
+  
+  /**
+   * POST/PUT entity — save api key.
+   *
+   * @param apiKey api key (ApiKeyInfo)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ApiKey> observable or value
+   */
+
 
   public saveApiKey(apiKey: ApiKeyInfo, config?: RequestConfig): Observable<ApiKey> {
     return this.http.post<ApiKey>('/api/apiKey', apiKey, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/apiKey/${id}, ...`. */
+  
+  /**
+   * DELETE — delete api key.
+   *
+   * @param id id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public deleteApiKey(id: string, config?: RequestConfig): Observable<void> {
     return this.http.delete<void>(`/api/apiKey/${id}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/apiKey/${id}/description, ...`. */
+  
+  /**
+   * update api key description.
+   *
+   * @param id id (string)
+   * @param description description (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ApiKeyInfo> observable or value
+   */
+
 
   public updateApiKeyDescription(id: string, description: string, config?: RequestConfig): Observable<ApiKeyInfo> {
     return this.http.put<ApiKeyInfo>(`/api/apiKey/${id}/description`, description, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/apiKey/${id}/enabled/${enabledValue}, ...`. */
+  
+  /**
+   * enable api key.
+   *
+   * @param id id (string)
+   * @param enabledValue enabled value (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ApiKeyInfo> observable or value
+   */
+
 
   public enableApiKey(id: string, enabledValue: boolean, config?: RequestConfig): Observable<ApiKeyInfo> {
     return this.http.put<ApiKeyInfo>(`/api/apiKey/${id}/enabled/${enabledValue}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/apiKeys/${userId}${pageLink.toQuery()}`. */
+  
+  /**
+   * get user api keys.
+   *
+   * @param userId user UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<ApiKeyInfo>> observable or value
+   */
+
 
   public getUserApiKeys(userId: string, pageLink: PageLink, config?: RequestConfig): Observable<PageData<ApiKeyInfo>> {
     return this.http.get<PageData<ApiKeyInfo>>(`/api/apiKeys/${userId}${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));

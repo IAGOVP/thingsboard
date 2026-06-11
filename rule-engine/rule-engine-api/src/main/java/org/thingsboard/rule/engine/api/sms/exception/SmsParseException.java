@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.api.sms.exception;
 
+
 /**
 
- * Rule engine component: sms parse exception.
+ * Sms parse exception (rule engine public API contracts and services).
 
  */
+
 
 public class SmsParseException extends SmsException {
 

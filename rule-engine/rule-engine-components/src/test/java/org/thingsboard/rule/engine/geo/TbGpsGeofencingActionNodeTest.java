@@ -55,8 +55,9 @@ import static org.thingsboard.rule.engine.util.GpsGeofencingEvents.LEFT;
 import static org.thingsboard.rule.engine.util.GpsGeofencingEvents.OUTSIDE;
 import static org.thingsboard.server.common.data.msg.TbNodeConnectionType.SUCCESS;
 /**
- * Unit test for tb gps geofencing action node rule node.
+ * Unit test for tb gps geofencing action node (GPS geofencing filter and action nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbGpsGeofencingActionNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -259,6 +260,12 @@ class TbGpsGeofencingActionNodeTest extends AbstractRuleNodeUpgradeTest {
                                 "}\n")
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

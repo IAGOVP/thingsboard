@@ -24,14 +24,17 @@ import {
 import { WidgetConfigComponent } from '@home/components/widget/widget-config.component';
 import { WidgetConfigComponentData } from '@home/models/widget-component.models';
 
+
+/**
+ * Angular component: radial gauge basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-radial-gauge-basic-config`.
+ */
 @Component({
     selector: 'tb-radial-gauge-basic-config',
     templateUrl: './analog-gauge-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: radial gauge basic config UI.
- */
+standalone: false
 })
 export class RadialGaugeBasicConfigComponent extends GaugeBasicConfigComponent {
 
@@ -42,6 +45,12 @@ export class RadialGaugeBasicConfigComponent extends GaugeBasicConfigComponent {
               protected fb: UntypedFormBuilder) {
     super(store, widgetConfigComponent, fb);
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     super.onConfigSet(configData);

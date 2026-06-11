@@ -19,14 +19,17 @@ import { isDefinedAndNotNull } from '@core/public-api';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: message type config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-node-message-type-config`.
+ */
 @Component({
     selector: 'tb-filter-node-message-type-config',
     templateUrl: './message-type-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: message type config UI.
- */
+standalone: false
 })
 export class MessageTypeConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -36,15 +39,34 @@ export class MessageTypeConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.messageTypeConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
       messageTypes: isDefinedAndNotNull(configuration?.messageTypes) ? configuration.messageTypes : null
     };
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.messageTypeConfigForm = this.fb.group({

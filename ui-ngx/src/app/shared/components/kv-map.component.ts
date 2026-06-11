@@ -35,6 +35,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: key val map (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-key-val-map`.
+ */
 @Component({
     selector: 'tb-key-val-map',
     templateUrl: './kv-map.component.html',
@@ -51,10 +57,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: key val map UI.
- */
+standalone: false
 })
 export class KeyValMapComponent extends PageComponent implements ControlValueAccessor, OnInit, OnDestroy, Validator {
 
@@ -86,6 +89,11 @@ export class KeyValMapComponent extends PageComponent implements ControlValueAcc
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.kvListFormGroup = this.fb.group({
       keyVals: this.fb.array([])
@@ -96,18 +104,41 @@ export class KeyValMapComponent extends PageComponent implements ControlValueAcc
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * key vals form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   keyValsFormArray(): UntypedFormArray {
     return this.kvListFormGroup.get('keyVals') as UntypedFormArray;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -120,6 +151,12 @@ export class KeyValMapComponent extends PageComponent implements ControlValueAcc
       this.kvListFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param keyValMap key val map ({[key: string]: string})
+   */
 
   writeValue(keyValMap: {[key: string]: string}): void {
     const keyValsControls: Array<AbstractControl> = [];
@@ -141,9 +178,20 @@ export class KeyValMapComponent extends PageComponent implements ControlValueAcc
     }
   }
 
+  /**
+   * DELETE — remove key val.
+   *
+   * @param index index (number)
+   */
+
   public removeKeyVal(index: number) {
     (this.kvListFormGroup.get('keyVals') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add key val.
+   *
+   */
 
   public addKeyVal() {
     const keyValsFormArray = this.kvListFormGroup.get('keyVals') as UntypedFormArray;
@@ -153,9 +201,20 @@ export class KeyValMapComponent extends PageComponent implements ControlValueAcc
     }));
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   public validate(): ValidationErrors | null {
     return this.kvListFormGroup.valid ? null : { keyVals: { valid: false } };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const kvList: {key: string; value: string}[] = this.kvListFormGroup.get('keyVals').value;

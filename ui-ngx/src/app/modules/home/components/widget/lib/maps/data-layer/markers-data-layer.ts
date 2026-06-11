@@ -68,11 +68,11 @@ import {
 import { TbImageMap } from '@home/components/widget/lib/maps/image-map';
 import { DataLayerColorProcessor, TbMapDataLayer } from '@home/components/widget/lib/maps/data-layer/map-data-layer';
 
+
 /**
-
- * marker data processor.
-
+ * Marker data processor (ThingsBoard web UI).
  */
+
 
 export class MarkerDataProcessor<S extends MarkersDataLayerSettings = MarkersDataLayerSettings> {
 
@@ -84,6 +84,12 @@ export class MarkerDataProcessor<S extends MarkersDataLayerSettings = MarkersDat
               public markerOffset: L.LatLngTuple,
               public tooltipOffset: L.LatLngTuple) {
   }
+
+  /**
+   * setup.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   public setup(): Observable<any> {
     this.markerIconProcessor = MarkerIconProcessor.fromSettings(this, this.settings);
@@ -101,6 +107,14 @@ export class MarkerDataProcessor<S extends MarkersDataLayerSettings = MarkersDat
     return forkJoin(setup$).pipe(map(() => null));
   }
 
+  /**
+   * extract location.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   * @returns L.LatLng observable or value
+   */
+
   public extractLocation(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): L.LatLng {
     let locationData = this.extractLocationData(data);
     if (locationData) {
@@ -113,6 +127,12 @@ export class MarkerDataProcessor<S extends MarkersDataLayerSettings = MarkersDat
       return null;
     }
   }
+
+  /**
+   * extract location data.
+   *
+   * @param data dialog or route input data
+   */
 
   public extractLocationData(data: FormattedData<TbMapDatasource>):  {x: number; y: number} {
     if (data) {
@@ -136,16 +156,39 @@ export class MarkerDataProcessor<S extends MarkersDataLayerSettings = MarkersDat
     }
   }
 
+  /**
+   * POST/PUT entity — create marker icon.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   * @param rotationAngle rotation angle (number)
+   * @returns Observable<MarkerIconInfo> observable or value
+   */
+
   public createMarkerIcon(data: FormattedData<TbMapDatasource>,
                           dsData: FormattedData<TbMapDatasource>[],
                           rotationAngle?: number): Observable<MarkerIconInfo> {
     return this.markerIconProcessor.createMarkerIcon(data, dsData, rotationAngle);
   }
 
+  /**
+   * POST/PUT entity — create default marker icon.
+   *
+   * @returns Observable<MarkerIconInfo> observable or value
+   */
+
   public createDefaultMarkerIcon(rotationAngle = 0): Observable<MarkerIconInfo> {
     const color = this.settings.markerShape?.color?.color || '#307FE5';
     return this.createColoredMarkerShape(MarkerShape.markerShape1, tinycolor(color), rotationAngle);
   }
+
+  /**
+   * POST/PUT entity — create colored marker shape.
+   *
+   * @param shape shape (MarkerShape)
+   * @param color color (tinycolor.Instance)
+   * @returns Observable<MarkerIconInfo> observable or value
+   */
 
   public createColoredMarkerShape(shape: MarkerShape, color: tinycolor.Instance, rotationAngle = 0, size = 34): Observable<MarkerIconInfo> {
     return createColorMarkerShapeURI(this.dataLayer.getCtx().$injector.get(MatIconRegistry), this.dataLayer.getCtx().$injector.get(DomSanitizer), shape, color).pipe(
@@ -175,6 +218,15 @@ export class MarkerDataProcessor<S extends MarkersDataLayerSettings = MarkersDat
       })
     );
   }
+
+  /**
+   * POST/PUT entity — create colored marker icon.
+   *
+   * @param iconContainer icon container (MarkerIconContainer)
+   * @param icon icon (string)
+   * @param color color (tinycolor.Instance)
+   * @returns Observable<MarkerIconInfo> observable or value
+   */
 
   public createColoredMarkerIcon(iconContainer: MarkerIconContainer,
                                  icon: string, color: tinycolor.Instance, rotationAngle = 0, size = 34): Observable<MarkerIconInfo> {

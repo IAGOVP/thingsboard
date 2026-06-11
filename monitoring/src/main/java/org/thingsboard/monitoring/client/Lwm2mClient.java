@@ -68,6 +68,7 @@ import static org.eclipse.leshan.core.LwM2mId.SERVER;
  * LwM2M client used by {@link org.thingsboard.monitoring.service.transport.impl.Lwm2mTransportHealthChecker}.
  */
 
+
 @Slf4j
 public class Lwm2mClient extends BaseInstanceEnabler implements Destroyable {
 
@@ -89,6 +90,13 @@ public class Lwm2mClient extends BaseInstanceEnabler implements Destroyable {
 
     public Lwm2mClient() {
     }
+    /**
+     * Init client.
+     *
+     * @return nothing
+     * @throws InvalidDDFFileException if invalid ddffile exception is thrown during processing
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     public void initClient() throws InvalidDDFFileException, IOException {
         String[] resources = new String[]{"0.xml", "1.xml", "2.xml", "test-model.xml"};
@@ -240,11 +248,26 @@ public class Lwm2mClient extends BaseInstanceEnabler implements Destroyable {
 
         leshanClient.start();
     }
+    /**
+     * Returns available resource ids.
+     *
+     * @param model model ({@link ObjectModel})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<Integer> getAvailableResourceIds(ObjectModel model) {
         return supportedResources;
     }
+    /**
+     * Read.
+     *
+     * @param server server ({@link LwM2mServer})
+     * @param resourceId resource id
+     * @return {@link ReadResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ReadResponse read(LwM2mServer server, int resourceId) {
@@ -254,12 +277,26 @@ public class Lwm2mClient extends BaseInstanceEnabler implements Destroyable {
             default -> super.read(server, resourceId);
         };
     }
+    /**
+     * Send.
+     *
+     * @param data data ({@link String})
+     * @param resource resource
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public void send(String data, int resource) {
         this.data = data;
         fireResourceChange(resource);
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {

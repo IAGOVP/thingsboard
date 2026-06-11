@@ -35,8 +35,9 @@ import { AssetProfileComponent } from '@home/components/profile/asset-profile.co
 import { AssetProfileTabsComponent } from './asset-profile-tabs.component';
 import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 /**
- * Route resolver: loads asset profiles table config before activate.
+ * Route resolver: preloads data for asset profiles table config (home/asset-profile pages).
  */
+
 
 @Injectable()
 export class AssetProfilesTableConfigResolver  {
@@ -101,11 +102,23 @@ export class AssetProfilesTableConfigResolver  {
     this.config.addActionDescriptors = this.configureAddActions();
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<AssetProfile> observable or value
+   */
+
   resolve(): EntityTableConfig<AssetProfile> {
     this.config.tableTitle = this.translate.instant('asset-profile.asset-profiles');
 
     return this.config;
   }
+
+  /**
+   * configure add actions.
+   *
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
 
   configureAddActions(): Array<HeaderActionDescriptor> {
     const actions: Array<HeaderActionDescriptor> = [];
@@ -125,6 +138,12 @@ export class AssetProfilesTableConfigResolver  {
     );
     return actions;
   }
+
+  /**
+   * set default asset profile.
+   *
+   * @param assetProfile asset profile (AssetProfile)
+   */
 
   setDefaultAssetProfile($event: Event, assetProfile: AssetProfile) {
     if ($event) {
@@ -148,6 +167,12 @@ export class AssetProfilesTableConfigResolver  {
     );
   }
 
+  /**
+   * open asset profile.
+   *
+   * @param assetProfile asset profile (AssetProfile)
+   */
+
   private openAssetProfile($event: Event, assetProfile: AssetProfile) {
     if ($event) {
       $event.stopPropagation();
@@ -155,6 +180,11 @@ export class AssetProfilesTableConfigResolver  {
     const url = this.router.createUrlTree(['profiles', 'assetProfiles', assetProfile.id.id]);
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * import asset profile.
+   *
+   */
 
   importAssetProfile($event: Event) {
     this.importExport.importAssetProfile().subscribe(
@@ -166,12 +196,25 @@ export class AssetProfilesTableConfigResolver  {
     );
   }
 
+  /**
+   * export asset profile.
+   *
+   * @param assetProfile asset profile (AssetProfile)
+   */
+
   exportAssetProfile($event: Event, assetProfile: AssetProfile) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExport.exportAssetProfile(assetProfile.id.id);
   }
+
+  /**
+   * Event handler for asset profile action.
+   *
+   * @param action action (EntityAction<AssetProfile>)
+   * @returns boolean observable or value
+   */
 
   onAssetProfileAction(action: EntityAction<AssetProfile>): boolean {
     switch (action.action) {

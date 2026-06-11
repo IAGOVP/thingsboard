@@ -20,6 +20,12 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { FloatLabelType, MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: datetime (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-datetime`.
+ */
 @Component({
     selector: 'tb-datetime',
     templateUrl: './datetime.component.html',
@@ -31,10 +37,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: datetime UI.
- */
+standalone: false
 })
 export class DatetimeComponent implements OnInit, ControlValueAccessor {
 
@@ -99,19 +102,48 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
   constructor() {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param datetime datetime (number | null)
+   */
 
   writeValue(datetime: number | null): void {
     this.modelValue = datetime;
@@ -122,6 +154,12 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (number | null)
+   */
+
   updateView(value: number | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -129,10 +167,20 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * Event handler for date change.
+   *
+   */
+
   onDateChange() {
     const value = this.date ? this.date.getTime() : null;
     this.updateView(value);
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear($event: Event) {
     $event.stopPropagation();

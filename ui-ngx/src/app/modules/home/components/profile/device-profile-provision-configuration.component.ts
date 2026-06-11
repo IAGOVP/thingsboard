@@ -39,6 +39,12 @@ import { AppState } from '@core/core.state';
 import { TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: device profile provision configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile-provision-configuration`.
+ */
 @Component({
     selector: 'tb-device-profile-provision-configuration',
     templateUrl: './device-profile-provision-configuration.component.html',
@@ -55,10 +61,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: device profile provision configuration UI.
- */
+standalone: false
 })
 export class DeviceProfileProvisionConfigurationComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -87,6 +90,11 @@ export class DeviceProfileProvisionConfigurationComponent implements ControlValu
               private translate: TranslateService,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.provisionConfigurationFormGroup = this.fb.group({
@@ -144,12 +152,30 @@ export class DeviceProfileProvisionConfigurationComponent implements ControlValu
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DeviceProvisionConfiguration | null)
+   */
 
   writeValue(value: DeviceProvisionConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
@@ -161,6 +187,12 @@ export class DeviceProfileProvisionConfigurationComponent implements ControlValu
       this.provisionConfigurationFormGroup.patchValue({type: DeviceProvisionType.DISABLED});
     }
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -175,6 +207,13 @@ export class DeviceProfileProvisionConfigurationComponent implements ControlValu
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(c: UntypedFormControl): ValidationErrors | null {
     return (this.provisionConfigurationFormGroup.valid) ? null : {
       provisionConfiguration: {
@@ -182,6 +221,11 @@ export class DeviceProfileProvisionConfigurationComponent implements ControlValu
       },
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel(): void {
     let deviceProvisionConfiguration: DeviceProvisionConfiguration = null;
@@ -195,6 +239,12 @@ export class DeviceProfileProvisionConfigurationComponent implements ControlValu
     this.propagateChange(deviceProvisionConfiguration);
   }
 
+  /**
+   * Event handler for provision copied.
+   *
+   * @param isKey is key (boolean)
+   */
+
   onProvisionCopied(isKey: boolean) {
     this.store.dispatch(new ActionNotificationShow(
       {
@@ -205,6 +255,12 @@ export class DeviceProfileProvisionConfigurationComponent implements ControlValu
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * reset form controls.
+   *
+   * @param value value (DeviceProvisionConfiguration)
+   */
 
   private resetFormControls(value: DeviceProvisionConfiguration) {
     if (value.type === DeviceProvisionType.CHECK_PRE_PROVISIONED_DEVICES || value.type === DeviceProvisionType.ALLOW_CREATE_NEW_DEVICES) {

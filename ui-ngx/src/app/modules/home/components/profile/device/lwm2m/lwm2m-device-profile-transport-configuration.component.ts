@@ -57,6 +57,12 @@ import { Lwm2mSecurityType } from '@shared/models/lwm2m-security-config.models';
 import { DialogService } from '@core/services/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: lwm2m device profile transport configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-device-transport-configuration`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-device-transport-configuration',
     templateUrl: './lwm2m-device-profile-transport-configuration.component.html',
@@ -73,10 +79,7 @@ import { TranslateService } from '@ngx-translate/core';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: lwm2m device profile transport configuration UI.
- */
+standalone: false
 })
 export class Lwm2mDeviceProfileTransportConfigurationComponent implements ControlValueAccessor, Validator, OnDestroy {
 
@@ -198,17 +201,40 @@ export class Lwm2mDeviceProfileTransportConfigurationComponent implements Contro
     this.sortFunction = this.sortObjectKeyPathJson;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -222,6 +248,12 @@ export class Lwm2mDeviceProfileTransportConfigurationComponent implements Contro
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (Lwm2mProfileConfigModels | null)
+   */
+
   async writeValue(value: Lwm2mProfileConfigModels | null) {
     if (isDefinedAndNotNull(value) && (value?.clientLwM2mSettings || value?.observeAttr || value?.bootstrap)) {
       this.configurationValue = value;
@@ -232,11 +264,23 @@ export class Lwm2mDeviceProfileTransportConfigurationComponent implements Contro
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.lwm2mDeviceProfileFormGroup.valid ? null : {
       lwm2mDeviceProfile: false
     };
   }
+
+  /**
+   * default profile config.
+   *
+   * @returns Promise<void> observable or value
+   */
 
   private async defaultProfileConfig(): Promise<void> {
     let lwm2m: ServerSecurityConfig;
@@ -316,6 +360,11 @@ export class Lwm2mDeviceProfileTransportConfigurationComponent implements Contro
       },
       {emitEvent: false});
   }
+
+  /**
+   * update device profile value.
+   *
+   */
 
   private updateDeviceProfileValue(config): void {
     if (this.lwm2mDeviceProfileFormGroup.valid && config.observeAttrTelemetry) {
@@ -591,6 +640,12 @@ export class Lwm2mDeviceProfileTransportConfigurationComponent implements Contro
   get clientSettingsFormGroup(): UntypedFormGroup {
     return this.lwm2mDeviceProfileFormGroup.get('clientLwM2mSettings') as UntypedFormGroup;
   }
+
+  /**
+   * update observe strategy.
+   *
+   * @param value value (ObjectLwM2M[])
+   */
 
   private updateObserveStrategy(value: ObjectLwM2M[]) {
     if (value.length && !this.disabled) {

@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { GpioItem, gpioItemValidator } from '@home/components/widget/lib/settings/gpio/gpio-item.component';
 import { ContentType } from '@shared/models/constants';
 
+
+/**
+ * Angular component: gpio control widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-gpio-control-widget-settings`.
+ */
 @Component({
     selector: 'tb-gpio-control-widget-settings',
     templateUrl: './gpio-control-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: gpio control widget settings UI.
- */
+standalone: false
 })
 export class GpioControlWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -42,9 +45,21 @@ export class GpioControlWidgetSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.gpioControlWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -62,6 +77,12 @@ export class GpioControlWidgetSettingsComponent extends WidgetSettingsComponent 
       parseGpioStatusFunction: 'return body[pin] === true;'
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.gpioControlWidgetSettingsForm = this.fb.group({
@@ -96,9 +117,23 @@ export class GpioControlWidgetSettingsComponent extends WidgetSettingsComponent 
     });
   }
 
+  /**
+   * do update settings.
+   *
+   * @param settingsForm settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
+
   protected doUpdateSettings(settingsForm: UntypedFormGroup, settings: WidgetSettings) {
     settingsForm.setControl('gpioList', this.prepareGpioListFormArray(settings.gpioList), {emitEvent: false});
   }
+
+  /**
+   * prepare gpio list form array.
+   *
+   * @param gpioList gpio list (GpioItem[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareGpioListFormArray(gpioList: GpioItem[] | undefined): UntypedFormArray {
     const gpioListControls: Array<AbstractControl> = [];
@@ -118,6 +153,12 @@ export class GpioControlWidgetSettingsComponent extends WidgetSettingsComponent 
     }]);
   }
 
+  /**
+   * gpio list form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   gpioListFormArray(): UntypedFormArray {
     return this.gpioControlWidgetSettingsForm.get('gpioList') as UntypedFormArray;
   }
@@ -126,13 +167,32 @@ export class GpioControlWidgetSettingsComponent extends WidgetSettingsComponent 
     return this.gpioListFormArray().controls as (AbstractControl & { new?: boolean })[];
   }
 
+  /**
+   * track by gpio item.
+   *
+   * @param index index (number)
+   * @param gpioItemControl gpio item control (AbstractControl)
+   * @returns any observable or value
+   */
+
   public trackByGpioItem(index: number, gpioItemControl: AbstractControl): any {
     return gpioItemControl;
   }
 
+  /**
+   * DELETE — remove gpio item.
+   *
+   * @param index index (number)
+   */
+
   public removeGpioItem(index: number) {
     (this.gpioControlWidgetSettingsForm.get('gpioList') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add gpio item.
+   *
+   */
 
   public addGpioItem() {
     const gpioItem: GpioItem = {

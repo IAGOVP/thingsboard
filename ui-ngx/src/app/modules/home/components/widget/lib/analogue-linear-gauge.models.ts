@@ -16,11 +16,11 @@
 
 import { AnalogueGaugeSettings } from '@home/components/widget/lib/analogue-gauge.models';
 
+
 /**
-
- * TypeScript models and enums for analogue linear gauge settings.
-
+ * Analogue linear gauge settings (ThingsBoard web UI).
  */
+
 
 export interface AnalogueLinearGaugeSettings extends AnalogueGaugeSettings {
   barStrokeWidth: number;

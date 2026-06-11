@@ -20,11 +20,11 @@ export type FontWeight = 'normal' | 'bold' | 'bolder' | 'lighter'
                          | '100' | '200' | '300' | '400' | '500'
                          | '600' | '700' | '800' | '900';
 
+
 /**
-
- * TypeScript models and enums for font settings.
-
+ * Font settings (ThingsBoard web UI).
  */
+
 
 export interface FontSettings {
   family?: string;

@@ -41,14 +41,17 @@ interface RoundSwitchSettings {
   persistentPollingInterval: number;
 }
 
+
+/**
+ * Angular component: round switch (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-round-switch`.
+ */
 @Component({
     selector: 'tb-round-switch',
     templateUrl: './round-switch.component.html',
     styleUrls: ['./round-switch.component.scss'],
-    standalone: false
-/**
- * Angular component: round switch UI.
- */
+standalone: false
 })
 export class RoundSwitchComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -103,6 +106,11 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.switchElement = $(this.switchElementRef.nativeElement);
     this.switchContainer = $(this.switchContainerRef.nativeElement);
@@ -125,6 +133,11 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
     this.init();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.valueSubscription) {
       this.ctx.subscriptionApi.removeSubscription(this.valueSubscription.id);
@@ -134,6 +147,11 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
     }
     this.ctx.controlApi.completedCommand();
   }
+
+  /**
+   * init.
+   *
+   */
 
   private init() {
     const settings: RoundSwitchSettings = this.ctx.settings;
@@ -205,6 +223,11 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
 
   }
 
+  /**
+   * resize.
+   *
+   */
+
   private resize() {
     const width = this.switchContainer.width();
     const height = this.switchContainer.height();
@@ -223,6 +246,15 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
     this.setFontSize(this.switchError, this.error, this.switchErrorContainer.height(), this.switchErrorContainer.width());
   }
 
+  /**
+   * set font size.
+   *
+   * @param element element (JQuery<HTMLElement>)
+   * @param text text (string)
+   * @param fontSize font size (number)
+   * @param maxWidth max width (number)
+   */
+
   private setFontSize(element: JQuery<HTMLElement>, text: string, fontSize: number, maxWidth: number) {
     let textWidth = this.measureTextWidth(text, fontSize);
     while (textWidth > maxWidth) {
@@ -232,11 +264,25 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
     element.css({fontSize: fontSize + 'px', lineHeight: fontSize + 'px'});
   }
 
+  /**
+   * measure text width.
+   *
+   * @param text text (string)
+   * @param fontSize font size (number)
+   * @returns number observable or value
+   */
+
   private measureTextWidth(text: string, fontSize: number): number {
     this.textMeasure.css({fontSize: fontSize + 'px', lineHeight: fontSize + 'px'});
     this.textMeasure.text(text);
     return this.textMeasure.width();
   }
+
+  /**
+   * Event handler for error.
+   *
+   * @param error error (string)
+   */
 
   private onError(error: string) {
     this.error = error;
@@ -244,14 +290,30 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
     this.ctx.detectChanges();
   }
 
+  /**
+   * set value.
+   *
+   * @param value value (boolean)
+   */
+
   private setValue(value: boolean) {
     this.value = value ? true : false;
     this.onoff.prop('checked', !this.value);
   }
 
+  /**
+   * Event handler for value.
+   *
+   */
+
   private onValue() {
     this.rpcUpdateValue(this.value);
   }
+
+  /**
+   * rpc request value.
+   *
+   */
 
   private rpcRequestValue() {
     this.error = '';
@@ -266,6 +328,11 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
       }
     );
   }
+
+  /**
+   * rpc update value.
+   *
+   */
 
   private rpcUpdateValue(value) {
     if (this.executingUpdateValue) {
@@ -292,6 +359,11 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
       }
     );
   }
+
+  /**
+   * subscribe for value.
+   *
+   */
 
   private subscribeForValue() {
     const valueSubscriptionInfo: SubscriptionInfo[] = [{
@@ -326,6 +398,13 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
     );
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   * @param detectChanges detect changes (boolean)
+   */
+
   private onDataUpdated(subscription: IWidgetSubscription, detectChanges: boolean) {
     let value = false;
     const data = subscription.data;
@@ -352,6 +431,13 @@ export class RoundSwitchComponent extends PageComponent implements OnInit, OnDes
       this.ctx.detectChanges();
     }
   }
+
+  /**
+   * Event handler for data update error.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   * @param e e (any)
+   */
 
   private onDataUpdateError(subscription: IWidgetSubscription, e: any) {
     const exceptionData = this.utils.parseException(e);

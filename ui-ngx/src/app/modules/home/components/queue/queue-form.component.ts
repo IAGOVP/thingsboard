@@ -37,6 +37,12 @@ import { isDefinedAndNotNull } from '@core/utils';
 import { Subscription } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: queue form (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-queue-form`.
+ */
 @Component({
     selector: 'tb-queue-form',
     templateUrl: './queue-form.component.html',
@@ -53,10 +59,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: queue form UI.
- */
+standalone: false
 })
 export class QueueFormComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -88,6 +91,12 @@ export class QueueFormComponent implements ControlValueAccessor, OnInit, Validat
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (this.propagateChangePending) {
@@ -98,8 +107,19 @@ export class QueueFormComponent implements ControlValueAccessor, OnInit, Validat
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.queueFormGroup = this.fb.group(
@@ -144,6 +164,12 @@ export class QueueFormComponent implements ControlValueAccessor, OnInit, Validat
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -157,6 +183,12 @@ export class QueueFormComponent implements ControlValueAccessor, OnInit, Validat
       }
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (QueueInfo)
+   */
 
   writeValue(value: QueueInfo): void {
     this.propagateChangePending = false;
@@ -175,6 +207,12 @@ export class QueueFormComponent implements ControlValueAccessor, OnInit, Validat
       }
     }
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     if (c.parent && !this.systemQueue) {
@@ -197,6 +235,11 @@ export class QueueFormComponent implements ControlValueAccessor, OnInit, Validat
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value = this.queueFormGroup.value;
     this.modelValue = {...this.modelValue, ...value};
@@ -206,6 +249,11 @@ export class QueueFormComponent implements ControlValueAccessor, OnInit, Validat
       this.propagateChangePending = true;
     }
   }
+
+  /**
+   * submit strategy type changed.
+   *
+   */
 
   submitStrategyTypeChanged() {
     const form = this.queueFormGroup.get('submitStrategy') as UntypedFormGroup;

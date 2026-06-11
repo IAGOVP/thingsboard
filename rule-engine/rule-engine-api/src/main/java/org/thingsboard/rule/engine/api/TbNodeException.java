@@ -18,11 +18,13 @@ package org.thingsboard.rule.engine.api;
 import lombok.Getter;
 import org.thingsboard.common.util.RecoveryAware;
 
+
 /**
 
- * Checked exception for rule node init/processing failures.
+ * Checked exception for rule node initialization or processing failures.
 
  */
+
 
 public class TbNodeException extends Exception implements RecoveryAware {
 

@@ -54,6 +54,12 @@ export function updateAttributeGeneralDefaultSettings(hasLabelValue = true): Upd
   return updateAttributeGeneralSettings;
 }
 
+
+/**
+ * Angular component: update attribute general settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-attribute-general-settings`.
+ */
 @Component({
     selector: 'tb-update-attribute-general-settings',
     templateUrl: './update-attribute-general-settings.component.html',
@@ -70,10 +76,7 @@ export function updateAttributeGeneralDefaultSettings(hasLabelValue = true): Upd
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: update attribute general settings UI.
- */
+standalone: false
 })
 export class UpdateAttributeGeneralSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -97,6 +100,11 @@ export class UpdateAttributeGeneralSettingsComponent extends PageComponent imple
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.updateAttributeGeneralSettingsFormGroup = this.fb.group({
@@ -127,12 +135,30 @@ export class UpdateAttributeGeneralSettingsComponent extends PageComponent imple
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -143,6 +169,12 @@ export class UpdateAttributeGeneralSettingsComponent extends PageComponent imple
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (UpdateAttributeGeneralSettings)
+   */
+
   writeValue(value: UpdateAttributeGeneralSettings): void {
     this.modelValue = value;
     this.updateAttributeGeneralSettingsFormGroup.patchValue(
@@ -150,6 +182,12 @@ export class UpdateAttributeGeneralSettingsComponent extends PageComponent imple
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.updateAttributeGeneralSettingsFormGroup.valid ? null : {
@@ -159,11 +197,22 @@ export class UpdateAttributeGeneralSettingsComponent extends PageComponent imple
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: UpdateAttributeGeneralSettings = this.updateAttributeGeneralSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     if (this.hasLabelValue) {

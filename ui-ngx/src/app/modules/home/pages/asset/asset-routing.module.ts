@@ -84,10 +84,13 @@ const routes: Routes = [
 /**
  * Angular NgModule: asset routing feature area.
  */
+/**
+ * Angular NgModule bundling asset routing (home/asset pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     AssetsTableConfigResolver
-  ]})
+]})
 export class AssetRoutingModule { }

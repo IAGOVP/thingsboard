@@ -15,8 +15,9 @@
 ///
 
 /**
- * TypeScript models and enums for user settings.
+ * TypeScript interfaces, types, and enums for user settings (shared TypeScript models).
  */
+
 export interface UserSettings {
   openedMenuSections?: string[];
   notDisplayConnectivityAfterAddDevice?: boolean;

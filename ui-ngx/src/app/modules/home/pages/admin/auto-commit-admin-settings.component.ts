@@ -24,14 +24,17 @@ import { AutoCommitSettingsComponent } from '@home/components/vc/auto-commit-set
 import { selectHasRepository } from '@core/auth/auth.selectors';
 import { RepositorySettingsComponent } from '@home/components/vc/repository-settings.component';
 
+
+/**
+ * Angular component: auto commit admin settings (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-auto-commit-admin-settings`.
+ */
 @Component({
     selector: 'tb-auto-commit-admin-settings',
     templateUrl: './auto-commit-admin-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: auto commit admin settings UI.
- */
+standalone: false
 })
 export class AutoCommitAdminSettingsComponent extends PageComponent implements OnInit, HasConfirmForm {
 
@@ -44,8 +47,19 @@ export class AutoCommitAdminSettingsComponent extends PageComponent implements O
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
 
   confirmForm(): UntypedFormGroup {
     return this.repositorySettingsComponent ?

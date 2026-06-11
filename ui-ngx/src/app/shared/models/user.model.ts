@@ -22,11 +22,11 @@ import { TenantId } from './id/tenant-id';
 import { HasTenantId } from '@shared/models/entity.models';
 import { UnitSystem } from '@shared/models/unit.models';
 
+
 /**
-
- * TypeScript models and enums for user.
-
+ * TypeScript interfaces, types, and enums for user (shared TypeScript models).
  */
+
 
 export interface User extends BaseData<UserId>, HasTenantId {
   tenantId: TenantId;

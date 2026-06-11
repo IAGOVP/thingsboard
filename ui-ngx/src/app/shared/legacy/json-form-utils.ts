@@ -276,11 +276,11 @@ function defaultFormDefinition(name: string, schema: any, options: DefaultsFormO
   }
 }
 
+
 /**
-
- * defaults form data.
-
+ * Defaults form data (ThingsBoard web UI).
  */
+
 
 interface DefaultsFormData {
   form: any[];

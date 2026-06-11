@@ -22,10 +22,13 @@ import { CommonModule } from '@angular/common';
 /**
  * Angular NgModule: account feature area.
  */
+/**
+ * Angular NgModule bundling account (home/account pages).
+ */
 @NgModule({
   declarations: [ ],
   imports: [
     CommonModule,
     AccountRoutingModule
-  ]})
+]})
 export class AccountModule { }

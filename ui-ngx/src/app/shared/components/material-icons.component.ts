@@ -39,16 +39,19 @@ import { MediaBreakpoints } from '@shared/models/constants';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { isTbImage } from '@shared/models/resource.models';
 
+
+/**
+ * Angular component: material icons (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-material-icons`.
+ */
 @Component({
     selector: 'tb-material-icons',
     templateUrl: './material-icons.component.html',
     providers: [],
     styleUrls: ['./material-icons.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: material icons UI.
- */
+standalone: false
 })
 export class MaterialIconsComponent extends PageComponent implements OnInit {
 
@@ -97,6 +100,11 @@ export class MaterialIconsComponent extends PageComponent implements OnInit {
     this.searchIconControl = new UntypedFormControl('');
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const iconsRowSize = this.breakpointObserver.isMatched(MediaBreakpoints['lt-md']) ? 8 : 11;
     this.calculatePanelSize(iconsRowSize);
@@ -136,22 +144,49 @@ export class MaterialIconsComponent extends PageComponent implements OnInit {
     this.isCustomIcon = isTbImage(this.selectedIcon)
   }
 
+  /**
+   * clear search.
+   *
+   */
+
   clearSearch() {
     this.searchIconControl.patchValue('', {emitEvent: true});
   }
+
+  /**
+   * select icon.
+   *
+   * @param icon icon (string)
+   */
 
   selectIcon(icon: string) {
     this.iconSelected.emit(icon);
   }
 
+  /**
+   * clear icon.
+   *
+   */
+
   clearIcon() {
     this.iconSelected.emit(null);
   }
+
+  /**
+   * calculate panel size.
+   *
+   * @param iconsRowSize icons row size (number)
+   */
 
   private calculatePanelSize(iconsRowSize: number, iconRows = 4) {
     this.iconsPanelHeight = Math.min(iconRows * this.iconsRowHeight, 10 * this.iconsRowHeight) + 'px';
     this.iconsPanelWidth = (iconsRowSize * 36 + (iconsRowSize - 1) * 12 + 6) + 'px';
   }
+
+  /**
+   * check size.
+   *
+   */
 
   private checkSize() {
     this.iconsPanel?.checkViewportSize();

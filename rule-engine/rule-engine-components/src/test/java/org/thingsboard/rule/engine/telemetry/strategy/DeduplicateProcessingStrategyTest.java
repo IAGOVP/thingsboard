@@ -28,11 +28,13 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+
 /**
 
- * Unit test for deduplicate processing strategy rule node.
+ * Unit test for deduplicate processing strategy (telemetry and attribute persistence nodes).
 
  */
+
 
 class DeduplicateProcessingStrategyTest {
 

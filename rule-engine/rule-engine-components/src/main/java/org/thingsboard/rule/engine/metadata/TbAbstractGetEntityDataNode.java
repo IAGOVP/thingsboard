@@ -28,8 +28,9 @@ import org.thingsboard.server.common.msg.TbMsg;
 
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 /**
- * Base implementation for get entity data node rule nodes.
+ * Abstract base class for get entity data node rule nodes (entity metadata and related-data fetch nodes).
  */
+
 
 @Slf4j
 public abstract class TbAbstractGetEntityDataNode<T extends EntityId> extends TbAbstractGetMappedDataNode<T, TbGetEntityDataNodeConfiguration> {
@@ -41,6 +42,13 @@ public abstract class TbAbstractGetEntityDataNode<T extends EntityId> extends Tb
 
     private static final String DATA_TO_FETCH_VALIDATION_MSG = "DataToFetch property has invalid value: %s." +
             " Only ATTRIBUTES and LATEST_TELEMETRY values supported!";
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -49,14 +57,37 @@ public abstract class TbAbstractGetEntityDataNode<T extends EntityId> extends Tb
                 entityId -> processDataAndTell(ctx, msg, entityId, msgDataAsObjectNode),
                 t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
     }
+    /**
+     * Finds entity async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originator message originator entity id
+     * @return future completing with {@link T}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract ListenableFuture<T> findEntityAsync(TbContext ctx, EntityId originator);
+    /**
+     * Checks data to fetch supported or else throw.
+     *
+     * @param dataToFetch data to fetch ({@link DataToFetch})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected void checkDataToFetchSupportedOrElseThrow(DataToFetch dataToFetch) throws TbNodeException {
         if (dataToFetch == null || dataToFetch.equals(DataToFetch.FIELDS)) {
             throw new TbNodeException(String.format(DATA_TO_FETCH_VALIDATION_MSG, dataToFetch));
         }
     }
+    /**
+     * Processes data and tell.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param entityId target entity identifier
+     * @param msgDataAsJsonNode msg data as json node ({@link ObjectNode})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void processDataAndTell(TbContext ctx, TbMsg msg, T entityId, ObjectNode msgDataAsJsonNode) {
         DataToFetch dataToFetch = config.getDataToFetch();
@@ -66,6 +97,13 @@ public abstract class TbAbstractGetEntityDataNode<T extends EntityId> extends Tb
             case FIELDS -> processFieldsData(ctx, msg, entityId, msgDataAsJsonNode, true);
         }
     }
+    /**
+     * Upgrade to use fetch to and data to fetch.
+     *
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected TbPair<Boolean, JsonNode> upgradeToUseFetchToAndDataToFetch(JsonNode oldConfiguration) throws TbNodeException {
         var newConfigObjectNode = (ObjectNode) oldConfiguration;

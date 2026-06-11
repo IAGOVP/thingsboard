@@ -21,14 +21,17 @@ import { EntityTableHeaderComponent } from '../../components/entity/entity-table
 import { EdgeEvent } from '@shared/models/edge.models';
 import { EdgeDownlinkTableConfig } from '@home/components/edge/edge-downlink-table-config';
 
+
+/**
+ * Angular component: edge downlink table header (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edge-downlink-table-header`.
+ */
 @Component({
     selector: 'tb-edge-downlink-table-header',
     templateUrl: './edge-downlink-table-header.component.html',
     styleUrls: ['./edge-downlink-table-header.component.scss'],
-    standalone: false
-/**
- * Angular component: edge downlink table header UI.
- */
+standalone: false
 })
 export class EdgeDownlinkTableHeaderComponent extends EntityTableHeaderComponent<EdgeEvent> {
 

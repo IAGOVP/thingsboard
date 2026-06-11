@@ -42,11 +42,11 @@ interface AggData {
   interval: [number, number];
 }
 
+
 /**
-
- * agg data map.
-
+ * Agg data map (ThingsBoard web UI).
  */
+
 
 class AggDataMap {
   private map = new BTree<number, AggData>();
@@ -58,17 +58,44 @@ class AggDataMap {
     private aggType: AggregationType
   ){};
 
+  /**
+   * set.
+   *
+   * @param ts ts (number)
+   * @param data dialog or route input data
+   */
+
   set(ts: number, data: AggData) {
     this.map.set(ts, data);
   }
+
+  /**
+   * get.
+   *
+   * @param ts ts (number)
+   * @returns AggData observable or value
+   */
 
   get(ts: number): AggData {
     return this.map.get(ts);
   }
 
+  /**
+   * DELETE — delete.
+   *
+   * @param ts ts (number)
+   */
+
   delete(ts: number) {
     this.map.delete(ts);
   }
+
+  /**
+   * find data for ts.
+   *
+   * @param ts ts (number)
+   * @returns AggData | undefined observable or value
+   */
 
   findDataForTs(ts: number): AggData | undefined {
     if (ts >= this.endTs) {
@@ -84,9 +111,22 @@ class AggDataMap {
     }
   }
 
+  /**
+   * calculate agg interval.
+   *
+   * @param timestamp timestamp (number)
+   * @returns [number, number] observable or value
+   */
+
   calculateAggInterval(timestamp: number): [number, number] {
     return calculateAggIntervalWithSubscriptionTimeWindow(this.subsTw, this.endTs, timestamp, this.aggType);
   }
+
+  /**
+   * update last interval.
+   *
+   * @param endTs end ts (number)
+   */
 
   updateLastInterval(endTs: number) {
     if (endTs > this.endTs) {
@@ -104,6 +144,12 @@ class AggDataMap {
   forEach(callback: (value: AggData, key: number, map: BTree<number, AggData>) => void, thisArg?: any) {
     this.map.forEach(callback, thisArg);
   }
+
+  /**
+   * size.
+   *
+   * @returns number observable or value
+   */
 
   size(): number {
     return this.map.size;

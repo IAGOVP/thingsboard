@@ -46,6 +46,12 @@ import { WidgetConfigCallbacks } from '@home/components/widget/config/widget-con
 import { FormProperty } from '@shared/models/dynamic-form.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: datasource (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-datasource`.
+ */
 @Component({
     selector: 'tb-datasource',
     templateUrl: './datasource.component.html',
@@ -62,10 +68,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: datasource UI.
- */
+standalone: false
 })
 export class DatasourceComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -211,6 +214,12 @@ export class DatasourceComponent implements ControlValueAccessor, OnInit, Valida
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (!this.datasourceFormGroup.valid) {
@@ -220,8 +229,20 @@ export class DatasourceComponent implements ControlValueAccessor, OnInit, Valida
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -232,6 +253,11 @@ export class DatasourceComponent implements ControlValueAccessor, OnInit, Valida
       this.updateValidators();
     }
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     if (this.widgetConfigComponent.functionsOnly) {
@@ -272,6 +298,12 @@ export class DatasourceComponent implements ControlValueAccessor, OnInit, Valida
     );
   }
 
+  /**
+   * write value.
+   *
+   * @param datasource datasource (Datasource)
+   */
+
   writeValue(datasource?: Datasource): void {
     this.datasourceFormGroup.patchValue({
       type: datasource?.type,
@@ -291,6 +323,12 @@ export class DatasourceComponent implements ControlValueAccessor, OnInit, Valida
     this.updateValidators();
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   validate(c: UntypedFormControl) {
     return (this.datasourceFormGroup.valid) ? null : {
       datasource: {
@@ -298,6 +336,13 @@ export class DatasourceComponent implements ControlValueAccessor, OnInit, Valida
       },
     };
   }
+
+  /**
+   * is data keys optional.
+   *
+   * @param type type (DatasourceType)
+   * @returns boolean observable or value
+   */
 
   public isDataKeysOptional(type?: DatasourceType): boolean {
     if (this.hasAdditionalLatestDataKeys || this.hideDataKeys) {
@@ -308,9 +353,20 @@ export class DatasourceComponent implements ControlValueAccessor, OnInit, Valida
     }
   }
 
+  /**
+   * datasource updated.
+   *
+   * @param datasource datasource (Datasource)
+   */
+
   private datasourceUpdated(datasource: Datasource) {
     this.propagateChange(datasource);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     if (!this.datasourcesOptional) {

@@ -224,11 +224,11 @@ export interface SubscriptionInfo {
   pageSize?: number;
 }
 
+
 /**
-
- * TypeScript models and enums for widget subscription context.
-
+ * Widget subscription context (ThingsBoard web UI).
  */
+
 
 export class WidgetSubscriptionContext {
 

@@ -21,14 +21,17 @@ import { DeviceInfo } from '@shared/models/device.models';
 import { EntityTabsComponent } from '../../components/entity/entity-tabs.component';
 import { EntityId } from "@shared/models/id/entity-id";
 
+
+/**
+ * Angular component: device tabs (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-tabs`.
+ */
 @Component({
     selector: 'tb-device-tabs',
     templateUrl: './device-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device tabs UI.
- */
+standalone: false
 })
 export class DeviceTabsComponent extends EntityTabsComponent<DeviceInfo> {
 
@@ -38,9 +41,20 @@ export class DeviceTabsComponent extends EntityTabsComponent<DeviceInfo> {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     super.ngOnInit();
   }
+
+  /**
+   * set entity.
+   *
+   * @param entity entity (DeviceInfo)
+   */
 
   protected setEntity(entity: DeviceInfo) {
     this.ownerId = entity.customerId.id !== this.nullUid ? entity.customerId : entity.tenantId;

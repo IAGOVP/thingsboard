@@ -35,6 +35,12 @@ import { IAliasController } from '@core/api/widget-api.models';
 import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/key/data-keys.component.models';
 import { merge } from 'rxjs';
 
+
+/**
+ * Angular component: axis scale row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-axis-scale-row`.
+ */
 @Component({
     selector: 'tb-axis-scale-row',
     templateUrl: './axis-scale-row.component.html',
@@ -50,10 +56,7 @@ import { merge } from 'rxjs';
             multi: true
         },
     ],
-    standalone: false
-/**
- * Angular component: axis scale row UI.
- */
+standalone: false
 })
 export class AxisScaleRowComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -96,6 +99,11 @@ export class AxisScaleRowComponent implements ControlValueAccessor, OnInit, Vali
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.limitForm = this.fb.group({
       type: [ValueSourceType.constant],
@@ -114,6 +122,12 @@ export class AxisScaleRowComponent implements ControlValueAccessor, OnInit, Vali
         this.updateModel();
       });
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ValueSourceConfig)
+   */
 
   writeValue(value: ValueSourceConfig) {
     this.modelValue = value;
@@ -140,12 +154,30 @@ export class AxisScaleRowComponent implements ControlValueAccessor, OnInit, Vali
     this.limitForm.markAllAsTouched();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChanges = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any) {
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     const type = this.limitForm.get('type')?.value;
@@ -171,6 +203,11 @@ export class AxisScaleRowComponent implements ControlValueAccessor, OnInit, Vali
     return Object.keys(errors).length ? { axisLimitForm: errors } : null;
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     const type = this.limitForm.get('type')?.value;
     const entityAliasCtr = this.limitForm.get('entityAlias');
@@ -191,6 +228,11 @@ export class AxisScaleRowComponent implements ControlValueAccessor, OnInit, Vali
     this.entityKeyFormControl.updateValueAndValidity({ emitEvent: false });
     entityAliasCtr.updateValueAndValidity({ emitEvent: false });
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.limitForm.value;

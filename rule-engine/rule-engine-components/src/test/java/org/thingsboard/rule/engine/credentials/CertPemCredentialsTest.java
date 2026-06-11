@@ -35,17 +35,24 @@ import java.util.stream.Stream;
 import static org.thingsboard.rule.engine.credentials.CertPemCredentials.CERT_ALIAS_PREFIX;
 import static org.thingsboard.rule.engine.credentials.CertPemCredentials.PRIVATE_KEY_ALIAS;
 
+
 /**
 
- * Unit test for cert pem credentials rule node.
+ * Unit test for cert pem credentials (credentials helper types).
 
  */
+
 
 public class CertPemCredentialsTest {
 
     private static final String PASS = "test";
     private static final String RSA = "RSA";
     private static final String EC = "EC";
+    /**
+     * Test chain of certificates.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testChainOfCertificates() throws Exception {
@@ -63,6 +70,11 @@ public class CertPemCredentialsTest {
         Assertions.assertEquals("CN=AAA Certificate Services, O=Comodo CA Limited, L=Salford, ST=Greater Manchester, C=GB",
                 x509Certificates.get(3).getSubjectDN().getName());
     }
+    /**
+     * Test single certificate.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSingleCertificate() throws Exception {
@@ -74,6 +86,11 @@ public class CertPemCredentialsTest {
         Assertions.assertEquals("CN=*.thingsboard.cloud, O=\"ThingsBoard, Inc.\", ST=New York, C=US",
                 x509Certificates.get(0).getSubjectDN().getName());
     }
+    /**
+     * Test empty file content.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testEmptyFileContent() throws Exception {
@@ -92,6 +109,15 @@ public class CertPemCredentialsTest {
                 Arguments.of("pem/ec_cert.pem", "pem/ec_key.pem", null, EC)
         );
     }
+    /**
+     * Test load key store.
+     *
+     * @param certPath cert path ({@link String})
+     * @param keyPath key path ({@link String})
+     * @param password password ({@link String})
+     * @param algorithm algorithm ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource

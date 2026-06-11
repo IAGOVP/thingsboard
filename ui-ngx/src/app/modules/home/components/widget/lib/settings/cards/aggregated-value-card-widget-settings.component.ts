@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { DateFormatProcessor, DateFormatSettings } from '@shared/models/widget-settings.models';
 import { aggregatedValueCardDefaultSettings } from '@home/components/widget/lib/cards/aggregated-value-card.models';
 
+
+/**
+ * Angular component: aggregated value card widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aggregated-value-card-widget-settings`.
+ */
 @Component({
     selector: 'tb-aggregated-value-card-widget-settings',
     templateUrl: './aggregated-value-card-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: aggregated value card widget settings UI.
- */
+standalone: false
 })
 export class AggregatedValueCardWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -45,13 +48,31 @@ export class AggregatedValueCardWidgetSettingsComponent extends WidgetSettingsCo
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.aggregatedValueCardWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return aggregatedValueCardDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.aggregatedValueCardWidgetSettingsForm = this.fb.group({
@@ -74,9 +95,21 @@ export class AggregatedValueCardWidgetSettingsComponent extends WidgetSettingsCo
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showSubtitle', 'showDate'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showSubtitle: boolean = this.aggregatedValueCardWidgetSettingsForm.get('showSubtitle').value;

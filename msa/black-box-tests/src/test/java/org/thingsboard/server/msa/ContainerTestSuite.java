@@ -40,8 +40,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.testng.Assert.fail;
 import static org.thingsboard.server.msa.TestUtils.addComposeVersion;
 /**
- * Container test suite.
+ * Singleton Docker Compose lifecycle for black-box tests.
+ *
+ * <p>Starts/stops ThingsBoard, transports, Redis, and dependencies; exposes REST base URL to tests.
  */
+
 
 @Slf4j
 public class ContainerTestSuite {
@@ -62,10 +65,23 @@ public class ContainerTestSuite {
     private boolean isActive;
 
     private static ContainerTestSuite containerTestSuite;
+    /**
+     * Is active.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isActive() {
         return isActive;
     }
+    /**
+     * Set active.
+     *
+     * @param active active
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setActive(boolean active) {
         isActive = active;
@@ -73,6 +89,12 @@ public class ContainerTestSuite {
 
     private ContainerTestSuite() {
     }
+    /**
+     * Returns singleton {@link ContainerTestSuite} instance.
+     *
+     * @return {@link ContainerTestSuite}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ContainerTestSuite getInstance() {
         if (containerTestSuite == null) {
@@ -80,6 +102,12 @@ public class ContainerTestSuite {
         }
         return containerTestSuite;
     }
+    /**
+     * Starts Docker Compose stack and waits until ThingsBoard is healthy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void start() {
         log.info("System property of blackBoxTests.redisCluster is {}", IS_VALKEY_CLUSTER);
@@ -185,6 +213,12 @@ public class ContainerTestSuite {
         }
         return "docker-compose.valkey.volumes.yml";
     }
+    /**
+     * Stops containers and releases ports after the test suite.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void stop() {
         if (isActive) {
@@ -253,10 +287,22 @@ public class ContainerTestSuite {
             fail("failed to update file", e);
         }
     }
+    /**
+     * Returns test container.
+     *
+     * @return {@link DockerComposeContainer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DockerComposeContainer<?> getTestContainer() {
         return testContainer;
     }
+
+    /**
+
+     * Docker compose container impl (black-box test infrastructure).
+
+     */
 
     static class DockerComposeContainerImpl extends DockerComposeContainer<DockerComposeContainerImpl> {
 

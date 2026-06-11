@@ -47,14 +47,17 @@ interface EdgesOverviewWidgetSettings {
   enableDefaultTitle: boolean;
 }
 
+
+/**
+ * Angular component: edges overview widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edges-overview-widget`.
+ */
 @Component({
     selector: 'tb-edges-overview-widget',
     templateUrl: './edges-overview-widget.component.html',
     styleUrls: ['./edges-overview-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: edges overview widget UI.
- */
+standalone: false
 })
 export class EdgesOverviewWidgetComponent extends PageComponent implements OnInit {
 
@@ -80,6 +83,11 @@ export class EdgesOverviewWidgetComponent extends PageComponent implements OnIni
               private cd: ChangeDetectorRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.widgetConfig = this.ctx.widgetConfig;
@@ -123,6 +131,13 @@ export class EdgesOverviewWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * load nodes for edge.
+   *
+   * @param entity entity (BaseData<HasId>)
+   * @returns EdgeOverviewNode[] observable or value
+   */
+
   private loadNodesForEdge(entity: BaseData<HasId>): EdgeOverviewNode[] {
     const nodes: EdgeOverviewNode[] = [];
     const authUser = getCurrentAuthUser(this.store);
@@ -147,6 +162,13 @@ export class EdgesOverviewWidgetComponent extends PageComponent implements OnIni
     return nodes;
   }
 
+  /**
+   * POST/PUT entity — create entity node.
+   *
+   * @param entity entity (BaseData<HasId>)
+   * @returns EdgeOverviewNode observable or value
+   */
+
   private createEntityNode(entity: BaseData<HasId>): EdgeOverviewNode {
     return {
       id: (++this.nodeIdCounter)+'',
@@ -163,6 +185,13 @@ export class EdgesOverviewWidgetComponent extends PageComponent implements OnIni
     } as EdgeOverviewNode;
   }
 
+  /**
+   * entities to nodes.
+   *
+   * @param entities entities (BaseData<HasId>[])
+   * @returns EdgeOverviewNode[] observable or value
+   */
+
   private entitiesToNodes(entities: BaseData<HasId>[]): EdgeOverviewNode[] {
     const nodes: EdgeOverviewNode[] = [];
     if (entities) {
@@ -173,6 +202,12 @@ export class EdgesOverviewWidgetComponent extends PageComponent implements OnIni
     }
     return nodes;
   }
+
+  /**
+   * get customer title.
+   *
+   * @param edgeId edge id (string)
+   */
 
   private getCustomerTitle(edgeId: string) {
     this.edgeService.getEdgeInfo(edgeId).subscribe(
@@ -186,6 +221,11 @@ export class EdgesOverviewWidgetComponent extends PageComponent implements OnIni
       });
   }
 
+  /**
+   * initialize config.
+   *
+   */
+
   private initializeConfig(): void {
     const edgeIsDatasource: boolean = this.datasources[0] && this.datasources[0].type === DatasourceType.entity && this.datasources[0].entity.id.entityType === EntityType.EDGE;
     if (edgeIsDatasource) {
@@ -193,6 +233,12 @@ export class EdgesOverviewWidgetComponent extends PageComponent implements OnIni
       this.updateTitle(edge);
     }
   }
+
+  /**
+   * update title.
+   *
+   * @param edge edge (BaseData<EntityId>)
+   */
 
   private updateTitle(edge: BaseData<EntityId>): void {
     const displayDefaultTitle: boolean = isDefined(this.settings.enableDefaultTitle) ? this.settings.enableDefaultTitle : false;

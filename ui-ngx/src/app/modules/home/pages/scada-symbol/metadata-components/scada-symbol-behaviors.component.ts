@@ -54,6 +54,12 @@ import { IAliasController } from '@core/api/widget-api.models';
 import { WidgetActionCallbacks } from '@home/components/widget/action/manage-widget-actions.component.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: scada symbol behaviors (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-metadata-behaviors`.
+ */
 @Component({
     selector: 'tb-scada-symbol-metadata-behaviors',
     templateUrl: './scada-symbol-behaviors.component.html',
@@ -71,10 +77,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol behaviors UI.
- */
+standalone: false
 })
 export class ScadaSymbolBehaviorsComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -108,6 +111,11 @@ export class ScadaSymbolBehaviorsComponent implements ControlValueAccessor, OnIn
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.behaviorsFormGroup = this.fb.group({
       behaviors: this.fb.array([])
@@ -125,12 +133,30 @@ export class ScadaSymbolBehaviorsComponent implements ControlValueAccessor, OnIn
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -141,10 +167,22 @@ export class ScadaSymbolBehaviorsComponent implements ControlValueAccessor, OnIn
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ScadaSymbolBehavior[] | undefined)
+   */
+
   writeValue(value: ScadaSymbolBehavior[] | undefined): void {
     const behaviors= value || [];
     this.behaviorsFormGroup.setControl('behaviors', this.prepareBehaviorsFormArray(behaviors), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     this.errorText = '';
@@ -165,6 +203,14 @@ export class ScadaSymbolBehaviorsComponent implements ControlValueAccessor, OnIn
     };
   }
 
+  /**
+   * behavior id unique.
+   *
+   * @param id id (string)
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public behaviorIdUnique(id: string, index: number): boolean {
     const behaviorsArray = this.behaviorsFormGroup.get('behaviors') as UntypedFormArray;
     for (let i = 0; i < behaviorsArray.controls.length; i++) {
@@ -178,6 +224,12 @@ export class ScadaSymbolBehaviorsComponent implements ControlValueAccessor, OnIn
     return true;
   }
 
+  /**
+   * behavior drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   behaviorDrop(event: CdkDragDrop<string[]>) {
     const behaviorsArray = this.behaviorsFormGroup.get('behaviors') as UntypedFormArray;
     const behavior = behaviorsArray.at(event.previousIndex);
@@ -185,17 +237,42 @@ export class ScadaSymbolBehaviorsComponent implements ControlValueAccessor, OnIn
     behaviorsArray.insert(event.currentIndex, behavior, {emitEvent: true});
   }
 
+  /**
+   * behaviors form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   behaviorsFormArray(): UntypedFormArray {
     return this.behaviorsFormGroup.get('behaviors') as UntypedFormArray;
   }
+
+  /**
+   * track by behavior.
+   *
+   * @param index index (number)
+   * @param behaviorControl behavior control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByBehavior(index: number, behaviorControl: AbstractControl): any {
     return behaviorControl;
   }
 
+  /**
+   * DELETE — remove behavior.
+   *
+   * @param index index (number)
+   */
+
   removeBehavior(index: number, emitEvent = true) {
     (this.behaviorsFormGroup.get('behaviors') as UntypedFormArray).removeAt(index, {emitEvent});
   }
+
+  /**
+   * POST/PUT entity — add behavior.
+   *
+   */
 
   addBehavior() {
     const behavior: ScadaSymbolBehavior = {
@@ -215,6 +292,13 @@ export class ScadaSymbolBehaviorsComponent implements ControlValueAccessor, OnIn
       });
     });
   }
+
+  /**
+   * prepare behaviors form array.
+   *
+   * @param behaviors behaviors (ScadaSymbolBehavior[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareBehaviorsFormArray(behaviors: ScadaSymbolBehavior[] | undefined): UntypedFormArray {
     const behaviorsControls: Array<AbstractControl> = [];

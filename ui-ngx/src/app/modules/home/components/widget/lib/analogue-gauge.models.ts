@@ -74,11 +74,11 @@ interface BaseGaugeModel extends BaseGauge {
   _value?: number;
 }
 
+
 /**
-
- * TypeScript models and enums for tb base gauge.
-
+ * Tb base gauge (ThingsBoard web UI).
  */
+
 
 export abstract class TbBaseGauge<S, O extends GenericOptions> {
 
@@ -95,6 +95,11 @@ export abstract class TbBaseGauge<S, O extends GenericOptions> {
   protected abstract createGaugeOptions(gaugeElement: HTMLElement, settings: S): O;
 
   protected abstract createGauge(gaugeData: O): BaseGaugeModel;
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     if (this.ctx.data.length > 0) {
@@ -117,16 +122,31 @@ export abstract class TbBaseGauge<S, O extends GenericOptions> {
     }
   }
 
+  /**
+   * mobile mode changed.
+   *
+   */
+
   mobileModeChanged() {
     const animation = this.ctx.settings.animation !== false && !this.ctx.isMobile;
     this.gauge.update({animation} as GenericOptions);
   }
+
+  /**
+   * resize.
+   *
+   */
 
   resize() {
     if (this.ctx.width > 0 && this.ctx.height > 0) {
       this.gauge.update({width: this.ctx.width, height: this.ctx.height} as GenericOptions);
     }
   }
+
+  /**
+   * destroy.
+   *
+   */
 
   destroy() {
     this.gauge.destroy();

@@ -19,13 +19,20 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 /**
- * Configuration for lwm2m transport monitoring.
+ * Configuration for lwm2m transport monitoring (monitoring targets and transport configuration beans).
  */
+
 
 @Component
 @ConditionalOnProperty(name = "monitoring.transports.lwm2m.enabled", havingValue = "true")
 @ConfigurationProperties(prefix = "monitoring.transports.lwm2m")
 public class Lwm2mTransportMonitoringConfig extends TransportMonitoringConfig {
+    /**
+     * Returns transport type.
+     *
+     * @return {@link TransportType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TransportType getTransportType() {

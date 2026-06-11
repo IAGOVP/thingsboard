@@ -30,17 +30,25 @@ import org.thingsboard.server.msa.ui.utils.DataProviderCredential;
 
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultDeviceProfile;
 
+
 /**
 
- * Search device profile test.
+ * Black-box test: search device profile (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class SearchDeviceProfileTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
     private String name;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -48,6 +56,12 @@ public class SearchDeviceProfileTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -62,6 +76,14 @@ public class SearchDeviceProfileTest extends AbstractDriverBaseTest {
     @Test(priority = 10, groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "deviceProfileSearch")
     @Description("Search device profile by first word in the name/Search device profile by second word in the name/" +
             "Search device profile by symbol in the name/Search asset profile by number in the name")
+    /**
+     * Search first word.
+     *
+     * @param name name ({@link String})
+     * @param namePath name path ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void searchFirstWord(String name, String namePath) {
         testRestClient.postDeviceProfile(defaultDeviceProfile(name));
         this.name = name;

@@ -41,14 +41,17 @@ interface CalculatedFieldAggMetricValuePanel extends CalculatedFieldAggMetricVal
   allowFilter: boolean;
 }
 
+
+/**
+ * Angular component: calculated field metrics panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-metrics-panel`.
+ */
 @Component({
     selector: 'tb-calculated-field-metrics-panel',
     templateUrl: './calculated-field-metrics-panel.component.html',
     styleUrls: ['../common/calculated-field-panel.scss', '../../calculated-field.component.scss'],
-    standalone: false
-/**
- * Angular component: calculated field metrics panel UI.
- */
+standalone: false
 })
 export class CalculatedFieldMetricsPanelComponent implements OnInit {
 
@@ -96,6 +99,11 @@ export class CalculatedFieldMetricsPanelComponent implements OnInit {
     this.observeInputTypeChange();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.updatedForm();
 
@@ -120,6 +128,11 @@ export class CalculatedFieldMetricsPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * POST/PUT entity — save metric.
+   *
+   */
+
   saveMetric(): void {
     const value = this.metricForm.value as CalculatedFieldAggMetricValuePanel;
     if (!value.allowFilter) {
@@ -129,9 +142,19 @@ export class CalculatedFieldMetricsPanelComponent implements OnInit {
     this.metricDataApplied.emit(value);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.popover.hide();
   }
+
+  /**
+   * updated form.
+   *
+   */
 
   private updatedForm(): void {
     this.metricForm.get('name').addValidators(uniqueNameValidator(this.usedNames));
@@ -142,17 +165,32 @@ export class CalculatedFieldMetricsPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * observe filter allow change.
+   *
+   */
+
   private observeFilterAllowChange(): void {
     this.metricForm.get('allowFilter').valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe(value => this.validateFilter(value));
   }
 
+  /**
+   * observe input type change.
+   *
+   */
+
   private observeInputTypeChange(): void {
     this.metricForm.get('input.type').valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe(value => this.validateInputTypeFilter(value));
   }
+
+  /**
+   * validate filter.
+   *
+   */
 
   private validateFilter(allowFilter = false): void {
     if (allowFilter) {
@@ -162,6 +200,12 @@ export class CalculatedFieldMetricsPanelComponent implements OnInit {
     }
     this.filterExpanded = allowFilter;
   }
+
+  /**
+   * validate input type filter.
+   *
+   * @param value value (AggInputType)
+   */
 
   private validateInputTypeFilter(value: AggInputType): void {
     const inputForm = this.metricForm.get('input');
@@ -174,12 +218,23 @@ export class CalculatedFieldMetricsPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * validate input key.
+   *
+   */
+
   private validateInputKey() {
     if (this.metric.input?.type === AggInputType.key && !this.arguments.includes(this.metric.input.key)) {
       this.metricForm.get('input.key').setValue(null);
       this.metricForm.get('input.key').markAsTouched();
     }
   }
+
+  /**
+   * Event handler for test script.
+   *
+   * @param scriptFunc script func ('filter' | 'input.function')
+   */
 
   onTestScript(scriptFunc: 'filter' | 'input.function') {
     this.testScript(this.metricForm.get(scriptFunc).value).subscribe(expression => {

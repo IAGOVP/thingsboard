@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 
+
+/**
+ * Angular component: resource library tabs (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-resource-library-tabs`.
+ */
 @Component({
     selector: 'tb-resource-library-tabs',
     templateUrl: './resource-library-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: resource library tabs UI.
- */
+standalone: false
 })
 export class ResourceLibraryTabsComponent extends EntityTabsComponent<Resource> {
 

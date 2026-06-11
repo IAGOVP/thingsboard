@@ -207,6 +207,9 @@ import { EventsDialogComponent } from '@home/dialogs/events-dialog.component';
 /**
  * Angular NgModule: home components feature area.
  */
+/**
+ * Angular NgModule bundling home components (ThingsBoard web UI).
+ */
 @NgModule({
   declarations:
     [
@@ -522,5 +525,5 @@ import { EventsDialogComponent } from '@home/dialogs/events-dialog.component';
     {provide: DASHBOARD_PAGE_COMPONENT_TOKEN, useValue: DashboardPageComponent},
     {provide: HOME_COMPONENTS_MODULE_TOKEN, useValue: HomeComponentsModule },
     {provide: MODULES_MAP, useValue: modulesMap}
-  ]})
+]})
 export class HomeComponentsModule { }

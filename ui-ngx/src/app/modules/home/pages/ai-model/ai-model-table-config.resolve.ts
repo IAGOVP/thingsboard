@@ -34,8 +34,9 @@ import { AiModelTableHeaderComponent } from '@home/pages/ai-model/ai-model-table
 import { AIModelDialogComponent, AIModelDialogData } from '@home/components/ai-model/ai-model-dialog.component';
 import { map } from 'rxjs/operators';
 /**
- * Route resolver: loads ai models table config before activate.
+ * Route resolver: preloads data for ai models table config (home/ai-model pages).
  */
+
 
 @Injectable()
 export class AiModelsTableConfigResolver {
@@ -87,9 +88,22 @@ export class AiModelsTableConfigResolver {
     };
   }
 
+  /**
+   * resolve.
+   *
+   * @param _route  route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<AiModel> observable or value
+   */
+
   resolve(_route: ActivatedRouteSnapshot): EntityTableConfig<AiModel> {
     return this.config;
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<AiModel>> observable or value
+   */
 
   private configureCellActions(): Array<CellActionDescriptor<AiModel>> {
     return [
@@ -102,10 +116,23 @@ export class AiModelsTableConfigResolver {
     ];
   }
 
+  /**
+   * edit model.
+   *
+   * @param AIModel aimodel (AiModel)
+   */
+
   private editModel($event, AIModel: AiModel): void {
     $event?.stopPropagation();
     this.addModel(AIModel, false).subscribe(res => res ? this.config.updateData() : null);
   }
+
+  /**
+   * POST/PUT entity — add model.
+   *
+   * @param AIModel aimodel (AiModel)
+   * @returns Observable<AiModel> observable or value
+   */
 
   private addModel(AIModel: AiModel, isAdd = false): Observable<AiModel> {
     return this.dialog.open<AIModelDialogComponent, AIModelDialogData, AiModel>(AIModelDialogComponent, {

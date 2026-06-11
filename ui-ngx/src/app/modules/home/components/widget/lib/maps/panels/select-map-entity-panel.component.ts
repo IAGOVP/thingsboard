@@ -19,16 +19,19 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { TbPopoverComponent } from '@shared/components/popover.component';
 import { UnplacedMapDataItem } from '@home/components/widget/lib/maps/data-layer/latest-map-data-layer';
 
+
+/**
+ * Angular component: select map entity panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-select-map-entity-panel`.
+ */
 @Component({
     selector: 'tb-select-map-entity-panel',
     templateUrl: './select-map-entity-panel.component.html',
     providers: [],
     styleUrls: ['./select-map-entity-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: select map entity panel UI.
- */
+standalone: false
 })
 export class SelectMapEntityPanelComponent implements OnInit {
 
@@ -46,6 +49,11 @@ export class SelectMapEntityPanelComponent implements OnInit {
               private popover: TbPopoverComponent) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.selectEntityFormGroup = this.fb.group(
       {
@@ -57,9 +65,19 @@ export class SelectMapEntityPanelComponent implements OnInit {
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover.hide();
   }
+
+  /**
+   * select entity.
+   *
+   */
 
   selectEntity() {
     this.selectedEntity = this.selectEntityFormGroup.value.entity;

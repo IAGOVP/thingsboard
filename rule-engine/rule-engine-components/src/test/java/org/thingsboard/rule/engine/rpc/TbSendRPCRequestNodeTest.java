@@ -61,8 +61,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.mock;
 /**
- * Unit test for tb send rpcrequest node rule node.
+ * Unit test for tb send rpcrequest node (device RPC request/reply nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbSendRPCRequestNodeTest {
@@ -88,6 +89,11 @@ public class TbSendRPCRequestNodeTest {
     private TbContext ctxMock;
     @Mock
     private RuleEngineRpcService rpcServiceMock;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
@@ -96,11 +102,23 @@ public class TbSendRPCRequestNodeTest {
         var configuration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
         node.init(ctxMock, configuration);
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
         assertThat(config.getTimeoutInSeconds()).isEqualTo(60);
     }
+    /**
+     * Given oneway when on msg then verify request.
+     *
+     * @param mdKeyValue md key value ({@link String})
+     * @param expectedResult expected result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -130,6 +148,11 @@ public class TbSendRPCRequestNodeTest {
                 Arguments.of("", false)
         );
     }
+    /**
+     * Given msg body when on msg then verify request.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMsgBody_whenOnMsg_thenVerifyRequest() {
@@ -153,6 +176,11 @@ public class TbSendRPCRequestNodeTest {
                 .hasFieldOrPropertyWithValue("tenantId", TENANT_ID)
                 .hasFieldOrPropertyWithValue("additionalInfo", "information");
     }
+    /**
+     * Given request id is not set when on msg then verify request.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRequestIdIsNotSet_whenOnMsg_thenVerifyRequest() {
@@ -173,6 +201,11 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getRequestId()).isEqualTo(123);
     }
+    /**
+     * Given request id when on msg then verify request.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRequestId_whenOnMsg_thenVerifyRequest() {
@@ -199,6 +232,11 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getRequestId()).isEqualTo(12345);
     }
+    /**
+     * Given request uuid when on msg then verify request.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRequestUUID_whenOnMsg_thenVerifyRequest() {
@@ -219,6 +257,12 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getRequestUUID()).isEqualTo(UUID.fromString(requestUUID));
     }
+    /**
+     * Given invalid request uuid when on msg then verify request.
+     *
+     * @param requestUUID request uuid ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -239,6 +283,11 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getRequestUUID()).isNotNull();
     }
+    /**
+     * Given origin service id when on msg then verify request.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenOriginServiceId_whenOnMsg_thenVerifyRequest() {
@@ -259,6 +308,12 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getOriginServiceId()).isEqualTo(originServiceId);
     }
+    /**
+     * Given invalid origin service id when on msg then verify request.
+     *
+     * @param originServiceId origin service id ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -279,6 +334,11 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getOriginServiceId()).isNull();
     }
+    /**
+     * Given expiration time when on msg then verify request.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenExpirationTime_whenOnMsg_thenVerifyRequest() {
@@ -299,6 +359,12 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getExpirationTime()).isEqualTo(Long.parseLong(expirationTime));
     }
+    /**
+     * Given invalid expiration time when on msg then verify request.
+     *
+     * @param expirationTime expiration time ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -319,6 +385,11 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getExpirationTime()).isGreaterThan(System.currentTimeMillis());
     }
+    /**
+     * Given retries when on msg then verify request.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRetries_whenOnMsg_thenVerifyRequest() {
@@ -339,6 +410,12 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getRetries()).isEqualTo(retries);
     }
+    /**
+     * Given invalid retries value when on msg then verify request.
+     *
+     * @param retries retries ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -359,6 +436,12 @@ public class TbSendRPCRequestNodeTest {
         ArgumentCaptor<RuleEngineDeviceRpcRequest> requestCaptor = captureRequest();
         assertThat(requestCaptor.getValue().getRetries()).isNull();
     }
+    /**
+     * Given tb msg type when on msg then verify request.
+     *
+     * @param msgType msg type ({@link TbMsgType})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @EnumSource(TbMsgType.class)
@@ -381,6 +464,13 @@ public class TbSendRPCRequestNodeTest {
         }
         assertThat(requestCaptor.getValue().isRestApiCall()).isFalse();
     }
+    /**
+     * Given persistent when on msg then verify request.
+     *
+     * @param isPersisted is persisted ({@link String})
+     * @param expectedPersistence expected persistence
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -416,6 +506,11 @@ public class TbSendRPCRequestNodeTest {
         then(rpcServiceMock).should().sendRpcRequestToDevice(requestCaptor.capture(), any(Consumer.class));
         return requestCaptor;
     }
+    /**
+     * Given rpc response without error when on msg then sends rpc request.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRpcResponseWithoutError_whenOnMsg_thenSendsRpcRequest() {
@@ -450,6 +545,11 @@ public class TbSendRPCRequestNodeTest {
         then(ctxMock).should().enqueueForTellNext(outMsg, TbNodeConnectionType.SUCCESS);
         then(ctxMock).should().ack(msg);
     }
+    /**
+     * Given rpc response with error when on msg then tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRpcResponseWithError_whenOnMsg_thenTellFailure() {
@@ -483,6 +583,12 @@ public class TbSendRPCRequestNodeTest {
         then(ctxMock).should().enqueueForTellFailure(outMsg, RpcError.NO_ACTIVE_CONNECTION.name());
         then(ctxMock).should().ack(msg);
     }
+    /**
+     * Given originator is not device when on msg then throws exception.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @EnumSource(EntityType.class)
@@ -503,6 +609,12 @@ public class TbSendRPCRequestNodeTest {
                 .hasMessage(EntityType.DEVICE != entityType ? "Message originator is not a device entity!"
                         : "Method is not present in the message!");
     }
+    /**
+     * Given method or params are not present when on msg then throws exception.
+     *
+     * @param key key ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @ValueSource(strings = {"method", "params"})

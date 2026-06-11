@@ -33,14 +33,17 @@ import { isEqual } from '@core/utils';
 import { EntityType } from '@shared/models/entity-type.models';
 import { PageLink } from "@shared/models/page/page-link";
 
+
+/**
+ * Angular component: dashboard form (home/dashboard pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-form`.
+ */
 @Component({
     selector: 'tb-dashboard-form',
     templateUrl: './dashboard-form.component.html',
     styleUrls: ['./dashboard-form.component.scss'],
-    standalone: false
-/**
- * Angular component: dashboard form UI.
- */
+standalone: false
 })
 export class DashboardFormComponent extends EntityComponent<Dashboard, PageLink, DashboardInfo> {
 
@@ -61,19 +64,43 @@ export class DashboardFormComponent extends EntityComponent<Dashboard, PageLink,
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.dashboardScope = this.entitiesTableConfig.componentsData.dashboardScope;
     this.customerId = this.entitiesTableConfig.componentsData.customerId;
     super.ngOnInit();
   }
 
+  /**
+   * is public.
+   *
+   * @param entity entity (Dashboard)
+   * @returns boolean observable or value
+   */
+
   isPublic(entity: Dashboard): boolean {
     return isPublicDashboard(entity);
   }
 
+  /**
+   * is current public customer.
+   *
+   * @param entity entity (Dashboard)
+   * @returns boolean observable or value
+   */
+
   isCurrentPublicCustomer(entity: Dashboard): boolean {
     return isCurrentPublicDashboardCustomer(entity, this.customerId);
   }
+
+  /**
+   * hide delete.
+   *
+   */
 
   hideDelete() {
     if (this.entitiesTableConfig) {
@@ -82,6 +109,13 @@ export class DashboardFormComponent extends EntityComponent<Dashboard, PageLink,
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (Dashboard)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: Dashboard): UntypedFormGroup {
     this.updateFields(entity);
@@ -105,6 +139,12 @@ export class DashboardFormComponent extends EntityComponent<Dashboard, PageLink,
     return form;
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (Dashboard)
+   */
+
   updateForm(entity: Dashboard) {
     this.updateFields(entity);
     this.entityForm.patchValue({title: entity.title});
@@ -114,11 +154,23 @@ export class DashboardFormComponent extends EntityComponent<Dashboard, PageLink,
     this.entityForm.patchValue({configuration: {description: entity.configuration ? entity.configuration.description : ''}});
   }
 
+  /**
+   * prepare form value.
+   *
+   * @param formValue form value (any)
+   * @returns any observable or value
+   */
+
   prepareFormValue(formValue: any): any {
     const preparedValue = super.prepareFormValue(formValue);
     preparedValue.configuration = {...(this.entity.configuration || {}), ...(preparedValue.configuration || {})};
     return preparedValue;
   }
+
+  /**
+   * Event handler for public link copied.
+   *
+   */
 
   onPublicLinkCopied($event) {
     this.store.dispatch(new ActionNotificationShow(
@@ -131,6 +183,11 @@ export class DashboardFormComponent extends EntityComponent<Dashboard, PageLink,
       }));
   }
 
+  /**
+   * Event handler for dashboard id copied.
+   *
+   */
+
   onDashboardIdCopied($event) {
     this.store.dispatch(new ActionNotificationShow(
       {
@@ -141,6 +198,12 @@ export class DashboardFormComponent extends EntityComponent<Dashboard, PageLink,
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * update fields.
+   *
+   * @param entity entity (Dashboard)
+   */
 
   private updateFields(entity: Dashboard): void {
     if (entity && !isEqual(entity, {})) {

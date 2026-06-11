@@ -24,8 +24,11 @@ import java.util.concurrent.TimeUnit;
  * Created by ashvayka on 19.01.18.
  */
 /**
- * JSON configuration for TbGpsGeofencingAction rule node.
+ * JSON configuration POJO for {@link TbGpsGeofencingAction} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 @Data
 public class TbGpsGeofencingActionNodeConfiguration extends TbGpsGeofencingFilterNodeConfiguration {
 
@@ -36,6 +39,12 @@ public class TbGpsGeofencingActionNodeConfiguration extends TbGpsGeofencingFilte
     private String minOutsideDurationTimeUnit;
 
     private boolean reportPresenceStatusOnEachMessage;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGpsGeofencingActionNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGpsGeofencingActionNodeConfiguration defaultConfiguration() {

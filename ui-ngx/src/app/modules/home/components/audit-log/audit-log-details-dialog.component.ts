@@ -32,14 +32,17 @@ export interface AuditLogDetailsDialogData {
   auditLog: AuditLog;
 }
 
+
+/**
+ * Angular component: audit log details dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-audit-log-details-dialog`.
+ */
 @Component({
     selector: 'tb-audit-log-details-dialog',
     templateUrl: './audit-log-details-dialog.component.html',
     styleUrls: ['./audit-log-details-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: audit log details dialog UI.
- */
+standalone: false
 })
 export class AuditLogDetailsDialogComponent extends DialogComponent<AuditLogDetailsDialogComponent> implements OnInit, OnDestroy {
 
@@ -62,6 +65,11 @@ export class AuditLogDetailsDialogComponent extends DialogComponent<AuditLogDeta
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.auditLog = this.data.auditLog;
     this.displayFailureDetails = this.auditLog.actionStatus === ActionStatus.FAILURE;
@@ -72,10 +80,22 @@ export class AuditLogDetailsDialogComponent extends DialogComponent<AuditLogDeta
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.aceEditors.forEach(editor => editor.destroy());
     super.ngOnDestroy();
   }
+
+  /**
+   * POST/PUT entity — create editor.
+   *
+   * @param editorElementRef editor element ref (ElementRef)
+   * @param content content (string | object)
+   */
 
   createEditor(editorElementRef: ElementRef, content: string | object): void {
     const editorElement = editorElementRef.nativeElement;

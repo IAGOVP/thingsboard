@@ -53,14 +53,17 @@ interface QuickLinksWidgetSettings {
   columns: number;
 }
 
+
+/**
+ * Angular component: quick links widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-quick-links-widget`.
+ */
 @Component({
     selector: 'tb-quick-links-widget',
     templateUrl: './quick-links-widget.component.html',
     styleUrls: ['./home-page-widget.scss', './links-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: quick links widget UI.
- */
+standalone: false
 })
 export class QuickLinksWidgetComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -86,6 +89,11 @@ export class QuickLinksWidgetComponent extends PageComponent implements OnInit, 
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.settings = this.ctx.settings;
     this.columns = this.settings.columns || 3;
@@ -108,6 +116,11 @@ export class QuickLinksWidgetComponent extends PageComponent implements OnInit, 
     this.loadQuickLinks();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.observeBreakpointSubscription) {
       this.observeBreakpointSubscription.unsubscribe();
@@ -118,6 +131,11 @@ export class QuickLinksWidgetComponent extends PageComponent implements OnInit, 
   menuLinks$(): Observable<Array<MenuSection>> {
     return this.quickLinks ? this.menuService.menuLinksByIds(this.quickLinks.links) : of([]);
   }
+
+  /**
+   * load quick links.
+   *
+   */
 
   private loadQuickLinks() {
     this.userSettingsService.getQuickLinks().pipe(
@@ -136,6 +154,11 @@ export class QuickLinksWidgetComponent extends PageComponent implements OnInit, 
     );
   }
 
+  /**
+   * edit.
+   *
+   */
+
   edit() {
     this.dialog.open<EditLinksDialogComponent, EditLinksDialogData,
       boolean>(EditLinksDialogComponent, {
@@ -153,6 +176,11 @@ export class QuickLinksWidgetComponent extends PageComponent implements OnInit, 
         }
       });
   }
+
+  /**
+   * POST/PUT entity — add link.
+   *
+   */
 
   addLink() {
     this.dialog.open<AddQuickLinkDialogComponent, any,

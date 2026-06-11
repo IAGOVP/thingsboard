@@ -17,15 +17,18 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { MenuSection } from '@core/services/menu.models';
 
+
+/**
+ * Angular component: menu link (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-menu-link`.
+ */
 @Component({
     selector: 'tb-menu-link',
     templateUrl: './menu-link.component.html',
     styleUrls: ['./menu-link.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: menu link UI.
- */
+standalone: false
 })
 export class MenuLinkComponent implements OnInit {
 
@@ -33,6 +36,11 @@ export class MenuLinkComponent implements OnInit {
 
   constructor() {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
   }

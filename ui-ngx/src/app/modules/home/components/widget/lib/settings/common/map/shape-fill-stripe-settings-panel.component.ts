@@ -27,16 +27,19 @@ import { ComponentStyle } from '@shared/models/widget-settings.models';
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 import { DatasourceType } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: shape fill stripe settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-shape-fill-stripe-settings-panel`.
+ */
 @Component({
     selector: 'tb-shape-fill-stripe-settings-panel',
     templateUrl: './shape-fill-stripe-settings-panel.component.html',
     providers: [],
     styleUrls: ['./shape-fill-stripe-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: shape fill stripe settings panel UI.
- */
+standalone: false
 })
 export class ShapeFillStripeSettingsPanelComponent implements OnInit {
 
@@ -71,6 +74,11 @@ export class ShapeFillStripeSettingsPanelComponent implements OnInit {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.shapeFillStripeSettingsFormGroup = this.fb.group(
       {
@@ -89,15 +97,30 @@ export class ShapeFillStripeSettingsPanelComponent implements OnInit {
     this.updatePreview();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply shape fill stripe settings.
+   *
+   */
 
   applyShapeFillStripeSettings() {
     const shapeFillStripeSettings: ShapeFillStripeSettings = this.shapeFillStripeSettingsFormGroup.value;
     this.shapeFillStripeSettingsApplied.emit(shapeFillStripeSettings);
     this.popover?.hide();
   }
+
+  /**
+   * update preview.
+   *
+   */
 
   private updatePreview() {
     const shapeFillStripeSettings: ShapeFillStripeSettings = this.shapeFillStripeSettingsFormGroup.value;

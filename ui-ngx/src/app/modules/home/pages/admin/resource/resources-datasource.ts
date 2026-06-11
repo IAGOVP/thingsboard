@@ -23,11 +23,11 @@ import { PageLink } from '@shared/models/page/page-link';
 import { catchError, map, take, tap } from 'rxjs/operators';
 import { ResourceService } from "@core/http/resource.service";
 
+
 /**
-
- * resources datasource.
-
+ * Resources datasource (home/admin pages).
  */
+
 
 export class ResourcesDatasource implements DataSource<ResourceInfo> {
   private entitiesSubject: Subject<ResourceInfo[]>;
@@ -51,10 +51,23 @@ export class ResourcesDatasource implements DataSource<ResourceInfo> {
     }
   }
 
+  /**
+   * connect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   * @returns Observable<ResourceInfo[] | ReadonlyArray<ResourceInfo>> observable or value
+   */
+
   connect(collectionViewer: CollectionViewer):
     Observable<ResourceInfo[] | ReadonlyArray<ResourceInfo>> {
     return this.entitiesSubject.asObservable();
   }
+
+  /**
+   * disconnect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   */
 
   disconnect(collectionViewer: CollectionViewer): void {
     this.entitiesSubject.complete();
@@ -63,12 +76,26 @@ export class ResourcesDatasource implements DataSource<ResourceInfo> {
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   reset() {
     this.entitiesSubject.next([]);
     if (this.pageDataSubject) {
       this.pageDataSubject.next(emptyPageData<ResourceInfo>());
     }
   }
+
+  /**
+   * load entities.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param resourceType resource type (ResourceType)
+   * @param subType sub type (ResourceSubType)
+   * @returns Observable<PageData<ResourceInfo>> observable or value
+   */
 
   loadEntities(pageLink: PageLink, resourceType: ResourceType, subType: ResourceSubType): Observable<PageData<ResourceInfo>> {
     this.dataLoading = true;
@@ -89,9 +116,24 @@ export class ResourcesDatasource implements DataSource<ResourceInfo> {
     return result;
   }
 
+  /**
+   * fetch entities.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param resourceType resource type (ResourceType)
+   * @param subType sub type (ResourceSubType)
+   * @returns Observable<PageData<ResourceInfo>> observable or value
+   */
+
   fetchEntities(pageLink: PageLink, resourceType: ResourceType, subType: ResourceSubType): Observable<PageData<ResourceInfo>> {
     return this.resourceService.getResources(pageLink, resourceType, subType);
   }
+
+  /**
+   * is all selected.
+   *
+   * @returns Observable<boolean> observable or value
+   */
 
   isAllSelected(): Observable<boolean> {
     const numSelected = this.selection.selected.length;
@@ -100,17 +142,34 @@ export class ResourcesDatasource implements DataSource<ResourceInfo> {
     );
   }
 
+  /**
+   * is empty.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isEmpty(): Observable<boolean> {
     return this.entitiesSubject.pipe(
       map((entities) => !entities.length)
     );
   }
 
+  /**
+   * total.
+   *
+   * @returns Observable<number> observable or value
+   */
+
   total(): Observable<number> {
     return this.pageDataSubject.pipe(
       map((pageData) => pageData.totalElements)
     );
   }
+
+  /**
+   * master toggle.
+   *
+   */
 
   masterToggle() {
     this.entitiesSubject.pipe(
@@ -129,6 +188,13 @@ export class ResourcesDatasource implements DataSource<ResourceInfo> {
       take(1)
     ).subscribe();
   }
+
+  /**
+   * selectable entities count.
+   *
+   * @param entities entities (Array<ResourceInfo>)
+   * @returns number observable or value
+   */
 
   private selectableEntitiesCount(entities: Array<ResourceInfo>): number {
     return entities.filter((entity) => this.selectionEnabledFunction(entity)).length;

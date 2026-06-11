@@ -56,6 +56,12 @@ const funcIriAttributeSelector = funcIriAttributes.map(attr => `[${attr}]`).join
 
 const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
 
+
+/**
+ * Angular component: tb icon (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-icon`.
+ */
 @Component({
     template: '<span style="display: none;" #iconNameContent><ng-content></ng-content></span>',
     selector: 'tb-icon',
@@ -73,10 +79,7 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: tb icon UI.
- */
+standalone: false
 })
 export class TbIconComponent implements AfterContentInit, AfterViewChecked, OnDestroy {
 
@@ -142,6 +145,11 @@ export class TbIconComponent implements AfterContentInit, AfterViewChecked, OnDe
       });
   }
 
+  /**
+   * ng after view checked.
+   *
+   */
+
   ngAfterViewChecked() {
     const cachedElements = this._elementsWithExternalReferences;
     if (cachedElements && cachedElements.size) {
@@ -152,6 +160,11 @@ export class TbIconComponent implements AfterContentInit, AfterViewChecked, OnDe
       }
     }
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this._contentChanges.unsubscribe();

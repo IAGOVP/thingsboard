@@ -49,15 +49,18 @@ import {
 } from '@home/components/widget/lib/cards/label-value-card-widget.models';
 import { isDefinedAndNotNull } from '@core/utils';
 
+
+/**
+ * Angular component: label value card widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-label-value-card-widget`.
+ */
 @Component({
     selector: 'tb-label-value-card-widget',
     templateUrl: './label-value-card-widget.component.html',
     styleUrls: ['./label-value-card-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: label value card widget UI.
- */
+standalone: false
 })
 export class LabelValueCardWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -107,6 +110,11 @@ export class LabelValueCardWidgetComponent implements OnInit, AfterViewInit, OnD
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.labelValueCardWidget = this;
     this.settings = {...labelValueCardWidgetDefaultSettings, ...this.ctx.settings};
@@ -133,6 +141,11 @@ export class LabelValueCardWidgetComponent implements OnInit, AfterViewInit, OnD
     this.hasCardClickAction = this.ctx.actionsApi.getActionDescriptors('cardClick').length > 0;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   public ngAfterViewInit() {
     if (this.settings.autoScale) {
       this.renderer.setStyle(this.labelCardContent.nativeElement, 'overflow', 'visible');
@@ -145,17 +158,32 @@ export class LabelValueCardWidgetComponent implements OnInit, AfterViewInit, OnD
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     const tsValue = getSingleTsValue(this.ctx.data);
@@ -177,9 +205,19 @@ export class LabelValueCardWidgetComponent implements OnInit, AfterViewInit, OnD
     }
   }
 
+  /**
+   * card click.
+   *
+   */
+
   public cardClick($event: Event) {
     this.ctx.actionsApi.cardClick($event);
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const paddingLeft = getComputedStyle(this.labelCardPanel.nativeElement).paddingLeft;

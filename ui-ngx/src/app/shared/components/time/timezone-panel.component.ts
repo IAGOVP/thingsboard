@@ -25,14 +25,17 @@ export interface TimezoneSelectionResult {
   timezone: string | null;
 }
 
+
+/**
+ * Angular component: timezone panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timezone-panel`.
+ */
 @Component({
     selector: 'tb-timezone-panel',
     templateUrl: './timezone-panel.component.html',
     styleUrls: ['./timezone-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: timezone panel UI.
- */
+standalone: false
 })
 export class TimezonePanelComponent extends PageComponent implements OnInit {
 
@@ -61,11 +64,21 @@ export class TimezonePanelComponent extends PageComponent implements OnInit {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.timezoneForm = this.fb.group({
       timezone: [this.timezone]
     });
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     if (this.onClose) {
@@ -74,6 +87,11 @@ export class TimezonePanelComponent extends PageComponent implements OnInit {
       });
     }
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel() {
     if (this.onClose) {

@@ -36,6 +36,12 @@ import {
   ImageGalleryDialogData
 } from '@shared/components/image/image-gallery-dialog.component';
 
+
+/**
+ * Angular component: multiple gallery image input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-multiple-gallery-image-input`.
+ */
 @Component({
     selector: 'tb-multiple-gallery-image-input',
     templateUrl: './multiple-gallery-image-input.component.html',
@@ -47,10 +53,7 @@ import {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: multiple gallery image input UI.
- */
+standalone: false
 })
 export class MultipleGalleryImageInputComponent extends PageComponent implements OnDestroy, ControlValueAccessor {
 
@@ -82,39 +85,89 @@ export class MultipleGalleryImageInputComponent extends PageComponent implements
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string[])
+   */
 
   writeValue(value: string[]): void {
     this.reset();
     this.imageUrls = removeTbImagePrefixFromUrls(value);
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.cd.markForCheck();
     this.propagateChange(prependTbImagePrefixToUrls(this.imageUrls));
   }
+
+  /**
+   * reset.
+   *
+   */
 
   private reset() {
     this.linkType = ImageLinkType.none;
     this.externalLinkControl.setValue(null, {emitEvent: false});
   }
 
+  /**
+   * clear image.
+   *
+   * @param index index (number)
+   */
+
   clearImage(index: number) {
     this.imageUrls.splice(index, 1);
     this.updateModel();
   }
+
+  /**
+   * set link.
+   *
+   */
 
   setLink($event: Event) {
     if ($event) {
@@ -123,12 +176,22 @@ export class MultipleGalleryImageInputComponent extends PageComponent implements
     this.linkType = ImageLinkType.external;
   }
 
+  /**
+   * decline link.
+   *
+   */
+
   declineLink($event: Event) {
     if ($event) {
       $event.stopPropagation();
     }
     this.reset();
   }
+
+  /**
+   * apply link.
+   *
+   */
 
   applyLink($event: Event) {
     if ($event) {
@@ -138,6 +201,11 @@ export class MultipleGalleryImageInputComponent extends PageComponent implements
     this.reset();
     this.updateModel();
   }
+
+  /**
+   * toggle gallery.
+   *
+   */
 
   toggleGallery($event: Event) {
     if ($event) {
@@ -159,6 +227,12 @@ export class MultipleGalleryImageInputComponent extends PageComponent implements
     });
   }
 
+  /**
+   * image drag start.
+   *
+   * @param index index (number)
+   */
+
   imageDragStart(index: number) {
     setTimeout(() => {
       this.dragIndex = index;
@@ -166,10 +240,21 @@ export class MultipleGalleryImageInputComponent extends PageComponent implements
     });
   }
 
+  /**
+   * image drag end.
+   *
+   */
+
   imageDragEnd() {
     this.dragIndex = -1;
     this.cd.markForCheck();
   }
+
+  /**
+   * image drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   imageDrop(event: DndDropEvent) {
     let index = event.index;

@@ -55,5 +55,8 @@ const routes: Routes = [
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling mobile routing (home/mobile pages).
+ */
   exports: [RouterModule]})
 export class MobileRoutingModule { }

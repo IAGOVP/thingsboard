@@ -31,15 +31,18 @@ export interface Lwm2mAttributesDialogData {
   isResource: boolean;
 }
 
+
+/**
+ * Angular component: lwm2m attributes dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-lwm2m-attributes-dialog`.
+ */
 @Component({
     selector: 'tb-lwm2m-attributes-dialog',
     templateUrl: './lwm2m-attributes-dialog.component.html',
     styleUrls: [],
     providers: [{ provide: ErrorStateMatcher, useExisting: Lwm2mAttributesDialogComponent }],
-    standalone: false
-/**
- * Angular component: lwm2m attributes dialog UI.
- */
+standalone: false
 })
 export class Lwm2mAttributesDialogComponent
   extends DialogComponent<Lwm2mAttributesDialogComponent, AttributesNameValueMap> implements ErrorStateMatcher {
@@ -72,16 +75,34 @@ export class Lwm2mAttributesDialogComponent
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * POST/PUT entity — save.
+   *
+   */
+
   save(): void {
     this.submitted = true;
     this.dialogRef.close(this.attributeFormGroup.get('attributes').value);
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel(): void {
     this.dialogRef.close(null);

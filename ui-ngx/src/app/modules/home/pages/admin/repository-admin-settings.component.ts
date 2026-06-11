@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { UntypedFormGroup } from '@angular/forms';
 import { RepositorySettingsComponent } from '@home/components/vc/repository-settings.component';
 
+
+/**
+ * Angular component: repository admin settings (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-repository-admin-settings`.
+ */
 @Component({
     selector: 'tb-repository-admin-settings',
     templateUrl: './repository-admin-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: repository admin settings UI.
- */
+standalone: false
 })
 export class RepositoryAdminSettingsComponent extends PageComponent implements OnInit, HasConfirmForm {
 
@@ -39,8 +42,19 @@ export class RepositoryAdminSettingsComponent extends PageComponent implements O
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
 
   confirmForm(): UntypedFormGroup {
     return this.repositorySettingsComponent?.repositorySettingsForm;

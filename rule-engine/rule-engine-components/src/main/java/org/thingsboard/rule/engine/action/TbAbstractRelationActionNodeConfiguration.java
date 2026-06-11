@@ -19,8 +19,11 @@ import lombok.Data;
 import org.thingsboard.server.common.data.EntityType;
 import org.thingsboard.server.common.data.relation.EntitySearchDirection;
 /**
- * JSON configuration for TbAbstractRelationAction rule node.
+ * JSON configuration POJO for {@link TbAbstractRelationAction} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public abstract class TbAbstractRelationActionNodeConfiguration {

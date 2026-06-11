@@ -31,6 +31,12 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { isDefined } from '@core/utils';
 
+
+/**
+ * Angular component: datapoints limit (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-datapoints-limit`.
+ */
 @Component({
     selector: 'tb-datapoints-limit',
     templateUrl: './datapoints-limit.component.html',
@@ -47,10 +53,7 @@ import { isDefined } from '@core/utils';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: datapoints limit UI.
- */
+standalone: false
 })
 export class DatapointsLimitComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
 
@@ -86,6 +89,12 @@ export class DatapointsLimitComponent implements ControlValueAccessor, Validator
               private timeService: TimeService) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (isDefined(this.propagateChangeValue)) {
@@ -93,8 +102,19 @@ export class DatapointsLimitComponent implements ControlValueAccessor, Validator
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.datapointsLimitFormGroup = this.fb.group({
@@ -107,6 +127,11 @@ export class DatapointsLimitComponent implements ControlValueAccessor, Validator
     });
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   updateValidators() {
     if (this.datapointsLimitFormGroup) {
       if (this.required) {
@@ -118,6 +143,12 @@ export class DatapointsLimitComponent implements ControlValueAccessor, Validator
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -126,6 +157,12 @@ export class DatapointsLimitComponent implements ControlValueAccessor, Validator
       this.datapointsLimitFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (number | null)
+   */
 
   writeValue(value: number | null): void {
     this.modelValue = value;
@@ -144,6 +181,12 @@ export class DatapointsLimitComponent implements ControlValueAccessor, Validator
     );
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (number | null)
+   */
+
   updateView(value: number | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -151,19 +194,40 @@ export class DatapointsLimitComponent implements ControlValueAccessor, Validator
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors observable or value
+   */
+
   validate(): ValidationErrors {
     return this.datapointsLimitFormGroup.get('limit').valid ? null : {
       datapointsLimitFormGroup: false,
     };
   }
 
+  /**
+   * min datapoints limit.
+   *
+   */
+
   minDatapointsLimit() {
     return this.timeService.getMinDatapointsLimit();
   }
 
+  /**
+   * max datapoints limit.
+   *
+   */
+
   maxDatapointsLimit() {
     return this.timeService.getMaxDatapointsLimit();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();

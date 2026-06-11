@@ -36,7 +36,13 @@ import java.util.Set;
 import static org.thingsboard.server.dao.service.ConstraintValidator.validateFields;
 
 /**
- * Rule engine external node 'rest api call': Invoke REST API calls to external REST server Implements org.thingsboard.rule.engine.api.TbNode.
+ * External rule node — <b>rest api call</b>.
+ *
+ * <p>Invoke REST API calls to external REST server
+ * <br>Will invoke REST API call <code>GET | POST | PUT | DELETE</code> to external REST server. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbRestApiCallNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/rest-api-call/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/rest-api-call/</a>
  */
 @RuleNode(
         type = ComponentType.EXTERNAL,
@@ -65,6 +71,13 @@ public class TbRestApiCallNode extends TbAbstractExternalNode {
     static final String REQUEST_BODY_TEMPLATE = "requestBodyTemplate";
     static final String TRIM_DOUBLE_QUOTES = "trimDoubleQuotes";
     protected TbHttpClient httpClient;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -85,6 +98,13 @@ public class TbRestApiCallNode extends TbAbstractExternalNode {
                 ctx.getSelfId() != null ? ctx.getSelfId().getId().toString() : "n/a",
                 httpClientSettings != null ? httpClientSettings : TbHttpClientSettings.DEFAULT);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -93,6 +113,10 @@ public class TbRestApiCallNode extends TbAbstractExternalNode {
                 m -> tellSuccess(ctx, m),
                 (m, t) -> tellFailure(ctx, m, t));
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {
@@ -100,6 +124,14 @@ public class TbRestApiCallNode extends TbAbstractExternalNode {
             this.httpClient.destroy();
         }
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

@@ -28,8 +28,9 @@ import org.thingsboard.server.msa.ui.utils.EntityPrototypes;
 
 import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 /**
- * Assign details tab from customer assign test.
+ * Black-box test: assign details tab from customer assign (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Assign from details tab of entity (by customer)")
 public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
@@ -39,6 +40,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
     private String tenantDeviceName;
     private String tenantAlarmType;
     private AlarmId assignedTenantAlarmId;
+    /**
+     * Generate tenant entity.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void generateTenantEntity() {
@@ -51,6 +58,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
         tenantDeviceId = testRestClient.getDeviceByName(tenantDeviceName).getId();
         tenantAlarmId = testRestClient.postAlarm(EntityPrototypes.defaultAlarm(tenantDeviceId, tenantAlarmType)).getId();
     }
+    /**
+     * Deletes tenant entity.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void deleteTenantEntity() {
@@ -58,6 +71,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
         deleteDeviceById(tenantDeviceId);
         clearStorage();
     }
+    /**
+     * Assigns alarm to yourself customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Can assign alarm to yourself")
     @Test
@@ -69,6 +88,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmPage.assignedUser(userEmail));
     }
+    /**
+     * Reassign alarm by customer from another customer user.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Can reassign alarm from himself to another customer user")
     @Test
@@ -80,6 +105,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmPage.assignedUser(userName));
     }
+    /**
+     * Unassigns ed alarm from customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Can unassign alarm from himself")
     @Test
@@ -91,6 +122,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmPage.unassigned(assignedAlarmType));
     }
+    /**
+     * Unassigns ed alarm from another user from customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Unassign alarm from any other customer user")
     @Test
@@ -102,6 +139,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmPage.unassigned(assignedAlarmType));
     }
+    /**
+     * Unassigns ed alarm from tenant.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Unassign alarm from any tenant user")
     @Test
@@ -120,6 +163,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmPage.unassigned(assignedTenantAlarmType));
     }
+    /**
+     * Checks the display of names emails from customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Check the display of names (emails)")
     @Test
@@ -136,6 +185,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmPage.assignedUser(Const.TENANT_EMAIL));
     }
+    /**
+     * Reassign tenant for old alarm.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Check the reassign tenant for old alarm on device")
     @Test
@@ -153,6 +208,12 @@ public class AssignDetailsTabFromCustomerAssignTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmPage.accessForbiddenDialogView());
     }
+    /**
+     * Reassign tenant for old alarm from details.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Check the reassign tenant for old alarm on device")
     @Test

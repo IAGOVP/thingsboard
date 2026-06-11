@@ -18,8 +18,11 @@ package org.thingsboard.rule.engine.mail;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbMsgToEmail rule node.
+ * JSON configuration POJO for {@link TbMsgToEmail} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMsgToEmailNodeConfiguration implements NodeConfiguration<TbMsgToEmailNodeConfiguration> {
@@ -32,6 +35,12 @@ public class TbMsgToEmailNodeConfiguration implements NodeConfiguration<TbMsgToE
     private String bodyTemplate;
     private String isHtmlTemplate;
     private String mailBodyType; // Plain Text -> false. HTML - true. Dynamic - value used from isHtmlTemplate.
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgToEmailNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgToEmailNodeConfiguration defaultConfiguration() {

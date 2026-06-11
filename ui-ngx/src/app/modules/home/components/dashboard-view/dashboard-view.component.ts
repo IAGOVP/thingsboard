@@ -21,14 +21,17 @@ import { PageComponent } from '@shared/components/page.component';
 import { Dashboard } from '@shared/models/dashboard.models';
 import { ActivatedRoute } from '@angular/router';
 
+
+/**
+ * Angular component: dashboard view (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-view`.
+ */
 @Component({
     selector: 'tb-dashboard-view',
     templateUrl: './dashboard-view.component.html',
     styleUrls: ['./dashboard-view.component.scss'],
-    standalone: false
-/**
- * Angular component: dashboard view UI.
- */
+standalone: false
 })
 export class DashboardViewComponent extends PageComponent {
 

@@ -40,6 +40,9 @@ import {
 /**
  * Angular NgModule: home page widgets feature area.
  */
+/**
+ * Angular NgModule bundling home page widgets (ThingsBoard web UI).
+ */
 @NgModule({
   declarations:
     [
@@ -77,5 +80,5 @@ import {
     QuickLinkComponent,
     AddQuickLinkDialogComponent,
     RecentDashboardsWidgetComponent
-  ]})
+]})
 export class HomePageWidgetsModule { }

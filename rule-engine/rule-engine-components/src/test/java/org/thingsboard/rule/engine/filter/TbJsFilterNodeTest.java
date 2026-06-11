@@ -43,8 +43,9 @@ import static org.mockito.Mockito.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb js filter node rule node.
+ * Unit test for tb js filter node (message filtering and branching rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbJsFilterNodeTest {
@@ -58,6 +59,11 @@ public class TbJsFilterNodeTest {
 
     private final RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
     private final RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+    /**
+     * False evaluation do not send msg.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void falseEvaluationDoNotSendMsg() throws TbNodeException {
@@ -77,6 +83,11 @@ public class TbJsFilterNodeTest {
         verify(ctx).getDbCallbackExecutor();
         verify(ctx).tellNext(msg, TbNodeConnectionType.FALSE);
     }
+    /**
+     * Exception in js throws exception.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void exceptionInJsThrowsException() throws TbNodeException {
@@ -97,6 +108,11 @@ public class TbJsFilterNodeTest {
         node.onMsg(ctx, msg);
         verifyError(msg, "error", ScriptException.class);
     }
+    /**
+     * Metadata condition can be true.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void metadataConditionCanBeTrue() throws TbNodeException {

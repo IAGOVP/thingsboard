@@ -20,6 +20,12 @@ import { MapItemTooltips, MapItemType, mapItemTooltipsTranslation } from '@share
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { deepTrim, isEqual } from '@core/utils';
 
+
+/**
+ * Angular component: map item tooltips (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-item-tooltips`.
+ */
 @Component({
     selector: 'tb-map-item-tooltips',
     templateUrl: './map-item-tooltips.component.html',
@@ -30,10 +36,7 @@ import { deepTrim, isEqual } from '@core/utils';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: map item tooltips UI.
- */
+standalone: false
 })
 export class MapItemTooltipsComponent implements ControlValueAccessor, OnChanges {
 
@@ -73,12 +76,30 @@ export class MapItemTooltipsComponent implements ControlValueAccessor, OnChanges
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any) {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
@@ -88,11 +109,22 @@ export class MapItemTooltipsComponent implements ControlValueAccessor, OnChanges
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param obj obj (MapItemTooltips)
+   */
+
   writeValue(obj: MapItemTooltips) {
     this.modelValue = obj;
     this.tooltipsForm.patchValue(obj, {emitEvent: false});
     this.updatedValidators();
   }
+
+  /**
+   * updated validators.
+   *
+   */
 
   private updatedValidators(emitNewValue = false) {
     this.tooltipsForm.disable({emitEvent: false});
@@ -116,6 +148,12 @@ export class MapItemTooltipsComponent implements ControlValueAccessor, OnChanges
     }
     this.tooltipsForm.updateValueAndValidity({emitEvent: emitNewValue})
   }
+
+  /**
+   * updated model.
+   *
+   * @param value value (MapItemTooltips)
+   */
 
   private updatedModel(value: MapItemTooltips) {
     const currentValue = Object.fromEntries(Object.entries(deepTrim(value)).filter(([_, v]) => v != ''));

@@ -31,14 +31,17 @@ import {
 import { NotificationService } from '@core/http/notification.service';
 import { DialogService } from '@core/services/dialog.service';
 
+
+/**
+ * Angular component: notification settings (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-notification-settings`.
+ */
 @Component({
     selector: 'tb-notification-settings',
     templateUrl: './notification-settings.component.html',
     styleUrls: ['./notification-settings.component.scss'],
-    standalone: false
-/**
- * Angular component: notification settings UI.
- */
+standalone: false
 })
 export class NotificationSettingsComponent extends PageComponent implements OnInit, HasConfirmForm {
 
@@ -66,15 +69,31 @@ export class NotificationSettingsComponent extends PageComponent implements OnIn
       });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.buildNotificationSettingsForm();
   }
+
+  /**
+   * build notification settings form.
+   *
+   */
 
   private buildNotificationSettingsForm() {
     this.notificationSettings = this.fb.group({
       prefs: this.fb.array([])
     });
   }
+
+  /**
+   * patch notification settings.
+   *
+   * @param settings settings (NotificationUserSettings)
+   */
 
   private patchNotificationSettings(settings: NotificationUserSettings) {
     const notificationSettingsControls: Array<AbstractControl> = [];
@@ -85,6 +104,12 @@ export class NotificationSettingsComponent extends PageComponent implements OnIn
     }
     this.notificationSettings.setControl('prefs', this.fb.array(notificationSettingsControls), {emitEvent: false});
   }
+
+  /**
+   * prepare notification settings.
+   *
+   * @param prefs prefs (any)
+   */
 
   private prepareNotificationSettings(prefs: any) {
     return Object.entries(prefs).map((value: any) => {
@@ -103,6 +128,11 @@ export class NotificationSettingsComponent extends PageComponent implements OnIn
       return value[1];
     });
   }
+
+  /**
+   * reset settings.
+   *
+   */
 
   resetSettings() {
     this.dialogService.confirm(
@@ -174,6 +204,11 @@ export class NotificationSettingsComponent extends PageComponent implements OnIn
     return this.notificationSettings.get('prefs') as UntypedFormArray;
   }
 
+  /**
+   * POST/PUT entity — save.
+   *
+   */
+
   save(): void {
     const settings = {prefs: {}};
     this.notificationSettings.getRawValue().prefs.forEach(value => {
@@ -188,6 +223,12 @@ export class NotificationSettingsComponent extends PageComponent implements OnIn
       }
     );
   }
+
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
 
   confirmForm(): UntypedFormGroup {
     return this.notificationSettings;

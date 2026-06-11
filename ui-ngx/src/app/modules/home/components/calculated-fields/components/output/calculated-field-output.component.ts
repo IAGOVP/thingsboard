@@ -41,6 +41,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { merge } from 'rxjs';
 import { deepClone } from '@core/utils';
 
+
+/**
+ * Angular component: calculated field output (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculate-field-output`.
+ */
 @Component({
     selector: 'tb-calculate-field-output',
     templateUrl: './calculated-field-output.component.html',
@@ -57,10 +63,7 @@ import { deepClone } from '@core/utils';
         }
     ],
     styleUrls: ['./calculated-field-output.component.scss'],
-    standalone: false
-/**
- * Angular component: calculated field output UI.
- */
+standalone: false
 })
 export class CalculatedFieldOutputComponent implements ControlValueAccessor, Validator, OnInit, OnChanges {
 
@@ -118,6 +121,11 @@ export class CalculatedFieldOutputComponent implements ControlValueAccessor, Val
 
   private propagateChange: (config: CalculatedFieldOutput | CalculatedFieldSimpleOutput) => void = () => { };
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.outputForm.get('type').valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -162,9 +170,21 @@ export class CalculatedFieldOutputComponent implements ControlValueAccessor, Val
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.outputForm.valid || this.outputForm.disabled ? null : {outputConfig: false};
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (CalculatedFieldOutput | CalculatedFieldSimpleOutput)
+   */
 
   writeValue(value: CalculatedFieldOutput | CalculatedFieldSimpleOutput): void {
     this.outputForm.patchValue(value, {emitEvent: false});
@@ -178,7 +198,19 @@ export class CalculatedFieldOutputComponent implements ControlValueAccessor, Val
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _   (any)
+   */
+
   registerOnTouched(_: any): void { }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -196,6 +228,12 @@ export class CalculatedFieldOutputComponent implements ControlValueAccessor, Val
     }
   }
 
+  /**
+   * updated model.
+   *
+   * @param value value (CalculatedFieldOutput | CalculatedFieldSimpleOutput)
+   */
+
   private updatedModel(value: CalculatedFieldOutput | CalculatedFieldSimpleOutput) {
     if (this.simpleMode && 'name' in value) {
       value.name = value.name?.trim() ?? '';
@@ -210,6 +248,12 @@ export class CalculatedFieldOutputComponent implements ControlValueAccessor, Val
     this.propagateChange(value);
   }
 
+  /**
+   * toggle scope by output type.
+   *
+   * @param type type (OutputType)
+   */
+
   private toggleScopeByOutputType(type: OutputType): void {
     if (type === OutputType.Attribute) {
       this.outputForm.get('scope').enable({emitEvent: false});
@@ -217,6 +261,11 @@ export class CalculatedFieldOutputComponent implements ControlValueAccessor, Val
       this.outputForm.get('scope').disable({emitEvent: false});
     }
   }
+
+  /**
+   * updated form with mode.
+   *
+   */
 
   private updatedFormWithMode(): void {
     if (this.simpleMode && !this.hiddenName) {
@@ -233,6 +282,11 @@ export class CalculatedFieldOutputComponent implements ControlValueAccessor, Val
       this.outputForm.get('type').disable({emitEvent: false});
     }
   }
+
+  /**
+   * updated strategy.
+   *
+   */
 
   private updatedStrategy(): void {
     const strategyType = this.outputForm.get('strategy.type').value;
@@ -257,6 +311,12 @@ export class CalculatedFieldOutputComponent implements ControlValueAccessor, Val
       }
     }
   }
+
+  /**
+   * update time series ttl.
+   *
+   * @param value value (boolean)
+   */
 
   private updateTimeSeriesTtl(value: boolean) {
     if (value) {

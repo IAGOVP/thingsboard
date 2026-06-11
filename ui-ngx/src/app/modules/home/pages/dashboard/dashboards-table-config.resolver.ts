@@ -83,8 +83,9 @@ import {
 } from "@home/pages/dashboard/import-dashboard-file-dialog.component";
 import { PageLink } from "@shared/models/page/page-link";
 /**
- * Route resolver: loads dashboards table config before activate.
+ * Route resolver: preloads data for dashboards table config (home/dashboard pages).
  */
+
 
 @Injectable()
 export class DashboardsTableConfigResolver {
@@ -137,6 +138,13 @@ export class DashboardsTableConfigResolver {
     };
   }
 
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<EntityTableConfig<DashboardInfo | Dashboard>> observable or value
+   */
+
   resolve(route: ActivatedRouteSnapshot): Observable<EntityTableConfig<DashboardInfo | Dashboard>> {
     const routeParams = route.params;
     this.config.componentsData = {
@@ -187,6 +195,13 @@ export class DashboardsTableConfigResolver {
     );
   }
 
+  /**
+   * configure columns.
+   *
+   * @param dashboardScope dashboard scope (string)
+   * @returns Array<EntityTableColumn<DashboardInfo>> observable or value
+   */
+
   configureColumns(dashboardScope: string): Array<EntityTableColumn<DashboardInfo>> {
     const columns: Array<EntityTableColumn<DashboardInfo>> = [
       new DateEntityTableColumn<DashboardInfo>('createdTime', 'common.created-time', this.datePipe, '150px'),
@@ -203,6 +218,12 @@ export class DashboardsTableConfigResolver {
     return columns;
   }
 
+  /**
+   * configure entity functions.
+   *
+   * @param dashboardScope dashboard scope (string)
+   */
+
   configureEntityFunctions(dashboardScope: string): void {
     if (dashboardScope === 'tenant') {
       this.config.entitiesFetchFunction = pageLink =>
@@ -218,6 +239,13 @@ export class DashboardsTableConfigResolver {
         this.dashboardService.unassignDashboardFromCustomer(this.config.componentsData.customerId, id.id);
     }
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @param dashboardScope dashboard scope (string)
+   * @returns Array<CellActionDescriptor<DashboardInfo>> observable or value
+   */
 
   configureCellActions(dashboardScope: string): Array<CellActionDescriptor<DashboardInfo>> {
     const actions: Array<CellActionDescriptor<DashboardInfo>> = [];
@@ -298,6 +326,13 @@ export class DashboardsTableConfigResolver {
     return actions;
   }
 
+  /**
+   * configure group actions.
+   *
+   * @param dashboardScope dashboard scope (string)
+   * @returns Array<GroupActionDescriptor<DashboardInfo>> observable or value
+   */
+
   configureGroupActions(dashboardScope: string): Array<GroupActionDescriptor<DashboardInfo>> {
     const actions: Array<GroupActionDescriptor<DashboardInfo>> = [];
     if (dashboardScope === 'tenant') {
@@ -342,6 +377,13 @@ export class DashboardsTableConfigResolver {
     return actions;
   }
 
+  /**
+   * configure add actions.
+   *
+   * @param dashboardScope dashboard scope (string)
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
+
   configureAddActions(dashboardScope: string): Array<HeaderActionDescriptor> {
     const actions: Array<HeaderActionDescriptor> = [];
     if (dashboardScope === 'tenant') {
@@ -383,6 +425,12 @@ export class DashboardsTableConfigResolver {
     return actions;
   }
 
+  /**
+   * open dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   */
+
   openDashboard($event: Event, dashboard: Dashboard) {
     if ($event) {
       $event.stopPropagation();
@@ -396,6 +444,11 @@ export class DashboardsTableConfigResolver {
     }
   }
 
+  /**
+   * import dashboard.
+   *
+   */
+
   importDashboard(_$event: Event) {
     this.importExport.importDashboard(this.editMissingAliases.bind(this)).subscribe(
       (dashboard) => {
@@ -405,6 +458,16 @@ export class DashboardsTableConfigResolver {
       }
     );
   }
+
+  /**
+   * edit missing aliases.
+   *
+   * @param widgets widgets (Array<Widget>)
+   * @param isSingleWidget is single widget (boolean)
+   * @param customTitle custom title (string)
+   * @param missingEntityAliases missing entity aliases (EntityAliases)
+   * @returns Observable<EntityAliases> observable or value
+   */
 
   private editMissingAliases(widgets: Array<Widget>, isSingleWidget: boolean,
                              customTitle: string, missingEntityAliases: EntityAliases): Observable<EntityAliases> {
@@ -430,12 +493,24 @@ export class DashboardsTableConfigResolver {
       ));
   }
 
+  /**
+   * export dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   */
+
   exportDashboard($event: Event, dashboard: Dashboard) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExport.exportDashboard(dashboard.id.id);
   }
+
+  /**
+   * import dashboard file.
+   *
+   * @param dashboard dashboard (Dashboard)
+   */
 
   importDashboardFile($event: Event, dashboard: Dashboard) {
     if ($event) {
@@ -450,6 +525,11 @@ export class DashboardsTableConfigResolver {
       }
     }).afterClosed();
   }
+
+  /**
+   * POST/PUT entity — add dashboards to customer.
+   *
+   */
 
   addDashboardsToCustomer($event: Event) {
     if ($event) {
@@ -471,6 +551,12 @@ export class DashboardsTableConfigResolver {
       });
   }
 
+  /**
+   * make public.
+   *
+   * @param dashboard dashboard (Dashboard)
+   */
+
   makePublic($event: Event, dashboard: Dashboard) {
     if ($event) {
       $event.stopPropagation();
@@ -491,6 +577,12 @@ export class DashboardsTableConfigResolver {
       }
     );
   }
+
+  /**
+   * make private.
+   *
+   * @param dashboard dashboard (Dashboard)
+   */
 
   makePrivate($event: Event, dashboard: Dashboard) {
     if ($event) {
@@ -514,19 +606,45 @@ export class DashboardsTableConfigResolver {
     );
   }
 
+  /**
+   * manage assigned customers.
+   *
+   * @param dashboard dashboard (Dashboard)
+   */
+
   manageAssignedCustomers($event: Event, dashboard: Dashboard) {
     const assignedCustomersIds = dashboard.assignedCustomers ?
       dashboard.assignedCustomers.map(customerInfo => customerInfo.customerId.id) : [];
     this.showManageAssignedCustomersDialog($event, [dashboard.id.id], 'manage', assignedCustomersIds);
   }
 
+  /**
+   * assign dashboards to customers.
+   *
+   * @param dashboardIds dashboard ids (Array<string>)
+   */
+
   assignDashboardsToCustomers($event: Event, dashboardIds: Array<string>) {
     this.showManageAssignedCustomersDialog($event, dashboardIds, 'assign');
   }
 
+  /**
+   * unassign dashboards from customers.
+   *
+   * @param dashboardIds dashboard ids (Array<string>)
+   */
+
   unassignDashboardsFromCustomers($event: Event, dashboardIds: Array<string>) {
     this.showManageAssignedCustomersDialog($event, dashboardIds, 'unassign');
   }
+
+  /**
+   * show manage assigned customers dialog.
+   *
+   * @param dashboardIds dashboard ids (Array<string>)
+   * @param actionType action type (ManageDashboardCustomersActionType)
+   * @param assignedCustomersIds assigned customers ids (Array<string>)
+   */
 
   showManageAssignedCustomersDialog($event: Event, dashboardIds: Array<string>,
                                     actionType: ManageDashboardCustomersActionType,
@@ -551,6 +669,13 @@ export class DashboardsTableConfigResolver {
       });
   }
 
+  /**
+   * unassign from customer.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param customerId customer UUID
+   */
+
   unassignFromCustomer($event: Event, dashboard: Dashboard, customerId: string) {
     if ($event) {
       $event.stopPropagation();
@@ -572,6 +697,13 @@ export class DashboardsTableConfigResolver {
       }
     );
   }
+
+  /**
+   * unassign dashboards from customer.
+   *
+   * @param dashboardIds dashboard ids (Array<string>)
+   * @param customerId customer UUID
+   */
 
   unassignDashboardsFromCustomer($event: Event, dashboardIds: Array<string>, customerId: string) {
     if ($event) {
@@ -600,6 +732,13 @@ export class DashboardsTableConfigResolver {
       }
     );
   }
+
+  /**
+   * Event handler for dashboard action.
+   *
+   * @param action action (EntityAction<Dashboard>)
+   * @returns boolean observable or value
+   */
 
   onDashboardAction(action: EntityAction<Dashboard>): boolean {
     switch (action.action) {
@@ -631,6 +770,11 @@ export class DashboardsTableConfigResolver {
     return false;
   }
 
+  /**
+   * POST/PUT entity — add dashboards to edge.
+   *
+   */
+
   addDashboardsToEdge($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -650,6 +794,12 @@ export class DashboardsTableConfigResolver {
         }
       });
   }
+
+  /**
+   * unassign from edge.
+   *
+   * @param dashboard dashboard (DashboardInfo)
+   */
 
   unassignFromEdge($event: Event, dashboard: DashboardInfo) {
     if ($event) {
@@ -672,6 +822,12 @@ export class DashboardsTableConfigResolver {
       }
     );
   }
+
+  /**
+   * unassign dashboards from edge.
+   *
+   * @param dashboards dashboards (Array<DashboardInfo>)
+   */
 
   unassignDashboardsFromEdge($event: Event, dashboards: Array<DashboardInfo>) {
     if ($event) {
@@ -700,6 +856,13 @@ export class DashboardsTableConfigResolver {
       }
     );
   }
+
+  /**
+   * POST/PUT entity — save and assign dashboard.
+   *
+   * @param dashboard dashboard (DashboardSetup)
+   * @returns Observable<Dashboard> observable or value
+   */
 
   saveAndAssignDashboard(dashboard: DashboardSetup): Observable<Dashboard> {
     const {assignedCustomerIds, ...dashboardToCreate} = dashboard;

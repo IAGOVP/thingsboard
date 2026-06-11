@@ -22,6 +22,9 @@ import { ClassProvider, FactoryProvider, Injectable, InjectionToken, PLATFORM_ID
 export const WINDOW = new InjectionToken('WindowToken');
 
 /* Define abstract class for obtaining reference to the global window object. */
+/**
+ * Window ref (ThingsBoard web UI).
+ */
 export abstract class WindowRef {
 
   get nativeWindow(): Window | object {

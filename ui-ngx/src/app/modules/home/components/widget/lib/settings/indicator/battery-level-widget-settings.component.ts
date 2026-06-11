@@ -29,14 +29,17 @@ import {
 } from '@home/components/widget/lib/indicator/battery-level-widget.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: battery level widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-battery-level-widget-settings`.
+ */
 @Component({
     selector: 'tb-battery-level-widget-settings',
     templateUrl: './battery-level-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: battery level widget settings UI.
- */
+standalone: false
 })
 export class BatteryLevelWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -69,13 +72,31 @@ export class BatteryLevelWidgetSettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.batteryLevelWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return batteryLevelDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.batteryLevelWidgetSettingsForm = this.fb.group({
@@ -95,9 +116,21 @@ export class BatteryLevelWidgetSettingsComponent extends WidgetSettingsComponent
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showValue', 'layout'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showValue: boolean = this.batteryLevelWidgetSettingsForm.get('showValue').value;

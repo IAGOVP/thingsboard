@@ -22,8 +22,11 @@ import org.thingsboard.server.common.data.DataConstants;
 import java.util.Collections;
 import java.util.List;
 /**
- * JSON configuration for TbMsgDeleteAttributes rule node.
+ * JSON configuration POJO for {@link TbMsgDeleteAttributes} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMsgDeleteAttributesNodeConfiguration implements NodeConfiguration<TbMsgDeleteAttributesNodeConfiguration> {
@@ -32,6 +35,12 @@ public class TbMsgDeleteAttributesNodeConfiguration implements NodeConfiguration
     private List<String> keys;
     private boolean sendAttributesDeletedNotification;
     private boolean notifyDevice;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgDeleteAttributesNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgDeleteAttributesNodeConfiguration defaultConfiguration() {

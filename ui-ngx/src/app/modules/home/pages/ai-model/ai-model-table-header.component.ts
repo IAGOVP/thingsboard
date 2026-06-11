@@ -20,6 +20,12 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { AiModel } from '@shared/models/ai-model.models';
 
+
+/**
+ * Angular component: ai model table header (home/ai-model pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-ai-model-table-header`.
+ */
 @Component({
     selector: 'tb-ai-model-table-header',
     templateUrl: './ai-model-table-header.component.html',
@@ -29,10 +35,7 @@ import { AiModel } from '@shared/models/ai-model.models';
     }
   `],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: ai model table header UI.
- */
+standalone: false
 })
 export class AiModelTableHeaderComponent extends EntityTableHeaderComponent<AiModel> {
 

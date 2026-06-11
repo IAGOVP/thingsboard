@@ -66,8 +66,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 /**
- * Unit test for tb get attributes node rule node.
+ * Unit test for tb get attributes node (entity metadata and related-data fetch nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -91,6 +92,11 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
 
     @Spy
     private TbGetAttributesNode node;
+    /**
+     * Before.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void before() throws TbNodeException {
@@ -125,11 +131,21 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
         lenient().when(timeseriesServiceMock.findLatest(TENANT_ID, ORIGINATOR_ID, tsKeys))
                 .thenReturn(Futures.immediateFuture(getListTsKvEntry(tsKeys, ts)));
     }
+    /**
+     * After.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterEach
     public void after() {
         dbExecutor.destroy();
     }
+    /**
+     * Given fetch attributes to metadata when on msg then should tell success.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchAttributesToMetadata_whenOnMsg_thenShouldTellSuccess() throws Exception {
@@ -149,6 +165,11 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
 
         checkTs(resultMsg, TbMsgSource.METADATA, false, tsKeys);
     }
+    /**
+     * Given fetch latest timeseries to metadata when on msg then should tell success.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchLatestTimeseriesToMetadata_whenOnMsg_thenShouldTellSuccess() throws Exception {
@@ -168,6 +189,11 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
 
         checkTs(resultMsg, TbMsgSource.METADATA, true, tsKeys);
     }
+    /**
+     * Given fetch attributes to data when on msg then should tell success.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchAttributesToData_whenOnMsg_thenShouldTellSuccess() throws Exception {
@@ -187,6 +213,11 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
 
         checkTs(resultMsg, TbMsgSource.DATA, false, tsKeys);
     }
+    /**
+     * Given fetch latest timeseries to data when on msg then should tell success.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchLatestTimeseriesToData_whenOnMsg_thenShouldTellSuccess() throws Exception {
@@ -206,6 +237,11 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
 
         checkTs(resultMsg, TbMsgSource.DATA, true, tsKeys);
     }
+    /**
+     * Given fetch attributes to metadata when on msg then should tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchAttributesToMetadata_whenOnMsg_thenShouldTellFailure() throws Exception {
@@ -225,6 +261,11 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
 
         checkTs(actualMsg, TbMsgSource.METADATA, false, tsKeys);
     }
+    /**
+     * Given fetch latest timeseries to data when on msg then should tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchLatestTimeseriesToData_whenOnMsg_thenShouldTellFailure() throws Exception {
@@ -244,6 +285,11 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
 
         checkTs(actualMsg, TbMsgSource.DATA, true, tsKeys);
     }
+    /**
+     * Given fetch latest timeseries to data and data is not json object when on msg then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchLatestTimeseriesToDataAndDataIsNotJsonObject_whenOnMsg_thenException() throws Exception {
@@ -494,6 +540,12 @@ public class TbGetAttributesNodeTest extends AbstractRuleNodeUpgradeTest {
         );
 
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

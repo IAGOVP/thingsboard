@@ -21,11 +21,11 @@ import { FormProperty } from '@shared/models/dynamic-form.models';
 
 export type DataKeySettingsFunction = (key: DataKey, isLatestDataKey: boolean) => any;
 
+
 /**
-
- * TypeScript models and enums for data keys callbacks.
-
+ * Data keys callbacks (ThingsBoard web UI).
  */
+
 
 export interface DataKeysCallbacks {
   generateDataKey: (chip: any, type: DataKeyType, dataKeySettingsForm: FormProperty[],

@@ -26,14 +26,17 @@ export interface DisplayColumnsPanelData {
   columnsUpdated: (columns: DisplayColumn[]) => void;
 }
 
+
+/**
+ * Angular component: display columns panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-display-columns-panel`.
+ */
 @Component({
     selector: 'tb-display-columns-panel',
     templateUrl: './display-columns-panel.component.html',
     styleUrls: ['./display-columns-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: display columns panel UI.
- */
+standalone: false
 })
 export class DisplayColumnsPanelComponent {
 
@@ -53,6 +56,12 @@ export class DisplayColumnsPanelComponent {
     return filtredColumns.length !== 0 && this.columns.length !== filtredColumns.length;
   }
 
+  /**
+   * toggle all columns.
+   *
+   * @param event DOM or Angular event object
+   */
+
   public toggleAllColumns(event: any): void {
     const isChecked = event.checked;
     
@@ -62,6 +71,11 @@ export class DisplayColumnsPanelComponent {
     
     this.update();
   }
+
+  /**
+   * update.
+   *
+   */
 
   public update() {
     this.data.columnsUpdated(this.data.columns);

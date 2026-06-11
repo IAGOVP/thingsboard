@@ -41,6 +41,9 @@ import { DeviceCheckConnectivityDialogComponent } from './device-check-connectiv
 /**
  * Angular NgModule: device feature area.
  */
+/**
+ * Angular NgModule bundling device (home/device pages).
+ */
 @NgModule({
   declarations: [
     DefaultDeviceConfigurationComponent,
@@ -66,5 +69,5 @@ import { DeviceCheckConnectivityDialogComponent } from './device-check-connectiv
     DeviceCredentialsModule,
     DeviceProfileCommonModule,
     DeviceRoutingModule
-  ]})
+]})
 export class DeviceModule { }

@@ -20,16 +20,25 @@ import org.testng.ITestResult;
 import org.testng.internal.ConstructorOrMethod;
 import org.thingsboard.server.msa.DisableUIListeners;
 
+
 /**
 
- * Retry analyzer.
+ * TestNG retry analyzer for flaky UI smoke tests.
 
  */
+
 
 public class RetryAnalyzer implements IRetryAnalyzer {
 
     private int retryCount = 0;
     private static final int MAX_RETRY_COUNT = 2;
+    /**
+     * TestNG retry decision for flaky UI tests.
+     *
+     * @param result TestNG test result for failure capture
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean retry(ITestResult result) {

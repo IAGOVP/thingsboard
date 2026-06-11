@@ -89,8 +89,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb math node rule node.
+ * Unit test for tb math node (expression evaluation nodes).
  */
+
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -112,6 +113,11 @@ public class TbMathNodeTest {
     private RuleEngineTelemetryService telemetryService;
     private AbstractListeningExecutor dbCallbackExecutor;
     private AbstractListeningExecutor ruleEngineDispatcherExecutor;
+    /**
+     * Before.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void before() {
@@ -126,6 +132,11 @@ public class TbMathNodeTest {
         willReturn(tsService).given(ctx).getTimeseriesService();
         willReturn(tenantId).given(ctx).getTenantId();
     }
+    /**
+     * After.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterEach
     public void after() {
@@ -166,6 +177,11 @@ public class TbMathNodeTest {
             throw new IllegalStateException(ex);
         }
     }
+    /**
+     * Test exp4j.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testExp4j() {
@@ -235,6 +251,15 @@ public class TbMathNodeTest {
                 Arguments.of(TbRuleNodeMathFunctionType.POW, 5, 3, 125)
         );
     }
+    /**
+     * Test simple two argument function.
+     *
+     * @param function function ({@link TbRuleNodeMathFunctionType})
+     * @param arg1 arg1
+     * @param arg2 arg2
+     * @param result result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -304,6 +329,14 @@ public class TbMathNodeTest {
                 Arguments.of(TbRuleNodeMathFunctionType.DEG, 5, 286.48)
         );
     }
+    /**
+     * Test simple one argument function.
+     *
+     * @param function function ({@link TbRuleNodeMathFunctionType})
+     * @param arg1 arg1
+     * @param result result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -332,6 +365,11 @@ public class TbMathNodeTest {
         assertTrue(resultJson.has("result"));
         assertEquals(result, resultJson.get("result").asDouble(), 0d);
     }
+    /**
+     * Test 2 plus 2 body.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_2_plus_2_body() {
@@ -360,6 +398,11 @@ public class TbMathNodeTest {
         assertTrue(resultJson.has("result"));
         assertEquals(4, resultJson.get("result").asInt());
     }
+    /**
+     * Test 2 plus 2 meta.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_2_plus_2_meta() {
@@ -389,6 +432,11 @@ public class TbMathNodeTest {
         assertNotNull(result);
         assertEquals("4", result);
     }
+    /**
+     * Test 2 plus 2 attr and ts.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_2_plus_2_attr_and_ts() {
@@ -423,6 +471,11 @@ public class TbMathNodeTest {
         assertTrue(resultJson.has("result"));
         assertEquals(4, resultJson.get("result").asInt());
     }
+    /**
+     * Test sqrt 5 body.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_sqrt_5_body() {
@@ -450,6 +503,11 @@ public class TbMathNodeTest {
         assertTrue(resultJson.has("result"));
         assertEquals(2.236, resultJson.get("result").asDouble(), 0.0);
     }
+    /**
+     * Test sqrt 5 meta.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_sqrt_5_meta() {
@@ -477,6 +535,11 @@ public class TbMathNodeTest {
         assertNotNull(result);
         assertEquals("2.236", result);
     }
+    /**
+     * Test sqrt 5 to attribute and metadata.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_sqrt_5_to_attribute_and_metadata() {
@@ -512,6 +575,11 @@ public class TbMathNodeTest {
         assertNotNull(result);
         assertEquals("2.236", result);
     }
+    /**
+     * Test sqrt 5 to timeseries and data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_sqrt_5_to_timeseries_and_data() {
@@ -548,6 +616,11 @@ public class TbMathNodeTest {
         assertTrue(resultJson.has("result"));
         assertEquals(2.236, resultJson.get("result").asDouble(), 0.0);
     }
+    /**
+     * Test sqrt 5 to timeseries and metadata and data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_sqrt_5_to_timeseries_and_metadata_and_data() {
@@ -589,6 +662,11 @@ public class TbMathNodeTest {
         assertNotNull(resultMetadata);
         assertEquals("2.236", resultMetadata);
     }
+    /**
+     * Test sqrt 5 default value.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_sqrt_5_default_value() {
@@ -616,6 +694,11 @@ public class TbMathNodeTest {
         assertNotNull(result);
         assertEquals("2.236", result);
     }
+    /**
+     * Test sqrt 5 default value failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_sqrt_5_default_value_failure() {
@@ -635,6 +718,11 @@ public class TbMathNodeTest {
         Mockito.verify(ctx, timeout(TIMEOUT)).tellFailure(eq(msg), tCaptor.capture());
         assertNotNull(tCaptor.getValue().getMessage());
     }
+    /**
+     * Test convert msg body if required failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testConvertMsgBodyIfRequiredFailure() {
@@ -655,6 +743,11 @@ public class TbMathNodeTest {
         Mockito.verify(ctx, timeout(TIMEOUT)).tellFailure(eq(msg), tCaptor.capture());
         assertNotNull(tCaptor.getValue().getMessage());
     }
+    /**
+     * Test exp4j concurrent.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testExp4j_concurrent() {
@@ -733,6 +826,11 @@ public class TbMathNodeTest {
 
         verify(ctx, never()).tellFailure(any(), any());
     }
+    /**
+     * Test exp4j concurrent by single originator process msg async exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testExp4j_concurrentBySingleOriginator_processMsgAsyncException() {
@@ -791,6 +889,11 @@ public class TbMathNodeTest {
         verify(ctx, never()).tellSuccess(any());
 
     }
+    /**
+     * Test exp4j concurrent by single originator single msg many nodes with different output.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testExp4j_concurrentBySingleOriginator_SingleMsg_manyNodesWithDifferentOutput() {
@@ -852,6 +955,13 @@ public class TbMathNodeTest {
         softly.assertAll();
         verify(ctx, never()).tellFailure(any(), any());
     }
+    /**
+     * Test custom functions.
+     *
+     * @param customFunction custom function ({@link String})
+     * @param result result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -889,12 +999,24 @@ public class TbMathNodeTest {
         );
     }
 
+    /**
+
+     * Rule dispatcher executor (expression evaluation nodes).
+
+     */
+
     static class RuleDispatcherExecutor extends AbstractListeningExecutor {
         @Override
         protected int getThreadPollSize() {
             return RULE_DISPATCHER_POOL_SIZE;
         }
     }
+
+    /**
+
+     * Dbcallback executor (expression evaluation nodes).
+
+     */
 
     static class DBCallbackExecutor extends AbstractListeningExecutor {
         @Override

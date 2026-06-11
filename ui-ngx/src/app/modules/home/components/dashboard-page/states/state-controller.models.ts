@@ -19,11 +19,13 @@ import { DashboardState } from '@shared/models/dashboard.models';
 
 export declare type StateControllerState = StateObject[];
 
+
 /**
-
- * Angular component: istate controller UI.
-
+ * Angular component: istate controller (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 
 export interface IStateControllerComponent extends IStateController {
   stateControllerInstanceId: string;

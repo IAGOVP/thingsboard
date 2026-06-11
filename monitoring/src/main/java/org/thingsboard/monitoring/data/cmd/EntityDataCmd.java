@@ -18,8 +18,9 @@ package org.thingsboard.monitoring.data.cmd;
 import lombok.Data;
 import org.thingsboard.server.common.data.query.EntityDataQuery;
 /**
- * WebSocket command wrapper for entity data subscription.
+ * WebSocket command wrapper for entity data subscription during monitoring.
  */
+
 
 @Data
 public class EntityDataCmd {

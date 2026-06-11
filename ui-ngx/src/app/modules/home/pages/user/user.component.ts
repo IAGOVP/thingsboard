@@ -30,14 +30,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { environment as env } from '@env/environment';
 import { UnitSystems } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: user (home/user pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-user`.
+ */
 @Component({
     selector: 'tb-user',
     templateUrl: './user.component.html',
     styleUrls: ['./user.component.scss'],
-    standalone: false
-/**
- * Angular component: user UI.
- */
+standalone: false
 })
 export class UserComponent extends EntityComponent<User>{
 
@@ -59,6 +62,11 @@ export class UserComponent extends EntityComponent<User>{
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -67,13 +75,32 @@ export class UserComponent extends EntityComponent<User>{
     }
   }
 
+  /**
+   * is user credentials enabled.
+   *
+   * @returns boolean observable or value
+   */
+
   isUserCredentialsEnabled(): boolean {
       return this.entity?.additionalInfo?.userCredentialsEnabled === true;
   }
 
+  /**
+   * is user activated.
+   *
+   * @returns boolean observable or value
+   */
+
   isUserActivated(): boolean {
     return this.entity?.additionalInfo?.userActivated === true;
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (User)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: User): UntypedFormGroup {
     return this.fb.group(
@@ -98,6 +125,12 @@ export class UserComponent extends EntityComponent<User>{
     );
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (User)
+   */
+
   updateForm(entity: User) {
     this.entityForm.patchValue({email: entity.email});
     this.entityForm.patchValue({firstName: entity.firstName});
@@ -118,6 +151,11 @@ export class UserComponent extends EntityComponent<User>{
         {homeDashboardHideToolbar: entity.additionalInfo &&
           isDefinedAndNotNull(entity.additionalInfo.homeDashboardHideToolbar) ? entity.additionalInfo.homeDashboardHideToolbar : true}});
   }
+
+  /**
+   * Event handler for user id copied.
+   *
+   */
 
   onUserIdCopied($event) {
     this.store.dispatch(new ActionNotificationShow(

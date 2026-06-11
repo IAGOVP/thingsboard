@@ -231,6 +231,10 @@ export const HelpLinks = {
 };
 /* eslint-enable max-len */
 
+/**
+ * TypeScript interfaces, types, and enums for value type data (shared TypeScript models).
+ */
+
 export interface ValueTypeData {
   name: string;
   icon: string;

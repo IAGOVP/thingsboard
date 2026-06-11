@@ -29,14 +29,17 @@ export interface DisplayWidgetTypesPanelData {
   typesUpdated: (columns: WidgetTypes[]) => void;
 }
 
+
+/**
+ * Angular component: display widget types panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-types-panel`.
+ */
 @Component({
     selector: 'tb-widget-types-panel',
     templateUrl: './widget-types-panel.component.html',
     styleUrls: ['./widget-types-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: display widget types panel UI.
- */
+standalone: false
 })
 export class DisplayWidgetTypesPanelComponent {
 
@@ -45,6 +48,11 @@ export class DisplayWidgetTypesPanelComponent {
   constructor(@Inject(DISPLAY_WIDGET_TYPES_PANEL_DATA) public data: DisplayWidgetTypesPanelData) {
     this.types = this.data.types;
   }
+
+  /**
+   * update.
+   *
+   */
 
   public update() {
     this.data.typesUpdated(this.types);

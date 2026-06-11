@@ -35,14 +35,17 @@ import { objToBase64URI } from '@core/utils';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
+/**
+ * Angular component: notification (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-notification`.
+ */
 @Component({
     selector: 'tb-notification',
     templateUrl: './notification.component.html',
     styleUrls: ['./notification.component.scss'],
-    standalone: false
-/**
- * Angular component: notification UI.
- */
+standalone: false
 })
 export class NotificationComponent implements OnInit {
 
@@ -80,6 +83,11 @@ export class NotificationComponent implements OnInit {
   ) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.showIcon = this.notification.additionalConfig?.icon?.enabled;
     this.showButton = this.notification.additionalConfig?.actionButtonConfig?.enabled;
@@ -91,6 +99,11 @@ export class NotificationComponent implements OnInit {
     }
   }
 
+  /**
+   * mark read.
+   *
+   */
+
   markRead($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -99,6 +112,11 @@ export class NotificationComponent implements OnInit {
       this.markAsRead.next(this.notification.id.id);
     }
   }
+
+  /**
+   * navigate.
+   *
+   */
 
   navigate($event: Event) {
     if ($event) {
@@ -142,9 +160,20 @@ export class NotificationComponent implements OnInit {
     }
   }
 
+  /**
+   * alarm color severity background.
+   *
+   */
+
   alarmColorSeverityBackground() {
     return alarmSeverityBackgroundColors.get(this.notification.info.alarmSeverity);
   }
+
+  /**
+   * notification color.
+   *
+   * @returns string observable or value
+   */
 
   notificationColor(): string {
     if (this.notification.type === NotificationType.ALARM && !this.notification.info.cleared) {
@@ -153,12 +182,24 @@ export class NotificationComponent implements OnInit {
     return 'transparent';
   }
 
+  /**
+   * notification background color.
+   *
+   * @returns string observable or value
+   */
+
   notificationBackgroundColor(): string {
     if (this.notification.type === NotificationType.ALARM && !this.notification.info.cleared) {
       return '#fff';
     }
     return 'transparent';
   }
+
+  /**
+   * notification icon color.
+   *
+   * @returns object observable or value
+   */
 
   notificationIconColor(): object {
     if (this.notification.type === NotificationType.ALARM) {

@@ -21,14 +21,17 @@ import { EntityTableHeaderComponent } from '@home/components/entity/entity-table
 import { Resource, ResourceInfo, ResourceType, ResourceTypeTranslationMap } from '@shared/models/resource.models';
 import { PageLink } from '@shared/models/page/page-link';
 
+
+/**
+ * Angular component: resources table header (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-resources-table-header`.
+ */
 @Component({
     selector: 'tb-resources-table-header',
     templateUrl: './resources-table-header.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: resources table header UI.
- */
+standalone: false
 })
 export class ResourcesTableHeaderComponent extends EntityTableHeaderComponent<Resource, PageLink, ResourceInfo> {
 
@@ -38,6 +41,12 @@ export class ResourcesTableHeaderComponent extends EntityTableHeaderComponent<Re
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * resource type changed.
+   *
+   * @param resourceType resource type (ResourceType)
+   */
 
   resourceTypeChanged(resourceType: ResourceType) {
     this.entitiesTableConfig.componentsData.resourceType = resourceType;

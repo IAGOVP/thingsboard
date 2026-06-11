@@ -45,6 +45,12 @@ export function labelDataKeyValidator(control: AbstractControl): ValidationError
   return null;
 }
 
+
+/**
+ * Angular component: label data key (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-label-data-key`.
+ */
 @Component({
     selector: 'tb-label-data-key',
     templateUrl: './label-data-key.component.html',
@@ -56,10 +62,7 @@ export function labelDataKeyValidator(control: AbstractControl): ValidationError
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: label data key UI.
- */
+standalone: false
 })
 export class LabelDataKeyComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -85,6 +88,11 @@ export class LabelDataKeyComponent extends PageComponent implements OnInit, Cont
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.labelDataKeyFormGroup = this.fb.group({
       name: [null, [Validators.required]],
@@ -97,12 +105,30 @@ export class LabelDataKeyComponent extends PageComponent implements OnInit, Cont
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -113,12 +139,24 @@ export class LabelDataKeyComponent extends PageComponent implements OnInit, Cont
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (LabelDataKey)
+   */
+
   writeValue(value: LabelDataKey): void {
     this.modelValue = value;
     this.labelDataKeyFormGroup.patchValue(
       value, {emitEvent: false}
     );
   }
+
+  /**
+   * label data key text.
+   *
+   * @returns string observable or value
+   */
 
   labelDataKeyText(): string {
     const name: string = this.labelDataKeyFormGroup.get('name').value || '';
@@ -131,6 +169,11 @@ export class LabelDataKeyComponent extends PageComponent implements OnInit, Cont
     }
     return `${name} (${typeStr})`;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: LabelDataKey = this.labelDataKeyFormGroup.value;

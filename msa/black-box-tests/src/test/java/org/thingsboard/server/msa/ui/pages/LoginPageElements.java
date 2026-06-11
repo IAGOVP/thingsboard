@@ -19,11 +19,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.thingsboard.server.msa.ui.base.AbstractBasePage;
 
+
 /**
 
- * Login page elements.
+ * Selenium element locators for login page page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class LoginPageElements extends AbstractBasePage {
     public LoginPageElements(WebDriver driver) {
@@ -34,18 +40,42 @@ public class LoginPageElements extends AbstractBasePage {
     private static final String PASSWORD_FIELD = "//input[@id='password-input']";
     private static final String SUBMIT_BTN = "//button[@type='submit']";
     private static final String TITLE_LOGO = "//img[@class='tb-logo-title']";
+    /**
+     * Email field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement emailField() {
         return waitUntilElementToBeClickable(EMAIL_FIELD);
     }
+    /**
+     * Password field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement passwordField() {
         return waitUntilElementToBeClickable(PASSWORD_FIELD);
     }
+    /**
+     * Submit btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement submitBtn() {
         return waitUntilElementToBeClickable(SUBMIT_BTN);
     }
+    /**
+     * Title logo.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement titleLogo() {
         return waitUntilVisibilityOfElementLocated(TITLE_LOGO);

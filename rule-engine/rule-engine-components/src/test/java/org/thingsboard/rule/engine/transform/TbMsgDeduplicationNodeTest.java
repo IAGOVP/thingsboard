@@ -76,8 +76,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb msg deduplication node rule node.
+ * Unit test for tb msg deduplication node (message transformation and originator change nodes).
  */
+
 
 @Slf4j
 public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -96,6 +97,11 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
     private TbNodeConfiguration nodeConfiguration;
 
     private CountDownLatch awaitTellSelfLatch;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void init() throws TbNodeException {
@@ -150,6 +156,10 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
             return null;
         }).when(ctx).tellSelf(ArgumentMatchers.any(TbMsg.class), ArgumentMatchers.anyLong());
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @AfterEach
     public void destroy() {
@@ -164,6 +174,14 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
                 Arguments.of(DataConstants.HP_QUEUE_NAME)
         );
     }
+    /**
+     * Given 100 messages strategy first then verify output.
+     *
+     * @param queueName queue name ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -220,6 +238,13 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
             Assertions.assertEquals(ctx.getQueueName(), actualMsg.getQueueName());
         }
     }
+    /**
+     * Given 100 messages strategy last then verify output.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void given_100_messages_strategy_last_then_verifyOutput() throws TbNodeException, ExecutionException, InterruptedException {
@@ -269,6 +294,13 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
         Assertions.assertEquals(RULE_NODE_EXEC_COUNTER, actualMsg.getAndIncrementRuleNodeCounter());
         Assertions.assertSame(TbMsgCallback.EMPTY, actualMsg.getCallback());
     }
+    /**
+     * Given 100 messages strategy all then verify output.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void given_100_messages_strategy_all_then_verifyOutput() throws TbNodeException, ExecutionException, InterruptedException {
@@ -309,6 +341,13 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
         Assertions.assertEquals(config.getOutMsgType(), outMessage.getType());
         Assertions.assertEquals(DataConstants.HP_QUEUE_NAME, outMessage.getQueueName());
     }
+    /**
+     * Given 100 messages strategy all then verify output 2 packs.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void given_100_messages_strategy_all_then_verifyOutput_2_packs() throws TbNodeException, ExecutionException, InterruptedException {
@@ -363,6 +402,13 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
         Assertions.assertEquals(config.getOutMsgType(), secondMsg.getType());
         Assertions.assertEquals(DataConstants.HP_QUEUE_NAME, secondMsg.getQueueName());
     }
+    /**
+     * Given 100 messages strategy last then verify output 2 packs.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void given_100_messages_strategy_last_then_verifyOutput_2_packs() throws TbNodeException, ExecutionException, InterruptedException {
@@ -427,6 +473,13 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
         Assertions.assertEquals(RULE_NODE_EXEC_COUNTER, actualMsg.getAndIncrementRuleNodeCounter());
         Assertions.assertSame(TbMsgCallback.EMPTY, actualMsg.getCallback());
     }
+    /**
+     * Given max retries is zero when enqueue fails then no retries is scheduled.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void given_maxRetriesIsZero_when_enqueueFails_then_noRetriesIsScheduled() throws TbNodeException, ExecutionException, InterruptedException {
@@ -461,6 +514,13 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(any(), eq(TbNodeConnectionType.SUCCESS), any(), any());
         verify(ctx, never()).schedule(any(), anyLong(), any());
     }
+    /**
+     * Given max retries is set to one when enqueue fails then only one retry is scheduled.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void given_maxRetriesIsSetToOne_when_enqueueFails_then_onlyOneRetryIsScheduled() throws TbNodeException, ExecutionException, InterruptedException {
@@ -568,6 +628,12 @@ public class TbMsgDeduplicationNodeTest extends AbstractRuleNodeUpgradeTest {
         });
         return JacksonUtil.toString(mergedData);
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

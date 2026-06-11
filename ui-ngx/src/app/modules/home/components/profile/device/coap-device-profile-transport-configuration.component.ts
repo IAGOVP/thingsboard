@@ -45,6 +45,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PowerMode } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
 
+
+/**
+ * Angular component: coap device profile transport configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-coap-device-profile-transport-configuration`.
+ */
 @Component({
     selector: 'tb-coap-device-profile-transport-configuration',
     templateUrl: './coap-device-profile-transport-configuration.component.html',
@@ -61,10 +67,7 @@ import { PowerMode } from '@home/components/profile/device/lwm2m/lwm2m-profile-c
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: coap device profile transport configuration UI.
- */
+standalone: false
 })
 export class CoapDeviceProfileTransportConfigurationComponent implements ControlValueAccessor, OnInit, OnDestroy, Validator {
 
@@ -95,12 +98,29 @@ export class CoapDeviceProfileTransportConfigurationComponent implements Control
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.coapTransportConfigurationFormGroup = this.fb.group({
@@ -127,6 +147,11 @@ export class CoapDeviceProfileTransportConfigurationComponent implements Control
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -147,6 +172,12 @@ export class CoapDeviceProfileTransportConfigurationComponent implements Control
     return this.coapTransportConfigurationFormGroup.get('clientSettings') as UntypedFormGroup;
   }
 
+  /**
+   * update coap device type based controls.
+   *
+   * @param type type (CoapTransportDeviceType)
+   */
+
   private updateCoapDeviceTypeBasedControls(type: CoapTransportDeviceType, forceUpdated = false) {
     const coapDeviceTypeConfigurationFormGroup = this.coapTransportConfigurationFormGroup
       .get('coapDeviceTypeConfiguration') as UntypedFormGroup;
@@ -162,6 +193,12 @@ export class CoapDeviceProfileTransportConfigurationComponent implements Control
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -171,6 +208,12 @@ export class CoapDeviceProfileTransportConfigurationComponent implements Control
       this.coapTransportConfigurationFormGroup.get('clientSettings.powerMode').updateValueAndValidity({onlySelf: true});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (CoapDeviceProfileTransportConfiguration | null)
+   */
 
   writeValue(value: CoapDeviceProfileTransportConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
@@ -187,11 +230,23 @@ export class CoapDeviceProfileTransportConfigurationComponent implements Control
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   public validate(c: UntypedFormControl): ValidationErrors | null {
     return (this.coapTransportConfigurationFormGroup.valid) ? null : {
       valid: false,
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const configuration = this.coapTransportConfigurationFormGroup.value;

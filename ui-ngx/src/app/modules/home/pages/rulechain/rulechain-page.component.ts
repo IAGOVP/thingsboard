@@ -105,15 +105,26 @@ import { AdditionalDebugActionConfig } from '@home/components/entity/debug/entit
 import { EventsDialogComponent } from '@home/dialogs/events-dialog.component';
 import Timeout = NodeJS.Timeout;
 
+
+/**
+ * Angular component: rule chain page (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rulechain-page`.
+ */
+/**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+/**
+   * ng after view checked.
+   *
+   */
 @Component({
     selector: 'tb-rulechain-page',
     templateUrl: './rulechain-page.component.html',
     styleUrls: ['./rulechain-page.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: rule chain page UI.
- */
+standalone: false
 })
 export class RuleChainPageComponent extends PageComponent
   implements AfterViewInit, OnInit, OnDestroy, HasDirtyFlag, ISearchableComponent, AfterViewChecked {
@@ -311,8 +322,7 @@ export class RuleChainPageComponent extends PageComponent
       }
     );
   }
-
-  ngOnInit() {
+ngOnInit() {
     this.ruleNodeTypeSearch.valueChanges.pipe(
       debounceTime(150),
       startWith(''),
@@ -321,20 +331,35 @@ export class RuleChainPageComponent extends PageComponent
       takeUntil(this.destroy$)
     ).subscribe(() => this.updateRuleChainLibrary());
   }
-
-  ngAfterViewChecked(){
+ngAfterViewChecked(){
     this.changeDetector.detectChanges();
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.ruleChainCanvas.adjustCanvasSize(true);
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * current rule chain id changed.
+   *
+   * @param ruleChainId rule chain UUID
+   */
 
   currentRuleChainIdChanged(ruleChainId: string) {
     if (this.ruleChainType === RuleChainType.CORE) {
@@ -344,10 +369,21 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * Event handler for search text updated.
+   *
+   * @param searchText search text (string)
+   */
+
   onSearchTextUpdated(searchText: string) {
     this.ruleNodeSearch = searchText;
     this.updateRuleNodesHighlight();
   }
+
+  /**
+   * init.
+   *
+   */
 
   private init() {
     this.initHotKeys();
@@ -378,6 +414,11 @@ export class RuleChainPageComponent extends PageComponent
     this.createRuleChainModel();
   }
 
+  /**
+   * reset.
+   *
+   */
+
   private reset(): void {
     this.selectedObjects = [];
     this.ruleChainModel.nodes = [];
@@ -393,6 +434,11 @@ export class RuleChainPageComponent extends PageComponent
     this.editingNote = null;
     this.updateRuleNodesHighlight();
   }
+
+  /**
+   * init hot keys.
+   *
+   */
 
   private initHotKeys(): void {
     if (!this.hotKeys.length) {
@@ -501,12 +547,23 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * update rule chain library.
+   *
+   */
+
   updateRuleChainLibrary() {
     const search = this.ruleNodeTypeSearch.value.trim().toUpperCase();
     const res = this.ruleNodeComponents.filter(
       (ruleNodeComponent) => ruleNodeComponent.name.toUpperCase().includes(search));
     this.loadRuleChainLibrary(res);
   }
+
+  /**
+   * load rule chain library.
+   *
+   * @param ruleNodeComponents rule node components (Array<RuleNodeComponentDescriptor>)
+   */
 
   private loadRuleChainLibrary(ruleNodeComponents: Array<RuleNodeComponentDescriptor>) {
     for (const componentType of Object.keys(this.ruleNodeTypesModel)) {
@@ -568,6 +625,11 @@ export class RuleChainPageComponent extends PageComponent
       }
     }
   }
+
+  /**
+   * POST/PUT entity — create rule chain model.
+   *
+   */
 
   private createRuleChainModel() {
     this.nextNodeID = 1;
@@ -699,6 +761,11 @@ export class RuleChainPageComponent extends PageComponent
     this.validate();
   }
 
+  /**
+   * open rule chain context menu.
+   *
+   */
+
   openRuleChainContextMenu($event: TbContextMenuEvent) {
     if (this.ruleChainCanvas.modelService && !$event.ctrlKey && !$event.metaKey) {
       const x = $event.clientX;
@@ -717,9 +784,21 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * Event handler for rule chain context menu mouse leave.
+   *
+   */
+
   onRuleChainContextMenuMouseLeave() {
     this.ruleChainMenuTrigger.closeMenu();
   }
+
+  /**
+   * prepare context menu.
+   *
+   * @param item item (FcItemInfo)
+   * @returns RuleChainMenuContextInfo observable or value
+   */
 
   private prepareContextMenu(item: FcItemInfo): RuleChainMenuContextInfo {
     if (this.objectsSelected() || (!item.node && !item.edge && !item.note)) {
@@ -732,6 +811,12 @@ export class RuleChainPageComponent extends PageComponent
       return this.prepareEdgeContextMenu(item.edge);
     }
   }
+
+  /**
+   * prepare rule chain context menu.
+   *
+   * @returns RuleChainMenuContextInfo observable or value
+   */
 
   private prepareRuleChainContextMenu(): RuleChainMenuContextInfo {
     const contextInfo: RuleChainMenuContextInfo = {
@@ -861,6 +946,13 @@ export class RuleChainPageComponent extends PageComponent
     return contextInfo;
   }
 
+  /**
+   * prepare rule node context menu.
+   *
+   * @param node node (FcRuleNode)
+   * @returns RuleChainMenuContextInfo observable or value
+   */
+
   private prepareRuleNodeContextMenu(node: FcRuleNode): RuleChainMenuContextInfo {
     const contextInfo: RuleChainMenuContextInfo = {
       headerClass: node.nodeClass,
@@ -906,6 +998,13 @@ export class RuleChainPageComponent extends PageComponent
     return contextInfo;
   }
 
+  /**
+   * prepare edge context menu.
+   *
+   * @param edge edge (FcRuleEdge)
+   * @returns RuleChainMenuContextInfo observable or value
+   */
+
   private prepareEdgeContextMenu(edge: FcRuleEdge): RuleChainMenuContextInfo {
     const contextInfo: RuleChainMenuContextInfo = {
       headerClass: 'tb-link-header',
@@ -941,6 +1040,12 @@ export class RuleChainPageComponent extends PageComponent
     return contextInfo;
   }
 
+  /**
+   * can create nested rule chain.
+   *
+   * @returns boolean observable or value
+   */
+
   private canCreateNestedRuleChain(): boolean {
     const selectedNodes = this.ruleChainCanvas.modelService.nodes.getSelectedNodes();
     const selectedEdges = this.ruleChainCanvas.modelService.edges.getSelectedEdges();
@@ -960,6 +1065,11 @@ export class RuleChainPageComponent extends PageComponent
     }
     return false;
   }
+
+  /**
+   * POST/PUT entity — create nested rule chain.
+   *
+   */
 
   private createNestedRuleChain() {
     const selectedNodes = this.ruleChainCanvas.modelService.nodes.getSelectedNodes();
@@ -1154,10 +1264,21 @@ export class RuleChainPageComponent extends PageComponent
    });
   }
 
+  /**
+   * Event handler for model changed.
+   *
+   */
+
   onModelChanged() {
     this.isDirtyValue = true;
     this.validate();
   }
+
+  /**
+   * help link id for rule node type.
+   *
+   * @returns string observable or value
+   */
 
   helpLinkIdForRuleNodeType(): string {
     let component: RuleNodeComponentDescriptor = null;
@@ -1166,6 +1287,12 @@ export class RuleChainPageComponent extends PageComponent
     }
     return getRuleNodeHelpLink(component);
   }
+
+  /**
+   * open node details.
+   *
+   * @param node node (FcRuleNode)
+   */
 
   openNodeDetails(node: FcRuleNode) {
     if (node.component.type !== RuleNodeType.INPUT) {
@@ -1181,6 +1308,12 @@ export class RuleChainPageComponent extends PageComponent
       }, 0);
     }
   }
+
+  /**
+   * open link details.
+   *
+   * @param edge edge (FcRuleEdge)
+   */
 
   openLinkDetails(edge: FcRuleEdge) {
     const sourceNode: FcRuleNode = this.ruleChainCanvas.modelService.nodes.getNodeByConnectorId(edge.source) as FcRuleNode;
@@ -1202,9 +1335,20 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * copy node.
+   *
+   * @param node node (FcRuleNode)
+   */
+
   private copyNode(node: FcRuleNode) {
     this.itembuffer.copyRuleChainObjects([node], [], []);
   }
+
+  /**
+   * copy rule chain objects.
+   *
+   */
 
   private copyRuleChainObjects() {
     const nodes: FcRuleNode[] = this.ruleChainCanvas.modelService.nodes.getSelectedNodes();
@@ -1232,6 +1376,12 @@ export class RuleChainPageComponent extends PageComponent
     });
     this.itembuffer.copyRuleChainObjects(nodes, connections, notes);
   }
+
+  /**
+   * paste rule chain objects.
+   *
+   * @param event DOM or Angular event object
+   */
 
   private pasteRuleChainObjects(event?: MouseEvent) {
     const canvas = $(this.ruleChainCanvas.modelService.canvasHtmlElement);
@@ -1327,6 +1477,12 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * POST/PUT entity — add note.
+   *
+   * @param event DOM or Angular event object
+   */
+
   addNote(event?: MouseEvent): void {
     this.dialog.open<AddNoteDialogComponent, FcRuleNote, Partial<FcRuleNote>>(AddNoteDialogComponent, {
       disableClose: true,
@@ -1368,6 +1524,13 @@ export class RuleChainPageComponent extends PageComponent
       }
     });
   }
+
+  /**
+   * prepare note context menu.
+   *
+   * @param note note (FcRuleNote)
+   * @returns RuleChainMenuContextInfo observable or value
+   */
 
   private prepareNoteContextMenu(note: FcRuleNote): RuleChainMenuContextInfo {
     const contextInfo: RuleChainMenuContextInfo = {
@@ -1412,6 +1575,12 @@ export class RuleChainPageComponent extends PageComponent
     return contextInfo;
   }
 
+  /**
+   * open note details.
+   *
+   * @param note note (FcRuleNote)
+   */
+
   private openNoteDetails(note: FcRuleNote): void {
     this.enableHotKeys = false;
     this.updateErrorTooltips(true);
@@ -1424,6 +1593,11 @@ export class RuleChainPageComponent extends PageComponent
     this.editingNote = deepClone(note);
   }
 
+  /**
+   * POST/PUT entity — save note.
+   *
+   */
+
   saveNote(): void {
     this.ruleNoteComponent.noteForm.markAsPristine();
     Object.assign(this.editingNote, this.ruleNoteComponent.noteForm.value);
@@ -1432,16 +1606,31 @@ export class RuleChainPageComponent extends PageComponent
     this.onModelChanged();
   }
 
+  /**
+   * Event handler for revert note edit.
+   *
+   */
+
   onRevertNoteEdit(): void {
     this.ruleNoteComponent.noteForm.markAsPristine();
     const note =  this.ruleChainModel.notes[this.editingNoteIndex];
     this.editingNote = deepClone(note);
   }
 
+  /**
+   * Event handler for edit note closed.
+   *
+   */
+
   onEditNoteClosed(): void {
     this.editingNote = null;
     this.isEditingNote = false;
   }
+
+  /**
+   * Event handler for details drawer closed.
+   *
+   */
 
   onDetailsDrawerClosed() {
     this.onEditRuleNodeClosed();
@@ -1451,15 +1640,30 @@ export class RuleChainPageComponent extends PageComponent
     this.updateErrorTooltips(false);
   }
 
+  /**
+   * Event handler for edit rule node closed.
+   *
+   */
+
   onEditRuleNodeClosed() {
     this.editingRuleNode = null;
     this.isEditingRuleNode = false;
   }
 
+  /**
+   * Event handler for edit rule node link closed.
+   *
+   */
+
   onEditRuleNodeLinkClosed() {
     this.editingRuleNodeLink = null;
     this.isEditingRuleNodeLink = false;
   }
+
+  /**
+   * Event handler for revert rule node edit.
+   *
+   */
 
   onRevertRuleNodeEdit() {
     this.ruleNodeComponent.ruleNodeFormGroup.markAsPristine();
@@ -1467,11 +1671,22 @@ export class RuleChainPageComponent extends PageComponent
     this.editingRuleNode = deepClone(node, ['component']);
   }
 
+  /**
+   * Event handler for revert rule node link edit.
+   *
+   */
+
   onRevertRuleNodeLinkEdit() {
     this.ruleNodeLinkComponent.ruleNodeLinkFormGroup.markAsPristine();
     const edge = this.ruleChainModel.edges[this.editingRuleNodeLinkIndex];
     this.editingRuleNodeLink = deepClone(edge);
   }
+
+  /**
+   * Event handler for debug event selected.
+   *
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   */
 
   onDebugEventSelected(debugEventBody: DebugRuleNodeEventBody) {
     const ruleNodeConfigComponent = this.ruleNodeComponent.ruleNodeConfigComponent;
@@ -1483,6 +1698,11 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * Event handler for rule node init.
+   *
+   */
+
   onRuleNodeInit() {
     const ruleNodeConfigDefinedComponent = this.ruleNodeComponent.ruleNodeConfigComponent.definedConfigComponent;
     if (this.ruleNodeComponent.ruleNodeConfigComponent.useDefinedDirective() && ruleNodeConfigDefinedComponent.hasScript) {
@@ -1492,9 +1712,19 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * switch to first tab.
+   *
+   */
+
   switchToFirstTab() {
     this.selectedRuleNodeTabIndex = 0;
   }
+
+  /**
+   * POST/PUT entity — save rule node.
+   *
+   */
 
   saveRuleNode() {
     this.ruleNodeComponent.validate();
@@ -1510,12 +1740,24 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * POST/PUT entity — save rule node link.
+   *
+   */
+
   saveRuleNodeLink() {
     this.ruleNodeLinkComponent.ruleNodeLinkFormGroup.markAsPristine();
     this.ruleChainModel.edges[this.editingRuleNodeLinkIndex] = this.editingRuleNodeLink;
     this.editingRuleNodeLink = deepClone(this.editingRuleNodeLink);
     this.onModelChanged();
   }
+
+  /**
+   * type header mouse enter.
+   *
+   * @param event DOM or Angular event object
+   * @param ruleNodeType rule node type (RuleNodeType)
+   */
 
   typeHeaderMouseEnter(event: MouseEvent, ruleNodeType: RuleNodeType) {
     const type = ruleNodeTypeDescriptors.get(ruleNodeType);
@@ -1529,6 +1771,13 @@ export class RuleChainPageComponent extends PageComponent
     );
   }
 
+  /**
+   * display lib node description tooltip.
+   *
+   * @param event DOM or Angular event object
+   * @param node node (FcRuleNodeType)
+   */
+
   displayLibNodeDescriptionTooltip(event: MouseEvent, node: FcRuleNodeType) {
     this.displayTooltip(event,
       '<div class="tb-rule-node-tooltip tb-lib-tooltip">' +
@@ -1540,6 +1789,13 @@ export class RuleChainPageComponent extends PageComponent
       '</div>'
     );
   }
+
+  /**
+   * display node description tooltip.
+   *
+   * @param event DOM or Angular event object
+   * @param node node (FcRuleNode)
+   */
 
   displayNodeDescriptionTooltip(event: MouseEvent, node: FcRuleNode) {
     if (!this.errorTooltips[node.id]) {
@@ -1573,6 +1829,11 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * destroy tooltips.
+   *
+   */
+
   destroyTooltips() {
     if (this.tooltipTimeout) {
       clearTimeout(this.tooltipTimeout);
@@ -1585,6 +1846,11 @@ export class RuleChainPageComponent extends PageComponent
       }
     });
   }
+
+  /**
+   * update rule nodes highlight.
+   *
+   */
 
   private updateRuleNodesHighlight() {
     for (const ruleNode of this.ruleChainModel.nodes) {
@@ -1604,20 +1870,42 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * objects selected.
+   *
+   * @returns boolean observable or value
+   */
+
   objectsSelected(): boolean {
     return this.ruleChainCanvas.modelService.nodes.getSelectedNodes().length > 0 ||
       this.ruleChainCanvas.modelService.edges.getSelectedEdges().length > 0 ||
       this.ruleChainCanvas.modelService.notes.getSelectedNotes().length > 0;
   }
 
+  /**
+   * DELETE — delete selected.
+   *
+   */
+
   deleteSelected() {
     this.ruleChainCanvas.modelService.deleteSelected();
   }
+
+  /**
+   * is debug settings enabled.
+   *
+   * @returns boolean observable or value
+   */
 
   isDebugSettingsEnabled(): boolean {
     const res = this.ruleChainModel.nodes.find((node) => node?.debugSettings && this.isDebugSettingsActive(node.debugSettings));
     return typeof res !== 'undefined';
   }
+
+  /**
+   * reset debug settings in all nodes.
+   *
+   */
 
   resetDebugSettingsInAllNodes(): void {
     let changed = false;
@@ -1635,9 +1923,21 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * is debug settings active.
+   *
+   * @param debugSettings debug settings (EntityDebugSettings)
+   * @returns boolean observable or value
+   */
+
   private isDebugSettingsActive(debugSettings: EntityDebugSettings): boolean {
     return debugSettings.allEnabled || debugSettings.failuresEnabled || debugSettings.allEnabledUntil > new Date().getTime();
   }
+
+  /**
+   * validate.
+   *
+   */
 
   validate() {
     setTimeout(() => {
@@ -1650,6 +1950,12 @@ export class RuleChainPageComponent extends PageComponent
       });
     }, 0);
   }
+
+  /**
+   * POST/PUT entity — save rule chain.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   saveRuleChain(): Observable<any> {
     const saveResult = new ReplaySubject<void>();
@@ -1714,6 +2020,10 @@ export class RuleChainPageComponent extends PageComponent
       });
       this.ruleChainService.saveRuleChainMetadata(ruleChainMetaData)
         .pipe(
+          /**
+           * catch error.
+           *
+           */
           catchError(err => {
             if (err.status === HttpStatusCode.Conflict) {
               return this.ruleChainService.getRuleChainMetadata(ruleChainMetaData.ruleChainId.id);
@@ -1744,6 +2054,11 @@ export class RuleChainPageComponent extends PageComponent
     return saveResult;
   }
 
+  /**
+   * reload rule chain.
+   *
+   */
+
   reloadRuleChain() {
     this.ruleChainService.getRuleChain(this.ruleChain.id.id).subscribe((ruleChain) => {
       this.ruleChain = ruleChain;
@@ -1756,9 +2071,20 @@ export class RuleChainPageComponent extends PageComponent
     });
   }
 
+  /**
+   * revert rule chain.
+   *
+   */
+
   revertRuleChain() {
     this.createRuleChainModel();
   }
+
+  /**
+   * POST/PUT entity — add rule node.
+   *
+   * @param ruleNode rule node (FcRuleNode)
+   */
 
   addRuleNode(ruleNode: FcRuleNode) {
     ruleNode.configuration = deepClone(ruleNode.component.configurationDescriptor.nodeDefinition.defaultConfiguration);
@@ -1804,6 +2130,16 @@ export class RuleChainPageComponent extends PageComponent
     );
   }
 
+  /**
+   * POST/PUT entity — add rule node link.
+   *
+   * @param link link (FcRuleEdge)
+   * @param labels labels ({[label: string]: LinkLabel})
+   * @param allowCustomLabels allow custom labels (boolean)
+   * @param sourceRuleChainId source rule chain id (string)
+   * @returns Observable<FcRuleEdge> observable or value
+   */
+
   addRuleNodeLink(link: FcRuleEdge, labels: {[label: string]: LinkLabel},
                   allowCustomLabels: boolean, sourceRuleChainId: string): Observable<FcRuleEdge> {
     return this.dialog.open<AddRuleNodeLinkDialogComponent, AddRuleNodeLinkDialogData,
@@ -1818,6 +2154,12 @@ export class RuleChainPageComponent extends PageComponent
       }
     }).afterClosed();
   }
+
+  /**
+   * toggle version control.
+   *
+   * @param versionControlButton version control button (MatMiniFabButton)
+   */
 
   toggleVersionControl($event: Event, versionControlButton: MatMiniFabButton) {
     if ($event) {
@@ -1858,6 +2200,11 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * switch to events tab.
+   *
+   */
+
   private switchToEventsTab() {
     if(!this.ruleNodeComponent.ruleNodeFormGroup.dirty) {
       this.selectedRuleNodeTabIndex = 1;
@@ -1865,6 +2212,11 @@ export class RuleChainPageComponent extends PageComponent
       this.openDebugEventsDialog();
     }
   }
+
+  /**
+   * open debug events dialog.
+   *
+   */
 
   private openDebugEventsDialog(): void {
     this.dialog.open<EventsDialogComponent>(EventsDialogComponent, {
@@ -1883,6 +2235,12 @@ export class RuleChainPageComponent extends PageComponent
       .afterClosed()
       .subscribe();
   }
+
+  /**
+   * update node error tooltip.
+   *
+   * @param node node (FcRuleNode)
+   */
 
   private updateNodeErrorTooltip(node: FcRuleNode) {
     if (node.error) {
@@ -1931,6 +2289,12 @@ export class RuleChainPageComponent extends PageComponent
     }
   }
 
+  /**
+   * update error tooltips.
+   *
+   * @param hide hide (boolean)
+   */
+
   private updateErrorTooltips(hide: boolean) {
     for (const nodeId of Object.keys(this.errorTooltips)) {
       const tooltip = this.errorTooltips[nodeId];
@@ -1941,6 +2305,13 @@ export class RuleChainPageComponent extends PageComponent
       }
     }
   }
+
+  /**
+   * display tooltip.
+   *
+   * @param event DOM or Angular event object
+   * @param content content (string)
+   */
 
   private displayTooltip(event: MouseEvent, content: string) {
     this.destroyTooltips();

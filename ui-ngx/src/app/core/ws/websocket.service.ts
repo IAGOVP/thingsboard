@@ -37,11 +37,13 @@ const MAX_RECONNECT_INTERVAL = 60000;
 const WS_IDLE_TIMEOUT = 90000;
 const MAX_PUBLISH_COMMANDS = 10;
 
+
 /**
-
- * Angular HTTP service: websocket REST wrappers (`@core/http`).
-
+ * Angular injectable service: websocket (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 export abstract class WebsocketService<T extends WsSubscriber> implements WsService<T> {
 
@@ -110,10 +112,21 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
 
   abstract processOnMessage(message: WebsocketDataMsg);
 
+  /**
+   * next cmd id.
+   *
+   * @returns number observable or value
+   */
+
   protected nextCmdId(): number {
     this.lastCmdId++;
     return this.lastCmdId;
   }
+
+  /**
+   * publish commands.
+   *
+   */
 
   protected publishCommands() {
     while (this.isOpened && this.cmdWrapper.hasCommands()) {
@@ -125,6 +138,11 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
     }
   }
 
+  /**
+   * check to close.
+   *
+   */
+
   private checkToClose() {
     if (this.subscribersCount === 0 && this.isOpened) {
       if (!this.socketCloseTimer) {
@@ -133,6 +151,12 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
       }
     }
   }
+
+  /**
+   * reset.
+   *
+   * @param close close (boolean)
+   */
 
   private reset(close: boolean) {
     if (this.socketCloseTimer) {
@@ -150,12 +174,22 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
     }
   }
 
+  /**
+   * close socket.
+   *
+   */
+
   private closeSocket() {
     this.isActive = false;
     if (this.isOpened) {
       this.dataStream.unsubscribe();
     }
   }
+
+  /**
+   * try open socket.
+   *
+   */
 
   private tryOpenSocket() {
     if (this.isActive) {
@@ -181,6 +215,12 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
       }
     }
   }
+
+  /**
+   * open socket.
+   *
+   * @param token token (string)
+   */
 
   private openSocket(token: string) {
     const uri = `${this.wsUri}`;
@@ -212,6 +252,12 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
     });
   }
 
+  /**
+   * Event handler for open.
+   *
+   * @param token token (string)
+   */
+
   private onOpen(token: string) {
     this.isOpening = false;
     this.isOpened = true;
@@ -234,6 +280,12 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
     }
   }
 
+  /**
+   * Event handler for message.
+   *
+   * @param message message (CmdUpdateMsg)
+   */
+
   private onMessage(message: CmdUpdateMsg) {
     if (message.errorCode) {
       this.showWsError(message.errorCode, message.errorMsg);
@@ -247,12 +299,23 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
     }
   }
 
+  /**
+   * Event handler for error.
+   *
+   */
+
   private onError(errorEvent) {
     if (errorEvent) {
       console.warn('WebSocket error event', errorEvent);
     }
     this.isOpening = false;
   }
+
+  /**
+   * Event handler for close.
+   *
+   * @param closeEvent close event (CloseEvent)
+   */
 
   private onClose(closeEvent: CloseEvent) {
     // Show error notification only when the error code changes to prevent notification spam,
@@ -285,6 +348,13 @@ export abstract class WebsocketService<T extends WsSubscriber> implements WsServ
       this.reconnectTimer = setTimeout(() => this.tryOpenSocket(), delay);
     }
   }
+
+  /**
+   * show ws error.
+   *
+   * @param errorCode error code (number)
+   * @param errorMsg error msg (string)
+   */
 
   private showWsError(errorCode: number, errorMsg: string) {
     let message = errorMsg;

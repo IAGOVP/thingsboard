@@ -40,8 +40,16 @@ import static org.thingsboard.mqtt.ReconnectStrategyExponential.JITTER_MAX;
  * Unit test for netty-mqtt reconnect strategy exponential.
  */
 
+
 @Slf4j
 class ReconnectStrategyExponentialTest {
+    /**
+     * Exponential reconnect delay test.
+     *
+     * @param reconnectIntervalMinSeconds reconnect interval min seconds
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Execution(ExecutionMode.SAME_THREAD) // just for convenient log reading
     @ParameterizedTest

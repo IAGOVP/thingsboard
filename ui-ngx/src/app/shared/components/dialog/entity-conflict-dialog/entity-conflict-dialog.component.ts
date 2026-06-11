@@ -28,17 +28,22 @@ interface EntityConflictDialogData {
   entity: VersionedEntity;
 }
 
+
+/**
+ * Angular component: entity conflict dialog UI.
+ */
 @Component({
     selector: 'tb-entity-conflict-dialog',
     templateUrl: 'entity-conflict-dialog.component.html',
     styleUrls: ['./entity-conflict-dialog.component.scss'],
     imports: [
     SharedModule
-]
 /**
- * Angular component: entity conflict dialog UI.
+ * Angular component: entity conflict dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-conflict-dialog`.
  */
-})
+]})
 export class EntityConflictDialogComponent {
 
   entityId: EntityId;
@@ -58,17 +63,38 @@ export class EntityConflictDialogComponent {
       : this.defaultEntityLabel;
   }
 
+  /**
+   * Event handler for cancel.
+   *
+   */
+
   onCancel(): void {
     this.dialogRef.close();
   }
+
+  /**
+   * Event handler for discard.
+   *
+   */
 
   onDiscard(): void {
     this.dialogRef.close(false);
   }
 
+  /**
+   * Event handler for confirm.
+   *
+   */
+
   onConfirm(): void {
     this.dialogRef.close(true);
   }
+
+  /**
+   * Event handler for link click.
+   *
+   * @param event DOM or Angular event object
+   */
 
   onLinkClick(event: MouseEvent): void {
     event.preventDefault();

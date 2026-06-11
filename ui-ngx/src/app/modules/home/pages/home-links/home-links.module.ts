@@ -26,6 +26,9 @@ import { HomeComponentsModule } from '@home/components/home-components.module';
 /**
  * Angular NgModule: home links feature area.
  */
+/**
+ * Angular NgModule bundling home links (home/home-links pages).
+ */
 @NgModule({
   declarations:
     [
@@ -36,5 +39,5 @@ import { HomeComponentsModule } from '@home/components/home-components.module';
     SharedModule,
     HomeComponentsModule,
     HomeLinksRoutingModule
-  ]})
+]})
 export class HomeLinksModule { }

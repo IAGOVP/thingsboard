@@ -31,6 +31,12 @@ import { Subject } from 'rxjs';
 import { isDefinedAndNotNull } from '@core/utils';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: notification action button configuration (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-notification-action-button-configuration`.
+ */
 @Component({
     selector: 'tb-notification-action-button-configuration',
     templateUrl: './notification-action-button-configuration.component.html',
@@ -46,10 +52,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: notification action button configuration UI.
- */
+standalone: false
 })
 export class NotificationActionButtonConfigurationComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
 
@@ -133,20 +136,48 @@ export class NotificationActionButtonConfigurationComponent implements ControlVa
     ).subscribe(value => this.propagateChange(value));
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any) {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
@@ -157,6 +188,12 @@ export class NotificationActionButtonConfigurationComponent implements ControlVa
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.actionButtonConfigForm.valid ? null : {
       actionButtonConfigForm: {
@@ -164,6 +201,11 @@ export class NotificationActionButtonConfigurationComponent implements ControlVa
       }
     };
   }
+
+  /**
+   * write value.
+   *
+   */
 
   writeValue(obj) {
     if (isDefinedAndNotNull(obj)) {

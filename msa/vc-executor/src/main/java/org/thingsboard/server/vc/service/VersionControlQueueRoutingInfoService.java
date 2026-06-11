@@ -23,12 +23,22 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Stub {@link QueueRoutingInfoService}: VC service does not host rule-engine queues.
+ * Stub {@link org.thingsboard.server.queue.discovery.QueueRoutingInfoService} for VC executor.
+ *
+ * <p>Returns an empty queue list — VC does not host rule-engine Kafka topics.
  */
+
 @Service
 public class VersionControlQueueRoutingInfoService implements QueueRoutingInfoService {
 
-    /** Empty list — no Kafka rule-engine topics on this service. */
+    
+  /**
+   * Returns empty list — VC executor has no rule-engine queues.
+   *
+   * @return {@link List}
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
     @Override
     public List<QueueRoutingInfo> getAllQueuesRoutingInfo() {
         return Collections.emptyList();

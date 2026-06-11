@@ -35,8 +35,9 @@ import { ActionAuthUpdateLastPublicDashboardId } from '../auth/auth.actions';
 
 export const SETTINGS_KEY = 'SETTINGS';
 /**
- * settings effects.
+ * Settings effects (ThingsBoard web UI).
  */
+
 
 @Injectable()
 export class SettingsEffects {

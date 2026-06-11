@@ -17,11 +17,11 @@
 import { EntityId } from './entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for calculated field id.
-
+ * TypeScript interfaces, types, and enums for calculated field id (shared TypeScript models).
  */
+
 
 export class CalculatedFieldId implements EntityId {
   entityType = EntityType.CALCULATED_FIELD;

@@ -49,14 +49,25 @@ import { Subscription } from 'rxjs';
 import { HistoryWindowType, TimewindowType } from '@shared/models/time/time.models';
 import { isDefined } from '@core/utils';
 
+
+/**
+ * Angular component: date range navigator widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-date-range-navigator-widget`.
+ */
+/**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+/**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 @Component({
     selector: 'tb-date-range-navigator-widget',
     templateUrl: './date-range-navigator.component.html',
     styleUrls: ['./date-range-navigator.component.scss'],
-    standalone: false
-/**
- * Angular component: date range navigator widget UI.
- */
+standalone: false
 })
 export class DateRangeNavigatorWidgetComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -88,8 +99,7 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
               protected store: Store<AppState>) {
     super(store);
   }
-
-  ngOnInit(): void {
+ngOnInit(): void {
     this.settings = this.ctx.settings;
     this.settings.useSessionStorage = isDefined(this.settings.useSessionStorage) ? this.settings.useSessionStorage : true;
     let selection;
@@ -117,13 +127,17 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
       this.widgetContextTimewindowSync();
     });
   }
-
-  ngOnDestroy(): void {
+ngOnDestroy(): void {
     if (this.dashboardTimewindowChangedSubscription) {
       this.dashboardTimewindowChangedSubscription.unsubscribe();
       this.dashboardTimewindowChangedSubscription = null;
     }
   }
+
+  /**
+   * open navigator panel.
+   *
+   */
 
   openNavigatorPanel($event: Event) {
     if ($event) {
@@ -171,6 +185,11 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
     this.ctx.detectChanges();
   }
 
+  /**
+   * widget context timewindow sync.
+   *
+   */
+
   private widgetContextTimewindowSync() {
     if (!this.firstUpdate) {
       this.updateAdvancedModel();
@@ -186,6 +205,11 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
     this.ctx.detectChanges();
   }
 
+  /**
+   * update advanced model.
+   *
+   */
+
   private updateAdvancedModel() {
     const timewindow = this.ctx.dashboardTimewindow;
     if (timewindow.selectedTab === TimewindowType.HISTORY && timewindow.history.historyType === HistoryWindowType.FIXED) {
@@ -196,9 +220,21 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
     }
   }
 
+  /**
+   * update timewindow.
+   *
+   * @param startTime start time (number)
+   * @param endTime end time (number)
+   */
+
   private updateTimewindow(startTime: number, endTime: number) {
    this.ctx.dashboard.onUpdateTimewindow(startTime, endTime, 10, true);
   }
+
+  /**
+   * update date interval.
+   *
+   */
 
   private updateDateInterval() {
     const interval = this.advancedModel.endDate.valueOf() - this.advancedModel.startDate.valueOf();
@@ -217,9 +253,19 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
     this.customInterval = {ts: interval, label: 'Custom interval'};
   }
 
+  /**
+   * trigger change.
+   *
+   */
+
   triggerChange() {
     this.updateTimewindow(this.advancedModel.startDate.valueOf(), this.advancedModel.endDate.valueOf());
   }
+
+  /**
+   * change interval.
+   *
+   */
 
   changeInterval() {
     const endTime = this.ctx.dashboard.dashboardTimewindow.history ?
@@ -228,13 +274,29 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
     this.updateTimewindow(endTime - this.selectedDateInterval / 2, endTime + this.selectedDateInterval / 2);
   }
 
+  /**
+   * go back.
+   *
+   */
+
   goBack() {
     this.step(-1);
   }
 
+  /**
+   * go forth.
+   *
+   */
+
   goForth() {
     this.step(1);
   }
+
+  /**
+   * step.
+   *
+   * @param direction direction (number)
+   */
 
   private step(direction: number) {
     const startTime = this.ctx.dashboard.dashboardTimewindow.history ?
@@ -246,6 +308,13 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
     this.updateTimewindow(startTime + this.selectedStepSize * direction, endTime + this.selectedStepSize * direction);
   }
 
+  /**
+   * read from storage.
+   *
+   * @param itemKey item key (string)
+   * @returns any observable or value
+   */
+
   private readFromStorage(itemKey: string): any {
     if (window.sessionStorage.getItem(itemKey)) {
       const selection = JSON.parse(window.sessionStorage.getItem(itemKey));
@@ -256,6 +325,11 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
     return undefined;
   }
 
+  /**
+   * update storage date.
+   *
+   */
+
   private updateStorageDate() {
     this.saveIntoStorage('date-range', {
       start: this.advancedModel.startDate.valueOf(),
@@ -263,6 +337,13 @@ export class DateRangeNavigatorWidgetComponent extends PageComponent implements 
       name: this.advancedModel.chosenLabel
     });
   }
+
+  /**
+   * POST/PUT entity — save into storage.
+   *
+   * @param keyName key name (string)
+   * @param selection selection (any)
+   */
 
   private saveIntoStorage(keyName: string, selection: any) {
     if (selection) {

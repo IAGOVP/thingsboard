@@ -34,7 +34,13 @@ import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine action node 'unassign from customer': Unassign message originator entity from customer Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>unassign from customer</b>.
+ *
+ * <p>Unassign message originator entity from customer
+ * <br>If the message originator is not assigned to any customer, rule node will do nothing.   
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbUnassignFromCustomerNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/unassign-from-customer/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/unassign-from-customer/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -51,16 +57,37 @@ import org.thingsboard.server.common.msg.TbMsg;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/unassign-from-customer/"
 )
 public class TbUnassignFromCustomerNode extends TbAbstractCustomerActionNode<TbUnassignFromCustomerNodeConfiguration> {
+    /**
+     * Creates customer if not exists.
+     *
+     * @return the boolean result
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected boolean createCustomerIfNotExists() {
         return false;
     }
+    /**
+     * Loads customer node action config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbUnassignFromCustomerNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbUnassignFromCustomerNodeConfiguration loadCustomerNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbUnassignFromCustomerNodeConfiguration.class);
     }
+    /**
+     * Processes customer action.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<Void> processCustomerAction(TbContext ctx, TbMsg msg) {

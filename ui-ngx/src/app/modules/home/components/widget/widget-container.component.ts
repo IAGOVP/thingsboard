@@ -60,11 +60,11 @@ export enum WidgetComponentActionType {
   REPLACE_REFERENCE_WITH_WIDGET_COPY,
 }
 
+
 /**
-
- * widget component action.
-
+ * Widget component action (ThingsBoard web UI).
  */
+
 
 export class WidgetComponentAction {
   event: MouseEvent | TbContextMenuEvent;

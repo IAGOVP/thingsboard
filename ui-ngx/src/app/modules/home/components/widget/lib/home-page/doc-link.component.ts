@@ -28,6 +28,12 @@ import { AppState } from '@core/core.state';
 import { DocumentationLink } from '@shared/models/user-settings.models';
 import { ErrorStateMatcher } from '@angular/material/core';
 
+
+/**
+ * Angular component: doc link (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-doc-link`.
+ */
 @Component({
     selector: 'tb-doc-link',
     templateUrl: './doc-link.component.html',
@@ -40,10 +46,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
         },
         { provide: ErrorStateMatcher, useExisting: DocLinkComponent }
     ],
-    standalone: false
-/**
- * Angular component: doc link UI.
- */
+standalone: false
 })
 export class DocLinkComponent extends PageComponent implements OnInit, ControlValueAccessor, ErrorStateMatcher {
 
@@ -88,6 +91,11 @@ export class DocLinkComponent extends PageComponent implements OnInit, ControlVa
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.addMode = this.addOnly;
     this.editDocLinkFormGroup = this.fb.group({
@@ -97,18 +105,44 @@ export class DocLinkComponent extends PageComponent implements OnInit, ControlVa
     });
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -118,6 +152,12 @@ export class DocLinkComponent extends PageComponent implements OnInit, ControlVa
       this.editDocLinkFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DocumentationLink)
+   */
 
   writeValue(value: DocumentationLink): void {
     this.docLink = value;
@@ -130,6 +170,11 @@ export class DocLinkComponent extends PageComponent implements OnInit, ControlVa
     }
   }
 
+  /**
+   * switch to edit mode.
+   *
+   */
+
   switchToEditMode() {
     if (!this.disableEdit && !this.editMode) {
       this.submitted = false;
@@ -141,6 +186,11 @@ export class DocLinkComponent extends PageComponent implements OnInit, ControlVa
     }
   }
 
+  /**
+   * apply.
+   *
+   */
+
   apply() {
     this.submitted = true;
     this.updateModel();
@@ -151,11 +201,21 @@ export class DocLinkComponent extends PageComponent implements OnInit, ControlVa
     }
   }
 
+  /**
+   * cancel edit.
+   *
+   */
+
   cancelEdit() {
     this.submitted = false;
     this.editMode = false;
     this.editModeChanged.emit(false);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add() {
     this.submitted = true;
@@ -169,18 +229,38 @@ export class DocLinkComponent extends PageComponent implements OnInit, ControlVa
     }
   }
 
+  /**
+   * cancel add.
+   *
+   */
+
   cancelAdd() {
     this.editModeChanged.emit(false);
     this.docLinkAddCanceled.emit();
   }
 
+  /**
+   * DELETE — delete.
+   *
+   */
+
   delete() {
     this.docLinkDeleted.emit();
   }
 
+  /**
+   * is editing.
+   *
+   */
+
   isEditing() {
     return this.editMode || this.addMode;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     if (this.editDocLinkFormGroup.valid) {

@@ -34,6 +34,12 @@ import { isDefinedAndNotNull } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: advanced processing setting row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-advanced-processing-setting-row`.
+ */
 @Component({
     selector: 'tb-advanced-processing-setting-row',
     templateUrl: './advanced-processing-setting-row.component.html',
@@ -46,10 +52,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             useExisting: forwardRef(() => AdvancedProcessingSettingRowComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: advanced processing setting row UI.
- */
+standalone: false
 })
 export class AdvancedProcessingSettingRowComponent implements ControlValueAccessor, Validator {
 
@@ -82,12 +85,30 @@ export class AdvancedProcessingSettingRowComponent implements ControlValueAccess
     ).subscribe((value) => this.propagateChange(value));
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any) {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
@@ -98,11 +119,23 @@ export class AdvancedProcessingSettingRowComponent implements ControlValueAccess
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.processingSettingRowForm.valid ? null : {
       processingSettingRow: false
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (AdvancedProcessingConfig)
+   */
 
   writeValue(value: AdvancedProcessingConfig) {
     if (isDefinedAndNotNull(value)) {
@@ -111,6 +144,11 @@ export class AdvancedProcessingSettingRowComponent implements ControlValueAccess
       this.processingSettingRowForm.patchValue(defaultAdvancedProcessingConfig);
     }
   }
+
+  /**
+   * updated validation.
+   *
+   */
 
   private updatedValidation() {
     if (this.processingSettingRowForm.get('type').value === ProcessingType.DEDUPLICATE) {

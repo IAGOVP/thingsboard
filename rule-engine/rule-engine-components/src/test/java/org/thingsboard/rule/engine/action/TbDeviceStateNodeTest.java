@@ -60,8 +60,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 /**
- * Unit test for tb device state node rule node.
+ * Unit test for tb device state node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbDeviceStateNodeTest {
@@ -79,6 +80,11 @@ public class TbDeviceStateNodeTest {
     private static final DeviceId DEVICE_ID = new DeviceId(UUID.randomUUID());
     private static final long METADATA_TS = 123L;
     private TbMsg msg;
+    /**
+     * Setup.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setup() {
@@ -95,17 +101,32 @@ public class TbDeviceStateNodeTest {
                 .data(JacksonUtil.toString(data))
                 .build();
     }
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
         node = new TbDeviceStateNode();
         config = new TbDeviceStateNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Given default configuration when invoked then correct values are set.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDefaultConfiguration_whenInvoked_thenCorrectValuesAreSet() {
         assertThat(config.getEvent()).isEqualTo(TbMsgType.ACTIVITY_EVENT);
     }
+    /**
+     * Given null event in config when init then throws unrecoverable tb node exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenNullEventInConfig_whenInit_thenThrowsUnrecoverableTbNodeException() {
@@ -115,6 +136,11 @@ public class TbDeviceStateNodeTest {
                 .hasMessage("Event cannot be null!")
                 .matches(e -> ((TbNodeException) e).isUnrecoverable());
     }
+    /**
+     * Given invalid rate limit config when init then uses default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenInvalidRateLimitConfig_whenInit_thenUsesDefaultConfig() {
@@ -134,6 +160,11 @@ public class TbDeviceStateNodeTest {
         String actualRateLimitConfig = (String) ReflectionTestUtils.getField(node, "rateLimitConfig");
         assertThat(actualRateLimitConfig).isEqualTo("1:1,30:60,60:3600");
     }
+    /**
+     * Given msg arrived too fast when on msg then rate limits this msg.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMsgArrivedTooFast_whenOnMsg_thenRateLimitsThisMsg() {
@@ -156,6 +187,11 @@ public class TbDeviceStateNodeTest {
         then(ctxMock).shouldHaveNoMoreInteractions();
         then(deviceStateManagerMock).shouldHaveNoInteractions();
     }
+    /**
+     * Given has non local devices when on partition change then removes entries for non local devices.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenHasNonLocalDevices_whenOnPartitionChange_thenRemovesEntriesForNonLocalDevices() {
@@ -191,6 +227,12 @@ public class TbDeviceStateNodeTest {
             names = {"CONNECT_EVENT", "ACTIVITY_EVENT", "DISCONNECT_EVENT", "INACTIVITY_EVENT"},
             mode = EnumSource.Mode.EXCLUDE
     )
+    /**
+     * Given unsupported event in config when init then throws unrecoverable tb node exception.
+     *
+     * @param unsupportedEvent unsupported event ({@link TbMsgType})
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void givenUnsupportedEventInConfig_whenInit_thenThrowsUnrecoverableTbNodeException(TbMsgType unsupportedEvent) {
         // GIVEN-WHEN-THEN
         assertThatThrownBy(() -> initNode(unsupportedEvent))
@@ -198,6 +240,12 @@ public class TbDeviceStateNodeTest {
                 .hasMessage("Unsupported event: " + unsupportedEvent)
                 .matches(e -> ((TbNodeException) e).isUnrecoverable());
     }
+    /**
+     * Given non device originator when on msg then tells success and no activity actions triggered.
+     *
+     * @param unsupportedType unsupported type ({@link EntityType})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @EnumSource(value = EntityType.class, names = "DEVICE", mode = EnumSource.Mode.EXCLUDE)
@@ -234,6 +282,11 @@ public class TbDeviceStateNodeTest {
 
         then(ctxMock).shouldHaveNoMoreInteractions();
     }
+    /**
+     * Given metadata does not contain ts when on msg then msg ts is used as event ts.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMetadataDoesNotContainTs_whenOnMsg_thenMsgTsIsUsedAsEventTs() {
@@ -263,6 +316,13 @@ public class TbDeviceStateNodeTest {
         // THEN
         then(deviceStateManagerMock).should().onDeviceActivity(eq(TENANT_ID), eq(DEVICE_ID), eq(msgTs), any());
     }
+    /**
+     * Given supported event and device originator when on msg then correct event is sent with correct callback.
+     *
+     * @param supportedEventType supported event type ({@link TbMsgType})
+     * @param actionVerification action verification ({@link BiConsumer})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource

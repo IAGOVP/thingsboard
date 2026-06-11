@@ -33,11 +33,19 @@ import java.util.List;
 
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 /**
- * Base implementation for get entity details node rule nodes.
+ * Abstract base class for get entity details node rule nodes (entity metadata and related-data fetch nodes).
  */
+
 
 @Slf4j
 public abstract class TbAbstractGetEntityDetailsNode<C extends TbAbstractGetEntityDetailsNodeConfiguration, I extends UUIDBased> extends TbAbstractNodeWithFetchTo<C> {
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -46,10 +54,30 @@ public abstract class TbAbstractGetEntityDetailsNode<C extends TbAbstractGetEnti
                 ctx::tellSuccess,
                 t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
     }
+    /**
+     * Returns prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getPrefix();
+    /**
+     * Returns contact based future.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link ContactBased}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract ListenableFuture<? extends ContactBased<I>> getContactBasedFuture(TbContext ctx, TbMsg msg);
+    /**
+     * Checks if details list is not empty or else throw.
+     *
+     * @param detailsList details list ({@link List})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected void checkIfDetailsListIsNotEmptyOrElseThrow(List<ContactBasedEntityDetails> detailsList) throws TbNodeException {
         if (detailsList == null || detailsList.isEmpty()) {

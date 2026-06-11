@@ -26,14 +26,17 @@ import {
 } from '../rule-node-config.models';
 
 
+
+/**
+ * Angular component: math function config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-math-function-config`.
+ */
 @Component({
     selector: 'tb-action-node-math-function-config',
     templateUrl: './math-function-config.component.html',
     styleUrls: ['./math-function-config.component.scss'],
-    standalone: false
-/**
- * Angular component: math function config UI.
- */
+standalone: false
 })
 export class MathFunctionConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -50,9 +53,21 @@ export class MathFunctionConfigComponent extends RuleNodeConfigurationComponent 
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.mathFunctionConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.mathFunctionConfigForm = this.fb.group({
@@ -69,6 +84,12 @@ export class MathFunctionConfigComponent extends RuleNodeConfigurationComponent 
       })
     });
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const operation: MathFunction = this.mathFunctionConfigForm.get('operation').value;
@@ -89,6 +110,12 @@ export class MathFunctionConfigComponent extends RuleNodeConfigurationComponent 
     this.mathFunctionConfigForm.get('customFunction').updateValueAndValidity({emitEvent});
     this.mathFunctionConfigForm.get('result.attributeScope').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected validatorTriggers(): string[] {
     return ['operation', 'result.type'];

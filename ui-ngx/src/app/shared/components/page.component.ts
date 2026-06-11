@@ -22,8 +22,11 @@ import { selectIsLoading } from '@core/interceptors/load.selectors';
 import { delay, share } from 'rxjs/operators';
 import { AbstractControl } from '@angular/forms';
 /**
- * Angular component: page UI.
+ * Angular component: page (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 
 @Directive()
 export abstract class PageComponent implements OnDestroy {
@@ -40,6 +43,12 @@ export abstract class PageComponent implements OnDestroy {
     this.isLoading$ = this.store.pipe(delay(0), select(selectIsLoading), share());
   }
 
+  /**
+   * register disable on load form control.
+   *
+   * @param control control (AbstractControl)
+   */
+
   protected registerDisableOnLoadFormControl(control: AbstractControl) {
     this.disabledOnLoadFormControls.push(control);
     if (!this.loadingSubscription) {
@@ -54,6 +63,11 @@ export abstract class PageComponent implements OnDestroy {
       });
     }
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.loadingSubscription) {

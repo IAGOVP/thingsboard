@@ -22,11 +22,11 @@ import { BackgroundSettings, BackgroundType } from '@shared/models/widget-settin
 import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 import { materialColors } from '@shared/models/material.models';
 
+
 /**
-
- * TypeScript models and enums for api usage settings context.
-
+ * Api usage settings context (ThingsBoard web UI).
  */
+
 
 export interface ApiUsageSettingsContext {
   aliasController: IAliasController;

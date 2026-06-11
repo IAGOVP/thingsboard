@@ -43,6 +43,12 @@ import { isDefinedAndNotNull } from '@core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: mqtt device profile transport configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mqtt-device-profile-transport-configuration`.
+ */
 @Component({
     selector: 'tb-mqtt-device-profile-transport-configuration',
     templateUrl: './mqtt-device-profile-transport-configuration.component.html',
@@ -59,10 +65,7 @@ import { takeUntil } from 'rxjs/operators';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: mqtt device profile transport configuration UI.
- */
+standalone: false
 })
 export class MqttDeviceProfileTransportConfigurationComponent implements ControlValueAccessor, OnInit, OnDestroy, Validator {
 
@@ -83,12 +86,29 @@ export class MqttDeviceProfileTransportConfigurationComponent implements Control
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.mqttDeviceProfileTransportConfigurationFormGroup = this.fb.group({
@@ -140,10 +160,21 @@ export class MqttDeviceProfileTransportConfigurationComponent implements Control
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -164,6 +195,12 @@ export class MqttDeviceProfileTransportConfigurationComponent implements Control
     return this.mqttDeviceProfileTransportConfigurationFormGroup.get('transportPayloadTypeConfiguration.enableCompatibilityWithJsonPayloadFormat').value;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MqttDeviceProfileTransportConfiguration | null)
+   */
+
   writeValue(value: MqttDeviceProfileTransportConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
       this.mqttDeviceProfileTransportConfigurationFormGroup.patchValue(value, {emitEvent: false});
@@ -174,17 +211,35 @@ export class MqttDeviceProfileTransportConfigurationComponent implements Control
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   public validate(c: UntypedFormControl): ValidationErrors | null {
     return (this.mqttDeviceProfileTransportConfigurationFormGroup.valid) ? null : {
       valid: false,
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const configuration = this.mqttDeviceProfileTransportConfigurationFormGroup.getRawValue();
     configuration.type = DeviceTransportType.MQTT;
     this.propagateChange(configuration);
   }
+
+  /**
+   * update transport payload based controls.
+   *
+   * @param type type (TransportPayloadType)
+   */
 
   private updateTransportPayloadBasedControls(type: TransportPayloadType, forceUpdated = false) {
     const transportPayloadTypeForm = this.mqttDeviceProfileTransportConfigurationFormGroup
@@ -216,6 +271,12 @@ export class MqttDeviceProfileTransportConfigurationComponent implements Control
     }
   }
 
+  /**
+   * validation mqtttopic.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private validationMQTTTopic(): ValidatorFn {
     return (c: UntypedFormControl) => {
       const newTopic = c.value;
@@ -246,6 +307,12 @@ export class MqttDeviceProfileTransportConfigurationComponent implements Control
     };
   }
 
+  /**
+   * unique device topic validator.
+   *
+   * @param control control (UntypedFormGroup)
+   */
+
   private uniqueDeviceTopicValidator(control: UntypedFormGroup): { [key: string]: boolean } | null {
     if (control.getRawValue()) {
       const formValue = control.getRawValue() as MqttDeviceProfileTransportConfiguration;
@@ -255,6 +322,13 @@ export class MqttDeviceProfileTransportConfigurationComponent implements Control
     }
     return null;
   }
+
+  /**
+   * get transport payload type.
+   *
+   * @param type type (string)
+   * @returns string observable or value
+   */
 
   getTransportPayloadType(type: string): string {
     return this.transportPayloadTypeTranslations.get(type as TransportPayloadType);

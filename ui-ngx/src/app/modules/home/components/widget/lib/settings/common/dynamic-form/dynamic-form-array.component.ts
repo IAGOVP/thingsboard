@@ -30,6 +30,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { defaultFormPropertyValue, FormProperty } from '@shared/models/dynamic-form.models';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
+
+/**
+ * Angular component: dynamic form array (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dynamic-form-array`.
+ */
 @Component({
     selector: 'tb-dynamic-form-array',
     templateUrl: './dynamic-form-array.component.html',
@@ -47,10 +53,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: dynamic form array UI.
- */
+standalone: false
 })
 export class DynamicFormArrayComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -75,6 +78,11 @@ export class DynamicFormArrayComponent implements ControlValueAccessor, OnInit, 
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.propertiesFormGroup = this.fb.group({
       properties: this.fb.array([])
@@ -90,12 +98,30 @@ export class DynamicFormArrayComponent implements ControlValueAccessor, OnInit, 
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -106,9 +132,21 @@ export class DynamicFormArrayComponent implements ControlValueAccessor, OnInit, 
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param values values (any[] | undefined)
+   */
+
   writeValue(values: any[] | undefined): void {
     this.propertiesFormGroup.setControl('properties', this.preparePropertiesFormArray(values || []), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   public validate(_c: UntypedFormControl) {
     const valid =  this.propertiesFormGroup.valid;
@@ -119,6 +157,12 @@ export class DynamicFormArrayComponent implements ControlValueAccessor, OnInit, 
     };
   }
 
+  /**
+   * property drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   propertyDrop(event: CdkDragDrop<string[]>) {
     const propertiesArray = this.propertiesFormGroup.get('properties') as UntypedFormArray;
     const property = propertiesArray.at(event.previousIndex);
@@ -126,17 +170,42 @@ export class DynamicFormArrayComponent implements ControlValueAccessor, OnInit, 
     propertiesArray.insert(event.currentIndex, property, {emitEvent: true});
   }
 
+  /**
+   * properties form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   propertiesFormArray(): UntypedFormArray {
     return this.propertiesFormGroup.get('properties') as UntypedFormArray;
   }
+
+  /**
+   * track by property.
+   *
+   * @param _index  index (number)
+   * @param propertyControl property control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByProperty(_index: number, propertyControl: AbstractControl): any {
     return propertyControl;
   }
 
+  /**
+   * DELETE — remove property.
+   *
+   * @param index index (number)
+   */
+
   removeProperty(index: number, emitEvent = true) {
     (this.propertiesFormGroup.get('properties') as UntypedFormArray).removeAt(index, {emitEvent});
   }
+
+  /**
+   * POST/PUT entity — add property.
+   *
+   */
 
   addProperty() {
     const property = {
@@ -149,6 +218,13 @@ export class DynamicFormArrayComponent implements ControlValueAccessor, OnInit, 
       propertyControl.updateValueAndValidity();
     });
   }
+
+  /**
+   * prepare properties form array.
+   *
+   * @param values values (any[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private preparePropertiesFormArray(values: any[] | undefined): UntypedFormArray {
     const propertiesControls: Array<AbstractControl> = [];

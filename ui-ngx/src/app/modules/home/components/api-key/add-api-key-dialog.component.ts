@@ -28,14 +28,17 @@ import { ApiKeyInfo } from '@shared/models/api-key.models';
 import { ApiKeysTableDialogData } from '@home/components/api-key/api-keys-table-dialog.component';
 import { DAY } from '@shared/models/time/time.models';
 
+
+/**
+ * Angular component: add api key dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-api-key-dialog`.
+ */
 @Component({
     selector: 'tb-add-api-key-dialog',
     templateUrl: './add-api-key-dialog.component.html',
     styleUrls: ['./add-api-key-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: add api key dialog UI.
- */
+standalone: false
 })
 export class AddApiKeyDialogComponent extends DialogComponent<AddApiKeyDialogComponent, ApiKeyInfo | string> {
 
@@ -59,9 +62,19 @@ export class AddApiKeyDialogComponent extends DialogComponent<AddApiKeyDialogCom
     super(store, router, dialogRef);
   }
 
+  /**
+   * close.
+   *
+   */
+
   close(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     const formValue = this.apiKeyForm.value;
@@ -79,9 +92,19 @@ export class AddApiKeyDialogComponent extends DialogComponent<AddApiKeyDialogCom
     );
   }
 
+  /**
+   * is custom expiration time.
+   *
+   */
+
   isCustomExpirationTime() {
     return this.apiKeyForm.value?.expirationTime === 'custom';
   }
+
+  /**
+   * Event handler for expiration date change.
+   *
+   */
 
   onExpirationDateChange() {
     const customExpirationTimeControl = this.apiKeyForm.get('customExpirationTime');
@@ -91,6 +114,12 @@ export class AddApiKeyDialogComponent extends DialogComponent<AddApiKeyDialogCom
       customExpirationTimeControl.disable({emitEvent: false});
     }
   }
+
+  /**
+   * calc expiration time.
+   *
+   * @returns number observable or value
+   */
 
   private calcExpirationTime(): number {
     const expirationTimeValue = this.apiKeyForm.get('expirationTime').value;

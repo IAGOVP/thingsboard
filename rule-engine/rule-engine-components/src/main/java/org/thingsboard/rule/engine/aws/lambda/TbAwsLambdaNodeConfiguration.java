@@ -20,8 +20,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbAwsLambda rule node.
+ * JSON configuration POJO for {@link TbAwsLambda} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbAwsLambdaNodeConfiguration implements NodeConfiguration<TbAwsLambdaNodeConfiguration> {
@@ -42,6 +45,12 @@ public class TbAwsLambdaNodeConfiguration implements NodeConfiguration<TbAwsLamb
     @Min(0)
     private int requestTimeout;
     private boolean tellFailureIfFuncThrowsExc;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbAwsLambdaNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbAwsLambdaNodeConfiguration defaultConfiguration() {

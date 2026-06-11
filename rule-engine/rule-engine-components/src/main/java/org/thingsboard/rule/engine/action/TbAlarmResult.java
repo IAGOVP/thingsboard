@@ -22,8 +22,9 @@ import lombok.NoArgsConstructor;
 import org.thingsboard.server.common.data.alarm.Alarm;
 import org.thingsboard.server.common.data.alarm.AlarmApiCallResult;
 /**
- * Rule engine component: tb alarm result.
+ * Tb alarm result (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @Data
 @AllArgsConstructor
@@ -46,6 +47,13 @@ public class TbAlarmResult {
         this.isCleared = isCleared;
         this.alarm = alarm;
     }
+    /**
+     * From alarm result.
+     *
+     * @param result result ({@link AlarmApiCallResult})
+     * @return {@link TbAlarmResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TbAlarmResult fromAlarmResult(AlarmApiCallResult result) {
         boolean isSeverityChanged = result.isSeverityChanged();

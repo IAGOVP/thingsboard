@@ -54,6 +54,12 @@ import { DataKeysCallbacks } from './data-keys.component.models';
 import { IAliasController } from '@core/api/widget-api.models';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: data key input (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-data-key-input`.
+ */
 @Component({
     selector: 'tb-data-key-input',
     templateUrl: './data-key-input.component.html',
@@ -66,10 +72,7 @@ import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: data key input UI.
- */
+standalone: false
 })
 export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -185,6 +188,11 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
               private utils: UtilsService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.alarmKeys = [];
     for (const name of Object.keys(alarmFields)) {
@@ -219,6 +227,11 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     this.updateAllowedDataKeys();
   }
 
+  /**
+   * update allowed data keys.
+   *
+   */
+
   private updateAllowedDataKeys() {
     this.allowedDataKeyTypes.length = 0;
     if (this.dataKeyTypes?.length) {
@@ -234,6 +247,11 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
       }
     }
   }
+
+  /**
+   * reset.
+   *
+   */
 
   private reset() {
     if (this.keyInput) {
@@ -278,12 +296,30 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -294,28 +330,66 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DataKey)
+   */
+
   writeValue(value: DataKey): void {
     this.modelValue = (value?.name && value?.type) ? value : null;
     this.keysFormControl.patchValue(this.modelValue ? [this.modelValue] : [], {emitEvent: false});
     this.cd.markForCheck();
   }
 
+  /**
+   * data key has aggregation.
+   *
+   * @returns boolean observable or value
+   */
+
   dataKeyHasAggregation(): boolean {
     return this.widgetType === widgetType.latest && this.modelValue?.type === DataKeyType.timeseries
       && this.modelValue?.aggregationType && this.modelValue?.aggregationType !== AggregationType.NONE;
   }
 
+  /**
+   * data key has postprocessing.
+   *
+   * @returns boolean observable or value
+   */
+
   dataKeyHasPostprocessing(): boolean {
     return !!this.modelValue?.postFuncBody;
   }
+
+  /**
+   * display key fn.
+   *
+   * @param key key (DataKey)
+   * @returns string | undefined observable or value
+   */
 
   displayKeyFn(key?: DataKey): string | undefined {
     return key ? key.name : undefined;
   }
 
+  /**
+   * POST/PUT entity — create key.
+   *
+   * @param name name (string)
+   * @param dataKeyType data key type (DataKeyType)
+   */
+
   createKey(name: string, dataKeyType: DataKeyType = this.dataKeyType) {
     this.addKeyFromChipValue({name: name ? name.trim() : '', type: dataKeyType});
   }
+
+  /**
+   * POST/PUT entity — add key.
+   *
+   * @param event DOM or Angular event object
+   */
 
   addKey(event: MatChipInputEvent): void {
     const value = event.value;
@@ -326,9 +400,19 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     }
   }
 
+  /**
+   * edit key.
+   *
+   */
+
   editKey() {
     this.keyEdit.emit(this.modelValue);
   }
+
+  /**
+   * DELETE — remove key.
+   *
+   */
 
   removeKey() {
     this.modelValue = null;
@@ -336,9 +420,22 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     this.clearKeyChip();
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return text && text.length > 0;
   }
+
+  /**
+   * clear key chip.
+   *
+   * @param value value (string)
+   */
 
   clearKeyChip(value: string = '', focus = true) {
     this.autocomplete.closePanel();
@@ -352,11 +449,23 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     }
   }
 
+  /**
+   * Event handler for key input focus.
+   *
+   */
+
   onKeyInputFocus() {
     if (!this.modelValue?.type) {
       this.keyFormControl.updateValueAndValidity({onlySelf: true, emitEvent: true});
     }
   }
+
+  /**
+   * fetch keys.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   private fetchKeys(searchText?: string): Observable<Array<DataKey>> {
     if (this.keySearchText !== searchText || this.latestKeySearchTextResult === null) {
@@ -369,6 +478,12 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     }
     return of(this.latestKeySearchTextResult);
   }
+
+  /**
+   * get keys.
+   *
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   private getKeys(): Observable<Array<DataKey>> {
     if (this.keyFetchObservable$ === null) {
@@ -398,10 +513,23 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     return this.keyFetchObservable$;
   }
 
+  /**
+   * POST/PUT entity — create data key filter.
+   *
+   * @param query query (string)
+   * @returns (key: DataKey) => boolean observable or value
+   */
+
   private createDataKeyFilter(query: string): (key: DataKey) => boolean {
     const lowercaseQuery = query.toLowerCase();
     return key => key.name.toLowerCase().startsWith(lowercaseQuery);
   }
+
+  /**
+   * POST/PUT entity — add key from chip value.
+   *
+   * @param chip chip (DataKey)
+   */
 
   private addKeyFromChipValue(chip: DataKey) {
     this.modelValue = this.generateKey(chip);
@@ -409,11 +537,21 @@ export class DataKeyInputComponent implements ControlValueAccessor, OnInit, OnCh
     this.clearKeyChip('', false);
   }
 
+  /**
+   * clear key search cache.
+   *
+   */
+
   private clearKeySearchCache() {
     this.keySearchText = '';
     this.keyFetchObservable$ = null;
     this.latestKeySearchTextResult = null;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.keysFormControl.patchValue(this.modelValue ? [this.modelValue] : [], {emitEvent: false});

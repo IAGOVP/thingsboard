@@ -17,14 +17,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { isLocalUrl } from '@core/utils';
 
+
+/**
+ * Angular component: social share panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-social-share-panel`.
+ */
 @Component({
     selector: 'tb-social-share-panel',
     templateUrl: './socialshare-panel.component.html',
     styleUrls: ['./socialshare-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: social share panel UI.
- */
+standalone: false
 })
 export class SocialSharePanelComponent implements OnInit {
 
@@ -43,8 +46,19 @@ export class SocialSharePanelComponent implements OnInit {
   constructor() {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * is share link local.
+   *
+   * @returns boolean observable or value
+   */
 
   isShareLinkLocal(): boolean {
     if (this.shareLink && this.shareLink.length > 0) {

@@ -42,6 +42,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { ValueSourceType } from '@shared/models/widget-settings.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: time series chart thresholds panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-thresholds-panel`.
+ */
 @Component({
     selector: 'tb-time-series-chart-thresholds-panel',
     templateUrl: './time-series-chart-thresholds-panel.component.html',
@@ -59,10 +65,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart thresholds panel UI.
- */
+standalone: false
 })
 export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -100,6 +103,11 @@ export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAcce
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.thresholdsFormGroup = this.fb.group({
       thresholds: [this.fb.array([]), []]
@@ -118,12 +126,30 @@ export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAcce
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -134,10 +160,22 @@ export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAcce
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartThreshold[] | undefined)
+   */
+
   writeValue(value: TimeSeriesChartThreshold[] | undefined): void {
     const thresholds = this.checkLatestDataKeys(value || []);
     this.thresholdsFormGroup.setControl('thresholds', this.prepareThresholdsFormArray(thresholds), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     const valid = this.thresholdsFormGroup.valid;
@@ -148,17 +186,42 @@ export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAcce
     };
   }
 
+  /**
+   * thresholds form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   thresholdsFormArray(): UntypedFormArray {
     return this.thresholdsFormGroup.get('thresholds') as UntypedFormArray;
   }
+
+  /**
+   * track by threshold.
+   *
+   * @param index index (number)
+   * @param thresholdControl threshold control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByThreshold(index: number, thresholdControl: AbstractControl): any {
     return thresholdControl;
   }
 
+  /**
+   * DELETE — remove threshold.
+   *
+   * @param index index (number)
+   */
+
   removeThreshold(index: number) {
     (this.thresholdsFormGroup.get('thresholds') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add threshold.
+   *
+   */
 
   addThreshold() {
     const threshold = mergeDeep<TimeSeriesChartThreshold>({} as TimeSeriesChartThreshold,
@@ -167,6 +230,13 @@ export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAcce
     const thresholdControl = this.fb.control(threshold, [timeSeriesChartThresholdValidator]);
     thresholdsArray.push(thresholdControl);
   }
+
+  /**
+   * prepare thresholds form array.
+   *
+   * @param thresholds thresholds (TimeSeriesChartThreshold[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareThresholdsFormArray(thresholds: TimeSeriesChartThreshold[] | undefined): UntypedFormArray {
     const thresholdsControls: Array<AbstractControl> = [];
@@ -177,6 +247,13 @@ export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAcce
     }
     return this.fb.array(thresholdsControls);
   }
+
+  /**
+   * check latest data keys.
+   *
+   * @param thresholds thresholds (TimeSeriesChartThreshold[])
+   * @returns TimeSeriesChartThreshold[] observable or value
+   */
 
   private checkLatestDataKeys(thresholds: TimeSeriesChartThreshold[]): TimeSeriesChartThreshold[] {
     const result: TimeSeriesChartThreshold[] = [];
@@ -193,6 +270,12 @@ export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAcce
     }
     return result;
   }
+
+  /**
+   * update latest data keys.
+   *
+   * @param thresholds thresholds (TimeSeriesChartThreshold[])
+   */
 
   private updateLatestDataKeys(thresholds: TimeSeriesChartThreshold[]) {
     if (this.datasource) {
@@ -225,6 +308,14 @@ export class TimeSeriesChartThresholdsPanelComponent implements ControlValueAcce
       }
     }
   }
+
+  /**
+   * is threshold key.
+   *
+   * @param d d (DataKey)
+   * @param threshold threshold (TimeSeriesChartThreshold)
+   * @returns boolean observable or value
+   */
 
   private isThresholdKey(d: DataKey, threshold: TimeSeriesChartThreshold): boolean {
     return (d.type === DataKeyType.function && d.label === threshold.latestKey) ||

@@ -65,11 +65,11 @@ import { ImagePipe } from '@shared/pipe/image.pipe';
 import { take, tap } from 'rxjs/operators';
 import ITooltipsterInstance = JQueryTooltipster.ITooltipsterInstance;
 
+
 /**
-
- * leaflet map.
-
+ * Leaflet map (ThingsBoard web UI).
  */
+
 
 export default abstract class LeafletMap {
 
@@ -125,6 +125,11 @@ export default abstract class LeafletMap {
         this.translateService = this.ctx.$injector.get(TranslateService);
         this.initMarkerClusterSettings();
     }
+
+    /**
+     * init marker cluster settings.
+     *
+     */
 
     private initMarkerClusterSettings() {
       const markerClusteringSettings: WidgetMarkerClusteringSettings = this.options;
@@ -188,6 +193,13 @@ export default abstract class LeafletMap {
       }
     }
 
+    /**
+     * select entity without location dialog.
+     *
+     * @param shapes shapes (L.PM.SUPPORTED_SHAPES)
+     * @returns Observable<FormattedData> observable or value
+     */
+
     private selectEntityWithoutLocationDialog(shapes: L.PM.SUPPORTED_SHAPES): Observable<FormattedData> {
       let entities: FormattedData[];
       let labelSettings: LabelSettings;
@@ -237,6 +249,12 @@ export default abstract class LeafletMap {
           }
         }).afterClosed();
     }
+
+    /**
+     * select entity without location.
+     *
+     * @param type type (string)
+     */
 
     private selectEntityWithoutLocation(type: string) {
       this.selectEntityWithoutLocationDialog(type.substring(2)).subscribe((data) => {
@@ -294,9 +312,20 @@ export default abstract class LeafletMap {
       });
     }
 
+    /**
+     * toggle draw mode.
+     *
+     * @param type type (string)
+     */
+
     private toggleDrawMode(type: string) {
       (this.map.pm.Draw[type] as any).toggle();
     }
+
+    /**
+     * POST/PUT entity — add edit control.
+     *
+     */
 
     addEditControl() {
       // Customize edit marker
@@ -492,6 +521,12 @@ export default abstract class LeafletMap {
       });
     }
 
+    /**
+     * set loading.
+     *
+     * @param loading loading (boolean)
+     */
+
     public setLoading(loading: boolean) {
       if (this.loading !== loading) {
         this.loading = loading;
@@ -507,6 +542,12 @@ export default abstract class LeafletMap {
         }
       }
     }
+
+    /**
+     * set map.
+     *
+     * @param map map (L.Map)
+     */
 
     public setMap(map: L.Map) {
         this.map = map;
@@ -549,12 +590,22 @@ export default abstract class LeafletMap {
         this.createdControlButtonTooltip();
     }
 
+    /**
+     * reset state.
+     *
+     */
+
     resetState() {
       if (this.options.initDragMode) {
         this.initDragModeIgnoreUpdateBoundsSet = false;
         this.ignoreUpdateBounds = false;
       }
     }
+
+    /**
+     * POST/PUT entity — created control button tooltip.
+     *
+     */
 
     private createdControlButtonTooltip() {
       import('tooltipster').then(() => {
@@ -601,13 +652,34 @@ export default abstract class LeafletMap {
       });
     }
 
+    /**
+     * POST/PUT entity — create lat lng.
+     *
+     * @param lat lat (number)
+     * @param lng lng (number)
+     * @returns L.LatLng observable or value
+     */
+
     createLatLng(lat: number, lng: number): L.LatLng {
         return L.latLng(lat, lng);
     }
 
+    /**
+     * POST/PUT entity — create bounds.
+     *
+     * @returns L.LatLngBounds observable or value
+     */
+
     createBounds(): L.LatLngBounds {
         return this.map.getBounds();
     }
+
+    /**
+     * extend bounds.
+     *
+     * @param bounds bounds (L.LatLngBounds)
+     * @param polyline polyline (L.Polyline)
+     */
 
     extendBounds(bounds: L.LatLngBounds, polyline: L.Polyline) {
         if (polyline && polyline.getLatLngs() && polyline.getBounds()) {
@@ -615,17 +687,39 @@ export default abstract class LeafletMap {
         }
     }
 
+    /**
+     * invalidate size.
+     *
+     */
+
     invalidateSize() {
         this.map?.invalidateSize(true);
     }
+
+    /**
+     * Event handler for resize.
+     *
+     */
 
     onResize() {
 
     }
 
+    /**
+     * get center.
+     *
+     */
+
     getCenter() {
         return this.map.getCenter();
     }
+
+    /**
+     * fit bounds.
+     *
+     * @param bounds bounds (LatLngBounds)
+     * @param padding padding (PointExpression)
+     */
 
     fitBounds(bounds: LatLngBounds, padding?: PointExpression) {
         if (bounds.isValid()) {
@@ -657,6 +751,12 @@ export default abstract class LeafletMap {
         }
     }
 
+    /**
+     * extract position.
+     *
+     * @param data dialog or route input data
+     */
+
     extractPosition(data: FormattedData): {x: number; y: number} {
       if (!data) {
         return null;
@@ -669,9 +769,24 @@ export default abstract class LeafletMap {
       return {x: lat, y: lng};
     }
 
+    /**
+     * position to lat lng.
+     *
+     * @param position position ({x: number; y: number})
+     * @returns L.LatLng observable or value
+     */
+
     positionToLatLng(position: {x: number; y: number}): L.LatLng {
       return L.latLng(position.x, position.y) as L.LatLng;
     }
+
+    /**
+     * convert position.
+     *
+     * @param data dialog or route input data
+     * @param _dsData  ds data (FormattedData[])
+     * @returns L.LatLng observable or value
+     */
 
     convertPosition(data: FormattedData, _dsData: FormattedData[]): L.LatLng {
       const position = this.extractPosition(data);
@@ -694,6 +809,13 @@ export default abstract class LeafletMap {
         }).filter(el => !!el);
     }
 
+    /**
+     * convert to custom format.
+     *
+     * @param position position (L.LatLng)
+     * @returns object observable or value
+     */
+
     convertToCustomFormat(position: L.LatLng, offset = 0): object {
       position = position ? checkLngLat(position, this.southWest, this.northEast, offset) : {lat: null, lng: null} as L.LatLng;
 
@@ -702,6 +824,13 @@ export default abstract class LeafletMap {
         [this.options.lngKeyName]: position.lng
       };
     }
+
+    /**
+     * convert to polygon format.
+     *
+     * @param points points (Array<any>)
+     * @returns Array<any> observable or value
+     */
 
     convertToPolygonFormat(points: Array<any>): Array<any> {
       if (points.length) {
@@ -717,12 +846,24 @@ export default abstract class LeafletMap {
       return [];
     }
 
+    /**
+     * convert polygon to custom format.
+     *
+     * @param expression expression (any[][])
+     */
+
     convertPolygonToCustomFormat(expression: any[][]): {[key: string]: any} {
       const coordinate = expression ? this.convertToPolygonFormat(expression) : null;
       return {
         [this.options.polygonKeyName]: coordinate
       };
     }
+
+    /**
+     * update data.
+     *
+     * @param drawRoutes draw routes (boolean)
+     */
 
     updateData(drawRoutes: boolean) {
       const data = this.ctx.data;
@@ -737,6 +878,15 @@ export default abstract class LeafletMap {
       }
       this.updateFromData(drawRoutes, formattedData, polyData);
     }
+
+    /**
+     * update from data.
+     *
+     * @param drawRoutes draw routes (boolean)
+     * @param formattedData formatted data (FormattedData[])
+     * @param polyData poly data (FormattedData[][])
+     * @param markerClickCallback marker click callback (any)
+     */
 
     updateFromData(drawRoutes: boolean, formattedData: FormattedData[],
                    polyData: FormattedData[][], markerClickCallback?: any) {
@@ -849,6 +999,11 @@ export default abstract class LeafletMap {
       }
     }
 
+  /**
+   * update bounds internal.
+   *
+   */
+
   private updateBoundsInternal() {
     const bounds = new L.LatLngBounds(null, null);
     if (this.drawRoutes) {
@@ -889,6 +1044,11 @@ export default abstract class LeafletMap {
   }
 
   // Markers
+    /**
+     * update markers.
+     *
+     * @param markersData markers data (FormattedData[])
+     */
     updateMarkers(markersData: FormattedData[], updateBounds = true, callback?) {
       const rawMarkers = markersData.filter(mdata => !!this.extractPosition(mdata));
       const toDelete = new Set(Array.from(this.markers.keys()));
@@ -968,6 +1128,16 @@ export default abstract class LeafletMap {
         this.saveLocation(data, this.convertToCustomFormat(e.target._latlng)).subscribe();
     };
 
+    /**
+     * POST/PUT entity — create marker.
+     *
+     * @param key key (string)
+     * @param data dialog or route input data
+     * @param dataSources data sources (FormattedData[])
+     * @param settings settings (Partial<WidgetMarkersSettings>)
+     * @returns Marker observable or value
+     */
+
     private createMarker(key: string, data: FormattedData, dataSources: FormattedData[], settings: Partial<WidgetMarkersSettings>,
                          updateBounds = true, callback?, snappable = false): Marker {
       const newMarker = new Marker(this, this.convertPosition(data, dataSources), settings, data, dataSources, this.dragMarker, snappable);
@@ -994,6 +1164,16 @@ export default abstract class LeafletMap {
       return newMarker;
     }
 
+    /**
+     * update marker.
+     *
+     * @param key key (string)
+     * @param data dialog or route input data
+     * @param dataSources data sources (FormattedData[])
+     * @param settings settings (Partial<WidgetMarkersSettings>)
+     * @returns Marker observable or value
+     */
+
     private updateMarker(key: string, data: FormattedData, dataSources: FormattedData[], settings: Partial<WidgetMarkersSettings>): Marker {
         const marker: Marker = this.markers.get(key);
         const location = this.convertPosition(data, dataSources);
@@ -1006,6 +1186,13 @@ export default abstract class LeafletMap {
         return marker;
     }
 
+    /**
+     * DELETE — delete marker.
+     *
+     * @param key key (string)
+     * @returns Marker observable or value
+     */
+
     deleteMarker(key: string): Marker {
       const marker = this.markers.get(key);
       const leafletMarker = marker?.leafletMarker;
@@ -1017,6 +1204,12 @@ export default abstract class LeafletMap {
       }
       return marker;
     }
+
+    /**
+     * DELETE — delete polygon.
+     *
+     * @param key key (string)
+     */
 
     deletePolygon(key: string) {
       const polygon = this.polygons.get(key)?.leafletPoly;
@@ -1065,6 +1258,13 @@ export default abstract class LeafletMap {
 
     // Polyline
 
+    /**
+     * update polylines.
+     *
+     * @param polyData poly data (FormattedData[][])
+     * @param dsData ds data (FormattedData[])
+     */
+
     updatePolylines(polyData: FormattedData[][], dsData: FormattedData[], updateBounds = true) {
         const keys: string[] = [];
         polyData.forEach((tsData: FormattedData[], index) => {
@@ -1089,6 +1289,15 @@ export default abstract class LeafletMap {
         });
     }
 
+    /**
+     * POST/PUT entity — create polyline.
+     *
+     * @param data dialog or route input data
+     * @param tsData ts data (FormattedData[])
+     * @param dsData ds data (FormattedData[])
+     * @param settings settings (Partial<WidgetPolylineSettings>)
+     */
+
     createPolyline(data: FormattedData, tsData: FormattedData[], dsData: FormattedData[],
                    settings: Partial<WidgetPolylineSettings>, updateBounds = true) {
         const poly = new Polyline(this.map,
@@ -1099,6 +1308,15 @@ export default abstract class LeafletMap {
         }
         this.polylines.set(data.entityName, poly);
     }
+
+    /**
+     * update polyline.
+     *
+     * @param data dialog or route input data
+     * @param tsData ts data (FormattedData[])
+     * @param dsData ds data (FormattedData[])
+     * @param settings settings (Partial<WidgetPolylineSettings>)
+     */
 
     updatePolyline(data: FormattedData, tsData: FormattedData[], dsData: FormattedData[],
                    settings: Partial<WidgetPolylineSettings>, updateBounds = true) {
@@ -1111,6 +1329,12 @@ export default abstract class LeafletMap {
             this.fitBounds(newBounds);
         }
     }
+
+    /**
+     * DELETE — remove polyline.
+     *
+     * @param name name (string)
+     */
 
     removePolyline(name: string) {
         const poly = this.polylines.get(name);
@@ -1125,10 +1349,23 @@ export default abstract class LeafletMap {
 
     // Polygon
 
+  /**
+   * is valid polygon position.
+   *
+   * @param data dialog or route input data
+   * @returns boolean observable or value
+   */
+
   isValidPolygonPosition(data: FormattedData): boolean {
     return data && ((isNotEmptyStr(data[this.options.polygonKeyName]) && !isJSON(data[this.options.polygonKeyName])
       || Array.isArray(data[this.options.polygonKeyName])));
   }
+
+  /**
+   * update polygons.
+   *
+   * @param polyData poly data (FormattedData[])
+   */
 
   updatePolygons(polyData: FormattedData[], updateBounds = true) {
     const keys: string[] = [];
@@ -1178,6 +1415,14 @@ export default abstract class LeafletMap {
     this.saveLocation(data, this.convertPolygonToCustomFormat(coordinates)).subscribe(() => {});
   };
 
+    /**
+     * POST/PUT entity — create polygon.
+     *
+     * @param polyData poly data (FormattedData)
+     * @param dataSources data sources (FormattedData[])
+     * @param settings settings (Partial<WidgetPolygonSettings>)
+     */
+
     createPolygon(polyData: FormattedData, dataSources: FormattedData[], settings: Partial<WidgetPolygonSettings>,
                   updateBounds = true, snappable = false) {
       const polygon = new Polygon(this, polyData, dataSources, settings, this.dragPolygonVertex, snappable);
@@ -1191,6 +1436,14 @@ export default abstract class LeafletMap {
       this.polygons.set(polyData.entityName, polygon);
     }
 
+    /**
+     * update polygon.
+     *
+     * @param polyData poly data (FormattedData)
+     * @param dataSources data sources (FormattedData[])
+     * @param settings settings (Partial<WidgetPolygonSettings>)
+     */
+
     updatePolygon(polyData: FormattedData, dataSources: FormattedData[], settings: Partial<WidgetPolygonSettings>, updateBounds = true) {
       const poly = this.polygons.get(polyData.entityName);
       const oldBounds = poly.leafletPoly.getBounds();
@@ -1201,6 +1454,12 @@ export default abstract class LeafletMap {
       }
     }
 
+    /**
+     * DELETE — remove polygon.
+     *
+     * @param name name (string)
+     */
+
     removePolygon(name: string) {
       const poly = this.polygons.get(name);
       if (poly) {
@@ -1208,6 +1467,11 @@ export default abstract class LeafletMap {
         this.polygons.delete(name);
       }
     }
+
+    /**
+     * DELETE — remove.
+     *
+     */
 
     remove(): void {
       if (this.map) {
@@ -1220,9 +1484,22 @@ export default abstract class LeafletMap {
     }
 
     // Circle
+    /**
+     * is valid circle.
+     *
+     * @param data dialog or route input data
+     * @returns boolean observable or value
+     */
     isValidCircle(data: FormattedData): boolean {
       return data && isNotEmptyStr(data[this.options.circleKeyName]) && isJSON(data[this.options.circleKeyName]);
     }
+
+    /**
+     * convert circle to custom format.
+     *
+     * @param expression expression (L.LatLng)
+     * @param radius radius (number)
+     */
 
     convertCircleToCustomFormat(expression: L.LatLng, radius: number): {[key: string]: CircleData} {
       let circleDara: CircleData = null;
@@ -1239,6 +1516,13 @@ export default abstract class LeafletMap {
       };
     }
 
+    /**
+     * convert to circle format.
+     *
+     * @param circle circle (CircleData)
+     * @returns CircleData observable or value
+     */
+
     convertToCircleFormat(circle: CircleData): CircleData {
       const centerPoint = checkLngLat(new L.LatLng(circle.latitude, circle.longitude), this.southWest, this.northEast);
       circle.latitude = centerPoint.lat;
@@ -1254,6 +1538,12 @@ export default abstract class LeafletMap {
       const radius = e.layer.getRadius();
       this.saveLocation(data, this.convertCircleToCustomFormat(center, radius)).subscribe(() => {});
     };
+
+    /**
+     * update circle.
+     *
+     * @param circlesData circles data (FormattedData[])
+     */
 
     updateCircle(circlesData: FormattedData[], updateBounds = true) {
       const toDelete = new Set(Array.from(this.circles.keys()));
@@ -1272,6 +1562,13 @@ export default abstract class LeafletMap {
       this.circleData = circlesData;
     }
 
+    /**
+     * updated circle.
+     *
+     * @param data dialog or route input data
+     * @param dataSources data sources (FormattedData[])
+     */
+
     updatedCircle(data: FormattedData, dataSources: FormattedData[], updateBounds = true) {
       const circle = this.circles.get(data.entityName);
       const oldBounds = circle.leafletCircle.getBounds();
@@ -1281,6 +1578,13 @@ export default abstract class LeafletMap {
         this.fitBounds(newBounds);
       }
     }
+
+    /**
+     * POST/PUT entity — created circle.
+     *
+     * @param data dialog or route input data
+     * @param dataSources data sources (FormattedData[])
+     */
 
     createdCircle(data: FormattedData, dataSources: FormattedData[], updateBounds = true) {
       const circle = new Circle(this, data, dataSources, this.options, this.dragCircleVertex, this.options.snappable);
@@ -1293,6 +1597,12 @@ export default abstract class LeafletMap {
       }
       this.circles.set(data.entityName, circle);
     }
+
+    /**
+     * DELETE — remove circle.
+     *
+     * @param name name (string)
+     */
 
     removeCircle(name: string) {
       const circle = this.circles.get(name);

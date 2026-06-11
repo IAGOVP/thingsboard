@@ -19,8 +19,9 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 /**
- * translate default loader.
+ * Translate default loader (ThingsBoard web UI).
  */
+
 
 @Injectable({ providedIn: 'root' })
 export class TranslateDefaultLoader implements TranslateLoader {
@@ -28,6 +29,13 @@ export class TranslateDefaultLoader implements TranslateLoader {
   constructor(private http: HttpClient) {
 
   }
+
+  /**
+   * get translation.
+   *
+   * @param lang lang (string)
+   * @returns Observable<TranslationObject> observable or value
+   */
 
   getTranslation(lang: string): Observable<TranslationObject> {
     return this.http.get<TranslationObject>(`/assets/locale/locale.constant-${lang}.json`);

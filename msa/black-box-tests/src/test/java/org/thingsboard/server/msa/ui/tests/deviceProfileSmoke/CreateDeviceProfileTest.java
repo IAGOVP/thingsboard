@@ -35,17 +35,25 @@ import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.NAME_IS_REQUIRED_MESSAGE;
 import static org.thingsboard.server.msa.ui.utils.Const.SAME_NAME_WARNING_DEVICE_PROFILE_MESSAGE;
 
+
 /**
 
- * Create device profile test.
+ * Black-box test: create device profile (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
     private String name;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -53,6 +61,12 @@ public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -61,6 +75,12 @@ public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
             name = null;
         }
     }
+    /**
+     * Creates device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Create device profile")
@@ -79,6 +99,12 @@ public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.entity(name));
         Assert.assertTrue(profilesPage.entity(name).isDisplayed());
     }
+    /**
+     * Creates device profile with details.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Create device profile")
@@ -116,6 +142,12 @@ public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
         Assert.assertEquals(queue, profilesPage.getQueue());
         Assert.assertEquals(description, profilesPage.getDescription());
     }
+    /**
+     * Creates devise profile with same name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Create device profile")
@@ -137,6 +169,12 @@ public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.addDeviceProfileView());
         Assert.assertTrue(profilesPage.addDeviceProfileView().isDisplayed());
     }
+    /**
+     * Creates device profile without name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Create device profile")
@@ -152,6 +190,12 @@ public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.errorMessage());
         Assert.assertEquals(profilesPage.errorMessage().getText(), NAME_IS_REQUIRED_MESSAGE);
     }
+    /**
+     * Creates devise profile with only space in name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Create device profile")
@@ -169,6 +213,12 @@ public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.addDeviceProfileView());
         Assert.assertTrue(profilesPage.addDeviceProfileView().isDisplayed());
     }
+    /**
+     * Creates device profile without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Create device profile")
@@ -186,6 +236,12 @@ public class CreateDeviceProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.entity(name));
         Assert.assertTrue(profilesPage.entity(name).isDisplayed());
     }
+    /**
+     * Documentation.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Create device profile")

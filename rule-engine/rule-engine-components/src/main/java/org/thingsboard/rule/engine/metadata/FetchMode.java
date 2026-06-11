@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.metadata;
 
+
 /**
 
- * Rule engine component: fetch mode.
+ * Enumerates fetch mode values used by rule engine entity metadata and related-data fetch nodes.
 
  */
+
 
 public enum FetchMode {
 

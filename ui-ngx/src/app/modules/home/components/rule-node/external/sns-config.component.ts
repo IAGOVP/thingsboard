@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: sns config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-sns-config`.
+ */
 @Component({
     selector: 'tb-external-node-sns-config',
     templateUrl: './sns-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: sns config UI.
- */
+standalone: false
 })
 export class SnsConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class SnsConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.snsConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.snsConfigForm = this.fb.group({

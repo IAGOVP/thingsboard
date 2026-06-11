@@ -22,14 +22,17 @@ import { EntityType } from '@shared/models/entity-type.models';
 import { AssetInfo } from '@shared/models/asset.models';
 import { AssetProfileId } from '@shared/models/id/asset-profile-id';
 
+
+/**
+ * Angular component: asset table header (home/asset pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-asset-table-header`.
+ */
 @Component({
     selector: 'tb-asset-table-header',
     templateUrl: './asset-table-header.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: asset table header UI.
- */
+standalone: false
 })
 export class AssetTableHeaderComponent extends EntityTableHeaderComponent<AssetInfo> {
 
@@ -38,6 +41,12 @@ export class AssetTableHeaderComponent extends EntityTableHeaderComponent<AssetI
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * asset profile changed.
+   *
+   * @param assetProfileId asset profile id (AssetProfileId)
+   */
 
   assetProfileChanged(assetProfileId: AssetProfileId) {
     this.entitiesTableConfig.componentsData.assetProfileId = assetProfileId;

@@ -38,9 +38,10 @@ import { KvListConfigComponent } from '@home/components/rule-node/common/kv-list
 
 
 /**
-
  * Angular NgModule: common rule node config feature area.
-
+ */
+/**
+ * Angular NgModule bundling common rule node config (ThingsBoard web UI).
  */
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { KvListConfigComponent } from '@home/components/rule-node/common/kv-list
     AlarmStatusSelectComponent,
     ExampleHintComponent,
     KvListConfigComponent
-  ]})
+
+]})
 
 export class CommonRuleNodeConfigModule {
 }

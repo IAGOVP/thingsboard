@@ -32,6 +32,12 @@ import { RateLimits, rateLimitsArrayToString, stringToRateLimitsArray } from './
 import { isDefinedAndNotNull } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: rate limits list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rate-limits-list`.
+ */
 @Component({
     selector: 'tb-rate-limits-list',
     templateUrl: './rate-limits-list.component.html',
@@ -48,10 +54,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: rate limits list UI.
- */
+standalone: false
 })
 export class RateLimitsListComponent implements ControlValueAccessor, Validator, OnInit {
 
@@ -66,6 +69,11 @@ export class RateLimitsListComponent implements ControlValueAccessor, Validator,
   constructor(private fb: FormBuilder,
               private destroyRef: DestroyRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.rateLimitsListFormGroup = this.fb.group({
       rateLimits: this.fb.array([])
@@ -78,9 +86,20 @@ export class RateLimitsListComponent implements ControlValueAccessor, Validator,
     );
   }
 
+  /**
+   * DELETE — remove rate limits.
+   *
+   * @param index index (number)
+   */
+
   public removeRateLimits(index: number) {
     this.rateLimitsFormArray.removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add rate limits.
+   *
+   */
 
   public addRateLimits() {
     this.rateLimitsFormArray.push(this.fb.group({
@@ -93,9 +112,21 @@ export class RateLimitsListComponent implements ControlValueAccessor, Validator,
     return this.rateLimitsListFormGroup.get('rateLimits') as FormArray<FormGroup>;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
 
   registerOnTouched(_fn: any): void {
   }
@@ -109,11 +140,23 @@ export class RateLimitsListComponent implements ControlValueAccessor, Validator,
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.rateLimitsListFormGroup.valid ? null : {
       rateLimitsList: {valid: false}
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param rateLimits rate limits (string)
+   */
 
   writeValue(rateLimits: string) {
     const rateLimitsControls: Array<FormGroup> = [];
@@ -135,6 +178,12 @@ export class RateLimitsListComponent implements ControlValueAccessor, Validator,
     this.rateLimitsListFormGroup.setControl('rateLimits', this.fb.array(rateLimitsControls), {emitEvent: false});
   }
 
+  /**
+   * update view.
+   *
+   * @param rateLimitsArray rate limits array (Array<RateLimits>)
+   */
+
   private updateView(rateLimitsArray: Array<RateLimits>) {
     if (rateLimitsArray.length > 0) {
       const notNullRateLimits = rateLimitsArray.filter(rateLimits =>
@@ -148,6 +197,12 @@ export class RateLimitsListComponent implements ControlValueAccessor, Validator,
       this.rateLimitsArray = null;
     }
   }
+
+  /**
+   * uniq time required.
+   *
+   * @returns ValidatorFn observable or value
+   */
 
   private uniqTimeRequired(): ValidatorFn {
     return (control: FormControl) => {

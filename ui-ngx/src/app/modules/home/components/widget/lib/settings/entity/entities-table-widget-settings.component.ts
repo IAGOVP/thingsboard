@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { buildPageStepSizeValues } from '@home/components/widget/lib/table-widget.models';
 
+
+/**
+ * Angular component: entities table widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entities-table-widget-settings`.
+ */
 @Component({
     selector: 'tb-entities-table-widget-settings',
     templateUrl: './entities-table-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: entities table widget settings UI.
- */
+standalone: false
 })
 export class EntitiesTableWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -42,9 +45,21 @@ export class EntitiesTableWidgetSettingsComponent extends WidgetSettingsComponen
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.entitiesTableWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -70,11 +85,24 @@ export class EntitiesTableWidgetSettingsComponent extends WidgetSettingsComponen
     };
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     settings.pageStepIncrement = settings.pageStepIncrement ?? settings.defaultPageSize;
     this.pageStepSizeValues = buildPageStepSizeValues(settings.pageStepCount, settings.pageStepIncrement);
     return settings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.entitiesTableWidgetSettingsForm = this.fb.group({
@@ -101,10 +129,23 @@ export class EntitiesTableWidgetSettingsComponent extends WidgetSettingsComponen
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useRowStyleFunction', 'displayPagination', 'displayEntityName', 'displayEntityLabel', 'pageStepCount',
       'pageStepIncrement'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger: string) {
     if (trigger === 'pageStepCount' || trigger === 'pageStepIncrement') {

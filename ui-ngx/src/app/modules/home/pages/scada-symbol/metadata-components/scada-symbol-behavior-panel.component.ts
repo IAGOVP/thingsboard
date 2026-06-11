@@ -34,15 +34,18 @@ import { IAliasController } from '@core/api/widget-api.models';
 import { WidgetActionCallbacks } from '@home/components/widget/action/manage-widget-actions.component.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: scada symbol behavior panel (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-behavior-panel`.
+ */
 @Component({
     selector: 'tb-scada-symbol-behavior-panel',
     templateUrl: './scada-symbol-behavior-panel.component.html',
     styleUrls: ['./scada-symbol-behavior-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol behavior panel UI.
- */
+standalone: false
 })
 export class ScadaSymbolBehaviorPanelComponent implements OnInit {
 
@@ -93,6 +96,11 @@ export class ScadaSymbolBehaviorPanelComponent implements OnInit {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.panelTitle = this.isAdd ? 'scada.behavior.add-behavior' : 'scada.behavior.behavior-settings';
     this.behaviorFormGroup = this.fb.group(
@@ -125,14 +133,29 @@ export class ScadaSymbolBehaviorPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply behavior settings.
+   *
+   */
 
   applyBehaviorSettings() {
     const behavior = this.behaviorFormGroup.getRawValue();
     this.behaviorSettingsApplied.emit(behavior);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const type: ScadaSymbolBehaviorType = this.behaviorFormGroup.get('type').value;

@@ -31,11 +31,11 @@ import { DataEntry, DataKey, DatasourceData } from '@shared/models/widget.models
 import { Injector } from '@angular/core';
 import { UnitService } from '@core/services/unit.service';
 
+
 /**
-
- * TypeScript models and enums for aggregated value card widget settings.
-
+ * Aggregated value card widget settings (ThingsBoard web UI).
  */
+
 
 export interface AggregatedValueCardWidgetSettings {
   autoScale: boolean;

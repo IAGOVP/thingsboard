@@ -39,6 +39,12 @@ import { getAce } from '@shared/models/ace/ace.models';
 import { beautifyJs } from '@shared/models/beautify.models';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: json content (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-json-content`.
+ */
 @Component({
     selector: 'tb-json-content',
     templateUrl: './json-content.component.html',
@@ -56,10 +62,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: json content UI.
- */
+standalone: false
 })
 export class JsonContentComponent implements OnInit, ControlValueAccessor, Validator, OnChanges, OnDestroy {
 
@@ -121,6 +124,11 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const editorElement = this.jsonEditorElmRef.nativeElement;
     let mode = 'text';
@@ -171,10 +179,20 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
     );
   }
 
+  /**
+   * POST/PUT entity — create placeholder.
+   *
+   */
+
   private createPlaceholder() {
     this.jsonEditor.on('input', this.updateEditorPlaceholder.bind(this));
     setTimeout(this.updateEditorPlaceholder.bind(this), 100);
   }
+
+  /**
+   * update editor placeholder.
+   *
+   */
 
   private updateEditorPlaceholder() {
     const shouldShow = !this.jsonEditor.session.getValue().length;
@@ -204,6 +222,11 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.editorResize$) {
       this.editorResize$.disconnect();
@@ -212,6 +235,11 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
       this.jsonEditor.destroy();
     }
   }
+
+  /**
+   * Event handler for ace editor resize.
+   *
+   */
 
   private onAceEditorResize() {
     if (this.editorsResizeCaf) {
@@ -241,12 +269,30 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -255,6 +301,12 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return (this.contentValid) ? null : {
       contentBody: {
@@ -262,6 +314,11 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
       },
     };
   }
+
+  /**
+   * validate on submit.
+   *
+   */
 
   validateOnSubmit(): void {
     if (!this.disabled && !this.readonly) {
@@ -273,6 +330,12 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * do validate.
+   *
+   * @returns boolean observable or value
+   */
 
   private doValidate(showErrorToast = false): boolean {
     try {
@@ -303,6 +366,11 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * cleanup json errors.
+   *
+   */
+
   cleanupJsonErrors(): void {
     if (this.errorShowed) {
       this.store.dispatch(new ActionNotificationHide(
@@ -312,6 +380,12 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
       this.errorShowed = false;
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
 
   writeValue(value: string): void {
     this.contentBody = value;
@@ -323,6 +397,11 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   updateView() {
     const editorValue = this.jsonEditor.getValue();
     if (this.contentBody !== editorValue) {
@@ -333,6 +412,11 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * beautify json.
+   *
+   */
+
   beautifyJSON() {
     beautifyJs(this.contentBody, {indent_size: 4, wrap_line_length: 60}).subscribe(
       (res) => {
@@ -342,11 +426,21 @@ export class JsonContentComponent implements OnInit, ControlValueAccessor, Valid
     );
   }
 
+  /**
+   * minify json.
+   *
+   */
+
   minifyJSON() {
     const res = JSON.stringify(this.contentBody);
     this.jsonEditor.setValue(res ? res : '', -1);
     this.updateView();
   }
+
+  /**
+   * Event handler for fullscreen.
+   *
+   */
 
   onFullscreen() {
     if (this.jsonEditor) {

@@ -18,11 +18,13 @@ package org.thingsboard.server.msa.ui.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+
 /**
 
- * Open rule chain page helper.
+ * Page object helper for open rule chain page UI actions (page object element locators and helpers — Selenium page objects).
 
  */
+
 
 public class OpenRuleChainPageHelper extends OpenRuleChainPageElements {
     public OpenRuleChainPageHelper(WebDriver driver) {
@@ -30,14 +32,33 @@ public class OpenRuleChainPageHelper extends OpenRuleChainPageElements {
     }
 
     private String headName;
+    /**
+     * Set head name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void setHeadName() {
         this.headName = headRuleChainName().getText().split(" ")[1];
     }
+    /**
+     * Returns head name.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getHeadName() {
         return headName;
     }
+    /**
+     * Wait until btn disable.
+     *
+     * @param element element ({@link WebElement})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void waitUntilBtnDisable(WebElement element) {
         waitUntilAttributeContains(element, "disabled", "true");

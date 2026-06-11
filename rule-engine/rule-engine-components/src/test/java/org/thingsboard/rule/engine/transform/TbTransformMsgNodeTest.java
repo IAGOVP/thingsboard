@@ -42,8 +42,9 @@ import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb transform msg node rule node.
+ * Unit test for tb transform msg node (message transformation and originator change nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbTransformMsgNodeTest {
@@ -54,6 +55,11 @@ public class TbTransformMsgNodeTest {
     private TbContext ctx;
     @Mock
     private ScriptEngine scriptEngine;
+    /**
+     * Metadata can be updated.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void metadataCanBeUpdated() throws TbNodeException {
@@ -90,6 +96,11 @@ public class TbTransformMsgNodeTest {
         TbMsg actualMsg = captor.getValue();
         assertEquals(transformedMsg, actualMsg);
     }
+    /**
+     * Exception handled correctly.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void exceptionHandledCorrectly() throws TbNodeException {

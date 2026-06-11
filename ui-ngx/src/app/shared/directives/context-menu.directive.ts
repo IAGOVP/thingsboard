@@ -17,12 +17,16 @@
 import { Directive, ElementRef, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { TbContextMenuEvent } from '@shared/models/jquery-event.models';
 
-@Directive({
-    selector: '[tbcontextmenu]',
-    standalone: false
+
 /**
  * Angular directive: context menu.
  */
+@Directive({
+    selector: '[tbcontextmenu]',
+/**
+ * Angular directive: context menu (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class ContextMenuDirective implements OnDestroy {
 
@@ -32,6 +36,11 @@ export class ContextMenuDirective implements OnDestroy {
   constructor(private el: ElementRef) {
     $(this.el.nativeElement).on('tbcontextmenu', (e: TbContextMenuEvent) => this.tbcontextmenu.emit(e));
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     $(this.el.nativeElement).off('tbcontextmenu');

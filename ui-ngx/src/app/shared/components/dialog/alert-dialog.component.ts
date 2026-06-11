@@ -28,14 +28,17 @@ export interface AlertDialogData {
   textMode?: boolean;
 }
 
+
+/**
+ * Angular component: alert dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alert-dialog`.
+ */
 @Component({
     selector: 'tb-alert-dialog',
     templateUrl: './alert-dialog.component.html',
     styleUrls: ['./alert-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: alert dialog UI.
- */
+standalone: false
 })
 export class AlertDialogComponent extends DialogComponent<AlertDialogComponent, boolean>{
   constructor(protected store: Store<AppState>,

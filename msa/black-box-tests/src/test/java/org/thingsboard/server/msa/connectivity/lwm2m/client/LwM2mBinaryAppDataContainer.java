@@ -35,8 +35,9 @@ import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 /**
- * Lw m2m binary app data container.
+ * Lw m2m binary app data container (black-box test infrastructure — LwM2M transport tests).
  */
+
 
 
 @Slf4j

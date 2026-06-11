@@ -23,14 +23,17 @@ import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
 import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
 import { WidgetTypeDetails } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: widget type (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-type`.
+ */
 @Component({
     selector: 'tb-widget-type',
     templateUrl: './widget-type.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: widget type UI.
- */
+standalone: false
 })
 export class WidgetTypeComponent extends EntityComponent<WidgetTypeDetails> {
 
@@ -42,6 +45,11 @@ export class WidgetTypeComponent extends EntityComponent<WidgetTypeDetails> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -49,6 +57,13 @@ export class WidgetTypeComponent extends EntityComponent<WidgetTypeDetails> {
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (WidgetTypeDetails)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: WidgetTypeDetails): UntypedFormGroup {
     return this.fb.group(
@@ -62,6 +77,12 @@ export class WidgetTypeComponent extends EntityComponent<WidgetTypeDetails> {
       }
     );
   }
+
+  /**
+   * update form.
+   *
+   * @param entity entity (WidgetTypeDetails)
+   */
 
   updateForm(entity: WidgetTypeDetails) {
     this.entityForm.patchValue({

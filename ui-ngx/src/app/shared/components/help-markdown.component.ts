@@ -27,14 +27,17 @@ import { HelpService } from '@core/services/help.service';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { base64toString } from '@core/utils';
 
+
+/**
+ * Angular component: help markdown (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-help-markdown`.
+ */
 @Component({
     selector: 'tb-help-markdown',
     templateUrl: './help-markdown.component.html',
     styleUrls: ['./help-markdown.component.scss'],
-    standalone: false
-/**
- * Angular component: help markdown UI.
- */
+standalone: false
 })
 export class HelpMarkdownComponent implements OnDestroy, OnInit, OnChanges {
 
@@ -64,9 +67,19 @@ export class HelpMarkdownComponent implements OnDestroy, OnInit, OnChanges {
 
   constructor(private help: HelpService) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.loadHelpWhenVisible();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     this.markdownText.complete();
@@ -90,6 +103,11 @@ export class HelpMarkdownComponent implements OnDestroy, OnInit, OnChanges {
     }
   }
 
+  /**
+   * load help when visible.
+   *
+   */
+
   private loadHelpWhenVisible() {
     if (this.visible) {
       this.loadHelp();
@@ -97,6 +115,11 @@ export class HelpMarkdownComponent implements OnDestroy, OnInit, OnChanges {
       this.loadHelpPending = true;
     }
   }
+
+  /**
+   * load help.
+   *
+   */
 
   private loadHelp() {
     if (this.helpId) {
@@ -114,9 +137,19 @@ export class HelpMarkdownComponent implements OnDestroy, OnInit, OnChanges {
     }
   }
 
+  /**
+   * Event handler for markdown ready.
+   *
+   */
+
   onMarkdownReady() {
     this.markdownReady.next();
   }
+
+  /**
+   * markdown click.
+   *
+   */
 
   markdownClick($event: MouseEvent) {
   }

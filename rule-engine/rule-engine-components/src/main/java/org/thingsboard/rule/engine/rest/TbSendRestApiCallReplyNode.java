@@ -28,7 +28,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.UUID;
 
 /**
- * Rule engine action node 'rest call reply': Sends reply to REST API call to rule engine Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>rest call reply</b>.
+ *
+ * <p>Sends reply to REST API call to rule engine
+ * <br>Expects messages with any message type. Forwards incoming message as a reply to REST API call sent to rule engine.
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbSendRestApiCallReplyNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/rest-call-reply/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/rest-call-reply/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -43,11 +49,25 @@ import java.util.UUID;
 public class TbSendRestApiCallReplyNode implements TbNode {
 
     private TbSendRestApiCallReplyNodeConfiguration config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         config = TbNodeUtils.convert(configuration, TbSendRestApiCallReplyNodeConfiguration.class);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

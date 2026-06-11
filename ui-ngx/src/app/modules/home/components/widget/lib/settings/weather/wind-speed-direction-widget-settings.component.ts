@@ -30,14 +30,17 @@ import {
 import { getDataKey } from '@shared/models/widget-settings.models';
 import { getSourceTbUnitSymbol, TbUnit } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: wind speed direction widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-wind-speed-direction-widget-settings`.
+ */
 @Component({
     selector: 'tb-wind-speed-direction-widget-settings',
     templateUrl: './wind-speed-direction-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: wind speed direction widget settings UI.
- */
+standalone: false
 })
 export class WindSpeedDirectionWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -69,13 +72,31 @@ export class WindSpeedDirectionWidgetSettingsComponent extends WidgetSettingsCom
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.windSpeedDirectionWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return windSpeedDirectionDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.windSpeedDirectionWidgetSettingsForm = this.fb.group({
@@ -100,9 +121,21 @@ export class WindSpeedDirectionWidgetSettingsComponent extends WidgetSettingsCom
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['layout'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const layout: WindSpeedDirectionLayout = this.windSpeedDirectionWidgetSettingsForm.get('layout').value;

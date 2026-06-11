@@ -16,11 +16,11 @@
 
 import { TranslateService } from '@ngx-translate/core';
 
+
 /**
-
- * TypeScript models and enums for rate limits.
-
+ * Rate limits (ThingsBoard web UI).
  */
+
 
 export interface RateLimits {
   value: number;

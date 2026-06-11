@@ -53,6 +53,9 @@ import {
 /**
  * Angular NgModule: action rule node config feature area.
  */
+/**
+ * Angular NgModule bundling action rule node config (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     DeleteAttributesConfigComponent,
@@ -111,6 +114,6 @@ import {
     PushToCloudConfigComponent,
     MathFunctionConfigComponent,
     DeviceStateConfigComponent
-  ]})
+]})
 export class ActionRuleNodeConfigModule {
 }

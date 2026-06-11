@@ -90,8 +90,9 @@ interface DevicePageQueryParams extends PageQueryParam {
   active?: boolean | string;
 }
 /**
- * Route resolver: loads devices table config before activate.
+ * Route resolver: preloads data for devices table config (home/device pages).
  */
+
 
 @Injectable()
 export class DevicesTableConfigResolver  {
@@ -140,6 +141,13 @@ export class DevicesTableConfigResolver  {
     this.config.headerComponent = DeviceTableHeaderComponent;
 
   }
+
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<EntityTableConfig<DeviceInfo>> observable or value
+   */
 
   resolve(route: ActivatedRouteSnapshot): Observable<EntityTableConfig<DeviceInfo>> {
     const routeParams = route.params;
@@ -193,6 +201,12 @@ export class DevicesTableConfigResolver  {
     );
   }
 
+  /**
+   * Event handler for load action.
+   *
+   * @param route route (ActivatedRoute)
+   */
+
   onLoadAction(route: ActivatedRoute): void {
     const routerQueryParams: DevicePageQueryParams = route.snapshot.queryParams;
     if (routerQueryParams) {
@@ -219,6 +233,13 @@ export class DevicesTableConfigResolver  {
     }
   }
 
+  /**
+   * configure columns.
+   *
+   * @param deviceScope device scope (string)
+   * @returns Array<EntityTableColumn<DeviceInfo>> observable or value
+   */
+
   configureColumns(deviceScope: string): Array<EntityTableColumn<DeviceInfo>> {
     const columns: Array<EntityTableColumn<DeviceInfo>> = [
       new DateEntityTableColumn<DeviceInfo>('createdTime', 'common.created-time', this.datePipe, '150px'),
@@ -242,6 +263,13 @@ export class DevicesTableConfigResolver  {
     return columns;
   }
 
+  /**
+   * device state.
+   *
+   * @param device device (DeviceInfo)
+   * @returns string observable or value
+   */
+
   private deviceState(device: DeviceInfo): string {
     let translateKey = 'device.active';
     let backgroundColor = 'rgba(25, 128, 56, 0.08)';
@@ -255,6 +283,13 @@ export class DevicesTableConfigResolver  {
             </div>`;
   }
 
+  /**
+   * device state style.
+   *
+   * @param device device (DeviceInfo)
+   * @returns object observable or value
+   */
+
   private deviceStateStyle(device: DeviceInfo): object {
     const styleObj = {
       fontSize: '14px',
@@ -267,6 +302,12 @@ export class DevicesTableConfigResolver  {
     return styleObj;
   }
 
+  /**
+   * configure entity functions.
+   *
+   * @param deviceScope device scope (string)
+   */
+
   configureEntityFunctions(deviceScope: string): void {
     this.config.entitiesFetchFunction = pageLink => this.deviceService.getDeviceInfosByQuery(this.prepareDeviceInfoQuery(pageLink));
     if (deviceScope === 'tenant') {
@@ -275,6 +316,13 @@ export class DevicesTableConfigResolver  {
       this.config.deleteEntity = () => of();
     }
   }
+
+  /**
+   * prepare device info query.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns DeviceInfoQuery observable or value
+   */
 
   prepareDeviceInfoQuery(pageLink: PageLink): DeviceInfoQuery {
     const deviceInfoFilter: DeviceInfoFilter = deepClone(this.config.componentsData.deviceInfoFilter);
@@ -285,6 +333,13 @@ export class DevicesTableConfigResolver  {
     }
     return new DeviceInfoQuery(pageLink, deviceInfoFilter);
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @param deviceScope device scope (string)
+   * @returns Array<CellActionDescriptor<DeviceInfo>> observable or value
+   */
 
   configureCellActions(deviceScope: string): Array<CellActionDescriptor<DeviceInfo>> {
     const actions: Array<CellActionDescriptor<DeviceInfo>> = [];
@@ -367,6 +422,13 @@ export class DevicesTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * configure group actions.
+   *
+   * @param deviceScope device scope (string)
+   * @returns Array<GroupActionDescriptor<DeviceInfo>> observable or value
+   */
+
   configureGroupActions(deviceScope: string): Array<GroupActionDescriptor<DeviceInfo>> {
     const actions: Array<GroupActionDescriptor<DeviceInfo>> = [];
     if (deviceScope === 'tenant') {
@@ -401,6 +463,13 @@ export class DevicesTableConfigResolver  {
     }
     return actions;
   }
+
+  /**
+   * configure add actions.
+   *
+   * @param deviceScope device scope (string)
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
 
   configureAddActions(deviceScope: string): Array<HeaderActionDescriptor> {
     this.config.addEntity = null;
@@ -445,6 +514,13 @@ export class DevicesTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * open device.
+   *
+   * @param device device (Device)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   private openDevice($event: Event, device: Device, config: EntityTableConfig<DeviceInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -452,6 +528,11 @@ export class DevicesTableConfigResolver  {
     const url = this.router.createUrlTree([device.id.id], {relativeTo: config.getActivatedRoute()});
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * import devices.
+   *
+   */
 
   importDevices($event: Event) {
     this.homeDialogs.importEntities(EntityType.DEVICE).subscribe((res) => {
@@ -461,6 +542,11 @@ export class DevicesTableConfigResolver  {
       }
     });
   }
+
+  /**
+   * device wizard.
+   *
+   */
 
   deviceWizard($event: Event) {
     this.dialog.open<DeviceWizardDialogComponent, AddEntityDialogData<BaseData<HasId>>,
@@ -484,6 +570,11 @@ export class DevicesTableConfigResolver  {
     );
   }
 
+  /**
+   * POST/PUT entity — add devices to customer.
+   *
+   */
+
   addDevicesToCustomer($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -503,6 +594,12 @@ export class DevicesTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * make public.
+   *
+   * @param device device (Device)
+   */
 
   makePublic($event: Event, device: Device) {
     if ($event) {
@@ -526,6 +623,12 @@ export class DevicesTableConfigResolver  {
     );
   }
 
+  /**
+   * assign to customer.
+   *
+   * @param deviceIds device ids (Array<DeviceId>)
+   */
+
   assignToCustomer($event: Event, deviceIds: Array<DeviceId>) {
     if ($event) {
       $event.stopPropagation();
@@ -545,6 +648,12 @@ export class DevicesTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * unassign from customer.
+   *
+   * @param device device (DeviceInfo)
+   */
 
   unassignFromCustomer($event: Event, device: DeviceInfo) {
     if ($event) {
@@ -578,6 +687,12 @@ export class DevicesTableConfigResolver  {
     );
   }
 
+  /**
+   * unassign devices from customer.
+   *
+   * @param devices devices (Array<DeviceInfo>)
+   */
+
   unassignDevicesFromCustomer($event: Event, devices: Array<DeviceInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -606,6 +721,12 @@ export class DevicesTableConfigResolver  {
     );
   }
 
+  /**
+   * manage credentials.
+   *
+   * @param device device (Device)
+   */
+
   manageCredentials($event: Event, device: Device) {
     if ($event) {
       $event.stopPropagation();
@@ -626,6 +747,14 @@ export class DevicesTableConfigResolver  {
       }
     });
   }
+
+  /**
+   * Event handler for device action.
+   *
+   * @param action action (EntityAction<DeviceInfo>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
 
   onDeviceAction(action: EntityAction<DeviceInfo>, config: EntityTableConfig<DeviceInfo>): boolean {
     switch (action.action) {
@@ -654,6 +783,11 @@ export class DevicesTableConfigResolver  {
     return false;
   }
 
+  /**
+   * POST/PUT entity — add devices to edge.
+   *
+   */
+
   addDevicesToEdge($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -673,6 +807,12 @@ export class DevicesTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * unassign from edge.
+   *
+   * @param device device (DeviceInfo)
+   */
 
   unassignFromEdge($event: Event, device: DeviceInfo) {
     if ($event) {
@@ -695,6 +835,12 @@ export class DevicesTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * unassign devices from edge.
+   *
+   * @param devices devices (Array<DeviceInfo>)
+   */
 
   unassignDevicesFromEdge($event: Event, devices: Array<DeviceInfo>) {
     if ($event) {
@@ -723,6 +869,12 @@ export class DevicesTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * check connectivity.
+   *
+   * @param deviceId device UUID
+   */
 
   checkConnectivity($event: Event, deviceId: EntityId, afterAdd = false) {
     if ($event) {

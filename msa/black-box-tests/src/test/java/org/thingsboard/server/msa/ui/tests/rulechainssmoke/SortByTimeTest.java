@@ -23,11 +23,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultRuleChainPrototype;
 /**
- * Sort by time test.
+ * Black-box test: sort by time (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Sort rule chain by time")
 public class SortByTimeTest extends AbstractRuleChainTest {
+    /**
+     * Sort by time down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Sort rule chain 'DOWN'")
@@ -43,6 +50,12 @@ public class SortByTimeTest extends AbstractRuleChainTest {
         assertThat(firstListElement).as("Last in list is last created").isEqualTo(lastCreated);
         assertIsDisplayed(ruleChainsPage.createdTimeEntity(ruleChainName, lastCreated));
     }
+    /**
+     * Sort by time up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Sort rule chain 'UP'")

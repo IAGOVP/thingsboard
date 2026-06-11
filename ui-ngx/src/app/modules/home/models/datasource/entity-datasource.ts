@@ -24,11 +24,11 @@ import { EntityBooleanFunction } from '@home/models/entity/entities-table-config
 
 export type EntitiesFetchFunction<T extends BaseData<HasId>, P extends PageLink> = (pageLink: P) => Observable<PageData<T>>;
 
+
 /**
-
- * TypeScript models and enums for entities data source.
-
+ * TypeScript interfaces, types, and enums for entities data source (ThingsBoard web UI).
  */
+
 
 export class EntitiesDataSource<T extends BaseData<HasId>, P extends PageLink = PageLink> implements DataSource<T> {
 
@@ -48,14 +48,32 @@ export class EntitiesDataSource<T extends BaseData<HasId>, P extends PageLink = 
               protected selectionEnabledFunction: EntityBooleanFunction<T>,
               protected dataLoadedFunction: (col?: number, row?: number) => void) {}
 
+  /**
+   * connect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   * @returns Observable<T[] | ReadonlyArray<T>> observable or value
+   */
+
   connect(collectionViewer: CollectionViewer): Observable<T[] | ReadonlyArray<T>> {
     return this.entitiesSubject.asObservable();
   }
+
+  /**
+   * disconnect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   */
 
   disconnect(collectionViewer: CollectionViewer): void {
     this.entitiesSubject.complete();
     this.pageDataSubject.complete();
   }
+
+  /**
+   * reset.
+   *
+   */
 
   reset() {
     const pageData = emptyPageData<T>();
@@ -63,6 +81,13 @@ export class EntitiesDataSource<T extends BaseData<HasId>, P extends PageLink = 
     this.pageDataSubject.next(pageData);
     this.dataLoadedFunction();
   }
+
+  /**
+   * load entities.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<T>> observable or value
+   */
 
   loadEntities(pageLink: P): Observable<PageData<T>> {
     if (this.currentLoadSubscription) {
@@ -87,9 +112,21 @@ export class EntitiesDataSource<T extends BaseData<HasId>, P extends PageLink = 
     return result;
   }
 
+  /**
+   * Event handler for entities.
+   *
+   * @param entities entities (T[])
+   */
+
   protected onEntities(entities: T[]) {
     this.entitiesSubject.next(entities);
   }
+
+  /**
+   * is all selected.
+   *
+   * @returns Observable<boolean> observable or value
+   */
 
   isAllSelected(): Observable<boolean> {
     const numSelected = this.selection.selected.length;
@@ -99,6 +136,12 @@ export class EntitiesDataSource<T extends BaseData<HasId>, P extends PageLink = 
     );
   }
 
+  /**
+   * is empty.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isEmpty(): Observable<boolean> {
     return this.entitiesSubject.pipe(
       map((entities) => !entities.length),
@@ -106,12 +149,25 @@ export class EntitiesDataSource<T extends BaseData<HasId>, P extends PageLink = 
     );
   }
 
+  /**
+   * total.
+   *
+   * @returns Observable<number> observable or value
+   */
+
   total(): Observable<number> {
     return this.pageDataSubject.pipe(
       map((pageData) => pageData.totalElements),
       share()
     );
   }
+
+  /**
+   * toggle current entity.
+   *
+   * @param entity entity (T)
+   * @returns boolean observable or value
+   */
 
   toggleCurrentEntity(entity: T): boolean {
     if (this.currentEntity !== entity) {
@@ -122,10 +178,22 @@ export class EntitiesDataSource<T extends BaseData<HasId>, P extends PageLink = 
     }
   }
 
+  /**
+   * is current entity.
+   *
+   * @param entity entity (T)
+   * @returns boolean observable or value
+   */
+
   isCurrentEntity(entity: T): boolean {
     return (this.currentEntity && entity && this.currentEntity.id && entity.id) &&
       (this.currentEntity.id.id === entity.id.id);
   }
+
+  /**
+   * master toggle.
+   *
+   */
 
   masterToggle() {
     this.entitiesSubject.pipe(
@@ -144,6 +212,13 @@ export class EntitiesDataSource<T extends BaseData<HasId>, P extends PageLink = 
       take(1)
     ).subscribe();
   }
+
+  /**
+   * selectable entities count.
+   *
+   * @param entities entities (Array<T>)
+   * @returns number observable or value
+   */
 
   private selectableEntitiesCount(entities: Array<T>): number {
     return entities.filter((entity) => this.selectionEnabledFunction(entity)).length;

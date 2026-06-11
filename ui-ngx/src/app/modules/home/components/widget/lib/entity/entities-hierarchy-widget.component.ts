@@ -71,14 +71,17 @@ import { EntityFilter } from '@shared/models/query/query.models';
 import { FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
 
+
+/**
+ * Angular component: entities hierarchy widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entities-hierarchy-widget`.
+ */
 @Component({
     selector: 'tb-entities-hierarchy-widget',
     templateUrl: './entities-hierarchy-widget.component.html',
     styleUrls: ['./entities-hierarchy-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: entities hierarchy widget UI.
- */
+standalone: false
 })
 export class EntitiesHierarchyWidgetComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -131,6 +134,11 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.entitiesHierarchyWidget = this;
     this.settings = this.ctx.settings;
@@ -140,6 +148,11 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     this.initializeConfig();
     this.ctx.updateWidgetParams();
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.textSearch.valueChanges.pipe(
@@ -157,15 +170,30 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.updateNodeData(this.subscription.data);
   }
+
+  /**
+   * Event handler for edit mode changed.
+   *
+   */
 
   public onEditModeChanged() {
     if (this.textSearchMode) {
@@ -173,6 +201,11 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
       this.ctx.detectChanges(true);
     }
   }
+
+  /**
+   * initialize config.
+   *
+   */
 
   private initializeConfig() {
     this.ctx.widgetActions = [this.searchAction];
@@ -222,6 +255,11 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     $(this.elementRef.nativeElement).addClass(namespace);
   }
 
+  /**
+   * enter filter mode.
+   *
+   */
+
   private enterFilterMode() {
     this.textSearchMode = true;
     this.ctx.hideTitlePanel = true;
@@ -232,12 +270,23 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
     this.ctx.hideTitlePanel = false;
     this.ctx.detectChanges(true);
   }
+
+  /**
+   * update node data.
+   *
+   * @param subscriptionData subscription data (Array<DatasourceData>)
+   */
 
   private updateNodeData(subscriptionData: Array<DatasourceData>) {
     const affectedNodes: string[] = [];
@@ -340,6 +389,12 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     return false;
   }
 
+  /**
+   * update node style.
+   *
+   * @param node node (HierarchyNavTreeNode)
+   */
+
   private updateNodeStyle(node: HierarchyNavTreeNode) {
     const newText = this.prepareNodeText(node);
     if (node.text !== newText) {
@@ -362,11 +417,25 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     }
   }
 
+  /**
+   * prepare nodes.
+   *
+   * @param nodes nodes (HierarchyNavTreeNode[])
+   * @returns HierarchyNavTreeNode[] observable or value
+   */
+
   private prepareNodes(nodes: HierarchyNavTreeNode[]): HierarchyNavTreeNode[] {
     nodes = nodes.filter((node) => node !== null);
     nodes.sort((node1, node2) => this.nodesSortFunction(this.ctx, node1.data.nodeCtx, node2.data.nodeCtx));
     return nodes;
   }
+
+  /**
+   * prepare node text.
+   *
+   * @param node node (HierarchyNavTreeNode)
+   * @returns string observable or value
+   */
 
   private prepareNodeText(node: HierarchyNavTreeNode): string {
     const nodeIcon = this.prepareNodeIcon(node.data.nodeCtx);
@@ -374,6 +443,13 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     node.data.searchText = nodeText ? nodeText.replace(/<[^>]+>/g, '').toLowerCase() : '';
     return nodeIcon + nodeText;
   }
+
+  /**
+   * prepare node icon.
+   *
+   * @param nodeCtx node ctx (HierarchyNodeContext)
+   * @returns string observable or value
+   */
 
   private prepareNodeIcon(nodeCtx: HierarchyNodeContext): string {
     let iconInfo = this.nodeIconFunction(this.ctx, nodeCtx);
@@ -394,6 +470,15 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
       return '';
     }
   }
+
+  /**
+   * datasource to node.
+   *
+   * @param datasource datasource (HierarchyNodeDatasource)
+   * @param data dialog or route input data
+   * @param parentNodeCtx parent node ctx (HierarchyNodeContext)
+   * @returns HierarchyNavTreeNode observable or value
+   */
 
   private datasourceToNode(datasource: HierarchyNodeDatasource,
                            data: DatasourceData[],
@@ -437,6 +522,14 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     node.children = this.nodeHasChildrenFunction(this.ctx, node.data.nodeCtx);
     return node;
   }
+
+  /**
+   * load children.
+   *
+   * @param parentNode parent node (HierarchyNavTreeNode)
+   * @param datasource datasource (HierarchyNodeDatasource)
+   * @param childrenNodesLoadCb children nodes load cb (NodesCallback)
+   */
 
   private loadChildren(parentNode: HierarchyNavTreeNode, datasource: HierarchyNodeDatasource, childrenNodesLoadCb: NodesCallback) {
     const nodeCtx = parentNode.data.nodeCtx;
@@ -483,6 +576,13 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     this.ctx.subscriptionApi.createSubscription(subscriptionOptions, true);
   }
 
+  /**
+   * prepare node relation query.
+   *
+   * @param nodeCtx node ctx (HierarchyNodeContext)
+   * @returns EntityRelationsQuery observable or value
+   */
+
   private prepareNodeRelationQuery(nodeCtx: HierarchyNodeContext): EntityRelationsQuery {
     let relationQuery = this.nodeRelationQueryFunction(this.ctx, nodeCtx);
     if (relationQuery && relationQuery === 'default') {
@@ -490,6 +590,13 @@ export class EntitiesHierarchyWidgetComponent extends PageComponent implements O
     }
     return relationQuery as EntityRelationsQuery;
   }
+
+  /**
+   * prepare node relations query filter.
+   *
+   * @param nodeCtx node ctx (HierarchyNodeContext)
+   * @returns EntityFilter observable or value
+   */
 
   private prepareNodeRelationsQueryFilter(nodeCtx: HierarchyNodeContext): EntityFilter {
     const relationQuery = this.prepareNodeRelationQuery(nodeCtx);

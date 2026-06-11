@@ -15,11 +15,13 @@
  */
 package org.thingsboard.monitoring.data;
 
+
 /**
 
- * Keys for login, WebSocket, EDQS, and per-transport failure reporting.
+ * Keys for login, WebSocket, EDQS, and per-transport failure/latency reporting.
 
  */
+
 
 public class MonitoredServiceKey {
 

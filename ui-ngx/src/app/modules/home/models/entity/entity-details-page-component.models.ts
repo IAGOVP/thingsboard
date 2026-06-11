@@ -15,8 +15,11 @@
 ///
 
 /**
- * Angular component: ientity details page UI.
+ * Angular component: ientity details page (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export interface IEntityDetailsPageComponent {
   reload(): void;
   goBack(): void;

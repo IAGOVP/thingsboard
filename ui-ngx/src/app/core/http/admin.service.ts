@@ -36,7 +36,9 @@ import { tap } from 'rxjs/operators';
 import { LoginResponse } from '@shared/models/login.models';
 
 /**
- * Angular HTTP service: admin REST wrappers (`@core/http`).
+ * Angular injectable service: admin (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -57,27 +59,58 @@ export class AdminService {
     return this.http.post<AdminSettings<T>>('/api/admin/settings', adminSettings, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/settings/testMail, ...`. */
+  
+  /**
+   * send test mail.
+   *
+   * @param adminSettings admin settings (AdminSettings<MailServerSettings>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public sendTestMail(adminSettings: AdminSettings<MailServerSettings>,
                       config?: RequestConfig): Observable<void> {
     return this.http.post<void>('/api/admin/settings/testMail', adminSettings, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/settings/testSms, ...`. */
+  
+  /**
+   * send test sms.
+   *
+   * @param testSmsRequest test sms request (TestSmsRequest)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public sendTestSms(testSmsRequest: TestSmsRequest,
                      config?: RequestConfig): Observable<void> {
     return this.http.post<void>('/api/admin/settings/testSms', testSmsRequest, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/securitySettings, ...`. */
+  
+  /**
+   * get security settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<SecuritySettings> observable or value
+   */
+
 
   public getSecuritySettings(config?: RequestConfig): Observable<SecuritySettings> {
     return this.http.get<SecuritySettings>(`/api/admin/securitySettings`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/securitySettings, ...`. */
+  
+  /**
+   * POST/PUT entity — save security settings.
+   *
+   * @param securitySettings security settings (SecuritySettings)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<SecuritySettings> observable or value
+   */
+
 
   public saveSecuritySettings(securitySettings: SecuritySettings,
                               config?: RequestConfig): Observable<SecuritySettings> {
@@ -85,25 +118,55 @@ export class AdminService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/jwtSettings, ...`. */
+  
+  /**
+   * get jwt settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<JwtSettings> observable or value
+   */
+
 
   public getJwtSettings(config?: RequestConfig): Observable<JwtSettings> {
     return this.http.get<JwtSettings>(`/api/admin/jwtSettings`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/jwtSettings, ...`. */
+  
+  /**
+   * POST/PUT entity — save jwt settings.
+   *
+   * @param jwtSettings jwt settings (JwtSettings)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<LoginResponse> observable or value
+   */
+
 
   public saveJwtSettings(jwtSettings: JwtSettings, config?: RequestConfig): Observable<LoginResponse> {
     return this.http.post<LoginResponse>('/api/admin/jwtSettings', jwtSettings, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/repositorySettings, ...`. */
+  
+  /**
+   * get repository settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RepositorySettings> observable or value
+   */
+
 
   public getRepositorySettings(config?: RequestConfig): Observable<RepositorySettings> {
     return this.http.get<RepositorySettings>(`/api/admin/repositorySettings`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/repositorySettings, ...`. */
+  
+  /**
+   * POST/PUT entity — save repository settings.
+   *
+   * @param repositorySettings repository settings (RepositorySettings)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RepositorySettings> observable or value
+   */
+
 
   public saveRepositorySettings(repositorySettings: RepositorySettings,
                                 config?: RequestConfig): Observable<RepositorySettings> {
@@ -115,6 +178,12 @@ export class AdminService {
     );
   }
 
+  /**
+   * DELETE — delete repository settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteRepositorySettings(config?: RequestConfig) {
     return this.http.delete('/api/admin/repositorySettings', defaultHttpOptionsFromConfig(config)).pipe(
       tap(() => {
@@ -123,67 +192,147 @@ export class AdminService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/admin/repositorySettings/checkAccess, ...`. */
+  
+  /**
+   * check repository access.
+   *
+   * @param repositorySettings repository settings (RepositorySettings)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public checkRepositoryAccess(repositorySettings: RepositorySettings,
                                config?: RequestConfig): Observable<void> {
     return this.http.post<void>('/api/admin/repositorySettings/checkAccess', repositorySettings, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/repositorySettings/info, ...`. */
+  
+  /**
+   * get repository settings info.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RepositorySettingsInfo> observable or value
+   */
+
 
   public getRepositorySettingsInfo(config?: RequestConfig): Observable<RepositorySettingsInfo> {
     return this.http.get<RepositorySettingsInfo>('/api/admin/repositorySettings/info', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/autoCommitSettings, ...`. */
+  
+  /**
+   * get auto commit settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AutoCommitSettings> observable or value
+   */
+
 
   public getAutoCommitSettings(config?: RequestConfig): Observable<AutoCommitSettings> {
     return this.http.get<AutoCommitSettings>(`/api/admin/autoCommitSettings`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/autoCommitSettings/exists, ...`. */
+  
+  /**
+   * auto commit settings exists.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<boolean> observable or value
+   */
+
 
   public autoCommitSettingsExists(config?: RequestConfig): Observable<boolean> {
     return this.http.get<boolean>('/api/admin/autoCommitSettings/exists', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/autoCommitSettings, ...`. */
+  
+  /**
+   * POST/PUT entity — save auto commit settings.
+   *
+   * @param autoCommitSettings auto commit settings (AutoCommitSettings)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AutoCommitSettings> observable or value
+   */
+
 
   public saveAutoCommitSettings(autoCommitSettings: AutoCommitSettings,
                                 config?: RequestConfig): Observable<AutoCommitSettings> {
     return this.http.post<AutoCommitSettings>('/api/admin/autoCommitSettings', autoCommitSettings, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete auto commit settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteAutoCommitSettings(config?: RequestConfig) {
     return this.http.delete('/api/admin/autoCommitSettings', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/updates, ...`. */
+  
+  /**
+   * check updates.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<UpdateMessage> observable or value
+   */
+
 
   public checkUpdates(config?: RequestConfig): Observable<UpdateMessage> {
     return this.http.get<UpdateMessage>(`/api/admin/updates`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/featuresInfo, ...`. */
+  
+  /**
+   * get features info.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<FeaturesInfo> observable or value
+   */
+
 
   public getFeaturesInfo(config?: RequestConfig): Observable<FeaturesInfo> {
     return this.http.get<FeaturesInfo>('/api/admin/featuresInfo', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/mail/oauth2/loginProcessingUrl, ...`. */
+  
+  /**
+   * GET /api/admin/mail/oauth2/loginProcessingUrl — fetch login processing url.
+   *
+   * REST endpoint(s): `/api/admin/mail/oauth2/loginProcessingUrl`
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<string> observable or value
+   */
+
 
   public getLoginProcessingUrl(config?: RequestConfig): Observable<string> {
     return this.http.get<string>(`/api/admin/mail/oauth2/loginProcessingUrl`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/admin/mail/oauth2/authorize, ...`. */
+  
+  /**
+   * generate access token.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<string> observable or value
+   */
+
 
   public generateAccessToken(config?: RequestConfig): Observable<string> {
     return this.http.get<string>(`/api/admin/mail/oauth2/authorize`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mail/config/template`. */
+  
+  /**
+   * get mail config template.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<MailConfigTemplate>> observable or value
+   */
+
 
   public getMailConfigTemplate(config?: RequestConfig): Observable<Array<MailConfigTemplate>> {
     return this.http.get<Array<MailConfigTemplate>>('/api/mail/config/template', defaultHttpOptionsFromConfig(config));

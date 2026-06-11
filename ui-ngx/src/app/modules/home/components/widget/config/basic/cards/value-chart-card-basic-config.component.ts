@@ -38,14 +38,17 @@ import {
 } from '@home/components/widget/lib/cards/value-chart-card-widget.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: value chart card basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-chart-card-basic-config`.
+ */
 @Component({
     selector: 'tb-value-chart-card-basic-config',
     templateUrl: './value-chart-card-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: value chart card basic config UI.
- */
+standalone: false
 })
 export class ValueChartCardBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -75,9 +78,22 @@ export class ValueChartCardBasicConfigComponent extends BasicWidgetConfigCompone
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.valueChartCardWidgetConfigForm;
   }
+
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
 
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [
@@ -85,9 +101,22 @@ export class ValueChartCardBasicConfigComponent extends BasicWidgetConfigCompone
     ];
   }
 
+  /**
+   * default latest data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultLatestDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'temperature', label: 'Latest', type: DataKeyType.timeseries}];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: ValueChartCardWidgetSettings = {...valueChartCardDefaultSettings, ...(configData.config.settings || {})};
@@ -128,6 +157,13 @@ export class ValueChartCardBasicConfigComponent extends BasicWidgetConfigCompone
       actions: [configData.config.actions || {}, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
@@ -170,9 +206,22 @@ export class ValueChartCardBasicConfigComponent extends BasicWidgetConfigCompone
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon', 'showValue'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.valueChartCardWidgetConfigForm.get('showTitle').value;
@@ -219,6 +268,13 @@ export class ValueChartCardBasicConfigComponent extends BasicWidgetConfigCompone
     }
   }
 
+  /**
+   * update latest values.
+   *
+   * @param sourceDataKey source data key (DataKey)
+   * @param datasources datasources (Datasource[])
+   */
+
   private updateLatestValues(sourceDataKey: DataKey, datasources?: Datasource[]) {
     if (datasources && datasources.length) {
       let latestDataKeys = datasources[0].latestDataKeys;
@@ -241,6 +297,13 @@ export class ValueChartCardBasicConfigComponent extends BasicWidgetConfigCompone
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -248,6 +311,13 @@ export class ValueChartCardBasicConfigComponent extends BasicWidgetConfigCompone
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

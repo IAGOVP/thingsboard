@@ -19,11 +19,20 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.script.ScriptLanguage;
 /**
- * JSON configuration for TbClearAlarm rule node.
+ * JSON configuration POJO for {@link TbClearAlarm} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbClearAlarmNodeConfiguration extends TbAbstractAlarmNodeConfiguration implements NodeConfiguration<TbClearAlarmNodeConfiguration> {
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbClearAlarmNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbClearAlarmNodeConfiguration defaultConfiguration() {

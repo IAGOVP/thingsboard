@@ -45,16 +45,19 @@ import { deepClone } from '@core/utils';
 import { WidgetButtonComponent } from '@shared/components/button/widget-button.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: widget button custom style panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-button-custom-style-panel`.
+ */
 @Component({
     selector: 'tb-widget-button-custom-style-panel',
     templateUrl: './widget-button-custom-style-panel.component.html',
     providers: [],
     styleUrls: ['./widget-button-custom-style-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widget button custom style panel UI.
- */
+standalone: false
 })
 export class WidgetButtonCustomStylePanelComponent extends PageComponent implements OnInit {
 
@@ -110,6 +113,11 @@ export class WidgetButtonCustomStylePanelComponent extends PageComponent impleme
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.copyFromStates = widgetButtonStates.filter(state =>
       state !== this.state && !!this.appearance.customStyle[state]);
@@ -139,20 +147,42 @@ export class WidgetButtonCustomStylePanelComponent extends PageComponent impleme
     this.setStyle(this.customStyle);
   }
 
+  /**
+   * copy style.
+   *
+   * @param state state (WidgetButtonState)
+   */
+
   copyStyle(state: WidgetButtonState) {
     this.customStyle = deepClone(this.appearance.customStyle[state]);
     this.setStyle(this.customStyle);
     this.customStyleFormGroup.markAsDirty();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply custom style.
+   *
+   */
 
   applyCustomStyle() {
     const customStyle: WidgetButtonCustomStyle = this.customStyleFormGroup.value;
     this.customStyleApplied.emit(customStyle);
   }
+
+  /**
+   * set style.
+   *
+   * @param customStyle custom style (WidgetButtonCustomStyle)
+   */
 
   private setStyle(customStyle?: WidgetButtonCustomStyle): void {
     let mainColor = this.state === WidgetButtonState.disabled ? defaultMainColorDisabled : this.appearance.mainColor;
@@ -179,6 +209,11 @@ export class WidgetButtonCustomStylePanelComponent extends PageComponent impleme
     this.updatePreviewAppearance();
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     const overrideMainColor: boolean = this.customStyleFormGroup.get('overrideMainColor').value;
     const overrideBackgroundColor: boolean = this.customStyleFormGroup.get('overrideBackgroundColor').value;
@@ -200,6 +235,11 @@ export class WidgetButtonCustomStylePanelComponent extends PageComponent impleme
       this.customStyleFormGroup.get('dropShadow').disable({emitEvent: false});
     }
   }
+
+  /**
+   * update preview appearance.
+   *
+   */
 
   private updatePreviewAppearance() {
     this.previewAppearance = deepClone(this.appearance);

@@ -104,8 +104,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tenant id loader rule node.
+ * Unit test for tenant id loader (shared rule-engine utilities and async loaders).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TenantIdLoaderTest {
@@ -178,6 +179,11 @@ public class TenantIdLoaderTest {
     private TenantId tenantId;
     private TenantProfileId tenantProfileId;
     private AbstractListeningExecutor dbExecutor;
+    /**
+     * Before.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void before() {
@@ -197,6 +203,11 @@ public class TenantIdLoaderTest {
             initMocks(entityType, tenantId);
         }
     }
+    /**
+     * After.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterEach
     public void after() {
@@ -432,11 +443,21 @@ public class TenantIdLoaderTest {
             }
         }
     }
+    /**
+     * Test find entity id async current tenant.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_findEntityIdAsync_current_tenant() {
         checkTenant(tenantId, true);
     }
+    /**
+     * Test find entity id async other tenant.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void test_findEntityIdAsync_other_tenant() {

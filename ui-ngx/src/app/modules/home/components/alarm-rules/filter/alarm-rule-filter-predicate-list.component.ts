@@ -51,6 +51,12 @@ import {
 import { CalculatedFieldArgument } from "@shared/models/calculated-field.models";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
+
+/**
+ * Angular component: alarm rule filter predicate list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-filter-predicate-list`.
+ */
 @Component({
     selector: 'tb-alarm-rule-filter-predicate-list',
     templateUrl: './alarm-rule-filter-predicate-list.component.html',
@@ -67,10 +73,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm rule filter predicate list UI.
- */
+standalone: false
 })
 export class AlarmRuleFilterPredicateListComponent implements ControlValueAccessor, Validator {
 
@@ -108,12 +111,30 @@ export class AlarmRuleFilterPredicateListComponent implements ControlValueAccess
     return this.filterListFormGroup.get('predicates') as FormArray;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -124,11 +145,24 @@ export class AlarmRuleFilterPredicateListComponent implements ControlValueAccess
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(control: AbstractControl): ValidationErrors | null {
     return this.filterListFormGroup.valid ? null : {
       filterList: {valid: false}
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param predicates predicates (Array<AlarmRulePredicateInfo>)
+   */
 
   writeValue(predicates: Array<AlarmRulePredicateInfo>): void {
     const predicateControls: Array<AbstractControl> = [];
@@ -141,9 +175,21 @@ export class AlarmRuleFilterPredicateListComponent implements ControlValueAccess
     predicateControls.forEach(predicate => this.predicatesFormArray.push(predicate));
   }
 
+  /**
+   * DELETE — remove predicate.
+   *
+   * @param index index (number)
+   */
+
   public removePredicate(index: number) {
     this.predicatesFormArray.removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add predicate.
+   *
+   * @param complex complex (boolean)
+   */
 
   public addPredicate(complex: boolean) {
     const predicatesFormArray = this.filterListFormGroup.get('predicates') as FormArray;
@@ -160,6 +206,14 @@ export class AlarmRuleFilterPredicateListComponent implements ControlValueAccess
       }
     });
   }
+
+  /**
+   * POST/PUT entity — create default filter predicate.
+   *
+   * @param valueType value type (EntityKeyValueType)
+   * @param complex complex (boolean)
+   * @returns AlarmRuleFilterPredicate observable or value
+   */
 
   private createDefaultFilterPredicate(valueType: EntityKeyValueType, complex: boolean): AlarmRuleFilterPredicate {
     const predicate = {
@@ -193,6 +247,13 @@ export class AlarmRuleFilterPredicateListComponent implements ControlValueAccess
     return predicate;
   }
 
+  /**
+   * open complex filter dialog.
+   *
+   * @param predicate predicate (ComplexAlarmRuleFilterPredicate)
+   * @returns Observable<ComplexAlarmRuleFilterPredicate> observable or value
+   */
+
   private openComplexFilterDialog(predicate: ComplexAlarmRuleFilterPredicate): Observable<ComplexAlarmRuleFilterPredicate> {
     return this.dialog.open<AlarmRuleComplexFilterPredicateDialogComponent, AlarmRuleComplexFilterPredicateDialogData,
       ComplexAlarmRuleFilterPredicate>(AlarmRuleComplexFilterPredicateDialogComponent, {
@@ -210,6 +271,11 @@ export class AlarmRuleFilterPredicateListComponent implements ControlValueAccess
       map(result => result)
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.propagateChange(this.filterListFormGroup.get('predicates').value);

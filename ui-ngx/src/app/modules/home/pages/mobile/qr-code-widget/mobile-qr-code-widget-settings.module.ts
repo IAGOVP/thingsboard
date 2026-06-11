@@ -31,6 +31,9 @@ import {
 /**
  * Angular NgModule: mobile qr code widget settings feature area.
  */
+/**
+ * Angular NgModule bundling mobile qr code widget settings (home/mobile pages).
+ */
 @NgModule({
   declarations: [
     MobileQrCodeWidgetSettingsComponent
@@ -41,5 +44,5 @@ import {
     HomeComponentsModule,
     WidgetComponentsModule,
     MobileQrCodeWidgetSettingsRoutingModule
-  ]})
+]})
 export class MobileQrCodeWidgetSettingsModule { }

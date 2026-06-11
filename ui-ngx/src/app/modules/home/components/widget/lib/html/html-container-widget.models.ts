@@ -25,11 +25,11 @@ export enum HtmlContainerWidgetType {
   ANGULAR = 'ANGULAR'
 }
 
+
 /**
-
- * TypeScript models and enums for html container widget settings.
-
+ * Html container widget settings (ThingsBoard web UI).
  */
+
 
 export interface HtmlContainerWidgetSettings {
   type: HtmlContainerWidgetType;

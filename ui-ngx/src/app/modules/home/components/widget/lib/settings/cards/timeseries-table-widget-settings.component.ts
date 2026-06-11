@@ -23,14 +23,17 @@ import { buildPageStepSizeValues } from '@home/components/widget/lib/table-widge
 import { Direction } from '@shared/models/page/sort-order';
 import { entityFields } from '@shared/models/entity.models';
 
+
+/**
+ * Angular component: timeseries table widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timeseries-table-widget-settings`.
+ */
 @Component({
     selector: 'tb-timeseries-table-widget-settings',
     templateUrl: './timeseries-table-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: timeseries table widget settings UI.
- */
+standalone: false
 })
 export class TimeseriesTableWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -45,9 +48,21 @@ export class TimeseriesTableWidgetSettingsComponent extends WidgetSettingsCompon
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.timeseriesTableWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -75,6 +90,13 @@ export class TimeseriesTableWidgetSettingsComponent extends WidgetSettingsCompon
     };
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     settings.pageStepIncrement = settings.pageStepIncrement ?? settings.defaultPageSize;
     settings.sortOrder = {
@@ -84,6 +106,12 @@ export class TimeseriesTableWidgetSettingsComponent extends WidgetSettingsCompon
     this.pageStepSizeValues = buildPageStepSizeValues(settings.pageStepCount, settings.pageStepIncrement);
     return settings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     // For backward compatibility
@@ -124,9 +152,22 @@ export class TimeseriesTableWidgetSettingsComponent extends WidgetSettingsCompon
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useRowStyleFunction', 'displayPagination', 'pageStepCount', 'pageStepIncrement'];
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: WidgetSettings): WidgetSettings {
     settings.sortOrder = {
@@ -135,6 +176,13 @@ export class TimeseriesTableWidgetSettingsComponent extends WidgetSettingsCompon
     };
     return settings;
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger: string) {
     if (trigger === 'pageStepCount' || trigger === 'pageStepIncrement') {

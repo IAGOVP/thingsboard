@@ -29,14 +29,17 @@ import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 import { EntityId } from '@app/shared/models/id/entity-id';
 import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
 
+
+/**
+ * Angular component: entity view (home/entity-view pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-view`.
+ */
 @Component({
     selector: 'tb-entity-view',
     templateUrl: './entity-view.component.html',
     styleUrls: ['./entity-view.component.scss'],
-    standalone: false
-/**
- * Angular component: entity view UI.
- */
+standalone: false
 })
 export class EntityViewComponent extends EntityComponent<EntityViewInfo> {
 
@@ -62,6 +65,11 @@ export class EntityViewComponent extends EntityComponent<EntityViewInfo> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.entityViewScope = this.entitiesTableConfig.componentsData.entityViewScope;
     super.ngOnInit();
@@ -69,6 +77,11 @@ export class EntityViewComponent extends EntityComponent<EntityViewInfo> {
     this.minEndTimeMs = this.entityForm.get('startTimeMs').valueChanges;
     this.selectedEntityId = this.entityForm.get('entityId').valueChanges;
   }
+
+  /**
+   * hide delete.
+   *
+   */
 
   hideDelete() {
     if (this.entitiesTableConfig) {
@@ -78,9 +91,23 @@ export class EntityViewComponent extends EntityComponent<EntityViewInfo> {
     }
   }
 
+  /**
+   * is assigned to customer.
+   *
+   * @param entity entity (EntityViewInfo)
+   * @returns boolean observable or value
+   */
+
   isAssignedToCustomer(entity: EntityViewInfo): boolean {
     return entity && entity.customerId && entity.customerId.id !== NULL_UUID;
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (EntityViewInfo)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: EntityViewInfo): UntypedFormGroup {
     return this.fb.group(
@@ -111,6 +138,12 @@ export class EntityViewComponent extends EntityComponent<EntityViewInfo> {
     );
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (EntityViewInfo)
+   */
+
   updateForm(entity: EntityViewInfo) {
     this.entityForm.patchValue({name: entity.name});
     this.entityForm.patchValue({type: entity.type});
@@ -130,6 +163,18 @@ export class EntityViewComponent extends EntityComponent<EntityViewInfo> {
     });
     this.entityForm.patchValue({additionalInfo: {description: entity.additionalInfo ? entity.additionalInfo.description : ''}});
   }
+
+
+  /**
+
+
+   * Event handler for entity view id copied.
+
+
+   *
+
+
+   */
 
 
   onEntityViewIdCopied($event) {

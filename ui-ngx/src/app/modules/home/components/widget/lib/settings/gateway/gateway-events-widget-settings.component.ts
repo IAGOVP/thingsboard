@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
 
+
+/**
+ * Angular component: gateway events widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-gateway-events-widget-settings`.
+ */
 @Component({
     selector: 'tb-gateway-events-widget-settings',
     templateUrl: './gateway-events-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: gateway events widget settings UI.
- */
+standalone: false
 })
 export class GatewayEventsWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -44,9 +47,21 @@ export class GatewayEventsWidgetSettingsComponent extends WidgetSettingsComponen
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.gatewayEventsWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -55,12 +70,24 @@ export class GatewayEventsWidgetSettingsComponent extends WidgetSettingsComponen
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.gatewayEventsWidgetSettingsForm = this.fb.group({
       eventsTitle: [settings.eventsTitle, []],
       eventsReg: [settings.eventsReg, []]
     });
   }
+
+  /**
+   * DELETE — remove event filter.
+   *
+   * @param eventFilter event filter (string)
+   */
 
   removeEventFilter(eventFilter: string) {
     const eventsFilter: string[] = this.gatewayEventsWidgetSettingsForm.get('eventsReg').value;
@@ -71,6 +98,12 @@ export class GatewayEventsWidgetSettingsComponent extends WidgetSettingsComponen
       this.gatewayEventsWidgetSettingsForm.get('eventsReg').markAsDirty();
     }
   }
+
+  /**
+   * POST/PUT entity — add event filter from input.
+   *
+   * @param event DOM or Angular event object
+   */
 
   addEventFilterFromInput(event: MatChipInputEvent) {
     const value = event.value;

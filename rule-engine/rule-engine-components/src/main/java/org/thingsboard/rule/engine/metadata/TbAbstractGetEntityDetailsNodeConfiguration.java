@@ -21,8 +21,11 @@ import org.thingsboard.rule.engine.util.ContactBasedEntityDetails;
 
 import java.util.List;
 /**
- * JSON configuration for TbAbstractGetEntityDetails rule node.
+ * JSON configuration POJO for {@link TbAbstractGetEntityDetails} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)

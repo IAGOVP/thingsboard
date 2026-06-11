@@ -79,8 +79,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb get customer attribute node rule node.
+ * Unit test for tb get customer attribute node (entity metadata and related-data fetch nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbGetCustomerAttributeNodeTest {
@@ -103,6 +104,11 @@ public class TbGetCustomerAttributeNodeTest {
     private TbGetEntityDataNodeConfiguration config;
     private TbNodeConfiguration nodeConfiguration;
     private TbMsg msg;
+    /**
+     * Setup.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setup() {
@@ -116,6 +122,11 @@ public class TbGetCustomerAttributeNodeTest {
         lenient().when(ctxMock.getTimeseriesService()).thenReturn(timeseriesServiceMock);
         lenient().when(ctxMock.getEntityService()).thenReturn(entityServiceMock);
     }
+    /**
+     * Given config with null fetch to when init then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenConfigWithNullFetchTo_whenInit_thenException() {
@@ -130,6 +141,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(exception.getMessage()).isEqualTo("FetchTo option can't be null! Allowed values: " + Arrays.toString(TbMsgSource.values()));
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given config with null data to fetch when init then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenConfigWithNullDataToFetch_whenInit_thenException() {
@@ -144,6 +160,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(exception.getMessage()).isEqualTo("DataToFetch property has invalid value: null. Only ATTRIBUTES and LATEST_TELEMETRY values supported!");
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given config with unsupported data to fetch when init then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenConfigWithUnsupportedDataToFetch_whenInit_thenException() {
@@ -158,6 +179,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(exception.getMessage()).isEqualTo("DataToFetch property has invalid value: FIELDS. Only ATTRIBUTES and LATEST_TELEMETRY values supported!");
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given default config when init then ok.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenInit_thenOK() throws TbNodeException {
@@ -172,6 +198,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(config.getDataToFetch()).isEqualTo(DataToFetch.ATTRIBUTES);
         assertThat(node.fetchTo).isEqualTo(TbMsgSource.METADATA);
     }
+    /**
+     * Given custom config when init then ok.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenCustomConfig_whenInit_thenOK() throws TbNodeException {
@@ -196,6 +227,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(config.getDataToFetch()).isEqualTo(DataToFetch.LATEST_TELEMETRY);
         assertThat(node.fetchTo).isEqualTo(TbMsgSource.DATA);
     }
+    /**
+     * Given empty attributes mapping when init then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenEmptyAttributesMapping_whenInit_thenException() {
@@ -212,6 +248,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(exception.getMessage()).isEqualTo(expectedExceptionMessage);
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given msg data is not an json object and fetch to data when on msg then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMsgDataIsNotAnJsonObjectAndFetchToData_whenOnMsg_thenException() {
@@ -231,6 +272,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(exception.getMessage()).isEqualTo("Message body is not an object!");
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given did not find entity when on msg then should tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDidNotFindEntity_whenOnMsg_thenShouldTellFailure() {
@@ -265,6 +311,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertEquals("Originator not found", actualException.getMessage());
         assertInstanceOf(NoSuchElementException.class, actualException);
     }
+    /**
+     * Given fetch attributes to data when on msg then should fetch attributes to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchAttributesToData_whenOnMsg_thenShouldFetchAttributesToData() {
@@ -308,6 +359,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(expectedMsgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given fetch attributes to meta data when on msg then should fetch attributes to meta data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchAttributesToMetaData_whenOnMsg_thenShouldFetchAttributesToMetaData() {
@@ -351,6 +407,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(expectedMsgMetaData);
     }
+    /**
+     * Given fetch telemetry to data when on msg then should fetch telemetry to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchTelemetryToData_whenOnMsg_thenShouldFetchTelemetryToData() {
@@ -391,6 +452,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(expectedMsgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given fetch telemetry to meta data when on msg then should fetch telemetry to meta data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchTelemetryToMetaData_whenOnMsg_thenShouldFetchTelemetryToMetaData() {
@@ -434,6 +500,11 @@ public class TbGetCustomerAttributeNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(expectedMsgMetaData);
     }
+    /**
+     * Given old config when upgrade then should return true result with new config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenOldConfig_whenUpgrade_thenShouldReturnTrueResultWithNewConfig() throws Exception {
@@ -470,6 +541,9 @@ public class TbGetCustomerAttributeNodeTest {
                 .data(msgData)
                 .build();
     }
+    /**
+     * List matcher (entity metadata and related-data fetch nodes).
+     */
 
     @RequiredArgsConstructor
     private static class ListMatcher<T> implements ArgumentMatcher<List<T>> {

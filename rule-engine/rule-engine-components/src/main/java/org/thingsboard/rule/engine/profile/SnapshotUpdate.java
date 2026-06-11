@@ -21,8 +21,9 @@ import org.thingsboard.server.common.data.device.profile.AlarmConditionKeyType;
 
 import java.util.Set;
 /**
- * Rule engine component: snapshot update.
+ * Snapshot update (device profile state nodes).
  */
+
 
 @Deprecated
 class SnapshotUpdate {

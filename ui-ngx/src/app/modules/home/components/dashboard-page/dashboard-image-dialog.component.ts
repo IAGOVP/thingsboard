@@ -40,14 +40,17 @@ export interface DashboardImageDialogResult {
   image?: string;
 }
 
+
+/**
+ * Angular component: dashboard image dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-image-dialog`.
+ */
 @Component({
     selector: 'tb-dashboard-image-dialog',
     templateUrl: './dashboard-image-dialog.component.html',
     styleUrls: ['./dashboard-image-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: dashboard image dialog UI.
- */
+standalone: false
 })
 export class DashboardImageDialogComponent extends DialogComponent<DashboardImageDialogComponent, DashboardImageDialogResult> {
 
@@ -98,6 +101,14 @@ export class DashboardImageDialogComponent extends DialogComponent<DashboardImag
     );
   }
 
+  /**
+   * convert user percent.
+   *
+   * @param percent percent (any)
+   * @param defaultValue default value (number)
+   * @returns number observable or value
+   */
+
   private convertUserPercent(percent: any, defaultValue: number): number {
     let result: number;
     if (isNumber(percent)) {
@@ -107,6 +118,11 @@ export class DashboardImageDialogComponent extends DialogComponent<DashboardImag
     }
     return result;
   }
+
+  /**
+   * take screen shot.
+   *
+   */
 
   takeScreenShot() {
     this.takingScreenshotSubject.next(true);
@@ -151,9 +167,19 @@ export class DashboardImageDialogComponent extends DialogComponent<DashboardImag
     );
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dashboardService.getDashboard(this.dashboardId.id).subscribe(
@@ -170,6 +196,12 @@ export class DashboardImageDialogComponent extends DialogComponent<DashboardImag
       }
     );
   }
+
+  /**
+   * update image.
+   *
+   * @param imageUrl image url (string)
+   */
 
   private updateImage(imageUrl: string) {
     this.imageUrl = imageUrl;

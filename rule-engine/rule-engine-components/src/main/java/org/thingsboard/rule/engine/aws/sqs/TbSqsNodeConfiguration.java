@@ -21,8 +21,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import java.util.Collections;
 import java.util.Map;
 /**
- * JSON configuration for TbSqs rule node.
+ * JSON configuration POJO for {@link TbSqs} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbSqsNodeConfiguration implements NodeConfiguration<TbSqsNodeConfiguration> {
@@ -34,6 +37,12 @@ public class TbSqsNodeConfiguration implements NodeConfiguration<TbSqsNodeConfig
     private String accessKeyId;
     private String secretAccessKey;
     private String region;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbSqsNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbSqsNodeConfiguration defaultConfiguration() {
@@ -45,6 +54,12 @@ public class TbSqsNodeConfiguration implements NodeConfiguration<TbSqsNodeConfig
         configuration.setRegion("us-east-1");
         return configuration;
     }
+
+    /**
+
+     * Enumerates queue type values used by rule engine AWS integration nodes (SQS, SNS, Lambda).
+
+     */
 
     public enum QueueType {
         STANDARD,

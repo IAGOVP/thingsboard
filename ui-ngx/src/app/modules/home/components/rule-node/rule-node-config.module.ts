@@ -32,6 +32,9 @@ import { RuleChainService } from '@core/http/rule-chain.service';
 /**
  * Angular NgModule: rule node config feature area.
  */
+/**
+ * Angular NgModule bundling rule node config (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     EmptyConfigComponent
@@ -48,7 +51,7 @@ import { RuleChainService } from '@core/http/rule-chain.service';
     TransformationRuleNodeConfigModule,
     FlowRuleNodeConfigModule,
     EmptyConfigComponent
-  ]})
+]})
 export class RuleNodeConfigModule {
   constructor(private ruleChainService: RuleChainService) {
     this.ruleChainService.registerSystemRuleNodeConfigModule(this.constructor);

@@ -24,14 +24,23 @@ import org.thingsboard.server.common.data.relation.EntitySearchDirection;
 
 import java.util.Collections;
 /**
- * JSON configuration for TbGetDeviceAttr rule node.
+ * JSON configuration POJO for {@link TbGetDeviceAttr} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TbGetDeviceAttrNodeConfiguration extends TbGetAttributesNodeConfiguration {
 
     private DeviceRelationsQuery deviceRelationsQuery;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGetDeviceAttrNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGetDeviceAttrNodeConfiguration defaultConfiguration() {

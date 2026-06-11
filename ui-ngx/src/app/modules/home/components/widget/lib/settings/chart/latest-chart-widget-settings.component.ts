@@ -55,8 +55,11 @@ import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: latest chart widget settings UI.
+ * Angular component: latest chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class LatestChartWidgetSettingsComponent<S extends LatestChartWidgetSettings> extends WidgetSettingsComponent {
 
   doughnutLayouts = doughnutLayouts;
@@ -111,9 +114,21 @@ export abstract class LatestChartWidgetSettingsComponent<S extends LatestChartWi
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.latestChartWidgetSettingsForm;
   }
+
+  /**
+   * Event handler for widget config set.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected onWidgetConfigSet(widgetConfig: WidgetConfigComponentData) {
     const params = widgetConfig.typeParameters as any;
@@ -121,9 +136,21 @@ export abstract class LatestChartWidgetSettingsComponent<S extends LatestChartWi
     this.doughnutLayoutImageMap = this.doughnutHorizontal ? horizontalDoughnutLayoutImages : doughnutLayoutImages;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return this.defaultLatestChartSettings();
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.latestChartWidgetSettingsForm = this.fb.group({
@@ -154,9 +181,22 @@ export abstract class LatestChartWidgetSettingsComponent<S extends LatestChartWi
     this.setupLatestChartControls(this.latestChartWidgetSettingsForm, settings);
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showLegend', 'showTooltip'].concat(this.latestChartValidatorTriggers());
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showLegend: boolean = this.latestChartWidgetSettingsForm.get('showLegend').value;
@@ -195,11 +235,32 @@ export abstract class LatestChartWidgetSettingsComponent<S extends LatestChartWi
     this.updateLatestChartValidators(this.latestChartWidgetSettingsForm, emitEvent, trigger);
   }
 
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
+
   protected setupLatestChartControls(latestChartWidgetSettingsForm: UntypedFormGroup, settings: WidgetSettings) {}
+
+  /**
+   * latest chart validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected latestChartValidatorTriggers(): string[] {
     return [];
   }
+
+  /**
+   * update latest chart validators.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateLatestChartValidators(latestChartWidgetSettingsForm: UntypedFormGroup, emitEvent: boolean, trigger?: string) {
   }

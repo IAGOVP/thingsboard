@@ -29,14 +29,17 @@ import {
 import { isUndefined } from '@core/utils';
 import { cssSizeToStrSize, resolveCssSize } from '@shared/models/widget-settings.models';
 
+
+/**
+ * Angular component: scada symbol basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-basic-config`.
+ */
 @Component({
     selector: 'tb-scada-symbol-basic-config',
     templateUrl: './scada-symbol-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: scada symbol basic config UI.
- */
+standalone: false
 })
 export class ScadaSymbolBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -54,9 +57,21 @@ export class ScadaSymbolBasicConfigComponent extends BasicWidgetConfigComponent 
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.scadaSymbolWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: ScadaSymbolWidgetSettings = {...scadaSymbolWidgetDefaultSettings, ...(configData.config.settings || {})};
@@ -87,6 +102,13 @@ export class ScadaSymbolBasicConfigComponent extends BasicWidgetConfigComponent 
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.targetDevice = config.targetDevice;
 
@@ -113,9 +135,22 @@ export class ScadaSymbolBasicConfigComponent extends BasicWidgetConfigComponent 
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.scadaSymbolWidgetConfigForm.get('showTitle').value;
@@ -149,6 +184,13 @@ export class ScadaSymbolBasicConfigComponent extends BasicWidgetConfigComponent 
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -156,6 +198,13 @@ export class ScadaSymbolBasicConfigComponent extends BasicWidgetConfigComponent 
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

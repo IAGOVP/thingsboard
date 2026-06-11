@@ -145,5 +145,8 @@ const routes: Routes = [
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling login routing (login pages).
+ */
   exports: [RouterModule]})
 export class LoginRoutingModule { }

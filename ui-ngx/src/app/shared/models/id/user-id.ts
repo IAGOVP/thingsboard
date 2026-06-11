@@ -17,11 +17,11 @@
 import { EntityId } from './entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for user id.
-
+ * TypeScript interfaces, types, and enums for user id (shared TypeScript models).
  */
+
 
 export class UserId implements EntityId {
   entityType = EntityType.USER;

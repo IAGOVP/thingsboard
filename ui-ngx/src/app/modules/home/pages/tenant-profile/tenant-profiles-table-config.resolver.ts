@@ -35,8 +35,9 @@ import { DialogService } from '@core/services/dialog.service';
 import { ImportExportService } from '@shared/import-export/import-export.service';
 import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 /**
- * Route resolver: loads tenant profiles table config before activate.
+ * Route resolver: preloads data for tenant profiles table config (home/tenant-profile pages).
  */
+
 
 @Injectable()
 export class TenantProfilesTableConfigResolver  {
@@ -99,11 +100,23 @@ export class TenantProfilesTableConfigResolver  {
     this.config.addActionDescriptors = this.configureAddActions();
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<TenantProfile> observable or value
+   */
+
   resolve(): EntityTableConfig<TenantProfile> {
     this.config.tableTitle = this.translate.instant('tenant-profile.tenant-profiles');
 
     return this.config;
   }
+
+  /**
+   * configure add actions.
+   *
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
 
   configureAddActions(): Array<HeaderActionDescriptor> {
     const actions: Array<HeaderActionDescriptor> = [];
@@ -124,6 +137,12 @@ export class TenantProfilesTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * open tenant profile.
+   *
+   * @param tenantProfile tenant profile (TenantProfile)
+   */
+
   private openTenantProfile($event: Event, tenantProfile: TenantProfile) {
     if ($event) {
       $event.stopPropagation();
@@ -131,6 +150,12 @@ export class TenantProfilesTableConfigResolver  {
     const url = this.router.createUrlTree(['tenantProfiles', tenantProfile.id.id]);
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * set default tenant profile.
+   *
+   * @param tenantProfile tenant profile (TenantProfile)
+   */
 
   setDefaultTenantProfile($event: Event, tenantProfile: TenantProfile) {
     if ($event) {
@@ -154,6 +179,11 @@ export class TenantProfilesTableConfigResolver  {
     );
   }
 
+  /**
+   * import tenant profile.
+   *
+   */
+
   importTenantProfile($event: Event) {
     this.importExport.importTenantProfile().subscribe(
       (deviceProfile) => {
@@ -164,12 +194,25 @@ export class TenantProfilesTableConfigResolver  {
     );
   }
 
+  /**
+   * export tenant profile.
+   *
+   * @param tenantProfile tenant profile (TenantProfile)
+   */
+
   exportTenantProfile($event: Event, tenantProfile: TenantProfile) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExport.exportTenantProfile(tenantProfile.id.id);
   }
+
+  /**
+   * Event handler for tenant profile action.
+   *
+   * @param action action (EntityAction<TenantProfile>)
+   * @returns boolean observable or value
+   */
 
   onTenantProfileAction(action: EntityAction<TenantProfile>): boolean {
     switch (action.action) {

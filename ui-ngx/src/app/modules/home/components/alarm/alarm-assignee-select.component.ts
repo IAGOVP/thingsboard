@@ -33,6 +33,12 @@ import {
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { AlarmAssigneeOption } from '@shared/models/alarm.models';
 
+
+/**
+ * Angular component: alarm assignee select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-assignee-select`.
+ */
 @Component({
     selector: 'tb-alarm-assignee-select',
     templateUrl: './alarm-assignee-select.component.html',
@@ -44,10 +50,7 @@ import { AlarmAssigneeOption } from '@shared/models/alarm.models';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm assignee select UI.
- */
+standalone: false
 })
 export class AlarmAssigneeSelectComponent implements OnInit, ControlValueAccessor {
 
@@ -75,18 +78,41 @@ export class AlarmAssigneeSelectComponent implements OnInit, ControlValueAccesso
               private translateService: TranslateService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.assigneeFormGroup = this.fb.group({
       assignee: [null, []]
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -96,6 +122,12 @@ export class AlarmAssigneeSelectComponent implements OnInit, ControlValueAccesso
       this.assigneeFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (UserId | AlarmAssigneeOption)
+   */
 
   writeValue(value?: UserId | AlarmAssigneeOption): void {
     let userId: UserId;
@@ -127,6 +159,13 @@ export class AlarmAssigneeSelectComponent implements OnInit, ControlValueAccesso
     });
   }
 
+  /**
+   * get assignee.
+   *
+   * @param user user (User| UserEmailInfo)
+   * @returns string | null observable or value
+   */
+
   private getAssignee(user?: User| UserEmailInfo): string | null {
     if (user) {
       return this.getUserDisplayName(user);
@@ -135,6 +174,13 @@ export class AlarmAssigneeSelectComponent implements OnInit, ControlValueAccesso
     }
   }
 
+  /**
+   * get assignee option.
+   *
+   * @param assigneeOption assignee option (AlarmAssigneeOption)
+   * @returns string observable or value
+   */
+
   private getAssigneeOption(assigneeOption: AlarmAssigneeOption): string {
     if (assigneeOption === AlarmAssigneeOption.noAssignee) {
       return this.translateService.instant('alarm.assignee-not-set');
@@ -142,6 +188,13 @@ export class AlarmAssigneeSelectComponent implements OnInit, ControlValueAccesso
       return this.translateService.instant(this.userMode ? 'alarm.assigned-to-me' : 'alarm.assigned-to-current-user');
     }
   }
+
+  /**
+   * get user display name.
+   *
+   * @param user user (User | UserEmailInfo)
+   * @returns string observable or value
+   */
 
   private getUserDisplayName(user?: User | UserEmailInfo): string {
     let displayName = '';
@@ -162,6 +215,12 @@ export class AlarmAssigneeSelectComponent implements OnInit, ControlValueAccesso
     return displayName;
   }
 
+  /**
+   * get user initials.
+   *
+   * @returns string observable or value
+   */
+
   getUserInitials(): string {
     let initials = '';
     if (this.assignee?.firstName && this.assignee?.firstName.length ||
@@ -178,9 +237,20 @@ export class AlarmAssigneeSelectComponent implements OnInit, ControlValueAccesso
     return initials.toUpperCase();
   }
 
+  /**
+   * get avatar bg color.
+   *
+   * @returns string observable or value
+   */
+
   getAvatarBgColor(): string {
     return this.utilsService.stringToHslColor(this.getUserDisplayName(this.assignee), 40, 60);
   }
+
+  /**
+   * open alarm assignee select panel.
+   *
+   */
 
   openAlarmAssigneeSelectPanel($event: Event) {
     if ($event) {

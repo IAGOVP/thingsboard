@@ -38,6 +38,12 @@ import { AdditionalDebugActionConfig } from '@home/components/entity/debug/entit
 import { EntityType, entityTypeTranslations } from '@shared/models/entity-type.models';
 import { getCurrentAuthState } from '@core/auth/auth.selectors';
 
+
+/**
+ * Angular component: entity debug settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-debug-settings-panel`.
+ */
 @Component({
     selector: 'tb-entity-debug-settings-panel',
     templateUrl: './entity-debug-settings-panel.component.html',
@@ -46,10 +52,7 @@ import { getCurrentAuthState } from '@core/auth/auth.selectors';
         CommonModule,
         DurationLeftPipe
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
-/**
- * Angular component: entity debug settings panel UI.
- */
+changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntityDebugSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -70,6 +73,10 @@ export class EntityDebugSettingsPanelComponent extends PageComponent implements 
 
   isDebugAllActive$ = this.debugAllControl.valueChanges.pipe(
     startWith(this.debugAllControl.value),
+    /**
+     * switch map.
+     *
+     */
     switchMap(value => {
       if (value) {
         return of(true);
@@ -104,6 +111,11 @@ export class EntityDebugSettingsPanelComponent extends PageComponent implements 
     ).subscribe(isDebugOn => this.debugAllControl.patchValue(isDebugOn, {emitEvent: false}))
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const debugLimitsConfiguration = this.getByEntityTypeDebugLimit(this.entityType);
     this.maxMessagesCount = debugLimitsConfiguration?.split(':')[0];
@@ -116,9 +128,19 @@ export class EntityDebugSettingsPanelComponent extends PageComponent implements 
     }
   }
 
+  /**
+   * Event handler for cancel.
+   *
+   */
+
   onCancel(): void {
     this.popover.hide();
   }
+
+  /**
+   * Event handler for apply.
+   *
+   */
 
   onApply(): void {
     const isDebugAllChanged = this.initialAllEnabled !== this.debugAllControl.value || this.initialAllEnabled !== this.allEnabledUntil > new Date().getTime();
@@ -137,12 +159,24 @@ export class EntityDebugSettingsPanelComponent extends PageComponent implements 
     }
   }
 
+  /**
+   * Event handler for reset.
+   *
+   */
+
   onReset(): void {
     this.debugAllControl.patchValue(true);
     this.debugAllControl.markAsDirty();
     this.allEnabledUntil = 0;
     this.cd.markForCheck();
   }
+
+  /**
+   * get by entity type debug limit.
+   *
+   * @param entityType entity type (EntityType)
+   * @returns string observable or value
+   */
 
   private getByEntityTypeDebugLimit(entityType: EntityType): string {
     switch (entityType) {

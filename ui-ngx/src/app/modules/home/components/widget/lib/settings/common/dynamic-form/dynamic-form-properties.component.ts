@@ -52,6 +52,12 @@ import { ImportExportService } from '@shared/import-export/import-export.service
 import { DialogService } from '@core/services/dialog.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: dynamic form properties (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dynamic-form-properties`.
+ */
 @Component({
     selector: 'tb-dynamic-form-properties',
     templateUrl: './dynamic-form-properties.component.html',
@@ -69,10 +75,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: dynamic form properties UI.
- */
+standalone: false
 })
 export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -127,6 +130,11 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.propertiesFormGroup = this.fb.group({
       properties: this.fb.array([])
@@ -149,12 +157,30 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -165,11 +191,23 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (FormProperty[] | undefined)
+   */
+
   writeValue(value: FormProperty[] | undefined): void {
     const properties= value || [];
     this.propertiesFormGroup.setControl('properties', this.preparePropertiesFormArray(properties), {emitEvent: false});
     this.booleanPropertyIds = properties.filter(p => p.type === FormPropertyType.switch).map(p => p.id);
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   public validate(_c: UntypedFormControl) {
     this.errorText = '';
@@ -190,6 +228,14 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     };
   }
 
+  /**
+   * property id unique.
+   *
+   * @param id id (string)
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public propertyIdUnique(id: string, index: number): boolean {
     const propertiesArray = this.propertiesFormGroup.get('properties') as UntypedFormArray;
     for (let i = 0; i < propertiesArray.controls.length; i++) {
@@ -203,6 +249,12 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     return true;
   }
 
+  /**
+   * property drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   propertyDrop(event: CdkDragDrop<string[]>) {
     const propertiesArray = this.propertiesFormGroup.get('properties') as UntypedFormArray;
     const property = propertiesArray.at(event.previousIndex);
@@ -210,17 +262,42 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     propertiesArray.insert(event.currentIndex, property, {emitEvent: true});
   }
 
+  /**
+   * properties form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   propertiesFormArray(): UntypedFormArray {
     return this.propertiesFormGroup.get('properties') as UntypedFormArray;
   }
+
+  /**
+   * track by property.
+   *
+   * @param _index  index (number)
+   * @param propertyControl property control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByProperty(_index: number, propertyControl: AbstractControl): any {
     return propertyControl;
   }
 
+  /**
+   * DELETE — remove property.
+   *
+   * @param index index (number)
+   */
+
   removeProperty(index: number, emitEvent = true) {
     (this.propertiesFormGroup.get('properties') as UntypedFormArray).removeAt(index, {emitEvent});
   }
+
+  /**
+   * POST/PUT entity — add property.
+   *
+   */
 
   addProperty() {
     const property: FormProperty = {
@@ -240,6 +317,11 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     });
   }
 
+  /**
+   * export.
+   *
+   */
+
   export($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -247,6 +329,11 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     const properties = this.getProperties();
     this.importExportService.exportFormProperties(properties, this.exportFileName);
   }
+
+  /**
+   * import.
+   *
+   */
 
   import($event: Event) {
     if ($event) {
@@ -258,6 +345,11 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
       }
     });
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear($event: Event) {
     if ($event) {
@@ -272,6 +364,13 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     });
   }
 
+  /**
+   * prepare properties form array.
+   *
+   * @param properties properties (FormProperty[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
+
   private preparePropertiesFormArray(properties: FormProperty[] | undefined): UntypedFormArray {
     const propertiesControls: Array<AbstractControl> = [];
     if (properties) {
@@ -281,6 +380,12 @@ export class DynamicFormPropertiesComponent implements ControlValueAccessor, OnI
     }
     return this.fb.array(propertiesControls);
   }
+
+  /**
+   * get properties.
+   *
+   * @returns FormProperty[] observable or value
+   */
 
   private getProperties(): FormProperty[] {
     let properties: FormProperty[] = this.propertiesFormGroup.get('properties').value;

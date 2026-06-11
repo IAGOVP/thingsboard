@@ -97,11 +97,11 @@ export interface DashboardPageLayout {
 
 export declare type DashboardPageLayouts = {[key in DashboardLayoutId]: DashboardPageLayout};
 
+
 /**
-
- * TypeScript models and enums for layout widgets array.
-
+ * Layout widgets array (ThingsBoard web UI).
  */
+
 
 export class LayoutWidgetsArray implements Iterable<Widget> {
 
@@ -112,26 +112,60 @@ export class LayoutWidgetsArray implements Iterable<Widget> {
   constructor(private dashboardCtx: DashboardContext) {
   }
 
+  /**
+   * size.
+   *
+   */
+
   size() {
     return this.widgetIds.length;
   }
+
+  /**
+   * is loading.
+   *
+   */
 
   isLoading() {
     return !this.loaded;
   }
 
+  /**
+   * is empty.
+   *
+   */
+
   isEmpty() {
     return this.loaded && this.widgetIds.length === 0;
   }
+
+  /**
+   * set widget ids.
+   *
+   * @param widgetIds widget ids (string[])
+   */
 
   setWidgetIds(widgetIds: string[]) {
     this.widgetIds = widgetIds;
     this.loaded = true;
   }
 
+  /**
+   * POST/PUT entity — add widget id.
+   *
+   * @param widgetId widget id (string)
+   */
+
   addWidgetId(widgetId: string) {
     this.widgetIds.push(widgetId);
   }
+
+  /**
+   * DELETE — remove widget id.
+   *
+   * @param widgetId widget id (string)
+   * @returns boolean observable or value
+   */
 
   removeWidgetId(widgetId: string): boolean {
     const index = this.widgetIds.indexOf(widgetId);
@@ -147,6 +181,12 @@ export class LayoutWidgetsArray implements Iterable<Widget> {
     const widgetIds = this.widgetIds;
     const dashboard = this.dashboardCtx.getDashboard();
     return {
+      /**
+       * next.
+       *
+       * @param value value (any)
+       * @returns IteratorResult<Widget> observable or value
+       */
       next(value?: any): IteratorResult<Widget> {
         if (pointer < widgetIds.length) {
           const widgetId = widgetIds[pointer++];
@@ -165,6 +205,13 @@ export class LayoutWidgetsArray implements Iterable<Widget> {
     };
   }
 
+  /**
+   * widget by index.
+   *
+   * @param index index (number)
+   * @returns Widget observable or value
+   */
+
   public widgetByIndex(index: number): Widget {
     const widgetId = this.widgetIds[index];
     if (widgetId) {
@@ -173,6 +220,13 @@ export class LayoutWidgetsArray implements Iterable<Widget> {
       return null;
     }
   }
+
+  /**
+   * widget by id.
+   *
+   * @param widgetId widget id (string)
+   * @returns Widget observable or value
+   */
 
   private widgetById(widgetId: string): Widget {
     return this.dashboardCtx.getDashboard().configuration.widgets[widgetId];

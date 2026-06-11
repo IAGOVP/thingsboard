@@ -28,6 +28,9 @@ import { UserTabsComponent } from '@home/pages/user/user-tabs.component';
 /**
  * Angular NgModule: user feature area.
  */
+/**
+ * Angular NgModule bundling user (home/user pages).
+ */
 @NgModule({
   declarations: [
     UserComponent,
@@ -40,5 +43,5 @@ import { UserTabsComponent } from '@home/pages/user/user-tabs.component';
     SharedModule,
     HomeComponentsModule,
     UserRoutingModule
-  ]})
+]})
 export class UserModule { }

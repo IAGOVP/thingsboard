@@ -18,11 +18,11 @@ import {
   ScadaSymbolBehavior
 } from '@home/components/widget/lib/scada/scada-symbol.models';
 
+
 /**
-
- * TypeScript models and enums for scada symbol behavior group.
-
+ * Scada symbol behavior group (ThingsBoard web UI).
  */
+
 
 export interface ScadaSymbolBehaviorGroup {
   title?: string;

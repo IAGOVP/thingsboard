@@ -47,7 +47,9 @@ import { Edge } from '@shared/models/edge.models';
 import { IModulesMap } from '@modules/common/modules-map.models';
 
 /**
- * Rule chain and rule node metadata, save/test flows via `/api/ruleChain*`.
+ * Rule chain and rule node metadata, save, and test script execution.
+ *
+ * <p>REST base: `/api/ruleChain*`, `/api/ruleNode*`, `/api/component/descriptor*`.
  */
 @Injectable({
   providedIn: 'root'
@@ -65,7 +67,16 @@ export class RuleChainService {
     private translate: TranslateService
   ) { }
 
-  /** Calls ThingsBoard REST `/api/ruleChains${pageLink.toQuery()}&type=${type}, ...`. */
+  
+  /**
+   * get rule chains.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param type type (RuleChainType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<RuleChain>> observable or value
+   */
+
 
   public getRuleChains(pageLink: PageLink, type: RuleChainType = RuleChainType.CORE,
                        config?: RequestConfig): Observable<PageData<RuleChain>> {
@@ -73,26 +84,58 @@ export class RuleChainService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChains?&ruleChainIds=${ruleChainIds.join(, ...`. */
+  
+  /**
+   * get rule chains by ids.
+   *
+   * @param ruleChainIds rule chain ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<RuleChain>> observable or value
+   */
+
 
   public getRuleChainsByIds(ruleChainIds: Array<string>, config?: RequestConfig): Observable<Array<RuleChain>> {
     return this.http.get<Array<RuleChain>>(`/api/ruleChains?&ruleChainIds=${ruleChainIds.join(',')}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/${ruleChainId}, ...`. */
+  
+  /**
+   * get rule chain.
+   *
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChain> observable or value
+   */
+
 
   public getRuleChain(ruleChainId: string, config?: RequestConfig): Observable<RuleChain> {
     return this.http.get<RuleChain>(`/api/ruleChain/${ruleChainId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/${ruleChainId}/output/labels, ...`. */
+  
+  /**
+   * get rule chain output labels.
+   *
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<string>> observable or value
+   */
+
 
   public getRuleChainOutputLabels(ruleChainId: string, config?: RequestConfig): Observable<Array<string>> {
     return this.http.get<Array<string>>(`/api/ruleChain/${ruleChainId}/output/labels`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/device/default, ...`. */
+  
+  /**
+   * POST/PUT entity — create default rule chain.
+   *
+   * @param ruleChainName rule chain name (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChain> observable or value
+   */
+
 
   public createDefaultRuleChain(ruleChainName: string, config?: RequestConfig): Observable<RuleChain> {
     return this.http.post<RuleChain>('/api/ruleChain/device/default', {
@@ -100,35 +143,83 @@ export class RuleChainService {
     }, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain, ...`. */
+  
+  /**
+   * POST/PUT entity — save rule chain.
+   *
+   * @param ruleChain rule chain (RuleChain)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChain> observable or value
+   */
+
 
   public saveRuleChain(ruleChain: RuleChain, config?: RequestConfig): Observable<RuleChain> {
     return this.http.post<RuleChain>('/api/ruleChain', ruleChain, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete rule chain.
+   *
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteRuleChain(ruleChainId: string, config?: RequestConfig) {
     return this.http.delete(`/api/ruleChain/${ruleChainId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/${ruleChainId}/root, ...`. */
+  
+  /**
+   * set root rule chain.
+   *
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChain> observable or value
+   */
+
 
   public setRootRuleChain(ruleChainId: string, config?: RequestConfig): Observable<RuleChain> {
     return this.http.post<RuleChain>(`/api/ruleChain/${ruleChainId}/root`, null, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/${ruleChainId}/metadata, ...`. */
+  
+  /**
+   * get rule chain metadata.
+   *
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChainMetaData> observable or value
+   */
+
 
   public getRuleChainMetadata(ruleChainId: string, config?: RequestConfig): Observable<RuleChainMetaData> {
     return this.http.get<RuleChainMetaData>(`/api/ruleChain/${ruleChainId}/metadata`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/metadata, ...`. */
+  
+  /**
+   * POST/PUT entity — save rule chain metadata.
+   *
+   * @param ruleChainMetaData rule chain meta data (RuleChainMetaData)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChainMetaData> observable or value
+   */
+
 
   public saveRuleChainMetadata(ruleChainMetaData: RuleChainMetaData, config?: RequestConfig): Observable<RuleChainMetaData> {
     return this.http.post<RuleChainMetaData>('/api/ruleChain/metadata', ruleChainMetaData, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleNode/${ruleNodeId}/debugIn, ...`. */
+  
+  /**
+   * get rule node components.
+   *
+   * @param modulesMap modules map (IModulesMap)
+   * @param ruleChainType rule chain type (RuleChainType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<RuleNodeComponentDescriptor>> observable or value
+   */
+
 
   public getRuleNodeComponents(modulesMap: IModulesMap, ruleChainType: RuleChainType, config?: RequestConfig):
     Observable<Array<RuleNodeComponentDescriptor>> {
@@ -157,9 +248,24 @@ export class RuleChainService {
     }
   }
 
+  /**
+   * get rule node config component.
+   *
+   * @param directive directive (string)
+   * @returns Type<IRuleNodeConfigurationComponent> observable or value
+   */
+
   public getRuleNodeConfigComponent(directive: string): Type<IRuleNodeConfigurationComponent> {
     return this.ruleNodeConfigComponents[directive];
   }
+
+  /**
+   * get rule node component by clazz.
+   *
+   * @param ruleChainType rule chain type (RuleChainType)
+   * @param clazz clazz (string)
+   * @returns RuleNodeComponentDescriptor observable or value
+   */
 
   public getRuleNodeComponentByClazz(ruleChainType: RuleChainType = RuleChainType.CORE, clazz: string): RuleNodeComponentDescriptor {
     const found = this.ruleNodeComponentsMap.get(ruleChainType).filter((component) => component.clazz === clazz);
@@ -173,6 +279,12 @@ export class RuleChainService {
     }
   }
 
+  /**
+   * get rule node supported links.
+   *
+   * @param component component (RuleNodeComponentDescriptor)
+   */
+
   public getRuleNodeSupportedLinks(component: RuleNodeComponentDescriptor): {[label: string]: LinkLabel} {
     const relationTypes = component.configurationDescriptor.nodeDefinition.relationTypes;
     const linkLabels: {[label: string]: LinkLabel} = {};
@@ -185,9 +297,24 @@ export class RuleChainService {
     return linkLabels;
   }
 
+  /**
+   * rule node allow custom links.
+   *
+   * @param component component (RuleNodeComponentDescriptor)
+   * @returns boolean observable or value
+   */
+
   public ruleNodeAllowCustomLinks(component: RuleNodeComponentDescriptor): boolean {
     return component.configurationDescriptor.nodeDefinition.customRelations;
   }
+
+  /**
+   * rule node source rule chain id.
+   *
+   * @param component component (RuleNodeComponentDescriptor)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string observable or value
+   */
 
   public ruleNodeSourceRuleChainId(component: RuleNodeComponentDescriptor, config: RuleNodeConfiguration): string {
     if (component.configurationDescriptor.nodeDefinition.ruleChainNode) {
@@ -197,13 +324,30 @@ export class RuleChainService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/ruleNode/${ruleNodeId}/debugIn, ...`. */
+  
+  /**
+   * get latest rule node debug input.
+   *
+   * @param ruleNodeId rule node id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DebugRuleNodeEventBody> observable or value
+   */
+
 
   public getLatestRuleNodeDebugInput(ruleNodeId: string, config?: RequestConfig): Observable<DebugRuleNodeEventBody> {
     return this.http.get<DebugRuleNodeEventBody>(`/api/ruleNode/${ruleNodeId}/debugIn`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/testScript, ...`. */
+  
+  /**
+   * test script.
+   *
+   * @param inputParams input params (TestScriptInputParams)
+   * @param scriptLang script lang (ScriptLanguage)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TestScriptResult> observable or value
+   */
+
 
   public testScript(inputParams: TestScriptInputParams, scriptLang?: ScriptLanguage, config?: RequestConfig): Observable<TestScriptResult> {
     let url = '/api/ruleChain/testScript';
@@ -213,9 +357,23 @@ export class RuleChainService {
     return this.http.post<TestScriptResult>(url, inputParams, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * register system rule node config module.
+   *
+   * @param module module (any)
+   */
+
   public registerSystemRuleNodeConfigModule(module: any) {
     Object.assign(this.ruleNodeConfigComponents, this.resourcesService.extractComponentsFromModule<IRuleNodeConfigurationComponent>(module, RuleNodeConfigurationComponent, true));
   }
+
+  /**
+   * load rule node components.
+   *
+   * @param ruleChainType rule chain type (RuleChainType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<RuleNodeComponentDescriptor>> observable or value
+   */
 
   private loadRuleNodeComponents(ruleChainType: RuleChainType, config?: RequestConfig): Observable<Array<RuleNodeComponentDescriptor>> {
     return this.componentDescriptorService.getComponentDescriptorsByTypes(ruleNodeTypeComponentTypes, ruleChainType, config).pipe(
@@ -228,6 +386,14 @@ export class RuleChainService {
       })
     );
   }
+
+  /**
+   * resolve rule node components ui resources.
+   *
+   * @param components components (Array<RuleNodeComponentDescriptor>)
+   * @param modulesMap modules map (IModulesMap)
+   * @returns Observable<Array<RuleNodeComponentDescriptor>> observable or value
+   */
 
   private resolveRuleNodeComponentsUiResources(components: Array<RuleNodeComponentDescriptor>,
                                                modulesMap: IModulesMap):
@@ -242,6 +408,14 @@ export class RuleChainService {
       })
     );
   }
+
+  /**
+   * resolve rule node component ui resources.
+   *
+   * @param component component (RuleNodeComponentDescriptor)
+   * @param modulesMap modules map (IModulesMap)
+   * @returns Observable<RuleNodeComponentDescriptor> observable or value
+   */
 
   private resolveRuleNodeComponentUiResources(component: RuleNodeComponentDescriptor,
                                               modulesMap: IModulesMap):
@@ -289,49 +463,115 @@ export class RuleChainService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}/ruleChains${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get edge rule chains.
+   *
+   * @param edgeId edge id (string)
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<RuleChain>> observable or value
+   */
+
 
   public getEdgeRuleChains(edgeId: string, pageLink: PageLink, config?: RequestConfig): Observable<PageData<RuleChain>> {
     return this.http.get<PageData<RuleChain>>(`/api/edge/${edgeId}/ruleChains${pageLink.toQuery()}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}/ruleChain/${ruleChainId}, ...`. */
+  
+  /**
+   * assign rule chain to edge.
+   *
+   * @param edgeId edge id (string)
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChain> observable or value
+   */
+
 
   public assignRuleChainToEdge(edgeId: string, ruleChainId: string, config?: RequestConfig): Observable<RuleChain> {
     return this.http.post<RuleChain>(`/api/edge/${edgeId}/ruleChain/${ruleChainId}`, null,
       defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * unassign rule chain from edge.
+   *
+   * @param edgeId edge id (string)
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public unassignRuleChainFromEdge(edgeId: string, ruleChainId: string, config?: RequestConfig) {
     return this.http.delete(`/api/edge/${edgeId}/ruleChain/${ruleChainId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/${ruleChainId}/edgeTemplateRoot, ...`. */
+  
+  /**
+   * set edge template root rule chain.
+   *
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChain> observable or value
+   */
+
 
   public setEdgeTemplateRootRuleChain(ruleChainId: string, config?: RequestConfig): Observable<RuleChain> {
     return this.http.post<RuleChain>(`/api/ruleChain/${ruleChainId}/edgeTemplateRoot`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/${ruleChainId}/autoAssignToEdge, ...`. */
+  
+  /**
+   * set auto assign to edge rule chain.
+   *
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChain> observable or value
+   */
+
 
   public setAutoAssignToEdgeRuleChain(ruleChainId: string, config?: RequestConfig): Observable<RuleChain> {
     return this.http.post<RuleChain>(`/api/ruleChain/${ruleChainId}/autoAssignToEdge`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/${ruleChainId}/autoAssignToEdge, ...`. */
+  
+  /**
+   * unset auto assign to edge rule chain.
+   *
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<RuleChain> observable or value
+   */
+
 
   public unsetAutoAssignToEdgeRuleChain(ruleChainId: string, config?: RequestConfig): Observable<RuleChain> {
     return this.http.delete<RuleChain>(`/api/ruleChain/${ruleChainId}/autoAssignToEdge`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ruleChain/autoAssignToEdgeRuleChains, ...`. */
+  
+  /**
+   * get auto assign to edge rule chains.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<RuleChain>> observable or value
+   */
+
 
   public getAutoAssignToEdgeRuleChains(config?: RequestConfig): Observable<Array<RuleChain>> {
     return this.http.get<Array<RuleChain>>(`/api/ruleChain/autoAssignToEdgeRuleChains`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}/${ruleChainId}/root`. */
+  
+  /**
+   * set edge root rule chain.
+   *
+   * @param edgeId edge id (string)
+   * @param ruleChainId rule chain UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Edge> observable or value
+   */
+
 
   public setEdgeRootRuleChain(edgeId: string, ruleChainId: string, config?: RequestConfig): Observable<Edge> {
     return this.http.post<Edge>(`/api/edge/${edgeId}/${ruleChainId}/root`, defaultHttpOptionsFromConfig(config));

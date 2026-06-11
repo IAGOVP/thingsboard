@@ -34,7 +34,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Rule engine transformation node 'to email': Transforms message to email message Implements org.thingsboard.rule.engine.api.TbNode.
+ * Transformation rule node — <b>to email</b>.
+ *
+ * <p>Transforms message to email message
+ * <br>Transforms message to email message. If transformation completed successfully output message type will be set to <code>SEND_EMAIL</code>.  
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgToEmailNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/to-email/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/to-email/</a>
  */
 @RuleNode(
         type = ComponentType.TRANSFORMATION,
@@ -54,12 +60,26 @@ public class TbMsgToEmailNode implements TbNode {
 
     private TbMsgToEmailNodeConfiguration config;
     private boolean dynamicMailBodyType;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         config = TbNodeUtils.convert(configuration, TbMsgToEmailNodeConfiguration.class);
         dynamicMailBodyType = DYNAMIC.equals(config.getMailBodyType());
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

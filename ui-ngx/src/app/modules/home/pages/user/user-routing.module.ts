@@ -61,10 +61,13 @@ const routes: Routes = [
 /**
  * Angular NgModule: user routing feature area.
  */
+/**
+ * Angular NgModule bundling user routing (home/user pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     UsersTableConfigResolver
-  ]})
+]})
 export class UserRoutingModule { }

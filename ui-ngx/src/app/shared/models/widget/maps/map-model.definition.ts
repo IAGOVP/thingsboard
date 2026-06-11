@@ -37,11 +37,11 @@ import {
 } from '@shared/models/widget/maps/map.models';
 import { WidgetModelDefinition } from '@shared/models/widget/widget-model.definition';
 
+
 /**
-
- * TypeScript models and enums for alias filter pair.
-
+ * TypeScript interfaces, types, and enums for alias filter pair (shared TypeScript models).
  */
+
 
 interface AliasFilterPair {
   alias?: EntityAliasInfo,

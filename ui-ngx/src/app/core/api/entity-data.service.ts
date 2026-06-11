@@ -58,7 +58,9 @@ export interface EntityDataLoadResult {
 }
 
 /**
- * Angular HTTP service: entity data REST wrappers (`@core/http`).
+ * Angular injectable service: entity data (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -69,6 +71,14 @@ export class EntityDataService {
               private utils: UtilsService,
               private http: HttpClient) {}
 
+  /**
+   * is unresolved datasource.
+   *
+   * @param datasource datasource (Datasource)
+   * @param pageLink pagination and sort parameters
+   * @returns boolean observable or value
+   */
+
   private static isUnresolvedDatasource(datasource: Datasource, pageLink: EntityDataPageLink): boolean {
     if (datasource.type === DatasourceType.entity) {
       return !datasource.entityFilter || !pageLink;
@@ -78,6 +88,14 @@ export class EntityDataService {
       return false;
     }
   }
+
+  /**
+   * to subscription data key.
+   *
+   * @param dataKey data key (DataKey)
+   * @param latest latest (boolean)
+   * @returns SubscriptionDataKey observable or value
+   */
 
   private static toSubscriptionDataKey(dataKey: DataKey, latest: boolean): SubscriptionDataKey {
     return {
@@ -93,6 +111,13 @@ export class EntityDataService {
       latest
     };
   }
+
+  /**
+   * prepare subscription.
+   *
+   * @param listener listener (EntityDataListener)
+   * @returns Observable<EntityDataLoadResult> observable or value
+   */
 
   public prepareSubscription(listener: EntityDataListener,
                              ignoreDataUpdateOnIntervalTick = false): Observable<EntityDataLoadResult> {
@@ -112,6 +137,12 @@ export class EntityDataService {
     return listener.subscription.subscribe();
   }
 
+  /**
+   * start subscription.
+   *
+   * @param listener listener (EntityDataListener)
+   */
+
   public startSubscription(listener: EntityDataListener) {
     if (listener.subscription) {
       if (listener.useTimewindow) {
@@ -123,6 +154,15 @@ export class EntityDataService {
       listener.subscription.start();
     }
   }
+
+  /**
+   * subscribe for paginated data.
+   *
+   * @param listener listener (EntityDataListener)
+   * @param pageLink pagination and sort parameters
+   * @param keyFilters key filters (KeyFilter[])
+   * @returns Observable<EntityDataLoadResult> observable or value
+   */
 
   public subscribeForPaginatedData(listener: EntityDataListener,
                                    pageLink: EntityDataPageLink,
@@ -152,11 +192,30 @@ export class EntityDataService {
     return listener.subscription.subscribe();
   }
 
+  /**
+   * stop subscription.
+   *
+   * @param listener listener (EntityDataListener)
+   */
+
   public stopSubscription(listener: EntityDataListener) {
     if (listener.subscription) {
       listener.subscription.unsubscribe();
     }
   }
+
+  /**
+   * POST/PUT entity — create subscription options.
+   *
+   * @param datasource datasource (Datasource)
+   * @param subscriptionType subscription type (widgetType)
+   * @param pageLink pagination and sort parameters
+   * @param keyFilters key filters (KeyFilter[])
+   * @param additionalKeyFilters additional key filters (KeyFilter[])
+   * @param isPaginatedDataSubscription is paginated data subscription (boolean)
+   * @param ignoreDataUpdateOnIntervalTick ignore data update on interval tick (boolean)
+   * @returns EntityDataSubscriptionOptions observable or value
+   */
 
   private createSubscriptionOptions(datasource: Datasource,
                                     subscriptionType: widgetType,

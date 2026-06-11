@@ -26,14 +26,17 @@ import {
 import type { JsFuncComponent } from '@app/shared/components/js-func.component';
 import { DebugRuleNodeEventBody } from '@shared/models/event.models';
 
+
+/**
+ * Angular component: switch config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-node-switch-config`.
+ */
 @Component({
     selector: 'tb-filter-node-switch-config',
     templateUrl: './switch-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: switch config UI.
- */
+standalone: false
 })
 export class SwitchConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -58,9 +61,21 @@ export class SwitchConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.switchConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.switchConfigForm = this.fb.group({
@@ -70,9 +85,21 @@ export class SwitchConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['scriptLang'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     let scriptLang: ScriptLanguage = this.switchConfigForm.get('scriptLang').value;
@@ -89,6 +116,13 @@ export class SwitchConfigComponent extends RuleNodeConfigurationComponent {
     this.switchConfigForm.get('tbelScript').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (configuration) {
       if (!configuration.scriptLang) {
@@ -101,6 +135,12 @@ export class SwitchConfigComponent extends RuleNodeConfigurationComponent {
       tbelScript: isDefinedAndNotNull(configuration?.tbelScript) ? configuration.tbelScript : null
     };
   }
+
+  /**
+   * test script.
+   *
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   */
 
   testScript(debugEventBody?: DebugRuleNodeEventBody) {
     const scriptLang: ScriptLanguage = this.switchConfigForm.get('scriptLang').value;
@@ -124,6 +164,11 @@ export class SwitchConfigComponent extends RuleNodeConfigurationComponent {
       }
     });
   }
+
+  /**
+   * Event handler for validate.
+   *
+   */
 
   protected onValidate() {
     const scriptLang: ScriptLanguage = this.switchConfigForm.get('scriptLang').value;

@@ -38,7 +38,9 @@ import { selectAuth, selectIsAuthenticated } from '@core/auth/auth.selectors';
 import { filter, switchMap, take } from 'rxjs/operators';
 
 /**
- * Angular HTTP service: unit REST wrappers (`@core/http`).
+ * Angular injectable service: unit (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -64,9 +66,21 @@ export class UnitService {
     })
   }
 
+  /**
+   * get unit system.
+   *
+   * @returns UnitSystem observable or value
+   */
+
   getUnitSystem(): UnitSystem {
     return this.currentUnitSystem;
   }
+
+  /**
+   * set unit system.
+   *
+   * @param unitSystem unit system (UnitSystem)
+   */
 
   setUnitSystem(unitSystem: UnitSystem) {
     if (isNotEmptyStr(unitSystem)) {
@@ -76,17 +90,49 @@ export class UnitService {
     }
   }
 
+  /**
+   * get units.
+   *
+   * @param measure measure (AllMeasures)
+   * @param unitSystem unit system (UnitSystem)
+   * @returns UnitInfo[] observable or value
+   */
+
   getUnits(measure?: AllMeasures, unitSystem?: UnitSystem): UnitInfo[] {
     return this.converter?.listUnits(measure, unitSystem);
   }
+
+  /**
+   * get units grouped by measure.
+   *
+   * @param measure measure (AllMeasures)
+   * @param unitSystem unit system (UnitSystem)
+   * @param tagFilter tag filter (string)
+   * @returns UnitInfoGroupByMeasure<AllMeasures> observable or value
+   */
 
   getUnitsGroupedByMeasure(measure?: AllMeasures, unitSystem?: UnitSystem, tagFilter?: string): UnitInfoGroupByMeasure<AllMeasures> {
     return this.converter?.unitsGroupByMeasure(measure, unitSystem, tagFilter);
   }
 
+  /**
+   * get unit info.
+   *
+   * @param symbol symbol (AllMeasuresUnits | string)
+   * @returns UnitInfo observable or value
+   */
+
   getUnitInfo(symbol: AllMeasuresUnits | string): UnitInfo {
     return this.converter.describe(symbol);
   }
+
+  /**
+   * get default unit.
+   *
+   * @param measure measure (AllMeasures)
+   * @param unitSystem unit system (UnitSystem)
+   * @returns AllMeasuresUnits observable or value
+   */
 
   getDefaultUnit(measure: AllMeasures, unitSystem: UnitSystem): AllMeasuresUnits {
     return this.converter.getDefaultUnit(measure, unitSystem);
@@ -94,6 +140,13 @@ export class UnitService {
 
   geUnitConverter(unit: TbUnit): TbUnitConverter;
   geUnitConverter(from: string, to: string): TbUnitConverter;
+  /**
+   * ge unit converter.
+   *
+   * @param unit unit (TbUnit)
+   * @param to to (string)
+   * @returns TbUnitConverter observable or value
+   */
   geUnitConverter(unit: TbUnit, to?: string): TbUnitConverter {
     try {
       if (isTbUnitMapping(unit)) {
@@ -110,6 +163,13 @@ export class UnitService {
     }
   }
 
+  /**
+   * get target unit symbol.
+   *
+   * @param unit unit (TbUnitMapping | string)
+   * @returns string observable or value
+   */
+
   getTargetUnitSymbol(unit: TbUnitMapping | string): string {
     if (isObject(unit)) {
       return isNotEmptyStr(unit[this.currentUnitSystem]) ? unit[this.currentUnitSystem] : (unit as TbUnitMapping).from;
@@ -119,6 +179,14 @@ export class UnitService {
 
   convertUnitValue(value: number, unit: TbUnit): number;
   convertUnitValue(value: number, from: string, to: string): number;
+  /**
+   * convert unit value.
+   *
+   * @param value value (number)
+   * @param unit unit (TbUnit)
+   * @param to to (string)
+   * @returns number observable or value
+   */
   convertUnitValue(value: number, unit: TbUnit, to?: string): number {
     try {
       if (isTbUnitMapping(unit)) {
@@ -134,6 +202,12 @@ export class UnitService {
       return value;
     }
   }
+
+  /**
+   * get unit system by timezone.
+   *
+   * @returns UnitSystem observable or value
+   */
 
   private getUnitSystemByTimezone(): UnitSystem {
     const timeZone = moment.tz.guess(true);

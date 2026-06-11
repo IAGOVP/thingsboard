@@ -18,8 +18,11 @@ package org.thingsboard.rule.engine.mail;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbSendEmail rule node.
+ * JSON configuration POJO for {@link TbSendEmail} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbSendEmailNodeConfiguration implements NodeConfiguration {
@@ -38,6 +41,12 @@ public class TbSendEmailNodeConfiguration implements NodeConfiguration {
     private String proxyPort;
     private String proxyUser;
     private String proxyPassword;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbSendEmailNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbSendEmailNodeConfiguration defaultConfiguration() {

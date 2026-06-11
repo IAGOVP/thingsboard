@@ -44,6 +44,12 @@ import { MatButton } from '@angular/material/button';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: template autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-template-autocomplete`.
+ */
 @Component({
     selector: 'tb-template-autocomplete',
     templateUrl: './template-autocomplete.component.html',
@@ -54,10 +60,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             useExisting: forwardRef(() => TemplateAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: template autocomplete UI.
- */
+standalone: false
 })
 export class TemplateAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -117,12 +120,29 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     if (this.required) {
@@ -132,6 +152,10 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
     this.filteredTemplate = this.selectTemplateFormGroup.get('templateName').valueChanges
       .pipe(
         debounceTime(150),
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue;
           if (typeof value === 'string' || !value) {
@@ -150,6 +174,12 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
       );
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -159,9 +189,22 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
     }
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (EntityId | null)
+   */
 
   writeValue(value: EntityId | null): void {
     this.searchText = '';
@@ -189,6 +232,11 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectTemplateFormGroup.get('templateName').updateValueAndValidity({onlySelf: true, emitEvent: true});
@@ -196,9 +244,21 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
     }
   }
 
+  /**
+   * display template fn.
+   *
+   * @param template template (NotificationTemplate)
+   * @returns string | undefined observable or value
+   */
+
   displayTemplateFn(template?: NotificationTemplate): string | undefined {
     return template ? template.name : undefined;
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectTemplateFormGroup.get('templateName').patchValue('', {emitEvent: true});
@@ -207,6 +267,11 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
       this.templateInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * edit template.
+   *
+   */
 
   editTemplate($event: Event) {
     if ($event) {
@@ -219,11 +284,23 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
     );
   }
 
+  /**
+   * POST/PUT entity — create template.
+   *
+   * @param button button (MatButton)
+   */
+
   createTemplate($event: Event, button: MatButton) {
     $event?.stopPropagation();
     button._elementRef.nativeElement.blur();
     this.createTemplateByName($event);
   }
+
+  /**
+   * POST/PUT entity — create template by name.
+   *
+   * @param name name (string)
+   */
 
   createTemplateByName($event: Event, name?: string) {
     $event?.stopPropagation();
@@ -233,6 +310,12 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
       name
     });
   }
+
+  /**
+   * open notification template dialog.
+   *
+   * @param dialogData dialog data (TemplateNotificationDialogData)
+   */
 
   private openNotificationTemplateDialog(dialogData?: TemplateNotificationDialogData) {
     this.dialog.open<TemplateNotificationDialogComponent, TemplateNotificationDialogData,
@@ -248,12 +331,25 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
       });
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (EntityId | null)
+   */
+
   private updateView(value: EntityId | null) {
     if (!isEqual(this.modelValue, value)) {
       this.modelValue = value;
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * fetch template.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<NotificationTemplate>> observable or value
+   */
 
   private fetchTemplate(searchText?: string): Observable<Array<NotificationTemplate>> {
     this.searchText = searchText;
@@ -267,11 +363,22 @@ export class TemplateAutocompleteComponent implements ControlValueAccessor, OnIn
     );
   }
 
+  /**
+   * reset.
+   *
+   */
+
   private reset() {
     this.selectTemplateFormGroup.get('templateName').patchValue('', {emitEvent: false});
     this.updateView(null);
     this.dirty = true;
   }
+
+  /**
+   * get notification delivery method info map.
+   *
+   * @param key key (string)
+   */
 
   getNotificationDeliveryMethodInfoMap(key: string) {
     return this.notificationDeliveryMethodInfoMap.get(key as NotificationDeliveryMethod);

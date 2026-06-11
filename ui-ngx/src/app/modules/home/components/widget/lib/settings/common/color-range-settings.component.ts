@@ -30,8 +30,11 @@ import { MatButton } from '@angular/material/button';
 import { TbPopoverService } from '@shared/components/popover.service';
 import { ColorRangePanelComponent } from '@home/components/widget/lib/settings/common/color-range-panel.component';
 /**
- * Angular HTTP service: color range settings component REST wrappers (`@core/http`).
+ * Angular injectable service: color range settings component (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 @Injectable()
 export class ColorRangeSettingsComponentService {
@@ -40,13 +43,32 @@ export class ColorRangeSettingsComponentService {
 
   constructor() {}
 
+  /**
+   * register color settings component.
+   *
+   * @param comp comp (ColorRangeSettingsComponent)
+   */
+
   public registerColorSettingsComponent(comp: ColorRangeSettingsComponent) {
     this.colorSettingsComponents.add(comp);
   }
 
+  /**
+   * unregister color settings component.
+   *
+   * @param comp comp (ColorRangeSettingsComponent)
+   */
+
   public unregisterColorSettingsComponent(comp: ColorRangeSettingsComponent) {
     this.colorSettingsComponents.delete(comp);
   }
+
+  /**
+   * get other color settings components.
+   *
+   * @param comp comp (ColorRangeSettingsComponent)
+   * @returns ColorRangeSettingsComponent[] observable or value
+   */
 
   public getOtherColorSettingsComponents(comp: ColorRangeSettingsComponent): ColorRangeSettingsComponent[] {
     const result: ColorRangeSettingsComponent[] = [];

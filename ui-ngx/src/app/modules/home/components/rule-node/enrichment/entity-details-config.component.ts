@@ -25,17 +25,19 @@ import {
   FetchTo
 } from '@home/components/rule-node/rule-node-config.models';
 
+
+
+/**
+ * Angular component: entity details config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-entity-details-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-entity-details-config',
     templateUrl: './entity-details-config.component.html',
     styleUrls: [],
-    standalone: false
 
-/**
-
- * Angular component: entity details config UI.
-
- */
+standalone: false
 })
 
 export class EntityDetailsConfigComponent extends RuleNodeConfigurationComponent implements OnInit {
@@ -55,13 +57,31 @@ export class EntityDetailsConfigComponent extends RuleNodeConfigurationComponent
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     super.ngOnInit();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.entityDetailsConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     let fetchTo: FetchTo;
@@ -84,6 +104,12 @@ export class EntityDetailsConfigComponent extends RuleNodeConfigurationComponent
       fetchTo
     };
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.entityDetailsConfigForm = this.fb.group({

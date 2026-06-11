@@ -27,14 +27,17 @@ import {
   LatestChartWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/latest-chart-widget-settings.component';
 
+
+/**
+ * Angular component: polar area chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-polar-area-chart-widget-settings`.
+ */
 @Component({
     selector: 'tb-polar-area-chart-widget-settings',
     templateUrl: './latest-chart-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: polar area chart widget settings UI.
- */
+standalone: false
 })
 export class PolarAreaChartWidgetSettingsComponent extends LatestChartWidgetSettingsComponent<PolarAreaChartWidgetSettings> {
 
@@ -46,13 +49,31 @@ export class PolarAreaChartWidgetSettingsComponent extends LatestChartWidgetSett
     super(store, fb);
   }
 
+  /**
+   * default latest chart settings.
+   *
+   */
+
   protected defaultLatestChartSettings() {
     return polarAreaChartWidgetDefaultSettings;
   }
 
+  /**
+   * latest chart config template.
+   *
+   * @returns TemplateRef<any> observable or value
+   */
+
   public latestChartConfigTemplate(): TemplateRef<any> {
     return this.polarAreaChartConfigTemplate;
   }
+
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
 
   protected setupLatestChartControls(latestChartWidgetSettingsForm: UntypedFormGroup, settings: WidgetSettings) {
     latestChartWidgetSettingsForm.addControl('barSettings', this.fb.control(settings.barSettings, []));

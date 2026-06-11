@@ -23,14 +23,17 @@ import { isDefinedAndNotNull } from '@core/utils';
 import { mapWidgetDefaultSettings } from '@home/components/widget/lib/maps/map-widget.models';
 import { WidgetConfigComponentData } from '@home/models/widget-component.models';
 
+
+/**
+ * Angular component: map widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-widget-settings`.
+ */
 @Component({
     selector: 'tb-map-widget-settings',
     templateUrl: './map-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: map widget settings UI.
- */
+standalone: false
 })
 export class MapWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -43,9 +46,21 @@ export class MapWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.mapWidgetSettingsForm;
   }
+
+  /**
+   * Event handler for widget config set.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected onWidgetConfigSet(widgetConfig: WidgetConfigComponentData) {
     const params = widgetConfig.typeParameters as any;
@@ -56,9 +71,22 @@ export class MapWidgetSettingsComponent extends WidgetSettingsComponent {
     }
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return mapWidgetDefaultSettings;
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return {
@@ -68,6 +96,12 @@ export class MapWidgetSettingsComponent extends WidgetSettingsComponent {
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.mapWidgetSettingsForm = this.fb.group({
       mapSettings: [settings.mapSettings, []],
@@ -75,6 +109,13 @@ export class MapWidgetSettingsComponent extends WidgetSettingsComponent {
       padding: [settings.padding, []]
     });
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return {...settings.mapSettings, background: settings.background, padding: settings.padding};

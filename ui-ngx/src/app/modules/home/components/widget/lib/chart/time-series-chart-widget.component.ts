@@ -45,15 +45,18 @@ import {
 import { mergeDeep } from '@core/utils';
 import { WidgetComponent } from '@home/components/widget/widget.component';
 
+
+/**
+ * Angular component: time series chart widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-widget`.
+ */
 @Component({
     selector: 'tb-time-series-chart-widget',
     templateUrl: './time-series-chart-widget.component.html',
     styleUrls: ['./time-series-chart-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart widget UI.
- */
+standalone: false
 })
 export class TimeSeriesChartWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -95,6 +98,11 @@ export class TimeSeriesChartWidgetComponent implements OnInit, OnDestroy, AfterV
               private renderer: Renderer2,
               private cd: ChangeDetectorRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.ctx.$scope.timeSeriesChartWidget = this;
@@ -138,9 +146,19 @@ export class TimeSeriesChartWidgetComponent implements OnInit, OnDestroy, AfterV
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.timeSeriesChart = new TbTimeSeriesChart(this.ctx, this.settings, this.chartShape.nativeElement, this.renderer);
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     if (this.timeSeriesChart) {
@@ -148,11 +166,21 @@ export class TimeSeriesChartWidgetComponent implements OnInit, OnDestroy, AfterV
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     if (this.timeSeriesChart) {
@@ -160,19 +188,42 @@ export class TimeSeriesChartWidgetComponent implements OnInit, OnDestroy, AfterV
     }
   }
 
+  /**
+   * Event handler for latest data updated.
+   *
+   */
+
   public onLatestDataUpdated() {
     if (this.timeSeriesChart) {
       this.timeSeriesChart.latestUpdated();
     }
   }
 
+  /**
+   * Event handler for legend key enter.
+   *
+   * @param legendKey legend key (LegendKey)
+   */
+
   public onLegendKeyEnter(legendKey: LegendKey) {
     this.timeSeriesChart.keyEnter(legendKey.dataKey);
   }
 
+  /**
+   * Event handler for legend key leave.
+   *
+   * @param legendKey legend key (LegendKey)
+   */
+
   public onLegendKeyLeave(legendKey: LegendKey) {
     this.timeSeriesChart.keyLeave(legendKey.dataKey);
   }
+
+  /**
+   * toggle legend key.
+   *
+   * @param legendKey legend key (LegendKey)
+   */
 
   public toggleLegendKey(legendKey: LegendKey) {
     this.timeSeriesChart.toggleKey(legendKey.dataKey, legendKey.dataIndex);

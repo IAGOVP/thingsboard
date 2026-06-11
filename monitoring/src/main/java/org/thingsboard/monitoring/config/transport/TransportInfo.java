@@ -18,14 +18,21 @@ package org.thingsboard.monitoring.config.transport;
 import lombok.Data;
 import org.thingsboard.monitoring.data.notification.ShortNameProvider;
 /**
- * Monitoring component: transport info.
+ * Resolved transport connection details (host, port, protocol) for a monitoring target.
  */
+
 
 @Data
 public class TransportInfo implements ShortNameProvider {
 
     private final TransportType type;
     private final TransportMonitoringTarget target;
+    /**
+     * Returns a compact display name for the monitored service key.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getShortName() {
         if (target.getQueue().equals("Main")) {

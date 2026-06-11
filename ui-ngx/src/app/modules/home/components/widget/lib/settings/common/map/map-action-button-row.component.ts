@@ -29,6 +29,12 @@ import { WidgetAction, WidgetActionType, widgetType } from '@shared/models/widge
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isEmptyStr } from '@core/utils';
 
+
+/**
+ * Angular component: map action button row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-action-button-row`.
+ */
 @Component({
     selector: 'tb-map-action-button-row',
     templateUrl: 'map-action-button-row.component.html',
@@ -42,10 +48,7 @@ import { isEmptyStr } from '@core/utils';
             useExisting: forwardRef(() => MapActionButtonRowComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: map action button row UI.
- */
+standalone: false
 })
 export class MapActionButtonRowComponent implements ControlValueAccessor, Validator {
 
@@ -70,11 +73,29 @@ export class MapActionButtonRowComponent implements ControlValueAccessor, Valida
     ).subscribe(value => this.propagateChange(value))
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void { }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
@@ -84,15 +105,32 @@ export class MapActionButtonRowComponent implements ControlValueAccessor, Valida
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.mapActionButton.valid ? null : {
       mapButtonAction: false
     };
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MapActionButtonSettings)
+   */
+
   writeValue(value: MapActionButtonSettings) {
    this.mapActionButton.patchValue(value, {emitEvent: false});
   }
+
+  /**
+   * validate button config.
+   *
+   */
 
   private validateButtonConfig() {
     return (c: FormGroup) => {

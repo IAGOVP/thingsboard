@@ -31,7 +31,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import static org.thingsboard.server.common.data.DataConstants.QUEUE_NAME;
 
 /**
- * Rule engine flow node 'checkpoint': transfers the message to another queue Implements org.thingsboard.rule.engine.api.TbNode.
+ * Flow rule node — <b>checkpoint</b>.
+ *
+ * <p>transfers the message to another queue
+ * <br>After successful transfer incoming message is automatically acknowledged. Queue name is configurable.
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link EmptyNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/flow/checkpoint/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/flow/checkpoint/</a>
  */
 @RuleNode(
         type = ComponentType.FLOW,
@@ -47,16 +53,38 @@ import static org.thingsboard.server.common.data.DataConstants.QUEUE_NAME;
 public class TbCheckpointNode implements TbNode {
 
     private String queueName;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         queueName = ctx.getQueueName();
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
         ctx.enqueueForTellNext(msg, queueName, TbNodeConnectionType.SUCCESS, () -> ctx.ack(msg), error -> ctx.tellFailure(msg, error));
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

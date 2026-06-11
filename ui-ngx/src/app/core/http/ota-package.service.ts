@@ -36,7 +36,9 @@ import { DialogService } from '@core/services/dialog.service';
 import { ResourcesService } from '@core/services/resources.service';
 
 /**
- * Angular HTTP service: ota package REST wrappers (`@core/http`).
+ * Angular injectable service: ota package (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -51,13 +53,31 @@ export class OtaPackageService {
 
   }
 
-  /** Calls ThingsBoard REST `/api/otaPackages${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get ota packages.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<OtaPackageInfo>> observable or value
+   */
+
 
   public getOtaPackages(pageLink: PageLink, config?: RequestConfig): Observable<PageData<OtaPackageInfo>> {
     return this.http.get<PageData<OtaPackageInfo>>(`/api/otaPackages${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/otaPackages/${deviceProfileId}/${type}${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get ota packages info by device profile id.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param deviceProfileId device profile id (string)
+   * @param type type (OtaUpdateType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<OtaPackageInfo>> observable or value
+   */
+
 
   public getOtaPackagesInfoByDeviceProfileId(pageLink: PageLink, deviceProfileId: string, type: OtaUpdateType,
                                              config?: RequestConfig): Observable<PageData<OtaPackageInfo>> {
@@ -65,25 +85,58 @@ export class OtaPackageService {
     return this.http.get<PageData<OtaPackageInfo>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/otaPackage/${otaPackageId}, ...`. */
+  
+  /**
+   * get ota package.
+   *
+   * @param otaPackageId ota package id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<OtaPackage> observable or value
+   */
+
 
   public getOtaPackage(otaPackageId: string, config?: RequestConfig): Observable<OtaPackage> {
     return this.http.get<OtaPackage>(`/api/otaPackage/${otaPackageId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/otaPackage/info/${otaPackageId}, ...`. */
+  
+  /**
+   * get ota package info.
+   *
+   * @param otaPackageId ota package id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<OtaPackageInfo> observable or value
+   */
+
 
   public getOtaPackageInfo(otaPackageId: string, config?: RequestConfig): Observable<OtaPackageInfo> {
     return this.http.get<OtaPackageInfo>(`/api/otaPackage/info/${otaPackageId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/otaPackage/${otaPackageId}/download, ...`. */
+  
+  /**
+   * Calls ThingsBoard REST `/api/otaPackage/*`.
+   *
+   * REST endpoint(s): `/api/otaPackage/*`
+   *
+   * @param otaPackageId ota package id (string)
+   * @returns Observable<any> observable or value
+   */
+
 
   public downloadOtaPackage(otaPackageId: string): Observable<any> {
     return this.resourcesService.downloadResource(`/api/otaPackage/${otaPackageId}/download`);
   }
 
-  /** Calls ThingsBoard REST `/api/otaPackage, ...`. */
+  
+  /**
+   * POST/PUT entity — save ota package.
+   *
+   * @param otaPackage ota package (OtaPackage)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<OtaPackage> observable or value
+   */
+
 
   public saveOtaPackage(otaPackage: OtaPackage, config?: RequestConfig): Observable<OtaPackage> {
     if (!otaPackage.file) {
@@ -102,13 +155,32 @@ export class OtaPackageService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/otaPackage, ...`. */
+  
+  /**
+   * POST/PUT entity — save ota package info.
+   *
+   * @param otaPackageInfo ota package info (OtaPackageInfo)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<OtaPackage> observable or value
+   */
+
 
   public saveOtaPackageInfo(otaPackageInfo: OtaPackageInfo, config?: RequestConfig): Observable<OtaPackage> {
     return this.http.post<OtaPackage>('/api/otaPackage', otaPackageInfo, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/otaPackage/${otaPackageId}?checksumAlgorithm=${checksumAlgorithm}, ...`. */
+  
+  /**
+   * upload ota package file.
+   *
+   * @param otaPackageId ota package id (string)
+   * @param file file (File)
+   * @param checksumAlgorithm checksum algorithm (ChecksumAlgorithm)
+   * @param checksum checksum (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public uploadOtaPackageFile(otaPackageId: string, file: File, checksumAlgorithm: ChecksumAlgorithm,
                               checksum?: string, config?: RequestConfig): Observable<any> {
@@ -125,15 +197,39 @@ export class OtaPackageService {
       defaultHttpUploadOptions(config.ignoreLoading, config.ignoreErrors, config.resendRequest));
   }
 
+  /**
+   * DELETE — delete ota package.
+   *
+   * @param otaPackageId ota package id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteOtaPackage(otaPackageId: string, config?: RequestConfig) {
     return this.http.delete(`/api/otaPackage/${otaPackageId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/devices/count/${type}/${entityId.id}`. */
+  
+  /**
+   * count update device after change package.
+   *
+   * @param type type (OtaUpdateType)
+   * @param entityId entity UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<number> observable or value
+   */
+
 
   public countUpdateDeviceAfterChangePackage(type: OtaUpdateType, entityId: EntityId, config?: RequestConfig): Observable<number> {
     return this.http.get<number>(`/api/devices/count/${type}/${entityId.id}`, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * confirm dialog update package.
+   *
+   * @param entity entity (BaseData<EntityId>&OtaPagesIds)
+   * @param originEntity origin entity (BaseData<EntityId>&OtaPagesIds)
+   * @returns Observable<boolean> observable or value
+   */
 
   public confirmDialogUpdatePackage(entity: BaseData<EntityId>&OtaPagesIds,
                                     originEntity: BaseData<EntityId>&OtaPagesIds): Observable<boolean> {

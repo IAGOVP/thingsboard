@@ -46,15 +46,18 @@ import { deepClone, mergeDeep } from '@core/utils';
 import { catchError } from 'rxjs/operators';
 import { HttpStatusCode } from '@angular/common/http';
 
+
+/**
+ * Angular component: entity details panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-details-panel`.
+ */
 @Component({
     selector: 'tb-entity-details-panel',
     templateUrl: './entity-details-panel.component.html',
     styleUrls: ['./entity-details-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: entity details panel UI.
- */
+standalone: false
 })
 export class EntityDetailsPanelComponent extends PageComponent implements AfterViewInit, OnDestroy {
 
@@ -145,11 +148,21 @@ export class EntityDetailsPanelComponent extends PageComponent implements AfterV
     return this.isEditValue;
   }
 
+  /**
+   * init.
+   *
+   */
+
   protected init() {
     this.translations = this.entitiesTableConfig.entityTranslations;
     this.resources = this.entitiesTableConfig.entityResources;
     this.buildEntityComponent();
   }
+
+  /**
+   * clear subscriptions.
+   *
+   */
 
   private clearSubscriptions() {
     this.subscriptions.forEach((subscription) => {
@@ -158,10 +171,20 @@ export class EntityDetailsPanelComponent extends PageComponent implements AfterV
     this.subscriptions.length = 0;
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     super.ngOnDestroy();
     this.clearSubscriptions();
   }
+
+  /**
+   * build entity component.
+   *
+   */
 
   buildEntityComponent() {
     this.clearSubscriptions();
@@ -199,6 +222,11 @@ export class EntityDetailsPanelComponent extends PageComponent implements AfterV
     }));
   }
 
+  /**
+   * build entity tabs component.
+   *
+   */
+
   buildEntityTabsComponent() {
     if (this.entityTabsComponentRef) {
       this.entityTabsComponentRef.destroy();
@@ -228,9 +256,21 @@ export class EntityDetailsPanelComponent extends PageComponent implements AfterV
     }
   }
 
+  /**
+   * hide details tabs.
+   *
+   * @returns boolean observable or value
+   */
+
   hideDetailsTabs(): boolean {
     return !this.entityTabsComponent || this.isEditValue && this.entitiesTableConfig.hideDetailsTabsOnEdit;
   }
+
+  /**
+   * reload entity.
+   *
+   * @returns Observable<BaseData<HasId>> observable or value
+   */
 
   reloadEntity(): Observable<BaseData<HasId>> {
     const loadEntitySubject = new ReplaySubject<BaseData<HasId>>();
@@ -249,9 +289,20 @@ export class EntityDetailsPanelComponent extends PageComponent implements AfterV
     return loadEntitySubject;
   }
 
+  /**
+   * Event handler for close entity details.
+   *
+   */
+
   onCloseEntityDetails() {
     this.closeEntityDetails.emit();
   }
+
+  /**
+   * Event handler for toggle edit mode.
+   *
+   * @param isEdit is edit (boolean)
+   */
 
   onToggleEditMode(isEdit: boolean) {
     if (!isEdit) {
@@ -273,6 +324,12 @@ export class EntityDetailsPanelComponent extends PageComponent implements AfterV
     }
   }
 
+  /**
+   * help link id.
+   *
+   * @returns string observable or value
+   */
+
   helpLinkId(): string {
     if (this.resources.helpLinkIdForEntity && this.entityComponent.entityForm) {
       return this.resources.helpLinkIdForEntity(this.entityComponent.entityForm.getRawValue());
@@ -280,6 +337,12 @@ export class EntityDetailsPanelComponent extends PageComponent implements AfterV
       return this.resources.helpLinkId;
     }
   }
+
+  /**
+   * POST/PUT entity — save entity.
+   *
+   * @returns Observable<BaseData<HasId>> observable or value
+   */
 
   saveEntity(emitEntityUpdated = true): Observable<BaseData<HasId>> {
     const saveEntitySubject = new ReplaySubject<BaseData<HasId>>();
@@ -319,6 +382,11 @@ export class EntityDetailsPanelComponent extends PageComponent implements AfterV
     }
     return saveEntitySubject;
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.viewInited = true;

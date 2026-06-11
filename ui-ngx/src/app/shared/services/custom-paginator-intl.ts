@@ -19,8 +19,9 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 /**
- * custom paginator intl.
+ * Custom paginator intl (ThingsBoard web UI).
  */
+
 
 @Injectable()
 export class CustomPaginatorIntl implements MatPaginatorIntl {
@@ -34,6 +35,15 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
   nextPageLabel = this.translate.instant('paginator.next-page-label');
   previousPageLabel = this.translate.instant('paginator.previous-page-label');
   separator = this.translate.instant('paginator.items-per-page-separator');
+
+  /**
+   * get range label.
+   *
+   * @param page page (number)
+   * @param pageSize page size (number)
+   * @param length length (number)
+   * @returns string observable or value
+   */
 
   getRangeLabel(page: number, pageSize: number, length: number): string {
     const startNumber = page * pageSize + 1;

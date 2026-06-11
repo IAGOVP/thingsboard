@@ -23,6 +23,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: entity type select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-type-select`.
+ */
 @Component({
     selector: 'tb-entity-type-select',
     templateUrl: './entity-type-select.component.html',
@@ -32,10 +38,7 @@ import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-
             useExisting: forwardRef(() => EntityTypeSelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: entity type select UI.
- */
+standalone: false
 })
 export class EntityTypeSelectComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -100,12 +103,29 @@ export class EntityTypeSelectComponent implements ControlValueAccessor, OnInit, 
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.entityTypes = this.filterAllowedEntityTypes
@@ -150,6 +170,12 @@ export class EntityTypeSelectComponent implements ControlValueAccessor, OnInit, 
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -158,6 +184,12 @@ export class EntityTypeSelectComponent implements ControlValueAccessor, OnInit, 
       this.entityTypeFormGroup.enable();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (EntityType | AliasEntityType | null)
+   */
 
   writeValue(value: EntityType | AliasEntityType | null): void {
     if (value != null) {
@@ -169,12 +201,25 @@ export class EntityTypeSelectComponent implements ControlValueAccessor, OnInit, 
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (EntityType | AliasEntityType | null)
+   */
+
   updateView(value: EntityType | AliasEntityType | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * display entity type fn.
+   *
+   * @param entityType entity type (EntityType | AliasEntityType | string | null)
+   * @returns string | undefined observable or value
+   */
 
   displayEntityTypeFn(entityType?: EntityType | AliasEntityType | string | null): string | undefined {
     if (this.additionEntityTypes[entityType as EntityType]) {
@@ -185,6 +230,11 @@ export class EntityTypeSelectComponent implements ControlValueAccessor, OnInit, 
       return '';
     }
   }
+
+  /**
+   * mark as touched.
+   *
+   */
 
   markAsTouched(): void {
     this.entityTypeFormGroup.get('entityType').markAsTouched();

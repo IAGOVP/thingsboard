@@ -38,8 +38,9 @@ import org.thingsboard.server.common.msg.TbMsgMetaData;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb js switch node rule node.
+ * Unit test for tb js switch node (message filtering and branching rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbJsSwitchNodeTest {
@@ -53,6 +54,11 @@ public class TbJsSwitchNodeTest {
 
     private final RuleChainId ruleChainId = new RuleChainId(Uuids.timeBased());
     private final RuleNodeId ruleNodeId = new RuleNodeId(Uuids.timeBased());
+    /**
+     * Multiple routes are allowed.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void multipleRoutesAreAllowed() throws TbNodeException {

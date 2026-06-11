@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: send sms config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-send-sms-config`.
+ */
 @Component({
     selector: 'tb-external-node-send-sms-config',
     templateUrl: './send-sms-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: send sms config UI.
- */
+standalone: false
 })
 export class SendSmsConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class SendSmsConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.sendSmsConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.sendSmsConfigForm = this.fb.group({
@@ -48,9 +63,21 @@ export class SendSmsConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useSystemSmsSettings'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const useSystemSmsSettings: boolean = this.sendSmsConfigForm.get('useSystemSmsSettings').value;

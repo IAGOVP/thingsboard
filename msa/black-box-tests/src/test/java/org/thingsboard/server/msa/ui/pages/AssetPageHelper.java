@@ -17,16 +17,25 @@ package org.thingsboard.server.msa.ui.pages;
 
 import org.openqa.selenium.WebDriver;
 
+
 /**
 
- * Asset page helper.
+ * Page object helper for asset page UI actions (page object element locators and helpers — Selenium page objects).
 
  */
+
 
 public class AssetPageHelper extends AssetPageElements {
     public AssetPageHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Open asset alarms.
+     *
+     * @param assetName asset name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void openAssetAlarms(String assetName) {
         if (!assetDetailsView().isDisplayed()) {

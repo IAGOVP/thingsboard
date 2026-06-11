@@ -23,8 +23,11 @@ import { NavigationStart, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 /**
- * Angular component: dialog UI.
+ * Angular component: dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 
 @Directive()
 export abstract class DialogComponent<T, R = any> extends PageComponent implements OnDestroy {
@@ -44,6 +47,11 @@ export abstract class DialogComponent<T, R = any> extends PageComponent implemen
         this.dialogRef.close();
       });
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     super.ngOnDestroy();

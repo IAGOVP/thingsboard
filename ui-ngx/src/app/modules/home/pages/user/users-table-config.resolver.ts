@@ -56,8 +56,9 @@ export interface UsersTableRouteData {
   authority: Authority;
 }
 /**
- * Route resolver: loads users table config before activate.
+ * Route resolver: preloads data for users table config (home/user pages).
  */
+
 
 @Injectable()
 export class UsersTableConfigResolver  {
@@ -105,6 +106,13 @@ export class UsersTableConfigResolver  {
     this.config.addEntity = () => this.addUser();
   }
 
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<EntityTableConfig<User>> observable or value
+   */
+
   resolve(route: ActivatedRouteSnapshot): Observable<EntityTableConfig<User>> {
     const routeParams = route.params;
     return this.store.pipe(select(selectAuth), take(1)).pipe(
@@ -141,6 +149,12 @@ export class UsersTableConfigResolver  {
     );
   }
 
+  /**
+   * update action cell descriptors.
+   *
+   * @param auth auth (AuthState)
+   */
+
   updateActionCellDescriptors(auth: AuthState) {
     this.config.cellActionDescriptors.splice(0);
     if (auth.userTokenAccessEnabled) {
@@ -157,6 +171,13 @@ export class UsersTableConfigResolver  {
     }
   }
 
+  /**
+   * POST/PUT entity — save user.
+   *
+   * @param user user (User)
+   * @returns Observable<User> observable or value
+   */
+
   saveUser(user: User): Observable<User> {
     user.tenantId = new TenantId(this.tenantId);
     user.customerId = new CustomerId(this.customerId);
@@ -169,6 +190,12 @@ export class UsersTableConfigResolver  {
     }
     return this.userService.saveUser(user);
   }
+
+  /**
+   * POST/PUT entity — add user.
+   *
+   * @returns Observable<User> observable or value
+   */
 
   addUser(): Observable<User> {
     return this.dialog.open<AddUserDialogComponent, AddUserDialogData,
@@ -183,6 +210,13 @@ export class UsersTableConfigResolver  {
     }).afterClosed();
   }
 
+  /**
+   * open user.
+   *
+   * @param user user (User)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   private openUser($event: Event, user: User, config: EntityTableConfig<User>) {
     if ($event) {
       $event.stopPropagation();
@@ -191,12 +225,24 @@ export class UsersTableConfigResolver  {
     this.router.navigateByUrl(url);
   }
 
+  /**
+   * login as user.
+   *
+   * @param user user (User)
+   */
+
   loginAsUser($event: Event, user: User) {
     if ($event) {
       $event.stopPropagation();
     }
     this.authService.loginAsUser(user.id.id).subscribe();
   }
+
+  /**
+   * display activation link.
+   *
+   * @param user user (User)
+   */
 
   displayActivationLink($event: Event, user: User) {
     if ($event) {
@@ -216,6 +262,12 @@ export class UsersTableConfigResolver  {
     );
   }
 
+  /**
+   * resend activation.
+   *
+   * @param user user (User)
+   */
+
   resendActivation($event: Event, user: User) {
     if ($event) {
       $event.stopPropagation();
@@ -228,6 +280,13 @@ export class UsersTableConfigResolver  {
         }));
     });
   }
+
+  /**
+   * set user credentials enabled.
+   *
+   * @param user user (User)
+   * @param userCredentialsEnabled user credentials enabled (boolean)
+   */
 
   setUserCredentialsEnabled($event: Event, user: User, userCredentialsEnabled: boolean) {
     if ($event) {
@@ -245,6 +304,14 @@ export class UsersTableConfigResolver  {
         }));
     });
   }
+
+  /**
+   * Event handler for user action.
+   *
+   * @param action action (EntityAction<User>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
 
   onUserAction(action: EntityAction<User>, config: EntityTableConfig<User>): boolean {
     switch (action.action) {

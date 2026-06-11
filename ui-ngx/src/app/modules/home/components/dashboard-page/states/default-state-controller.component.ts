@@ -28,14 +28,17 @@ import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
 import { EntityService } from '@core/http/entity.service';
 import { MobileService } from '@core/services/mobile.service';
 
+
+/**
+ * Angular component: default state controller (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-default-state-controller`.
+ */
 @Component({
     selector: 'tb-default-state-controller',
     templateUrl: './default-state-controller.component.html',
     styleUrls: ['./default-state-controller.component.scss'],
-    standalone: false
-/**
- * Angular component: default state controller UI.
- */
+standalone: false
 })
 export class DefaultStateControllerComponent extends StateControllerComponent implements OnInit, OnDestroy {
 
@@ -50,13 +53,28 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     super(router, route, ngZone, statesControllerService);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     super.ngOnDestroy();
   }
+
+  /**
+   * init.
+   *
+   */
 
   public init() {
     if (this.preservedState) {
@@ -73,23 +91,55 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     }
   }
 
+  /**
+   * Event handler for mobile changed.
+   *
+   */
+
   protected onMobileChanged() {
   }
+
+  /**
+   * Event handler for state id changed.
+   *
+   */
 
   protected onStateIdChanged() {
   }
 
+  /**
+   * Event handler for states changed.
+   *
+   */
+
   protected onStatesChanged() {
   }
+
+  /**
+   * Event handler for state changed.
+   *
+   */
 
   protected onStateChanged() {
     this.stateObject = this.parseState(this.currentState);
     this.gotoState(this.stateObject[0].id, false);
   }
 
+  /**
+   * state controller id.
+   *
+   * @returns string observable or value
+   */
+
   protected stateControllerId(): string {
     return 'default';
   }
+
+  /**
+   * get state params.
+   *
+   * @returns StateParams observable or value
+   */
 
   public getStateParams(): StateParams {
     if (this.stateObject && this.stateObject.length) {
@@ -98,6 +148,14 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
       return {};
     }
   }
+
+  /**
+   * open state.
+   *
+   * @param id id (string)
+   * @param params params (StateParams)
+   * @param openRightLayout open right layout (boolean)
+   */
 
   public openState(id: string, params?: StateParams, openRightLayout?: boolean): void {
     if (this.states && this.states[id]) {
@@ -113,10 +171,25 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     }
   }
 
+  /**
+   * push and open state.
+   *
+   * @param states states (Array<StateObject>)
+   * @param openRightLayout open right layout (boolean)
+   */
+
   public pushAndOpenState(states: Array<StateObject>, openRightLayout?: boolean): void {
     const state = states[states.length - 1];
     this.openState(state.id, state.params, openRightLayout);
   }
+
+  /**
+   * update state.
+   *
+   * @param id id (string)
+   * @param params params (StateParams)
+   * @param openRightLayout open right layout (boolean)
+   */
 
   public updateState(id: string, params?: StateParams, openRightLayout?: boolean): void {
     if (!id) {
@@ -135,9 +208,22 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     }
   }
 
+  /**
+   * get entity id.
+   *
+   * @param entityParamName entity param name (string)
+   * @returns EntityId observable or value
+   */
+
   public getEntityId(entityParamName: string): EntityId {
     return null;
   }
+
+  /**
+   * get state id.
+   *
+   * @returns string observable or value
+   */
 
   public getStateId(): string {
     if (this.stateObject && this.stateObject.length) {
@@ -147,6 +233,13 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     }
   }
 
+  /**
+   * get state id at index.
+   *
+   * @param index index (number)
+   * @returns string observable or value
+   */
+
   public getStateIdAtIndex(index: number): string {
     if (this.stateObject && this.stateObject[index]) {
       return this.stateObject[index].id;
@@ -154,6 +247,12 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
       return '';
     }
   }
+
+  /**
+   * get state index.
+   *
+   * @returns number observable or value
+   */
 
   public getStateIndex(): number {
     if (this.stateObject && this.stateObject.length) {
@@ -163,6 +262,13 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     }
   }
 
+  /**
+   * get state params by state id.
+   *
+   * @param stateId state id (string)
+   * @returns StateParams observable or value
+   */
+
   public getStateParamsByStateId(stateId: string): StateParams {
     const stateObj = this.getStateObjById(stateId);
     if (stateObj) {
@@ -171,6 +277,13 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
       return null;
     }
   }
+
+  /**
+   * navigate prev state.
+   *
+   * @param index index (number)
+   * @param params params (StateParams)
+   */
 
   public navigatePrevState(index: number, params?: StateParams): void {
     const lastStateIndex = this.stateObject.length - 1;
@@ -184,28 +297,65 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     }
   }
 
+  /**
+   * reset state.
+   *
+   */
+
   public resetState(): void {
     const rootStateId = this.dashboardUtils.getRootStateId(this.states);
     this.stateObject = [ { id: rootStateId, params: {} } ];
     this.gotoState(rootStateId, true);
   }
 
+  /**
+   * get state name.
+   *
+   * @param id id (string)
+   * @param state state (DashboardState)
+   * @returns string observable or value
+   */
+
   public getStateName(id: string, state: DashboardState): string {
     const name = this.utils.customTranslation(state.name, id);
     return name === this.stateControllerId() ? name.charAt(0).toUpperCase() + name.slice(1) : name;
   }
 
+  /**
+   * get current state name.
+   *
+   * @returns string observable or value
+   */
+
   public getCurrentStateName(): string {
     return this.getStateName(this.stateObject[0].id, this.statesValue[this.stateObject[0].id]);
   }
+
+  /**
+   * display state selection.
+   *
+   * @returns boolean observable or value
+   */
 
   public displayStateSelection(): boolean {
     return this.states && Object.keys(this.states).length > 1;
   }
 
+  /**
+   * selected state id changed.
+   *
+   */
+
   public selectedStateIdChanged() {
     this.gotoState(this.stateObject[0].id, true);
   }
+
+  /**
+   * parse state.
+   *
+   * @param stateBase64 state base64 (string)
+   * @returns StateControllerState observable or value
+   */
 
   private parseState(stateBase64: string): StateControllerState {
     let result: StateControllerState;
@@ -242,6 +392,14 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     return result;
   }
 
+  /**
+   * goto state.
+   *
+   * @param stateId state id (string)
+   * @param update update (boolean)
+   * @param openRightLayout open right layout (boolean)
+   */
+
   private gotoState(stateId: string, update: boolean, openRightLayout?: boolean) {
     if (this.dashboardCtrl.dashboardCtx.state !== stateId) {
       this.dashboardCtrl.openDashboardState(stateId, openRightLayout);
@@ -255,12 +413,24 @@ export class DefaultStateControllerComponent extends StateControllerComponent im
     }
   }
 
+  /**
+   * update location.
+   *
+   */
+
   private updateLocation() {
     if (this.stateObject[0].id) {
       const newState = objToBase64(this.stateObject);
       this.updateStateParam(newState);
     }
   }
+
+  /**
+   * get state obj by id.
+   *
+   * @param id id (string)
+   * @returns StateObject observable or value
+   */
 
   private getStateObjById(id: string): StateObject {
     return this.stateObject.find((stateObj) => stateObj.id === id);

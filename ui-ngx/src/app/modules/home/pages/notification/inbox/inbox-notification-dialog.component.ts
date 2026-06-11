@@ -26,14 +26,17 @@ export interface InboxNotificationDialogData {
   notification: Notification;
 }
 
+
+/**
+ * Angular component: inbox notification dialog (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-inbox-notification-dialog`.
+ */
 @Component({
     selector: 'tb-inbox-notification-dialog',
     templateUrl: './inbox-notification-dialog.component.html',
     styleUrls: ['inbox-notification-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: inbox notification dialog UI.
- */
+standalone: false
 })
 export class InboxNotificationDialogComponent extends DialogComponent<InboxNotificationDialogComponent, string> {
 
@@ -47,6 +50,12 @@ export class InboxNotificationDialogComponent extends DialogComponent<InboxNotif
 
     this.notification = data.notification;
   }
+
+  /**
+   * mark as read.
+   *
+   * @param id id (string)
+   */
 
   markAsRead(id: string) {
     this.dialogRef.close(id);

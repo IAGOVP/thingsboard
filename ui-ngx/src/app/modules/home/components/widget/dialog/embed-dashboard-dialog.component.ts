@@ -33,14 +33,17 @@ export interface EmbedDashboardDialogData {
   parentDashboard?: IDashboardComponent;
 }
 
+
+/**
+ * Angular component: embed dashboard dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-embed-dashboard-dialog`.
+ */
 @Component({
     selector: 'tb-embed-dashboard-dialog',
     templateUrl: './embed-dashboard-dialog.component.html',
     styleUrls: ['./embed-dashboard-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: embed dashboard dialog UI.
- */
+standalone: false
 })
 export class EmbedDashboardDialogComponent extends DialogComponent<EmbedDashboardDialogComponent>
   implements OnInit {
@@ -68,8 +71,18 @@ export class EmbedDashboardDialogComponent extends DialogComponent<EmbedDashboar
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     this.dialogRef.close(null);

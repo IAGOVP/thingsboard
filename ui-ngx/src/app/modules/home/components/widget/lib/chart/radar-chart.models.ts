@@ -42,11 +42,11 @@ export const radarChartShapeTranslations = new Map<RadarChartShape, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for radar chart settings.
-
+ * Radar chart settings (ThingsBoard web UI).
  */
+
 
 export interface RadarChartSettings extends LatestChartSettings {
   shape: RadarChartShape;

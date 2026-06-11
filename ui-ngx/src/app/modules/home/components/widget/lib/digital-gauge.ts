@@ -39,8 +39,9 @@ import GenericOptions = CanvasGauges.GenericOptions;
 
 // @dynamic
 /**
- * tb canvas digital gauge.
+ * Tb canvas digital gauge (ThingsBoard web UI).
  */
+
 export class TbCanvasDigitalGauge {
 
   constructor(protected ctx: WidgetContext, canvasId: string) {
@@ -210,9 +211,21 @@ export class TbCanvasDigitalGauge {
 
   private gauge: CanvasDigitalGauge;
 
+  /**
+   * to radians.
+   *
+   * @param angle angle (number)
+   * @returns number observable or value
+   */
+
   private static toRadians(angle: number): number {
     return angle * (Math.PI / 180);
   }
+
+  /**
+   * init.
+   *
+   */
 
   init() {
     let updateSetting = false;
@@ -239,6 +252,12 @@ export class TbCanvasDigitalGauge {
     });
   }
 
+  /**
+   * update attribute.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   */
+
   updateAttribute(subscription: IWidgetSubscription) {
     for (const keyData of subscription.data) {
       if (keyData && keyData.data && keyData.data[0]) {
@@ -253,11 +272,21 @@ export class TbCanvasDigitalGauge {
     this.updateSetting();
   }
 
+  /**
+   * update setting.
+   *
+   */
+
   updateSetting() {
     (this.gauge.options as CanvasDigitalGaugeOptions).ticks = this.localSettings.ticks;
     this.gauge.options = CanvasDigitalGauge.configure(this.gauge.options as CanvasDigitalGaugeOptions);
     this.gauge.update({} as CanvasDigitalGaugeOptions);
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     if (this.ctx.data.length > 0) {
@@ -287,14 +316,29 @@ export class TbCanvasDigitalGauge {
     }
   }
 
+  /**
+   * mobile mode changed.
+   *
+   */
+
   mobileModeChanged() {
     const animation = this.ctx.settings.animation !== false && !this.ctx.isMobile;
     this.gauge.update({animation, isMobile: this.ctx.isMobile} as CanvasDigitalGaugeOptions);
   }
 
+  /**
+   * resize.
+   *
+   */
+
   resize() {
     this.gauge.update({width: this.ctx.width, height: this.ctx.height} as GenericOptions);
   }
+
+  /**
+   * destroy.
+   *
+   */
 
   destroy() {
     this.gauge.destroy();

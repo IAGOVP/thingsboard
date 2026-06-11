@@ -51,8 +51,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.spy;
 import static org.mockito.BDDMockito.then;
 /**
- * Unit test for tb checkpoint node rule node.
+ * Unit test for tb checkpoint node (rule chain flow control (input, output, ack, checkpoint)).
  */
+
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -66,6 +67,11 @@ public class TbCheckpointNodeTest extends AbstractRuleNodeUpgradeTest {
 
     @Mock
     private TbContext ctxMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -73,16 +79,32 @@ public class TbCheckpointNodeTest extends AbstractRuleNodeUpgradeTest {
         config = new EmptyNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
         assertThat(config.getVersion()).isEqualTo(0);
     }
+    /**
+     * Given default config when init then ok.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenInit_thenOk() {
         assertThatNoException().isThrownBy(() -> node.init(ctxMock, nodeConfiguration));
     }
+    /**
+     * Given queue name when on msg then transfers msg to defined queue.
+     *
+     * @param queueName queue name ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @ValueSource(strings = {DataConstants.MAIN_QUEUE_NAME, DataConstants.HP_QUEUE_NAME, DataConstants.SQ_QUEUE_NAME, "Custom queue"})
@@ -103,6 +125,11 @@ public class TbCheckpointNodeTest extends AbstractRuleNodeUpgradeTest {
         onSuccess.getValue().run();
         then(ctxMock).should().ack(msg);
     }
+    /**
+     * Given error during transfer when on msg then tell failure.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenErrorDuringTransfer_whenOnMsg_thenTellFailure() throws TbNodeException {
@@ -146,6 +173,12 @@ public class TbCheckpointNodeTest extends AbstractRuleNodeUpgradeTest {
                         "{}")
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

@@ -20,11 +20,17 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
+
 /**
 
- * Rule chains page elements.
+ * Selenium element locators for rule chains page page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class RuleChainsPageElements extends OtherPageElementsHelper {
     public RuleChainsPageElements(WebDriver driver) {
@@ -44,62 +50,158 @@ public class RuleChainsPageElements extends OtherPageElementsHelper {
     private static final String MAKE_ROOT_FROM_VIEW = "//span[contains(text(),' Make rule chain root ')]/parent::button";
     private static final String ROOT_ACTIVE_CHECKBOXES = "//mat-icon[text() = 'check_box']";
     private static final String ALL_NAMES = "//mat-icon[contains(text(),'check')]/../../../mat-cell[contains(@class,'name')]/span";
+    /**
+     * Returns delete rule chain from view btn.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getDeleteRuleChainFromViewBtn() {
         return DELETE_RULE_CHAIN_FROM_VIEW_BTN;
     }
+    /**
+     * Make root btn.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement makeRootBtn(String entityName) {
         return waitUntilElementToBeClickable(String.format(MAKE_ROOT_BTN, entityName));
     }
+    /**
+     * Root check boxes enable.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<WebElement> rootCheckBoxesEnable() {
         return waitUntilVisibilityOfElementsLocated(ROOT_ACTIVE_CHECKBOXES);
     }
+    /**
+     * Root check box enable.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement rootCheckBoxEnable(String entityName) {
         return waitUntilVisibilityOfElementLocated(String.format(ROOT, entityName));
     }
+    /**
+     * Root check box disable.
+     *
+     * @param entityName entity name ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement rootCheckBoxDisable(String entityName) {
         return waitUntilVisibilityOfElementLocated(String.format(ROOT_DISABLE, entityName));
     }
+    /**
+     * Creates rule chain btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement createRuleChainBtn() {
         return waitUntilElementToBeClickable(CREATE_RULE_CHAIN_BTN);
     }
+    /**
+     * Imports rule chain btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement importRuleChainBtn() {
         return waitUntilElementToBeClickable(IMPORT_RULE_CHAIN_BTN);
     }
+    /**
+     * Name field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement nameField() {
         return waitUntilElementToBeClickable(CREATE_RULE_CHAIN_NAME_FIELD);
     }
+    /**
+     * Not root rule chains names.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<WebElement> notRootRuleChainsNames() {
         return waitUntilVisibilityOfElementsLocated(RULE_CHAINS_NAMES_WITHOUT_ROOT);
     }
+    /**
+     * Deletes btn from view.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement deleteBtnFromView() {
         return waitUntilElementToBeClickable(DELETE_RULE_CHAIN_FROM_VIEW_BTN);
     }
+    /**
+     * Open rule chain from view btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement openRuleChainFromViewBtn() {
         return waitUntilElementToBeClickable(OPEN_RULE_CHAIN_FROM_VIEW);
     }
+    /**
+     * Entities.
+     *
+     * @param name name ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<WebElement> entities(String name) {
         return waitUntilVisibilityOfElementsLocated(String.format(ENTITY, name));
     }
+    /**
+     * Make root from view btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement makeRootFromViewBtn() {
         return waitUntilElementToBeClickable(MAKE_ROOT_FROM_VIEW);
     }
+    /**
+     * All names.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<WebElement> allNames() {
         return waitUntilVisibilityOfElementsLocated(ALL_NAMES);
     }
+    /**
+     * Creates d time entity.
+     *
+     * @param name name ({@link String})
+     * @param time time ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement createdTimeEntity(String name, String time) {
         return waitUntilElementToBeClickable(String.format(CREATED_TIME, name, time));

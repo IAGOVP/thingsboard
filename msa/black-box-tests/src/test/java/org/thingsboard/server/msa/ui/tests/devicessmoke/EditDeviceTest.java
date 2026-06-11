@@ -26,11 +26,18 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.getRandomNumbe
 import static org.thingsboard.server.msa.ui.utils.Const.EMPTY_DEVICE_MESSAGE;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 /**
- * Edit device test.
+ * Black-box test: edit device (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Edit device")
 public class EditDeviceTest extends AbstractDeviceTest {
+    /**
+     * Change name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Change name by edit menu")
@@ -52,6 +59,12 @@ public class EditDeviceTest extends AbstractDeviceTest {
         assertThat(nameAfter).as("The name has changed").isNotEqualTo(nameBefore);
         assertThat(nameAfter).as("The name has changed correctly").isEqualTo(newDeviceName);
     }
+    /**
+     * Deletes name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Delete name and save")
@@ -65,6 +78,12 @@ public class EditDeviceTest extends AbstractDeviceTest {
 
         assertIsDisable(devicePage.doneBtnEditViewVisible());
     }
+    /**
+     * Saves or persists only with space.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Save only with space")
@@ -80,6 +99,15 @@ public class EditDeviceTest extends AbstractDeviceTest {
         assertIsDisplayed(devicePage.warningMessage());
         assertThat(devicePage.warningMessage().getText()).as("Text of warning message").isEqualTo(EMPTY_DEVICE_MESSAGE);
     }
+    /**
+     * Edit description.
+     *
+     * @param description description ({@link String})
+     * @param newDescription new description ({@link String})
+     * @param finalDescription final description ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "editMenuDescription")
     @Description("Write the description and save the changes/Change the description and save the changes/Delete the description and save the changes")
@@ -95,6 +123,13 @@ public class EditDeviceTest extends AbstractDeviceTest {
 
         assertThat(devicePage.getDescription()).as("The description changed correctly").isEqualTo(finalDescription);
     }
+    /**
+     * Is gateway.
+     *
+     * @param isGateway is gateway
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "enable")
     @Description("Enable gateway mode/Disable gateway")
@@ -115,6 +150,13 @@ public class EditDeviceTest extends AbstractDeviceTest {
                     .as("Gateway is enable").isTrue();
         }
     }
+    /**
+     * Is overwrite activity time for connected device.
+     *
+     * @param isOverwriteActivityTimeForConnected is overwrite activity time for connected
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "enable")
     @Description("Enable overwrite activity time for connected/Disable overwrite activity time for connected")
@@ -136,6 +178,12 @@ public class EditDeviceTest extends AbstractDeviceTest {
                     .as("Overwrite activity time for connected is enable").isTrue();
         }
     }
+    /**
+     * Change device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Change device profile")
@@ -151,6 +199,12 @@ public class EditDeviceTest extends AbstractDeviceTest {
         assertIsDisplayed(devicePage.deviceProfileRedirectedBtn());
         assertThat(devicePage.deviceProfileRedirectedBtn().getText()).as("Profile changed correctly").isEqualTo("DEFAULT");
     }
+    /**
+     * Saves or persists without device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Save without device profile")
@@ -164,6 +218,15 @@ public class EditDeviceTest extends AbstractDeviceTest {
 
         assertIsDisable(devicePage.doneBtnEditViewVisible());
     }
+    /**
+     * Edit label.
+     *
+     * @param label label ({@link String})
+     * @param newLabel new label ({@link String})
+     * @param finalLabel final label ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "editDeviceLabel")
     @Description("Write the label and save the changes/Change the label and save the changes/Delete the label and save the changes")

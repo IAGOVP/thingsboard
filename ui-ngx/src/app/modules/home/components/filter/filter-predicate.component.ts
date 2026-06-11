@@ -44,6 +44,12 @@ import {
   FilterUserInfoDialogData
 } from '@home/components/filter/filter-user-info-dialog.component';
 
+
+/**
+ * Angular component: filter predicate (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-predicate`.
+ */
 @Component({
     selector: 'tb-filter-predicate',
     templateUrl: './filter-predicate.component.html',
@@ -60,10 +66,7 @@ import {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: filter predicate UI.
- */
+standalone: false
 })
 export class FilterPredicateComponent implements ControlValueAccessor, Validator {
 
@@ -115,12 +118,30 @@ export class FilterPredicateComponent implements ControlValueAccessor, Validator
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -131,11 +152,23 @@ export class FilterPredicateComponent implements ControlValueAccessor, Validator
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.filterPredicateFormGroup.valid ? null : {
       filterPredicate: {valid: false}
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param predicate predicate (KeyFilterPredicateInfo)
+   */
 
   writeValue(predicate: KeyFilterPredicateInfo): void {
     this.type = predicate.keyFilterPredicate.type;
@@ -143,6 +176,11 @@ export class FilterPredicateComponent implements ControlValueAccessor, Validator
     this.filterPredicateFormGroup.patchValue(predicate.keyFilterPredicate, {emitEvent: false});
     this.filterPredicateFormGroup.get('userInfo').patchValue(predicate.userInfo, {emitEvent: false});
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators(): void {
     const operationCtrl = this.filterPredicateFormGroup.get('operation');
@@ -156,6 +194,11 @@ export class FilterPredicateComponent implements ControlValueAccessor, Validator
     operationCtrl.updateValueAndValidity({emitEvent: false});
     predicatesCtrl.updateValueAndValidity({emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let predicate: KeyFilterPredicateInfo = null;
@@ -184,6 +227,11 @@ export class FilterPredicateComponent implements ControlValueAccessor, Validator
     this.propagateChange(predicate);
   }
 
+  /**
+   * open complex filter dialog.
+   *
+   */
+
   public openComplexFilterDialog() {
     this.dialog.open<ComplexFilterPredicateDialogComponent, ComplexFilterPredicateDialogData,
       ComplexFilterPredicateInfo>(ComplexFilterPredicateDialogComponent, {
@@ -211,6 +259,11 @@ export class FilterPredicateComponent implements ControlValueAccessor, Validator
       }
     );
   }
+
+  /**
+   * open filter user info dialog.
+   *
+   */
 
   public openFilterUserInfoDialog() {
     this.dialog.open<FilterUserInfoDialogComponent, FilterUserInfoDialogData,

@@ -37,6 +37,12 @@ import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { Authority } from '@shared/models/authority.enum';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: ota package autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-ota-package-autocomplete`.
+ */
 @Component({
     selector: 'tb-ota-package-autocomplete',
     templateUrl: './ota-package-autocomplete.component.html',
@@ -46,10 +52,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             useExisting: forwardRef(() => OtaPackageAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: ota package autocomplete UI.
- */
+standalone: false
 })
 export class OtaPackageAutocompleteComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
@@ -145,17 +148,38 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     const getPackages = this.otaPackageFormGroup.get('packageId').valueChanges
       .pipe(
         debounceTime(150),
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue;
           if (typeof value === 'string' || !value) {
@@ -176,10 +200,21 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
     this.filteredPackages = merge(this.cleanFilteredPackages, getPackages);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.cleanFilteredPackages.complete();
     this.cleanFilteredPackages = null;
   }
+
+  /**
+   * get current entity.
+   *
+   * @returns OtaPackageInfo | null observable or value
+   */
 
   getCurrentEntity(): OtaPackageInfo | null {
     const currentPackage = this.otaPackageFormGroup.get('packageId').value;
@@ -190,6 +225,12 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -199,9 +240,22 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
     }
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | EntityId | null)
+   */
 
   writeValue(value: string | EntityId | null): void {
     this.searchText = '';
@@ -241,6 +295,11 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.otaPackageFormGroup.get('packageId').updateValueAndValidity({onlySelf: true, emitEvent: true});
@@ -248,10 +307,21 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   reset() {
     this.cleanFilteredPackages.next([]);
     this.otaPackageFormGroup.get('packageId').patchValue('', {emitEvent: false});
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (string | null)
+   */
 
   updateView(value: string | null) {
     if (this.modelValue !== value) {
@@ -260,9 +330,23 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
     }
   }
 
+  /**
+   * display package fn.
+   *
+   * @param packageInfo package info (OtaPackageInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayPackageFn(packageInfo?: OtaPackageInfo): string | undefined {
     return packageInfo ? `${packageInfo.title} (${packageInfo.version})` : undefined;
   }
+
+  /**
+   * fetch packages.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<OtaPackageInfo>> observable or value
+   */
 
   fetchPackages(searchText?: string): Observable<Array<OtaPackageInfo>> {
     if (isDefinedAndNotNull(this.deviceProfileId)) {
@@ -280,6 +364,11 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
       return of([]);
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.otaPackageFormGroup.get('packageId').patchValue('');
@@ -308,6 +397,13 @@ export class OtaPackageAutocompleteComponent implements ControlValueAccessor, On
   get hintText(): string {
     return OtaUpdateTranslation.get(this.type).hint;
   }
+
+  /**
+   * package title text.
+   *
+   * @param firpackageInfomware firpackage infomware (OtaPackageInfo)
+   * @returns string observable or value
+   */
 
   packageTitleText(firpackageInfomware: OtaPackageInfo): string {
     return `${firpackageInfomware.title} (${firpackageInfomware.version})`;

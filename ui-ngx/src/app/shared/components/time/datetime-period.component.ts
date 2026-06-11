@@ -26,6 +26,12 @@ interface DateTimePeriod {
   endDate: Date;
 }
 
+
+/**
+ * Angular component: datetime period (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-datetime-period`.
+ */
 @Component({
     selector: 'tb-datetime-period',
     templateUrl: './datetime-period.component.html',
@@ -37,10 +43,7 @@ interface DateTimePeriod {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: datetime period UI.
- */
+standalone: false
 })
 export class DatetimePeriodComponent implements ControlValueAccessor {
 
@@ -93,6 +96,12 @@ export class DatetimePeriodComponent implements ControlValueAccessor {
     ).subscribe(endDate => this.onEndDateChange(endDate));
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (this.changePending && this.propagateChange) {
@@ -101,8 +110,20 @@ export class DatetimePeriodComponent implements ControlValueAccessor {
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -112,6 +133,12 @@ export class DatetimePeriodComponent implements ControlValueAccessor {
       this.dateTimePeriodFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param datePeriod date period (FixedWindow)
+   */
 
   writeValue(datePeriod: FixedWindow): void {
     this.modelValue = datePeriod;
@@ -131,6 +158,11 @@ export class DatetimePeriodComponent implements ControlValueAccessor {
     this.updateMinMaxDates(this.dateTimePeriodFormGroup.value);
   }
 
+  /**
+   * update view.
+   *
+   */
+
   private updateView() {
     let value: FixedWindow = null;
     const dateTimePeriod = this.dateTimePeriodFormGroup.value;
@@ -148,6 +180,12 @@ export class DatetimePeriodComponent implements ControlValueAccessor {
     }
   }
 
+  /**
+   * update min max dates.
+   *
+   * @param dateTimePeriod date time period (Partial<DateTimePeriod>)
+   */
+
   private updateMinMaxDates(dateTimePeriod: Partial<DateTimePeriod>) {
     this.maxEndDate = new Date();
     this.maxEndTs = this.maxEndDate.getTime();
@@ -162,6 +200,12 @@ export class DatetimePeriodComponent implements ControlValueAccessor {
     }
   }
 
+  /**
+   * Event handler for start date change.
+   *
+   * @param startDate start date (Date)
+   */
+
   private onStartDateChange(startDate: Date) {
     if (startDate) {
       let startDateTs = startDate.getTime();
@@ -174,6 +218,12 @@ export class DatetimePeriodComponent implements ControlValueAccessor {
       }
     }
   }
+
+  /**
+   * Event handler for end date change.
+   *
+   * @param endDate end date (Date)
+   */
 
   private onEndDateChange(endDate: Date) {
     if (endDate) {

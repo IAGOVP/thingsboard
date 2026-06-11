@@ -48,8 +48,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 /**
- * WebSocket client for live telemetry: subscribes to monitoring device keys and waits for testData updates.
+ * WebSocket client for live telemetry validation during health checks.
+ *
+ * <p>Subscribes to monitoring device keys and waits for {@code testData} updates echoed from transports.
  */
+
 
 @Slf4j
 public class WsClient extends WebSocketClient implements AutoCloseable {
@@ -66,10 +69,24 @@ public class WsClient extends WebSocketClient implements AutoCloseable {
         super(serverUri);
         this.requestTimeoutMs = requestTimeoutMs;
     }
+    /**
+     * Handles open.
+     *
+     * @param serverHandshake server handshake ({@link ServerHandshake})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
     }
+    /**
+     * Handles message.
+     *
+     * @param s s ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onMessage(String s) {
@@ -91,16 +108,39 @@ public class WsClient extends WebSocketClient implements AutoCloseable {
             updateLock.unlock();
         }
     }
+    /**
+     * Handles close.
+     *
+     * @param i i
+     * @param s s ({@link String})
+     * @param b b
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onClose(int i, String s, boolean b) {
         log.debug("WebSocket client is closed");
     }
+    /**
+     * Handles error.
+     *
+     * @param e e ({@link Exception})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onError(Exception e) {
         log.error("WebSocket client error:", e);
     }
+    /**
+     * Register wait for updates.
+     *
+     * @param count count
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void registerWaitForUpdates(int count) {
         updateLock.lock();
@@ -112,6 +152,13 @@ public class WsClient extends WebSocketClient implements AutoCloseable {
         }
         log.trace("Registered wait for update");
     }
+    /**
+     * Send.
+     *
+     * @param text text ({@link String})
+     * @return nothing
+     * @throws NotYetConnectedException if not yet connected exception is thrown during processing
+     */
 
     @Override
     public void send(String text) throws NotYetConnectedException {
@@ -124,6 +171,14 @@ public class WsClient extends WebSocketClient implements AutoCloseable {
         }
         super.send(text);
     }
+    /**
+     * Subscribe for telemetry.
+     *
+     * @param devices devices ({@link List})
+     * @param keys keys ({@link List})
+     * @return {@link WsClient}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WsClient subscribeForTelemetry(List<UUID> devices, List<String> keys) {
         EntityDataCmd cmd = new EntityDataCmd();
@@ -145,6 +200,13 @@ public class WsClient extends WebSocketClient implements AutoCloseable {
         send(JacksonUtil.toString(wrapper));
         return this;
     }
+    /**
+     * Wait for updates.
+     *
+     * @param ms ms
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<JsonNode> waitForUpdates(long ms) {
         log.trace("update latch count: {}", update.getCount());
@@ -159,6 +221,12 @@ public class WsClient extends WebSocketClient implements AutoCloseable {
         log.trace("No update arrived within {} ms", ms);
         return null;
     }
+    /**
+     * Wait for reply.
+     *
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public JsonNode waitForReply() {
         try {
@@ -189,6 +257,13 @@ public class WsClient extends WebSocketClient implements AutoCloseable {
         }
         return lastMsgs;
     }
+    /**
+     * Returns latest.
+     *
+     * @param deviceId monitoring device UUID on the target tenant
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Map<String, String> getLatest(UUID deviceId) {
         Map<String, String> updates = new HashMap<>();
@@ -199,6 +274,13 @@ public class WsClient extends WebSocketClient implements AutoCloseable {
         });
         return updates;
     }
+    /**
+     * Handles set sslparameters.
+     *
+     * @param sslParameters ssl parameters ({@link SSLParameters})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onSetSSLParameters(SSLParameters sslParameters) {

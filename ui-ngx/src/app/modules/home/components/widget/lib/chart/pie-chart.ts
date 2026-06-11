@@ -29,11 +29,11 @@ import { toAnimationOption } from '@home/components/widget/lib/chart/chart.model
 const shapeSize = 134;
 const shapeSegmentWidth = 13.4;
 
+
 /**
-
- * tb pie chart.
-
+ * Tb pie chart (ThingsBoard web UI).
  */
+
 
 export class TbPieChart extends TbLatestChart<PieChartSettings> {
 
@@ -50,15 +50,31 @@ export class TbPieChart extends TbLatestChart<PieChartSettings> {
     super(ctx, inputSettings, chartElement, renderer, translate, autoResize);
   }
 
+  /**
+   * default settings.
+   *
+   * @returns PieChartSettings observable or value
+   */
+
   protected defaultSettings(): PieChartSettings {
       return pieChartDefaultSettings;
   }
+
+  /**
+   * init settings.
+   *
+   */
 
   protected initSettings() {
     if (this.settings.showTotal) {
       this.totalValueColor = ColorProcessor.fromSettings(this.settings.totalValueColor);
     }
   }
+
+  /**
+   * prepare latest chart option.
+   *
+   */
 
   protected prepareLatestChartOption() {
     const shapeWidth = this.chartElement.offsetWidth;
@@ -110,6 +126,11 @@ export class TbPieChart extends TbLatestChart<PieChartSettings> {
     ];
   }
 
+  /**
+   * after draw chart.
+   *
+   */
+
   protected afterDrawChart() {
     if (this.settings.showTotal) {
       this.totalTextNode = this.svgShape.text('').font({
@@ -119,6 +140,11 @@ export class TbPieChart extends TbLatestChart<PieChartSettings> {
       this.renderTotal();
     }
   };
+
+  /**
+   * do update series data.
+   *
+   */
 
   protected doUpdateSeriesData() {
     const seriesData: PieDataItemOption[] = [];
@@ -136,6 +162,12 @@ export class TbPieChart extends TbLatestChart<PieChartSettings> {
     this.latestChartOption.series[0].data = seriesData;
   }
 
+  /**
+   * after update series data.
+   *
+   * @param initial initial (boolean)
+   */
+
   protected afterUpdateSeriesData(initial: boolean) {
     if (this.settings.showTotal) {
       this.totalValueColor.update(this.total);
@@ -145,13 +177,32 @@ export class TbPieChart extends TbLatestChart<PieChartSettings> {
     }
   };
 
+  /**
+   * initial shape width.
+   *
+   * @returns number observable or value
+   */
+
   protected initialShapeWidth(): number {
     return shapeSize;
   }
 
+  /**
+   * initial shape height.
+   *
+   * @returns number observable or value
+   */
+
   protected initialShapeHeight(): number {
     return shapeSize;
   }
+
+  /**
+   * before resize.
+   *
+   * @param shapeWidth shape width (number)
+   * @param shapeHeight shape height (number)
+   */
 
   protected beforeResize(shapeWidth: number, shapeHeight: number) {
     if (!this.settings.autoScale) {
@@ -165,12 +216,24 @@ export class TbPieChart extends TbLatestChart<PieChartSettings> {
     }
   };
 
+  /**
+   * after resize.
+   *
+   * @param shapeWidth shape width (number)
+   * @param shapeHeight shape height (number)
+   */
+
   protected afterResize(shapeWidth: number, shapeHeight: number) {
     if (this.settings.showTotal) {
       this.totalTextNode.center((this.settings.autoScale ? shapeSize : shapeWidth) / 2,
         (this.settings.autoScale ? shapeSize : shapeHeight) / 2);
     }
   };
+
+  /**
+   * render total.
+   *
+   */
 
   private renderTotal() {
     this.totalTextNode.text(add => {

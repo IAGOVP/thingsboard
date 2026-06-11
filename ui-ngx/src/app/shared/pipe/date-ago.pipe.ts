@@ -28,18 +28,30 @@ const intervals = {
   sec: SECOND
 };
 
-@Pipe({
-    name: 'dateAgo',
-    standalone: false
+
 /**
  * Angular pipe: date ago.
  */
+@Pipe({
+    name: 'dateAgo',
+/**
+ * Angular pipe: date ago (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class DateAgoPipe implements PipeTransform {
 
   constructor(@Inject(TranslateService) private translate: TranslateService) {
 
   }
+
+  /**
+   * transform.
+   *
+   * @param value value (string| number | Date)
+   * @param args args (any)
+   * @returns string observable or value
+   */
 
   transform(value: string| number | Date, args?: any): string {
     if (value) {

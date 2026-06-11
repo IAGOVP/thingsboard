@@ -23,11 +23,11 @@ import { EntityRelationsQuery, EntitySearchDirection, RelationTypeGroup } from '
 import { EntityType } from '@shared/models/entity-type.models';
 import { WidgetContext } from '@home/models/widget-component.models';
 
+
 /**
-
- * TypeScript models and enums for entities hierarchy widget settings.
-
+ * Entities hierarchy widget settings (ThingsBoard web UI).
  */
+
 
 export interface EntitiesHierarchyWidgetSettings {
   nodeRelationQueryFunction: string;

@@ -21,15 +21,18 @@ import { AbstractControl } from '@angular/forms';
 import { UserPasswordPolicy } from '@shared/models/settings.models';
 import { POSITION_MAP } from '@shared/models/overlay.models';
 
+
+/**
+ * Angular component: password requirements tooltip (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-password-requirements-tooltip`.
+ */
 @Component({
     selector: 'tb-password-requirements-tooltip',
     templateUrl: './password-requirements-tooltip.component.html',
     styleUrl: './password-requirements-tooltip.component.scss',
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: password requirements tooltip UI.
- */
+standalone: false
 })
 export class PasswordRequirementsTooltipComponent {
   @Input() passwordControl: AbstractControl;
@@ -43,13 +46,30 @@ export class PasswordRequirementsTooltipComponent {
     {...POSITION_MAP.top, offsetY: -20}
   ];
 
+  /**
+   * check for error.
+   *
+   * @param errorName error name (string)
+   * @returns boolean observable or value
+   */
+
   checkForError(errorName: string): boolean {
     return this.passwordControl?.hasError(errorName) ?? false;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus(): void {
     this.isTooltipOpen = true;
   }
+
+  /**
+   * Event handler for blur.
+   *
+   */
 
   onBlur(): void {
     this.isTooltipOpen = false;

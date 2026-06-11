@@ -44,7 +44,13 @@ import static org.thingsboard.common.util.DonAsynchron.withCallback;
 
 @Slf4j
 /**
- * Rule engine external node 'aws sqs': Publish messages to the AWS SQS Implements org.thingsboard.rule.engine.api.TbNode.
+ * External rule node — <b>aws sqs</b>.
+ *
+ * <p>Publish messages to the AWS SQS
+ * <br>Will publish message payload and metadata attributes to the AWS SQS queue. Outbound message will contain 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbSqsNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/aws-sqs/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/aws-sqs/</a>
  */
 @RuleNode(
         type = ComponentType.EXTERNAL,
@@ -70,6 +76,13 @@ public class TbSqsNode extends TbAbstractExternalNode {
 
     private TbSqsNodeConfiguration config;
     private AmazonSQS sqsClient;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -89,6 +102,13 @@ public class TbSqsNode extends TbAbstractExternalNode {
             throw new TbNodeException(e);
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -149,6 +169,10 @@ public class TbSqsNode extends TbAbstractExternalNode {
                 .metaData(metaData)
                 .build();
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {

@@ -20,6 +20,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { SubscriptSizing, MatFormFieldAppearance } from '@angular/material/form-field';
 import { MqttVersionTranslation, MqttVersion } from '@shared/models/mqtt.models';
 
+
+/**
+ * Angular component: mqtt version select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mqtt-version-select`.
+ */
 @Component({
     selector: 'tb-mqtt-version-select',
     templateUrl: './mqtt-version-select.component.html',
@@ -29,10 +35,7 @@ import { MqttVersionTranslation, MqttVersion } from '@shared/models/mqtt.models'
             useExisting: forwardRef(() => MqttVersionSelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: mqtt version select UI.
- */
+standalone: false
 })
 export class MqttVersionSelectComponent implements ControlValueAccessor, OnChanges {
 
@@ -75,24 +78,58 @@ export class MqttVersionSelectComponent implements ControlValueAccessor, OnChang
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MqttVersion | null)
+   */
+
   writeValue(value: MqttVersion | null): void {
     this.modelValue = value;
   }
 
+  /**
+   * mqtt version changed.
+   *
+   */
+
   mqttVersionChanged() {
     this.updateView();
   }
+
+  /**
+   * update view.
+   *
+   */
 
   private updateView() {
     this.propagateChange(this.modelValue);

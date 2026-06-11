@@ -18,11 +18,17 @@ package org.thingsboard.server.msa.ui.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+
 /**
 
- * Alarm widget elements.
+ * Selenium element locators for alarm widget page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class AlarmWidgetElements extends AlarmDetailsEntityTabHelper {
     public AlarmWidgetElements(WebDriver driver) {
@@ -32,11 +38,25 @@ public class AlarmWidgetElements extends AlarmDetailsEntityTabHelper {
     private static final String ASSIGN_USER_DISPLAY_NAME = "//span[contains(@class,'assigned-container')]/span[contains(text(),'%s')]";
     private static final String UNASSIGNED = "//span[text() = '%s']/ancestor::mat-row//span[contains(@class,'assigned-container')]" +
             "//mat-icon[text() = 'account_circle']/following-sibling::span";
+    /**
+     * Assigns ed user.
+     *
+     * @param userEmail user email ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WebElement assignedUser(String userEmail) {
         return waitUntilElementToBeClickable(String.format(ASSIGN_USER_DISPLAY_NAME, userEmail));
     }
+    /**
+     * Unassigns ed.
+     *
+     * @param alarmType alarm type ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WebElement unassigned(String alarmType) {

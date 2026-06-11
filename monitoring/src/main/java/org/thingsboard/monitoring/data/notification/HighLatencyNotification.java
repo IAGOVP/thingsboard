@@ -21,11 +21,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 /**
 
- * Alert when one or more steps exceed configured latency threshold.
+ * Alert when one or more monitoring steps exceed the configured latency threshold.
 
  */
+
 
 public class HighLatencyNotification implements Notification {
 
@@ -36,6 +38,12 @@ public class HighLatencyNotification implements Notification {
         this.highLatencies = highLatencies;
         this.thresholdMs = thresholdMs;
     }
+    /**
+     * Returns text.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getText() {
@@ -46,6 +54,12 @@ public class HighLatencyNotification implements Notification {
         });
         return text.toString();
     }
+    /**
+     * Returns affected services.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<AffectedService> getAffectedServices() {

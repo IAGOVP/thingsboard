@@ -19,11 +19,11 @@ import { isUndefined } from '@core/utils';
 import { WidgetContext } from '@home/models/widget-component.models';
 import { UtilsService } from '@core/services/utils.service';
 
+
 /**
-
- * TypeScript models and enums for exception data.
-
+ * TypeScript interfaces, types, and enums for exception data (shared TypeScript models).
  */
+
 
 export interface ExceptionData {
   message?: string;

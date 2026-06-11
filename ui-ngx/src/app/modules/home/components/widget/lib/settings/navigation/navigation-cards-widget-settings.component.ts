@@ -25,14 +25,17 @@ import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
 import { Observable, of, Subject } from 'rxjs';
 import { map, mergeMap, share, startWith } from 'rxjs/operators';
 
+
+/**
+ * Angular component: navigation cards widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-navigation-cards-widget-settings`.
+ */
 @Component({
     selector: 'tb-navigation-cards-widget-settings',
     templateUrl: './navigation-cards-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: navigation cards widget settings UI.
- */
+standalone: false
 })
 export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -64,9 +67,21 @@ export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsCompon
       );
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.navigationCardsWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -75,6 +90,12 @@ export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsCompon
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.navigationCardsWidgetSettingsForm = this.fb.group({
       filterType: [settings.filterType, []],
@@ -82,9 +103,21 @@ export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsCompon
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['filterType'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const filterType: string = this.navigationCardsWidgetSettingsForm.get('filterType').value;
@@ -96,6 +129,13 @@ export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsCompon
     this.navigationCardsWidgetSettingsForm.get('filter').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * fetch filter items.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   private fetchFilterItems(searchText?: string): Observable<Array<string>> {
     this.filterItemSearchText = searchText;
     let result = [...this.filterItems];
@@ -105,6 +145,13 @@ export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsCompon
     }
     return of(result);
   }
+
+  /**
+   * POST/PUT entity — add filter item.
+   *
+   * @param filterItem filter item (string)
+   * @returns boolean observable or value
+   */
 
   private addFilterItem(filterItem: string): boolean {
     if (filterItem) {
@@ -120,6 +167,12 @@ export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsCompon
     return false;
   }
 
+  /**
+   * Event handler for filter item removed.
+   *
+   * @param filterItem filter item (string)
+   */
+
   onFilterItemRemoved(filterItem: string): void {
     const filterItems: string[] = this.navigationCardsWidgetSettingsForm.get('filter').value;
     const index = filterItems.indexOf(filterItem);
@@ -130,9 +183,20 @@ export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * Event handler for filter item input focus.
+   *
+   */
+
   onFilterItemInputFocus() {
     this.filterItemInputChange.next(this.filterItemInput.nativeElement.value);
   }
+
+  /**
+   * POST/PUT entity — add filter item from chip input.
+   *
+   * @param event DOM or Angular event object
+   */
 
   addFilterItemFromChipInput(event: MatChipInputEvent): void {
     const value = event.value;
@@ -144,10 +208,22 @@ export class NavigationCardsWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * filter item selected.
+   *
+   * @param event DOM or Angular event object
+   */
+
   filterItemSelected(event: MatAutocompleteSelectedEvent): void {
     this.addFilterItem(event.option.value);
     this.clearFilterItemInput('');
   }
+
+  /**
+   * clear filter item input.
+   *
+   * @param value value (string)
+   */
 
   clearFilterItemInput(value: string = '') {
     this.filterItemInput.nativeElement.value = value;

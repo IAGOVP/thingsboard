@@ -19,8 +19,11 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.sms.config.SmsProviderConfiguration;
 /**
- * JSON configuration for TbSendSms rule node.
+ * JSON configuration POJO for {@link TbSendSms} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbSendSmsNodeConfiguration implements NodeConfiguration {
@@ -29,6 +32,12 @@ public class TbSendSmsNodeConfiguration implements NodeConfiguration {
     private String smsMessageTemplate;
     private boolean useSystemSmsSettings;
     private SmsProviderConfiguration smsProviderConfiguration;
+    /**
+     * Default configuration.
+     *
+     * @return {@link NodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public NodeConfiguration defaultConfiguration() {

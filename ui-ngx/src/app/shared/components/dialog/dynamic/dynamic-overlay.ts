@@ -18,13 +18,20 @@ import { Overlay } from '@angular/cdk/overlay';
 import { inject, Injectable } from '@angular/core';
 import { DynamicOverlayContainer } from './dynamic-overlay-container';
 /**
- * dynamic overlay.
+ * Dynamic overlay (shared UI components).
  */
+
 
 @Injectable()
 export class DynamicOverlay extends Overlay {
 
   private _dynamicOverlayContainer = inject(DynamicOverlayContainer);
+
+  /**
+   * set container element.
+   *
+   * @param containerElement container element (HTMLElement)
+   */
 
   public setContainerElement(containerElement: HTMLElement): void {
     this._dynamicOverlayContainer.setContainerElement(containerElement);

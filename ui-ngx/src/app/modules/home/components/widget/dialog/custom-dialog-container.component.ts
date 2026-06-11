@@ -43,13 +43,16 @@ export interface CustomDialogContainerData {
   customComponentType: Type<CustomDialogComponent>;
 }
 
+
+/**
+ * Angular component: custom dialog container (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-custom-dialog-container-component`.
+ */
 @Component({
     selector: 'tb-custom-dialog-container-component',
     template: '',
-    standalone: false
-/**
- * Angular component: custom dialog container UI.
- */
+standalone: false
 })
 export class CustomDialogContainerComponent extends DialogComponent<CustomDialogContainerComponent> implements OnDestroy {
 
@@ -96,6 +99,11 @@ export class CustomDialogContainerComponent extends DialogComponent<CustomDialog
       this.dialogService.errorAlert(this.translate.instant('widget-action.custom-pretty-error-title'), message, e);
     }
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     super.ngOnDestroy();

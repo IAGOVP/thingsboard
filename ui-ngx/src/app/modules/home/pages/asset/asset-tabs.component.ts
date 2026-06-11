@@ -21,14 +21,17 @@ import { EntityTabsComponent } from '../../components/entity/entity-tabs.compone
 import { AssetInfo } from '@app/shared/models/asset.models';
 import { EntityId } from "@shared/models/id/entity-id";
 
+
+/**
+ * Angular component: asset tabs (home/asset pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-asset-tabs`.
+ */
 @Component({
     selector: 'tb-asset-tabs',
     templateUrl: './asset-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: asset tabs UI.
- */
+standalone: false
 })
 export class AssetTabsComponent extends EntityTabsComponent<AssetInfo> {
 
@@ -38,9 +41,20 @@ export class AssetTabsComponent extends EntityTabsComponent<AssetInfo> {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     super.ngOnInit();
   }
+
+  /**
+   * set entity.
+   *
+   * @param entity entity (AssetInfo)
+   */
 
   protected setEntity(entity: AssetInfo) {
     this.ownerId = entity.customerId.id !== this.nullUid ? entity.customerId : entity.tenantId;

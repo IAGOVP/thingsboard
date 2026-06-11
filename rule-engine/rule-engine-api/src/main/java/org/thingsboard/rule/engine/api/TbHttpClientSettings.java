@@ -16,23 +16,39 @@
 package org.thingsboard.rule.engine.api;
 
 /**
- * Server-level safety caps for the HTTP client used by the REST API Call rule node.
- * Values are read from {@code thingsboard.yml} (or the corresponding environment variables)
- * and applied as hard ceilings on top of the per-node tenant configuration.
- * A value of {@code 0} means no system-level restriction.
+ * tb http client settings contract (rule engine public API contracts and services).
  */
+
 public interface TbHttpClientSettings {
 
-    /** System ceiling for {@code maxParallelRequestsCount}. 0 = no system limit. */
+    
+    /**
+     * Returns max parallel requests.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     int getMaxParallelRequests();
 
-    /** System ceiling for the pending-request queue depth. 0 = no system limit. */
+    
+    /**
+     * Returns max pending requests.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     int getMaxPendingRequests();
 
-    /**
-     * Maximum number of TCP connections in the reactor-netty pool per node instance.
-     * 0 = use reactor-netty's default: {@code max(availableProcessors, 8) * 2}.
-     */
+    
+   /**
+    * Returns pool max connections.
+    *
+    * @return the int result
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
     int getPoolMaxConnections();
 
     TbHttpClientSettings DEFAULT = new TbHttpClientSettings() {

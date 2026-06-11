@@ -170,19 +170,32 @@ interface FontHeightInfo {
   descent?: number;
 }
 
+
 /**
-
- * drawings.
-
+ * Drawings (ThingsBoard web UI).
  */
 
+
 export class Drawings {
+  /**
+   * font.
+   *
+   * @param options options (CanvasGauges.GenericOptions)
+   * @param target target (string)
+   * @param baseSize base size (number)
+   * @returns string observable or value
+   */
   static font(options: CanvasGauges.GenericOptions, target: string, baseSize: number): string {
     return options['font' + target + 'Style'] + ' ' +
       options['font' + target + 'Weight'] + ' ' +
       options['font' + target + 'Size'] * baseSize + 'px ' +
       options['font' + target];
   }
+  /**
+   * normalized value.
+   *
+   * @param options options (CanvasGauges.GenericOptions)
+   */
   static normalizedValue(options: CanvasGauges.GenericOptions): {normal: number; indented: number} {
     const value = options.value;
     const min = options.minValue;
@@ -193,6 +206,11 @@ export class Drawings {
       indented: value < min ? min - dt : value > max ? max + dt : value
     };
   }
+  /**
+   * verify error.
+   *
+   * @param err err (any)
+   */
   static verifyError(err: any) {
     if (err instanceof DOMException && (err as any).result === 0x8053000b) {
       return ; // ignore it

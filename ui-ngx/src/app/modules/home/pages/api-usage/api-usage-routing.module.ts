@@ -54,5 +54,8 @@ const routes: Routes = [
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling api usage routing (home/api-usage pages).
+ */
   exports: [RouterModule]})
 export class ApiUsageRoutingModule { }

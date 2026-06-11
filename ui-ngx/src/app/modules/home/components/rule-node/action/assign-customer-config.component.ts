@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: assign customer config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-assign-to-customer-config`.
+ */
 @Component({
     selector: 'tb-action-node-assign-to-customer-config',
     templateUrl: './assign-customer-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: assign customer config UI.
- */
+standalone: false
 })
 export class AssignCustomerConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class AssignCustomerConfigComponent extends RuleNodeConfigurationComponen
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.assignCustomerConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.assignCustomerConfigForm = this.fb.group({
@@ -45,6 +60,13 @@ export class AssignCustomerConfigComponent extends RuleNodeConfigurationComponen
       createCustomerIfNotExists: [configuration ? configuration.createCustomerIfNotExists : false, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     configuration.customerNamePattern = configuration.customerNamePattern.trim();

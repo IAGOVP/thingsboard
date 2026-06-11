@@ -54,18 +54,33 @@ import static org.thingsboard.server.common.data.msg.TbMsgType.POST_TELEMETRY_RE
 import static org.thingsboard.server.common.data.msg.TbMsgType.TIMESERIES_UPDATED;
 import static org.thingsboard.server.common.data.msg.TbMsgType.TO_SERVER_RPC_REQUEST;
 /**
- * Rule engine component: abstract tb msg push node.
+ * Abstract base class for msg push node rule nodes (ThingsBoard Edge synchronization nodes).
  */
+
 
 @Slf4j
 public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfiguration, S, U> implements TbNode {
 
     protected T config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = TbNodeUtils.convert(configuration, getConfigClazz());
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -82,6 +97,14 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
             ctx.tellFailure(msg, new RuntimeException(errMsg));
         }
     }
+    /**
+     * Build event.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @return {@link S}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected S buildEvent(TbMsg msg, TbContext ctx) {
         if (msg.isTypeOneOf(ALARM, ALARM_CREATED, ALARM_UPDATED, ALARM_SEVERITY_UPDATED)) {
@@ -148,11 +171,25 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
     abstract protected Class<T> getConfigClazz();
 
     abstract void processMsg(TbContext ctx, TbMsg msg);
+    /**
+     * Returns uuidfrom msg data.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected UUID getUUIDFromMsgData(TbMsg msg) {
         Alarm alarm = JacksonUtil.fromString(msg.getData(), Alarm.class);
         return alarm != null ? alarm.getUuidId() : null;
     }
+    /**
+     * Returns scope.
+     *
+     * @param metadata metadata ({@link Map})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected String getScope(Map<String, String> metadata) {
         String scope = metadata.get(DataConstants.SCOPE);
@@ -161,6 +198,13 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
         }
         return scope;
     }
+    /**
+     * Returns edge event action type by msg type.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @return {@link EdgeEventActionType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected EdgeEventActionType getEdgeEventActionTypeByMsgType(TbMsg msg) {
         EdgeEventActionType actionType;
@@ -185,6 +229,13 @@ public abstract class AbstractTbMsgPushNode<T extends BaseTbMsgPushNodeConfigura
         }
         return actionType;
     }
+    /**
+     * Is supported msg type.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected boolean isSupportedMsgType(TbMsg msg) {
         return msg.isTypeOneOf(POST_TELEMETRY_REQUEST, POST_ATTRIBUTES_REQUEST, ATTRIBUTES_UPDATED, ATTRIBUTES_DELETED, TIMESERIES_UPDATED,

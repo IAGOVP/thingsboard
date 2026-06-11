@@ -38,16 +38,19 @@ import {
 } from '@shared/models/widget/maps/map.models';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: map layer settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-layer-settings-panel`.
+ */
 @Component({
     selector: 'tb-map-layer-settings-panel',
     templateUrl: './map-layer-settings-panel.component.html',
     providers: [],
     styleUrls: ['./map-layer-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map layer settings panel UI.
- */
+standalone: false
 })
 export class MapLayerSettingsPanelComponent implements OnInit {
 
@@ -97,6 +100,11 @@ export class MapLayerSettingsPanelComponent implements OnInit {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.layerFormGroup = this.fb.group(
       {
@@ -126,9 +134,20 @@ export class MapLayerSettingsPanelComponent implements OnInit {
     this.updateValidators();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * label placeholder.
+   *
+   * @returns string observable or value
+   */
 
   labelPlaceholder(): string {
     let translationKey = defaultLayerTitle(this.layerFormGroup.value);
@@ -138,10 +157,21 @@ export class MapLayerSettingsPanelComponent implements OnInit {
     return this.translate.instant(translationKey);
   }
 
+  /**
+   * apply layer settings.
+   *
+   */
+
   applyLayerSettings() {
     const layerSettings: MapLayerSettings = this.layerFormGroup.value;
     this.mapLayerSettingsApplied.emit(layerSettings);
   }
+
+  /**
+   * Event handler for provider changed.
+   *
+   * @param newProvider new provider (MapProvider)
+   */
 
   private onProviderChanged(newProvider: MapProvider) {
     let modelValue: MapLayerSettings = this.layerFormGroup.value;
@@ -151,6 +181,11 @@ export class MapLayerSettingsPanelComponent implements OnInit {
     );
     this.updateValidators();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const provider: MapProvider = this.layerFormGroup.get('provider').value;

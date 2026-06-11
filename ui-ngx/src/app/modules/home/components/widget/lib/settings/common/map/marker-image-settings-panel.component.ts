@@ -24,16 +24,19 @@ import { WidgetService } from '@core/http/widget.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MarkerImageSettings, MarkerImageType } from '@shared/models/widget/maps/map.models';
 
+
+/**
+ * Angular component: marker image settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-marker-image-settings-panel`.
+ */
 @Component({
     selector: 'tb-marker-image-settings-panel',
     templateUrl: './marker-image-settings-panel.component.html',
     providers: [],
     styleUrls: ['./marker-image-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: marker image settings panel UI.
- */
+standalone: false
 })
 export class MarkerImageSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -59,6 +62,11 @@ export class MarkerImageSettingsPanelComponent extends PageComponent implements 
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.markerImageSettingsFormGroup = this.fb.group(
       {
@@ -78,14 +86,29 @@ export class MarkerImageSettingsPanelComponent extends PageComponent implements 
     this.updateValidators();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply marker image settings.
+   *
+   */
 
   applyMarkerImageSettings() {
     const markerImageSettings: MarkerImageSettings = this.markerImageSettingsFormGroup.value;
     this.markerImageSettingsApplied.emit(markerImageSettings);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const type: MarkerImageType = this.markerImageSettingsFormGroup.get('type').value;

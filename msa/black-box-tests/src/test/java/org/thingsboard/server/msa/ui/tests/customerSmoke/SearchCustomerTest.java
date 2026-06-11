@@ -29,16 +29,24 @@ import org.thingsboard.server.msa.ui.utils.DataProviderCredential;
 
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultCustomerPrototype;
 
+
 /**
 
- * Search customer test.
+ * Black-box test: search customer (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class SearchCustomerTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewElements sideBarMenuView;
     private CustomerPageHelper customerPage;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -46,6 +54,13 @@ public class SearchCustomerTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewElements(driver);
         customerPage = new CustomerPageHelper(driver);
     }
+    /**
+     * Search first word.
+     *
+     * @param namePath name path ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Search customer")
@@ -57,6 +72,14 @@ public class SearchCustomerTest extends AbstractDriverBaseTest {
 
         customerPage.allEntity().forEach(x -> Assert.assertTrue(x.getText().contains(namePath)));
     }
+    /**
+     * Search number.
+     *
+     * @param name name ({@link String})
+     * @param namePath name path ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Search customer")

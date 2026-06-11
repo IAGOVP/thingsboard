@@ -33,11 +33,11 @@ import {
 } from '@home/components/widget/lib/chart/bars-chart.models';
 import { DeepPartial } from '@shared/models/common';
 
+
 /**
-
- * TypeScript models and enums for polar area chart widget settings.
-
+ * Polar area chart widget settings (ThingsBoard web UI).
  */
+
 
 export interface PolarAreaChartWidgetSettings extends LatestChartWidgetSettings {
   axisMin?: number;

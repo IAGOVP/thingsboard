@@ -49,14 +49,17 @@ export interface DeviceCheckConnectivityDialogData {
   afterAdd: boolean;
 }
 
+
+/**
+ * Angular component: device check connectivity dialog (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-check-connectivity-dialog`.
+ */
 @Component({
     selector: 'tb-device-check-connectivity-dialog',
     templateUrl: './device-check-connectivity-dialog.component.html',
     styleUrls: ['./device-check-connectivity-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: device check connectivity dialog UI.
- */
+standalone: false
 })
 export class DeviceCheckConnectivityDialogComponent extends
   DialogComponent<DeviceCheckConnectivityDialogComponent> implements OnInit, OnDestroy {
@@ -109,16 +112,31 @@ export class DeviceCheckConnectivityDialogComponent extends
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.loadCommands();
     this.subscribeToLatestTelemetry();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     super.ngOnDestroy();
     this.telemetrySubscriber?.complete();
     this.telemetrySubscriber?.unsubscribe();
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     if (this.notShowAgain && this.showDontShowAgain) {
@@ -128,6 +146,13 @@ export class DeviceCheckConnectivityDialogComponent extends
       this.dialogRef.close(null);
     }
   }
+
+  /**
+   * POST/PUT entity — create mark down command.
+   *
+   * @param commands commands (string | string[])
+   * @returns string observable or value
+   */
 
   createMarkDownCommand(commands: string | string[]): string {
     if (Array.isArray(commands)) {
@@ -139,12 +164,24 @@ export class DeviceCheckConnectivityDialogComponent extends
     }
   }
 
+  /**
+   * POST/PUT entity — create mark down single command.
+   *
+   * @param command command (string)
+   * @returns string observable or value
+   */
+
   private createMarkDownSingleCommand(command: string): string {
     return '```bash\n' +
       command +
       '{:copy-code}\n' +
       '```';
   }
+
+  /**
+   * load commands.
+   *
+   */
 
   private loadCommands() {
     this.deviceService.getDevicePublishTelemetryCommands(this.data.deviceId.id).subscribe(
@@ -163,6 +200,11 @@ export class DeviceCheckConnectivityDialogComponent extends
       }
     );
   }
+
+  /**
+   * subscribe to latest telemetry.
+   *
+   */
 
   private subscribeToLatestTelemetry() {
     this.store.pipe(select(selectPersistDeviceStateToTelemetry)).pipe(
@@ -195,6 +237,11 @@ export class DeviceCheckConnectivityDialogComponent extends
       );
     });
   }
+
+  /**
+   * select tab index for user os.
+   *
+   */
 
   private selectTabIndexForUserOS() {
     const currentOS = getOS();

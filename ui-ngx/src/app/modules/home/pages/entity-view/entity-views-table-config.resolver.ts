@@ -62,8 +62,9 @@ import {
   AddEntitiesToEdgeDialogData
 } from '@home/dialogs/add-entities-to-edge-dialog.component';
 /**
- * Route resolver: loads entity views table config before activate.
+ * Route resolver: preloads data for entity views table config (home/entity-view pages).
  */
+
 
 @Injectable()
 export class EntityViewsTableConfigResolver  {
@@ -113,6 +114,13 @@ export class EntityViewsTableConfigResolver  {
     this.config.headerComponent = EntityViewTableHeaderComponent;
 
   }
+
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<EntityTableConfig<EntityViewInfo>> observable or value
+   */
 
   resolve(route: ActivatedRouteSnapshot): Observable<EntityTableConfig<EntityViewInfo>> {
     const routeParams = route.params;
@@ -164,6 +172,13 @@ export class EntityViewsTableConfigResolver  {
     );
   }
 
+  /**
+   * configure columns.
+   *
+   * @param entityViewScope entity view scope (string)
+   * @returns Array<EntityTableColumn<EntityViewInfo>> observable or value
+   */
+
   configureColumns(entityViewScope: string): Array<EntityTableColumn<EntityViewInfo>> {
     const columns: Array<EntityTableColumn<EntityViewInfo>> = [
       new DateEntityTableColumn<EntityViewInfo>('createdTime', 'common.created-time', this.datePipe, '150px'),
@@ -182,6 +197,12 @@ export class EntityViewsTableConfigResolver  {
     return columns;
   }
 
+  /**
+   * configure entity functions.
+   *
+   * @param entityViewScope entity view scope (string)
+   */
+
   configureEntityFunctions(entityViewScope: string): void {
     if (entityViewScope === 'tenant') {
       this.config.entitiesFetchFunction = pageLink =>
@@ -196,6 +217,13 @@ export class EntityViewsTableConfigResolver  {
       this.config.deleteEntity = id => this.entityViewService.unassignEntityViewFromCustomer(id.id);
     }
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @param entityViewScope entity view scope (string)
+   * @returns Array<CellActionDescriptor<EntityViewInfo>> observable or value
+   */
 
   configureCellActions(entityViewScope: string): Array<CellActionDescriptor<EntityViewInfo>> {
     const actions: Array<CellActionDescriptor<EntityViewInfo>> = [];
@@ -256,6 +284,13 @@ export class EntityViewsTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * configure group actions.
+   *
+   * @param entityViewScope entity view scope (string)
+   * @returns Array<GroupActionDescriptor<EntityViewInfo>> observable or value
+   */
+
   configureGroupActions(entityViewScope: string): Array<GroupActionDescriptor<EntityViewInfo>> {
     const actions: Array<GroupActionDescriptor<EntityViewInfo>> = [];
     if (entityViewScope === 'tenant') {
@@ -291,6 +326,13 @@ export class EntityViewsTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * configure add actions.
+   *
+   * @param entityViewScope entity view scope (string)
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
+
   configureAddActions(entityViewScope: string): Array<HeaderActionDescriptor> {
     const actions: Array<HeaderActionDescriptor> = [];
     if (entityViewScope === 'customer') {
@@ -316,6 +358,11 @@ export class EntityViewsTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * POST/PUT entity — add entity views to customer.
+   *
+   */
+
   addEntityViewsToCustomer($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -336,6 +383,13 @@ export class EntityViewsTableConfigResolver  {
       });
   }
 
+  /**
+   * open entity view.
+   *
+   * @param entityView entity view (EntityView)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   private openEntityView($event: Event, entityView: EntityView, config: EntityTableConfig<EntityViewInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -343,6 +397,12 @@ export class EntityViewsTableConfigResolver  {
     const url = this.router.createUrlTree([entityView.id.id], {relativeTo: config.getActivatedRoute()});
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * make public.
+   *
+   * @param entityView entity view (EntityView)
+   */
 
   makePublic($event: Event, entityView: EntityView) {
     if ($event) {
@@ -366,6 +426,12 @@ export class EntityViewsTableConfigResolver  {
     );
   }
 
+  /**
+   * assign to customer.
+   *
+   * @param entityViewIds entity view ids (Array<EntityViewId>)
+   */
+
   assignToCustomer($event: Event, entityViewIds: Array<EntityViewId>) {
     if ($event) {
       $event.stopPropagation();
@@ -385,6 +451,12 @@ export class EntityViewsTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * unassign from customer.
+   *
+   * @param entityView entity view (EntityViewInfo)
+   */
 
   unassignFromCustomer($event: Event, entityView: EntityViewInfo) {
     if ($event) {
@@ -418,6 +490,12 @@ export class EntityViewsTableConfigResolver  {
     );
   }
 
+  /**
+   * unassign entity views from customer.
+   *
+   * @param entityViews entity views (Array<EntityViewInfo>)
+   */
+
   unassignEntityViewsFromCustomer($event: Event, entityViews: Array<EntityViewInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -446,6 +524,14 @@ export class EntityViewsTableConfigResolver  {
     );
   }
 
+  /**
+   * Event handler for entity view action.
+   *
+   * @param action action (EntityAction<EntityViewInfo>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
+
   onEntityViewAction(action: EntityAction<EntityViewInfo>, config: EntityTableConfig<EntityViewInfo>): boolean {
     switch (action.action) {
       case 'open':
@@ -467,6 +553,11 @@ export class EntityViewsTableConfigResolver  {
     return false;
   }
 
+  /**
+   * POST/PUT entity — add entity views to edge.
+   *
+   */
+
   addEntityViewsToEdge($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -486,6 +577,12 @@ export class EntityViewsTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * unassign from edge.
+   *
+   * @param entityView entity view (EntityViewInfo)
+   */
 
   unassignFromEdge($event: Event, entityView: EntityViewInfo) {
     if ($event) {
@@ -508,6 +605,12 @@ export class EntityViewsTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * unassign entity views from edge.
+   *
+   * @param entityViews entity views (Array<EntityViewInfo>)
+   */
 
   unassignEntityViewsFromEdge($event: Event, entityViews: Array<EntityViewInfo>) {
     if ($event) {

@@ -31,11 +31,11 @@ export interface ScrollGridColumns {
   breakpoints?: {[breakpoint: string]: number};
 }
 
+
 /**
-
- * scroll grid datasource.
-
+ * Scroll grid datasource (shared UI components).
  */
+
 
 export class ScrollGridDatasource<T, F> extends DataSource<(T | GridCellType)[]> {
 
@@ -80,6 +80,11 @@ export class ScrollGridDatasource<T, F> extends DataSource<(T | GridCellType)[]>
     return this._dataStream;
   }
 
+  /**
+   * disconnect.
+   *
+   */
+
   disconnect(): void {
     this._reset();
     this._subscription.unsubscribe();
@@ -98,10 +103,21 @@ export class ScrollGridDatasource<T, F> extends DataSource<(T | GridCellType)[]>
     return this._columns;
   }
 
+  /**
+   * update filter.
+   *
+   * @param filter filter (F)
+   */
+
   public updateFilter(filter: F) {
     this.filter = filter;
     this.update();
   }
+
+  /**
+   * update.
+   *
+   */
 
   public update() {
     if (this.active) {
@@ -133,10 +149,23 @@ export class ScrollGridDatasource<T, F> extends DataSource<(T | GridCellType)[]>
     }
   }
 
+  /**
+   * update item.
+   *
+   * @param index index (number)
+   * @param item item (T)
+   */
+
   public updateItem(index: number, item: T) {
     this._data[index] = item;
     this._dataUpdated();
   }
+
+  /**
+   * DELETE — delete item.
+   *
+   * @param index index (number)
+   */
 
   public deleteItem(index: number) {
     if (index < this._data.length) {

@@ -21,8 +21,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.rule.engine.credentials.AnonymousCredentials;
 import org.thingsboard.rule.engine.credentials.ClientCredentials;
 /**
- * JSON configuration for TbMqtt rule node.
+ * JSON configuration POJO for {@link TbMqtt} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbMqttNodeConfiguration implements NodeConfiguration<TbMqttNodeConfiguration> {
@@ -39,6 +42,12 @@ public class TbMqttNodeConfiguration implements NodeConfiguration<TbMqttNodeConf
     private boolean parseToPlainText;
     private MqttVersion protocolVersion;
     private ClientCredentials credentials;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMqttNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMqttNodeConfiguration defaultConfiguration() {

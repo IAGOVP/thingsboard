@@ -50,6 +50,12 @@ export interface AlarmRuleFilterConfigData {
   initialAlarmRuleFilterConfig?: AlarmRuleFilterConfig;
 }
 
+
+/**
+ * Angular component: alarm rule filter config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-filter-config`.
+ */
 @Component({
     selector: 'tb-alarm-rule-filter-config',
     templateUrl: './alarm-rule-filter-config.component.html',
@@ -61,10 +67,7 @@ export interface AlarmRuleFilterConfigData {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm rule filter config UI.
- */
+standalone: false
 })
 export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAccessor {
 
@@ -117,6 +120,11 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.data) {
       this.panelMode = this.data.panelMode;
@@ -145,12 +153,30 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -161,6 +187,12 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param alarmRuleFilterConfig alarm rule filter config (AlarmRuleFilterConfig)
+   */
+
   writeValue(alarmRuleFilterConfig?: AlarmRuleFilterConfig): void {
     this.alarmRuleFilterConfig = alarmRuleFilterConfig;
     if (!this.initialAlarmRuleFilterConfig && alarmRuleFilterConfig) {
@@ -169,6 +201,11 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
     this.updateButtonDisplayValue();
     this.updateAlarmRuleConfigForm(alarmRuleFilterConfig);
   }
+
+  /**
+   * toggle alarm rule filter panel.
+   *
+   */
 
   toggleAlarmRuleFilterPanel($event: Event) {
     if ($event) {
@@ -198,6 +235,11 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.updateAlarmRuleConfigForm(this.alarmRuleFilterConfig);
     this.alarmRuleFilterConfigForm.markAsPristine();
@@ -208,6 +250,11 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
       this.alarmFilterOverlayRef.dispose();
     }
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     this.alarmRuleConfigUpdated(this.alarmRuleFilterConfigForm.value);
@@ -222,6 +269,11 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
       this.alarmFilterOverlayRef.dispose();
     }
   }
+
+  /**
+   * reset.
+   *
+   */
 
   reset() {
     const alarmRuleFilterConfig = this.alarmRuleFilterConfigFromFormValue(this.alarmRuleFilterConfigForm.value);
@@ -249,6 +301,12 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
     return false;
   };
 
+  /**
+   * update alarm rule config form.
+   *
+   * @param alarmRuleFilterConfig alarm rule filter config (AlarmRuleFilterConfig)
+   */
+
   private updateAlarmRuleConfigForm(alarmRuleFilterConfig?: AlarmRuleFilterConfig) {
     this.alarmRuleFilterConfigForm.patchValue({
       name: alarmRuleFilterConfig?.name ?? [],
@@ -257,11 +315,24 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
     }, {emitEvent: false});
   }
 
+  /**
+   * alarm rule config updated.
+   *
+   * @param formValue form value (any)
+   */
+
   private alarmRuleConfigUpdated(formValue: any) {
     this.alarmRuleFilterConfig = this.alarmRuleFilterConfigFromFormValue(formValue);
     this.updateButtonDisplayValue();
     this.propagateChange(this.alarmRuleFilterConfig);
   }
+
+  /**
+   * alarm rule filter config from form value.
+   *
+   * @param formValue form value (any)
+   * @returns AlarmRuleFilterConfig observable or value
+   */
 
   private alarmRuleFilterConfigFromFormValue(formValue: any): AlarmRuleFilterConfig {
     return {
@@ -270,6 +341,11 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
       entities: formValue?.entities ?? [],
     };
   }
+
+  /**
+   * update button display value.
+   *
+   */
 
   private updateButtonDisplayValue() {
     if (this.buttonMode) {
@@ -287,6 +363,12 @@ export class AlarmRuleFilterConfigComponent implements OnInit, ControlValueAcces
       }
     }
   }
+
+  /**
+   * custom translate.
+   *
+   * @param entity entity (string)
+   */
 
   private customTranslate(entity: string) {
     return this.utils.customTranslation(entity, entity);

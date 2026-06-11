@@ -84,11 +84,11 @@ export const createTooltipValueFormatFunction =
     return tooltipValueFormatFunction;
   };
 
+
 /**
-
- * TypeScript models and enums for time series chart tooltip.
-
+ * Time series chart tooltip (ThingsBoard web UI).
  */
+
 
 export class TimeSeriesChartTooltip {
 
@@ -100,6 +100,16 @@ export class TimeSeriesChartTooltip {
               private translate: TranslateService) {
 
   }
+
+  /**
+   * formatted.
+   *
+   * @param params params (CallbackDataParams[] | CallbackDataParams)
+   * @param focusedSeriesIndex focused series index (number)
+   * @param series series (TimeSeriesChartDataItem[])
+   * @param interval interval (Interval)
+   * @returns HTMLElement observable or value
+   */
 
   formatted(params: CallbackDataParams[] | CallbackDataParams, focusedSeriesIndex: number,
             series?: TimeSeriesChartDataItem[], interval?: Interval): HTMLElement {
@@ -126,6 +136,14 @@ export class TimeSeriesChartTooltip {
 
     return tooltipElement;
   }
+
+  /**
+   * build items tooltip.
+   *
+   * @param tooltipElement tooltip element (HTMLElement)
+   * @param items items (TooltipItem[])
+   * @param interval interval (Interval)
+   */
 
   private buildItemsTooltip(tooltipElement: HTMLElement,
                             items: TooltipItem[], interval?: Interval) {
@@ -166,11 +184,25 @@ export class TimeSeriesChartTooltip {
     }
   }
 
+  /**
+   * should show item.
+   *
+   * @param item item (TooltipItem)
+   * @returns boolean observable or value
+   */
+
   private shouldShowItem(item: TooltipItem): boolean {
     if (!this.settings.tooltipHideZeroValues) return true;
     const value = item.param?.value?.[1];
     return value && value !== 'false';
   }
+
+  /**
+   * POST/PUT entity — create element.
+   *
+   * @param styles styles (Record<string, string>)
+   * @returns HTMLElement observable or value
+   */
 
   private createElement(tag = 'div', styles?: Record<string, string>): HTMLElement {
     const node = this.renderer.createElement(tag);
@@ -181,6 +213,15 @@ export class TimeSeriesChartTooltip {
     }
     return node;
   }
+
+  /**
+   * apply font.
+   *
+   * @param el el (HTMLElement)
+   * @param font font ({family: string; size: number; sizeUnit: string; style: string; weight: string; lineHeight: string})
+   * @param color color (string)
+   * @param overrides overrides (Partial<CSSStyleDeclaration>)
+   */
 
   private applyFont(el: HTMLElement, font: {family: string; size: number; sizeUnit: string; style: string; weight: string; lineHeight: string}, color: string, overrides?: Partial<CSSStyleDeclaration>) {
     this.renderer.setStyle(el, 'font-family', font.family);
@@ -195,6 +236,14 @@ export class TimeSeriesChartTooltip {
       }
     }
   }
+
+  /**
+   * construct tooltip date element.
+   *
+   * @param param param (CallbackDataParams)
+   * @param interval interval (Interval)
+   * @returns HTMLElement observable or value
+   */
 
   private constructTooltipDateElement(param: CallbackDataParams, interval?: Interval): HTMLElement {
     const dateElement = this.createElement();
@@ -217,6 +266,13 @@ export class TimeSeriesChartTooltip {
     this.applyFont(dateElement, this.settings.tooltipDateFont, this.settings.tooltipDateColor);
     return dateElement;
   }
+
+  /**
+   * construct tooltip series element.
+   *
+   * @param item item (TooltipItem)
+   * @returns HTMLElement observable or value
+   */
 
   private constructTooltipSeriesElement(item: TooltipItem): HTMLElement {
     const row = this.createElement('div', {display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'align-self': 'stretch', gap: '12px'});
@@ -256,6 +312,13 @@ export class TimeSeriesChartTooltip {
     return row;
   }
 
+  /**
+   * construct tooltip total stacked element.
+   *
+   * @param total total (string)
+   * @returns HTMLElement observable or value
+   */
+
   private constructTooltipTotalStackedElement(total: string): HTMLElement {
     const row = this.createElement('div', {display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'align-self': 'stretch', gap: '12px'});
 
@@ -274,6 +337,15 @@ export class TimeSeriesChartTooltip {
 
     return row;
   }
+
+/**
+ * map tooltip params.
+ *
+ * @param params params (CallbackDataParams[] | CallbackDataParams)
+ * @param series series (TimeSeriesChartDataItem[])
+ * @param focusedSeriesIndex focused series index (number)
+ * @returns TooltipParams observable or value
+ */
 
 private static mapTooltipParams(params: CallbackDataParams[] | CallbackDataParams,
                                   series?: TimeSeriesChartDataItem[],
@@ -304,6 +376,14 @@ private static mapTooltipParams(params: CallbackDataParams[] | CallbackDataParam
     }
     return result;
   }
+
+  /**
+   * append tooltip item.
+   *
+   * @param tooltipParams tooltip params (TooltipParams)
+   * @param seriesParams series params (CallbackDataParams)
+   * @param series series (TimeSeriesChartDataItem[])
+   */
 
   private static appendTooltipItem(tooltipParams: TooltipParams, seriesParams: CallbackDataParams, series?: TimeSeriesChartDataItem[]) {
     const dataItem = series?.find(s => s.id === seriesParams.seriesId);

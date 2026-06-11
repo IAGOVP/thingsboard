@@ -17,11 +17,11 @@
 import { HttpParams } from '@angular/common/http';
 import { InterceptorConfig } from './interceptor-config';
 
+
 /**
-
- * interceptor http params.
-
+ * Interceptor http params (HTTP interceptors).
  */
+
 
 export class InterceptorHttpParams extends HttpParams {
   constructor(

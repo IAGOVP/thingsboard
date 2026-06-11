@@ -48,8 +48,9 @@ import {
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
 /**
- * Route resolver: loads sent table config before activate.
+ * Route resolver: preloads data for sent table config (home/notification pages).
  */
+
 
 @Injectable()
 export class SentTableConfigResolver  {
@@ -103,9 +104,22 @@ export class SentTableConfigResolver  {
     );
   }
 
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<NotificationRequest, PageLink, NotificationRequestInfo> observable or value
+   */
+
   resolve(route: ActivatedRouteSnapshot): EntityTableConfig<NotificationRequest, PageLink, NotificationRequestInfo> {
     return this.config;
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<NotificationRequestInfo>> observable or value
+   */
 
   private configureCellActions(): Array<CellActionDescriptor<NotificationRequestInfo>> {
     return [{
@@ -115,6 +129,12 @@ export class SentTableConfigResolver  {
       onAction: ($event, entity) => this.createRequest($event, entity)
     }];
   }
+
+  /**
+   * POST/PUT entity — create request.
+   *
+   * @param request request (NotificationRequest)
+   */
 
   private createRequest($event: Event, request: NotificationRequest, isAdd = false, updateData = true) {
     if ($event) {
@@ -135,6 +155,13 @@ export class SentTableConfigResolver  {
     });
   }
 
+  /**
+   * Event handler for request action.
+   *
+   * @param action action (EntityAction<NotificationRequest>)
+   * @returns boolean observable or value
+   */
+
   private onRequestAction(action: EntityAction<NotificationRequest>): boolean {
     switch (action.action) {
       case 'add':
@@ -146,6 +173,13 @@ export class SentTableConfigResolver  {
     }
     return false;
   }
+
+  /**
+   * request status.
+   *
+   * @param status status (NotificationRequestStatus)
+   * @returns string observable or value
+   */
 
   private requestStatus(status: NotificationRequestStatus): string {
     const translateKey = NotificationRequestStatusTranslateMap.get(status);
@@ -164,6 +198,13 @@ export class SentTableConfigResolver  {
             </div>`;
   }
 
+  /**
+   * request stats.
+   *
+   * @param stats stats (NotificationRequestStats)
+   * @returns string observable or value
+   */
+
   private requestStats(stats: NotificationRequestStats): string {
     if (!stats?.errors) {
       return '';
@@ -177,6 +218,13 @@ export class SentTableConfigResolver  {
                 ${this.translate.instant('notification.fails', {count: countError})} >
             </div>`;
   }
+
+  /**
+   * request status style.
+   *
+   * @param status status (NotificationRequestStatus)
+   * @returns object observable or value
+   */
 
   private requestStatusStyle(status: NotificationRequestStatus): object {
     const styleObj = {
@@ -193,6 +241,12 @@ export class SentTableConfigResolver  {
     }
     return styleObj;
   }
+
+  /**
+   * open stats error dialog.
+   *
+   * @param notificationRequest notification request (NotificationRequest)
+   */
 
   private openStatsErrorDialog($event: Event, notificationRequest: NotificationRequest) {
     if ($event) {

@@ -53,11 +53,11 @@ export const rpcStatusTranslation = new Map<RpcStatus, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for persistent rpc.
-
+ * TypeScript interfaces, types, and enums for persistent rpc (shared TypeScript models).
  */
+
 
 export interface PersistentRpc {
   id: RpcId;

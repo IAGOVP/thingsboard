@@ -44,6 +44,12 @@ interface CredentialsConfig {
   certFileName?: string;
 }
 
+
+/**
+ * Angular component: credentials config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-credentials-config`.
+ */
 @Component({
     selector: 'tb-credentials-config',
     templateUrl: './credentials-config.component.html',
@@ -60,10 +66,7 @@ interface CredentialsConfig {
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: credentials config UI.
- */
+standalone: false
 })
 export class CredentialsConfigComponent extends PageComponent implements ControlValueAccessor, OnInit, Validator, OnChanges {
 
@@ -95,6 +98,11 @@ export class CredentialsConfigComponent extends PageComponent implements Control
               private destroyRef: DestroyRef) {
     super();
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.credentialsConfigFormGroup = this.fb.group(
@@ -138,12 +146,24 @@ export class CredentialsConfigComponent extends PageComponent implements Control
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param credentials credentials (CredentialsConfig | null)
+   */
+
   writeValue(credentials: CredentialsConfig | null): void {
     if (isDefinedAndNotNull(credentials)) {
       this.credentialsConfigFormGroup.reset(credentials, {emitEvent: false});
       this.updateValidators();
     }
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -153,6 +173,11 @@ export class CredentialsConfigComponent extends PageComponent implements Control
       this.updateValidators();
     }
   }
+
+  /**
+   * update view.
+   *
+   */
 
   updateView() {
     let credentialsConfigValue = this.credentialsConfigFormGroup.value;
@@ -177,12 +202,28 @@ export class CredentialsConfigComponent extends PageComponent implements Control
     this.propagateChange(credentialsConfigValue);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   */
+
   registerOnTouched(): void {
   }
+
+  /**
+   * validate.
+   *
+   */
 
   public validate() {
     return this.credentialsConfigFormGroup.valid ? null : {
@@ -191,6 +232,11 @@ export class CredentialsConfigComponent extends PageComponent implements Control
       },
     };
   }
+
+  /**
+   * credentials type changed.
+   *
+   */
 
   credentialsTypeChanged(): void {
     this.credentialsConfigFormGroup.patchValue({
@@ -205,6 +251,12 @@ export class CredentialsConfigComponent extends PageComponent implements Control
     });
     this.updateValidators();
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean = false) {
     const credentialsTypeValue: credentialsType = this.credentialsConfigFormGroup.get('type').value;
@@ -232,6 +284,13 @@ export class CredentialsConfigComponent extends PageComponent implements Control
     this.credentialsConfigFormGroup.get('password').updateValueAndValidity({emitEvent});
     this.credentialsConfigFormGroup.updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * required files selected.
+   *
+   * @param validator validator (ValidatorFn)
+   * @param requiredFieldsSet required fields set (string[][])
+   */
 
   private requiredFilesSelected(validator: ValidatorFn,
                                 requiredFieldsSet: string[][] = null) {

@@ -28,14 +28,17 @@ export interface ErrorAlertDialogData {
   ok: string;
 }
 
+
+/**
+ * Angular component: error alert dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-error-alert-dialog`.
+ */
 @Component({
     selector: 'tb-error-alert-dialog',
     templateUrl: './error-alert-dialog.component.html',
     styleUrls: ['./error-alert-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: error alert dialog UI.
- */
+standalone: false
 })
 export class ErrorAlertDialogComponent extends DialogComponent<ErrorAlertDialogComponent, boolean>{
 

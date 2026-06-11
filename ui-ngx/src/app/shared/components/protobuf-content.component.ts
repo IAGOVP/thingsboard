@@ -33,6 +33,12 @@ import { AppState } from '@core/core.state';
 import { getAce } from '@shared/models/ace/ace.models';
 import { beautifyJs } from '@shared/models/beautify.models';
 
+
+/**
+ * Angular component: protobuf content (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-protobuf-content`.
+ */
 @Component({
     selector: 'tb-protobuf-content',
     templateUrl: './protobuf-content.component.html',
@@ -44,10 +50,7 @@ import { beautifyJs } from '@shared/models/beautify.models';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: protobuf content UI.
- */
+standalone: false
 })
 export class ProtobufContentComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
@@ -93,6 +96,11 @@ export class ProtobufContentComponent implements OnInit, ControlValueAccessor, O
               private raf: RafService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const editorElement = this.protobufEditorElmRef.nativeElement;
     let editorOptions: Partial<Ace.EditorOptions> = {
@@ -128,6 +136,11 @@ export class ProtobufContentComponent implements OnInit, ControlValueAccessor, O
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.editorResize$) {
       this.editorResize$.disconnect();
@@ -137,12 +150,30 @@ export class ProtobufContentComponent implements OnInit, ControlValueAccessor, O
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -150,6 +181,12 @@ export class ProtobufContentComponent implements OnInit, ControlValueAccessor, O
       this.protobufEditor.setReadOnly(this.disabled || this.readonly);
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
 
   writeValue(value: string): void {
     this.contentBody = value;
@@ -160,6 +197,11 @@ export class ProtobufContentComponent implements OnInit, ControlValueAccessor, O
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   updateView() {
     const editorValue = this.protobufEditor.getValue();
     if (this.contentBody !== editorValue) {
@@ -167,6 +209,11 @@ export class ProtobufContentComponent implements OnInit, ControlValueAccessor, O
       this.propagateChange(this.contentBody);
     }
   }
+
+  /**
+   * beautify protobuf.
+   *
+   */
 
   beautifyProtobuf() {
     beautifyJs(this.contentBody, {indent_size: 4, wrap_line_length: 60}).subscribe(
@@ -177,6 +224,11 @@ export class ProtobufContentComponent implements OnInit, ControlValueAccessor, O
     );
   }
 
+  /**
+   * Event handler for fullscreen.
+   *
+   */
+
   onFullscreen() {
     if (this.protobufEditor) {
       setTimeout(() => {
@@ -184,6 +236,11 @@ export class ProtobufContentComponent implements OnInit, ControlValueAccessor, O
       }, 0);
     }
   }
+
+  /**
+   * Event handler for ace editor resize.
+   *
+   */
 
   private onAceEditorResize() {
     if (this.editorsResizeCaf) {

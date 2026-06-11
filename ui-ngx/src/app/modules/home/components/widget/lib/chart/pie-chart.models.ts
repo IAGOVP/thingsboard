@@ -23,11 +23,11 @@ import {
   PieChartLabelPosition
 } from '@home/components/widget/lib/chart/chart.models';
 
+
 /**
-
- * TypeScript models and enums for pie chart settings.
-
+ * Pie chart settings (ThingsBoard web UI).
  */
+
 
 export interface PieChartSettings extends LatestChartSettings {
   doughnut: boolean;

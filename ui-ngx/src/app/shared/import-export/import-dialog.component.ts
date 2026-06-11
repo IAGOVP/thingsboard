@@ -33,15 +33,18 @@ export interface ImportDialogData {
   importContentLabel?: string;
 }
 
+
+/**
+ * Angular component: import dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-import-dialog`.
+ */
 @Component({
     selector: 'tb-import-dialog',
     templateUrl: './import-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: ImportDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: import dialog UI.
- */
+standalone: false
 })
 export class ImportDialogComponent extends DialogComponent<ImportDialogComponent>
   implements OnInit, ErrorStateMatcher {
@@ -71,6 +74,11 @@ export class ImportDialogComponent extends DialogComponent<ImportDialogComponent
     this.importContentLabel = data.importContentLabel;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.importFormGroup = this.fb.group({
       importType: ['file'],
@@ -84,11 +92,26 @@ export class ImportDialogComponent extends DialogComponent<ImportDialogComponent
     });
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * load data from json content.
+   *
+   * @param content content (string)
+   * @returns any observable or value
+   */
 
   loadDataFromJsonContent(content: string): any {
     try {
@@ -100,9 +123,19 @@ export class ImportDialogComponent extends DialogComponent<ImportDialogComponent
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * import from json.
+   *
+   */
 
   importFromJson(): void {
     this.submitted = true;
@@ -110,6 +143,11 @@ export class ImportDialogComponent extends DialogComponent<ImportDialogComponent
     const importData = this.importFormGroup.get(importType === 'file' ? 'fileContent' : 'jsonContent').value;
     this.dialogRef.close(importData);
   }
+
+  /**
+   * import type changed.
+   *
+   */
 
   private importTypeChanged() {
     const importType: 'file' | 'content' = this.importFormGroup.get('importType').value;

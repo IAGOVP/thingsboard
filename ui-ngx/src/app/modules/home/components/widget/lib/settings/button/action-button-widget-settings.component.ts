@@ -23,14 +23,17 @@ import { ValueType } from '@shared/models/constants';
 import { getTargetDeviceFromDatasources } from '@shared/models/widget-settings.models';
 import { actionButtonDefaultSettings } from '@home/components/widget/lib/button/action-button-widget.models';
 
+
+/**
+ * Angular component: action button widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-button-widget-settings`.
+ */
 @Component({
     selector: 'tb-action-button-widget-settings',
     templateUrl: './action-button-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: action button widget settings UI.
- */
+standalone: false
 })
 export class ActionButtonWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -55,13 +58,31 @@ export class ActionButtonWidgetSettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.actionButtonWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return actionButtonDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.actionButtonWidgetSettingsForm = this.fb.group({

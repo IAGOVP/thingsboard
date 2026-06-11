@@ -60,7 +60,9 @@ import { WebsocketService } from '@core/ws/websocket.service';
 
 // @dynamic
 /**
- * Angular HTTP service: telemetry websocket REST wrappers (`@core/http`).
+ * Angular injectable service: telemetry websocket (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -75,6 +77,12 @@ export class TelemetryWebsocketService extends WebsocketService<TelemetrySubscri
               @Inject(WINDOW) protected window: Window) {
     super(store, authService, ngZone, 'api/ws', new TelemetryPluginCmdsWrapper(), window);
   }
+
+  /**
+   * subscribe.
+   *
+   * @param subscriber subscriber (TelemetrySubscriber)
+   */
 
   public subscribe(subscriber: TelemetrySubscriber) {
     this.isActive = true;
@@ -92,6 +100,12 @@ export class TelemetryWebsocketService extends WebsocketService<TelemetrySubscri
     this.publishCommands();
   }
 
+  /**
+   * update.
+   *
+   * @param subscriber subscriber (TelemetrySubscriber)
+   */
+
   public update(subscriber: TelemetrySubscriber) {
     if (!this.isReconnect) {
       subscriber.subscriptionCommands.forEach(
@@ -104,6 +118,12 @@ export class TelemetryWebsocketService extends WebsocketService<TelemetrySubscri
       this.publishCommands();
     }
   }
+
+  /**
+   * unsubscribe.
+   *
+   * @param subscriber subscriber (TelemetrySubscriber)
+   */
 
   public unsubscribe(subscriber: TelemetrySubscriber) {
     if (this.isActive) {
@@ -148,6 +168,12 @@ export class TelemetryWebsocketService extends WebsocketService<TelemetrySubscri
       this.publishCommands();
     }
   }
+
+  /**
+   * process on message.
+   *
+   * @param message message (WebsocketDataMsg)
+   */
 
   processOnMessage(message: WebsocketDataMsg) {
     let subscriber: TelemetrySubscriber | NotificationSubscriber;

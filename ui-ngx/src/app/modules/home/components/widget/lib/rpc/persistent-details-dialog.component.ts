@@ -33,17 +33,19 @@ export interface PersistentDetailsDialogData {
   allowDelete: boolean;
 }
 
+
+
+/**
+ * Angular component: persistent details dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-persistent-details-dialog`.
+ */
 @Component({
     selector: 'tb-persistent-details-dialog',
     templateUrl: './persistent-details-dialog.component.html',
     styleUrls: ['./persistent-details-dialog.component.scss'],
-    standalone: false
 
-/**
-
- * Angular component: persistent details dialog UI.
-
- */
+standalone: false
 })
 
 export class PersistentDetailsDialogComponent extends DialogComponent<PersistentDetailsDialogComponent, boolean> implements OnInit {
@@ -90,6 +92,12 @@ export class PersistentDetailsDialogComponent extends DialogComponent<Persistent
     this.responseData = JSON.stringify(data.persistentRequest.response, null, 2);
   }
 
+  /**
+   * load persistent fields.
+   *
+   * @param request request (PersistentRpc)
+   */
+
   loadPersistentFields(request: PersistentRpc) {
     this.persistentFormGroup.patchValue({
       rpcId: this.translate.instant('widgets.persistent-table.details-title') + request.id.id,
@@ -105,12 +113,27 @@ export class PersistentDetailsDialogComponent extends DialogComponent<Persistent
     }, {emitEvent: false});
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     this.dialogRef.close(this.persistentUpdated);
   }
+
+  /**
+   * DELETE — delete rpc request.
+   *
+   */
 
   deleteRpcRequest() {
     const persistentRpc = this.data.persistentRequest;

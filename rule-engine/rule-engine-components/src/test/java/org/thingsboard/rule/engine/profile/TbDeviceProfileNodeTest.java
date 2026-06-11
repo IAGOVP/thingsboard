@@ -110,8 +110,9 @@ import static org.thingsboard.server.common.data.device.profile.AlarmConditionKe
 import static org.thingsboard.server.common.data.query.NumericFilterPredicate.NumericOperation.GREATER;
 import static org.thingsboard.server.common.data.query.NumericFilterPredicate.NumericOperation.LESS;
 /**
- * Unit test for tb device profile node rule node.
+ * Unit test for tb device profile node (device profile state nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -136,6 +137,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
     private final DeviceId deviceId = new DeviceId(UUID.randomUUID());
     private final CustomerId customerId = new CustomerId(UUID.randomUUID());
     private final DeviceProfileId deviceProfileId = new DeviceProfileId(UUID.randomUUID());
+    /**
+     * Setup.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setup() {
@@ -146,6 +152,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         lenient().when(ctx.getDeviceService()).thenReturn(deviceService);
         lenient().when(ctx.getAttributesService()).thenReturn(attributesService);
     }
+    /**
+     * Test random message type.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testRandomMessageType() throws Exception {
@@ -170,6 +181,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).tellSuccess(msg);
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test empty profile.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testEmptyProfile() throws Exception {
@@ -194,6 +210,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).tellSuccess(msg);
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test alarm create.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAlarmCreate() throws Exception {
@@ -268,6 +289,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).tellSuccess(msg2);
         verify(ctx).enqueueForTellNext(theMsg2, "Alarm Updated");
     }
+    /**
+     * Test alarm severity update.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAlarmSeverityUpdate() throws Exception {
@@ -362,6 +388,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).tellSuccess(msg2);
         verify(ctx).enqueueForTellNext(theMsg2, "Alarm Severity Updated");
     }
+    /**
+     * Test constant key filter simple.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testConstantKeyFilterSimple() throws Exception {
@@ -455,6 +486,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test constant key filter inherited.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testConstantKeyFilterInherited() throws Exception {
@@ -553,6 +589,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test current device attribute for dynamic value.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testCurrentDeviceAttributeForDynamicValue() throws Exception {
@@ -633,6 +674,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test current device attribute for dynamic duration value.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testCurrentDeviceAttributeForDynamicDurationValue() throws Exception {
@@ -759,6 +805,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test current device attribute for dynamic duration value no messages received from device before alarm harvesting.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testCurrentDeviceAttributeForDynamicDurationValue_noMessagesReceivedFromDeviceBeforeAlarmHarvesting() throws Exception {
@@ -858,6 +909,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         // NPE should NOT happen here: dynamic value of duration condition should be correctly resolved
         assertThatNoException().isThrownBy(() -> node.onMsg(ctx, periodicCheck));
     }
+    /**
+     * Test inherit tenant attribute for duration.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testInheritTenantAttributeForDuration() throws Exception {
@@ -999,6 +1055,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test current device attribute for dynamic repeating value.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testCurrentDeviceAttributeForDynamicRepeatingValue() throws Exception {
@@ -1119,6 +1180,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test inherit tenant attribute for repeating.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testInheritTenantAttributeForRepeating() throws Exception {
@@ -1252,6 +1318,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test current device attribute for use default duration when dynamic duration value is null.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testCurrentDeviceAttributeForUseDefaultDurationWhenDynamicDurationValueIsNull() throws Exception {
@@ -1370,6 +1441,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test current device attribute for use default repeating when dynamic duration value is null.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testCurrentDeviceAttributeForUseDefaultRepeatingWhenDynamicDurationValueIsNull() throws Exception {
@@ -1464,6 +1540,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test active alarm schedule from dynamic values when default schedule is inactive.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testActiveAlarmScheduleFromDynamicValuesWhenDefaultScheduleIsInactive() throws Exception {
@@ -1560,6 +1641,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test inactive alarm schedule from dynamic values when default schedule is active.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testInactiveAlarmScheduleFromDynamicValuesWhenDefaultScheduleIsActive() throws Exception {
@@ -1663,6 +1749,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx, Mockito.never()).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test current customers attribute for dynamic value.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testCurrentCustomersAttributeForDynamicValue() throws Exception {
@@ -1754,6 +1845,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test current tenant attribute for dynamic value.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testCurrentTenantAttributeForDynamicValue() throws Exception {
@@ -1838,6 +1934,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Test tenant inherit mode for dynamic values.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testTenantInheritModeForDynamicValues() throws Exception {
@@ -1933,6 +2034,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
 
     }
+    /**
+     * Test customer inherit mode for dynamic values.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Test
@@ -2082,6 +2188,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         );
 
     }
+    /**
+     * Test alarm create with attr and ts condition.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAlarmCreateWithAttrAndTsCondition() throws Exception {
@@ -2176,6 +2287,11 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         filter.setPredicate(highTemperaturePredicate);
         return filter;
     }
+    /**
+     * Test alarm create after timeseries updated.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAlarmCreateAfterTimeseriesUpdated() throws Exception {
@@ -2244,6 +2360,12 @@ public class TbDeviceProfileNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctx).enqueueForTellNext(theMsg, "Alarm Created");
         verify(ctx, Mockito.never()).tellFailure(Mockito.any(), Mockito.any());
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

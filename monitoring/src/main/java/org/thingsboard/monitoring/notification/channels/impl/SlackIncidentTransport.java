@@ -17,11 +17,13 @@ package org.thingsboard.monitoring.notification.channels.impl;
 
 import org.thingsboard.monitoring.notification.incident.IncidentTransport;
 
+
 /**
 
- * Slack-specific {@link IncidentTransport} implementation.
+ * Slack-specific {@link org.thingsboard.monitoring.notification.incident.IncidentTransport} implementation.
 
  */
+
 
 public class SlackIncidentTransport implements IncidentTransport {
 
@@ -32,16 +34,39 @@ public class SlackIncidentTransport implements IncidentTransport {
         this.slackApiClient = slackApiClient;
         this.channelId = channelId;
     }
+    /**
+     * Post incident.
+     *
+     * @param text text ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String postIncident(String text) {
         return slackApiClient.postMessage(channelId, text);
     }
+    /**
+     * Post thread reply.
+     *
+     * @param threadId thread id ({@link String})
+     * @param text text ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void postThreadReply(String threadId, String text) {
         slackApiClient.postThreadReply(channelId, threadId, text);
     }
+    /**
+     * Updates incident.
+     *
+     * @param threadId thread id ({@link String})
+     * @param text text ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void updateIncident(String threadId, String text) {

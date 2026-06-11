@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.util;
 
+
 /**
 
- * Rule engine component: tb msg source.
+ * Enumerates tb msg source values used by rule engine shared rule-engine utilities and async loaders.
 
  */
+
 
 public enum TbMsgSource {
 

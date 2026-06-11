@@ -34,7 +34,13 @@ import static com.google.common.util.concurrent.Futures.transform;
 import static com.google.common.util.concurrent.Futures.transformAsync;
 
 /**
- * Rule engine action node 'clear alarm': Clear Alarm Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>clear alarm</b>.
+ *
+ * <p>Clear Alarm
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbClearAlarmNodeConfiguration}.
+ * <br>Output relations: {@code "Cleared", "False"}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/clear-alarm/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/clear-alarm/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -52,11 +58,26 @@ import static com.google.common.util.concurrent.Futures.transformAsync;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/clear-alarm/"
 )
 public class TbClearAlarmNode extends TbAbstractAlarmNode<TbClearAlarmNodeConfiguration> {
+    /**
+     * Loads alarm node config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbClearAlarmNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbClearAlarmNodeConfiguration loadAlarmNodeConfig(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbClearAlarmNodeConfiguration.class);
     }
+    /**
+     * Processes alarm.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link TbAlarmResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<TbAlarmResult> processAlarm(TbContext ctx, TbMsg msg) {

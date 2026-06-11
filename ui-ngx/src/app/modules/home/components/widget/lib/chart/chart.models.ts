@@ -184,11 +184,11 @@ export const pieChartLabelPositionTranslations = new Map<PieChartLabelPosition, 
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for chart animation settings.
-
+ * Chart animation settings (ThingsBoard web UI).
  */
+
 
 export interface ChartAnimationSettings {
   animation: boolean;

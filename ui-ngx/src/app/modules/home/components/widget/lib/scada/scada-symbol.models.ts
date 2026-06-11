@@ -495,11 +495,11 @@ export interface ScadaSymbolObjectCallbacks {
   onScadaSymbolObjectMessage: (message: string) => void;
 }
 
+
 /**
-
- * TypeScript models and enums for scada symbol object.
-
+ * Scada symbol object (ThingsBoard web UI).
  */
+
 
 export class ScadaSymbolObject {
 
@@ -549,6 +549,11 @@ export class ScadaSymbolObject {
     this.shapeResize$.observe(this.rootElement);
   }
 
+  /**
+   * destroy.
+   *
+   */
+
   public destroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -576,6 +581,11 @@ export class ScadaSymbolObject {
     }
   }
 
+  /**
+   * prepare metadata.
+   *
+   */
+
   private prepareMetadata() {
     this.metadata.stateRender = parseFunction(this.metadata.stateRenderFunction, ['ctx', 'svg']) || (() => {});
     for (const tag of this.metadata.tags) {
@@ -588,6 +598,12 @@ export class ScadaSymbolObject {
       }
     }
   }
+
+  /**
+   * prepare svg shape.
+   *
+   * @param doc doc (XMLDocument)
+   */
 
   private prepareSvgShape(doc: XMLDocument) {
     const elements = doc.getElementsByTagName('tb:metadata');
@@ -626,6 +642,11 @@ export class ScadaSymbolObject {
     this.svgShape.size(this.box.width, this.box.height);
     this.svgShape.addTo(this.rootElement);
   }
+
+  /**
+   * init.
+   *
+   */
 
   private init() {
     this.cssAnimations = new CssScadaSymbolAnimations(this.svgShape, this.raf);
@@ -738,17 +759,44 @@ export class ScadaSymbolObject {
     }
   }
 
+  /**
+   * Event handler for loading state.
+   *
+   * @param loading loading (boolean)
+   */
+
   private onLoadingState(loading: boolean) {
     this.callbacks.onScadaSymbolObjectLoadingState(loading);
   }
+
+  /**
+   * Event handler for error.
+   *
+   * @param error error (string)
+   */
 
   private onError(error: string) {
     this.callbacks.onScadaSymbolObjectError(error);
   }
 
+  /**
+   * Event handler for message.
+   *
+   * @param message message (string)
+   */
+
   private onMessage(message: string) {
     this.callbacks.onScadaSymbolObjectMessage(message);
   }
+
+  /**
+   * call action.
+   *
+   * @param event DOM or Angular event object
+   * @param behaviorId behavior id (string)
+   * @param value value (any)
+   * @param observer observer (Partial<Observer<void>>)
+   */
 
   private callAction(event: Event, behaviorId: string, value?: any, observer?: Partial<Observer<void>>) {
     const behavior = this.metadata.behavior.find(b => b.id === behaviorId);
@@ -792,6 +840,11 @@ export class ScadaSymbolObject {
     }
   }
 
+  /**
+   * resize.
+   *
+   */
+
   private resize() {
     if (this.svgShape) {
       const targetWidth = this.rootElement.getBoundingClientRect().width;
@@ -817,11 +870,25 @@ export class ScadaSymbolObject {
     }
   }
 
+  /**
+   * Event handler for value.
+   *
+   * @param id id (string)
+   * @param value value (any)
+   */
+
   private onValue(id: string, value: any) {
     const valueBehavior = this.metadata.behavior.find(b => b.id === id) as ScadaSymbolBehaviorValue;
     value = this.normalizeValue(value, valueBehavior.valueType);
     this.setValue(valueBehavior.id, value);
   }
+
+  /**
+   * set value.
+   *
+   * @param valueId value id (string)
+   * @param value value (any)
+   */
 
   private setValue(valueId: string, value: any) {
     const stateValueSubject = this.stateValueSubjects[valueId];
@@ -830,9 +897,24 @@ export class ScadaSymbolObject {
     }
   }
 
+  /**
+   * unit symbol.
+   *
+   * @param unit unit (TbUnit)
+   * @returns string observable or value
+   */
+
   private unitSymbol(unit: TbUnit): string {
     return this.ctx.unitService.getTargetUnitSymbol(unit);
   }
+
+  /**
+   * convert unit value.
+   *
+   * @param value value (number)
+   * @param unit unit (TbUnit)
+   * @returns number observable or value
+   */
 
   private convertUnitValue(value: number, unit: TbUnit): number {
     return this.ctx.unitService.convertUnitValue(value, unit);
@@ -840,6 +922,15 @@ export class ScadaSymbolObject {
 
   private formatValue(value: any, settings: ValueFormatSettings): string;
   private formatValue(value: any, dec?: number, units?: string, showZeroDecimals?: boolean): string | undefined;
+  /**
+   * format value.
+   *
+   * @param value value (any)
+   * @param settingsOrDec settings or dec (ValueFormatSettings | number)
+   * @param units units (string)
+   * @param showZeroDecimals show zero decimals (boolean)
+   * @returns string observable or value
+   */
   private formatValue(value: any, settingsOrDec?: ValueFormatSettings | number, units?: string, showZeroDecimals?: boolean): string {
     let valueFormatSettings: ValueFormatSettings;
     if (typeof settingsOrDec === 'object') {
@@ -858,12 +949,24 @@ export class ScadaSymbolObject {
     return this.valueProcessor[id].format(value);
   }
 
+  /**
+   * Event handler for state value changed.
+   *
+   * @param id id (string)
+   * @param value value (any)
+   */
+
   private onStateValueChanged(id: string, value: any) {
     if (this.context.values[id] !== value) {
       this.context.values[id] = value;
       this.renderState();
     }
   }
+
+  /**
+   * render state.
+   *
+   */
 
   private renderState(): void {
     try {
@@ -885,6 +988,14 @@ export class ScadaSymbolObject {
     }
   }
 
+  /**
+   * normalize value.
+   *
+   * @param value value (any)
+   * @param type type (ValueType)
+   * @returns any observable or value
+   */
+
   private normalizeValue(value: any, type: ValueType): any {
     if (isUndefinedOrNull(value)) {
         return defaultValueForValueType(type);
@@ -892,6 +1003,13 @@ export class ScadaSymbolObject {
       return value;
     }
   }
+
+  /**
+   * set element text.
+   *
+   * @param e e (Element | Element[])
+   * @param text text (string)
+   */
 
   private setElementText(e: Element | Element[], text: string) {
     this.elements(e).forEach(element => {
@@ -912,6 +1030,14 @@ export class ScadaSymbolObject {
     });
   }
 
+  /**
+   * set element font.
+   *
+   * @param e e (Element | Element[])
+   * @param font font (Font)
+   * @param color color (string)
+   */
+
   private setElementFont(e: Element | Element[], font: Font, color: string) {
     this.elements(e).forEach(element => {
       if (element.type === 'text') {
@@ -931,6 +1057,13 @@ export class ScadaSymbolObject {
       }
     });
   }
+
+  /**
+   * set element icon.
+   *
+   * @param e e (Element | Element[])
+   * @param icon icon (string)
+   */
 
   private setElementIcon(e: Element | Element[],
                          icon: string,
@@ -963,6 +1096,15 @@ export class ScadaSymbolObject {
       }
     });
   }
+
+  /**
+   * POST/PUT entity — create icon element.
+   *
+   * @param icon icon (string)
+   * @param size size (number)
+   * @param color color (string)
+   * @returns Observable<Element> observable or value
+   */
 
   private createIconElement(icon: string, size: number, color: string): Observable<Element> {
     const isSvg = isSvgIcon(icon);
@@ -1003,37 +1145,98 @@ export class ScadaSymbolObject {
     }
   }
 
+  /**
+   * css animate.
+   *
+   * @param element element (Element)
+   * @param duration duration (number)
+   * @returns ScadaSymbolAnimation observable or value
+   */
+
   private cssAnimate(element: Element, duration: number): ScadaSymbolAnimation {
     return this.cssAnimations.animate(element, duration);
   }
+
+  /**
+   * css animation.
+   *
+   * @param element element (Element)
+   * @returns ScadaSymbolAnimation | undefined observable or value
+   */
 
   private cssAnimation(element: Element): ScadaSymbolAnimation | undefined {
     return this.cssAnimations.animation(element);
   }
 
+  /**
+   * reset css animation.
+   *
+   * @param element element (Element)
+   */
+
   private resetCssAnimation(element: Element) {
     this.cssAnimations.resetAnimation(element);
   }
+
+  /**
+   * finish css animation.
+   *
+   * @param element element (Element)
+   */
 
   private finishCssAnimation(element: Element) {
     this.cssAnimations.finishAnimation(element);
   }
 
+  /**
+   * connector animate.
+   *
+   * @param element element (Element)
+   * @param path path (string)
+   * @param reversedPath reversed path (string)
+   * @returns ConnectorScadaSymbolAnimation observable or value
+   */
+
   private connectorAnimate(element: Element, path: string, reversedPath: string): ConnectorScadaSymbolAnimation {
     return this.connectorAnimations.animate(element, path, reversedPath);
   }
+
+  /**
+   * connector animation.
+   *
+   * @param element element (Element)
+   * @returns ConnectorScadaSymbolAnimation | undefined observable or value
+   */
 
   private connectorAnimation(element: Element): ConnectorScadaSymbolAnimation | undefined {
     return this.connectorAnimations.animation(element);
   }
 
+  /**
+   * reset connector animation.
+   *
+   * @param element element (Element)
+   */
+
   private resetConnectorAnimation(element: Element) {
     this.connectorAnimations.resetAnimation(element);
   }
 
+  /**
+   * finish connector animation.
+   *
+   * @param element element (Element)
+   */
+
   private finishConnectorAnimation(element: Element) {
     this.connectorAnimations.finishAnimation(element);
   }
+
+  /**
+   * disable element.
+   *
+   * @param e e (Element | Element[])
+   */
 
   private disableElement(e: Element | Element[]) {
     this.elements(e).forEach(element => {
@@ -1041,15 +1244,36 @@ export class ScadaSymbolObject {
     });
   }
 
+  /**
+   * enable element.
+   *
+   * @param e e (Element | Element[])
+   */
+
   private enableElement(e: Element | Element[]) {
     this.elements(e).forEach(element => {
       element.attr({'pointer-events': null});
     });
   }
 
+  /**
+   * elements.
+   *
+   * @param element element (Element | Element[])
+   * @returns Element[] observable or value
+   */
+
   private elements(element: Element | Element[]): Element[] {
     return Array.isArray(element) ? element : [element];
   }
+
+  /**
+   * get property.
+   *
+   * @param properties properties (FormProperty[])
+   * @param ids ids (string[])
+   * @returns FormProperty observable or value
+   */
 
   private getProperty(properties: FormProperty[], ...ids: string[]): FormProperty {
     let found: FormProperty;
@@ -1068,6 +1292,14 @@ export class ScadaSymbolObject {
     return found;
   }
 
+  /**
+   * get settings value.
+   *
+   * @param settings settings ({[id: string]: any})
+   * @param ids ids (string[])
+   * @returns any observable or value
+   */
+
   private getSettingsValue(settings: {[id: string]: any}, ...ids: string[]): any {
     let found: any;
     let properties = settings;
@@ -1085,6 +1317,15 @@ export class ScadaSymbolObject {
     }
     return found;
   }
+
+  /**
+   * get property value.
+   *
+   * @param properties properties (FormProperty[])
+   * @param settings settings ({[id: string]: any})
+   * @param ids ids (string[])
+   * @returns any observable or value
+   */
 
   private getPropertyValue(properties: FormProperty[], settings: {[id: string]: any}, ...ids: string[]): any {
     const property = this.getProperty(properties, ...ids);
@@ -1128,6 +1369,14 @@ export class ScadaSymbolObject {
       return '';
     }
   }
+
+  /**
+   * convert property value.
+   *
+   * @param property property (FormProperty)
+   * @param value value (any)
+   * @returns any observable or value
+   */
 
   private convertPropertyValue(property: FormProperty, value: any): any {
     if (isDefinedAndNotNull(value)) {

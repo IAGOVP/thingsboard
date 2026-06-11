@@ -31,6 +31,9 @@ import { DeduplicationConfigComponent } from './deduplication-config.component';
 /**
  * Angular NgModule: transformation rule node config feature area.
  */
+/**
+ * Angular NgModule bundling transformation rule node config (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     ChangeOriginatorConfigComponent,
@@ -56,6 +59,6 @@ import { DeduplicationConfigComponent } from './deduplication-config.component';
     NodeJsonPathConfigComponent,
     DeleteKeysConfigComponent,
     DeduplicationConfigComponent
-  ]})
+]})
 export class TransformationRuleNodeConfigModule {
 }

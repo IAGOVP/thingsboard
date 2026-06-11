@@ -65,8 +65,11 @@ import { compileTbFunction, TbFunction } from '@shared/models/js-function.models
 import { HttpClient } from '@angular/common/http';
 import { jsonFormSchemaToFormProperties } from '@shared/models/dynamic-form.models';
 /**
- * Angular HTTP service: widget component REST wrappers (`@core/http`).
+ * Angular injectable service: widget component (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 @Injectable()
 export class WidgetComponentService {
@@ -95,6 +98,12 @@ export class WidgetComponentService {
 
     this.init();
   }
+
+  /**
+   * init.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   private init(): Observable<any> {
     if (this.init$) {
@@ -241,6 +250,13 @@ export class WidgetComponentService {
     }
   }
 
+  /**
+   * get instant widget info.
+   *
+   * @param widget widget (Widget)
+   * @returns WidgetInfo observable or value
+   */
+
   public getInstantWidgetInfo(widget: Widget): WidgetInfo {
     const widgetInfo = this.widgetService.getWidgetInfoFromCache(widget.typeFullFqn);
     if (widgetInfo) {
@@ -254,16 +270,36 @@ export class WidgetComponentService {
     }
   }
 
+  /**
+   * get widget info.
+   *
+   * @param fullFqn full fqn (string)
+   * @returns Observable<WidgetInfo> observable or value
+   */
+
   public getWidgetInfo(fullFqn: string): Observable<WidgetInfo> {
     return this.init().pipe(
       mergeMap(() => this.getWidgetInfoInternal(fullFqn))
     );
   }
 
+  /**
+   * clear widget info.
+   *
+   * @param widgetInfo widget info (WidgetInfo)
+   */
+
   public clearWidgetInfo(widgetInfo: WidgetInfo): void {
     this.dynamicComponentFactoryService.destroyDynamicComponent(widgetInfo.componentType);
     this.widgetService.deleteWidgetInfoFromCache(widgetInfo.fullFqn);
   }
+
+  /**
+   * get widget info internal.
+   *
+   * @param fullFqn full fqn (string)
+   * @returns Observable<WidgetInfo> observable or value
+   */
 
   private getWidgetInfoInternal(fullFqn: string): Observable<WidgetInfo> {
     const widgetInfoSubject = new ReplaySubject<WidgetInfo>();
@@ -297,6 +333,13 @@ export class WidgetComponentService {
     }
     return widgetInfoSubject.asObservable();
   }
+
+  /**
+   * load widget.
+   *
+   * @param widgetType widget type (WidgetType)
+   * @param widgetInfoSubject widget info subject (Subject<WidgetInfo>)
+   */
 
   private loadWidget(widgetType: WidgetType, widgetInfoSubject: Subject<WidgetInfo>) {
     const widgetInfo = toWidgetInfo(widgetType);
@@ -340,6 +383,15 @@ export class WidgetComponentService {
       }
     );
   }
+
+  /**
+   * load widget resources.
+   *
+   * @param widgetInfo widget info (WidgetInfo)
+   * @param widgetNamespace widget namespace (string)
+   * @param modules modules (Type<any>[])
+   * @returns Observable<any> observable or value
+   */
 
   private loadWidgetResources(widgetInfo: WidgetInfo, widgetNamespace: string, modules?: Type<any>[]): Observable<any> {
     this.cssParser.cssPreviewNamespace = widgetNamespace;
@@ -414,6 +466,10 @@ export class WidgetComponentService {
         }))
     );
     return forkJoin(resourceTasks).pipe(
+      /**
+       * switch map.
+       *
+       */
       switchMap(msgs => {
           let errors: string[];
           if (msgs && msgs.length) {
@@ -427,6 +483,13 @@ export class WidgetComponentService {
         }
     ));
   }
+
+  /**
+   * register widget settings forms.
+   *
+   * @param widgetInfo widget info (WidgetInfo)
+   * @param modulesWithComponents modules with components (ModulesWithComponents)
+   */
 
   private registerWidgetSettingsForms(widgetInfo: WidgetInfo, modulesWithComponents: ModulesWithComponents) {
     const directives: string[] = [];
@@ -459,6 +522,13 @@ export class WidgetComponentService {
       });
     }
   }
+
+  /**
+   * POST/PUT entity — create widget controller descriptor.
+   *
+   * @param widgetInfo widget info (WidgetInfo)
+   * @returns Observable<WidgetControllerDescriptor> observable or value
+   */
 
   private createWidgetControllerDescriptor(widgetInfo: WidgetInfo): Observable<WidgetControllerDescriptor> {
     let controllerBody: string;

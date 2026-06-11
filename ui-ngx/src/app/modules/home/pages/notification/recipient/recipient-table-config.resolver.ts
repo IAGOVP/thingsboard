@@ -35,8 +35,9 @@ import { DatePipe } from '@angular/common';
 import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 import { Observable } from 'rxjs';
 /**
- * Route resolver: loads recipient table config before activate.
+ * Route resolver: preloads data for recipient table config (home/notification pages).
  */
+
 
 @Injectable()
 export class RecipientTableConfigResolver  {
@@ -86,14 +87,34 @@ export class RecipientTableConfigResolver  {
     );
   }
 
+  /**
+   * resolve.
+   *
+   * @param _route  route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<NotificationTarget> observable or value
+   */
+
   resolve(_route: ActivatedRouteSnapshot): EntityTableConfig<NotificationTarget> {
     return this.config;
   }
+
+  /**
+   * edit target.
+   *
+   * @param target target (NotificationTarget)
+   */
 
   private editTarget($event: Event, target: NotificationTarget): void {
     $event?.stopPropagation();
     this.notificationTargetDialog(target).subscribe(res => res ? this.config.updateData() : null);
   }
+
+  /**
+   * notification target dialog.
+   *
+   * @param target target (NotificationTarget)
+   * @returns Observable<NotificationTarget> observable or value
+   */
 
   private notificationTargetDialog(target: NotificationTarget, isAdd = false): Observable<NotificationTarget> {
     return this.dialog.open<RecipientNotificationDialogComponent, RecipientNotificationDialogData,

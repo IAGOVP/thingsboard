@@ -44,5 +44,8 @@ const routes: Routes = [
   imports: [
     StoreModule,
     RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling home routing (Angular routing).
+ */
   exports: [RouterModule]})
 export class HomeRoutingModule { }

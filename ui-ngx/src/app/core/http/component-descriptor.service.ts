@@ -24,7 +24,9 @@ import { RuleNodeType } from '@shared/models/rule-node.models';
 import { RuleChainType } from '@shared/models/rule-chain.models';
 
 /**
- * Angular HTTP service: component descriptor REST wrappers (`@core/http`).
+ * Angular injectable service: component descriptor (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -40,7 +42,16 @@ export class ComponentDescriptorService {
   ) {
   }
 
-  /** Calls ThingsBoard REST `/api/components/${componentType}&ruleChainType=${ruleChainType}, ...`. */
+  
+  /**
+   * get component descriptors by type.
+   *
+   * @param componentType component type (ComponentType)
+   * @param ruleChainType rule chain type (RuleChainType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<ComponentDescriptor>> observable or value
+   */
+
 
   public getComponentDescriptorsByType(componentType: ComponentType, ruleChainType: RuleChainType, config?: RequestConfig): Observable<Array<ComponentDescriptor>> {
     if (!this.componentsByTypeByRuleChainType.get(ruleChainType)) {
@@ -62,7 +73,16 @@ export class ComponentDescriptorService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/components?componentTypes=${componentTypes.join(, ...`. */
+  
+  /**
+   * get component descriptors by types.
+   *
+   * @param componentTypes component types (Array<ComponentType>)
+   * @param ruleChainType rule chain type (RuleChainType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<ComponentDescriptor>> observable or value
+   */
+
 
   public getComponentDescriptorsByTypes(componentTypes: Array<ComponentType>, ruleChainType: RuleChainType, config?: RequestConfig): Observable<Array<ComponentDescriptor>> {
     if (!this.componentsByTypeByRuleChainType.get(ruleChainType)) {
@@ -99,7 +119,15 @@ export class ComponentDescriptorService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/component/${componentDescriptorClazz}`. */
+  
+  /**
+   * get component descriptor by clazz.
+   *
+   * @param componentDescriptorClazz component descriptor clazz (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ComponentDescriptor> observable or value
+   */
+
 
   public getComponentDescriptorByClazz(componentDescriptorClazz: string, config?: RequestConfig): Observable<ComponentDescriptor> {
     const existing = this.componentsByClazz.get(componentDescriptorClazz);

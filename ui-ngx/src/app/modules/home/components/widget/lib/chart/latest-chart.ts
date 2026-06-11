@@ -33,11 +33,11 @@ import { SVG, Svg } from '@svgdotjs/svg.js';
 import { toAnimationOption } from '@home/components/widget/lib/chart/chart.models';
 import { ValueFormatProcessor } from '@shared/models/widget-settings.models';
 
+
 /**
-
- * tb latest chart.
-
+ * Tb latest chart (ThingsBoard web UI).
  */
+
 
 export abstract class TbLatestChart<S extends LatestChartSettings> {
 
@@ -84,6 +84,11 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     }
   }
 
+  /**
+   * prepare value format.
+   *
+   */
+
   private prepareValueFormat() {
     const units = this.ctx.units;
 
@@ -92,6 +97,11 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     }
     this.valueFormatter = ValueFormatProcessor.fromSettings(this.ctx.$injector, {units, decimals: this.ctx.decimals});
   }
+
+  /**
+   * setup data.
+   *
+   */
 
   private setupData(): void {
     let counter = 0;
@@ -142,9 +152,20 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     }
   }
 
+  /**
+   * get legend items.
+   *
+   * @returns LatestChartLegendItem[] observable or value
+   */
+
   public getLegendItems(): LatestChartLegendItem[] {
     return this.legendItems;
   }
+
+  /**
+   * update.
+   *
+   */
 
   public update(): void {
     for (const dsData of this.ctx.data) {
@@ -163,6 +184,12 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     this.updateSeriesData();
   }
 
+  /**
+   * key enter.
+   *
+   * @param dataKey data key (DataKey)
+   */
+
   public keyEnter(dataKey: DataKey): void {
     const item = this.dataItems.find(d => d.dataKey === dataKey);
     if (item) {
@@ -177,6 +204,12 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     }
   }
 
+  /**
+   * key leave.
+   *
+   * @param dataKey data key (DataKey)
+   */
+
   public keyLeave(dataKey: DataKey): void {
     const item = this.dataItems.find(d => d.dataKey === dataKey);
     if (item) {
@@ -190,6 +223,12 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
       }
     }
   }
+
+  /**
+   * toggle key.
+   *
+   * @param dataKey data key (DataKey)
+   */
 
   public toggleKey(dataKey: DataKey): void {
     const enable = dataKey.hidden;
@@ -219,6 +258,11 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     }
   }
 
+  /**
+   * destroy.
+   *
+   */
+
   public destroy(): void {
     if (this.shapeResize$) {
       this.shapeResize$.disconnect();
@@ -228,6 +272,11 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     }
   }
 
+  /**
+   * resize.
+   *
+   */
+
   public resize(): void {
     this.onResize();
   }
@@ -235,6 +284,11 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
   public onItemClick(itemClick: ($event: Event, item: LatestChartDataItem) => void) {
     this.itemClick = itemClick;
   }
+
+  /**
+   * update series data.
+   *
+   */
 
   protected updateSeriesData(initial = false) {
     if (!this.latestChart.isDisposed()) {
@@ -275,6 +329,11 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     }
   }
 
+  /**
+   * draw chart.
+   *
+   */
+
   private drawChart() {
     echartsModule.init();
     this.renderer.setStyle(this.chartElement, 'letterSpacing', 'normal');
@@ -312,6 +371,12 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     });
   }
 
+  /**
+   * Event handler for chart click.
+   *
+   * @param params params (echarts.ECElementEvent)
+   */
+
   protected onChartClick(params: echarts.ECElementEvent) {
     if (params.componentType === 'series') {
       if (params.data) {
@@ -325,6 +390,11 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
       }
     }
   };
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const shapeWidth = this.chartElement.offsetWidth;
@@ -359,26 +429,74 @@ export abstract class TbLatestChart<S extends LatestChartSettings> {
     }
   }
 
+  /**
+   * init settings.
+   *
+   */
+
   protected initSettings() {
   }
+
+  /**
+   * initial shape width.
+   *
+   * @returns number observable or value
+   */
 
   protected initialShapeWidth(): number {
     return 100;
   }
 
+  /**
+   * initial shape height.
+   *
+   * @returns number observable or value
+   */
+
   protected initialShapeHeight(): number {
     return 100;
   }
+
+  /**
+   * force redraw on resize.
+   *
+   * @returns boolean observable or value
+   */
 
   protected forceRedrawOnResize(): boolean {
     return false;
   }
 
+  /**
+   * before resize.
+   *
+   * @param _shapeWidth  shape width (number)
+   * @param _shapeHeight  shape height (number)
+   */
+
   protected beforeResize(_shapeWidth: number, _shapeHeight: number) {};
+
+  /**
+   * after resize.
+   *
+   * @param _shapeWidth  shape width (number)
+   * @param _shapeHeight  shape height (number)
+   */
 
   protected afterResize(_shapeWidth: number, _shapeHeight: number) {};
 
+  /**
+   * after draw chart.
+   *
+   */
+
   protected afterDrawChart() {};
+
+  /**
+   * after update series data.
+   *
+   * @param _initial  initial (boolean)
+   */
 
   protected afterUpdateSeriesData(_initial: boolean) {};
 

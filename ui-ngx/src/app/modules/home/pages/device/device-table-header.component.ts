@@ -22,14 +22,17 @@ import { DeviceInfo, DeviceInfoFilter } from '@app/shared/models/device.models';
 import { EntityType } from '@shared/models/entity-type.models';
 import { DeviceProfileId } from '../../../../shared/models/id/device-profile-id';
 
+
+/**
+ * Angular component: device table header (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-table-header`.
+ */
 @Component({
     selector: 'tb-device-table-header',
     templateUrl: './device-table-header.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device table header UI.
- */
+standalone: false
 })
 export class DeviceTableHeaderComponent extends EntityTableHeaderComponent<DeviceInfo> {
 
@@ -38,6 +41,12 @@ export class DeviceTableHeaderComponent extends EntityTableHeaderComponent<Devic
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * device info filter changed.
+   *
+   * @param deviceInfoFilter device info filter (DeviceInfoFilter)
+   */
 
   deviceInfoFilterChanged(deviceInfoFilter: DeviceInfoFilter) {
     this.entitiesTableConfig.componentsData.deviceInfoFilter = deviceInfoFilter;

@@ -37,14 +37,17 @@ import { TbPopoverComponent } from '@shared/components/popover.component';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: repository settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-repository-settings`.
+ */
 @Component({
     selector: 'tb-repository-settings',
     templateUrl: './repository-settings.component.html',
     styleUrls: ['./repository-settings.component.scss', './../../pages/admin/settings-card.scss'],
-    standalone: false
-/**
- * Angular component: repository settings UI.
- */
+standalone: false
 })
 export class RepositorySettingsComponent extends PageComponent implements OnInit {
 
@@ -80,6 +83,11 @@ export class RepositorySettingsComponent extends PageComponent implements OnInit
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.repositorySettingsForm = this.fb.group({
@@ -132,6 +140,11 @@ export class RepositorySettingsComponent extends PageComponent implements OnInit
     });
   }
 
+  /**
+   * check access.
+   *
+   */
+
   checkAccess(): void {
     const settings: RepositorySettings = this.repositorySettingsForm.value;
     this.adminService.checkRepositoryAccess(settings).subscribe(() => {
@@ -139,6 +152,11 @@ export class RepositorySettingsComponent extends PageComponent implements OnInit
         type: 'success' }));
     });
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const settings: RepositorySettings = this.repositorySettingsForm.value;
@@ -158,6 +176,12 @@ export class RepositorySettingsComponent extends PageComponent implements OnInit
       }
     );
   }
+
+  /**
+   * DELETE — delete.
+   *
+   * @param formDirective form directive (FormGroupDirective)
+   */
 
   delete(formDirective: FormGroupDirective): void {
     this.dialogService.confirm(
@@ -183,6 +207,11 @@ export class RepositorySettingsComponent extends PageComponent implements OnInit
     });
   }
 
+  /**
+   * change password changed.
+   *
+   */
+
   changePasswordChanged() {
     if (this.changePassword) {
       this.repositorySettingsForm.get('password').patchValue('');
@@ -191,6 +220,11 @@ export class RepositorySettingsComponent extends PageComponent implements OnInit
     this.updateValidators(false);
   }
 
+  /**
+   * change private key password changed.
+   *
+   */
+
   changePrivateKeyPasswordChanged() {
     if (this.changePrivateKeyPassword) {
       this.repositorySettingsForm.get('privateKeyPassword').patchValue('');
@@ -198,6 +232,12 @@ export class RepositorySettingsComponent extends PageComponent implements OnInit
     }
     this.updateValidators(false);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   updateValidators(emitEvent?: boolean): void {
     const authMethod: RepositoryAuthMethod = this.repositorySettingsForm.get('authMethod').value;

@@ -17,11 +17,11 @@
 import { EntityDebugSettings } from '@shared/models/entity.models';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * additional debug action config.
-
+ * Additional debug action config (ThingsBoard web UI).
  */
+
 
 export interface AdditionalDebugActionConfig<Action = (...args: unknown[]) => void> {
   action: Action;

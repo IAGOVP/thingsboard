@@ -34,6 +34,12 @@ import {
 } from '@shared/models/query/query.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: numeric filter predicate (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-numeric-filter-predicate`.
+ */
 @Component({
     selector: 'tb-numeric-filter-predicate',
     templateUrl: './numeric-filter-predicate.component.html',
@@ -50,10 +56,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: numeric filter predicate UI.
- */
+standalone: false
 })
 export class NumericFilterPredicateComponent implements ControlValueAccessor, Validator, OnInit {
 
@@ -79,6 +82,11 @@ export class NumericFilterPredicateComponent implements ControlValueAccessor, Va
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.numericFilterPredicateFormGroup = this.fb.group({
       operation: [NumericOperation.EQUAL, [Validators.required]],
@@ -91,12 +99,30 @@ export class NumericFilterPredicateComponent implements ControlValueAccessor, Va
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -107,16 +133,33 @@ export class NumericFilterPredicateComponent implements ControlValueAccessor, Va
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.numericFilterPredicateFormGroup.valid ? null : {
       numericFilterPredicate: {valid: false}
     };
   }
 
+  /**
+   * write value.
+   *
+   * @param predicate predicate (NumericFilterPredicate)
+   */
+
   writeValue(predicate: NumericFilterPredicate): void {
     this.numericFilterPredicateFormGroup.get('operation').patchValue(predicate.operation, {emitEvent: false});
     this.numericFilterPredicateFormGroup.get('value').patchValue(predicate.value, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const predicate: NumericFilterPredicate = this.numericFilterPredicateFormGroup.getRawValue();

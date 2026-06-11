@@ -84,10 +84,13 @@ const routes: Routes = [
 /**
  * Angular NgModule: entity view routing feature area.
  */
+/**
+ * Angular NgModule bundling entity view routing (home/entity-view pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     EntityViewsTableConfigResolver
-  ]})
+]})
 export class EntityViewRoutingModule { }

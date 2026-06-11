@@ -38,8 +38,9 @@ import java.util.function.BiFunction;
  * resource access synchronization are crucial, such as updating caches or databases in a concurrent environment.
  */
 /**
- * Rule engine component: semaphore with tb msg queue.
+ * Semaphore with tb msg queue (shared rule-engine utilities and async loaders).
  */
+
 @Data
 @Slf4j
 public class SemaphoreWithTbMsgQueue {
@@ -48,15 +49,18 @@ public class SemaphoreWithTbMsgQueue {
     private final Semaphore semaphore = new Semaphore(1);
     private final Queue<TbMsgTbContextBiFunction> queue = new ConcurrentLinkedQueue<>();
 
+    
+    
     /**
-     * Adds a message to the queue for asynchronous processing and attempts to process the queue if possible.
-     * This method is thread-safe and ensures that messages are processed in the order they were added,
-     * with each message for a specific entity being processed one at a time due to the semaphore control.
+     * Add to queue and try process.
      *
-     * @param msg                   The message to be processed.
-     * @param ctx                   The context in which the message should be processed.
-     * @param msgProcessingFunction The function that defines how the message will be processed.
+     * @param msg incoming or outgoing rule engine message
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msgProcessingFunction msg processing function ({@link BiFunction})
+     * @throws Exception if an unexpected error occurs during processing
      */
+
+
     public void addToQueueAndTryProcess(TbMsg msg, TbContext ctx, BiFunction<TbContext, TbMsg, ListenableFuture<TbMsg>> msgProcessingFunction) {
         queue.add(new TbMsgTbContextBiFunction(msg, ctx, msgProcessingFunction));
         tryProcessQueue();
@@ -126,10 +130,11 @@ public class SemaphoreWithTbMsgQueue {
         }
     }
 
+    
     /**
-     * A utility record to hold the tuple of a {@link TbMsg}, {@link TbContext}, and the message processing function.
-     * This facilitates passing these three elements as a single object within the queue.
+     * Immutable record for tb msg tb context bi function (shared rule-engine utilities and async loaders).
      */
+
     private record TbMsgTbContextBiFunction(TbMsg msg, TbContext ctx,
                                             BiFunction<TbContext, TbMsg, ListenableFuture<TbMsg>> biFunction) {
     }

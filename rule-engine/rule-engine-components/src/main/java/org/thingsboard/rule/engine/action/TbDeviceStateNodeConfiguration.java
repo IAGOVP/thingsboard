@@ -19,13 +19,22 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.msg.TbMsgType;
 /**
- * JSON configuration for TbDeviceState rule node.
+ * JSON configuration POJO for {@link TbDeviceState} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbDeviceStateNodeConfiguration implements NodeConfiguration<TbDeviceStateNodeConfiguration> {
 
     private TbMsgType event;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbDeviceStateNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbDeviceStateNodeConfiguration defaultConfiguration() {

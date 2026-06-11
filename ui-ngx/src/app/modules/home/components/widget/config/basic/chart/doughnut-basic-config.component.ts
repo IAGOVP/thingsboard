@@ -31,14 +31,17 @@ import {
   LatestChartBasicConfigComponent
 } from '@home/components/widget/config/basic/chart/latest-chart-basic-config.component';
 
+
+/**
+ * Angular component: doughnut basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-doughnut-basic-config`.
+ */
 @Component({
     selector: 'tb-doughnut-basic-config',
     templateUrl: './latest-chart-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: doughnut basic config UI.
- */
+standalone: false
 })
 export class DoughnutBasicConfigComponent extends LatestChartBasicConfigComponent<DoughnutWidgetSettings> {
 
@@ -53,18 +56,43 @@ export class DoughnutBasicConfigComponent extends LatestChartBasicConfigComponen
     super(store, widgetConfigComponent, fb);
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'windPower', label: 'Wind power', type: DataKeyType.timeseries, units: '', decimals: 0, color: '#08872B' },
             { name: 'solarPower', label: 'Solar power', type: DataKeyType.timeseries, units: '', decimals: 0, color: '#FF4D5A' }];
   }
 
+  /**
+   * default settings.
+   *
+   */
+
   protected defaultSettings() {
     return doughnutDefaultSettings(this.doughnutHorizontal);
   }
 
+  /**
+   * latest chart config template.
+   *
+   * @returns TemplateRef<any> observable or value
+   */
+
   public latestChartConfigTemplate(): TemplateRef<any> {
     return this.doughnutChartConfigTemplate;
   }
+
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetConfigForm latest chart widget config form (UntypedFormGroup)
+   * @param settings settings (DoughnutWidgetSettings)
+   */
 
   protected setupLatestChartControls(latestChartWidgetConfigForm: UntypedFormGroup, settings: DoughnutWidgetSettings) {
     latestChartWidgetConfigForm.addControl('layout', this.fb.control(settings.layout, []));
@@ -74,6 +102,12 @@ export class DoughnutBasicConfigComponent extends LatestChartBasicConfigComponen
     latestChartWidgetConfigForm.addControl('totalValueColor', this.fb.control(settings.totalValueColor, []));
   }
 
+  /**
+   * prepare output latest chart config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   protected prepareOutputLatestChartConfig(config: any) {
     this.widgetConfig.config.settings.layout = config.layout;
     this.widgetConfig.config.settings.autoScale = config.autoScale;
@@ -82,9 +116,23 @@ export class DoughnutBasicConfigComponent extends LatestChartBasicConfigComponen
     this.widgetConfig.config.settings.totalValueColor = config.totalValueColor;
   }
 
+  /**
+   * latest chart validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected latestChartValidatorTriggers(): string[] {
     return ['layout'];
   }
+
+  /**
+   * update latest chart validators.
+   *
+   * @param latestChartWidgetConfigForm latest chart widget config form (UntypedFormGroup)
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateLatestChartValidators(latestChartWidgetConfigForm: UntypedFormGroup, emitEvent: boolean, trigger?: string) {
     const layout: DoughnutLayout = latestChartWidgetConfigForm.get('layout').value;

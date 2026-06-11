@@ -33,14 +33,17 @@ import {
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 import { updateLatestDataKeys } from '@home/components/widget/lib/chart/time-series-chart.models';
 
+
+/**
+ * Angular component: bar chart with labels widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-bar-chart-with-labels-widget-settings`.
+ */
 @Component({
     selector: 'tb-bar-chart-with-labels-widget-settings',
     templateUrl: './bar-chart-with-labels-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: bar chart with labels widget settings UI.
- */
+standalone: false
 })
 export class BarChartWithLabelsWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -69,13 +72,31 @@ export class BarChartWithLabelsWidgetSettingsComponent extends WidgetSettingsCom
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.barChartWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return barChartWithLabelsDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.barChartWidgetSettingsForm = this.fb.group({
@@ -127,14 +148,32 @@ export class BarChartWithLabelsWidgetSettingsComponent extends WidgetSettingsCom
     });
   }
 
+  /**
+   * Event handler for settings changed.
+   *
+   * @param updated updated (WidgetSettings)
+   */
+
   protected onSettingsChanged(updated: WidgetSettings) {
     updateLatestDataKeys([updated.yAxis], this.datasource, this.dataKeyCallbacks);
     super.onSettingsChanged(updated);
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showBarLabel', 'showBarValue', 'showBarBorder', 'showLegend', 'showTooltip', 'tooltipShowDate'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showBarLabel: boolean = this.barChartWidgetSettingsForm.get('showBarLabel').value;

@@ -130,11 +130,11 @@ const toTimeSeriesChartDataEntry = (entry: DataEntry, valueConverter?: (value: a
   return item;
 };
 
+
 /**
-
- * TypeScript models and enums for time series chart data item.
-
+ * Time series chart data item (ThingsBoard web UI).
  */
+
 
 export interface TimeSeriesChartDataItem {
   id: string;

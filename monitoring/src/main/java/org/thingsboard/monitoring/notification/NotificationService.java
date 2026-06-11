@@ -30,8 +30,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 /**
- * Dispatches {@link org.thingsboard.monitoring.data.notification.Notification} to all configured channels asynchronously.
+ * Dispatches {@link org.thingsboard.monitoring.data.notification.Notification} to all configured channels.
+ *
+ * <p>Runs delivery asynchronously and returns futures for shutdown synchronization.
  */
+
 
 @Component
 @RequiredArgsConstructor
@@ -44,7 +47,15 @@ public class NotificationService {
     @Value("${monitoring.notifications.message_prefix}")
     private String messagePrefix;
 
-    /** Prefixes message and dispatches to all {@link NotificationChannel} beans on a background thread. */
+    
+    /**
+     * Dispatches a notification to all configured channels asynchronously.
+     *
+     * @param notification alert payload to deliver to notification channels
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     public List<? extends Future<?>> sendNotification(Notification notification) {
         String message;
         if (StringUtils.isEmpty(messagePrefix)) {
@@ -62,6 +73,12 @@ public class NotificationService {
             })
         ).toList();
     }
+    /**
+     * Shutdown executor.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     public void shutdownExecutor() {

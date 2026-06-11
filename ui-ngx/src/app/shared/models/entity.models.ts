@@ -22,11 +22,11 @@ import { Lwm2mSecurityConfigModels } from '@shared/models/lwm2m-security-config.
 import { TenantId } from '@shared/models/id/tenant-id';
 import { RuleChainMetaData } from '@shared/models/rule-chain.models';
 
+
 /**
-
- * TypeScript models and enums for entity info.
-
+ * TypeScript interfaces, types, and enums for entity info (shared TypeScript models).
  */
+
 
 export interface EntityInfo {
   name?: string;

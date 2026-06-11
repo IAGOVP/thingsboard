@@ -33,13 +33,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
+
 /**
 
- * Unit test for alarm state rule node.
+ * Unit test for alarm state (device profile state nodes).
 
  */
 
+
 public class AlarmStateTest {
+    /**
+     * Test set alarm condition metadata repeating condition.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSetAlarmConditionMetadata_repeatingCondition() {
@@ -57,6 +64,11 @@ public class AlarmStateTest {
         assertNull(metaData.getValue(DataConstants.ALARM_CONDITION_DURATION));
         assertEquals(String.valueOf(eventCount), metaData.getValue(DataConstants.ALARM_CONDITION_REPEATS));
     }
+    /**
+     * Test set alarm condition metadata duration condition.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSetAlarmConditionMetadata_durationCondition() {

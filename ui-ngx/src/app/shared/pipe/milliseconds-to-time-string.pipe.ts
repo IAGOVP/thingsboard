@@ -18,22 +18,39 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DAY, HOUR, MINUTE, SECOND, YEAR } from '@shared/models/time/time.models';
 
-@Pipe({
-    name: 'milliSecondsToTimeString',
-    standalone: false
+
 /**
  * Angular pipe: milliseconds to time string.
  */
+@Pipe({
+    name: 'milliSecondsToTimeString',
+/**
+ * Angular pipe: milliseconds to time string (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class MillisecondsToTimeStringPipe implements PipeTransform {
 
   constructor(private translate: TranslateService) {
   }
 
+  /**
+   * transform.
+   *
+   * @param milliSeconds milli seconds (number)
+   * @returns string observable or value
+   */
+
   transform(milliSeconds: number, shortFormat = false, onlyFirstDigit = false): string {
     const { years, days, hours, minutes, seconds } = this.extractTimeUnits(milliSeconds);
     return this.formatTimeString(years, days, hours, minutes, seconds, shortFormat, onlyFirstDigit);
   }
+
+  /**
+   * extract time units.
+   *
+   * @param milliseconds milliseconds (number)
+   */
 
   private extractTimeUnits(milliseconds: number): { years: number; days: number; hours: number; minutes: number; seconds: number } {
     const years = Math.floor(milliseconds / YEAR);
@@ -43,6 +60,19 @@ export class MillisecondsToTimeStringPipe implements PipeTransform {
     const seconds = Math.floor((milliseconds % MINUTE) / SECOND);
     return { years, days, hours, minutes, seconds };
   }
+
+  /**
+   * format time string.
+   *
+   * @param years years (number)
+   * @param days days (number)
+   * @param hours hours (number)
+   * @param minutes minutes (number)
+   * @param seconds seconds (number)
+   * @param shortFormat short format (boolean)
+   * @param onlyFirstDigit only first digit (boolean)
+   * @returns string observable or value
+   */
 
   private formatTimeString(
     years: number,

@@ -743,11 +743,11 @@ export interface SaveDeviceParams extends SaveEntityParams {
   accessToken?: string;
 }
 
+
 /**
-
- * TypeScript models and enums for device info query.
-
+ * TypeScript interfaces, types, and enums for device info query (shared TypeScript models).
  */
+
 
 export class DeviceInfoQuery  {
 
@@ -758,6 +758,12 @@ export class DeviceInfoQuery  {
     this.pageLink = pageLink;
     this.deviceInfoFilter = deviceInfoFilter;
   }
+
+  /**
+   * to query.
+   *
+   * @returns string observable or value
+   */
 
   public toQuery(): string {
     let query;

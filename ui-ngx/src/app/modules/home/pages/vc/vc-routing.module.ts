@@ -50,5 +50,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
+/**
+ * Angular NgModule bundling vc routing (home/vc pages).
+ */
   providers: []})
 export class VcRoutingModule { }

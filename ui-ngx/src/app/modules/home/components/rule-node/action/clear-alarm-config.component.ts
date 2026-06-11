@@ -27,14 +27,17 @@ import {
 import type { JsFuncComponent } from '@app/shared/components/js-func.component';
 import { DebugRuleNodeEventBody } from '@shared/models/event.models';
 
+
+/**
+ * Angular component: clear alarm config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-clear-alarm-config`.
+ */
 @Component({
     selector: 'tb-action-node-clear-alarm-config',
     templateUrl: './clear-alarm-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: clear alarm config UI.
- */
+standalone: false
 })
 export class ClearAlarmConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -60,9 +63,21 @@ export class ClearAlarmConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.clearAlarmConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.clearAlarmConfigForm = this.fb.group({
@@ -73,9 +88,21 @@ export class ClearAlarmConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['scriptLang'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     let scriptLang: ScriptLanguage = this.clearAlarmConfigForm.get('scriptLang').value;
@@ -90,6 +117,13 @@ export class ClearAlarmConfigComponent extends RuleNodeConfigurationComponent {
     this.clearAlarmConfigForm.get('alarmDetailsBuildTbel').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (configuration) {
       if (!configuration.scriptLang) {
@@ -98,6 +132,12 @@ export class ClearAlarmConfigComponent extends RuleNodeConfigurationComponent {
     }
     return configuration;
   }
+
+  /**
+   * test script.
+   *
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   */
 
   testScript(debugEventBody?: DebugRuleNodeEventBody) {
     const scriptLang: ScriptLanguage = this.clearAlarmConfigForm.get('scriptLang').value;
@@ -121,6 +161,11 @@ export class ClearAlarmConfigComponent extends RuleNodeConfigurationComponent {
       }
     });
   }
+
+  /**
+   * Event handler for validate.
+   *
+   */
 
   protected onValidate() {
     const scriptLang: ScriptLanguage = this.clearAlarmConfigForm.get('scriptLang').value;

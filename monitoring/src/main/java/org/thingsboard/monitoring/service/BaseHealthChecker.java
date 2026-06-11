@@ -35,9 +35,11 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * End-to-end transport probe: publish test payload via protocol client, wait for matching WebSocket
- * telemetry update (and calculated-field key when enabled).
+ * End-to-end transport health probe base class.
+ *
+ * <p>Publishes a test payload through a protocol client, waits for a matching WebSocket telemetry update (and calculated-field key when enabled), and records step latencies.
  */
+
 @RequiredArgsConstructor
 @Slf4j
 public abstract class BaseHealthChecker<C extends MonitoringConfig, T extends MonitoringTarget> {
@@ -71,9 +73,17 @@ public abstract class BaseHealthChecker<C extends MonitoringConfig, T extends Mo
         info = getInfo();
     }
 
+    /**
+     * Initializes transport-specific client resources before the first health check.
+     */
     protected abstract void initialize();
 
-    /** Sends test payload, waits for WS update(s), reports success or failure to {@link MonitoringReporter}. */
+    /**
+     * Runs the transport-specific probe and validates WebSocket telemetry echo.
+     *
+     * @param wsClient authenticated WebSocket client for telemetry validation
+     * @throws ServiceFailureException if the probe or WebSocket validation fails
+     */
     public final void check(WsClient wsClient) {
         log.debug("[{}] Checking", info);
         try {
@@ -130,19 +140,63 @@ public abstract class BaseHealthChecker<C extends MonitoringConfig, T extends Mo
         }
         reporter.reportLatency(Latencies.wsUpdate(getKey()), stopWatch.getTime());
     }
+    /**
+     * Init client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void initClient() throws Exception;
+    /**
+     * Creates test payload.
+     *
+     * @param testValue test value ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String createTestPayload(String testValue);
+    /**
+     * Send test payload.
+     *
+     * @param payload payload ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract void sendTestPayload(String payload) throws Exception;
+    /**
+     * Destroy client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @PreDestroy
     protected abstract void destroyClient() throws Exception;
+    /**
+     * Returns info.
+     *
+     * @return {@link Object}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract Object getInfo();
+    /**
+     * Returns key.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract String getKey();
+    /**
+     * Is cf monitoring enabled.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract boolean isCfMonitoringEnabled();
 

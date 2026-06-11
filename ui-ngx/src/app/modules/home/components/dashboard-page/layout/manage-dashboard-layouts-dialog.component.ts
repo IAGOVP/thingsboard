@@ -74,15 +74,18 @@ export interface DashboardLayoutSettings {
   breakpoint: BreakpointId;
 }
 
+
+/**
+ * Angular component: manage dashboard layouts dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-manage-dashboard-layouts-dialog`.
+ */
 @Component({
     selector: 'tb-manage-dashboard-layouts-dialog',
     templateUrl: './manage-dashboard-layouts-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: ManageDashboardLayoutsDialogComponent }],
     styleUrls: ['./manage-dashboard-layouts-dialog.component.scss', '../../../components/dashboard/layout-button.scss'],
-    standalone: false
-/**
- * Angular component: manage dashboard layouts dialog UI.
- */
+standalone: false
 })
 export class ManageDashboardLayoutsDialogComponent extends DialogComponent<ManageDashboardLayoutsDialogComponent, DashboardStateLayouts>
   implements ErrorStateMatcher, OnDestroy {
@@ -253,17 +256,37 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
         ));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * open layout settings.
+   *
+   * @param layoutId layout id (DashboardLayoutId)
+   * @param breakpointId breakpoint id (BreakpointId)
+   */
 
   openLayoutSettings(layoutId: DashboardLayoutId, breakpointId: BreakpointId = 'default') {
     const layout = this.dashboardUtils.getDashboardLayoutConfig(this.layouts[layoutId], breakpointId);
@@ -287,9 +310,19 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;
@@ -332,6 +365,12 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
     this.dialogRef.close(this.layouts);
   }
 
+  /**
+   * button flex value.
+   *
+   * @returns number observable or value
+   */
+
   buttonFlexValue(): number {
     const formValues = this.layoutsFormGroup.value;
     if (this.isDividerLayout) {
@@ -347,9 +386,23 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
     }
   }
 
+  /**
+   * format slider tooltip label.
+   *
+   * @param value value (number)
+   * @returns string | number observable or value
+   */
+
   formatSliderTooltipLabel(value: number): string | number {
     return this.layoutsFormGroup.get('type').value === LayoutWidthType.FIXED ? value : `${value}|${100 - value}`;
   }
+
+  /**
+   * layout control change.
+   *
+   * @param key key (string)
+   * @param value value (number)
+   */
 
   private layoutControlChange(key: string, value: number) {
     const valueToSet = 100 - Number(value);
@@ -358,12 +411,26 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
       .setValue(key === 'leftWidthPercentage' ? valueToSet : Number(value), {emitEvent: false});
   }
 
+  /**
+   * set fixed layout.
+   *
+   * @param layout layout (string)
+   */
+
   setFixedLayout(layout: string): void {
     if (this.layoutsFormGroup.get('type').value === LayoutWidthType.FIXED && this.isDividerLayout) {
       this.layoutsFormGroup.get('fixedLayout').setValue(layout);
       this.layoutsFormGroup.get('fixedLayout').markAsDirty();
     }
   }
+
+  /**
+   * show tooltip.
+   *
+   * @param control control (AbstractControl)
+   * @param layoutType layout type (LayoutWidthType)
+   * @param layoutSide layout side (DashboardLayoutId)
+   */
 
   private showTooltip(control: AbstractControl, layoutType: LayoutWidthType, layoutSide: DashboardLayoutId): void {
     if (control.errors) {
@@ -400,6 +467,14 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
     }
   }
 
+  /**
+   * layout button class.
+   *
+   * @param side side (DashboardLayoutId)
+   * @param border border (boolean)
+   * @returns string observable or value
+   */
+
   layoutButtonClass(side: DashboardLayoutId, border: boolean = false): string {
     const formValues = this.layoutsFormGroup.value;
     if (this.isDividerLayout) {
@@ -410,6 +485,13 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
       return classString;
     }
   }
+
+  /**
+   * layout button text.
+   *
+   * @param side side (DashboardLayoutId)
+   * @returns string observable or value
+   */
 
   layoutButtonText(side: DashboardLayoutId): string {
     const formValues = this.layoutsFormGroup.value;
@@ -422,6 +504,13 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
     }
   }
 
+  /**
+   * show preview inputs.
+   *
+   * @param side side (DashboardLayoutId)
+   * @returns boolean observable or value
+   */
+
   showPreviewInputs(side: DashboardLayoutId): boolean {
     const formValues = this.layoutsFormGroup.value;
     return this.isDividerLayout && (formValues.type === LayoutWidthType.PERCENTAGE || formValues.fixedLayout === side);
@@ -430,6 +519,11 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
   get isDividerLayout(): boolean {
     return this.layoutsFormGroup.get('layoutType').value === LayoutType.divider;
   }
+
+  /**
+   * POST/PUT entity — add breakpoint.
+   *
+   */
 
   addBreakpoint() {
     this.dialog.open<AddNewBreakpointDialogComponent, AddNewBreakpointDialogData,
@@ -447,6 +541,12 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
       }
     });
   }
+
+  /**
+   * DELETE — delete breakpoint.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   */
 
   deleteBreakpoint($event: Event, breakpointId: BreakpointId): void {
     if ($event) {
@@ -470,6 +570,13 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
       }
     );
   }
+
+  /**
+   * POST/PUT entity — created new breakpoint.
+   *
+   * @param newBreakpointId new breakpoint id (BreakpointId)
+   * @param copyFromBreakpointId copy from breakpoint id (BreakpointId)
+   */
 
   private createdNewBreakpoint(newBreakpointId: BreakpointId, copyFromBreakpointId: BreakpointId): void {
     const layoutConfig = this.layouts.main;
@@ -507,6 +614,12 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
     this.sortLayoutBreakpoints();
   }
 
+  /**
+   * POST/PUT entity — add layout configuration.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   */
+
   private addLayoutConfiguration(breakpointId: BreakpointId) {
     const layout = breakpointId === 'default' ? this.layouts.main : this.layouts.main.breakpoints[breakpointId];
     const size = breakpointId === 'default' ? '' : this.dashboardUtils.getBreakpointSizeDescription(breakpointId);
@@ -518,6 +631,11 @@ export class ManageDashboardLayoutsDialogComponent extends DialogComponent<Manag
       breakpoint: breakpointId
     });
   }
+
+  /**
+   * sort layout breakpoints.
+   *
+   */
 
   private sortLayoutBreakpoints() {
     this.layoutBreakpoints.sort((a, b) => {

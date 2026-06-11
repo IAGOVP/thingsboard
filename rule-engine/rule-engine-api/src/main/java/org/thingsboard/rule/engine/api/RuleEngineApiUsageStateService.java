@@ -19,13 +19,23 @@ import org.thingsboard.server.common.data.ApiUsageState;
 import org.thingsboard.server.common.data.id.ApiUsageStateId;
 import org.thingsboard.server.common.data.id.TenantId;
 
+
 /**
 
- * Rule engine facade for rule engine api usage state operations.
+ * Rule engine service facade for rule engine api usage state (rule engine public API contracts and services).
 
  */
 
+
 public interface RuleEngineApiUsageStateService {
+    /**
+     * Finds api usage state by id.
+     *
+     * @param tenantId tenant UUID
+     * @param id id ({@link ApiUsageStateId})
+     * @return {@link ApiUsageState}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     ApiUsageState findApiUsageStateById(TenantId tenantId, ApiUsageStateId id);
 

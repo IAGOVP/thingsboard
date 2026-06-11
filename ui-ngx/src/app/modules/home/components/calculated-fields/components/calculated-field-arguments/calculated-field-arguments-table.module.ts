@@ -37,6 +37,9 @@ import {
 /**
  * Angular NgModule: calculated field arguments table feature area.
  */
+/**
+ * Angular NgModule bundling calculated field arguments table (ThingsBoard web UI).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -54,5 +57,5 @@ import {
     PropagateArgumentsTableComponent,
     RelatedAggregationArgumentsTableComponent,
     EntityAggregationArgumentsTableComponent,
-  ]})
+]})
 export class CalculatedFieldArgumentsTableModule {}

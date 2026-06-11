@@ -31,15 +31,18 @@ export interface MaterialIconsDialogResult {
   canceled?: boolean;
 }
 
+
+/**
+ * Angular component: material icons dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-material-icons-dialog`.
+ */
 @Component({
     selector: 'tb-material-icons-dialog',
     templateUrl: './material-icons-dialog.component.html',
     providers: [],
     styleUrls: ['./material-icons-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: material icons dialog UI.
- */
+standalone: false
 })
 export class MaterialIconsDialogComponent extends DialogComponent<MaterialIconsDialogComponent, MaterialIconsDialogResult> {
 
@@ -55,9 +58,20 @@ export class MaterialIconsDialogComponent extends DialogComponent<MaterialIconsD
     this.iconClearButton = data.iconClearButton;
   }
 
+  /**
+   * select icon.
+   *
+   * @param icon icon (string)
+   */
+
   selectIcon(icon: string) {
     this.dialogRef.close({icon});
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel(): void {
     this.dialogRef.close({canceled: true});

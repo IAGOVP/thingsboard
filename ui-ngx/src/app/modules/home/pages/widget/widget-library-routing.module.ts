@@ -306,11 +306,14 @@ const routes: Routes = [
 /**
  * Angular NgModule: widget library routing feature area.
  */
+/**
+ * Angular NgModule bundling widget library routing (home/widget pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     WidgetTypesTableConfigResolver,
     WidgetsBundlesTableConfigResolver
-  ]})
+]})
 export class WidgetLibraryRoutingModule { }

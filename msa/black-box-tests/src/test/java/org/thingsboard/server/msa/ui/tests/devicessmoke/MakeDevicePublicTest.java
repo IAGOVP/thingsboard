@@ -30,8 +30,9 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.PUBLIC_CUSTOMER_NAME;
 /**
- * Make device public test.
+ * Black-box test: make device public (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Make device public")
 public class MakeDevicePublicTest extends AbstractDeviceTest {
@@ -39,6 +40,12 @@ public class MakeDevicePublicTest extends AbstractDeviceTest {
     private CustomerPageHelper customerPage;
     private AssignDeviceTabHelper assignDeviceTab;
     private String deviceName1;
+    /**
+     * Creates first device.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void createFirstDevice() {
@@ -47,17 +54,35 @@ public class MakeDevicePublicTest extends AbstractDeviceTest {
 
         deviceName1 = testRestClient.postDevice("", EntityPrototypes.defaultDevicePrototype(ENTITY_NAME + random())).getName();
     }
+    /**
+     * Clean up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterClass
     public void cleanUp() {
         deleteCustomerByName(PUBLIC_CUSTOMER_NAME);
         deleteDeviceByName(deviceName1);
     }
+    /**
+     * Creates second device.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void createSecondDevice() {
         deviceName = testRestClient.postDevice("", EntityPrototypes.defaultDevicePrototype(ENTITY_NAME + random())).getName();
     }
+    /**
+     * Make device public by right side btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", priority = 10)
     @Description("Make device public by right side btn")
@@ -75,6 +100,12 @@ public class MakeDevicePublicTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(PUBLIC_CUSTOMER_NAME).click();
         assertIsDisplayed(devicePage.device(deviceName));
     }
+    /**
+     * Make device public from details tab.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", priority = 10)
     @Description("Make device public by btn on details tab")
@@ -94,6 +125,12 @@ public class MakeDevicePublicTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(PUBLIC_CUSTOMER_NAME).click();
         assertIsDisplayed(devicePage.device(deviceName));
     }
+    /**
+     * Make device public by assign to public customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", priority = 20)
     @Description("Make device public by assign to public customer")
@@ -109,6 +146,12 @@ public class MakeDevicePublicTest extends AbstractDeviceTest {
         customerPage.manageCustomersDevicesBtn(PUBLIC_CUSTOMER_NAME).click();
         assertIsDisplayed(devicePage.device(deviceName));
     }
+    /**
+     * Make public several devices by assign on public customer.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", priority = 20)
     @Description("Make several devices public by assign to public customer")

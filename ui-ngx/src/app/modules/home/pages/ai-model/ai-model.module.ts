@@ -24,6 +24,9 @@ import { AiModelTableHeaderComponent } from '@home/pages/ai-model/ai-model-table
 /**
  * Angular NgModule: ai model feature area.
  */
+/**
+ * Angular NgModule bundling ai model (home/ai-model pages).
+ */
 @NgModule({
   declarations: [
     AiModelTableHeaderComponent
@@ -32,5 +35,5 @@ import { AiModelTableHeaderComponent } from '@home/pages/ai-model/ai-model-table
     CommonModule,
     SharedModule,
     AiModelRoutingModule
-  ]})
+]})
 export class AiModelModule { }

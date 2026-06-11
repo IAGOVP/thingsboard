@@ -20,11 +20,11 @@ import { TenantId } from './id/tenant-id';
 import { ExportableEntity } from '@shared/models/base-data';
 import { HasTenantId, HasVersion } from '@shared/models/entity.models';
 
+
 /**
-
- * TypeScript models and enums for customer.
-
+ * TypeScript interfaces, types, and enums for customer (shared TypeScript models).
  */
+
 
 export interface Customer extends ContactBased<CustomerId>, HasTenantId, HasVersion, ExportableEntity<CustomerId> {
   tenantId: TenantId;

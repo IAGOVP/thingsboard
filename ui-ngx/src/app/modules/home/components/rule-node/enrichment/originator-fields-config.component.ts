@@ -21,13 +21,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { allowedOriginatorFields, FetchTo, SvMapOption } from '@home/components/rule-node/rule-node-config.models';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 
+
+/**
+ * Angular component: originator fields config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-originator-fields-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-originator-fields-config',
     templateUrl: './originator-fields-config.component.html',
-    standalone: false
-/**
- * Angular component: originator fields config UI.
- */
+standalone: false
 })
 export class OriginatorFieldsConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -45,13 +48,33 @@ export class OriginatorFieldsConfigComponent extends RuleNodeConfigurationCompon
     }
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.originatorFieldsConfigForm;
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return deepTrim(configuration);
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
@@ -60,6 +83,12 @@ export class OriginatorFieldsConfigComponent extends RuleNodeConfigurationCompon
       fetchTo: isDefinedAndNotNull(configuration?.fetchTo) ? configuration.fetchTo : FetchTo.METADATA
     };
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.originatorFieldsConfigForm = this.fb.group({

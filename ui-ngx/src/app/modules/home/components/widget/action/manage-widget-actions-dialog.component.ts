@@ -36,15 +36,18 @@ export interface ManageWidgetActionsDialogData {
   additionalWidgetActionTypes?: WidgetActionType[];
 }
 
+
+/**
+ * Angular component: manage widget actions dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-manage-widget-actions-dialog`.
+ */
 @Component({
     selector: 'tb-manage-widget-actions-dialog',
     templateUrl: './manage-widget-actions-dialog.component.html',
     providers: [],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: manage widget actions dialog UI.
- */
+standalone: false
 })
 export class ManageWidgetActionsDialogComponent extends DialogComponent<ManageWidgetActionsDialogComponent,
   WidgetActionsData> implements OnInit {
@@ -60,15 +63,30 @@ export class ManageWidgetActionsDialogComponent extends DialogComponent<ManageWi
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.actionsSettings = this.fb.group({
       actions: [this.data.actionsData.actionsMap, []]
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close(this.actionsSettings.get('actions').value);

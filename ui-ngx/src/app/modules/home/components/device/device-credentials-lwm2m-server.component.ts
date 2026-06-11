@@ -35,6 +35,13 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
+
+
+/**
+ * Angular component: device credentials lwm2m server (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-credentials-lwm2m-server`.
+ */
 @Component({
     selector: 'tb-device-credentials-lwm2m-server',
     templateUrl: './device-credentials-lwm2m-server.component.html',
@@ -51,13 +58,8 @@ import { Subject } from 'rxjs';
             multi: true
         }
     ],
-    standalone: false
 
-/**
-
- * Angular component: device credentials lwm2m server UI.
-
- */
+standalone: false
 })
 
 export class DeviceCredentialsLwm2mServerComponent implements OnDestroy, ControlValueAccessor, Validator {
@@ -91,18 +93,42 @@ export class DeviceCredentialsLwm2mServerComponent implements OnDestroy, Control
     });
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (any)
+   */
+
   writeValue(value: any): void {
     if (value) {
       this.updateValueFields(value);
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -112,21 +138,44 @@ export class DeviceCredentialsLwm2mServerComponent implements OnDestroy, Control
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(control): ValidationErrors | null {
     return this.serverFormGroup.valid ? null : {
       securityConfig: {valid: false}
     };
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * update value fields.
+   *
+   * @param serverData server data (ServerSecurityConfig)
+   */
+
   private updateValueFields(serverData: ServerSecurityConfig): void {
     this.serverFormGroup.patchValue(serverData, {emitEvent: false});
     this.updateValidate(serverData.securityMode, true);
   }
+
+  /**
+   * update validate.
+   *
+   * @param securityMode security mode (Lwm2mSecurityType)
+   */
 
   private updateValidate(securityMode: Lwm2mSecurityType, initValue = false): void {
     switch (securityMode) {

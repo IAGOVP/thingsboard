@@ -38,13 +38,16 @@ export interface FilterDialogData {
   filter?: Filter;
 }
 
+
+/**
+ * Angular component: filter dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-dialog`.
+ */
 @Component({
   selector: 'tb-filter-dialog',
   templateUrl: './filter-dialog.component.html',
-  standalone: false
-/**
- * Angular component: filter dialog UI.
- */
+standalone: false
 })
 export class FilterDialogComponent extends DialogComponent<FilterDialogComponent, Filter> {
 
@@ -102,6 +105,12 @@ export class FilterDialogComponent extends DialogComponent<FilterDialogComponent
     }
   }
 
+  /**
+   * validate duplicate filter name.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   validateDuplicateFilterName(): ValidatorFn {
     return (c: FormControl<string>) => {
       const newFilter = c.value.trim();
@@ -119,6 +128,12 @@ export class FilterDialogComponent extends DialogComponent<FilterDialogComponent
     };
   }
 
+  /**
+   * Event handler for editable change.
+   *
+   * @param event DOM or Angular event object
+   */
+
   onEditableChange(event: MouseEvent): void {
     event.stopPropagation();
     const editableControl = this.filterFormGroup.controls.editable;
@@ -126,9 +141,19 @@ export class FilterDialogComponent extends DialogComponent<FilterDialogComponent
     editableControl.markAsDirty();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const {filter, editable, keyFilters, keyFiltersOperation} = this.filterFormGroup.getRawValue();

@@ -24,6 +24,12 @@ import {
   TimeSeriesChartAxisSettingsPanelComponent
 } from '@home/components/widget/lib/settings/common/chart/time-series-chart-axis-settings-panel.component';
 
+
+/**
+ * Angular component: time series chart axis settings button (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-axis-settings-button`.
+ */
 @Component({
     selector: 'tb-time-series-chart-axis-settings-button',
     templateUrl: './time-series-chart-axis-settings-button.component.html',
@@ -35,10 +41,7 @@ import {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: time series chart axis settings button UI.
- */
+standalone: false
 })
 export class TimeSeriesChartAxisSettingsButtonComponent implements OnInit, ControlValueAccessor {
 
@@ -63,23 +66,58 @@ export class TimeSeriesChartAxisSettingsButtonComponent implements OnInit, Contr
               private renderer: Renderer2,
               private viewContainerRef: ViewContainerRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartAxisSettings)
+   */
+
   writeValue(value: TimeSeriesChartAxisSettings): void {
     this.modelValue = value;
   }
+
+  /**
+   * open axis settings popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openAxisSettingsPopup($event: Event, matButton: MatButton) {
     if ($event) {

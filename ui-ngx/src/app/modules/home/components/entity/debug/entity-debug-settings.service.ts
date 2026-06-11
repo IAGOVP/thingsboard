@@ -23,7 +23,9 @@ import { DurationLeftPipe } from '@shared/pipe/duration-left.pipe';
 import { EntityDebugSettingPanelConfig } from '@home/components/entity/debug/entity-debug-settings.model';
 
 /**
- * Angular HTTP service: entity debug settings REST wrappers (`@core/http`).
+ * Angular injectable service: entity debug settings (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -37,6 +39,13 @@ export class EntityDebugSettingsService {
     private translate: TranslateService,
     private durationLeft: DurationLeftPipe,
   ) {}
+
+  /**
+   * open debug strategy panel.
+   *
+   * @param panelConfig panel config (EntityDebugSettingPanelConfig)
+   * @param trigger trigger (Element)
+   */
 
   openDebugStrategyPanel(panelConfig: EntityDebugSettingPanelConfig, trigger: Element): void {
     if (this.popoverService.hasPopover(trigger)) {
@@ -62,6 +71,24 @@ export class EntityDebugSettingsService {
   }
 
 
+  /**
+
+
+   * get debug config label.
+
+
+   *
+
+
+   * @param debugSettings debug settings (EntityDebugSettings)
+
+
+   * @returns string observable or value
+
+
+   */
+
+
   getDebugConfigLabel(debugSettings: EntityDebugSettings): string {
     const isDebugActive = this.isDebugActive(debugSettings?.allEnabledUntil);
 
@@ -71,6 +98,13 @@ export class EntityDebugSettingsService {
       return this.durationLeft.transform(debugSettings?.allEnabledUntil);
     }
   }
+
+  /**
+   * is debug active.
+   *
+   * @param allEnabledUntil all enabled until (number)
+   * @returns boolean observable or value
+   */
 
   isDebugActive(allEnabledUntil: number): boolean {
     return allEnabledUntil > new Date().getTime();

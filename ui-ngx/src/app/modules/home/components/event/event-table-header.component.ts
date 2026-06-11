@@ -21,14 +21,17 @@ import { EntityTableHeaderComponent } from '../../components/entity/entity-table
 import { DebugEventType, Event, EventType, eventTypeTranslations } from '@app/shared/models/event.models';
 import { EventTableConfig } from '@home/components/event/event-table-config';
 
+
+/**
+ * Angular component: event table header (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-event-table-header`.
+ */
 @Component({
     selector: 'tb-event-table-header',
     templateUrl: './event-table-header.component.html',
     styleUrls: ['./event-table-header.component.scss'],
-    standalone: false
-/**
- * Angular component: event table header UI.
- */
+standalone: false
 })
 export class EventTableHeaderComponent extends EntityTableHeaderComponent<Event> {
 
@@ -41,6 +44,12 @@ export class EventTableHeaderComponent extends EntityTableHeaderComponent<Event>
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * event type changed.
+   *
+   * @param eventType event type (EventType | DebugEventType)
+   */
 
   eventTypeChanged(eventType: EventType | DebugEventType) {
     this.eventTableConfig.eventType = eventType;

@@ -19,13 +19,27 @@ import org.thingsboard.server.common.data.id.TenantId;
 
 import java.util.Map;
 
+
 /**
 
- * Rule engine facade for firebase operations.
+ * Rule engine service facade for firebase (rule engine public API contracts and services).
 
  */
 
+
 public interface FirebaseService {
+    /**
+     * Send message.
+     *
+     * @param tenantId tenant UUID
+     * @param credentials credentials ({@link String})
+     * @param fcmToken fcm token ({@link String})
+     * @param title title ({@link String})
+     * @param body body ({@link String})
+     * @param data data ({@link Map})
+     * @param badge badge ({@link Integer})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendMessage(TenantId tenantId, String credentials, String fcmToken, String title, String body, Map<String, String> data, Integer badge) throws Exception;
 

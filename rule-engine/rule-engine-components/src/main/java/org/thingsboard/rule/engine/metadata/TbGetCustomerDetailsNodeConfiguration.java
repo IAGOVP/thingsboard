@@ -22,12 +22,21 @@ import org.thingsboard.rule.engine.util.TbMsgSource;
 
 import java.util.Collections;
 /**
- * JSON configuration for TbGetCustomerDetails rule node.
+ * JSON configuration POJO for {@link TbGetCustomerDetails} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TbGetCustomerDetailsNodeConfiguration extends TbAbstractGetEntityDetailsNodeConfiguration implements NodeConfiguration<TbGetCustomerDetailsNodeConfiguration> {
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGetCustomerDetailsNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGetCustomerDetailsNodeConfiguration defaultConfiguration() {

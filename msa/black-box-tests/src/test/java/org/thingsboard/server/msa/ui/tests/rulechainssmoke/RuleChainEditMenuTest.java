@@ -28,11 +28,18 @@ import static org.thingsboard.server.msa.ui.utils.Const.EMPTY_RULE_CHAIN_MESSAGE
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultRuleChainPrototype;
 /**
- * Rule chain edit menu test.
+ * Black-box test: rule chain edit menu (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Edit rule chain")
 public class RuleChainEditMenuTest extends AbstractRuleChainTest {
+    /**
+     * Change name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Change name by edit menu")
@@ -55,6 +62,12 @@ public class RuleChainEditMenuTest extends AbstractRuleChainTest {
         assertThat(nameAfter).as("The name has changed").isNotEqualTo(nameBefore);
         assertThat(nameAfter).as("The name has changed correctly").isEqualTo(newRuleChainName);
     }
+    /**
+     * Deletes name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Delete name and save")
@@ -69,6 +82,12 @@ public class RuleChainEditMenuTest extends AbstractRuleChainTest {
 
         assertIsDisable(ruleChainsPage.doneBtnEditViewVisible());
     }
+    /**
+     * Saves or persists only with space.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Save only with space")
@@ -85,6 +104,15 @@ public class RuleChainEditMenuTest extends AbstractRuleChainTest {
         assertIsDisplayed(ruleChainsPage.warningMessage());
         assertThat(ruleChainsPage.warningMessage().getText()).as("Text of warning message").isEqualTo(EMPTY_RULE_CHAIN_MESSAGE);
     }
+    /**
+     * Edit description.
+     *
+     * @param description description ({@link String})
+     * @param newDescription new description ({@link String})
+     * @param finalDescription final description ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "editMenuDescription")
     @Description("Write the description and save the changes/Change the description and save the changes/Delete the description and save the changes")
@@ -101,6 +129,13 @@ public class RuleChainEditMenuTest extends AbstractRuleChainTest {
 
         assertThat(ruleChainsPage.getDescription()).as("The description changed correctly").isEqualTo(finalDescription);
     }
+    /**
+     * Debug mode.
+     *
+     * @param debugMode debug mode
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "enable")
     @Description("Enable debug mode/Disable debug mode")

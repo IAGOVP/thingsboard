@@ -27,14 +27,17 @@ import { jsonRequired } from '@shared/components/json-object-edit.component';
 import { Resource, ResourceType } from "@shared/models/resource.models";
 import { ResourcesDialogComponent, ResourcesDialogData } from "@home/components/resources/resources-dialog.component";
 
+
+/**
+ * Angular component: ai config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-ai-config`.
+ */
 @Component({
     selector: 'tb-external-node-ai-config',
     templateUrl: './ai-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: ai config UI.
- */
+standalone: false
 })
 export class AiConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -53,9 +56,21 @@ export class AiConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.aiConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.aiConfigForm = this.fb.group({
@@ -72,9 +87,21 @@ export class AiConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['responseFormat.type'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     if (this.aiConfigForm.get('responseFormat.type').value === ResponseFormat.JSON_SCHEMA) {
@@ -83,6 +110,12 @@ export class AiConfigComponent extends RuleNodeConfigurationComponent {
       this.aiConfigForm.get('responseFormat.schema').disable({emitEvent: false});
     }
   }
+
+  /**
+   * prepare output config.
+   *
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(): RuleNodeConfiguration {
     const config = this.configForm().getRawValue();
@@ -94,6 +127,11 @@ export class AiConfigComponent extends RuleNodeConfigurationComponent {
     }
     return deepTrim(config);
   }
+
+  /**
+   * Event handler for entity change.
+   *
+   */
 
   onEntityChange($event: AiModel) {
     if ($event) {
@@ -112,6 +150,13 @@ export class AiConfigComponent extends RuleNodeConfigurationComponent {
     return this.translate.instant(`rule-node-config.ai.response-format-hint-${this.aiConfigForm.get('responseFormat.type').value}`);
   }
 
+  /**
+   * POST/PUT entity — create model ai.
+   *
+   * @param name name (string)
+   * @param formControl form control (string)
+   */
+
   createModelAi(name: string, formControl: string) {
     this.dialog.open<AIModelDialogComponent, AIModelDialogData, AiModel>(AIModelDialogComponent, {
       disableClose: true,
@@ -128,6 +173,13 @@ export class AiConfigComponent extends RuleNodeConfigurationComponent {
         }
       });
   };
+
+  /**
+   * POST/PUT entity — create ai resources.
+   *
+   * @param name name (string)
+   * @param formControl form control (string)
+   */
 
   createAiResources(name: string, formControl: string) {
     this.dialog.open<ResourcesDialogComponent, ResourcesDialogData, Resource>(ResourcesDialogComponent, {

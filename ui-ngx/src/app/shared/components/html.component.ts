@@ -36,6 +36,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { CancelAnimationFrame, RafService } from '@core/services/raf.service';
 import { beautifyHtml } from '@shared/models/beautify.models';
 
+
+/**
+ * Angular component: html (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-html`.
+ */
 @Component({
     selector: 'tb-html',
     templateUrl: './html.component.html',
@@ -53,10 +59,7 @@ import { beautifyHtml } from '@shared/models/beautify.models';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: html UI.
- */
+standalone: false
 })
 export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
@@ -100,6 +103,11 @@ export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, V
               private raf: RafService,
               private cd: ChangeDetectorRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     const editorElement = this.htmlEditorElmRef.nativeElement;
@@ -156,6 +164,11 @@ export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, V
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.editorResize$) {
       this.editorResize$.disconnect();
@@ -164,6 +177,11 @@ export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, V
       this.htmlEditor.destroy();
     }
   }
+
+  /**
+   * Event handler for ace editor resize.
+   *
+   */
 
   private onAceEditorResize() {
     if (this.editorsResizeCaf) {
@@ -176,12 +194,30 @@ export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, V
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -190,6 +226,12 @@ export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, V
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return (!this.hasErrors) ? null : {
       html: {
@@ -197,6 +239,11 @@ export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, V
       },
     };
   }
+
+  /**
+   * beautify html.
+   *
+   */
 
   beautifyHtml() {
     beautifyHtml(this.modelValue, {indent_size: 4}).subscribe(
@@ -209,6 +256,12 @@ export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, V
     );
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string): void {
     this.modelValue = value;
     if (this.htmlEditor) {
@@ -217,6 +270,11 @@ export class HtmlComponent implements OnInit, OnDestroy, ControlValueAccessor, V
       this.ignoreChange = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   */
 
   updateView() {
     const editorValue = this.htmlEditor.getValue();

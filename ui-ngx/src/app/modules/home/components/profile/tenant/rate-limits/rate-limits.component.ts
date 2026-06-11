@@ -38,6 +38,12 @@ import {
 } from './rate-limits.models';
 import { isDefined } from '@core/utils';
 
+
+/**
+ * Angular component: rate limits (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rate-limits`.
+ */
 @Component({
     selector: 'tb-rate-limits',
     templateUrl: './rate-limits.component.html',
@@ -54,10 +60,7 @@ import { isDefined } from '@core/utils';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: rate limits UI.
- */
+standalone: false
 })
 export class RateLimitsComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -83,12 +86,29 @@ export class RateLimitsComponent implements ControlValueAccessor, OnInit, Valida
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.label = rateLimitsLabelTranslationMap.get(this.type);
@@ -96,6 +116,12 @@ export class RateLimitsComponent implements ControlValueAccessor, OnInit, Valida
       rateLimits: [null, []]
     });
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -106,14 +132,31 @@ export class RateLimitsComponent implements ControlValueAccessor, OnInit, Valida
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string) {
     this.modelValue = value;
     this.updateRateLimitsInfo();
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return null;
   }
+
+  /**
+   * Event handler for click.
+   *
+   */
 
   public onClick($event: Event) {
     if ($event) {
@@ -137,6 +180,11 @@ export class RateLimitsComponent implements ControlValueAccessor, OnInit, Valida
     });
   }
 
+  /**
+   * update rate limits info.
+   *
+   */
+
   private updateRateLimitsInfo() {
     this.rateLimitsFormGroup.patchValue(
       {
@@ -144,6 +192,11 @@ export class RateLimitsComponent implements ControlValueAccessor, OnInit, Valida
       }
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.updateRateLimitsInfo();

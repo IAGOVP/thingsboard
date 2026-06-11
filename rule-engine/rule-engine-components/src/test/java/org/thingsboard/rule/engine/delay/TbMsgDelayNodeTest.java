@@ -42,8 +42,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.lenient;
 /**
- * Unit test for tb msg delay node rule node.
+ * Unit test for tb msg delay node (message delay nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 class TbMsgDelayNodeTest {

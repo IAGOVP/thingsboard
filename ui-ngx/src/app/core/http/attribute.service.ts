@@ -24,7 +24,9 @@ import { isDefinedAndNotNull } from '@core/utils';
 import { AggregationType } from '@shared/models/time/time.models';
 
 /**
- * Post/delete attributes and timeseries via `/api/plugins/telemetry` and entity APIs.
+ * Post/delete attributes and latest telemetry values.
+ *
+ * <p>Uses `/api/plugins/telemetry` and entity attribute endpoints.
  */
 @Injectable({
   providedIn: 'root'
@@ -35,7 +37,17 @@ export class AttributeService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/plugins/telemetry/${entityId.entityType}/${entityId.id}/values/attributes, ...`. */
+  
+  /**
+   * get entity attributes.
+   *
+   * @param entityId entity UUID
+   * @param attributeScope attribute scope (AttributeScope)
+   * @param keys keys (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<AttributeData>> observable or value
+   */
+
 
   public getEntityAttributes(entityId: EntityId, attributeScope?: AttributeScope,
                              keys?: Array<string>, config?: RequestConfig): Observable<Array<AttributeData>> {
@@ -52,7 +64,17 @@ export class AttributeService {
     return this.http.get<Array<AttributeData>>(url, defaultHttpOptionsFromParams(queryParams, config));
   }
 
-  /** Calls ThingsBoard REST `/api/plugins/telemetry/${entityId.entityType}/${entityId.id}/${attributeScope}, ...`. */
+  
+  /**
+   * DELETE — delete entity attributes.
+   *
+   * @param entityId entity UUID
+   * @param attributeScope attribute scope (AttributeScope)
+   * @param attributes attributes (Array<AttributeData>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public deleteEntityAttributes(entityId: EntityId, attributeScope: AttributeScope, attributes: Array<AttributeData>,
                                 config?: RequestConfig): Observable<any> {
@@ -60,7 +82,18 @@ export class AttributeService {
       defaultHttpOptionsFromParams({key: attributes.map(attribute => attribute.key)}, config));
   }
 
-  /** Calls ThingsBoard REST `/api/plugins/telemetry/${entityId.entityType}/${entityId.id}/timeseries/delete, ...`. */
+  
+  /**
+   * DELETE — delete entity timeseries.
+   *
+   * @param entityId entity UUID
+   * @param timeseries timeseries (Array<AttributeData>)
+   * @param startTs start ts (number)
+   * @param endTs end ts (number)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public deleteEntityTimeseries(entityId: EntityId, timeseries: Array<AttributeData>, deleteAllDataForKeys = false,
                                 startTs?: number, endTs?: number, rewriteLatestIfDeleted = false, deleteLatest = true,
@@ -77,7 +110,17 @@ export class AttributeService {
       defaultHttpOptionsFromParams(queryParams, config));
   }
 
-  /** Calls ThingsBoard REST `/api/plugins/telemetry/${entityId.entityType}/${entityId.id}/${attributeScope}, ...`. */
+  
+  /**
+   * POST/PUT entity — save entity attributes.
+   *
+   * @param entityId entity UUID
+   * @param attributeScope attribute scope (AttributeScope)
+   * @param attributes attributes (Array<AttributeData>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public saveEntityAttributes(entityId: EntityId, attributeScope: AttributeScope, attributes: Array<AttributeData>,
                               config?: RequestConfig): Observable<any> {
@@ -106,7 +149,17 @@ export class AttributeService {
     return forkJoin([saveEntityAttributesObservable, deleteEntityAttributesObservable]);
   }
 
-  /** Calls ThingsBoard REST `/api/plugins/telemetry/${entityId.entityType}/${entityId.id}/timeseries/${timeseriesScope}, ...`. */
+  
+  /**
+   * POST/PUT entity — save entity timeseries.
+   *
+   * @param entityId entity UUID
+   * @param timeseriesScope timeseries scope (string)
+   * @param timeseries timeseries (Array<AttributeData>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public saveEntityTimeseries(entityId: EntityId, timeseriesScope: string, timeseries: Array<AttributeData>,
                               config?: RequestConfig): Observable<any> {
@@ -137,7 +190,23 @@ export class AttributeService {
     return forkJoin([saveEntityTimeseriesObservable, deleteEntityTimeseriesObservable]);
   }
 
-  /** Calls ThingsBoard REST `/api/plugins/telemetry/${entityId.entityType}/${entityId.id}/values/timeseries, ...`. */
+  
+  /**
+   * get entity timeseries.
+   *
+   * @param entityId entity UUID
+   * @param keys keys (Array<string>)
+   * @param startTs start ts (number)
+   * @param endTs end ts (number)
+   * @param limit limit (number)
+   * @param agg agg (AggregationType)
+   * @param interval interval (number)
+   * @param orderBy order by (DataSortOrder)
+   * @param useStrictDataTypes use strict data types (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TimeseriesData> observable or value
+   */
+
 
   public getEntityTimeseries(entityId: EntityId, keys: Array<string>, startTs: number, endTs: number,
                              limit: number = 100, agg: AggregationType = AggregationType.NONE, interval?: number,
@@ -157,7 +226,16 @@ export class AttributeService {
       defaultHttpOptionsFromParams(queryParams, config));
   }
 
-  /** Calls ThingsBoard REST `/api/plugins/telemetry/${entityId.entityType}/${entityId.id}/values/timeseries`. */
+  
+  /**
+   * get entity timeseries latest.
+   *
+   * @param entityId entity UUID
+   * @param keys keys (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TimeseriesData> observable or value
+   */
+
 
   public getEntityTimeseriesLatest(entityId: EntityId, keys?: Array<string>,
                                    useStrictDataTypes = false, config?: RequestConfig): Observable<TimeseriesData> {

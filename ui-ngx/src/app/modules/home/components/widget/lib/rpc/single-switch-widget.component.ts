@@ -49,15 +49,18 @@ const initialSwitchHeight = 60;
 const horizontalLayoutPadding = 48;
 const verticalLayoutPadding = 36;
 
+
+/**
+ * Angular component: single switch widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-single-switch-widget`.
+ */
 @Component({
     selector: 'tb-single-switch-widget',
     templateUrl: './single-switch-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './single-switch-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: single switch widget UI.
- */
+standalone: false
 })
 export class SingleSwitchWidgetComponent extends
   BasicActionWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -122,6 +125,11 @@ export class SingleSwitchWidgetComponent extends
     super(cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
     this.settings = {...singleSwitchDefaultSettings, ...this.ctx.settings};
@@ -181,6 +189,11 @@ export class SingleSwitchWidgetComponent extends
     this.offValueSetter = this.createValueSetter(offUpdateStateSettings);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.autoScale) {
       this.renderer.setStyle(this.singleSwitchContent.nativeElement, 'overflow', 'visible');
@@ -197,6 +210,11 @@ export class SingleSwitchWidgetComponent extends
     super.ngAfterViewInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
@@ -207,12 +225,23 @@ export class SingleSwitchWidgetComponent extends
     super.ngOnDestroy();
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     super.onInit();
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for toggle change.
+   *
+   * @param event DOM or Angular event object
+   */
 
   public onToggleChange(event: MouseEvent) {
     if (!this.ctx.isEdit && !this.ctx.isPreview) {
@@ -226,15 +255,32 @@ export class SingleSwitchWidgetComponent extends
     }
   }
 
+  /**
+   * Event handler for value.
+   *
+   * @param value value (boolean)
+   */
+
   private onValue(value: boolean): void {
     this.value = !!value;
     this.cd.markForCheck();
   }
 
+  /**
+   * Event handler for disabled.
+   *
+   * @param value value (boolean)
+   */
+
   private onDisabled(value: boolean): void {
     this.disabled = !!value;
     this.cd.markForCheck();
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const widgetBoundingClientRect = this.singleSwitchPanel.nativeElement.getBoundingClientRect();

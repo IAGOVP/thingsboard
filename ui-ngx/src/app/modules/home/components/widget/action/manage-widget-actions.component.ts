@@ -56,6 +56,12 @@ import { hidePageSizePixelValue } from '@shared/models/constants';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
+/**
+ * Angular component: manage widget actions (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-manage-widget-actions`.
+ */
 @Component({
     selector: 'tb-manage-widget-actions',
     templateUrl: './manage-widget-actions.component.html',
@@ -67,10 +73,7 @@ import { DomSanitizer } from '@angular/platform-browser';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: manage widget actions UI.
- */
+standalone: false
 })
 export class ManageWidgetActionsComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor {
 
@@ -121,6 +124,11 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     this.displayedColumns = ['actionSourceId', 'actionSourceName', 'name', 'icon', 'typeName', 'actions'];
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.widgetResize$ = new ResizeObserver(() => {
       this.zone.run(() => {
@@ -134,12 +142,22 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     this.widgetResize$.observe(this.elementRef.nativeElement);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.destroyed = true;
     if (this.widgetResize$) {
       this.widgetResize$.disconnect();
     }
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     fromEvent(this.searchInputField.nativeElement, 'keyup')
@@ -168,6 +186,12 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * update data.
+   *
+   * @param reload reload (boolean)
+   */
+
   private updateData(reload: boolean = false) {
     this.pageLink.page = this.paginator.pageIndex;
     this.pageLink.pageSize = this.paginator.pageSize;
@@ -175,6 +199,12 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     this.pageLink.sortOrder.direction = Direction[this.sort.direction.toUpperCase()];
     this.dataSource.loadActions(this.pageLink, reload);
   }
+
+  /**
+   * drop action.
+   *
+   * @param event DOM or Angular event object
+   */
 
   dropAction(event: CdkDragDrop<WidgetActionsDatasource>) {
     this.dragDisabled = true;
@@ -193,13 +223,30 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     });
   }
 
+  /**
+   * POST/PUT entity — add action.
+   *
+   */
+
   addAction($event: Event) {
     this.openWidgetActionDialog($event);
   }
 
+  /**
+   * edit action.
+   *
+   * @param action action (WidgetActionDescriptorInfo)
+   */
+
   editAction($event: Event, action: WidgetActionDescriptorInfo) {
     this.openWidgetActionDialog($event, action);
   }
+
+  /**
+   * open widget action dialog.
+   *
+   * @param action action (WidgetActionDescriptorInfo)
+   */
 
   private openWidgetActionDialog($event: Event, action: WidgetActionDescriptorInfo = null) {
     if ($event) {
@@ -254,6 +301,14 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     );
   }
 
+  /**
+   * POST/PUT entity — save action.
+   *
+   * @param actionInfo action info (WidgetActionDescriptorInfo)
+   * @param isAdd is add (boolean)
+   * @param prevActionSourceId prev action source id (string)
+   */
+
   private saveAction(actionInfo: WidgetActionDescriptorInfo, isAdd: boolean, prevActionSourceId: string) {
     const actionSourceId = actionInfo.actionSourceId;
     const action = toWidgetActionDescriptor(actionInfo);
@@ -280,6 +335,13 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     this.onActionsUpdated();
   }
 
+  /**
+   * get or create target actions.
+   *
+   * @param actionSourceId action source id (string)
+   * @returns Array<WidgetActionDescriptor> observable or value
+   */
+
   private getOrCreateTargetActions(actionSourceId: string): Array<WidgetActionDescriptor> {
     const actionsMap = this.actionsMap;
     let targetActions = actionsMap[actionSourceId];
@@ -289,6 +351,12 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     }
     return targetActions;
   }
+
+  /**
+   * DELETE — delete action.
+   *
+   * @param action action (WidgetActionDescriptorInfo)
+   */
 
   deleteAction($event: Event, action: WidgetActionDescriptorInfo) {
     if ($event) {
@@ -312,6 +380,11 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
       });
   }
 
+  /**
+   * enter filter mode.
+   *
+   */
+
   enterFilterMode() {
     this.textSearchMode = true;
     this.pageLink.textSearch = '';
@@ -321,12 +394,23 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.pageLink.textSearch = null;
     this.paginator.pageIndex = 0;
     this.updateData();
   }
+
+  /**
+   * reset sort and filter.
+   *
+   * @param update update (boolean)
+   */
 
   private resetSortAndFilter(update: boolean = true) {
     this.pageLink.textSearch = null;
@@ -339,16 +423,40 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param actions actions ({[actionSourceId: string]: Array<WidgetActionDescriptor>})
+   */
 
   writeValue(actions?: {[actionSourceId: string]: Array<WidgetActionDescriptor>}): void {
     this.actionsMap = actions ?? {};
@@ -367,6 +475,11 @@ export class ManageWidgetActionsComponent extends PageComponent implements OnIni
       }
     }, 0);
   }
+
+  /**
+   * Event handler for actions updated.
+   *
+   */
 
   private onActionsUpdated() {
     this.updateData(true);

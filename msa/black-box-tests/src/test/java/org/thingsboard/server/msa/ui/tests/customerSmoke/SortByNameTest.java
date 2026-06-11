@@ -30,16 +30,24 @@ import org.thingsboard.server.msa.ui.utils.DataProviderCredential;
 
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultCustomerPrototype;
 
+
 /**
 
- * Sort by name test.
+ * Black-box test: sort by name (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class SortByNameTest extends AbstractDriverBaseTest {
     private SideBarMenuViewElements sideBarMenuView;
     private CustomerPageHelper customerPage;
     private String customerName;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -47,6 +55,12 @@ public class SortByNameTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewElements(driver);
         customerPage = new CustomerPageHelper(driver);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -55,6 +69,13 @@ public class SortByNameTest extends AbstractDriverBaseTest {
             customerName = null;
         }
     }
+    /**
+     * Special character up.
+     *
+     * @param title title ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Sort customers by name")
@@ -70,6 +91,15 @@ public class SortByNameTest extends AbstractDriverBaseTest {
 
         Assert.assertEquals(customerPage.getCustomerName(), title);
     }
+    /**
+     * All sort up.
+     *
+     * @param customer customer ({@link String})
+     * @param customerSymbol customer symbol ({@link String})
+     * @param customerNumber customer number ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Sort customers by name")
@@ -97,6 +127,13 @@ public class SortByNameTest extends AbstractDriverBaseTest {
         Assert.assertEquals(secondCustomer, customerNumber);
         Assert.assertEquals(thirdCustomer, customer);
     }
+    /**
+     * Special character down.
+     *
+     * @param title title ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Sort customers by name")
@@ -112,6 +149,15 @@ public class SortByNameTest extends AbstractDriverBaseTest {
 
         Assert.assertEquals(customerPage.getCustomerName(), title);
     }
+    /**
+     * All sort down.
+     *
+     * @param customer customer ({@link String})
+     * @param customerSymbol customer symbol ({@link String})
+     * @param customerNumber customer number ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Sort customers by name")

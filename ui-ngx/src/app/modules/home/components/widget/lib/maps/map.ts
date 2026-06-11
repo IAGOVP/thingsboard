@@ -89,11 +89,11 @@ import TooltipPositioningSide = JQueryTooltipster.TooltipPositioningSide;
 
 type TooltipInstancesData = { root: HTMLElement, instances: ITooltipsterInstance[] };
 
+
 /**
-
- * tb map.
-
+ * Tb map (ThingsBoard web UI).
  */
+
 
 export abstract class TbMap<S extends BaseMapSettings> {
 
@@ -195,6 +195,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
     });
   }
 
+  /**
+   * setup controls.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   private setupControls(): Observable<any> {
     if (this.settings.scales?.length) {
       L.control.scale({
@@ -239,6 +245,11 @@ export abstract class TbMap<S extends BaseMapSettings> {
     return forkJoin(setup);
   }
 
+  /**
+   * init map.
+   *
+   */
+
   private initMap() {
 
     this.map.on('move', () => {
@@ -265,6 +276,11 @@ export abstract class TbMap<S extends BaseMapSettings> {
     this.setupCustomActions();
     this.createdControlButtonTooltip(this.mapElement, ['topleft', 'bottomleft'].includes(this.settings.controlsPosition) ? 'right' : 'left');
   }
+
+  /**
+   * setup data layers.
+   *
+   */
 
   private setupDataLayers() {
     this.dataLayers = [];
@@ -436,6 +452,11 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
   }
 
+  /**
+   * setup edit mode.
+   *
+   */
+
   private setupEditMode() {
 
     this.editToolbar = L.TB.bottomToolbar({
@@ -534,6 +555,13 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
   }
 
+  /**
+   * toggle drag mode.
+   *
+   * @param _e  e (MouseEvent)
+   * @param button button (L.TB.ToolbarButton)
+   */
+
   private toggleDragMode(_e: MouseEvent, button: L.TB.ToolbarButton): void {
     if (this.dragMode) {
       this.disableDragMode();
@@ -560,11 +588,25 @@ export abstract class TbMap<S extends BaseMapSettings> {
     this.editToolbar.close();
   }
 
+  /**
+   * place marker.
+   *
+   * @param e e (MouseEvent)
+   * @param button button (L.TB.ToolbarButton)
+   */
+
   private placeMarker(e: MouseEvent, button: L.TB.ToolbarButton): void {
     this.placeItem(e, button, this.addMarkerDataLayers, (entity) => this.prepareDrawMode('Marker', {
       placeMarker: this.ctx.translate.instant('widgets.maps.data-layer.marker.place-marker-hint-with-entity', {entityName: entity.entity.entityDisplayName})
     }));
   }
+
+  /**
+   * draw rectangle.
+   *
+   * @param e e (MouseEvent)
+   * @param button button (L.TB.ToolbarButton)
+   */
 
   private drawRectangle(e: MouseEvent, button: L.TB.ToolbarButton): void {
     this.placeItem(e, button, this.addPolygonDataLayers, (entity) => this.prepareDrawMode('Rectangle', {
@@ -572,6 +614,13 @@ export abstract class TbMap<S extends BaseMapSettings> {
       finishRect: this.ctx.translate.instant('widgets.maps.data-layer.polygon.finish-rectangle-hint-with-entity', {entityName: entity.entity.entityDisplayName})
     }));
   }
+
+  /**
+   * draw polygon.
+   *
+   * @param e e (MouseEvent)
+   * @param button button (L.TB.ToolbarButton)
+   */
 
   private drawPolygon(e: MouseEvent, button: L.TB.ToolbarButton): void {
     this.placeItem(e, button, this.addPolygonDataLayers, (entity) => this.prepareDrawMode('Polygon', {
@@ -581,12 +630,26 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }));
   }
 
+  /**
+   * draw circle.
+   *
+   * @param e e (MouseEvent)
+   * @param button button (L.TB.ToolbarButton)
+   */
+
   private drawCircle(e: MouseEvent, button: L.TB.ToolbarButton): void {
     this.placeItem(e, button, this.addCircleDataLayers, (entity) => this.prepareDrawMode('Circle', {
       startCircle: this.ctx.translate.instant('widgets.maps.data-layer.circle.place-circle-center-hint-with-entity', {entityName: entity.entity.entityDisplayName}),
       finishCircle: this.ctx.translate.instant('widgets.maps.data-layer.circle.finish-circle-hint-with-entity', {entityName: entity.entity.entityDisplayName}),
     }));
   }
+
+  /**
+   * draw polyline.
+   *
+   * @param e e (MouseEvent)
+   * @param button button (L.TB.ToolbarButton)
+   */
 
   private drawPolyline(e: MouseEvent, button: L.TB.ToolbarButton): void {
     this.placeItem(e, button, this.addPolylineDataLayers, (entity) => this.prepareDrawMode('Line', {
@@ -641,6 +704,14 @@ export abstract class TbMap<S extends BaseMapSettings> {
     });
   }
 
+  /**
+   * select entity to place.
+   *
+   * @param e e (MouseEvent)
+   * @param entities entities (UnplacedMapDataItem[])
+   * @returns Observable<UnplacedMapDataItem> observable or value
+   */
+
   private selectEntityToPlace(e: MouseEvent, entities: UnplacedMapDataItem[]): Observable<UnplacedMapDataItem> {
     if (entities.length === 1) {
       return of(entities[0]);
@@ -667,6 +738,11 @@ export abstract class TbMap<S extends BaseMapSettings> {
       );
     }
   }
+
+  /**
+   * setup custom actions.
+   *
+   */
 
   private setupCustomActions() {
     const widgetHeaderActions = this.ctx.actionsApi.getActionDescriptors('headerButton');
@@ -702,6 +778,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
     });
   }
 
+  /**
+   * place map item.
+   *
+   * @param actionData action data (PlaceMapItemActionData)
+   */
+
   public placeMapItem(actionData: PlaceMapItemActionData): void {
     switch (actionData.action.mapItemType) {
       case MapItemType.marker:
@@ -722,6 +804,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
   }
 
+  /**
+   * POST/PUT entity — create marker.
+   *
+   * @param actionData action data (PlaceMapItemActionData)
+   */
+
   private createMarker(actionData: PlaceMapItemActionData) {
     this.createItem(actionData, () => this.prepareDrawMode('Marker', {
       placeMarker: actionData.action.mapItemTooltips.placeMarker
@@ -729,6 +817,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
         : this.ctx.translate.instant(mapItemTooltipsTranslation.placeMarker)
     }));
   }
+
+  /**
+   * POST/PUT entity — create rectangle.
+   *
+   * @param actionData action data (PlaceMapItemActionData)
+   */
 
   private createRectangle(actionData: PlaceMapItemActionData): void {
     this.createItem(actionData, () => this.prepareDrawMode('Rectangle', {
@@ -740,6 +834,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
         : this.ctx.translate.instant(mapItemTooltipsTranslation.finishRect),
     }));
   }
+
+  /**
+   * POST/PUT entity — create polygon.
+   *
+   * @param actionData action data (PlaceMapItemActionData)
+   */
 
   private createPolygon(actionData: PlaceMapItemActionData): void {
     this.createItem(actionData, () => this.prepareDrawMode('Polygon', {
@@ -755,6 +855,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }));
   }
 
+  /**
+   * POST/PUT entity — create circle.
+   *
+   * @param actionData action data (PlaceMapItemActionData)
+   */
+
   private createCircle(actionData: PlaceMapItemActionData): void {
     this.createItem(actionData, () => this.prepareDrawMode('Circle', {
       startCircle: actionData.action.mapItemTooltips.startCircle
@@ -765,6 +871,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
         : this.ctx.translate.instant(mapItemTooltipsTranslation.finishCircle),
     }));
   }
+
+  /**
+   * POST/PUT entity — create polyline.
+   *
+   * @param actionData action data (PlaceMapItemActionData)
+   */
 
   private createPolyline(actionData: PlaceMapItemActionData): void {
     this.createItem(actionData, () => this.prepareDrawMode('Line', {
@@ -874,12 +986,25 @@ export abstract class TbMap<S extends BaseMapSettings> {
     this.editToolbar.close();
   }
 
+  /**
+   * prepare draw mode.
+   *
+   * @param shape shape ('Marker' | 'Rectangle' | 'Polygon' | 'Circle' | 'Line')
+   * @param tooltipsTranslation tooltips translation (Record<string, string>)
+   */
+
   private prepareDrawMode(shape: 'Marker' | 'Rectangle' | 'Polygon' | 'Circle' | 'Line', tooltipsTranslation: Record<string, string>) {
     this.map.pm.setLang('en', {tooltips: tooltipsTranslation}, 'en');
     this.map.pm.enableDraw(shape);
     // @ts-ignore
     L.DomUtil.addClass(this.map.pm.Draw[shape]._hintMarker.getTooltip()._container, 'tb-place-item-label');
   }
+
+  /**
+   * update place item state.
+   *
+   * @param editButton edit button (L.TB.ToolbarButton)
+   */
 
   private updatePlaceItemState(editButton?: L.TB.ToolbarButton, disabled = false): void {
     if (editButton) {
@@ -891,6 +1016,13 @@ export abstract class TbMap<S extends BaseMapSettings> {
     this.currentEditButton = editButton;
     this.updateEditButtonsStates(disabled);
   }
+
+  /**
+   * POST/PUT entity — created control button tooltip.
+   *
+   * @param root root (HTMLElement)
+   * @param side side (TooltipPositioningSide)
+   */
 
   private createdControlButtonTooltip(root: HTMLElement, side: TooltipPositioningSide) {
     import('tooltipster').then(() => {
@@ -952,6 +1084,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
     });
   }
 
+  /**
+   * update.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   */
+
   private update(subscription: IWidgetSubscription) {
     this.dsData = formattedDataFormDatasourceData<TbMapDatasource>(subscription.data,
       undefined, undefined, el => el.datasource.entityId + el.datasource.mapDataIds[0]);
@@ -962,6 +1100,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
     this.updateEditButtonsStates();
     this.ctx.updateLabelPatterns();
   }
+
+  /**
+   * update trips.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   */
 
   private updateTrips(subscription: IWidgetSubscription) {
     const tripsData = formattedDataArrayFromDatasourceData<TbMapDatasource>(subscription.data, el => el.datasource.entityId + el.datasource.mapDataIds[0]);
@@ -995,6 +1139,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
     this.updateBounds();
   }
 
+  /**
+   * update trips with latest data.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   */
+
   private updateTripsWithLatestData(subscription: IWidgetSubscription) {
     const tripsLatestData = formattedDataFormDatasourceData<TbMapDatasource>(subscription.latestData,
       undefined, undefined, el => el.datasource.entityId + el.datasource.mapDataIds[0]);
@@ -1002,13 +1152,28 @@ export abstract class TbMap<S extends BaseMapSettings> {
     this.updateTripsAnchors();
   }
 
+  /**
+   * update trips appearance.
+   *
+   */
+
   private updateTripsAppearance() {
     this.tripDataLayers.forEach(dl => dl.updateAppearance());
   }
 
+  /**
+   * update trips time.
+   *
+   */
+
   private updateTripsTime() {
     this.tripDataLayers.forEach(dl => dl.updateCurrentTime());
   }
+
+  /**
+   * update trips anchors.
+   *
+   */
 
   private updateTripsAnchors() {
     if (this.timeline) {
@@ -1026,6 +1191,14 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
   }
 
+  /**
+   * calculate current time.
+   *
+   * @param minTime min time (number)
+   * @param maxTime max time (number)
+   * @returns number observable or value
+   */
+
   private calculateCurrentTime(minTime: number, maxTime: number): number {
     if (minTime !== this.minTime || maxTime !== this.maxTime) {
       if (this.minTime >= this.currentTime || isUndefined(this.currentTime) || this.currentTime === Infinity) {
@@ -1039,11 +1212,21 @@ export abstract class TbMap<S extends BaseMapSettings> {
     return this.currentTime;
   }
 
+  /**
+   * resize.
+   *
+   */
+
   private resize() {
     this.onResize();
     this.map?.invalidateSize();
     this.currentPopover?.updatePosition();
   }
+
+  /**
+   * update bounds.
+   *
+   */
 
   private updateBounds(force = false) {
     const enabledDataLayers = this.dataLayers.filter(dl => dl.isEnabled());
@@ -1067,6 +1250,11 @@ export abstract class TbMap<S extends BaseMapSettings> {
 
     }
   }
+
+  /**
+   * update edit buttons states.
+   *
+   */
 
   private updateEditButtonsStates(disabled = false) {
     if (this.currentEditButton || disabled) {
@@ -1112,6 +1300,11 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
   }
 
+  /**
+   * set place marker style.
+   *
+   */
+
   private setPlaceMarkerStyle() {
     createPlaceItemIcon(this.getCtx().$injector.get(MatIconRegistry), this.getCtx().$injector.get(DomSanitizer)).subscribe(
       ((iconUrl) => {
@@ -1137,13 +1330,30 @@ export abstract class TbMap<S extends BaseMapSettings> {
 
   protected abstract fitBounds(bounds: L.LatLngBounds): void;
 
+  /**
+   * do setup controls.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   protected doSetupControls(): Observable<any> {
     return of(null);
   }
 
+  /**
+   * invalidate data layers coordinates.
+   *
+   */
+
   protected invalidateDataLayersCoordinates(): void {
     this.dataLayers.forEach(dl => dl.invalidateCoordinates());
   }
+
+  /**
+   * get sidebar.
+   *
+   * @returns L.TB.SidebarControl observable or value
+   */
 
   protected getSidebar(): L.TB.SidebarControl {
     if (!this.sidebar) {
@@ -1156,21 +1366,53 @@ export abstract class TbMap<S extends BaseMapSettings> {
     return this.sidebar;
   }
 
+  /**
+   * get ctx.
+   *
+   * @returns WidgetContext observable or value
+   */
+
   public getCtx(): WidgetContext {
     return this.ctx;
   }
+
+  /**
+   * get data.
+   *
+   * @returns FormattedData<TbMapDatasource>[] observable or value
+   */
 
   public getData(): FormattedData<TbMapDatasource>[] {
     return this.dsData;
   }
 
+  /**
+   * get map.
+   *
+   * @returns L.Map observable or value
+   */
+
   public getMap(): L.Map {
     return this.map;
   }
 
+  /**
+   * type.
+   *
+   * @returns MapType observable or value
+   */
+
   public type(): MapType {
     return this.settings.mapType;
   }
+
+  /**
+   * use shape pattern.
+   *
+   * @param patternId pattern id (string)
+   * @param prevPatternId prev pattern id (string)
+   * @returns L.TB.Pattern observable or value
+   */
 
   public useShapePattern(patternId: string, prevPatternId?: string): L.TB.Pattern {
     if (prevPatternId && patternId !== prevPatternId) {
@@ -1187,6 +1429,12 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
   }
 
+  /**
+   * un use shape pattern.
+   *
+   * @param patternId pattern id (string)
+   */
+
   public unUseShapePattern(patternId: string): void {
     if (patternId) {
       const patternItem = this.shapePatternStorage[patternId];
@@ -1200,6 +1448,13 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
   }
 
+  /**
+   * store shape pattern.
+   *
+   * @param patternId pattern id (string)
+   * @param pattern pattern (L.TB.Pattern)
+   */
+
   public storeShapePattern(patternId: string, pattern: L.TB.Pattern): void {
     pattern.addTo(this.map);
     this.shapePatternStorage[patternId] = {
@@ -1208,10 +1463,22 @@ export abstract class TbMap<S extends BaseMapSettings> {
     };
   }
 
+  /**
+   * enabled data layers updated.
+   *
+   */
+
   public enabledDataLayersUpdated() {
     this.updateEditButtonsStates();
     this.updateTripsAnchors();
   }
+
+  /**
+   * data item click.
+   *
+   * @param action action (WidgetAction)
+   * @param data dialog or route input data
+   */
 
   public dataItemClick($event: Event, action: WidgetAction, data: FormattedData<TbMapDatasource>) {
     if ($event) {
@@ -1224,6 +1491,13 @@ export abstract class TbMap<S extends BaseMapSettings> {
       id: entityId
     }, entityName, data, entityLabel);
   }
+
+  /**
+   * select item.
+   *
+   * @param item item (TbLatestDataLayerItem)
+   * @returns boolean observable or value
+   */
 
   public selectItem(item: TbLatestDataLayerItem, cancel = false, force = false): boolean {
     if (this.isPlacingItem) {
@@ -1249,21 +1523,54 @@ export abstract class TbMap<S extends BaseMapSettings> {
     return deselected;
   }
 
+  /**
+   * deselect item.
+   *
+   * @returns boolean observable or value
+   */
+
   public deselectItem(cancel = false, force = false): boolean {
     return this.selectItem(null, cancel, force);
   }
+
+  /**
+   * get edit toolbar.
+   *
+   * @returns L.TB.BottomToolbarControl observable or value
+   */
 
   public getEditToolbar(): L.TB.BottomToolbarControl {
     return this.editToolbar;
   }
 
+  /**
+   * use drag mode button.
+   *
+   * @returns boolean observable or value
+   */
+
   public useDragModeButton(): boolean {
     return this.settings.dragModeButton;
   }
 
+  /**
+   * drag mode enabled.
+   *
+   * @returns boolean observable or value
+   */
+
   public dragModeEnabled(): boolean {
     return this.dragMode;
   }
+
+  /**
+   * POST/PUT entity — save marker location.
+   *
+   * @param data dialog or route input data
+   * @param lat lat (number)
+   * @param lng lng (number)
+   * @returns Observable<any> observable or value
+   */
 
   public saveMarkerLocation(data: FormattedData<TbMapDatasource>, lat?: number, lng?: number): Observable<any> {
     const targetDataLayer = this.latestDataLayers.find(dl => dl.dataLayerType() === 'markers' && dl.hasData(data));
@@ -1278,6 +1585,14 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
   }
 
+  /**
+   * POST/PUT entity — save polygon location.
+   *
+   * @param data dialog or route input data
+   * @param coordinates coordinates (TbPolygonCoordinates)
+   * @returns Observable<any> observable or value
+   */
+
   public savePolygonLocation(data: FormattedData<TbMapDatasource>, coordinates?: TbPolygonCoordinates): Observable<any> {
     const targetDataLayer = this.latestDataLayers.find(dl => dl.dataLayerType() === 'polygons' && dl.hasData(data));
     if (targetDataLayer) {
@@ -1286,6 +1601,14 @@ export abstract class TbMap<S extends BaseMapSettings> {
       return EMPTY;
     }
   }
+
+  /**
+   * POST/PUT entity — save location.
+   *
+   * @param data dialog or route input data
+   * @param values values ({ [key: string]: any })
+   * @returns Observable<any> observable or value
+   */
 
   public saveLocation(data: FormattedData<TbMapDatasource>, values: { [key: string]: any }): Observable<any> {
     const datasource = data.$datasource;
@@ -1305,6 +1628,15 @@ export abstract class TbMap<S extends BaseMapSettings> {
     }
     return this.saveItemData(datasource, itemData, AttributeScope.SERVER_SCOPE);
   }
+
+  /**
+   * POST/PUT entity — save item data.
+   *
+   * @param datasource datasource (TbMapDatasource)
+   * @param data dialog or route input data
+   * @param attributeScope attribute scope (AttributeScope)
+   * @returns Observable<any> observable or value
+   */
 
   public saveItemData(datasource: TbMapDatasource, data: DataKeyValuePair[], attributeScope: AttributeScope): Observable<any> {
     const attributeService = this.ctx.$injector.get(AttributeService);
@@ -1356,29 +1688,70 @@ export abstract class TbMap<S extends BaseMapSettings> {
 
   // Timeline methods
 
+  /**
+   * has timeline.
+   *
+   * @returns boolean observable or value
+   */
+
   public hasTimeline(): boolean {
     return this.timeline;
   }
+
+  /**
+   * get min time.
+   *
+   * @returns number observable or value
+   */
 
   public getMinTime(): number {
     return this.minTime;
   }
 
+  /**
+   * get max time.
+   *
+   * @returns number observable or value
+   */
+
   public getMaxTime(): number {
     return this.maxTime;
   }
+
+  /**
+   * get time step.
+   *
+   * @returns number observable or value
+   */
 
   public getTimeStep(): number {
     return this.timeStep;
   }
 
+  /**
+   * get current time.
+   *
+   * @returns number observable or value
+   */
+
   public getCurrentTime(): number {
     return this.currentTime;
   }
 
+  /**
+   * get location snap filter function.
+   *
+   * @returns CompiledTbFunction<MapBooleanFunction> observable or value
+   */
+
   public getLocationSnapFilterFunction(): CompiledTbFunction<MapBooleanFunction> {
     return this.locationSnapFilterFunction;
   }
+
+  /**
+   * destroy.
+   *
+   */
 
   public destroy() {
     if (this.mapResize$) {

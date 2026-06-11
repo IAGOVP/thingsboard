@@ -59,6 +59,9 @@ export const DYNAMIC_MAT_DIALOG_PROVIDERS = [
     DialogModule,
     MatDialogModule
   ],
+/**
+ * Angular NgModule bundling dynamic mat dialog (shared UI components).
+ */
   providers: DYNAMIC_MAT_DIALOG_PROVIDERS})
 export class DynamicMatDialogModule {
 }

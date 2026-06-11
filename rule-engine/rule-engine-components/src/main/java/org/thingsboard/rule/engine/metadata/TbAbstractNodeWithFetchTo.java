@@ -34,8 +34,9 @@ import org.thingsboard.server.common.msg.TbMsgMetaData;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 /**
- * Base implementation for node with fetch to rule nodes.
+ * Abstract base class for node with fetch to rule nodes (entity metadata and related-data fetch nodes).
  */
+
 
 @Slf4j
 public abstract class TbAbstractNodeWithFetchTo<C extends TbAbstractFetchToNodeConfiguration> implements TbNode {
@@ -44,6 +45,13 @@ public abstract class TbAbstractNodeWithFetchTo<C extends TbAbstractFetchToNodeC
 
     protected C config;
     protected TbMsgSource fetchTo;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -53,8 +61,22 @@ public abstract class TbAbstractNodeWithFetchTo<C extends TbAbstractFetchToNodeC
         }
         fetchTo = config.getFetchTo();
     }
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link C}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract C loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException;
+    /**
+     * Checks if entity is present or throw.
+     *
+     * @param message message ({@link String})
+     * @return {@link Function}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected <I extends EntityId> Function<I, I> checkIfEntityIsPresentOrThrow(String message) {
         return id -> {
@@ -64,6 +86,13 @@ public abstract class TbAbstractNodeWithFetchTo<C extends TbAbstractFetchToNodeC
             return id;
         };
     }
+    /**
+     * Returns msg data as object node.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @return {@link ObjectNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ObjectNode getMsgDataAsObjectNode(TbMsg msg) {
         var msgDataNode = JacksonUtil.toJsonNode(msg.getData());
@@ -72,6 +101,15 @@ public abstract class TbAbstractNodeWithFetchTo<C extends TbAbstractFetchToNodeC
         }
         return (ObjectNode) msgDataNode;
     }
+    /**
+     * Enrich message.
+     *
+     * @param msgData msg data ({@link ObjectNode})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param kvEntry kv entry ({@link KvEntry})
+     * @param targetKey target key ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void enrichMessage(ObjectNode msgData, TbMsgMetaData metaData, KvEntry kvEntry, String targetKey) {
         if (TbMsgSource.DATA.equals(fetchTo)) {
@@ -80,6 +118,15 @@ public abstract class TbAbstractNodeWithFetchTo<C extends TbAbstractFetchToNodeC
             metaData.putValue(targetKey, kvEntry.getValueAsString());
         }
     }
+    /**
+     * Transform message.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @param msgDataNode msg data node ({@link ObjectNode})
+     * @param msgMetaData msg meta data ({@link TbMsgMetaData})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TbMsg transformMessage(TbMsg msg, ObjectNode msgDataNode, TbMsgMetaData msgMetaData) {
         switch (fetchTo) {
@@ -96,6 +143,16 @@ public abstract class TbAbstractNodeWithFetchTo<C extends TbAbstractFetchToNodeC
                 return msg;
         }
     }
+    /**
+     * Upgrade rule nodes with old property to use fetch to.
+     *
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @param oldProperty old property ({@link String})
+     * @param ifTrue if true ({@link String})
+     * @param ifFalse if false ({@link String})
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected TbPair<Boolean, JsonNode> upgradeRuleNodesWithOldPropertyToUseFetchTo(
             JsonNode oldConfiguration,
@@ -109,6 +166,16 @@ public abstract class TbAbstractNodeWithFetchTo<C extends TbAbstractFetchToNodeC
         }
         return upgradeConfigurationToUseFetchTo(oldProperty, ifTrue, ifFalse, newConfig);
     }
+    /**
+     * Upgrade configuration to use fetch to.
+     *
+     * @param oldProperty old property ({@link String})
+     * @param ifTrue if true ({@link String})
+     * @param ifFalse if false ({@link String})
+     * @param newConfig new config ({@link ObjectNode})
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected TbPair<Boolean, JsonNode> upgradeConfigurationToUseFetchTo(
             String oldProperty, String ifTrue,

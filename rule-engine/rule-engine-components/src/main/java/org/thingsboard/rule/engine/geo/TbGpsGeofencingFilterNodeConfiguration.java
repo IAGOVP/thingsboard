@@ -24,8 +24,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
  * Created by ashvayka on 19.01.18.
  */
 /**
- * JSON configuration for TbGpsGeofencingFilter rule node.
+ * JSON configuration POJO for {@link TbGpsGeofencingFilter} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 @Data
 public class TbGpsGeofencingFilterNodeConfiguration implements NodeConfiguration<TbGpsGeofencingFilterNodeConfiguration> {
 
@@ -45,6 +48,12 @@ public class TbGpsGeofencingFilterNodeConfiguration implements NodeConfiguration
     private Double centerLongitude;
     private Double range;
     private RangeUnit rangeUnit;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGpsGeofencingFilterNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGpsGeofencingFilterNodeConfiguration defaultConfiguration() {

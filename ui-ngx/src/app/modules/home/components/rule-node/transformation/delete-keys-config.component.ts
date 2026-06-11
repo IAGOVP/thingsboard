@@ -21,17 +21,19 @@ import { TranslateService } from '@ngx-translate/core';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { FetchTo, FetchToTranslation } from '@home/components/rule-node/rule-node-config.models';
 
+
+
+/**
+ * Angular component: delete keys config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-transformation-node-delete-keys-config`.
+ */
 @Component({
     selector: 'tb-transformation-node-delete-keys-config',
     templateUrl: './delete-keys-config.component.html',
     styleUrls: [],
-    standalone: false
 
-/**
-
- * Angular component: delete keys config UI.
-
- */
+standalone: false
 })
 
 export class DeleteKeysConfigComponent extends RuleNodeConfigurationComponent {
@@ -51,12 +53,25 @@ export class DeleteKeysConfigComponent extends RuleNodeConfigurationComponent {
     }
   }
 
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
+
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.deleteKeysConfigForm = this.fb.group({
       deleteFrom: [configuration.deleteFrom, [Validators.required]],
       keys: [configuration ? configuration.keys : null, [Validators.required]]
     });
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     let deleteFrom: FetchTo;
@@ -74,6 +89,12 @@ export class DeleteKeysConfigComponent extends RuleNodeConfigurationComponent {
       deleteFrom
     };
   }
+
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
 
   protected configForm(): FormGroup {
     return this.deleteKeysConfigForm;

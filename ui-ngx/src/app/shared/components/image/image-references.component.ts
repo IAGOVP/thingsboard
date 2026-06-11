@@ -46,14 +46,17 @@ interface TenantReferencedEntities {
 type ReferencedEntities = {[tenantId: string]: TenantReferencedEntities};
 type ReferencedEntitiesEntry = [string, TenantReferencedEntities];
 
+
+/**
+ * Angular component: image references (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-image-references`.
+ */
 @Component({
     selector: 'tb-image-references',
     templateUrl: './image-references.component.html',
     styleUrls: ['./image-references.component.scss'],
-    standalone: false
-/**
- * Angular component: image references UI.
- */
+standalone: false
 })
 export class ImageReferencesComponent implements OnInit {
 
@@ -78,6 +81,11 @@ export class ImageReferencesComponent implements OnInit {
               private translate: TranslateService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.authUser.authority === Authority.SYS_ADMIN && this.hasNonSystemEntities(this.references)) {
       this.simpleList = false;
@@ -99,9 +107,23 @@ export class ImageReferencesComponent implements OnInit {
     }
   }
 
+  /**
+   * is system.
+   *
+   * @param tenantId tenant UUID
+   * @returns boolean observable or value
+   */
+
   isSystem(tenantId: string): boolean {
     return tenantId === NULL_UUID;
   }
+
+  /**
+   * has non system entities.
+   *
+   * @param references references (ResourceReferences)
+   * @returns boolean observable or value
+   */
 
   private hasNonSystemEntities(references: ResourceReferences): boolean {
     for (const entityTypeStr of Object.keys(references)) {
@@ -112,6 +134,13 @@ export class ImageReferencesComponent implements OnInit {
     }
     return false;
   }
+
+  /**
+   * to referenced entities list.
+   *
+   * @param references references (ResourceReferences)
+   * @returns ReferencedEntityInfo[] observable or value
+   */
 
   private toReferencedEntitiesList(references: ResourceReferences): ReferencedEntityInfo[] {
     const result: ReferencedEntityInfo[] = [];
@@ -130,6 +159,13 @@ export class ImageReferencesComponent implements OnInit {
     }
     return result;
   }
+
+  /**
+   * to referenced entities entries.
+   *
+   * @param references references (ResourceReferences)
+   * @returns Observable<ReferencedEntitiesEntry[]> observable or value
+   */
 
   private toReferencedEntitiesEntries(references: ResourceReferences): Observable<ReferencedEntitiesEntry[]> {
     let referencedEntities: ReferencedEntities = {};

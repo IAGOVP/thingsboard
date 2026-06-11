@@ -40,11 +40,13 @@ import type { EntityDetailsPanelComponent } from '@home/components/entity/entity
 
 export type EntitiesTableAction = 'add';
 
+
 /**
-
- * Angular component: ientities table UI.
-
+ * Angular component: ientities table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 
 export interface IEntitiesTableComponent {
   entitiesTableConfig: EntityTableConfig<BaseData<HasId>>;

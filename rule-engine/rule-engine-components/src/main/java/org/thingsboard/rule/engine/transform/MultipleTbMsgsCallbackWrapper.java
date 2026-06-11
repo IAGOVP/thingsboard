@@ -20,11 +20,13 @@ import org.thingsboard.server.common.msg.queue.TbMsgCallback;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 /**
 
- * Rule engine component: multiple tb msgs callback wrapper.
+ * Multiple tb msgs callback wrapper (message transformation and originator change nodes).
 
  */
+
 
 public class MultipleTbMsgsCallbackWrapper implements TbMsgCallbackWrapper {
 
@@ -35,6 +37,11 @@ public class MultipleTbMsgsCallbackWrapper implements TbMsgCallbackWrapper {
         this.tbMsgsCallbackCount = new AtomicInteger(tbMsgsCallbackCount);
         this.callback = callback;
     }
+    /**
+     * Handles success.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onSuccess() {
@@ -42,6 +49,12 @@ public class MultipleTbMsgsCallbackWrapper implements TbMsgCallbackWrapper {
             callback.onSuccess();
         }
     }
+    /**
+     * Handles failure.
+     *
+     * @param t t ({@link Throwable})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onFailure(Throwable t) {

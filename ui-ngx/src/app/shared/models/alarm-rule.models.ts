@@ -71,11 +71,11 @@ export const FilterPredicateTypeTranslationMap = new Map<FilterPredicateType, st
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for alarm rule.
-
+ * TypeScript interfaces, types, and enums for alarm rule (shared TypeScript models).
  */
+
 
 export interface AlarmRule {
   condition: AlarmRuleCondition;

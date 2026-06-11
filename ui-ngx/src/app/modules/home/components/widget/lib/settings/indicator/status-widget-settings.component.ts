@@ -27,14 +27,17 @@ import {
 } from '@home/components/widget/lib/indicator/status-widget.models';
 import { ValueType } from '@shared/models/constants';
 
+
+/**
+ * Angular component: status widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-status-widget-settings`.
+ */
 @Component({
     selector: 'tb-status-widget-settings',
     templateUrl: './status-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: status widget settings UI.
- */
+standalone: false
 })
 export class StatusWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -63,13 +66,31 @@ export class StatusWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.statusWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return statusWidgetDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.statusWidgetSettingsForm = this.fb.group({

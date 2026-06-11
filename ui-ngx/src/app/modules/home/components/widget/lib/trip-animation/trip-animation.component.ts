@@ -58,15 +58,18 @@ interface DataMap {
   [key: string]: FormattedData;
 }
 
+
+/**
+ * Angular component: trip animation (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `trip-animation`.
+ */
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'trip-animation',
     templateUrl: './trip-animation.component.html',
     styleUrls: ['./trip-animation.component.scss'],
-    standalone: false
-/**
- * Angular component: trip animation UI.
- */
+standalone: false
 })
 export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -101,6 +104,11 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
   useAnchors: boolean;
   currentTime: number;
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.widgetConfig = this.ctx.widgetConfig;
     this.settings = {
@@ -126,6 +134,11 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
 
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     import('@home/components/widget/lib/maps-legacy/map-widget2').then(
       (mod) => {
@@ -144,11 +157,22 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.mapResize$) {
       this.mapResize$.disconnect();
     }
   }
+
+  /**
+   * time updated.
+   *
+   * @param time time (number)
+   */
 
   timeUpdated(time: number) {
     this.currentTime = time;
@@ -181,12 +205,23 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
     this.updateCurrentData();
   }
 
+  /**
+   * initialize functions.
+   *
+   * @returns Promise<void> observable or value
+   */
+
   private async initializeFunctions(): Promise<void> {
     this.settings.parsedPointAsAnchorFunction = await firstValueFrom(parseTbFunction(this.ctx.http, this.settings.pointAsAnchorFunction, ['data', 'dsData', 'dsIndex']));
     this.settings.parsedTooltipFunction = await firstValueFrom(parseTbFunction(this.ctx.http, this.settings.tooltipFunction, ['data', 'dsData', 'dsIndex']));
     this.settings.parsedLabelFunction = await firstValueFrom(parseTbFunction(this.ctx.http, this.settings.labelFunction, ['data', 'dsData', 'dsIndex']));
     this.settings.parsedColorPointFunction = await firstValueFrom(parseTbFunction(this.ctx.http, this.settings.colorPointFunction, ['data', 'dsData', 'dsIndex']));
   }
+
+  /**
+   * update.
+   *
+   */
 
   private update() {
     this.historicalData = formattedDataArrayFromDatasourceData(this.ctx.data).map(
@@ -203,10 +238,20 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
     this.updateMapWidget();
   }
 
+  /**
+   * latest data update.
+   *
+   */
+
   private latestDataUpdate() {
     this.formattedLatestData = formattedDataFormDatasourceData(this.ctx.latestData);
     this.updateCurrentData();
   }
+
+  /**
+   * update map widget.
+   *
+   */
 
   private updateMapWidget() {
     if (this.mapWidget?.map) {
@@ -218,6 +263,11 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
       this.mapWidgetUpdatePending = true;
     }
   }
+
+  /**
+   * update current data.
+   *
+   */
 
   private updateCurrentData() {
     if (this.initialized) {
@@ -243,8 +293,21 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
+  /**
+   * set active trip.
+   *
+   */
+
   setActiveTrip() {
   }
+
+  /**
+   * calculate last points.
+   *
+   * @param dataSource data source (DataMap)
+   * @param time time (number)
+   * @returns FormattedData observable or value
+   */
 
   private calculateLastPoints(dataSource: DataMap, time: number): FormattedData {
     const timeArr = Object.keys(dataSource);
@@ -262,6 +325,11 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
 
     return dataSource[timeArr[index]];
   }
+
+  /**
+   * calculate intervals.
+   *
+   */
 
   calculateIntervals() {
     let minTime = Infinity;
@@ -296,6 +364,12 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
     return parseWithTranslation.parseTemplate(tooltipPattern, data, true);
   }
 
+  /**
+   * calc main tooltip.
+   *
+   * @param points points (FormattedData[])
+   */
+
   private calcMainTooltip(points: FormattedData[]): void {
     const tooltips = [];
     for (const point of points) {
@@ -303,6 +377,12 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     this.mainTooltips = tooltips;
   }
+
+  /**
+   * calc label.
+   *
+   * @param points points (FormattedData[])
+   */
 
   calcLabel(points: FormattedData[]) {
     if (this.activeTrip) {
@@ -312,6 +392,12 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
       this.label = this.sanitizer.bypassSecurityTrustHtml(parseWithTranslation.parseTemplate(labelText, data, true));
     }
   }
+
+  /**
+   * interpolate array.
+   *
+   * @param originData origin data (FormattedData[])
+   */
 
   private interpolateArray(originData: FormattedData[]): {[time: number]: FormattedData} {
     const result: {[time: number]: FormattedData} = {};
@@ -346,6 +432,14 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
     return result;
   }
 
+  /**
+   * calculate current time.
+   *
+   * @param minTime min time (number)
+   * @param maxTime max time (number)
+   * @returns number observable or value
+   */
+
   private calculateCurrentTime(minTime: number, maxTime: number): number {
     if (minTime !== this.minTime || maxTime !== this.maxTime) {
       if (this.minTime >= this.currentTime || isUndefined(this.currentTime)) {
@@ -358,6 +452,13 @@ export class TripAnimationComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     return this.currentTime;
   }
+
+  /**
+   * clear incorrect firs last datapoint.
+   *
+   * @param dataSource data source (FormattedData[])
+   * @returns FormattedData[] observable or value
+   */
 
   private clearIncorrectFirsLastDatapoint(dataSource: FormattedData[]): FormattedData[] {
     const firstHistoricalDataIndexCoordinate = dataSource.findIndex(this.findFirstHistoricalDataIndexCoordinate);

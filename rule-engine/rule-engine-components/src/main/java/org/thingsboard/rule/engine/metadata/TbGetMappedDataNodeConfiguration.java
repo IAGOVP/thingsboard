@@ -20,8 +20,11 @@ import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 /**
- * JSON configuration for TbGetMappedData rule node.
+ * JSON configuration POJO for {@link TbGetMappedData} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)

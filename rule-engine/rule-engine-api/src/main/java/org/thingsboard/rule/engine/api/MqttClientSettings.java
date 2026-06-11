@@ -15,17 +15,37 @@
  */
 package org.thingsboard.rule.engine.api;
 
+
 /**
 
- * Rule engine mqtt client settings API.
+ * mqtt client settings contract (rule engine public API contracts and services).
 
  */
 
+
 public interface MqttClientSettings {
+    /**
+     * Returns retransmission max attempts.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     int getRetransmissionMaxAttempts();
+    /**
+     * Returns retransmission initial delay millis.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     long getRetransmissionInitialDelayMillis();
+    /**
+     * Returns retransmission jitter factor.
+     *
+     * @return the double result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     double getRetransmissionJitterFactor();
 

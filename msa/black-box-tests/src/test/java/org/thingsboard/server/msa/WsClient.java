@@ -27,8 +27,9 @@ import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 /**
- * Ws client.
+ * WebSocket test client for telemetry and notification subscription assertions.
  */
+
 
 @Slf4j
 public class WsClient extends WebSocketClient {
@@ -45,10 +46,24 @@ public class WsClient extends WebSocketClient {
         super(serverUri);
         this.timeoutMultiplier = timeoutMultiplier;
     }
+    /**
+     * Handles open.
+     *
+     * @param serverHandshake server handshake ({@link ServerHandshake})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
     }
+    /**
+     * Handles message.
+     *
+     * @param message message ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public synchronized void onMessage(String message) {
@@ -68,17 +83,39 @@ public class WsClient extends WebSocketClient {
             }
         }
     }
+    /**
+     * Handles close.
+     *
+     * @param code code
+     * @param reason reason ({@link String})
+     * @param remote remote
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public synchronized void onClose(int code, String reason, boolean remote) {
         log.error("WS onClose: [{}]", reason);
     }
+    /**
+     * Handles error.
+     *
+     * @param ex ex ({@link Exception})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public synchronized void onError(Exception ex) {
         log.error("WS onError: ", ex);
         ex.printStackTrace();
     }
+    /**
+     * Returns last message.
+     *
+     * @return {@link WsTelemetryResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WsTelemetryResponse getLastMessage() {
         try {
@@ -107,6 +144,13 @@ public class WsClient extends WebSocketClient {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Handles set sslparameters.
+     *
+     * @param sslParameters ssl parameters ({@link SSLParameters})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void onSetSSLParameters(SSLParameters sslParameters) {

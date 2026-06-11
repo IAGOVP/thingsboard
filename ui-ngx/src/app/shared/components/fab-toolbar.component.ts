@@ -32,11 +32,11 @@ import { ThemePalette } from '@angular/material/core';
 
 export declare type FabToolbarDirection = 'left' | 'right';
 
+
 /**
-
- * mat fab toolbar base.
-
+ * Mat fab toolbar base (shared UI components).
  */
+
 
 class MatFabToolbarBase {
 

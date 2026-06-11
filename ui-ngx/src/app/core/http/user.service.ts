@@ -25,7 +25,9 @@ import { isDefined } from '@core/utils';
 import { InterceptorHttpParams } from '@core/interceptors/interceptor-http-params';
 
 /**
- * User administration, activation links, user credentials via `/api/user*`.
+ * User administration, activation links, and credentials.
+ *
+ * <p>REST base: `/api/user*`, `/api/users*`.
  */
 @Injectable({
   providedIn: 'root'
@@ -36,7 +38,15 @@ export class UserService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/users${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get users.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<User>> observable or value
+   */
+
 
   public getUsers(pageLink: PageLink,
                   config?: RequestConfig): Observable<PageData<User>> {
@@ -44,7 +54,16 @@ export class UserService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/${tenantId}/users${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant admins.
+   *
+   * @param tenantId tenant UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<User>> observable or value
+   */
+
 
   public getTenantAdmins(tenantId: string, pageLink: PageLink,
                          config?: RequestConfig): Observable<PageData<User>> {
@@ -52,7 +71,16 @@ export class UserService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}/users${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get customer users.
+   *
+   * @param customerId customer UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<User>> observable or value
+   */
+
 
   public getCustomerUsers(customerId: string, pageLink: PageLink,
                           config?: RequestConfig): Observable<PageData<User>> {
@@ -60,7 +88,16 @@ export class UserService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/users/assign/${alarmId}${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get users for assign.
+   *
+   * @param alarmId alarm UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<UserEmailInfo>> observable or value
+   */
+
 
   public getUsersForAssign(alarmId: string, pageLink: PageLink,
                           config?: RequestConfig): Observable<PageData<UserEmailInfo>> {
@@ -68,19 +105,44 @@ export class UserService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/${userId}, ...`. */
+  
+  /**
+   * get user.
+   *
+   * @param userId user UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<User> observable or value
+   */
+
 
   public getUser(userId: string, config?: RequestConfig): Observable<User> {
     return this.http.get<User>(`/api/user/${userId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/users?userIds=${userIds.join(, ...`. */
+  
+  /**
+   * get users by ids.
+   *
+   * @param userIds user ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<User>> observable or value
+   */
+
 
   public getUsersByIds(userIds: Array<string>, config?: RequestConfig): Observable<Array<User>> {
     return this.http.get<Array<User>>(`/api/users?userIds=${userIds.join(',')}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user, ...`. */
+  
+  /**
+   * POST/PUT entity — save user.
+   *
+   * @param user user (User)
+   * @param sendActivationMail send activation mail (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<User> observable or value
+   */
+
 
   public saveUser(user: User, sendActivationMail: boolean = false,
                   config?: RequestConfig): Observable<User> {
@@ -89,29 +151,68 @@ export class UserService {
     return this.http.post<User>(url, user, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete user.
+   *
+   * @param userId user UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteUser(userId: string, config?: RequestConfig) {
     return this.http.delete(`/api/user/${userId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/${userId}/activationLink, ...`. */
+  
+  /**
+   * get activation link.
+   *
+   * @param userId user UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<string> observable or value
+   */
+
 
   public getActivationLink(userId: string, config?: RequestConfig): Observable<string> {
     return this.http.get(`/api/user/${userId}/activationLink`,
       {...{responseType: 'text'}, ...defaultHttpOptionsFromConfig(config)});
   }
 
-  /** Calls ThingsBoard REST `/api/user/${userId}/activationLinkInfo, ...`. */
+  
+  /**
+   * get activation link info.
+   *
+   * @param userId user UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ActivationLinkInfo> observable or value
+   */
+
 
   public getActivationLinkInfo(userId: string, config?: RequestConfig): Observable<ActivationLinkInfo> {
     return this.http.get<ActivationLinkInfo>(`/api/user/${userId}/activationLinkInfo`, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * send activation email.
+   *
+   * @param email email (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public sendActivationEmail(email: string, config?: RequestConfig) {
     const encodeEmail = encodeURIComponent(email);
     return this.http.post(`/api/user/sendActivationMail?email=${encodeEmail}`, null, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/${userId}/userCredentialsEnabled, ...`. */
+  
+  /**
+   * set user credentials enabled.
+   *
+   * @param userId user UUID
+   * @param userCredentialsEnabled user credentials enabled (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public setUserCredentialsEnabled(userId: string, userCredentialsEnabled?: boolean, config?: RequestConfig): Observable<any> {
     let url = `/api/user/${userId}/userCredentialsEnabled`;
@@ -121,7 +222,15 @@ export class UserService {
     return this.http.post<User>(url, null, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/users/info${pageLink.toQuery()}`. */
+  
+  /**
+   * find users by query.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<UserEmailInfo>> observable or value
+   */
+
 
   public findUsersByQuery(pageLink: PageLink, config?: RequestConfig) : Observable<PageData<UserEmailInfo>> {
     return this.http.get<PageData<UserEmailInfo>>(`/api/users/info${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));

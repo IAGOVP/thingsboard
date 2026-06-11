@@ -15,19 +15,45 @@
  */
 package org.thingsboard.rule.engine.api;
 
+
 /**
 
- * Saves telemetry and attributes from rule nodes.
+ * Facade for saving telemetry and attributes from rule nodes.
 
  */
 
+
 public interface RuleEngineTelemetryService {
+    /**
+     * Saves or persists timeseries.
+     *
+     * @param request async service request DTO
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void saveTimeseries(TimeseriesSaveRequest request);
+    /**
+     * Saves or persists attributes.
+     *
+     * @param request async service request DTO
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void saveAttributes(AttributesSaveRequest request);
+    /**
+     * Deletes timeseries.
+     *
+     * @param request async service request DTO
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteTimeseries(TimeseriesDeleteRequest request);
+    /**
+     * Deletes attributes.
+     *
+     * @param request async service request DTO
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void deleteAttributes(AttributesDeleteRequest request);
 

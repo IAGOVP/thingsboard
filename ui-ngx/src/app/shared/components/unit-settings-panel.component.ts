@@ -23,16 +23,19 @@ import { UnitService } from '@core/services/unit.service';
 import { debounceTime } from 'rxjs/operators';
 import { isUndefinedOrNull } from '@core/utils';
 
+
+/**
+ * Angular component: unit settings panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-covert-unit-settings-panel`.
+ */
 @Component({
     selector: 'tb-covert-unit-settings-panel',
     templateUrl: './unit-settings-panel.component.html',
     styleUrls: ['./unit-settings-panel.component.scss'],
     providers: [],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: unit settings panel UI.
- */
+standalone: false
 })
 export class UnitSettingsPanelComponent implements OnInit {
 
@@ -115,6 +118,11 @@ export class UnitSettingsPanelComponent implements OnInit {
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     let unitDescription: UnitInfo;
     if (this.required) {
@@ -142,6 +150,11 @@ export class UnitSettingsPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * clear unit.
+   *
+   */
+
   clearUnit() {
     this.unitSettingForm.reset({
       convertUnit: false
@@ -152,9 +165,19 @@ export class UnitSettingsPanelComponent implements OnInit {
     this.unitSettingForm.markAsDirty();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover.hide();
   }
+
+  /**
+   * apply unit settings.
+   *
+   */
 
   applyUnitSettings() {
     if (this.unitSettingForm.value.convertUnit) {

@@ -21,8 +21,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import java.util.Collections;
 import java.util.Map;
 /**
- * JSON configuration for TbPubSub rule node.
+ * JSON configuration POJO for {@link TbPubSub} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbPubSubNodeConfiguration implements NodeConfiguration<TbPubSubNodeConfiguration> {
@@ -32,6 +35,12 @@ public class TbPubSubNodeConfiguration implements NodeConfiguration<TbPubSubNode
     private Map<String, String> messageAttributes;
     private String serviceAccountKey;
     private String serviceAccountKeyFileName;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbPubSubNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbPubSubNodeConfiguration defaultConfiguration() {

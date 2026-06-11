@@ -19,11 +19,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.thingsboard.server.msa.ui.base.AbstractBasePage;
 
+
 /**
 
- * Alarm details view elements.
+ * Selenium element locators for alarm details view page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class AlarmDetailsViewElements extends AbstractBasePage {
     public AlarmDetailsViewElements(WebDriver driver) {
@@ -34,18 +40,43 @@ public class AlarmDetailsViewElements extends AbstractBasePage {
     private static final String USER_FROM_DROP_DOWN = "//div[@class='user-display-name']/span[text() = '%s']";
     private static final String CLOSE_ALARM_DETAILS_VIEW_BTN = "//mat-dialog-container//mat-icon[contains(text(),'close')]/parent::button";
     private static final String UNASSIGNED_BTN = "//div[@role='listbox']//mat-icon[text() = 'account_circle']/following-sibling::span";
+    /**
+     * Assigns field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assignField() {
         return waitUntilElementToBeClickable(ASSIGN_FIELD);
     }
+    /**
+     * User from assign dropdown.
+     *
+     * @param emailOrName email or name ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement userFromAssignDropdown(String emailOrName) {
         return waitUntilElementToBeClickable(String.format(USER_FROM_DROP_DOWN, emailOrName));
     }
+    /**
+     * Close alarm details view btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement closeAlarmDetailsViewBtn() {
         return waitUntilElementToBeClickable(CLOSE_ALARM_DETAILS_VIEW_BTN);
     }
+    /**
+     * Unassigns ed btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement unassignedBtn() {
         return waitUntilElementToBeClickable(UNASSIGNED_BTN);

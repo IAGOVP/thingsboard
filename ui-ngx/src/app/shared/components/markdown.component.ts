@@ -42,14 +42,17 @@ import { sanitizeTemplate } from './markdown-sanitize.helper';
 
 let defaultMarkdownStyle: string;
 
+
+/**
+ * Angular component: tb markdown (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-markdown`.
+ */
 @Component({
     selector: 'tb-markdown',
     templateUrl: './markdown.component.html',
     styleUrls: ['./markdown.component.scss'],
-    standalone: false
-/**
- * Angular component: tb markdown UI.
- */
+standalone: false
 })
 export class TbMarkdownComponent implements OnChanges {
 
@@ -117,6 +120,12 @@ export class TbMarkdownComponent implements OnChanges {
     }
   }
 
+  /**
+   * render.
+   *
+   * @param markdown markdown (string)
+   */
+
   private render(markdown: string) {
     const compiled = this.markdownService.parse(markdown, { decodeHtml: false, disableSanitizer: true });
     let markdownClass = 'tb-markdown-view';
@@ -166,6 +175,10 @@ export class TbMarkdownComponent implements OnChanges {
       }
       this.dynamicComponentFactoryService.createDynamicComponent(
         class TbMarkdownInstance {
+          /**
+           * Angular lifecycle hook: unsubscribe and release resources.
+           *
+           */
           ngOnDestroy(): void {
             destroyMarkdownInstanceResources();
           }
@@ -209,6 +222,15 @@ export class TbMarkdownComponent implements OnChanges {
     }
   }
 
+  /**
+   * handle error.
+   *
+   * @param template template (string)
+   * @param error error (any)
+   * @param styles styles (string[])
+   * @returns Observable<void> observable or value
+   */
+
   private handleError(template: string, error: any, styles?: string[]): Observable<void> {
     this.error = (error ? error + '' : 'Failed to render markdown!').replace(/\n/g, '<br>');
     this.markdownContainer.clear();
@@ -218,6 +240,14 @@ export class TbMarkdownComponent implements OnChanges {
       return of(null);
     }
   }
+
+  /**
+   * plain markdown.
+   *
+   * @param template template (string)
+   * @param styles styles (string[])
+   * @returns Observable<void> observable or value
+   */
 
   private plainMarkdown(template: string, styles?: string[]): Observable<void> {
     const element = this.fallbackElement.nativeElement;
@@ -237,11 +267,24 @@ export class TbMarkdownComponent implements OnChanges {
     return this.handleImages(element);
   }
 
+  /**
+   * handle plugins.
+   *
+   * @param element element (HTMLElement)
+   */
+
   private handlePlugins(element: HTMLElement): void {
     if (this.lineNumbers) {
       this.setPluginClass(element, PrismPlugin.LineNumbers);
     }
   }
+
+  /**
+   * set plugin class.
+   *
+   * @param element element (HTMLElement)
+   * @param plugin plugin (string | string[])
+   */
 
   private setPluginClass(element: HTMLElement, plugin: string | string[]): void {
     const preElements = element.querySelectorAll('pre');
@@ -250,6 +293,13 @@ export class TbMarkdownComponent implements OnChanges {
       preElements.item(i).classList.add(...classes);
     }
   }
+
+  /**
+   * handle images.
+   *
+   * @param element element (HTMLElement)
+   * @returns Observable<void> observable or value
+   */
 
   private handleImages(element: HTMLElement): Observable<void> {
     const imgs = $('img', element);
@@ -270,6 +320,11 @@ export class TbMarkdownComponent implements OnChanges {
       return of(null);
     }
   }
+
+  /**
+   * destroy markdown instance resources.
+   *
+   */
 
   private destroyMarkdownInstanceResources() {
     if (this.tbMarkdownInstanceComponentType) {

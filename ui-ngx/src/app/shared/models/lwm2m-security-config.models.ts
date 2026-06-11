@@ -53,11 +53,11 @@ export const Lwm2mClientKeyTooltipTranslationsMap = new Map<Lwm2mSecurityType, s
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for client security config.
-
+ * TypeScript interfaces, types, and enums for client security config (shared TypeScript models).
  */
+
 
 export interface ClientSecurityConfig {
   securityConfigClientMode: Lwm2mSecurityType;

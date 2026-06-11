@@ -22,11 +22,13 @@ import org.thingsboard.server.common.data.id.EntityId;
 
 import java.util.List;
 
+
 /**
 
- * Rule engine component: entities by name and type loader.
+ * Entities by name and type loader (shared rule-engine utilities and async loaders).
 
  */
+
 
 public class EntitiesByNameAndTypeLoader {
 
@@ -36,6 +38,15 @@ public class EntitiesByNameAndTypeLoader {
             EntityType.ENTITY_VIEW,
             EntityType.EDGE,
             EntityType.USER);
+    /**
+     * Finds entity id.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param entityType entity type ({@link EntityType})
+     * @param entityName entity name ({@link String})
+     * @return {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityId findEntityId(TbContext ctx, EntityType entityType, String entityName) {
         BaseData<? extends EntityId> targetEntity;
@@ -63,6 +74,12 @@ public class EntitiesByNameAndTypeLoader {
         }
         return targetEntity.getId();
     }
+    /**
+     * Checks entity type.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static void checkEntityType(EntityType entityType) {
         if (!AVAILABLE_ENTITY_TYPES.contains(entityType)) {

@@ -47,6 +47,12 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
+
+/**
+ * Angular component: api usage widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-api-usage-widget-settings`.
+ */
 @Component({
     selector: 'tb-api-usage-widget-settings',
     templateUrl: './api-usage-widget-settings.component.html',
@@ -58,10 +64,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: api usage widget settings UI.
- */
+standalone: false
 })
 export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -75,6 +78,11 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.context = {
       aliasController: this.aliasController,
@@ -85,13 +93,33 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
     };
   }
 
+  /**
+   * do update settings.
+   *
+   * @param settingsForm settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
+
   protected doUpdateSettings(settingsForm: UntypedFormGroup, settings: WidgetSettings) {
     settingsForm.setControl('apiUsageDataKeys', this.prepareDataKeysFormArray(settings?.apiUsageDataKeys), {emitEvent: false});
   }
 
+  /**
+   * data keys form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   dataKeysFormArray(): UntypedFormArray {
     return this.apiUsageWidgetSettingsForm.get('apiUsageDataKeys') as UntypedFormArray;
   }
+
+  /**
+   * track by data key.
+   *
+   * @param index index (number)
+   * @returns any observable or value
+   */
 
   trackByDataKey(index: number): any {
     return index;
@@ -101,15 +129,32 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
     return this.dataKeysFormArray().controls.length > 1;
   }
 
+  /**
+   * layer drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   layerDrop(event: CdkDragDrop<string[]>) {
     const layer = this.dataKeysFormArray().at(event.previousIndex);
     this.dataKeysFormArray().removeAt(event.previousIndex);
     this.dataKeysFormArray().insert(event.currentIndex, layer);
   }
 
+  /**
+   * DELETE — remove data key.
+   *
+   * @param index index (number)
+   */
+
   removeDataKey(index: number) {
     (this.apiUsageWidgetSettingsForm.get('apiUsageDataKeys') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add data key.
+   *
+   */
 
   addDataKey() {
     const dataKey = {
@@ -124,13 +169,32 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
     dataKeysArray.push(dataKeyControl);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.apiUsageWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return apiUsageDefaultSettings;
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return {
@@ -142,6 +206,12 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.apiUsageWidgetSettingsForm = this.fb.group({
       dsEntityAliasId: [settings?.dsEntityAliasId, Validators.required],
@@ -151,6 +221,13 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
       padding: [settings.padding, []]
     });
   }
+
+  /**
+   * prepare data keys form array.
+   *
+   * @param dataKeys data keys (ApiUsageDataKeysSettings[])
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareDataKeysFormArray(dataKeys: ApiUsageDataKeysSettings[]): UntypedFormArray {
     const dataKeysControls: Array<AbstractControl> = [];
@@ -162,9 +239,20 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
     return this.fb.array(dataKeysControls);
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return [];
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   protected updateValidators() {
   }
@@ -180,6 +268,14 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
       return null;
     };
   };
+
+  /**
+   * edit key.
+   *
+   * @param key key (DataKey)
+   * @param entityAliasId entity alias id (string)
+   * @returns Observable<DataKey> observable or value
+   */
 
   private editKey(key: DataKey, entityAliasId: string, _widgetType = widgetType.latest): Observable<DataKey> {
     return this.dialog.open<DataKeyConfigDialogComponent, DataKeyConfigDialogData, DataKey>(DataKeyConfigDialogComponent,
@@ -206,9 +302,23 @@ export class ApiUsageWidgetSettingsComponent extends WidgetSettingsComponent {
       }).afterClosed();
   }
 
+  /**
+   * generate data key.
+   *
+   * @param key key (DataKey)
+   * @returns DataKey observable or value
+   */
+
   private generateDataKey(key: DataKey): DataKey {
     return this.callbacks.generateDataKey(key.name, key.type, null, false, null);
   }
+
+  /**
+   * fetch dashboard states.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   fetchDashboardStates(searchText?: string): Observable<Array<string>> {
     return of(this.callbacks.fetchDashboardStates(searchText));

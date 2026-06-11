@@ -39,7 +39,14 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Rule engine action node 'create alarm': Create or Update Alarm Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>create alarm</b>.
+ *
+ * <p>Create or Update Alarm
+ * <br>Details - JS function that creates JSON object based on incoming message. This object will be added into Alarm.details field.\n
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbCreateAlarmNodeConfiguration}.
+ * <br>Output relations: {@code "Created", "Updated", "False"}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/create-alarm/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/create-alarm/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -60,6 +67,13 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
 
     private List<String> relationTypes;
     private AlarmSeverity notDynamicAlarmSeverity;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -71,6 +85,13 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
             }
         }
     }
+    /**
+     * Loads alarm node config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbCreateAlarmNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbCreateAlarmNodeConfiguration loadAlarmNodeConfig(TbNodeConfiguration configuration) throws TbNodeException {
@@ -78,6 +99,14 @@ public class TbCreateAlarmNode extends TbAbstractAlarmNode<TbCreateAlarmNodeConf
         relationTypes = nodeConfiguration.getRelationTypes();
         return nodeConfiguration;
     }
+    /**
+     * Processes alarm.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link TbAlarmResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<TbAlarmResult> processAlarm(TbContext ctx, TbMsg msg) {

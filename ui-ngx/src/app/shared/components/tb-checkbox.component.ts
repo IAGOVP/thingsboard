@@ -17,6 +17,12 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+
+/**
+ * Angular component: tb checkbox (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-checkbox`.
+ */
 @Component({
     selector: 'tb-checkbox',
     templateUrl: './tb-checkbox.component.html',
@@ -27,10 +33,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: tb checkbox UI.
- */
+standalone: false
 })
 export class TbCheckboxComponent implements ControlValueAccessor {
 
@@ -43,9 +46,19 @@ export class TbCheckboxComponent implements ControlValueAccessor {
 
   private propagateChange = (_: any) => {};
 
+  /**
+   * Event handler for host change.
+   *
+   */
+
   onHostChange(ev) {
     this.propagateChange(ev.checked ? this.trueValue : this.falseValue);
   }
+
+  /**
+   * model change.
+   *
+   */
 
   modelChange($event) {
     if ($event) {
@@ -57,16 +70,40 @@ export class TbCheckboxComponent implements ControlValueAccessor {
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param obj obj (any)
+   */
 
   writeValue(obj: any): void {
     if (obj === this.trueValue) {

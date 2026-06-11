@@ -28,6 +28,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { widgetTitleAutocompleteValues } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: widget button appearance (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-button-appearance`.
+ */
 @Component({
     selector: 'tb-widget-button-appearance',
     templateUrl: './widget-button-appearance.component.html',
@@ -40,10 +46,7 @@ import { widgetTitleAutocompleteValues } from '@shared/models/widget.models';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widget button appearance UI.
- */
+standalone: false
 })
 export class WidgetButtonAppearanceComponent implements OnInit, ControlValueAccessor {
 
@@ -83,6 +86,11 @@ export class WidgetButtonAppearanceComponent implements OnInit, ControlValueAcce
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.appearanceFormGroup = this.fb.group({
       type: [null, []],
@@ -120,12 +128,30 @@ export class WidgetButtonAppearanceComponent implements OnInit, ControlValueAcce
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -137,6 +163,12 @@ export class WidgetButtonAppearanceComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (WidgetButtonAppearance)
+   */
+
   writeValue(value: WidgetButtonAppearance): void {
     this.modelValue = value;
     this.appearanceFormGroup.patchValue(
@@ -145,10 +177,20 @@ export class WidgetButtonAppearanceComponent implements OnInit, ControlValueAcce
     this.updateValidators();
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.modelValue = this.appearanceFormGroup.getRawValue();
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators(): void {
     const showLabel: boolean = this.appearanceFormGroup.get('showLabel').value;

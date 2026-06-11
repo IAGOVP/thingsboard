@@ -51,14 +51,17 @@ import { DomSanitizer } from '@angular/platform-browser';
 const squareLayoutSize = 160;
 const horizontalLayoutHeight = 80;
 
+
+/**
+ * Angular component: value card widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-card-widget`.
+ */
 @Component({
     selector: 'tb-value-card-widget',
     templateUrl: './value-card-widget.component.html',
     styleUrls: ['./value-card-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: value card widget UI.
- */
+standalone: false
 })
 export class ValueCardWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -114,6 +117,11 @@ export class ValueCardWidgetComponent implements OnInit, AfterViewInit, OnDestro
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const params = this.widgetComponent.typeParameters as any;
     this.horizontal  = isDefinedAndNotNull(params.horizontal) ? params.horizontal : false;
@@ -147,6 +155,11 @@ export class ValueCardWidgetComponent implements OnInit, AfterViewInit, OnDestro
     this.padding = this.settings.background.overlay.enabled ? undefined : this.settings.padding;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   public ngAfterViewInit() {
     if (this.settings.autoScale) {
       if (!this.horizontal) {
@@ -164,17 +177,32 @@ export class ValueCardWidgetComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     const tsValue = getSingleTsValue(this.ctx.data);
@@ -194,6 +222,11 @@ export class ValueCardWidgetComponent implements OnInit, AfterViewInit, OnDestro
     this.dateColor.update(value);
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const computedStyle = getComputedStyle(this.valueCardPanel.nativeElement);

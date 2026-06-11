@@ -17,13 +17,21 @@ package org.thingsboard.monitoring.config;
 
 import java.util.List;
 
+
 /**
 
- * Base configuration: list of {@link MonitoringTarget} URLs and shared options.
+ * Base configuration: list of {@link MonitoringTarget} URLs and shared monitoring options.
 
  */
 
+
 public interface MonitoringConfig<T extends MonitoringTarget> {
+    /**
+     * Returns targets.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<T> getTargets();
 

@@ -35,11 +35,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+
 /**
 
- * Unit test for alarm rule state rule node.
+ * Unit test for alarm rule state (device profile state nodes).
 
  */
+
 
 public class AlarmRuleStateTest {
 
@@ -63,6 +65,15 @@ public class AlarmRuleStateTest {
                 Arguments.of(StringFilterPredicate.StringOperation.STARTS_WITH, "test value", "test", AlarmEvalResult.FALSE)
         );
     }
+    /**
+     * Test eval condition.
+     *
+     * @param operation operation
+     * @param predicateValue predicate value ({@link String})
+     * @param attributeValue attribute value ({@link String})
+     * @param evalResult eval result ({@link AlarmEvalResult})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource

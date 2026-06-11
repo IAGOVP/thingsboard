@@ -22,8 +22,9 @@ import org.thingsboard.server.common.msg.TbMsg;
 
 import java.util.List;
 /**
- * Rule engine component: attributes delete node callback.
+ * Attributes delete node callback (telemetry and attribute persistence nodes).
  */
+
 
 @Slf4j
 public class AttributesDeleteNodeCallback extends TelemetryNodeCallback {
@@ -36,6 +37,12 @@ public class AttributesDeleteNodeCallback extends TelemetryNodeCallback {
         this.scope = scope;
         this.keys = keys;
     }
+    /**
+     * Handles success.
+     *
+     * @param result result ({@link Void})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onSuccess(@Nullable Void result) {

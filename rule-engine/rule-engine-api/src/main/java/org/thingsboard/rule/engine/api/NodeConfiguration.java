@@ -15,13 +15,21 @@
  */
 package org.thingsboard.rule.engine.api;
 
+
 /**
 
- * JSON configuration for  rule node.
+ * Marker interface for deserializable rule node configuration POJOs.
 
  */
 
+
 public interface NodeConfiguration<T extends NodeConfiguration> {
+    /**
+     * Default configuration.
+     *
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     T defaultConfiguration();
 

@@ -45,6 +45,12 @@ export interface ValueInputLayout {
   breakpoints?: {[breakpoint: string]: Layout};
 }
 
+
+/**
+ * Angular component: value input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-input`.
+ */
 @Component({
     selector: 'tb-value-input',
     templateUrl: './value-input.component.html',
@@ -56,10 +62,7 @@ export interface ValueInputLayout {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: value input UI.
- */
+standalone: false
 })
 export class ValueInputComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
 
@@ -123,6 +126,11 @@ export class ValueInputComponent implements OnInit, OnDestroy, OnChanges, Contro
 
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (!this.trueLabel) {
       this.trueLabel = this.translate.instant('value.true');
@@ -163,9 +171,19 @@ export class ValueInputComponent implements OnInit, OnDestroy, OnChanges, Contro
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this._subscription.unsubscribe();
   }
+
+  /**
+   * open edit jsondialog.
+   *
+   */
 
   openEditJSONDialog($event: Event) {
     if ($event) {
@@ -189,16 +207,40 @@ export class ValueInputComponent implements OnInit, OnDestroy, OnChanges, Contro
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (any)
+   */
 
   writeValue(value: any): void {
     this.modelValue = value;
@@ -212,6 +254,11 @@ export class ValueInputComponent implements OnInit, OnDestroy, OnChanges, Contro
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   updateView() {
     if (this.inputForm.valid || this.valueType === ValueType.BOOLEAN ||
         (this.valueType === ValueType.JSON && Array.isArray(this.modelValue))) {
@@ -220,6 +267,11 @@ export class ValueInputComponent implements OnInit, OnDestroy, OnChanges, Contro
       this.propagateChange(null);
     }
   }
+
+  /**
+   * Event handler for value type changed.
+   *
+   */
 
   onValueTypeChanged() {
     if (this.valueType === ValueType.BOOLEAN) {
@@ -233,9 +285,19 @@ export class ValueInputComponent implements OnInit, OnDestroy, OnChanges, Contro
     this.updateView();
   }
 
+  /**
+   * Event handler for value changed.
+   *
+   */
+
   onValueChanged() {
     this.updateView();
   }
+
+  /**
+   * detect value type.
+   *
+   */
 
   private detectValueType() {
     if (this.modelValue === true || this.modelValue === false) {
@@ -252,6 +314,11 @@ export class ValueInputComponent implements OnInit, OnDestroy, OnChanges, Contro
       this.valueType = ValueType.STRING;
     }
   }
+
+  /**
+   * update model to value type.
+   *
+   */
 
   private updateModelToValueType() {
     if (this.valueType === ValueType.BOOLEAN && typeof this.modelValue !== 'boolean') {

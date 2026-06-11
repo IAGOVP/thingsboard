@@ -35,6 +35,12 @@ import {
 } from '@shared/models/device.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: device data (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-data`.
+ */
 @Component({
     selector: 'tb-device-data',
     templateUrl: './device-data.component.html',
@@ -51,10 +57,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         },
     ],
-    standalone: false
-/**
- * Angular component: device data UI.
- */
+standalone: false
 })
 export class DeviceDataComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -82,12 +85,29 @@ export class DeviceDataComponent implements ControlValueAccessor, OnInit, Valida
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.deviceDataFormGroup = this.fb.group({
@@ -101,6 +121,12 @@ export class DeviceDataComponent implements ControlValueAccessor, OnInit, Valida
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -109,6 +135,12 @@ export class DeviceDataComponent implements ControlValueAccessor, OnInit, Valida
       this.deviceDataFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DeviceData | null)
+   */
 
   writeValue(value: DeviceData | null): void {
     const deviceProfileType = value?.configuration?.type;
@@ -121,11 +153,22 @@ export class DeviceDataComponent implements ControlValueAccessor, OnInit, Valida
     this.deviceDataFormGroup.patchValue({transportConfiguration: value?.transportConfiguration}, {emitEvent: false});
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.deviceDataFormGroup.valid ? null : {
       deviceDataForm: false
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let deviceData: DeviceData = null;

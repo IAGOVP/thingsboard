@@ -46,6 +46,9 @@ import { EntityConflictInterceptor } from '@core/interceptors/entity-conflict.in
  * Core Angular module: HTTP client + {@link GlobalHttpInterceptor}, NgRx root store,
  * i18n, dialogs, and shared Material imports for the whole app.
  */
+/**
+ * Angular NgModule bundling core (ThingsBoard web UI).
+ */
 @NgModule({ exports: [], imports: [CommonModule,
         MatDialogModule,
         MatButtonModule,
@@ -111,9 +114,6 @@ import { EntityConflictInterceptor } from '@core/interceptors/entity-conflict.in
               disableImageLazyLoadWarning: true
             }
        }
-/**
- * Angular NgModule: core feature area.
- */
-    ] })
+] })
 export class CoreModule {
 }

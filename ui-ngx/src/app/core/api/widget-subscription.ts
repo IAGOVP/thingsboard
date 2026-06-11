@@ -145,11 +145,11 @@ const calculateLatest = (data: DataSet): number => {
   }
 };
 
+
 /**
-
- * widget subscription.
-
+ * Widget subscription (ThingsBoard web UI).
  */
+
 
 export class WidgetSubscription implements IWidgetSubscription {
 
@@ -398,6 +398,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
  }
 
+  /**
+   * init rpc.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   private initRpc(): Observable<any> {
     const initRpcSubject = new ReplaySubject<void>();
     this.ctx.aliasController.resolveSingleEntityInfoForTargetDevice(this.targetDevice).subscribe({
@@ -443,6 +449,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     return initRpcSubject.asObservable();
   }
 
+  /**
+   * init alarm subscription.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   private initAlarmSubscription(): Observable<any> {
     const initAlarmSubscriptionSubject = new ReplaySubject<void>(1);
     this.loadStDiff().subscribe(() => {
@@ -473,9 +485,20 @@ export class WidgetSubscription implements IWidgetSubscription {
     return initAlarmSubscriptionSubject.asObservable();
   }
 
+  /**
+   * configure alarms data.
+   *
+   */
+
   private configureAlarmsData() {
     this.notifyDataLoaded();
   }
+
+  /**
+   * init data subscription.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   private initDataSubscription(): Observable<any> {
     this.notifyDataLoading();
@@ -512,6 +535,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     });
     return initDataSubscriptionSubject.asObservable();
   }
+
+  /**
+   * prepare data subscriptions.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   private prepareDataSubscriptions(): Observable<any> {
     if (this.hasDataPageLink || !this.configuredDatasources || !this.configuredDatasources.length) {
@@ -580,6 +609,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     );
   }
 
+  /**
+   * reset data.
+   *
+   */
+
   private resetData() {
     this.data.length = 0;
     this.latestData.length = 0;
@@ -593,6 +627,12 @@ export class WidgetSubscription implements IWidgetSubscription {
       this.onLatestDataUpdated();
     }
   }
+
+  /**
+   * get first entity info.
+   *
+   * @returns SubscriptionEntityInfo observable or value
+   */
 
   getFirstEntityInfo(): SubscriptionEntityInfo {
     let entityId: EntityId;
@@ -661,6 +701,13 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * Event handler for aliases changed.
+   *
+   * @param aliasIds alias ids (Array<string>)
+   * @returns boolean observable or value
+   */
+
   onAliasesChanged(aliasIds: Array<string>): boolean {
     if (this.type === widgetType.rpc) {
       return this.checkRpcTarget(aliasIds);
@@ -670,6 +717,13 @@ export class WidgetSubscription implements IWidgetSubscription {
       return this.checkSubscriptions(aliasIds);
     }
   }
+
+  /**
+   * Event handler for filters changed.
+   *
+   * @param filterIds filter ids (Array<string>)
+   * @returns boolean observable or value
+   */
 
   onFiltersChanged(filterIds: Array<string>): boolean {
     if (this.type !== widgetType.rpc) {
@@ -681,6 +735,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
     return false;
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   * @param detectChanges detect changes (boolean)
+   */
 
   private onDataUpdated(detectChanges?: boolean) {
     if (this.cafs.dataUpdated) {
@@ -696,6 +756,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     });
   }
 
+  /**
+   * Event handler for latest data updated.
+   *
+   * @param detectChanges detect changes (boolean)
+   */
+
   private onLatestDataUpdated(detectChanges?: boolean) {
     if (this.cafs.latestDataUpdated) {
       this.cafs.latestDataUpdated();
@@ -710,6 +776,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     });
   }
 
+  /**
+   * Event handler for subscription message.
+   *
+   * @param message message (SubscriptionMessage)
+   */
+
   private onSubscriptionMessage(message: SubscriptionMessage) {
     if (this.cafs.message) {
       this.cafs.message();
@@ -719,6 +791,12 @@ export class WidgetSubscription implements IWidgetSubscription {
       this.callbacks.onSubscriptionMessage(this, message);
     });
   }
+
+  /**
+   * Event handler for dashboard timewindow changed.
+   *
+   * @param newDashboardTimewindow new dashboard timewindow (Timewindow)
+   */
 
   onDashboardTimewindowChanged(newDashboardTimewindow: Timewindow) {
     let doUpdate = false;
@@ -748,6 +826,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * update data visibility.
+   *
+   * @param index index (number)
+   */
+
   updateDataVisibility(index: number): void {
     if (this.displayLegend) {
       const hidden = this.legendData.keys.find(key => key.dataIndex === index).dataKey.hidden;
@@ -761,6 +845,12 @@ export class WidgetSubscription implements IWidgetSubscription {
       this.onDataUpdated();
     }
   }
+
+  /**
+   * update timewindow config.
+   *
+   * @param newTimewindow new timewindow (Timewindow)
+   */
 
   updateTimewindowConfig(newTimewindow: Timewindow): void {
     if (!this.useDashboardTimewindow) {
@@ -776,6 +866,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * Event handler for reset timewindow.
+   *
+   */
+
   onResetTimewindow(): void {
     if (this.useDashboardTimewindow) {
       this.ctx.dashboardTimewindowApi.onResetTimewindow();
@@ -789,6 +884,14 @@ export class WidgetSubscription implements IWidgetSubscription {
       }
     }
   }
+
+  /**
+   * Event handler for update timewindow.
+   *
+   * @param startTimeMs start time ms (number)
+   * @param endTimeMs end time ms (number)
+   * @param interval interval (number)
+   */
 
   onUpdateTimewindow(startTimeMs: number, endTimeMs: number, interval?: number): void {
     if (this.useDashboardTimewindow) {
@@ -804,15 +907,48 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * send one way command.
+   *
+   * @param method method (string)
+   * @param params params (any)
+   * @param timeout timeout (number)
+   * @param persistent persistent (boolean)
+   * @param persistentPollingInterval persistent polling interval (number)
+   * @param retries retries (number)
+   * @param additionalInfo additional info (any)
+   * @param requestUUID request uuid (string)
+   * @returns Observable<any> observable or value
+   */
+
   sendOneWayCommand(method: string, params?: any, timeout?: number, persistent?: boolean,
                     persistentPollingInterval?: number, retries?: number, additionalInfo?: any, requestUUID?: string): Observable<any> {
     return this.sendCommand(true, method, params, timeout, persistent, persistentPollingInterval, retries, additionalInfo, requestUUID);
   }
 
+  /**
+   * send two way command.
+   *
+   * @param method method (string)
+   * @param params params (any)
+   * @param timeout timeout (number)
+   * @param persistent persistent (boolean)
+   * @param persistentPollingInterval persistent polling interval (number)
+   * @param retries retries (number)
+   * @param additionalInfo additional info (any)
+   * @param requestUUID request uuid (string)
+   * @returns Observable<any> observable or value
+   */
+
   sendTwoWayCommand(method: string, params?: any, timeout?: number, persistent?: boolean,
                     persistentPollingInterval?: number, retries?: number, additionalInfo?: any, requestUUID?: string): Observable<any> {
     return this.sendCommand(false, method, params, timeout, persistent, persistentPollingInterval, retries, additionalInfo, requestUUID);
   }
+
+  /**
+   * clear rpc error.
+   *
+   */
 
   clearRpcError(): void {
     this.rpcRejection = null;
@@ -820,12 +956,32 @@ export class WidgetSubscription implements IWidgetSubscription {
     this.callbacks.onRpcErrorCleared(this);
   }
 
+  /**
+   * completed command.
+   *
+   */
+
   completedCommand(): void {
     this.executingSubjects.forEach(subject => {
       subject.next();
       subject.complete();
     });
   }
+
+  /**
+   * send command.
+   *
+   * @param oneWayElseTwoWay one way else two way (boolean)
+   * @param method method (string)
+   * @param params params (any)
+   * @param timeout timeout (number)
+   * @param persistent persistent (boolean)
+   * @param persistentPollingInterval persistent polling interval (number)
+   * @param retries retries (number)
+   * @param additionalInfo additional info (any)
+   * @param requestUUID request uuid (string)
+   * @returns Observable<any> observable or value
+   */
 
   sendCommand(oneWayElseTwoWay: boolean, method: string, params?: any, timeout?: number,
               persistent?: boolean, persistentPollingInterval?: number, retries?: number,
@@ -936,6 +1092,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * update.
+   *
+   */
+
   update(isTimewindowTypeChanged = false) {
     if (this.type !== widgetType.rpc) {
       this.widgetTimewindowChangedSubject.next(this.timeWindowConfig);
@@ -956,6 +1117,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * subscribe.
+   *
+   */
+
   subscribe(): void {
     if (!this.subscribed) {
       this.subscribed = true;
@@ -968,6 +1134,14 @@ export class WidgetSubscription implements IWidgetSubscription {
       });
     }
   }
+
+  /**
+   * subscribe all for paginated data.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param keyFilters key filters (KeyFilter[])
+   * @returns Observable<any> observable or value
+   */
 
   subscribeAllForPaginatedData(pageLink: EntityDataPageLink,
                                keyFilters: KeyFilter[]): Observable<any> {
@@ -982,12 +1156,27 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * stop subscription.
+   *
+   * @param datasourceIndex datasource index (number)
+   */
+
   stopSubscription(datasourceIndex: number) {
     const entityDataListener = this.entityDataListeners[datasourceIndex];
     if (entityDataListener) {
       this.ctx.entityDataService.stopSubscription(entityDataListener);
     }
   }
+
+  /**
+   * subscribe for paginated data.
+   *
+   * @param datasourceIndex datasource index (number)
+   * @param pageLink pagination and sort parameters
+   * @param keyFilters key filters (KeyFilter[])
+   * @returns Observable<any> observable or value
+   */
 
   subscribeForPaginatedData(datasourceIndex: number,
                             pageLink: EntityDataPageLink,
@@ -1025,6 +1214,13 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * subscribe for alarms.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param keyFilters key filters (KeyFilter[])
+   */
+
   subscribeForAlarms(pageLink: AlarmDataPageLink,
                      keyFilters: KeyFilter[]) {
     if (this.alarmDataListener) {
@@ -1055,11 +1251,21 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * do subscribe.
+   *
+   */
+
   private doSubscribe() {
     if (this.type !== widgetType.rpc && this.type !== widgetType.alarm) {
       this.dataSubscribe();
     }
   }
+
+  /**
+   * update data timewindow.
+   *
+   */
 
   private updateDataTimewindow() {
     if (!this.hasDataPageLink) {
@@ -1071,6 +1277,11 @@ export class WidgetSubscription implements IWidgetSubscription {
       }
     }
   }
+
+  /**
+   * data subscribe.
+   *
+   */
 
   private dataSubscribe() {
     this.updateDataTimewindow();
@@ -1098,6 +1309,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * unsubscribe.
+   *
+   */
+
   unsubscribe() {
     if (this.type !== widgetType.rpc) {
       if (this.type === widgetType.alarm) {
@@ -1115,6 +1331,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     this.subscribed = false;
   }
 
+  /**
+   * alarms unsubscribe.
+   *
+   */
+
   private alarmsUnsubscribe() {
     if (this.alarmDataListener) {
       this.ctx.alarmDataService.stopSubscription(this.alarmDataListener);
@@ -1122,10 +1343,24 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * check rpc target.
+   *
+   * @param aliasIds alias ids (Array<string>)
+   * @returns boolean observable or value
+   */
+
   private checkRpcTarget(aliasIds: Array<string>): boolean {
     return this.targetDevice?.type === TargetDeviceType.entity &&
           aliasIds.indexOf(this.targetDevice.entityAliasId) > -1;
   }
+
+  /**
+   * check alarm source.
+   *
+   * @param aliasIds alias ids (Array<string>)
+   * @returns boolean observable or value
+   */
 
   private checkAlarmSource(aliasIds: Array<string>): boolean {
     if (this.options.alarmSource && this.options.alarmSource.entityAliasId) {
@@ -1136,6 +1371,13 @@ export class WidgetSubscription implements IWidgetSubscription {
     return false;
   }
 
+  /**
+   * check alarm source filters.
+   *
+   * @param filterIds filter ids (Array<string>)
+   * @returns boolean observable or value
+   */
+
   private checkAlarmSourceFilters(filterIds: Array<string>): boolean {
     if (this.options.alarmSource && this.options.alarmSource.filterId) {
       if (filterIds.indexOf(this.options.alarmSource.filterId) > -1) {
@@ -1144,6 +1386,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
     return false;
   }
+
+  /**
+   * update alarm subscription.
+   *
+   */
 
   private updateAlarmSubscription() {
     this.alarmSource = this.options.alarmSource;
@@ -1170,6 +1417,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * update alarm data subscription.
+   *
+   */
+
   private updateAlarmDataSubscription() {
     if (this.alarmDataListener) {
       const pageLink = this.alarmDataListener.alarmDataSubscriptionOptions.pageLink;
@@ -1177,6 +1429,13 @@ export class WidgetSubscription implements IWidgetSubscription {
       this.subscribeForAlarms(pageLink, keyFilters);
     }
   }
+
+  /**
+   * check subscriptions.
+   *
+   * @param aliasIds alias ids (Array<string>)
+   * @returns boolean observable or value
+   */
 
   private checkSubscriptions(aliasIds: Array<string>): boolean {
     let subscriptionsChanged = false;
@@ -1198,6 +1457,13 @@ export class WidgetSubscription implements IWidgetSubscription {
     return subscriptionsChanged;
   }
 
+  /**
+   * check subscriptions filters.
+   *
+   * @param filterIds filter ids (Array<string>)
+   * @returns boolean observable or value
+   */
+
   private checkSubscriptionsFilters(filterIds: Array<string>): boolean {
     let subscriptionsChanged = false;
     const datasources = this.options.datasources;
@@ -1217,6 +1483,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
     return subscriptionsChanged;
   }
+
+  /**
+   * update data subscriptions.
+   *
+   */
 
   private updateDataSubscriptions() {
     this.configuredDatasources = this.ctx.dashboardUtils.validateAndUpdateDatasources(this.options.datasources);
@@ -1247,6 +1518,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * update paginated data subscriptions.
+   *
+   */
+
   private updatePaginatedDataSubscriptions() {
     for (let datasourceIndex = 0; datasourceIndex < this.entityDataListeners.length; datasourceIndex++) {
       this.stopSubscription(datasourceIndex);
@@ -1262,9 +1538,20 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * is data resolved.
+   *
+   * @returns boolean observable or value
+   */
+
   isDataResolved(): boolean {
     return this.hasResolvedData;
   }
+
+  /**
+   * destroy.
+   *
+   */
 
   destroy(): void {
     this.unsubscribe();
@@ -1277,15 +1564,30 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * notify data loading.
+   *
+   */
+
   private notifyDataLoading() {
     this.loadingData = true;
     this.callbacks.dataLoading(this);
   }
 
+  /**
+   * notify data loaded.
+   *
+   */
+
   private notifyDataLoaded() {
     this.loadingData = false;
     this.callbacks.dataLoading(this);
   }
+
+  /**
+   * update timewindow.
+   *
+   */
 
   private updateTimewindow() {
     this.timeWindow.interval = this.subscriptionTimewindow.aggregation.interval || 1000;
@@ -1310,6 +1612,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * update ts offset.
+   *
+   * @returns boolean observable or value
+   */
+
   private updateTsOffset(): boolean {
     const newOffset = calculateTsOffset(this.timezone);
     if (this.tsOffset !== newOffset) {
@@ -1318,6 +1626,13 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
     return false;
   }
+
+  /**
+   * update realtime subscription.
+   *
+   * @param subscriptionTimewindow subscription timewindow (SubscriptionTimewindow)
+   * @returns SubscriptionTimewindow observable or value
+   */
 
   private updateRealtimeSubscription(subscriptionTimewindow?: SubscriptionTimewindow): SubscriptionTimewindow {
     if (subscriptionTimewindow) {
@@ -1331,6 +1646,11 @@ export class WidgetSubscription implements IWidgetSubscription {
     return this.subscriptionTimewindow;
   }
 
+  /**
+   * update comparison timewindow.
+   *
+   */
+
   private updateComparisonTimewindow() {
     this.comparisonTimeWindow.interval = this.timewindowForComparison.aggregation.interval || 1000;
     this.comparisonTimeWindow.timezone = this.timewindowForComparison.timezone;
@@ -1340,6 +1660,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * update subscription for comparison.
+   *
+   * @returns SubscriptionTimewindow observable or value
+   */
+
   private updateSubscriptionForComparison(): SubscriptionTimewindow {
     this.timewindowForComparison = createTimewindowForComparison(this.subscriptionTimewindow, this.timeForComparison,
       this.comparisonCustomIntervalValue);
@@ -1347,13 +1673,34 @@ export class WidgetSubscription implements IWidgetSubscription {
     return this.timewindowForComparison;
   }
 
+  /**
+   * initial page data changed.
+   *
+   * @param nextPageData next page data (PageData<EntityData>)
+   */
+
   private initialPageDataChanged(nextPageData: PageData<EntityData>) {
     this.callbacks.onInitialPageDataChanged(this, nextPageData);
   }
 
+  /**
+   * force re init.
+   *
+   */
+
   private forceReInit() {
     this.callbacks.forceReInit();
   }
+
+  /**
+   * data loaded.
+   *
+   * @param pageData page data (PageData<EntityData>)
+   * @param data dialog or route input data
+   * @param datasourceIndex datasource index (number)
+   * @param _pageLink  page link (EntityDataPageLink)
+   * @param isUpdate is update (boolean)
+   */
 
   private dataLoaded(pageData: PageData<EntityData>,
                      data: Array<Array<DataSetHolder>>,
@@ -1397,6 +1744,11 @@ export class WidgetSubscription implements IWidgetSubscription {
       }
     }
   }
+
+  /**
+   * configure loaded data.
+   *
+   */
 
   private configureLoadedData() {
     this.datasources.length = 0;
@@ -1500,6 +1852,14 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * entity data to datasource data.
+   *
+   * @param datasource datasource (Datasource)
+   * @param data dialog or route input data
+   * @returns Array<DatasourceData> observable or value
+   */
+
   private entityDataToDatasourceData(datasource: Datasource, data: Array<DataSetHolder>): Array<DatasourceData> {
     let datasourceDataArray: Array<DatasourceData> = [];
     datasourceDataArray = datasourceDataArray.concat(datasource.dataKeys.map((dataKey, keyIndex) => {
@@ -1552,6 +1912,15 @@ export class WidgetSubscription implements IWidgetSubscription {
     return datasourceDataArray;
   }
 
+  /**
+   * entity data to datasource.
+   *
+   * @param configDatasource config datasource (Datasource)
+   * @param entityData entity data (EntityData)
+   * @param index index (number)
+   * @returns Datasource observable or value
+   */
+
   private entityDataToDatasource(configDatasource: Datasource, entityData: EntityData, index: number): Datasource {
     const newDatasource = deepClone(configDatasource);
     const entityInfo = entityDataToEntityInfo(entityData);
@@ -1559,6 +1928,17 @@ export class WidgetSubscription implements IWidgetSubscription {
     newDatasource.generated = index > 0;
     return newDatasource;
   }
+
+  /**
+   * data updated.
+   *
+   * @param data dialog or route input data
+   * @param datasourceIndex datasource index (number)
+   * @param dataIndex data index (number)
+   * @param dataKeyIndex data key index (number)
+   * @param detectChanges detect changes (boolean)
+   * @param isLatest is latest (boolean)
+   */
 
   private dataUpdated(data: DataSetHolder, datasourceIndex: number, dataIndex: number, dataKeyIndex: number,
                       detectChanges: boolean, isLatest: boolean) {
@@ -1568,6 +1948,16 @@ export class WidgetSubscription implements IWidgetSubscription {
       this.processDataUpdated(data, datasourceIndex, dataIndex, dataKeyIndex, detectChanges);
     }
   }
+
+  /**
+   * process data updated.
+   *
+   * @param data dialog or route input data
+   * @param datasourceIndex datasource index (number)
+   * @param dataIndex data index (number)
+   * @param dataKeyIndex data key index (number)
+   * @param detectChanges detect changes (boolean)
+   */
 
   private processDataUpdated(data: DataSetHolder, datasourceIndex: number, dataIndex: number,
                              dataKeyIndex: number, detectChanges: boolean) {
@@ -1612,6 +2002,16 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * process latest data updated.
+   *
+   * @param data dialog or route input data
+   * @param datasourceIndex datasource index (number)
+   * @param dataIndex data index (number)
+   * @param dataKeyIndex data key index (number)
+   * @param detectChanges detect changes (boolean)
+   */
+
   private processLatestDataUpdated(data: DataSetHolder, datasourceIndex: number, dataIndex: number,
                                    dataKeyIndex: number, detectChanges: boolean) {
     const configuredDatasource = this.configuredDatasources[datasourceIndex];
@@ -1636,6 +2036,14 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
   }
 
+  /**
+   * alarms loaded.
+   *
+   * @param alarms alarms (PageData<AlarmData>)
+   * @param allowedEntities allowed entities (number)
+   * @param totalEntities total entities (number)
+   */
+
   private alarmsLoaded(alarms: PageData<AlarmData>, allowedEntities: number, totalEntities: number) {
     this.alarms = alarms;
     if (totalEntities > allowedEntities) {
@@ -1652,9 +2060,24 @@ export class WidgetSubscription implements IWidgetSubscription {
     this.onDataUpdated();
   }
 
+  /**
+   * alarms updated.
+   *
+   * @param _updated  updated (Array<AlarmData>)
+   * @param alarms alarms (PageData<AlarmData>)
+   */
+
   private alarmsUpdated(_updated: Array<AlarmData>, alarms: PageData<AlarmData>) {
     this.alarmsLoaded(alarms, 0, 0);
   }
+
+  /**
+   * update legend.
+   *
+   * @param dataIndex data index (number)
+   * @param data dialog or route input data
+   * @param detectChanges detect changes (boolean)
+   */
 
   private updateLegend(dataIndex: number, data: DataSet, detectChanges: boolean) {
     const valueFormat = this.legendData.keys.find(key => key.dataIndex === dataIndex).valueFormat;
@@ -1676,6 +2099,12 @@ export class WidgetSubscription implements IWidgetSubscription {
     }
     this.callbacks.legendDataUpdated(this, detectChanges !== false);
   }
+
+  /**
+   * load st diff.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   private loadStDiff(): Observable<any> {
     const loadSubject = new ReplaySubject<void>(1);

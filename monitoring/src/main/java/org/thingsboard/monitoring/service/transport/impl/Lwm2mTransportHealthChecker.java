@@ -25,8 +25,9 @@ import org.thingsboard.monitoring.config.transport.TransportMonitoringTarget;
 import org.thingsboard.monitoring.config.transport.TransportType;
 import org.thingsboard.monitoring.service.transport.TransportHealthChecker;
 /**
- * LwM2M observe/write probe for transport health.
+ * LwM2M observe/write probe for transport health validation.
  */
+
 
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -38,6 +39,12 @@ public class Lwm2mTransportHealthChecker extends TransportHealthChecker<Lwm2mTra
     protected Lwm2mTransportHealthChecker(Lwm2mTransportMonitoringConfig config, TransportMonitoringTarget target) {
         super(config, target);
     }
+    /**
+     * Init client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void initClient() throws Exception {
@@ -48,16 +55,36 @@ public class Lwm2mTransportHealthChecker extends TransportHealthChecker<Lwm2mTra
             log.debug("Initialized LwM2M client for endpoint '{}'", endpoint);
         }
     }
+    /**
+     * Send test payload.
+     *
+     * @param payload payload ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void sendTestPayload(String payload) throws Exception {
         lwm2mClient.send(payload, 0);
     }
+    /**
+     * Creates test payload.
+     *
+     * @param testValue test value ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String createTestPayload(String testValue) {
         return testValue;
     }
+    /**
+     * Destroy client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void destroyClient() throws Exception {
@@ -66,6 +93,12 @@ public class Lwm2mTransportHealthChecker extends TransportHealthChecker<Lwm2mTra
             lwm2mClient = null;
         }
     }
+    /**
+     * Returns transport type.
+     *
+     * @return {@link TransportType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TransportType getTransportType() {

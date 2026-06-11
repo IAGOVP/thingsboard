@@ -18,6 +18,12 @@ import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: tb error (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-error`.
+ */
 @Component({
     selector: 'tb-error',
     template: `
@@ -45,10 +51,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             transition('* <=> *', animate('200ms ease-out'))
         ]),
     ],
-    standalone: false
-/**
- * Angular component: tb error UI.
- */
+standalone: false
 })
 export class TbErrorComponent {
   errorValue: string;

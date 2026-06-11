@@ -17,19 +17,39 @@ package org.thingsboard.monitoring.data.notification;
 
 import java.util.List;
 
+
 /**
 
- * Base type for Slack/info/failure/recovery messages.
+ * Base type for Slack/info/failure/recovery monitoring messages.
 
  */
 
+
 public interface Notification {
+    /**
+     * Returns text.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     String getText();
+    /**
+     * Is incident.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default boolean isIncident() {
         return true;
     }
+    /**
+     * Returns affected services.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     default List<AffectedService> getAffectedServices() {
         return List.of();

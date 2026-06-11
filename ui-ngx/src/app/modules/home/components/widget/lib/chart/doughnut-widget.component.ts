@@ -30,15 +30,18 @@ import {
   LatestChartComponentCallbacks
 } from '@home/components/widget/lib/chart/latest-chart.component';
 
+
+/**
+ * Angular component: doughnut widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-doughnut-widget`.
+ */
 @Component({
     selector: 'tb-doughnut-widget',
     templateUrl: './latest-chart-widget.component.html',
     styleUrls: [],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: doughnut widget UI.
- */
+standalone: false
 })
 export class DoughnutWidgetComponent implements OnInit {
 
@@ -59,6 +62,11 @@ export class DoughnutWidgetComponent implements OnInit {
               private translate: TranslateService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const params = this.widgetComponent.typeParameters as any;
     const horizontal  = isDefinedAndNotNull(params.horizontal) ? params.horizontal : false;
@@ -72,9 +80,19 @@ export class DoughnutWidgetComponent implements OnInit {
     };
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     this.latestChart?.onInit();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     this.latestChart?.onDataUpdated();

@@ -18,14 +18,23 @@ package org.thingsboard.rule.engine.transform;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbJsonPath rule node.
+ * JSON configuration POJO for {@link TbJsonPath} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbJsonPathNodeConfiguration implements NodeConfiguration<TbJsonPathNodeConfiguration> {
 
     static final String DEFAULT_JSON_PATH = "$";
     private String jsonPath;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbJsonPathNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbJsonPathNodeConfiguration defaultConfiguration() {

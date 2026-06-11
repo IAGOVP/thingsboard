@@ -21,16 +21,19 @@ import { WidgetService } from '@core/http/widget.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ShapeFillImageSettings, ShapeFillImageType } from '@shared/models/widget/maps/map.models';
 
+
+/**
+ * Angular component: shape fill image settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-shape-fill-image-settings-panel`.
+ */
 @Component({
     selector: 'tb-shape-fill-image-settings-panel',
     templateUrl: './shape-fill-image-settings-panel.component.html',
     providers: [],
     styleUrls: ['./shape-fill-image-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: shape fill image settings panel UI.
- */
+standalone: false
 })
 export class ShapeFillImageSettingsPanelComponent implements OnInit {
 
@@ -51,6 +54,11 @@ export class ShapeFillImageSettingsPanelComponent implements OnInit {
               private widgetService: WidgetService,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.shapeFillImageSettingsFormGroup = this.fb.group(
@@ -74,15 +82,30 @@ export class ShapeFillImageSettingsPanelComponent implements OnInit {
     this.updateValidators();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply shape fill image settings.
+   *
+   */
 
   applyShapeFillImageSettings() {
     const shapeFillImageSettings: ShapeFillImageSettings = this.shapeFillImageSettingsFormGroup.value;
     this.shapeFillImageSettingsApplied.emit(shapeFillImageSettings);
     this.popover?.hide();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const type: ShapeFillImageType = this.shapeFillImageSettingsFormGroup.get('type').value;

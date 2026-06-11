@@ -27,14 +27,21 @@ import static org.thingsboard.server.msa.ui.utils.Const.IMPORT_RULE_CHAIN_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.IMPORT_TXT_FILE_NAME;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultRuleChainPrototype;
 /**
- * Create rule chain import test.
+ * Black-box test: create rule chain import (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Import rule chain")
 public class CreateRuleChainImportTest extends AbstractRuleChainTest {
 
     private final String absolutePathToFileImportRuleChain = getClass().getClassLoader().getResource(IMPORT_RULE_CHAIN_FILE_NAME).getPath();
     private final String absolutePathToFileImportTxt = getClass().getClassLoader().getResource(IMPORT_TXT_FILE_NAME).getPath();
+    /**
+     * Imports rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Drop json file")
@@ -45,6 +52,12 @@ public class CreateRuleChainImportTest extends AbstractRuleChainTest {
 
         assertIsDisplayed(ruleChainsPage.importingFile(IMPORT_RULE_CHAIN_FILE_NAME));
     }
+    /**
+     * Imports rule chain and delete file.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Drop json file and delete it")
@@ -57,6 +70,12 @@ public class CreateRuleChainImportTest extends AbstractRuleChainTest {
         assertIsDisplayed(ruleChainsPage.importingFile(EMPTY_IMPORT_MESSAGE));
         ruleChainsPage.assertEntityIsNotPresent(IMPORT_RULE_CHAIN_FILE_NAME);
     }
+    /**
+     * Imports txt file.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Import txt file")
@@ -67,6 +86,12 @@ public class CreateRuleChainImportTest extends AbstractRuleChainTest {
 
         assertIsDisplayed(ruleChainsPage.importingFile(EMPTY_IMPORT_MESSAGE));
     }
+    /**
+     * Imports rule chain and save.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 30, groups = "smoke")
     @Description("Import rule chain")
@@ -82,6 +107,12 @@ public class CreateRuleChainImportTest extends AbstractRuleChainTest {
 
         assertIsDisplayed(ruleChainsPage.entity(ruleChainName));
     }
+    /**
+     * Imports rule chain and save with same name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 40, groups = "smoke")
     @Description("Import rule chain with same name")

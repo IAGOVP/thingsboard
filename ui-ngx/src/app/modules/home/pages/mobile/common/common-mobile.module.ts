@@ -23,6 +23,9 @@ import { SharedModule } from '@shared/shared.module';
 /**
  * Angular NgModule: common mobile feature area.
  */
+/**
+ * Angular NgModule bundling common mobile (home/mobile pages).
+ */
 @NgModule({
   declarations: [
     EditorPanelComponent
@@ -33,5 +36,5 @@ import { SharedModule } from '@shared/shared.module';
   ],
   exports: [
     EditorPanelComponent
-  ]})
+]})
 export class CommonMobileModule {}

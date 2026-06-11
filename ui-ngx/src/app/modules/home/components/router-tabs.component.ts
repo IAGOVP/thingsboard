@@ -27,14 +27,17 @@ import { ActiveComponentService } from '@core/services/active-component.service'
 import { TbAnchorComponent } from '@shared/components/tb-anchor.component';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 
+
+/**
+ * Angular component: router tabs (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-router-tabs`.
+ */
 @Component({
     selector: 'tb-router-tabs',
     templateUrl: './router-tabs.component.html',
     styleUrls: ['./router-tabs.component.scss'],
-    standalone: false
-/**
- * Angular component: router tabs UI.
- */
+standalone: false
 })
 export class RouterTabsComponent extends PageComponent implements OnInit {
 
@@ -55,6 +58,11 @@ export class RouterTabsComponent extends PageComponent implements OnInit {
               private activeComponentService: ActiveComponentService) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     if (this.activatedRoute.snapshot.data.useChildrenRoutesForTabs) {
@@ -83,6 +91,12 @@ export class RouterTabsComponent extends PageComponent implements OnInit {
     );
   }
 
+  /**
+   * active component changed.
+   *
+   * @param activeComponent active component (any)
+   */
+
   activeComponentChanged(activeComponent: any) {
     this.activeComponentService.setCurrentActiveComponent(activeComponent);
     let snapshot = this.router.routerState.snapshot.root;
@@ -101,10 +115,25 @@ export class RouterTabsComponent extends PageComponent implements OnInit {
     }
   }
 
+  /**
+   * get section path.
+   *
+   * @param activatedRoute activated route (ActivatedRoute)
+   * @returns string observable or value
+   */
+
   private getSectionPath(activatedRoute: ActivatedRoute): string {
     return '/' + activatedRoute.pathFromRoot.map(r => r.snapshot.url)
       .filter(f => !!f[0]).map(f => f.map(f1 => f1.path).join('/')).join('/');
   }
+
+  /**
+   * build tabs.
+   *
+   * @param activatedRoute activated route (ActivatedRoute)
+   * @param sections sections (MenuSection[])
+   * @returns Array<MenuSection> observable or value
+   */
 
   private buildTabs(activatedRoute: ActivatedRoute, sections: MenuSection[]): Array<MenuSection> {
     const sectionPath = this.getSectionPath(activatedRoute);
@@ -117,6 +146,13 @@ export class RouterTabsComponent extends PageComponent implements OnInit {
     }
     return [];
   }
+
+  /**
+   * build tabs for routes.
+   *
+   * @param activatedRoute activated route (ActivatedRoute)
+   * @returns Array<MenuSection> observable or value
+   */
 
   private buildTabsForRoutes(activatedRoute: ActivatedRoute): Array<MenuSection> {
     const sectionPath = this.getSectionPath(activatedRoute);
@@ -144,6 +180,14 @@ export class RouterTabsComponent extends PageComponent implements OnInit {
     return [];
   }
 
+  /**
+   * find root section.
+   *
+   * @param sections sections (MenuSection[])
+   * @param sectionPath section path (string)
+   * @returns MenuSection observable or value
+   */
+
   private findRootSection(sections: MenuSection[], sectionPath: string): MenuSection {
     for (const section of sections) {
       if (sectionPath.endsWith(section.path)) {
@@ -158,6 +202,12 @@ export class RouterTabsComponent extends PageComponent implements OnInit {
     }
     return null;
   }
+
+  /**
+   * build tabs header component.
+   *
+   * @param snapshotData snapshot data (any)
+   */
 
   private buildTabsHeaderComponent(snapshotData: any) {
     const viewContainerRef = this.tabsHeaderComponentAnchor.viewContainerRef;

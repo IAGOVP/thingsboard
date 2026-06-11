@@ -40,8 +40,9 @@ import java.util.stream.Collectors;
 
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 /**
- * Base implementation for customer action node rule nodes.
+ * Abstract base class for customer action node rule nodes (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @Slf4j
 public abstract class TbAbstractCustomerActionNode<C extends TbAbstractCustomerActionNodeConfiguration> implements TbNode {
@@ -52,15 +53,42 @@ public abstract class TbAbstractCustomerActionNode<C extends TbAbstractCustomerA
     private static final String supportedEntityTypesStr = supportedEntityTypes.stream().map(Enum::name).collect(Collectors.joining(", "));
 
     protected C config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = loadCustomerNodeActionConfig(configuration);
     }
+    /**
+     * Creates customer if not exists.
+     *
+     * @return the boolean result
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract boolean createCustomerIfNotExists();
+    /**
+     * Loads customer node action config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link C}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract C loadCustomerNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException;
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -72,8 +100,24 @@ public abstract class TbAbstractCustomerActionNode<C extends TbAbstractCustomerA
                 m -> ctx.tellSuccess(msg),
                 t -> ctx.tellFailure(msg, t), MoreExecutors.directExecutor());
     }
+    /**
+     * Processes customer action.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract ListenableFuture<Void> processCustomerAction(TbContext ctx, TbMsg msg);
+    /**
+     * Returns customer id future.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link CustomerId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<CustomerId> getCustomerIdFuture(TbContext ctx, TbMsg msg) {
         var tenantId = ctx.getTenantId();
@@ -115,6 +159,14 @@ public abstract class TbAbstractCustomerActionNode<C extends TbAbstractCustomerA
         return "Unsupported originator type '" + originatorType +
                 "'! Only " + supportedEntityTypesStr + " types are allowed.";
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) {

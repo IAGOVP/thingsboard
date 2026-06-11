@@ -25,17 +25,19 @@ import { RequestData } from '@shared/models/rpc.models';
 import { TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+
+/**
+ * Angular component: persistent add dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-persistent-add-dialog`.
+ */
 @Component({
     selector: 'tb-persistent-add-dialog',
     templateUrl: './persistent-add-dialog.component.html',
     styleUrls: ['./persistent-add-dialog.component.scss'],
-    standalone: false
 
-/**
-
- * Angular component: persistent add dialog UI.
-
- */
+standalone: false
 })
 
 export class PersistentAddDialogComponent extends DialogComponent<PersistentAddDialogComponent, RequestData> implements OnInit {
@@ -64,10 +66,20 @@ export class PersistentAddDialogComponent extends DialogComponent<PersistentAddD
     );
   }
 
+  /**
+   * POST/PUT entity — save.
+   *
+   */
+
   save() {
     this.requestData = this.persistentFormGroup.value;
     this.close();
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.rpcMessageTypeText = this.translate.instant('widgets.persistent-table.message-types.false');
@@ -79,6 +91,11 @@ export class PersistentAddDialogComponent extends DialogComponent<PersistentAddD
       }
     );
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     this.dialogRef.close(this.requestData);

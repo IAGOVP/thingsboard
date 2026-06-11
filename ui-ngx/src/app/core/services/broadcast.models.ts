@@ -15,11 +15,11 @@
 ///
 
 
+
 /**
-
- * TypeScript models and enums for broadcast message.
-
+ * Broadcast message (ThingsBoard web UI).
  */
+
 
 export interface BroadcastMessage {
   name: string;

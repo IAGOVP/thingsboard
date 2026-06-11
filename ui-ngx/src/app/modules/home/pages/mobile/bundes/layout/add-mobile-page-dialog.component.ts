@@ -24,14 +24,17 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder } from '@angular/forms';
 import { deepTrim } from '@core/utils';
 
+
+/**
+ * Angular component: add mobile page dialog (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-add-mobile-page-dialog`.
+ */
 @Component({
     selector: 'tb-add-mobile-page-dialog',
     templateUrl: './add-mobile-page-dialog.component.html',
     styleUrls: ['./add-mobile-page-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: add mobile page dialog UI.
- */
+standalone: false
 })
 export class AddMobilePageDialogComponent extends DialogComponent<AddMobilePageDialogComponent, CustomMobilePage> {
 
@@ -44,9 +47,19 @@ export class AddMobilePageDialogComponent extends DialogComponent<AddMobilePageD
     super(store, router, dialogRef);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save() {
     if (this.customMobilePage.valid) {

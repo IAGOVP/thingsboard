@@ -22,8 +22,9 @@ import lombok.Data;
  * Created by ashvayka on 19.01.18.
  */
 /**
- * JSON configuration for Tb rule node.
+ * Wrapper holding rule node configuration as {@link com.fasterxml.jackson.databind.JsonNode}.
  */
+
 @Data
 public final class TbNodeConfiguration {
 

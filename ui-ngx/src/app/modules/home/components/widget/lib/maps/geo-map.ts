@@ -38,11 +38,11 @@ import { map, tap } from 'rxjs/operators';
 import { TbMapLayer } from '@home/components/widget/lib/maps/map-layer';
 import { TbMap } from '@home/components/widget/lib/maps/map';
 
+
 /**
-
- * tb geo map.
-
+ * Tb geo map (ThingsBoard web UI).
  */
+
 
 export class TbGeoMap extends TbMap<GeoMapSettings> {
 
@@ -52,9 +52,21 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
     super(ctx, inputSettings, containerElement);
   }
 
+  /**
+   * default settings.
+   *
+   * @returns GeoMapSettings observable or value
+   */
+
   protected defaultSettings(): GeoMapSettings {
     return defaultGeoMapSettings;
   }
+
+  /**
+   * POST/PUT entity — create map.
+   *
+   * @returns Observable<L.Map> observable or value
+   */
 
   protected createMap(): Observable<L.Map> {
     const map = L.map(this.mapElement, {
@@ -67,7 +79,18 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
     return of(map);
   }
 
+  /**
+   * Event handler for resize.
+   *
+   */
+
   protected onResize(): void {}
+
+  /**
+   * fit bounds.
+   *
+   * @param bounds bounds (L.LatLngBounds)
+   */
 
   protected fitBounds(bounds: L.LatLngBounds) {
     if (bounds.isValid()) {
@@ -98,6 +121,12 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
     }
   }
 
+  /**
+   * do setup controls.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   protected doSetupControls(): Observable<any> {
     return this.loadLayers().pipe(
       tap((layers: L.TB.LayerData[]) => {
@@ -122,6 +151,12 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
 
   }
 
+  /**
+   * load layers.
+   *
+   * @returns Observable<L.TB.LayerData[]> observable or value
+   */
+
   private loadLayers(): Observable<L.TB.LayerData[]> {
     const layers = this.settings.layers.map(settings => TbMapLayer.fromSettings(this.ctx, settings));
     return forkJoin(layers.map(layer => layer.loadLayer(this.map))).pipe(
@@ -131,9 +166,22 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
     );
   }
 
+  /**
+   * location data to lat lng.
+   *
+   * @param position position ({x: number; y: number})
+   * @returns L.LatLng observable or value
+   */
+
   public locationDataToLatLng(position: {x: number; y: number}): L.LatLng {
     return L.latLng(position.x, position.y) as L.LatLng;
   }
+
+  /**
+   * lat lng to location data.
+   *
+   * @param position position (L.LatLng)
+   */
 
   public latLngToLocationData(position: L.LatLng): {x: number; y: number} {
     position = position ? latLngPointToBounds(position, this.southWest, this.northEast, 0) : {lat: null, lng: null} as L.LatLng;
@@ -142,6 +190,13 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
       y: position.lng
     }
   }
+
+  /**
+   * polygon data to coordinates.
+   *
+   * @param expression expression (TbPolygonRawCoordinates)
+   * @returns TbPolygonRawCoordinates observable or value
+   */
 
   public polygonDataToCoordinates(expression: TbPolygonRawCoordinates): TbPolygonRawCoordinates {
     return (expression).map((el: TbPolygonRawCoordinate) => {
@@ -154,6 +209,13 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
       }
     }).filter(el => !!el);
   }
+
+  /**
+   * coordinates to polygon data.
+   *
+   * @param coordinates coordinates (TbPolygonCoordinates)
+   * @returns TbPolygonRawCoordinates observable or value
+   */
 
   public coordinatesToPolygonData(coordinates: TbPolygonCoordinates): TbPolygonRawCoordinates {
     if (coordinates.length) {
@@ -169,12 +231,27 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
     return [];
   }
 
+  /**
+   * circle data to coordinates.
+   *
+   * @param circle circle (TbCircleData)
+   * @returns TbCircleData observable or value
+   */
+
   public circleDataToCoordinates(circle: TbCircleData): TbCircleData {
     const centerPoint = latLngPointToBounds(new L.LatLng(circle.latitude, circle.longitude), this.southWest, this.northEast);
     circle.latitude = centerPoint.lat;
     circle.longitude = centerPoint.lng;
     return circle;
   }
+
+  /**
+   * coordinates to circle data.
+   *
+   * @param center center (L.LatLng)
+   * @param radius radius (number)
+   * @returns TbCircleData observable or value
+   */
 
   public coordinatesToCircleData(center: L.LatLng, radius: number): TbCircleData {
     let circleData: TbCircleData = null;
@@ -189,6 +266,13 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
     return circleData;
   }
 
+  /**
+   * polyline data to coordinates.
+   *
+   * @param expression expression (TbPolylineRawCoordinates)
+   * @returns TbPolylineRawCoordinates observable or value
+   */
+
   public polylineDataToCoordinates(expression: TbPolylineRawCoordinates): TbPolylineRawCoordinates {
     return (expression).map((el: TbPolylineRawCoordinate) => {
       if (!Array.isArray(el[0]) && !Array.isArray(el[1]) && el.length === 2) {
@@ -200,6 +284,13 @@ export class TbGeoMap extends TbMap<GeoMapSettings> {
       }
     }).filter(el => !!el);
   }
+
+  /**
+   * coordinates to polyline data.
+   *
+   * @param coordinates coordinates (TbPolylineCoordinates)
+   * @returns TbPolylineRawCoordinates observable or value
+   */
 
   public coordinatesToPolylineData(coordinates: TbPolylineCoordinates): TbPolylineRawCoordinates {
     if (coordinates.length) {

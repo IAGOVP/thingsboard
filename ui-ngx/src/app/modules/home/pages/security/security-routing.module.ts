@@ -29,8 +29,9 @@ import { Observable } from 'rxjs';
 import { TwoFactorAuthProviderType } from '@shared/models/two-factor-auth.models';
 import { TwoFactorAuthenticationService } from '@core/http/two-factor-authentication.service';
 /**
- * Route resolver: loads user profile before activate.
+ * Route resolver: preloads data for user profile (home/security pages).
  */
+
 
 @Injectable()
 export class UserProfileResolver  {
@@ -38,6 +39,12 @@ export class UserProfileResolver  {
   constructor(private store: Store<AppState>,
               private userService: UserService) {
   }
+
+  /**
+   * resolve.
+   *
+   * @returns Observable<User> observable or value
+   */
 
   resolve(): Observable<User> {
     const userId = getCurrentAuthUser(this.store).userId;

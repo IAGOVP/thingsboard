@@ -25,11 +25,13 @@ import static org.thingsboard.server.msa.ui.utils.Const.DEVICE_ACTIVE_STATE;
 import static org.thingsboard.server.msa.ui.utils.Const.DEVICE_INACTIVE_STATE;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 
+
 /**
 
- * Data provider credential.
+ * Data provider credential (UI and test utilities).
 
  */
+
 
 public class DataProviderCredential {
 
@@ -44,6 +46,12 @@ public class DataProviderCredential {
     private static final String CUSTOMER_FIRST_WORD_NAME_PATH = "A";
     private static final String DEFAULT_DEVICE_PROFILE_NAME = "Device Profile";
     private static final String DEFAULT_ASSET_PROFILE_NAME = "Asset Profile";
+    /**
+     * Rule chain name for search by first and second word.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] ruleChainNameForSearchByFirstAndSecondWord() {
@@ -51,6 +59,12 @@ public class DataProviderCredential {
                 {RULE_CHAIN_SECOND_WORD_NAME_PATH},
                 {RULE_CHAIN_FIRST_WORD_NAME_PATH}};
     }
+    /**
+     * Name for search by symbol and number.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] nameForSearchBySymbolAndNumber() {
@@ -72,6 +86,12 @@ public class DataProviderCredential {
                 {NAME + getRandomNumber(), "="},
                 {NAME + getRandomNumber(), "-"}};
     }
+    /**
+     * Name for sort.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] nameForSort() {
@@ -80,12 +100,24 @@ public class DataProviderCredential {
                 {SYMBOL},
                 {NUMBER}};
     }
+    /**
+     * Name for all sort.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] nameForAllSort() {
         return new Object[][]{
                 {NAME + getRandomNumber(), SYMBOL, NUMBER}};
     }
+    /**
+     * Incorrect phone number.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] incorrectPhoneNumber() {
@@ -94,6 +126,12 @@ public class DataProviderCredential {
                 {SHORT_PHONE_NUMBER},
                 {ENTITY_NAME + getRandomNumber()}};
     }
+    /**
+     * Customer name for search by first and second word.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] customerNameForSearchByFirstAndSecondWord() {
@@ -101,6 +139,12 @@ public class DataProviderCredential {
                 {CUSTOMER_FIRST_WORD_NAME_PATH},
                 {CUSTOMER_SECOND_WORD_NAME_PATH}};
     }
+    /**
+     * Device profile search.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] deviceProfileSearch() {
@@ -124,6 +168,12 @@ public class DataProviderCredential {
                 {NAME + getRandomNumber(), "="},
                 {NAME + getRandomNumber(), "-"}};
     }
+    /**
+     * Asset profile search.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] assetProfileSearch() {
@@ -147,6 +197,12 @@ public class DataProviderCredential {
                 {NAME + getRandomNumber(), "="},
                 {NAME + getRandomNumber(), "-"}};
     }
+    /**
+     * Edit menu description.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] editMenuDescription() {
@@ -157,6 +213,12 @@ public class DataProviderCredential {
                 {description, newDescription, description + newDescription},
                 {description, Keys.CONTROL + "A" + Keys.BACK_SPACE, ""}};
     }
+    /**
+     * Enable.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] enable() {
@@ -164,6 +226,12 @@ public class DataProviderCredential {
                 {false},
                 {true}};
     }
+    /**
+     * Edit device label.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider
     public static Object[][] editDeviceLabel() {
@@ -174,6 +242,12 @@ public class DataProviderCredential {
                 {label, newLabel, label + newLabel},
                 {label, Keys.CONTROL + "A" + Keys.BACK_SPACE, ""}};
     }
+    /**
+     * Returns filter data.
+     *
+     * @return the Object[][] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @DataProvider(name = "filterData")
     public static Object[][] getFilterData() {

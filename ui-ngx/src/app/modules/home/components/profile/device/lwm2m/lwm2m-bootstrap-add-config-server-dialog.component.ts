@@ -26,13 +26,16 @@ import {
   ServerConfigTypeTranslationMap
 } from '@home/components/profile/device/lwm2m/lwm2m-profile-config.models';
 
+
+/**
+ * Angular component: lwm2m bootstrap add config server dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-bootstrap-add-config-server-dialog`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-bootstrap-add-config-server-dialog',
     templateUrl: './lwm2m-bootstrap-add-config-server-dialog.component.html',
-    standalone: false
-/**
- * Angular component: lwm2m bootstrap add config server dialog UI.
- */
+standalone: false
 })
 export class Lwm2mBootstrapAddConfigServerDialogComponent extends DialogComponent<Lwm2mBootstrapAddConfigServerDialogComponent> {
 
@@ -52,9 +55,19 @@ export class Lwm2mBootstrapAddConfigServerDialogComponent extends DialogComponen
     });
   }
 
+  /**
+   * POST/PUT entity — add server config.
+   *
+   */
+
   addServerConfig() {
     this.dialogRef.close(this.addConfigServerFormGroup.get('serverType').value === ServerConfigType.BOOTSTRAP);
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel(): void {
     this.dialogRef.close(null);

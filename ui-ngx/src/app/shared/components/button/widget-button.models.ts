@@ -128,15 +128,22 @@ const mainColorVarPrefix = '--tb-widget-button-main-color-';
 const backgroundColorVarPrefix = '--tb-widget-button-background-color-';
 const boxShadowColorVarPrefix = '--tb-widget-button-box-shadow-color-';
 
+
 /**
-
- * TypeScript models and enums for button state css generator.
-
+ * Button state css generator (shared UI components).
  */
+
 
 abstract class ButtonStateCssGenerator {
 
   constructor() {}
+
+  /**
+   * generate state css.
+   *
+   * @param appearance appearance (WidgetButtonAppearance)
+   * @returns string observable or value
+   */
 
   public generateStateCss(appearance: WidgetButtonAppearance): string {
     let mainColor = this.getMainColor(appearance);
@@ -166,13 +173,35 @@ abstract class ButtonStateCssGenerator {
 
   protected abstract get state(): WidgetButtonState;
 
+  /**
+   * get main color.
+   *
+   * @param appearance appearance (WidgetButtonAppearance)
+   * @returns string observable or value
+   */
+
   protected getMainColor(appearance: WidgetButtonAppearance): string {
     return appearance.mainColor || defaultMainColor;
   }
 
+  /**
+   * get background color.
+   *
+   * @param appearance appearance (WidgetButtonAppearance)
+   * @returns string observable or value
+   */
+
   protected getBackgroundColor(appearance: WidgetButtonAppearance): string {
     return appearance.backgroundColor || defaultBackgroundColor;
   }
+
+  /**
+   * generate additional state css.
+   *
+   * @param _mainColor  main color (string)
+   * @param _backgroundColor  background color (string)
+   * @returns string observable or value
+   */
 
   protected generateAdditionalStateCss(_mainColor: string, _backgroundColor: string): string {
     return null;

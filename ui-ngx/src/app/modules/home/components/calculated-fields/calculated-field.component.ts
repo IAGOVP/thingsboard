@@ -44,14 +44,17 @@ import { DeviceInfo } from '@shared/models/device.models';
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 import { EntityService } from '@core/http/entity.service';
 
+
+/**
+ * Angular component: calculated field (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field`.
+ */
 @Component({
     selector: 'tb-calculated-field',
     templateUrl: './calculated-field.component.html',
     styleUrls: ['./calculated-field.component.scss'],
-    standalone: false
-/**
- * Angular component: calculated field UI.
- */
+standalone: false
 })
 export class CalculatedFieldComponent extends EntityComponent<CalculatedFieldsTableEntity> {
 
@@ -84,6 +87,11 @@ export class CalculatedFieldComponent extends EntityComponent<CalculatedFieldsTa
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -112,15 +120,34 @@ export class CalculatedFieldComponent extends EntityComponent<CalculatedFieldsTa
     return this.entitiesTableConfigValue;
   }
 
+  /**
+   * change entity.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   */
+
   changeEntity(entity: BaseData<EntityId>): void {
     this.entityName = entity?.name;
   }
+
+  /**
+   * build form.
+   *
+   * @param _entity  entity (CalculatedFieldInfo)
+   * @returns FormGroup observable or value
+   */
 
   buildForm(_entity?: CalculatedFieldInfo): FormGroup {
     const form = inject(CalculatedFieldFormService).buildForm();
     inject(CalculatedFieldFormService).setupTypeChange(form, inject(DestroyRef), () => this.isEditValue);
     return form;
   }
+
+  /**
+   * update form.
+   *
+   * @param entity entity (CalculatedFieldInfo)
+   */
 
   updateForm(entity: CalculatedFieldInfo) {
     const { configuration = {} as CalculatedFieldConfiguration, type = CalculatedFieldType.SIMPLE, debugSettings = { failuresEnabled: true, allEnabled: true }, entityId = this.entityId, ...value } = entity ?? {};
@@ -132,6 +159,13 @@ export class CalculatedFieldComponent extends EntityComponent<CalculatedFieldsTa
     });
   }
 
+  /**
+   * Event handler for test script.
+   *
+   * @param expression expression (string)
+   * @returns Observable<string> observable or value
+   */
+
   onTestScript(expression?: string): Observable<string> {
     return this.cfFormService.testScript(
       this.entity?.id?.id,
@@ -141,6 +175,11 @@ export class CalculatedFieldComponent extends EntityComponent<CalculatedFieldsTa
       expression
     );
   }
+
+  /**
+   * update form state.
+   *
+   */
 
   updateFormState() {
     if (this.entityForm) {
@@ -154,6 +193,12 @@ export class CalculatedFieldComponent extends EntityComponent<CalculatedFieldsTa
     }
   }
 
+  /**
+   * get owner id.
+   *
+   * @param entityId entity UUID
+   */
+
   getOwnerId(entityId: EntityId) {
     if (entityId?.entityType === EntityType.DEVICE || entityId?.entityType === EntityType.ASSET) {
       this.entityService.getEntity(entityId.entityType, entityId.id, { ignoreLoading: true, ignoreErrors: true }).subscribe(
@@ -165,6 +210,13 @@ export class CalculatedFieldComponent extends EntityComponent<CalculatedFieldsTa
       );
     }
   }
+
+  /**
+   * is assigned to customer.
+   *
+   * @param entity entity (AssetInfo | DeviceInfo)
+   * @returns boolean observable or value
+   */
 
   private isAssignedToCustomer(entity: AssetInfo | DeviceInfo): boolean {
     return entity && entity.customerId && entity.customerId.id !== NULL_UUID;

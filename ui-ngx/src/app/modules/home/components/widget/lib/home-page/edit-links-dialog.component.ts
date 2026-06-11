@@ -31,14 +31,17 @@ export interface EditLinksDialogData {
   links: DocumentationLinks | QuickLinks;
 }
 
+
+/**
+ * Angular component: edit links dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edit-links-dialog`.
+ */
 @Component({
     selector: 'tb-edit-links-dialog',
     templateUrl: './edit-links-dialog.component.html',
     styleUrls: ['./edit-links-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: edit links dialog UI.
- */
+standalone: false
 })
 export class EditLinksDialogComponent extends
   DialogComponent<EditLinksDialogComponent, boolean> implements OnInit {
@@ -62,6 +65,11 @@ export class EditLinksDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const linksControls: Array<AbstractControl> = [];
     for (const link of this.links.links) {
@@ -72,13 +80,33 @@ export class EditLinksDialogComponent extends
     });
   }
 
+  /**
+   * links form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   linksFormArray(): UntypedFormArray {
     return this.editLinksFormGroup.get('links') as UntypedFormArray;
   }
 
+  /**
+   * track by link.
+   *
+   * @param index index (number)
+   * @param linkControl link control (AbstractControl)
+   * @returns any observable or value
+   */
+
   trackByLink(index: number, linkControl: AbstractControl): any {
     return linkControl;
   }
+
+  /**
+   * link drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   linkDrop(event: CdkDragDrop<string[]>) {
     const linksArray = this.editLinksFormGroup.get('links') as UntypedFormArray;
@@ -88,10 +116,21 @@ export class EditLinksDialogComponent extends
     this.update();
   }
 
+  /**
+   * POST/PUT entity — add link.
+   *
+   */
+
   addLink() {
     this.addingLink = this.mode === 'docs' ? { icon: 'notifications' } : null;
     this.addMode = true;
   }
+
+  /**
+   * link added.
+   *
+   * @param link link (DocumentationLink | string)
+   */
 
   linkAdded(link: DocumentationLink | string) {
     this.addMode = false;
@@ -101,10 +140,21 @@ export class EditLinksDialogComponent extends
     this.update();
   }
 
+  /**
+   * DELETE — delete link.
+   *
+   * @param index index (number)
+   */
+
   deleteLink(index: number) {
     (this.editLinksFormGroup.get('links') as UntypedFormArray).removeAt(index);
     this.update();
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     if (this.editLinksFormGroup.valid) {
@@ -119,6 +169,11 @@ export class EditLinksDialogComponent extends
       });
     }
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     this.dialogRef.close(this.updated);

@@ -28,14 +28,17 @@ import { EntityService } from "@core/http/entity.service";
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: edge downlink table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edge-downlink-table`.
+ */
 @Component({
     selector: 'tb-edge-downlink-table',
     templateUrl: './edge-downlink-table.component.html',
     styleUrls: ['./edge-downlink-table.component.scss'],
-    standalone: false
-/**
- * Angular component: edge downlink table UI.
- */
+standalone: false
 })
 export class EdgeDownlinkTableComponent implements OnInit {
 
@@ -79,6 +82,11 @@ export class EdgeDownlinkTableComponent implements OnInit {
               private translate: TranslateService,
               protected store: Store<AppState>) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.dirtyValue = !this.activeValue;

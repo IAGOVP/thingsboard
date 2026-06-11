@@ -23,22 +23,44 @@ import org.thingsboard.server.common.msg.queue.PartitionChangeMsg;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Contract for a rule chain node: init, process {@link TbMsg}, optional destroy.
- * Implementations are annotated with {@link RuleNode}.
+ * Contract for a rule chain node executed by the rule engine.
+ *
+ * <p>Lifecycle: {@link #init(TbContext, TbNodeConfiguration)} → repeated {@link #onMsg(TbContext, TbMsg)} → optional {@link #destroy()}. Implementations are registered with {@link RuleNode}.
  */
+
 public interface TbNode {
 
-    /** Called when the node is started; load configuration and resources. */
+    
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
+
     void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException;
 
     /** Process one message; route via {@link TbContext#tellSuccess}, {@link TbContext#tellNext}, or {@link TbContext#tellFailure}. */
     void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException;
 
-    /** Release script engines, HTTP clients, and other resources. */
+    
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
+
     default void destroy() {
     }
 
-    /** Optional hook on Kafka partition reassignment in cluster deployments. */
+    
+    /**
+     * Cluster hook invoked on Kafka partition reassignment for this tenant/queue.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     */
+
     default void onPartitionChangeMsg(TbContext ctx, PartitionChangeMsg msg) {
     }
 

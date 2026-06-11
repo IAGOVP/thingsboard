@@ -26,6 +26,9 @@ import { OtaUpdateTabsComponent } from '@home/pages/ota-update/ota-update-tabs.c
 /**
  * Angular NgModule: ota update feature area.
  */
+/**
+ * Angular NgModule bundling ota update (home/ota-update pages).
+ */
 @NgModule({
   declarations: [
     OtaUpdateComponent,
@@ -36,5 +39,5 @@ import { OtaUpdateTabsComponent } from '@home/pages/ota-update/ota-update-tabs.c
     SharedModule,
     HomeComponentsModule,
     OtaUpdateRoutingModule
-  ]})
+]})
 export class OtaUpdateModule { }

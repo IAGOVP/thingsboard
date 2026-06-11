@@ -36,6 +36,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: filter select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-select`.
+ */
 @Component({
     selector: 'tb-filter-select',
     templateUrl: './filter-select.component.html',
@@ -49,10 +55,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             provide: ErrorStateMatcher,
             useExisting: FilterSelectComponent
         }],
-    standalone: false
-/**
- * Angular component: filter select UI.
- */
+standalone: false
 })
 export class FilterSelectComponent implements ControlValueAccessor, OnInit, ErrorStateMatcher {
 
@@ -107,18 +110,39 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.loadFilters();
 
     this.filteredFilters = this.selectFilterFormGroup.get('filter').valueChanges
       .pipe(
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue: Filter;
           if (typeof value === 'string' || !value) {
@@ -143,11 +167,25 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
     });
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = this.tbRequired && !this.modelValue;
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -157,6 +195,12 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
       this.selectFilterFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.searchText = '';
@@ -177,12 +221,23 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectFilterFormGroup.get('filter').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (Filter | null)
+   */
 
   updateView(value: Filter | null) {
     const filterId = value ? value.id : null;
@@ -192,9 +247,23 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
     }
   }
 
+  /**
+   * display filter fn.
+   *
+   * @param filter filter (Filter)
+   * @returns string | undefined observable or value
+   */
+
   displayFilterFn(filter?: Filter): string | undefined {
     return filter ? filter.filter : undefined;
   }
+
+  /**
+   * fetch filters.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<Filter>> observable or value
+   */
 
   fetchFilters(searchText?: string): Observable<Array<Filter>> {
     this.searchText = searchText;
@@ -205,6 +274,12 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
     return of(result);
   }
 
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
+
   clear(value: string = '') {
     this.filterInput.nativeElement.value = value;
     this.selectFilterFormGroup.get('filter').patchValue(value, {emitEvent: true});
@@ -214,9 +289,21 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
     }, 0);
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return text?.length > 0;
   }
+
+  /**
+   * filter enter.
+   *
+   */
 
   filterEnter($event: KeyboardEvent) {
     if ($event.keyCode === ENTER) {
@@ -226,6 +313,12 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
       }
     }
   }
+
+  /**
+   * POST/PUT entity — create filter.
+   *
+   * @param filter filter (string)
+   */
 
   createFilter($event: Event, filter: string, focusOnCancel = true) {
     $event.preventDefault();
@@ -248,6 +341,11 @@ export class FilterSelectComponent implements ControlValueAccessor, OnInit, Erro
       );
     }
   }
+
+  /**
+   * load filters.
+   *
+   */
 
   private loadFilters(): void {
     this.filterList = [];

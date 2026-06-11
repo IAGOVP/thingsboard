@@ -18,6 +18,10 @@ import { UserPasswordPolicy } from '@shared/models/settings.models';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { isEqual } from '@core/utils';
 
+/**
+ * TypeScript interfaces, types, and enums for tooltip password error message key (shared TypeScript models).
+ */
+
 export enum TooltipPasswordErrorMessageKey {
   minLength = 'security.password-requirement.password-tooltip-min-length',
   maxLength = 'security.password-requirement.password-tooltip-max-length',

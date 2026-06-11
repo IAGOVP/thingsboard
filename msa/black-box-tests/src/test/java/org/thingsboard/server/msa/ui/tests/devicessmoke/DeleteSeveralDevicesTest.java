@@ -28,14 +28,21 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 /**
- * Delete several devices test.
+ * Black-box test: delete several devices (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Delete several devices")
 public class DeleteSeveralDevicesTest extends AbstractDeviceTest {
 
     private String deviceName1;
     private String deviceName2;
+    /**
+     * Creates devices.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void createDevices() {
@@ -44,6 +51,12 @@ public class DeleteSeveralDevicesTest extends AbstractDeviceTest {
         deviceName1 = device.getName();
         deviceName2 = device1.getName();
     }
+    /**
+     * Deletes devices.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void deleteDevices() {
@@ -54,6 +67,12 @@ public class DeleteSeveralDevicesTest extends AbstractDeviceTest {
     @Test(groups = "smoke")
     @Description("Remove several devices by mark in the checkbox and then click on the trash can icon in the menu " +
             "that appears at the top")
+    /**
+     * Deletes several devices by top btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void deleteSeveralDevicesByTopBtn() {
         sideBarMenuView.goToDevicesPage();
         devicePage.deleteSelectedDevices(deviceName1, deviceName2);
@@ -66,6 +85,12 @@ public class DeleteSeveralDevicesTest extends AbstractDeviceTest {
     @Test(groups = "smoke")
     @Description("Remove several devices by mark all the devices on the page by clicking in the topmost checkbox" +
             " and then clicking on the trash icon in the menu that appears")
+    /**
+     * Select all devices.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void selectAllDevices() {
         sideBarMenuView.goToDevicesPage();
         devicePage.selectAllCheckBox().click();
@@ -79,6 +104,12 @@ public class DeleteSeveralDevicesTest extends AbstractDeviceTest {
     @Test(groups = "smoke")
     @Description("Remove several devices by mark in the checkbox and then click on the trash can icon in the menu " +
             "that appears at the top without refresh")
+    /**
+     * Deletes several without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void deleteSeveralWithoutRefresh() {
         sideBarMenuView.goToDevicesPage();
         devicePage.deleteSelectedDevices(deviceName1, deviceName2);

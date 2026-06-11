@@ -21,14 +21,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { DataToFetch, dataToFetchTranslations, FetchTo } from '@home/components/rule-node/rule-node-config.models';
 
+
+/**
+ * Angular component: customer attributes config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-customer-attributes-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-customer-attributes-config',
     templateUrl: './customer-attributes-config.component.html',
     styleUrls: ['./customer-attributes-config.component.scss'],
-    standalone: false
-/**
- * Angular component: customer attributes config UI.
- */
+standalone: false
 })
 export class CustomerAttributesConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -49,9 +52,22 @@ export class CustomerAttributesConfigComponent extends RuleNodeConfigurationComp
     }
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.customerAttributesConfigForm;
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     const filteDataMapping = {};
@@ -61,6 +77,13 @@ export class CustomerAttributesConfigComponent extends RuleNodeConfigurationComp
     configuration.dataMapping = filteDataMapping;
     return deepTrim(configuration);
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     let dataToFetch: DataToFetch;
@@ -84,6 +107,13 @@ export class CustomerAttributesConfigComponent extends RuleNodeConfigurationComp
     };
   }
 
+  /**
+   * select translation.
+   *
+   * @param latestTelemetryTranslation latest telemetry translation (string)
+   * @param attributesTranslation attributes translation (string)
+   */
+
   public selectTranslation(latestTelemetryTranslation: string, attributesTranslation: string) {
     if (this.customerAttributesConfigForm.get('dataToFetch').value === DataToFetch.LATEST_TELEMETRY) {
       return latestTelemetryTranslation;
@@ -91,6 +121,12 @@ export class CustomerAttributesConfigComponent extends RuleNodeConfigurationComp
       return attributesTranslation;
     }
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.customerAttributesConfigForm = this.fb.group({

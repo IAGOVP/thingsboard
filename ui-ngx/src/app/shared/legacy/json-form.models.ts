@@ -15,8 +15,9 @@
 ///
 
 /**
- * TypeScript models and enums for form option.
+ * Form option (ThingsBoard web UI).
  */
+
 export interface FormOption {
   formDefaults?: {
     startEmpty?: boolean;

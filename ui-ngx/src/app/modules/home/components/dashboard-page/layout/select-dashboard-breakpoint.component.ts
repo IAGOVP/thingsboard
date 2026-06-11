@@ -20,14 +20,17 @@ import { Subscription } from 'rxjs';
 import { BreakpointId } from '@shared/models/dashboard.models';
 import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
 
+
+/**
+ * Angular component: select dashboard breakpoint (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-select-dashboard-breakpoint`.
+ */
 @Component({
     selector: 'tb-select-dashboard-breakpoint',
     templateUrl: './select-dashboard-breakpoint.component.html',
     styleUrls: ['./select-dashboard-breakpoint.component.scss'],
-    standalone: false
-/**
- * Angular component: select dashboard breakpoint UI.
- */
+standalone: false
 })
 export class SelectDashboardBreakpointComponent implements OnInit, OnDestroy {
 
@@ -42,6 +45,11 @@ export class SelectDashboardBreakpointComponent implements OnInit, OnDestroy {
 
   constructor(private dashboardUtils: DashboardUtilsService) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.layoutDataChanged$ = this.dashboardCtrl.layouts.main.layoutCtx.layoutDataChanged.subscribe(() => {
@@ -62,22 +70,53 @@ export class SelectDashboardBreakpointComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.layoutDataChanged$.unsubscribe();
   }
+
+  /**
+   * select layout changed.
+   *
+   */
 
   selectLayoutChanged() {
     this.dashboardUtils.updatedLayoutForBreakpoint(this.dashboardCtrl.layouts.main, this.selectedBreakpoint);
     this.dashboardCtrl.updateLayoutSizes();
   }
 
+  /**
+   * get name.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
+
   getName(breakpointId: BreakpointId): string {
     return this.dashboardUtils.getBreakpointName(breakpointId);
   }
 
+  /**
+   * get icon.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
+
   getIcon(breakpointId: BreakpointId): string {
     return this.dashboardUtils.getBreakpointIcon(breakpointId);
   }
+
+  /**
+   * get size description.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
 
   getSizeDescription(breakpointId: BreakpointId): string {
     return this.dashboardUtils.getBreakpointSizeDescription(breakpointId);

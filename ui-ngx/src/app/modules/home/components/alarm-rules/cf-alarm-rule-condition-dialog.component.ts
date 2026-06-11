@@ -52,15 +52,18 @@ export interface CfAlarmRuleConditionDialogData {
   testScript: (expression: string) => Observable<string>;
 }
 
+
+/**
+ * Angular component: cf alarm rule condition dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-cf-alarm-rule-condition-dialog`.
+ */
 @Component({
     selector: 'tb-cf-alarm-rule-condition-dialog',
     templateUrl: './cf-alarm-rule-condition-dialog.component.html',
     providers: [],
     styleUrls: ['./cf-alarm-rules-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: cf alarm rule condition dialog UI.
- */
+standalone: false
 })
 export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarmRuleConditionDialogComponent, AlarmRuleCondition> {
 
@@ -206,6 +209,13 @@ export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarm
     }
   }
 
+  /**
+   * update static value validator.
+   *
+   * @param type type (AlarmRuleConditionType)
+   * @param dynamicValue dynamic value (boolean)
+   */
+
   updateStaticValueValidator(type: AlarmRuleConditionType, dynamicValue: boolean) {
     const control = this.conditionFormGroup.get(type === AlarmRuleConditionType.DURATION ? 'value' : 'count');
     if (dynamicValue) {
@@ -217,6 +227,12 @@ export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarm
     }
   }
 
+  /**
+   * update expression type validator.
+   *
+   * @param type type ('SIMPLE' | 'TBEL')
+   */
+
   updateExpressionTypeValidator(type: 'SIMPLE' | 'TBEL') {
     if (type === 'SIMPLE') {
       this.conditionFormGroup.get(`expression.expression`).disable({emitEvent: false});
@@ -226,6 +242,12 @@ export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarm
       this.conditionFormGroup.get(`expression.filters`).disable({emitEvent: false});
     }
   }
+
+  /**
+   * check is no data.
+   *
+   * @param filters filters (Array<AlarmRuleFilter>)
+   */
 
   private checkIsNoData(filters: Array<AlarmRuleFilter>) {
     this.isNoData = this.hasNoData(filters);
@@ -239,6 +261,12 @@ export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarm
     }
   }
 
+  /**
+   * has no data.
+   *
+   * @param data dialog or route input data
+   */
+
   private hasNoData(data: Array<AlarmRuleFilter>) {
     const search = (filter) => {
       if (!filter) return false;
@@ -250,6 +278,12 @@ export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarm
     };
     return search(data);
   };
+
+  /**
+   * update validators.
+   *
+   * @param type type (AlarmRuleConditionType)
+   */
 
   private updateValidators(type: AlarmRuleConditionType) {
     switch (type) {
@@ -280,6 +314,12 @@ export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarm
         break;
     }
   }
+
+  /**
+   * update spec text.
+   *
+   * @param type type (AlarmRuleConditionType)
+   */
 
   private updateSpecText(type: AlarmRuleConditionType) {
     this.specText = '';
@@ -330,9 +370,19 @@ export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarm
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close({
@@ -340,6 +390,11 @@ export class CfAlarmRuleConditionDialogComponent extends DialogComponent<CfAlarm
       type: this.conditionFormGroup.get('type').value,
     } as AlarmRuleCondition);
   }
+
+  /**
+   * Event handler for test script.
+   *
+   */
 
   onTestScript($event: Event) {
     $event?.preventDefault();

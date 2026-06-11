@@ -30,14 +30,17 @@ import { WidgetConfigComponent } from '@home/components/widget/widget-config.com
 import { DataKeySettingsFunction } from '@home/components/widget/lib/settings/common/key/data-keys.component.models';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: edit widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edit-widget`.
+ */
 @Component({
     selector: 'tb-edit-widget',
     templateUrl: './edit-widget.component.html',
     styleUrls: ['./edit-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: edit widget UI.
- */
+standalone: false
 })
 export class EditWidgetComponent extends PageComponent implements OnInit, OnChanges {
 
@@ -102,6 +105,11 @@ export class EditWidgetComponent extends PageComponent implements OnInit, OnChan
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.loadWidgetConfig();
   }
@@ -126,6 +134,11 @@ export class EditWidgetComponent extends PageComponent implements OnInit, OnChan
     }
   }
 
+  /**
+   * Event handler for apply widget config.
+   *
+   */
+
   onApplyWidgetConfig() {
     if (this.widgetFormGroup.valid) {
       this.currentWidgetConfigChanged = true;
@@ -133,10 +146,20 @@ export class EditWidgetComponent extends PageComponent implements OnInit, OnChan
     }
   }
 
+  /**
+   * Event handler for revert widget config.
+   *
+   */
+
   onRevertWidgetConfig() {
     this.currentWidgetConfigChanged = true;
     this.revertWidgetConfig.emit();
   }
+
+  /**
+   * load widget config.
+   *
+   */
 
   private loadWidgetConfig() {
     if (!this.widget) {

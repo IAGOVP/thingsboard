@@ -55,6 +55,12 @@ import {
 } from '@shared/models/widget-settings.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: time series chart threshold row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-threshold-row`.
+ */
 @Component({
     selector: 'tb-time-series-chart-threshold-row',
     templateUrl: './time-series-chart-threshold-row.component.html',
@@ -67,10 +73,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart threshold row UI.
- */
+standalone: false
 })
 export class TimeSeriesChartThresholdRowComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -135,6 +138,11 @@ export class TimeSeriesChartThresholdRowComponent implements ControlValueAccesso
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.thresholdFormGroup = this.fb.group({
       type: [null, []],
@@ -198,12 +206,30 @@ export class TimeSeriesChartThresholdRowComponent implements ControlValueAccesso
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -218,6 +244,12 @@ export class TimeSeriesChartThresholdRowComponent implements ControlValueAccesso
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartThreshold)
+   */
 
   writeValue(value: TimeSeriesChartThreshold): void {
     this.modelValue = value;
@@ -249,6 +281,11 @@ export class TimeSeriesChartThresholdRowComponent implements ControlValueAccesso
     this.cd.markForCheck();
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     const type: ValueSourceType = this.thresholdFormGroup.get('type').value;
     if (type === ValueSourceType.constant) {
@@ -268,6 +305,11 @@ export class TimeSeriesChartThresholdRowComponent implements ControlValueAccesso
       this.entityKeyFormControl.enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.thresholdFormGroup.value;

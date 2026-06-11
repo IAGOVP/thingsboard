@@ -27,17 +27,37 @@ import java.util.UUID;
 
  */
 
+
 /**
 
- * Request DTO for rule engine calculated field system aware.
+ * Async request DTO for rule engine calculated field system aware (rule engine public API contracts and services).
 
  */
 
+
 public interface CalculatedFieldSystemAwareRequest {
+    /**
+     * Returns previous calculated field ids.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     List<CalculatedFieldId> getPreviousCalculatedFieldIds();
+    /**
+     * Returns tb msg id.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     UUID getTbMsgId();
+    /**
+     * Returns tb msg type.
+     *
+     * @return {@link TbMsgType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     TbMsgType getTbMsgType();
 

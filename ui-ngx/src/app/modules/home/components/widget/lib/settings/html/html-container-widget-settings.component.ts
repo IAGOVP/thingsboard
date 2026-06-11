@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { htmlContainerDefaultSettings } from '@home/components/widget/lib/html/html-container-widget.models';
 
+
+/**
+ * Angular component: html container widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-html-container-widget-settings`.
+ */
 @Component({
     selector: 'tb-html-container-widget-settings',
     templateUrl: './html-container-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: html container widget settings UI.
- */
+standalone: false
 })
 export class HtmlContainerWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -42,13 +45,31 @@ export class HtmlContainerWidgetSettingsComponent extends WidgetSettingsComponen
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.htmlContainerWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return htmlContainerDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.htmlContainerWidgetSettingsForm = this.fb.group({
@@ -56,11 +77,25 @@ export class HtmlContainerWidgetSettingsComponent extends WidgetSettingsComponen
     });
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return {
       htmlContainerSettings: settings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return settings.htmlContainerSettings;

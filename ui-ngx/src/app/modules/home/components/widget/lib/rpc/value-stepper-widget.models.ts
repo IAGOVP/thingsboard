@@ -54,11 +54,11 @@ export const valueStepperTypeImages = new Map<ValueStepperType, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for value stepper widget settings.
-
+ * Value stepper widget settings (ThingsBoard web UI).
  */
+
 
 export interface ValueStepperWidgetSettings {
   initialState: GetValueSettings<number>;

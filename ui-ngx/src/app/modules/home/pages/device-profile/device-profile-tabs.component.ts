@@ -26,14 +26,17 @@ import {
 } from '@shared/models/device.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: device profile tabs (home/device-profile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile-tabs`.
+ */
 @Component({
     selector: 'tb-device-profile-tabs',
     templateUrl: './device-profile-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device profile tabs UI.
- */
+standalone: false
 })
 export class DeviceProfileTabsComponent extends EntityTabsComponent<DeviceProfile> implements OnInit {
 
@@ -53,6 +56,11 @@ export class DeviceProfileTabsComponent extends EntityTabsComponent<DeviceProfil
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     super.ngOnInit();
     this.detailsForm.get('transportType').valueChanges.pipe(
@@ -61,6 +69,12 @@ export class DeviceProfileTabsComponent extends EntityTabsComponent<DeviceProfil
       this.isTransportTypeChanged = true;
     });
   }
+
+  /**
+   * set entity.
+   *
+   * @param entity entity (DeviceProfile)
+   */
 
   protected setEntity(entity: DeviceProfile) {
     this.isTransportTypeChanged = false;

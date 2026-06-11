@@ -20,11 +20,13 @@ import org.thingsboard.common.util.NoOpFutureCallback;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 /**
 
- * Unit test for attributes delete request rule node.
+ * Unit test for attributes delete request (rule engine public API contracts and services).
 
  */
+
 
 class AttributesDeleteRequestTest {
 

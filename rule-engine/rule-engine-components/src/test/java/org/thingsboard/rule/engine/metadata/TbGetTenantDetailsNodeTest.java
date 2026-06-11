@@ -53,8 +53,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb get tenant details node rule node.
+ * Unit test for tb get tenant details node (entity metadata and related-data fetch nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbGetTenantDetailsNodeTest {
@@ -69,6 +70,11 @@ public class TbGetTenantDetailsNodeTest {
     private TbNodeConfiguration nodeConfiguration;
     private TbMsg msg;
     private Tenant tenant;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -88,6 +94,11 @@ public class TbGetTenantDetailsNodeTest {
         tenant.setEmail("email@tenant.com");
         tenant.setAdditionalInfo(JacksonUtil.toJsonNode("{\"someProperty\":\"someValue\",\"description\":\"Tenant description\"}"));
     }
+    /**
+     * Given config with null fetch to when init then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenConfigWithNullFetchTo_whenInit_thenException() {
@@ -103,6 +114,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(exception.getMessage()).isEqualTo("FetchTo option can't be null! Allowed values: " + Arrays.toString(TbMsgSource.values()));
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given default config when init then ok.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenInit_thenOK() {
@@ -110,6 +126,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(config.getDetailsList()).isEqualTo(Collections.emptyList());
         assertThat(config.getFetchTo()).isEqualTo(TbMsgSource.DATA);
     }
+    /**
+     * Given custom config when init then ok.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenCustomConfig_whenInit_thenOK() throws TbNodeException {
@@ -127,6 +148,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(config.getFetchTo()).isEqualTo(TbMsgSource.METADATA);
         assertThat(node.fetchTo).isEqualTo(TbMsgSource.METADATA);
     }
+    /**
+     * Given msg data is not an json object and fetch to data when on msg then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMsgDataIsNotAnJsonObjectAndFetchToData_whenOnMsg_thenException() {
@@ -146,6 +172,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(exception.getMessage()).isEqualTo("Message body is not an object!");
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given all entity details and fetch to data when on msg then should tell success and fetch all to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenAllEntityDetailsAndFetchToData_whenOnMsg_thenShouldTellSuccessAndFetchAllToData() {
@@ -179,6 +210,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(expectedMsgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given some entity details and fetch to metadata when on msg then should tell success and fetch some to meta data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenSomeEntityDetailsAndFetchToMetadata_whenOnMsg_thenShouldTellSuccessAndFetchSomeToMetaData() {
@@ -204,6 +240,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(expectedMsgMetaData);
     }
+    /**
+     * Given not present entity details and fetch to data when on msg then should tell success and fetch nothing to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenNotPresentEntityDetailsAndFetchToData_whenOnMsg_thenShouldTellSuccessAndFetchNothingToData() {
@@ -228,6 +269,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given did not find tenant when on msg then should tell success and fetch nothing to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDidNotFindTenant_whenOnMsg_thenShouldTellSuccessAndFetchNothingToData() {
@@ -250,6 +296,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given null description and add info entity details when on msg then should tell success and fetch nothing to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenNullDescriptionAndAddInfoEntityDetails_whenOnMsg_thenShouldTellSuccessAndFetchNothingToData() {
@@ -272,6 +323,11 @@ public class TbGetTenantDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given old config when upgrade then should return true result with new config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenOldConfig_whenUpgrade_thenShouldReturnTrueResultWithNewConfig() throws Exception {

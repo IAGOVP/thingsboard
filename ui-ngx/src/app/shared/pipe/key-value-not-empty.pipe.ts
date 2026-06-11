@@ -26,14 +26,17 @@ import {
 import { KeyValue } from '@angular/common';
 import { isDefinedAndNotNull } from '@core/utils';
 
-@Pipe({
-  name: 'keyValueIsNotEmpty',
-  pure: false,
-  standalone: true,
+
 /**
  * Angular pipe: key value is not empty.
  */
-})
+@Pipe({
+  name: 'keyValueIsNotEmpty',
+  pure: false,
+/**
+ * Angular pipe: key value is not empty (ThingsBoard web UI).
+ */
+  standalone: true,})
 export class KeyValueIsNotEmptyPipe implements PipeTransform {
   private differs: KeyValueDiffers = inject(KeyValueDiffers);
   private differ!: KeyValueDiffer<string, unknown>;
@@ -41,6 +44,12 @@ export class KeyValueIsNotEmptyPipe implements PipeTransform {
 
   // This is a custom implementation of angular keyvalue pipe
   // https://github.com/angular/angular/blob/main/packages/common/src/pipes/keyvalue_pipe.ts
+  /**
+   * transform.
+   *
+   * @param input input (Record<string, unknown>)
+   * @returns Array<KeyValue<string, unknown>> observable or value
+   */
   transform(
     input: Record<string, unknown>,
   ): Array<KeyValue<string, unknown>> {
@@ -63,6 +72,14 @@ export class KeyValueIsNotEmptyPipe implements PipeTransform {
 
     return this.keyValues;
   }
+
+  /**
+   * make key value pair.
+   *
+   * @param key key (string)
+   * @param value value (unknown)
+   * @returns KeyValue<string, unknown> observable or value
+   */
 
   private makeKeyValuePair(key: string, value: unknown): KeyValue<string, unknown> {
     return {key, value};

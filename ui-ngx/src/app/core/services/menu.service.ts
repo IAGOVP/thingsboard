@@ -25,7 +25,9 @@ import { AuthState } from '@core/auth/auth.models';
 import { NavigationEnd, Router } from '@angular/router';
 
 /**
- * Angular HTTP service: menu REST wrappers (`@core/http`).
+ * Angular injectable service: menu (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -56,6 +58,11 @@ export class MenuService {
     );
   }
 
+  /**
+   * build menu.
+   *
+   */
+
   private buildMenu() {
     this.store.pipe(select(selectAuth), take(1)).subscribe(
       (authState: AuthState) => {
@@ -72,6 +79,11 @@ export class MenuService {
     );
   }
 
+  /**
+   * update opened menu sections.
+   *
+   */
+
   private updateOpenedMenuSections() {
     const url = this.router.url;
     const openedMenuSections = getCurrentOpenedMenuSections(this.store);
@@ -82,6 +94,13 @@ export class MenuService {
       );
     }
   }
+
+  /**
+   * all menu links.
+   *
+   * @param sections sections (Array<MenuSection>)
+   * @returns Array<MenuSection> observable or value
+   */
 
   private allMenuLinks(sections: Array<MenuSection>): Array<MenuSection> {
     const result: Array<MenuSection> = [];
@@ -96,6 +115,13 @@ export class MenuService {
     return result;
   }
 
+  /**
+   * all menu sections.
+   *
+   * @param sections sections (Array<MenuSection>)
+   * @returns Array<MenuSection> observable or value
+   */
+
   private allMenuSections(sections: Array<MenuSection>): Array<MenuSection> {
     const result: Array<MenuSection> = [];
     for (const section of sections) {
@@ -107,27 +133,65 @@ export class MenuService {
     return result;
   }
 
+  /**
+   * menu sections.
+   *
+   * @returns Observable<Array<MenuSection>> observable or value
+   */
+
   public menuSections(): Observable<Array<MenuSection>> {
     return this.menuSections$;
   }
+
+  /**
+   * home sections.
+   *
+   * @returns Observable<Array<HomeSection>> observable or value
+   */
 
   public homeSections(): Observable<Array<HomeSection>> {
     return this.homeSections$;
   }
 
+  /**
+   * available menu links.
+   *
+   * @returns Observable<Array<MenuSection>> observable or value
+   */
+
   public availableMenuLinks(): Observable<Array<MenuSection>> {
     return this.availableMenuLinks$;
   }
 
+  /**
+   * available menu sections.
+   *
+   * @returns Observable<Array<MenuSection>> observable or value
+   */
+
   public availableMenuSections(): Observable<Array<MenuSection>> {
     return this.availableMenuSections$;
   }
+
+  /**
+   * menu link by id.
+   *
+   * @param id id (MenuId | string)
+   * @returns Observable<MenuSection | undefined> observable or value
+   */
 
   public menuLinkById(id: MenuId | string): Observable<MenuSection | undefined> {
     return this.availableMenuLinks$.pipe(
       map((links) => links.find(link => link.id === id))
     );
   }
+
+  /**
+   * menu links by ids.
+   *
+   * @param ids ids (string[])
+   * @returns Observable<Array<MenuSection>> observable or value
+   */
 
   public menuLinksByIds(ids: string[]): Observable<Array<MenuSection>> {
     return this.availableMenuLinks$.pipe(

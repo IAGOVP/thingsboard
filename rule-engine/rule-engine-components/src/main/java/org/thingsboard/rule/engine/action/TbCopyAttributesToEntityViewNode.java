@@ -52,7 +52,13 @@ import static org.thingsboard.server.common.data.msg.TbMsgType.POST_ATTRIBUTES_R
 import static org.thingsboard.server.common.data.msg.TbNodeConnectionType.SUCCESS;
 
 /**
- * Rule engine action node 'copy to view': Copy attributes from asset/device to entity view and changes message originator to related entity view Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>copy to view</b>.
+ *
+ * <p>Copy attributes from asset/device to entity view and changes message originator to related entity view
+ * <br>Copy attributes from asset/device to related entity view according to entity view configuration. \n 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link EmptyNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/copy-to-view/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/copy-to-view/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -67,9 +73,23 @@ import static org.thingsboard.server.common.data.msg.TbNodeConnectionType.SUCCES
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/copy-to-view/"
 )
 public class TbCopyAttributesToEntityViewNode implements TbNode {
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) {}
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

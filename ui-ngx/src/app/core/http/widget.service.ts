@@ -46,7 +46,9 @@ import {
 import { ResourcesService } from '@core/services/resources.service';
 
 /**
- * Angular HTTP service: widget REST wrappers (`@core/http`).
+ * Angular injectable service: widget (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -76,11 +78,24 @@ export class WidgetService {
     );
   }
 
+  /**
+   * get widget scope variables.
+   *
+   * @returns string[] observable or value
+   */
+
   public getWidgetScopeVariables(): string[] {
     return ['tinycolor', 'cssjs', 'moment', '$', 'jQuery'];
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundles${pageLink.toQuery()}&tenantOnly=${tenantOnly}&fullSearch=${fullSearch}&scadaFirst=${scadaFirst}, ...`. */
+  
+  /**
+   * get all widgets bundles.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<WidgetsBundle>> observable or value
+   */
+
 
   public getAllWidgetsBundles(config?: RequestConfig): Observable<Array<WidgetsBundle>> {
     return this.loadWidgetsBundleCache(config).pipe(
@@ -88,7 +103,14 @@ export class WidgetService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundles${pageLink.toQuery()}&tenantOnly=${tenantOnly}&fullSearch=${fullSearch}&scadaFirst=${scadaFirst}, ...`. */
+  
+  /**
+   * get system widgets bundles.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<WidgetsBundle>> observable or value
+   */
+
 
   public getSystemWidgetsBundles(config?: RequestConfig): Observable<Array<WidgetsBundle>> {
     return this.loadWidgetsBundleCache(config).pipe(
@@ -96,7 +118,14 @@ export class WidgetService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundles${pageLink.toQuery()}&tenantOnly=${tenantOnly}&fullSearch=${fullSearch}&scadaFirst=${scadaFirst}, ...`. */
+  
+  /**
+   * get tenant widgets bundles.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<WidgetsBundle>> observable or value
+   */
+
 
   public getTenantWidgetsBundles(config?: RequestConfig): Observable<Array<WidgetsBundle>> {
     return this.loadWidgetsBundleCache(config).pipe(
@@ -104,7 +133,15 @@ export class WidgetService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundles${pageLink.toQuery()}&tenantOnly=${tenantOnly}&fullSearch=${fullSearch}&scadaFirst=${scadaFirst}, ...`. */
+  
+  /**
+   * get widget bundles.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<WidgetsBundle>> observable or value
+   */
+
 
   public getWidgetBundles(pageLink: PageLink, fullSearch = false,
                           tenantOnly = false, scadaFirst = false, config?: RequestConfig): Observable<PageData<WidgetsBundle>> {
@@ -114,21 +151,45 @@ export class WidgetService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundle/${widgetsBundleId}, ...`. */
+  
+  /**
+   * get widgets bundle.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetsBundle> observable or value
+   */
+
 
   public getWidgetsBundle(widgetsBundleId: string,
                           config?: RequestConfig): Observable<WidgetsBundle> {
     return this.http.get<WidgetsBundle>(`/api/widgetsBundle/${widgetsBundleId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundle/${widgetsBundleId}?inlineImages=true, ...`. */
+  
+  /**
+   * export widgets bundle.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetsBundle> observable or value
+   */
+
 
   public exportWidgetsBundle(widgetsBundleId: string,
                           config?: RequestConfig): Observable<WidgetsBundle> {
     return this.http.get<WidgetsBundle>(`/api/widgetsBundle/${widgetsBundleId}?inlineImages=true`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundle, ...`. */
+  
+  /**
+   * POST/PUT entity — save widgets bundle.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetsBundle> observable or value
+   */
+
 
   public saveWidgetsBundle(widgetsBundle: WidgetsBundle,
                            config?: RequestConfig): Observable<WidgetsBundle> {
@@ -140,7 +201,16 @@ export class WidgetService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundle/${widgetsBundleId}/widgetTypes, ...`. */
+  
+  /**
+   * update widgets bundle widget types.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param widgetTypeIds widget type ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public updateWidgetsBundleWidgetTypes(widgetsBundleId: string, widgetTypeIds: Array<string>,
                                         config?: RequestConfig): Observable<void> {
@@ -148,13 +218,29 @@ export class WidgetService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundle/${widgetsBundleId}/widgetTypeFqns, ...`. */
+  
+  /**
+   * update widgets bundle widget fqns.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param widgetTypeFqns widget type fqns (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public updateWidgetsBundleWidgetFqns(widgetsBundleId: string, widgetTypeFqns: Array<string>,
                                        config?: RequestConfig): Observable<void> {
     return this.http.post<void>(`/api/widgetsBundle/${widgetsBundleId}/widgetTypeFqns`, widgetTypeFqns,
       defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * DELETE — delete widgets bundle.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public deleteWidgetsBundle(widgetsBundleId: string, config?: RequestConfig) {
     return this.http.delete(`/api/widgetsBundle/${widgetsBundleId}`, defaultHttpOptionsFromConfig(config))
@@ -163,7 +249,15 @@ export class WidgetService {
       );
   }
 
-  /** Calls ThingsBoard REST `/api/widgetTypes?widgetsBundleId=${widgetsBundleId}, ...`. */
+  
+  /**
+   * get bundle widget types.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<WidgetType>> observable or value
+   */
+
 
   public getBundleWidgetTypes(widgetsBundleId: string,
                               config?: RequestConfig): Observable<Array<WidgetType>> {
@@ -171,7 +265,15 @@ export class WidgetService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetTypesDetails?widgetsBundleId=${widgetsBundleId}, ...`. */
+  
+  /**
+   * export bundle widget types details.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<WidgetTypeDetails>> observable or value
+   */
+
 
   public exportBundleWidgetTypesDetails(widgetsBundleId: string,
                                         includeResources = true,
@@ -183,7 +285,15 @@ export class WidgetService {
     return this.http.get<Array<WidgetTypeDetails>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetTypeFqns?widgetsBundleId=${widgetsBundleId}, ...`. */
+  
+  /**
+   * get bundle widget type fqns.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<string>> observable or value
+   */
+
 
   public getBundleWidgetTypeFqns(widgetsBundleId: string,
                                  config?: RequestConfig): Observable<Array<string>> {
@@ -191,7 +301,15 @@ export class WidgetService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetTypesInfos${pageLink.toQuery()}&widgetsBundleId=${widgetsBundleId}, ...`. */
+  
+  /**
+   * get bundle widget type infos list.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<WidgetTypeInfo>> observable or value
+   */
+
 
   public getBundleWidgetTypeInfosList(widgetsBundleId: string,
                                       config?: RequestConfig): Observable<Array<WidgetTypeInfo>> {
@@ -200,7 +318,17 @@ export class WidgetService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/widgetTypesInfos${pageLink.toQuery()}&widgetsBundleId=${widgetsBundleId}, ...`. */
+  
+  /**
+   * get bundle widget type infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param widgetTypes widget types (Array<widgetType>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<WidgetTypeInfo>> observable or value
+   */
+
 
   public getBundleWidgetTypeInfos(pageLink: PageLink,
                                   widgetsBundleId: string,
@@ -218,14 +346,33 @@ export class WidgetService {
     return this.http.get<PageData<WidgetTypeInfo>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetType?fqn=${fullFqn}, ...`. */
+  
+  /**
+   * get widget type.
+   *
+   * @param fullFqn full fqn (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetType> observable or value
+   */
+
 
   public getWidgetType(fullFqn: string, config?: RequestConfig): Observable<WidgetType> {
     return this.http.get<WidgetType>(`/api/widgetType?fqn=${fullFqn}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetType, ...`. */
+  
+  /**
+   * POST/PUT entity — save widget type details.
+   *
+   * @param widgetInfo widget info (WidgetInfo)
+   * @param id id (WidgetTypeId)
+   * @param createdTime created time (number)
+   * @param version version (number)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetTypeDetails> observable or value
+   */
+
 
   public saveWidgetTypeDetails(widgetInfo: WidgetInfo,
                                id: WidgetTypeId,
@@ -240,7 +387,15 @@ export class WidgetService {
       }));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetType?updateExistingByFqn=true, ...`. */
+  
+  /**
+   * POST/PUT entity — save imported widget type details.
+   *
+   * @param widgetTypeDetails widget type details (WidgetTypeDetails)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetTypeDetails> observable or value
+   */
+
 
   public saveImportedWidgetTypeDetails(widgetTypeDetails: WidgetTypeDetails,
                                        config?: RequestConfig): Observable<WidgetTypeDetails> {
@@ -251,7 +406,15 @@ export class WidgetService {
       }));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetType/${widgetTypeId}, ...`. */
+  
+  /**
+   * get widget type by id.
+   *
+   * @param widgetTypeId widget type id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetTypeDetails> observable or value
+   */
+
 
   public getWidgetTypeById(widgetTypeId: string,
                            config?: RequestConfig): Observable<WidgetTypeDetails> {
@@ -259,7 +422,15 @@ export class WidgetService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetType/${widgetTypeId}, ...`. */
+  
+  /**
+   * export widget type.
+   *
+   * @param widgetTypeId widget type id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetTypeDetails> observable or value
+   */
+
 
   public exportWidgetType(widgetTypeId: string,
                           includeResources = true,
@@ -271,7 +442,15 @@ export class WidgetService {
     return this.http.get<WidgetTypeDetails>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetTypeInfo/${widgetTypeId}, ...`. */
+  
+  /**
+   * get widget type info by id.
+   *
+   * @param widgetTypeId widget type id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetTypeInfo> observable or value
+   */
+
 
   public getWidgetTypeInfoById(widgetTypeId: string,
                                config?: RequestConfig): Observable<WidgetTypeInfo> {
@@ -279,13 +458,28 @@ export class WidgetService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetType, ...`. */
+  
+  /**
+   * POST/PUT entity — save widget type.
+   *
+   * @param widgetTypeDetails widget type details (WidgetTypeDetails)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetTypeDetails> observable or value
+   */
+
 
   public saveWidgetType(widgetTypeDetails: WidgetTypeDetails,
                         config?: RequestConfig): Observable<WidgetTypeDetails> {
     return this.http.post<WidgetTypeDetails>(`/api/widgetType`, widgetTypeDetails,
       defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * DELETE — delete widget type.
+   *
+   * @param widgetTypeId widget type id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public deleteWidgetType(widgetTypeId: string,
                           config?: RequestConfig) {
@@ -299,8 +493,16 @@ export class WidgetService {
     ));
   }
 
-  /** Calls ThingsBoard REST `/api/widgetTypes${pageLink.toQuery()}&tenantOnly=${tenantOnly}&fullSearch=${fullSearch}
-      &scadaFirst=${scadaFirst}&deprecatedFilter=${deprecatedFilter}, ...`. */
+  
+  /**
+   * get widget types.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param widgetTypes widget types (Array<widgetType>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<WidgetTypeInfo>> observable or value
+   */
+
 
   public getWidgetTypes(pageLink: PageLink, tenantOnly = false,
                         fullSearch = false, scadaFirst = false,
@@ -316,6 +518,14 @@ export class WidgetService {
     return this.http.get<PageData<WidgetTypeInfo>>(url, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * POST/PUT entity — add widget fqn to widget bundle.
+   *
+   * @param widgetsBundleId widgets bundle id (string)
+   * @param fqn fqn (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public addWidgetFqnToWidgetBundle(widgetsBundleId: string, fqn: string, config?: RequestConfig) {
     return this.getBundleWidgetTypeFqns(widgetsBundleId, config).pipe(
       mergeMap(widgetsBundleFqn => {
@@ -325,7 +535,15 @@ export class WidgetService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundles?widgetsBundleIds=${widgetsBundleIds.join(, ...`. */
+  
+  /**
+   * get widget template.
+   *
+   * @param widgetTypeParam widget type param (widgetType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<WidgetInfo> observable or value
+   */
+
 
   public getWidgetTemplate(widgetTypeParam: widgetType,
                            config?: RequestConfig): Observable<WidgetInfo> {
@@ -341,52 +559,132 @@ export class WidgetService {
       );
   }
 
+  /**
+   * get widget info from cache.
+   *
+   * @param fullFqn full fqn (string)
+   * @returns WidgetInfo | undefined observable or value
+   */
+
   public getWidgetInfoFromCache(fullFqn: string): WidgetInfo | undefined {
     return this.widgetsInfoInMemoryCache.get(fullFqn);
   }
+
+  /**
+   * put widget info to cache.
+   *
+   * @param widgetInfo widget info (WidgetInfo)
+   */
 
   public putWidgetInfoToCache(widgetInfo: WidgetInfo) {
     this.widgetsInfoInMemoryCache.set(widgetInfo.fullFqn, widgetInfo);
   }
 
+  /**
+   * register basic widget config components.
+   *
+   * @param module module (any)
+   */
+
   public registerBasicWidgetConfigComponents(module: any) {
     Object.assign(this.basicWidgetSettingsComponentsMap, this.resourcesService.extractComponentsFromModule<IBasicWidgetConfigComponent>(module, BasicWidgetConfigComponent));
   }
+
+  /**
+   * get basic widget settings component by selector.
+   *
+   * @param selector selector (string)
+   * @returns Type<IBasicWidgetConfigComponent> observable or value
+   */
 
   public getBasicWidgetSettingsComponentBySelector(selector: string): Type<IBasicWidgetConfigComponent> {
     return this.basicWidgetSettingsComponentsMap[selector];
   }
 
+  /**
+   * put basic widget settings component to map.
+   *
+   * @param selector selector (string)
+   * @param compType comp type (Type<IBasicWidgetConfigComponent>)
+   */
+
   public putBasicWidgetSettingsComponentToMap(selector: string, compType: Type<IBasicWidgetConfigComponent>) {
     this.basicWidgetSettingsComponentsMap[selector] = compType;
   }
+
+  /**
+   * register widget settings components.
+   *
+   * @param module module (any)
+   */
 
   public registerWidgetSettingsComponents(module: any) {
     Object.assign(this.widgetSettingsComponentsMap, this.resourcesService.extractComponentsFromModule<IWidgetSettingsComponent>(module, WidgetSettingsComponent));
   }
 
+  /**
+   * get widget settings component type by selector.
+   *
+   * @param selector selector (string)
+   * @returns Type<IWidgetSettingsComponent> observable or value
+   */
+
   public getWidgetSettingsComponentTypeBySelector(selector: string): Type<IWidgetSettingsComponent> {
     return this.widgetSettingsComponentsMap[selector];
   }
+
+  /**
+   * put widget settings component to map.
+   *
+   * @param selector selector (string)
+   * @param compType comp type (Type<IWidgetSettingsComponent>)
+   */
 
   public putWidgetSettingsComponentToMap(selector: string, compType: Type<IWidgetSettingsComponent>) {
     this.widgetSettingsComponentsMap[selector] = compType;
   }
 
+  /**
+   * widget type updated.
+   *
+   * @param updatedWidgetType updated widget type (BaseWidgetType)
+   */
+
   private widgetTypeUpdated(updatedWidgetType: BaseWidgetType): void {
     this.deleteWidgetInfoFromCache(fullWidgetTypeFqn(updatedWidgetType));
   }
+
+  /**
+   * DELETE — delete widget info from cache.
+   *
+   * @param fullFqn full fqn (string)
+   */
 
   public deleteWidgetInfoFromCache(fullFqn: string) {
     this.widgetsInfoInMemoryCache.delete(fullFqn);
   }
 
-  /** Calls ThingsBoard REST `/api/widgetsBundles?widgetsBundleIds=${widgetsBundleIds.join(, ...`. */
+  
+  /**
+   * get widgets bundles by ids.
+   *
+   * @param widgetsBundleIds widgets bundle ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<WidgetsBundle>> observable or value
+   */
+
 
   public getWidgetsBundlesByIds(widgetsBundleIds: Array<string>, config?: RequestConfig): Observable<Array<WidgetsBundle>> {
     return this.http.get<Array<WidgetsBundle>>(`/api/widgetsBundles?widgetsBundleIds=${widgetsBundleIds.join(',')}`,
       defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * load widgets bundle cache.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
 
   private loadWidgetsBundleCache(config?: RequestConfig): Observable<any> {
     if (!this.allWidgetsBundles) {
@@ -424,6 +722,11 @@ export class WidgetService {
       return of(null);
     }
   }
+
+  /**
+   * invalidate widgets bundle cache.
+   *
+   */
 
   private invalidateWidgetsBundleCache() {
     this.allWidgetsBundles = undefined;

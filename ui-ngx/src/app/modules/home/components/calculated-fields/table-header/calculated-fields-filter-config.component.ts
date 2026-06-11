@@ -55,6 +55,12 @@ export interface CalculatedFieldsFilterConfigData {
   initialFilterConfig?: CalculatedFieldsQuery;
 }
 
+
+/**
+ * Angular component: calculated fields filter config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-fields-filter-config`.
+ */
 @Component({
     selector: 'tb-calculated-fields-filter-config',
     templateUrl: './calculated-fields-filter-config.component.html',
@@ -66,10 +72,7 @@ export interface CalculatedFieldsFilterConfigData {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: calculated fields filter config UI.
- */
+standalone: false
 })
 export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlValueAccessor {
 
@@ -125,6 +128,11 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
               private translate: TranslateService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (this.data) {
       this.panelMode = this.data.panelMode;
@@ -153,12 +161,30 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -169,6 +195,12 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param cfFilterConfig cf filter config (CalculatedFieldsQuery)
+   */
+
   writeValue(cfFilterConfig?: CalculatedFieldsQuery): void {
     this.cfFilterConfig = cfFilterConfig;
     if (!this.initialCfFilterConfig && cfFilterConfig) {
@@ -177,6 +209,11 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
     this.updateButtonDisplayValue();
     this.updateCfConfigForm(cfFilterConfig);
   }
+
+  /**
+   * toggle cf filter panel.
+   *
+   */
 
   toggleCfFilterPanel($event: Event) {
     if ($event) {
@@ -206,6 +243,11 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.updateCfConfigForm(this.cfFilterConfig);
     this.cfFilterForm.markAsPristine();
@@ -216,6 +258,11 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
       this.cfFilterOverlayRef.dispose();
     }
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     this.cfConfigUpdated(this.cfFilterForm.value);
@@ -230,6 +277,11 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
       this.cfFilterOverlayRef.dispose();
     }
   }
+
+  /**
+   * reset.
+   *
+   */
 
   reset() {
     const cfFilterConfig = this.cfFilterFromFormValue(this.cfFilterForm.value);
@@ -257,6 +309,12 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
     return false;
   };
 
+  /**
+   * update cf config form.
+   *
+   * @param cfFilterConfig cf filter config (CalculatedFieldsQuery)
+   */
+
   private updateCfConfigForm(cfFilterConfig?: CalculatedFieldsQuery) {
     this.cfFilterForm.patchValue({
       types: cfFilterConfig?.types ?? [],
@@ -265,11 +323,22 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
     }, {emitEvent: false});
   }
 
+  /**
+   * cf config updated.
+   *
+   * @param formValue form value (any)
+   */
+
   private cfConfigUpdated(formValue: any) {
     this.cfFilterConfig = this.cfFilterFromFormValue(formValue);
     this.updateButtonDisplayValue();
     this.propagateChange(this.cfFilterConfig);
   }
+
+  /**
+   * update button display value.
+   *
+   */
 
   private updateButtonDisplayValue() {
     if (this.buttonMode) {
@@ -287,6 +356,13 @@ export class CalculatedFieldsFilterConfigComponent implements OnInit, ControlVal
       }
     }
   }
+
+  /**
+   * cf filter from form value.
+   *
+   * @param formValue form value (any)
+   * @returns CalculatedFieldsQuery observable or value
+   */
 
   private cfFilterFromFormValue(formValue: any): CalculatedFieldsQuery {
     return {

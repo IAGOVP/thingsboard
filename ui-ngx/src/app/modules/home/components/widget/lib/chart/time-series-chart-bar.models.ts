@@ -27,11 +27,11 @@ import { isNumeric } from '@core/utils';
 import * as echarts from 'echarts/core';
 import { BarSeriesLabelOption } from 'echarts/types/src/chart/bar/BarSeries';
 
+
 /**
-
- * TypeScript models and enums for bar visual settings.
-
+ * Bar visual settings (ThingsBoard web UI).
  */
+
 
 export interface BarVisualSettings {
   color: string | LinearGradientObject;

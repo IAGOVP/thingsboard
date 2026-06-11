@@ -88,8 +88,11 @@ export interface IRuleNodeConfigurationComponent {
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: rule node configuration UI.
+ * Angular component: rule node configuration (shared TypeScript models).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class RuleNodeConfigurationComponent extends PageComponent implements
   IRuleNodeConfigurationComponent, OnInit, AfterViewInit {
 
@@ -140,7 +143,17 @@ export abstract class RuleNodeConfigurationComponent extends PageComponent imple
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {}
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -150,9 +163,20 @@ export abstract class RuleNodeConfigurationComponent extends PageComponent imple
     }, 0);
   }
 
+  /**
+   * validate.
+   *
+   */
+
   validate() {
     this.onValidate();
   }
+
+  /**
+   * setup configuration.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected setupConfiguration(configuration: RuleNodeConfiguration) {
     this.onConfigurationSet(this.prepareInputConfig(configuration));
@@ -176,17 +200,42 @@ export abstract class RuleNodeConfigurationComponent extends PageComponent imple
     });
   }
 
+  /**
+   * update configuration.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
+
   protected updateConfiguration(configuration: RuleNodeConfiguration) {
     this.configForm().reset(this.prepareInputConfig(configuration), {emitEvent: false});
     this.updateValidators(false);
   }
 
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
+
   protected updateValidators(emitEvent: boolean, trigger?: string) {
   }
+
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected validatorTriggers(): string[] {
     return [];
   }
+
+  /**
+   * Event handler for configuration changed.
+   *
+   * @param updated updated (RuleNodeConfiguration)
+   */
 
   protected onConfigurationChanged(updated: RuleNodeConfiguration) {
     this.configurationValue = updated;
@@ -197,17 +246,42 @@ export abstract class RuleNodeConfigurationComponent extends PageComponent imple
     }
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return configuration;
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return configuration;
   }
 
+  /**
+   * validate config.
+   *
+   * @returns boolean observable or value
+   */
+
   protected validateConfig(): boolean {
     return this.configForm().valid;
   }
+
+  /**
+   * Event handler for validate.
+   *
+   */
 
   protected onValidate() {}
 

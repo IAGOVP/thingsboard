@@ -17,11 +17,11 @@
 import { EntityId } from './entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for asset id.
-
+ * TypeScript interfaces, types, and enums for asset id (shared TypeScript models).
  */
+
 
 export class AssetId implements EntityId {
   entityType = EntityType.ASSET;

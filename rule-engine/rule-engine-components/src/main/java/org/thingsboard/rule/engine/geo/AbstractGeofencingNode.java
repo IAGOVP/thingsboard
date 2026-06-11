@@ -37,16 +37,25 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.Collections;
 import java.util.List;
 
+
 /**
 
- * Rule engine component: abstract geofencing node.
+ * Abstract geofencing node (GPS geofencing filter and action nodes).
 
  */
+
 
 public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNodeConfiguration> implements TbNode {
 
     protected T config;
     protected JtsSpatialContext jtsCtx;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -57,6 +66,13 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
     }
 
     abstract protected Class<T> getConfigClazz();
+    /**
+     * Checks matches.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @return the boolean result
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected boolean checkMatches(TbMsg msg) throws TbNodeException {
         JsonElement msgDataElement = JsonParser.parseString(msg.getData());
@@ -76,6 +92,15 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
         }
         return matches;
     }
+    /**
+     * Checks matches.
+     *
+     * @param perimeter perimeter ({@link Perimeter})
+     * @param latitude latitude
+     * @param longitude longitude
+     * @return the boolean result
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected boolean checkMatches(Perimeter perimeter, double latitude, double longitude) throws TbNodeException {
         if (perimeter.getPerimeterType() == PerimeterType.CIRCLE) {
@@ -88,6 +113,13 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
             throw new TbNodeException("Unsupported perimeter type: " + perimeter.getPerimeterType() + "!");
         }
     }
+    /**
+     * Returns perimeters.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @return {@link List}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected List<Perimeter> getPerimeters(TbMsg msg) throws TbNodeException {
         if (config.isFetchPerimeterInfoFromMessageMetadata()) {
@@ -143,6 +175,15 @@ public abstract class AbstractGeofencingNode<T extends TbGpsGeofencingFilterNode
             return Collections.singletonList(perimeter);
         }
     }
+    /**
+     * Returns value from message by name.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @param msgDataObj msg data obj ({@link JsonObject})
+     * @param keyName key name ({@link String})
+     * @return {@link Double}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected Double getValueFromMessageByName(TbMsg msg, JsonObject msgDataObj, String keyName) throws TbNodeException {
         double value;

@@ -52,11 +52,11 @@ export interface AlarmDataSubscriptionOptions {
   subscriptionTimewindow?: SubscriptionTimewindow;
 }
 
+
 /**
-
- * alarm data subscription.
-
+ * Alarm data subscription (ThingsBoard web UI).
  */
+
 
 export class AlarmDataSubscription {
 
@@ -79,6 +79,11 @@ export class AlarmDataSubscription {
               private telemetryService: TelemetryWebsocketService) {
   }
 
+  /**
+   * unsubscribe.
+   *
+   */
+
   public unsubscribe() {
     if (this.datasourceType === DatasourceType.entity) {
       if (this.subscriber) {
@@ -87,6 +92,11 @@ export class AlarmDataSubscription {
       }
     }
   }
+
+  /**
+   * subscribe.
+   *
+   */
 
   public subscribe() {
     this.subsTw = this.alarmDataSubscriptionOptions.subscriptionTimewindow;
@@ -180,6 +190,11 @@ export class AlarmDataSubscription {
     }
   }
 
+  /**
+   * reset data.
+   *
+   */
+
   private resetData() {
     this.alarmIdToDataIndex = {};
     for (let dataIndex = 0; dataIndex < this.pageData.data.length; dataIndex++) {
@@ -188,11 +203,25 @@ export class AlarmDataSubscription {
     }
   }
 
+  /**
+   * Event handler for page data.
+   *
+   * @param pageData page data (PageData<AlarmData>)
+   * @param allowedEntities allowed entities (number)
+   * @param totalEntities total entities (number)
+   */
+
   private onPageData(pageData: PageData<AlarmData>, allowedEntities: number, totalEntities: number) {
     this.pageData = pageData;
     this.resetData();
     this.listener.alarmsLoaded(pageData, allowedEntities, totalEntities);
   }
+
+  /**
+   * Event handler for data update.
+   *
+   * @param update update (Array<AlarmData>)
+   */
 
   private onDataUpdate(update: Array<AlarmData>) {
     for (const alarmData of update) {

@@ -29,6 +29,9 @@ import { DomainTableHeaderComponent } from '@home/pages/admin/oauth2/domains/dom
 /**
  * Angular NgModule: oauth2 feature area.
  */
+/**
+ * Angular NgModule bundling oauth2 (home/admin pages).
+ */
 @NgModule({
   declarations: [
     ClientComponent,
@@ -42,6 +45,6 @@ import { DomainTableHeaderComponent } from '@home/pages/admin/oauth2/domains/dom
     CommonModule,
     SharedModule,
     HomeComponentsModule
-  ]})
+]})
 export class OAuth2Module {
 }

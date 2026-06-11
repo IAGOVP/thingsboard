@@ -38,6 +38,9 @@ import { AiConfigComponent } from '@home/components/rule-node/external/ai-config
 /**
  * Angular NgModule: external rule node config feature area.
  */
+/**
+ * Angular NgModule bundling external rule node config (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     SnsConfigComponent,
@@ -76,6 +79,6 @@ import { AiConfigComponent } from '@home/components/rule-node/external/ai-config
     SendSmsConfigComponent,
     SlackConfigComponent,
     AiConfigComponent
-  ]})
+]})
 export class ExternalRuleNodeConfigModule {
 }

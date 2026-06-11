@@ -70,8 +70,11 @@ export const assetProfilesRoutes: Routes = [
 /**
  * Angular NgModule: asset profile routing feature area.
  */
+/**
+ * Angular NgModule bundling asset profile routing (home/asset-profile pages).
+ */
 @NgModule({
   providers: [
     AssetProfilesTableConfigResolver
-  ]})
+]})
 export class AssetProfileRoutingModule { }

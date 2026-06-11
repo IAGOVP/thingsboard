@@ -22,6 +22,12 @@ import { TruncatePipe } from '@shared/pipe/truncate.pipe';
 import { TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: rule node link (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-node-link`.
+ */
 @Component({
     selector: 'tb-rule-node-link',
     templateUrl: './rule-node-link.component.html',
@@ -31,10 +37,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => RuleNodeLinkComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: rule node link UI.
- */
+standalone: false
 })
 export class RuleNodeLinkComponent implements ControlValueAccessor, OnInit {
 
@@ -84,15 +87,38 @@ export class RuleNodeLinkComponent implements ControlValueAccessor, OnInit {
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -103,11 +129,23 @@ export class RuleNodeLinkComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (FcRuleEdge)
+   */
+
   writeValue(value: FcRuleEdge): void {
     this.modelValue = value;
     const labels = this.modelValue && this.modelValue.labels ? this.modelValue.labels : [];
     this.ruleNodeLinkFormGroup.get('labels').patchValue(labels, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   * @param labels labels (string[])
+   */
 
   private updateModel(labels: string[]) {
     if (labels && labels.length) {

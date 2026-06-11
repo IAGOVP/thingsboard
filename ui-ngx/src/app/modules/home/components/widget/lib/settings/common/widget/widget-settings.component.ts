@@ -46,6 +46,12 @@ import { WidgetConfigComponentData } from '@home/models/widget-component.models'
 import { WidgetConfigCallbacks } from '@home/components/widget/config/widget-config.component.models';
 import { FormProperty } from '@shared/models/dynamic-form.models';
 
+
+/**
+ * Angular component: widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-settings`.
+ */
 @Component({
     selector: 'tb-widget-settings',
     templateUrl: './widget-settings.component.html',
@@ -60,10 +66,7 @@ import { FormProperty } from '@shared/models/dynamic-form.models';
             useExisting: forwardRef(() => WidgetSettingsComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: widget settings UI.
- */
+standalone: false
 })
 export class WidgetSettingsComponent implements ControlValueAccessor, OnDestroy, OnChanges, Validator {
 
@@ -114,9 +117,21 @@ export class WidgetSettingsComponent implements ControlValueAccessor, OnDestroy,
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -160,6 +175,11 @@ export class WidgetSettingsComponent implements ControlValueAccessor, OnDestroy,
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.definedSettingsComponentRef) {
       this.definedSettingsComponentRef.destroy();
@@ -170,6 +190,12 @@ export class WidgetSettingsComponent implements ControlValueAccessor, OnDestroy,
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -178,6 +204,12 @@ export class WidgetSettingsComponent implements ControlValueAccessor, OnDestroy,
       this.widgetSettingsFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DynamicFormData)
+   */
 
   writeValue(value: DynamicFormData): void {
     this.widgetSettingsFormData = value;
@@ -205,19 +237,42 @@ export class WidgetSettingsComponent implements ControlValueAccessor, OnDestroy,
     }
   }
 
+  /**
+   * use defined directive.
+   *
+   * @returns boolean observable or value
+   */
+
   useDefinedDirective(): boolean {
     return this.settingsDirective &&
       this.settingsDirective.length && !this.definedDirectiveError;
   }
 
+  /**
+   * use dynamic form.
+   *
+   * @returns boolean observable or value
+   */
+
   useDynamicForm(): boolean {
     return !this.settingsDirective || !this.settingsDirective.length;
   }
+
+  /**
+   * update model.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   private updateModel(settings: WidgetSettings) {
     this.widgetSettingsFormData.model = settings;
     this.propagateChange(this.widgetSettingsFormData);
   }
+
+  /**
+   * validate defined directive.
+   *
+   */
 
   private validateDefinedDirective() {
     if (this.definedSettingsComponentRef) {
@@ -252,6 +307,13 @@ export class WidgetSettingsComponent implements ControlValueAccessor, OnDestroy,
       }
     }
   }
+
+  /**
+   * validate.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(control: AbstractControl): ValidationErrors | null {
     if (this.useDefinedDirective()) {

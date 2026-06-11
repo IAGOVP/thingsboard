@@ -26,8 +26,11 @@ import java.util.Collections;
 
 import static org.thingsboard.rule.engine.transform.OriginatorSource.CUSTOMER;
 /**
- * JSON configuration for TbChangeOriginator rule node.
+ * JSON configuration POJO for {@link TbChangeOriginator} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbChangeOriginatorNodeConfiguration implements NodeConfiguration<TbChangeOriginatorNodeConfiguration> {
@@ -36,6 +39,12 @@ public class TbChangeOriginatorNodeConfiguration implements NodeConfiguration<Tb
     private RelationsQuery relationsQuery;
     private String entityType;
     private String entityNamePattern;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbChangeOriginatorNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbChangeOriginatorNodeConfiguration defaultConfiguration() {

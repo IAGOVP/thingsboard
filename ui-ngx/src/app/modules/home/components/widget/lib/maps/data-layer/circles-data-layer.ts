@@ -33,11 +33,11 @@ import {
 } from '@home/components/widget/lib/maps/data-layer/latest-map-data-layer';
 import { map } from 'rxjs/operators';
 
+
 /**
-
- * tb circle data layer item.
-
+ * Tb circle data layer item (ThingsBoard web UI).
  */
+
 
 class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettings, TbCirclesDataLayer> {
 
@@ -52,13 +52,28 @@ class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettin
     super(data, dsData, settings, dataLayer);
   }
 
+  /**
+   * is editing.
+   *
+   */
+
   public isEditing() {
     return this.editing;
   }
 
+  /**
+   * update bubbling mouse events.
+   *
+   */
+
   public updateBubblingMouseEvents() {
     this.circle.options.bubblingMouseEvents =  !this.dataLayer.isEditMode();
   }
+
+  /**
+   * DELETE — remove.
+   *
+   */
 
   public remove() {
     super.remove();
@@ -66,6 +81,14 @@ class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettin
       this.dataLayer.getMap().unUseShapePattern(this.circleStyleInfo.patternId);
     }
   }
+
+  /**
+   * POST/PUT entity — create.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   * @returns L.Layer observable or value
+   */
 
   protected create(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): L.Layer {
     const circleData = this.dataLayer.extractCircleCoordinates(data);
@@ -87,14 +110,32 @@ class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettin
     return this.circle;
   }
 
+  /**
+   * unbind label.
+   *
+   */
+
   protected unbindLabel() {
     this.circle.unbindTooltip();
   }
+
+  /**
+   * bind label.
+   *
+   * @param content content (L.Content)
+   */
 
   protected bindLabel(content: L.Content): void {
     this.circle.bindTooltip(content, { className: 'tb-circle-label', permanent: true, direction: 'center'})
     .openTooltip(this.circle.getLatLng());
   }
+
+  /**
+   * do update.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
 
   protected doUpdate(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): void {
     this.dataLayer.getShapeStyle(data, dsData, this.circleStyleInfo?.patternId).subscribe((styleInfo) => {
@@ -106,10 +147,23 @@ class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettin
     });
   }
 
+  /**
+   * do invalidate coordinates.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
+
   protected doInvalidateCoordinates(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): void {
     this.updateCircleShape(data);
     this.updateLabel(data, dsData);
   }
+
+  /**
+   * POST/PUT entity — add item class.
+   *
+   * @param clazz clazz (string)
+   */
 
   protected addItemClass(clazz: string): void {
     if ((this.circle as any)._path) {
@@ -117,11 +171,22 @@ class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettin
     }
   }
 
+  /**
+   * DELETE — remove item class.
+   *
+   * @param clazz clazz (string)
+   */
+
   protected removeItemClass(clazz: string): void {
     if ((this.circle as any)._path) {
       L.DomUtil.removeClass((this.circle as any)._path, clazz);
     }
   }
+
+  /**
+   * enable drag.
+   *
+   */
 
   protected enableDrag(): void {
     this.circle.pm.setOptions({
@@ -137,11 +202,22 @@ class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettin
     });
   }
 
+  /**
+   * disable drag.
+   *
+   */
+
   protected disableDrag(): void {
     this.circle.pm.disableLayerDrag();
     this.circle.off('pm:dragstart');
     this.circle.off('pm:dragend');
   }
+
+  /**
+   * Event handler for selected.
+   *
+   * @returns L.TB.ToolbarButtonOptions[] observable or value
+   */
 
   protected onSelected(): L.TB.ToolbarButtonOptions[] {
     if (this.dataLayer.isEditEnabled()) {
@@ -153,6 +229,11 @@ class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettin
     return [];
   }
 
+  /**
+   * Event handler for deselected.
+   *
+   */
+
   protected onDeselected(): void {
     if (this.dataLayer.isEditEnabled()) {
       this.circle.pm.disable();
@@ -162,19 +243,42 @@ class TbCircleDataLayerItem extends TbLatestDataLayerItem<CirclesDataLayerSettin
     }
   }
 
+  /**
+   * DELETE — remove data item title.
+   *
+   * @returns string observable or value
+   */
+
   protected removeDataItemTitle(): string {
     return this.dataLayer.getCtx().translate.instant('widgets.maps.data-layer.circle.remove-circle-for', {entityName: this.data.entityName});
   }
 
+  /**
+   * DELETE — remove data item.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   protected removeDataItem(): Observable<any> {
     return this.dataLayer.saveCircleCoordinates(this.data, null, null);
   }
+
+  /**
+   * POST/PUT entity — save circle coordinates.
+   *
+   */
 
   private saveCircleCoordinates() {
     const center = this.circle.getLatLng();
     const radius = this.circle.getRadius();
     this.dataLayer.saveCircleCoordinates(this.data, center, radius).subscribe();
   }
+
+  /**
+   * update circle shape.
+   *
+   * @param data dialog or route input data
+   */
 
   private updateCircleShape(data: FormattedData<TbMapDatasource>) {
     if (this.editing) {

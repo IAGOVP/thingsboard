@@ -109,10 +109,13 @@ const routes: Routes = [
 /**
  * Angular NgModule: tenant routing feature area.
  */
+/**
+ * Angular NgModule bundling tenant routing (home/tenant pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     TenantsTableConfigResolver
-  ]})
+]})
 export class TenantRoutingModule { }

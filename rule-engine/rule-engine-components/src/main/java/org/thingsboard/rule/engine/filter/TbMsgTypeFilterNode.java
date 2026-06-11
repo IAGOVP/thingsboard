@@ -26,7 +26,14 @@ import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine filter node 'message type filter': Filter incoming messages by Message Type Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>message type filter</b>.
+ *
+ * <p>Filter incoming messages by Message Type
+ * <br>If incoming message type is expected - send Message via True chain, otherwise False chain is used.  
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgTypeFilterNodeConfiguration}.
+ * <br>Output relations: {@code TbNodeConnectionType.TRUE, TbNodeConnectionType.FALSE}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/message-type-filter/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/message-type-filter/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -42,11 +49,25 @@ import org.thingsboard.server.common.msg.TbMsg;
 public class TbMsgTypeFilterNode implements TbNode {
 
     private TbMsgTypeFilterNodeConfiguration config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         config = TbNodeUtils.convert(configuration, TbMsgTypeFilterNodeConfiguration.class);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

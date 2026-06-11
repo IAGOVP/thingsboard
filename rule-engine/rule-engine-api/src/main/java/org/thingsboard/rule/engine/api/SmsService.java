@@ -20,19 +20,48 @@ import org.thingsboard.server.common.data.id.CustomerId;
 import org.thingsboard.server.common.data.id.TenantId;
 import org.thingsboard.server.common.data.sms.config.TestSmsRequest;
 
+
 /**
 
- * Sends SMS from rule nodes.
+ * Facade for sending SMS from rule engine SMS nodes.
 
  */
 
+
 public interface SmsService {
+    /**
+     * Updates sms configuration.
+     *
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     void updateSmsConfiguration();
+    /**
+     * Send sms.
+     *
+     * @param tenantId tenant UUID
+     * @param customerId customer id ({@link CustomerId})
+     * @param numbersTo numbers to
+     * @param message message ({@link String})
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     void sendSms(TenantId tenantId, CustomerId customerId, String[] numbersTo, String message) throws ThingsboardException;;
+    /**
+     * Send test sms.
+     *
+     * @param testSmsRequest test sms request ({@link TestSmsRequest})
+     * @throws ThingsboardException if the operation fails validation, authorization, or business rules
+     */
 
     void sendTestSms(TestSmsRequest testSmsRequest) throws ThingsboardException;
+    /**
+     * Is configured.
+     *
+     * @param tenantId tenant UUID
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     boolean isConfigured(TenantId tenantId);
 

@@ -61,11 +61,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
 
- * Unit test for tb check relation node rule node.
+ * Unit test for tb check relation node (message filtering and branching rule nodes).
 
  */
+
 
 class TbCheckRelationNodeTest extends AbstractRuleNodeUpgradeTest {
 
@@ -341,6 +343,12 @@ class TbCheckRelationNodeTest extends AbstractRuleNodeUpgradeTest {
                         "{\"checkForSingleEntity\":true,\"direction\":\"FROM\",\"entityType\":\"DEVICE\",\"entityId\":\"1943b1eb-2811-4373-846d-6ca2f527bf9e\",\"relationType\":\"Contains\"}")
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

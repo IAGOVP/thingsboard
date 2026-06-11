@@ -34,6 +34,9 @@ import {
 /**
  * Angular NgModule: related entities aggregation component feature area.
  */
+/**
+ * Angular NgModule bundling related entities aggregation component (ThingsBoard web UI).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -47,6 +50,6 @@ import {
   ],
   exports: [
     RelatedEntitiesAggregationComponentComponent,
-  ]})
+]})
 export class RelatedEntitiesAggregationComponentModule {
 }

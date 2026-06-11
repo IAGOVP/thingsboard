@@ -23,11 +23,11 @@ import { EntityBooleanFunction } from '@home/models/entity/entities-table-config
 import { PageLink } from '@shared/models/page/page-link';
 import { catchError, map, take, tap } from 'rxjs/operators';
 
+
 /**
-
- * images datasource.
-
+ * Images datasource (shared UI components).
  */
+
 
 export class ImagesDatasource implements DataSource<ImageResourceInfo> {
   private entitiesSubject: Subject<ImageResourceInfo[]>;
@@ -51,10 +51,23 @@ export class ImagesDatasource implements DataSource<ImageResourceInfo> {
     }
   }
 
+  /**
+   * connect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   * @returns Observable<ImageResourceInfo[] | ReadonlyArray<ImageResourceInfo>> observable or value
+   */
+
   connect(collectionViewer: CollectionViewer):
     Observable<ImageResourceInfo[] | ReadonlyArray<ImageResourceInfo>> {
     return this.entitiesSubject.asObservable();
   }
+
+  /**
+   * disconnect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   */
 
   disconnect(collectionViewer: CollectionViewer): void {
     this.entitiesSubject.complete();
@@ -63,12 +76,25 @@ export class ImagesDatasource implements DataSource<ImageResourceInfo> {
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   reset() {
     this.entitiesSubject.next([]);
     if (this.pageDataSubject) {
       this.pageDataSubject.next(emptyPageData<ImageResourceInfo>());
     }
   }
+
+  /**
+   * load entities.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param imageSubType image sub type (ResourceSubType)
+   * @returns Observable<PageData<ImageResourceInfo>> observable or value
+   */
 
   loadEntities(pageLink: PageLink, imageSubType: ResourceSubType, includeSystemImages = false): Observable<PageData<ImageResourceInfo>> {
     this.dataLoading = true;
@@ -89,9 +115,23 @@ export class ImagesDatasource implements DataSource<ImageResourceInfo> {
     return result;
   }
 
+  /**
+   * fetch entities.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param imageSubType image sub type (ResourceSubType)
+   * @returns Observable<PageData<ImageResourceInfo>> observable or value
+   */
+
   fetchEntities(pageLink: PageLink, imageSubType: ResourceSubType, includeSystemImages = false): Observable<PageData<ImageResourceInfo>> {
     return this.imageService.getImages(pageLink, includeSystemImages, imageSubType);
   }
+
+  /**
+   * is all selected.
+   *
+   * @returns Observable<boolean> observable or value
+   */
 
   isAllSelected(): Observable<boolean> {
     const numSelected = this.selection.selected.length;
@@ -100,17 +140,34 @@ export class ImagesDatasource implements DataSource<ImageResourceInfo> {
     );
   }
 
+  /**
+   * is empty.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isEmpty(): Observable<boolean> {
     return this.entitiesSubject.pipe(
       map((entities) => !entities.length)
     );
   }
 
+  /**
+   * total.
+   *
+   * @returns Observable<number> observable or value
+   */
+
   total(): Observable<number> {
     return this.pageDataSubject.pipe(
       map((pageData) => pageData.totalElements)
     );
   }
+
+  /**
+   * master toggle.
+   *
+   */
 
   masterToggle() {
     this.entitiesSubject.pipe(
@@ -129,6 +186,13 @@ export class ImagesDatasource implements DataSource<ImageResourceInfo> {
       take(1)
     ).subscribe();
   }
+
+  /**
+   * selectable entities count.
+   *
+   * @param entities entities (Array<ImageResourceInfo>)
+   * @returns number observable or value
+   */
 
   private selectableEntitiesCount(entities: Array<ImageResourceInfo>): number {
     return entities.filter((entity) => this.selectionEnabledFunction(entity)).length;

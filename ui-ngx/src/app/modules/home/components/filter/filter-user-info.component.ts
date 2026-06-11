@@ -29,6 +29,12 @@ import {
 } from '@home/components/filter/filter-user-info-dialog.component';
 import { deepClone } from '@core/utils';
 
+
+/**
+ * Angular component: filter user info (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-user-info`.
+ */
 @Component({
     selector: 'tb-filter-user-info',
     templateUrl: './filter-user-info.component.html',
@@ -40,10 +46,7 @@ import { deepClone } from '@core/utils';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: filter user info UI.
- */
+standalone: false
 })
 export class FilterUserInfoComponent implements ControlValueAccessor, OnInit {
 
@@ -62,12 +65,29 @@ export class FilterUserInfoComponent implements ControlValueAccessor, OnInit {
   constructor(private dialog: MatDialog) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -76,9 +96,20 @@ export class FilterUserInfoComponent implements ControlValueAccessor, OnInit {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param keyFilterPredicateUserInfo key filter predicate user info (KeyFilterPredicateUserInfo)
+   */
+
   writeValue(keyFilterPredicateUserInfo: KeyFilterPredicateUserInfo): void {
     this.keyFilterPredicateUserInfo = keyFilterPredicateUserInfo;
   }
+
+  /**
+   * open filter user info dialog.
+   *
+   */
 
   public openFilterUserInfoDialog() {
    this.dialog.open<FilterUserInfoDialogComponent, FilterUserInfoDialogData,
@@ -101,6 +132,11 @@ export class FilterUserInfoComponent implements ControlValueAccessor, OnInit {
       }
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.propagateChange(this.keyFilterPredicateUserInfo);

@@ -44,6 +44,12 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getSourceTbUnitSymbol, isNotEmptyTbUnits } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: time series chart line settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-line-settings`.
+ */
 @Component({
     selector: 'tb-time-series-chart-line-settings',
     templateUrl: './time-series-chart-line-settings.component.html',
@@ -55,10 +61,7 @@ import { getSourceTbUnitSymbol, isNotEmptyTbUnits } from '@shared/models/unit.mo
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: time series chart line settings UI.
- */
+standalone: false
 })
 export class TimeSeriesChartLineSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -100,6 +103,11 @@ export class TimeSeriesChartLineSettingsComponent implements OnInit, ControlValu
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.lineSettingsFormGroup = this.fb.group({
       showLine: [null, []],
@@ -135,12 +143,30 @@ export class TimeSeriesChartLineSettingsComponent implements OnInit, ControlValu
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -152,6 +178,12 @@ export class TimeSeriesChartLineSettingsComponent implements OnInit, ControlValu
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (LineSeriesSettings)
+   */
+
   writeValue(value: LineSeriesSettings): void {
     this.modelValue = value;
     this.lineSettingsFormGroup.patchValue(
@@ -159,6 +191,11 @@ export class TimeSeriesChartLineSettingsComponent implements OnInit, ControlValu
     );
     this.updateValidators();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const state = this.chartType === TimeSeriesChartType.state;
@@ -211,6 +248,11 @@ export class TimeSeriesChartLineSettingsComponent implements OnInit, ControlValu
       this.lineSettingsFormGroup.get('pointLabelBackground').disable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.lineSettingsFormGroup.getRawValue();

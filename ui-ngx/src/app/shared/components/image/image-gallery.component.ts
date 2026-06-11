@@ -99,15 +99,18 @@ const dialogGridColumns: ScrollGridColumns = {
   }
 };
 
+
+/**
+ * Angular component: image gallery (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-image-gallery`.
+ */
 @Component({
     selector: 'tb-image-gallery',
     templateUrl: './image-gallery.component.html',
     styleUrls: ['./image-gallery.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: image gallery UI.
- */
+standalone: false
 })
 export class ImageGalleryComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -211,6 +214,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     };
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.gridColumns = this.dialogMode ? dialogGridColumns : pageGridColumns;
     this.displayedColumns = this.computeDisplayedColumns();
@@ -249,6 +257,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.widgetResize$) {
       this.widgetResize$.disconnect();
@@ -260,6 +273,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.textSearch.valueChanges.pipe(
@@ -291,6 +309,12 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     this.updateMode();
   }
 
+  /**
+   * include system images changed.
+   *
+   * @param value value (boolean)
+   */
+
   public includeSystemImagesChanged(value: boolean) {
     this.includeSystemImages = value;
     this.displayedColumns = this.computeDisplayedColumns();
@@ -305,6 +329,12 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * set mode.
+   *
+   * @param targetMode target mode ('list' | 'grid')
+   */
 
   public setMode(targetMode: 'list' | 'grid') {
     if (this.mode !== targetMode) {
@@ -332,6 +362,12 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     return this.authUser.authority === Authority.SYS_ADMIN;
   }
 
+  /**
+   * compute displayed columns.
+   *
+   * @returns string[] observable or value
+   */
+
   private computeDisplayedColumns(): string[] {
     let columns: string[];
     if (this.selectionMode) {
@@ -350,6 +386,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     return columns;
   }
 
+  /**
+   * update mode.
+   *
+   */
+
   private updateMode() {
     if (this.mode === 'list') {
       this.initListMode();
@@ -357,6 +398,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
       this.initGridMode();
     }
   }
+
+  /**
+   * init list mode.
+   *
+   */
 
   private initListMode() {
     this.destroyListMode$ = new Subject<void>();
@@ -396,9 +442,19 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     this.updateData();
   }
 
+  /**
+   * init grid mode.
+   *
+   */
+
   private initGridMode() {
 
   }
+
+  /**
+   * update pagination subscriptions.
+   *
+   */
 
   private updatePaginationSubscriptions() {
     if (this.updateDataSubscription) {
@@ -428,10 +484,20 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     ).subscribe(queryParams => this.updatedRouterParamsAndData(queryParams));
   }
 
+  /**
+   * clear selection.
+   *
+   */
+
   clearSelection() {
     this.dataSource.selection.clear();
     this.cd.detectChanges();
   }
+
+  /**
+   * update data.
+   *
+   */
 
   updateData() {
     if (this.mode === 'list') {
@@ -451,6 +517,12 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * image updated.
+   *
+   * @param image image (ImageResourceInfo)
+   */
+
   private imageUpdated(image: ImageResourceInfo, index = -1) {
     if (this.mode === 'list') {
       this.updateData();
@@ -458,6 +530,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
       this.gridComponent.updateItem(index, image);
     }
   }
+
+  /**
+   * image deleted.
+   *
+   */
 
   private imageDeleted(index = -1) {
     if (this.mode === 'list') {
@@ -467,6 +544,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * enter filter mode.
+   *
+   */
+
   enterFilterMode() {
     this.textSearchMode = true;
     setTimeout(() => {
@@ -475,26 +557,65 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
   }
 
+  /**
+   * track by entity.
+   *
+   * @param index index (number)
+   * @param entity entity (BaseData<HasId>)
+   */
+
   trackByEntity(index: number, entity: BaseData<HasId>) {
     return entity;
   }
+
+  /**
+   * is system.
+   *
+   * @param image image (ImageResourceInfo)
+   * @returns boolean observable or value
+   */
 
   isSystem(image?: ImageResourceInfo): boolean {
     return !this.isSysAdmin && image?.tenantId?.id === NULL_UUID;
   }
 
+  /**
+   * readonly.
+   *
+   * @param image image (ImageResourceInfo)
+   * @returns boolean observable or value
+   */
+
   readonly(image?: ImageResourceInfo): boolean {
     return this.authUser.authority !== Authority.SYS_ADMIN && this.isSystem(image);
   }
 
+  /**
+   * DELETE — delete enabled.
+   *
+   * @param image image (ImageResourceInfo)
+   * @returns boolean observable or value
+   */
+
   deleteEnabled(image?: ImageResourceInfo): boolean {
     return this.authUser.authority === Authority.SYS_ADMIN || !this.isSystem(image);
   }
+
+  /**
+   * DELETE — delete image.
+   *
+   * @param image image (ImageResourceInfo)
+   */
 
   deleteImage($event: Event, image: ImageResourceInfo, itemIndex = -1) {
     if ($event) {
@@ -551,6 +672,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
       }
     });
   }
+
+  /**
+   * DELETE — delete images.
+   *
+   */
 
   deleteImages($event: Event) {
     if ($event) {
@@ -624,6 +750,12 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * download image.
+   *
+   * @param image image (ImageResourceInfo)
+   */
+
   downloadImage($event, image: ImageResourceInfo) {
     if ($event) {
       $event.stopPropagation();
@@ -631,12 +763,23 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     this.imageService.downloadImage(imageResourceType(image), image.resourceKey).subscribe();
   }
 
+  /**
+   * export image.
+   *
+   * @param image image (ImageResourceInfo)
+   */
+
   exportImage($event, image: ImageResourceInfo) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExportService.exportImage(imageResourceType(image), image.resourceKey);
   }
+
+  /**
+   * import image.
+   *
+   */
 
   importImage(): void {
     this.importExportService.importImage().subscribe((image) => {
@@ -650,12 +793,24 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     });
   }
 
+  /**
+   * select image.
+   *
+   * @param image image (ImageResourceInfo)
+   */
+
   selectImage($event, image: ImageResourceInfo) {
     if ($event) {
       $event.stopPropagation();
     }
     this.imageSelected.next(image);
   }
+
+  /**
+   * row click.
+   *
+   * @param image image (ImageResourceInfo)
+   */
 
   rowClick($event, image: ImageResourceInfo) {
     if (this.isScada) {
@@ -670,6 +825,11 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
       }
     }
   }
+
+  /**
+   * upload image.
+   *
+   */
 
   uploadImage(): void {
     this.dialog.open<UploadImageDialogComponent, UploadImageDialogData,
@@ -696,6 +856,12 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     });
   }
 
+  /**
+   * edit image.
+   *
+   * @param image image (ImageResourceInfo)
+   */
+
   editImage($event: Event, image: ImageResourceInfo, itemIndex = -1) {
     if ($event) {
       $event.stopPropagation();
@@ -721,6 +887,12 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * embed image.
+   *
+   * @param image image (ImageResourceInfo)
+   */
+
   embedImage($event: Event, image: ImageResourceInfo, itemIndex = -1) {
     if ($event) {
       $event.stopPropagation();
@@ -739,6 +911,13 @@ export class ImageGalleryComponent extends PageComponent implements OnInit, OnDe
       }
     });
   }
+
+  /**
+   * updated router params and data.
+   *
+   * @param queryParams query params (object)
+   * @param queryParamsHandling query params handling (QueryParamsHandling)
+   */
 
   protected updatedRouterParamsAndData(queryParams: object, queryParamsHandling: QueryParamsHandling = 'merge') {
     if (this.pageMode) {

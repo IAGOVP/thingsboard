@@ -33,6 +33,12 @@ import {
 } from '@shared/models/settings.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: sms provider configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-sms-provider-configuration`.
+ */
 @Component({
     selector: 'tb-sms-provider-configuration',
     templateUrl: './sms-provider-configuration.component.html',
@@ -42,10 +48,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => SmsProviderConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: sms provider configuration UI.
- */
+standalone: false
 })
 export class SmsProviderConfigurationComponent implements ControlValueAccessor, OnInit {
 
@@ -74,12 +77,29 @@ export class SmsProviderConfigurationComponent implements ControlValueAccessor, 
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.smsProviderConfigurationFormGroup = this.fb.group({
@@ -98,6 +118,12 @@ export class SmsProviderConfigurationComponent implements ControlValueAccessor, 
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -106,6 +132,12 @@ export class SmsProviderConfigurationComponent implements ControlValueAccessor, 
       this.smsProviderConfigurationFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (SmsProviderConfiguration | null)
+   */
 
   writeValue(value: SmsProviderConfiguration | null): void {
     const configuration = deepClone(value);
@@ -117,10 +149,20 @@ export class SmsProviderConfigurationComponent implements ControlValueAccessor, 
     this.smsProviderConfigurationFormGroup.patchValue({configuration}, {emitEvent: false});
   }
 
+  /**
+   * sms provider type changed.
+   *
+   */
+
   private smsProviderTypeChanged() {
     const type: SmsProviderType = this.smsProviderConfigurationFormGroup.get('type').value;
     this.smsProviderConfigurationFormGroup.patchValue({configuration: createSmsProviderConfiguration(type)}, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: SmsProviderConfiguration = null;

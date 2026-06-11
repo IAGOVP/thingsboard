@@ -38,16 +38,19 @@ import { AlarmRulesTableConfig } from "@home/components/alarm-rules/alarm-rules-
 import { UtilsService } from "@core/services/utils.service";
 import { ActivatedRoute, Router } from "@angular/router";
 
+
+/**
+ * Angular component: alarm rules table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rules-table`.
+ */
 @Component({
     selector: 'tb-alarm-rules-table',
     templateUrl: './alarm-rules-table.component.html',
     styleUrls: ['./alarm-rules-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [EntityDebugSettingsService],
-    standalone: false
-/**
- * Angular component: alarm rules table UI.
- */
+standalone: false
 })
 export class AlarmRulesTableComponent {
 

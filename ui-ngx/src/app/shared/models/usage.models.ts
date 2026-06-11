@@ -15,8 +15,9 @@
 ///
 
 /**
- * TypeScript models and enums for usage info.
+ * TypeScript interfaces, types, and enums for usage info (shared TypeScript models).
  */
+
 export interface UsageInfo {
   devices: number;
   maxDevices: number;

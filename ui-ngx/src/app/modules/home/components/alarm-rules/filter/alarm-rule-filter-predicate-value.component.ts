@@ -33,6 +33,12 @@ import { AlarmRuleValue } from "@shared/models/alarm-rule.models";
 import { FormControlsFrom } from "@shared/models/tenant.model";
 import { isDefinedAndNotNull } from "@core/utils";
 
+
+/**
+ * Angular component: alarm rule filter predicate value (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-filter-predicate-value`.
+ */
 @Component({
     selector: 'tb-alarm-rule-filter-predicate-value',
     templateUrl: './alarm-rule-filter-predicate-value.component.html',
@@ -49,10 +55,7 @@ import { isDefinedAndNotNull } from "@core/utils";
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm rule filter predicate value UI.
- */
+standalone: false
 })
 export class AlarmRuleFilterPredicateValueComponent implements ControlValueAccessor, Validator, OnInit, OnChanges {
 
@@ -78,6 +81,11 @@ export class AlarmRuleFilterPredicateValueComponent implements ControlValueAcces
   constructor(private fb: FormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.argumentsList = this.arguments ? Object.keys(this.arguments): [];
@@ -129,6 +137,12 @@ export class AlarmRuleFilterPredicateValueComponent implements ControlValueAcces
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
       this.filterPredicateValueFormGroup.disable({emitEvent: false});
@@ -139,6 +153,12 @@ export class AlarmRuleFilterPredicateValueComponent implements ControlValueAcces
       this.updateValueModeValidators(this.dynamicModeControl.value);
     }
   }
+
+  /**
+   * update value mode validators.
+   *
+   * @param isDynamicMode is dynamic mode (boolean)
+   */
 
   private updateValueModeValidators(isDynamicMode: boolean): void {
     if (isDynamicMode) {
@@ -156,18 +176,42 @@ export class AlarmRuleFilterPredicateValueComponent implements ControlValueAcces
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.filterPredicateValueFormGroup.valid ? null : {
       filterPredicateValue: {valid: false}
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param predicateValue predicate value (AlarmRuleValue<string | number | boolean>)
+   */
 
   writeValue(predicateValue: AlarmRuleValue<string | number | boolean>): void {
     if (isDefinedAndNotNull(predicateValue?.dynamicValueArgument)) {
@@ -179,6 +223,11 @@ export class AlarmRuleFilterPredicateValueComponent implements ControlValueAcces
     }
     this.filterPredicateValueFormGroup.patchValue(predicateValue, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.propagateChange(this.filterPredicateValueFormGroup.value);

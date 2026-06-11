@@ -26,16 +26,19 @@ import {
   ColorRangeSettingsComponent
 } from '@home/components/widget/lib/settings/common/color-range-settings.component';
 
+
+/**
+ * Angular component: color range panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-color-range-panel`.
+ */
 @Component({
     selector: 'tb-color-range-panel',
     templateUrl: './color-range-panel.component.html',
     providers: [],
     styleUrls: ['./color-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: color range panel UI.
- */
+standalone: false
 })
 export class ColorRangePanelComponent extends PageComponent implements OnInit {
 
@@ -58,11 +61,22 @@ export class ColorRangePanelComponent extends PageComponent implements OnInit {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.colorRangeFormGroup = this.fb.group({
         rangeList: [this.colorRangeSettings, []]
     });
   }
+
+  /**
+   * copy color settings.
+   *
+   * @param comp comp (ColorRangeSettingsComponent)
+   */
 
   copyColorSettings(comp: ColorRangeSettingsComponent) {
     this.colorRangeSettings = deepClone(comp.modelValue);
@@ -70,9 +84,19 @@ export class ColorRangePanelComponent extends PageComponent implements OnInit {
     this.colorRangeFormGroup.markAsDirty();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply color range settings.
+   *
+   */
 
   applyColorRangeSettings() {
     const colorRangeSettings: ColorRangeSettings = this.colorRangeFormGroup.get('rangeList').value;

@@ -47,5 +47,8 @@ export const bundlesRoutes: Routes = [
     MobileBundleTableConfigResolver
   ],
   imports: [],
+/**
+ * Angular NgModule bundling mobile bundle routing (home/mobile pages).
+ */
   exports: []})
 export class MobileBundleRoutingModule { }

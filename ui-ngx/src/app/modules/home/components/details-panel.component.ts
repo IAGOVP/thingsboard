@@ -30,14 +30,17 @@ import { UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: details panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-details-panel`.
+ */
 @Component({
     selector: 'tb-details-panel',
     templateUrl: './details-panel.component.html',
     styleUrls: ['./details-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: details panel UI.
- */
+standalone: false
 })
 export class DetailsPanelComponent extends PageComponent implements OnDestroy {
 
@@ -105,6 +108,11 @@ export class DetailsPanelComponent extends PageComponent implements OnDestroy {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.formSubscription !== null) {
       this.formSubscription.unsubscribe();
@@ -112,9 +120,19 @@ export class DetailsPanelComponent extends PageComponent implements OnDestroy {
     super.ngOnDestroy();
   }
 
+  /**
+   * Event handler for close details.
+   *
+   */
+
   onCloseDetails() {
     this.closeDetails.emit();
   }
+
+  /**
+   * Event handler for toggle details edit mode.
+   *
+   */
 
   onToggleDetailsEditMode() {
     if (!this.isAlwaysEdit) {
@@ -123,11 +141,21 @@ export class DetailsPanelComponent extends PageComponent implements OnDestroy {
     this.toggleDetailsEditMode.emit(this.isEditValue);
   }
 
+  /**
+   * Event handler for apply details.
+   *
+   */
+
   onApplyDetails() {
     if (this.theForm && this.theForm.valid) {
       this.applyDetails.emit();
     }
   }
+
+  /**
+   * Event handler for toggle search.
+   *
+   */
 
   onToggleSearch() {
     this.showSearchPane = !this.showSearchPane;

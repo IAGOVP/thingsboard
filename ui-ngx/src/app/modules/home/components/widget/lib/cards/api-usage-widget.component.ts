@@ -31,15 +31,18 @@ import {
   getUniqueDataKeys
 } from '@home/components/widget/lib/settings/cards/api-usage-settings.component.models';
 
+
+/**
+ * Angular component: api usage widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-api-usage-widget`.
+ */
 @Component({
     selector: 'tb-api-usage-widget',
     templateUrl: './api-usage-widget.component.html',
     styleUrls: ['api-usage-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: api usage widget UI.
- */
+standalone: false
 })
 export class ApiUsageWidgetComponent implements OnInit, OnDestroy {
 
@@ -73,6 +76,11 @@ export class ApiUsageWidgetComponent implements OnInit, OnDestroy {
               private sanitizer: DomSanitizer,
               private cd: ChangeDetectorRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.ctx.$scope.apiUsageWidget = this;
@@ -122,9 +130,22 @@ export class ApiUsageWidgetComponent implements OnInit, OnDestroy {
     this.padding = this.settings.background.overlay.enabled ? undefined : this.settings.padding;
   }
 
+  /**
+   * is finite number.
+   *
+   * @param value value (any)
+   * @returns boolean observable or value
+   */
+
   private isFiniteNumber(value: any): boolean {
     return typeof value === 'number' && isFinite(value);
   }
+
+  /**
+   * update state.
+   *
+   * @param stateName state name (string)
+   */
 
   updateState($event: MouseEvent, stateName: string) {
     $event?.preventDefault();
@@ -132,6 +153,11 @@ export class ApiUsageWidgetComponent implements OnInit, OnDestroy {
       this.ctx.stateController.updateState(stateName, this.ctx.stateController.getStateParams(), this.ctx.isMobile);
     }
   }
+
+  /**
+   * parse api usages.
+   *
+   */
 
   parseApiUsages() {
     this.settings.apiUsageDataKeys.forEach((key) => {
@@ -146,11 +172,22 @@ export class ApiUsageWidgetComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.contentResize$) {
       this.contentResize$.disconnect();
     }
   }
+
+  /**
+   * to short number.
+   *
+   * @param number number (any)
+   */
 
   private toShortNumber(number: any, decimals = 1) {
     if (!Number.isFinite(number) || number < 0) {
@@ -165,6 +202,11 @@ export class ApiUsageWidgetComponent implements OnInit, OnDestroy {
     }
     return `${Number(number.toFixed(decimals))}`;
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');

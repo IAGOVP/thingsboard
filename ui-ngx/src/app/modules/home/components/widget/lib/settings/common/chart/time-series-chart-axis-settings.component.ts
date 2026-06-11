@@ -38,6 +38,12 @@ import { IAliasController } from '@app/core/public-api';
 import { Datasource } from '@app/shared/public-api';
 import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/key/data-keys.component.models';
 
+
+/**
+ * Angular component: time series chart axis settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-axis-settings`.
+ */
 @Component({
     selector: 'tb-time-series-chart-axis-settings',
     templateUrl: './time-series-chart-axis-settings.component.html',
@@ -54,10 +60,7 @@ import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/k
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: time series chart axis settings UI.
- */
+standalone: false
 })
 export class TimeSeriesChartAxisSettingsComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -113,6 +116,11 @@ export class TimeSeriesChartAxisSettingsComponent implements OnInit, ControlValu
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
 
     this.axisPositions = this.axisType === 'xAxis' ? [AxisPosition.top, AxisPosition.bottom] :
@@ -163,18 +171,42 @@ export class TimeSeriesChartAxisSettingsComponent implements OnInit, ControlValu
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.axisSettingsFormGroup.valid ? null : {
       axisSettings: false
     };
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -185,6 +217,12 @@ export class TimeSeriesChartAxisSettingsComponent implements OnInit, ControlValu
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartAxisSettings | TimeSeriesChartYAxisSettings)
+   */
 
   writeValue(value: TimeSeriesChartAxisSettings | TimeSeriesChartYAxisSettings): void {
     this.modelValue = value;
@@ -198,6 +236,11 @@ export class TimeSeriesChartAxisSettingsComponent implements OnInit, ControlValu
       this.settingsExpanded = show;
     });
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const show: boolean = this.axisSettingsFormGroup.get('show').value;
@@ -250,6 +293,11 @@ export class TimeSeriesChartAxisSettingsComponent implements OnInit, ControlValu
       }
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.axisSettingsFormGroup.getRawValue();

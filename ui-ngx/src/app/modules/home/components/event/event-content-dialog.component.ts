@@ -35,14 +35,17 @@ export interface EventContentDialogData {
   contentType: ContentType;
 }
 
+
+/**
+ * Angular component: event content dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-event-content-dialog`.
+ */
 @Component({
     selector: 'tb-event-content-dialog',
     templateUrl: './event-content-dialog.component.html',
     styleUrls: ['./event-content-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: event content dialog UI.
- */
+standalone: false
 })
 export class EventContentDialogComponent extends DialogComponent<EventContentDialogComponent> implements OnInit, OnDestroy {
 
@@ -63,6 +66,11 @@ export class EventContentDialogComponent extends DialogComponent<EventContentDia
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.title = this.data.title;
     this.contentType = this.data.contentType;
@@ -70,10 +78,21 @@ export class EventContentDialogComponent extends DialogComponent<EventContentDia
     this.createEditor(this.eventContentEditorElmRef, this.data.content);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.aceEditor?.destroy();
     super.ngOnDestroy();
   }
+
+  /**
+   * is json.
+   *
+   * @param str str (string)
+   */
 
   private isJson(str: string) {
     try {
@@ -82,6 +101,13 @@ export class EventContentDialogComponent extends DialogComponent<EventContentDia
       return false;
     }
   }
+
+  /**
+   * POST/PUT entity — create editor.
+   *
+   * @param editorElementRef editor element ref (ElementRef)
+   * @param content content (string)
+   */
 
   private createEditor(editorElementRef: ElementRef, content: string) {
     const editorElement = editorElementRef.nativeElement;

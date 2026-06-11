@@ -19,8 +19,11 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.StringUtils;
 /**
- * JSON configuration for TbSendRpcReply rule node.
+ * JSON configuration POJO for {@link TbSendRpcReply} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbSendRpcReplyNodeConfiguration implements NodeConfiguration<TbSendRpcReplyNodeConfiguration> {
@@ -32,6 +35,12 @@ public class TbSendRpcReplyNodeConfiguration implements NodeConfiguration<TbSend
     private String serviceIdMetaDataAttribute;
     private String sessionIdMetaDataAttribute;
     private String requestIdMetaDataAttribute;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbSendRpcReplyNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbSendRpcReplyNodeConfiguration defaultConfiguration() {
@@ -41,14 +50,32 @@ public class TbSendRpcReplyNodeConfiguration implements NodeConfiguration<TbSend
         configuration.setRequestIdMetaDataAttribute(REQUEST_ID);
         return configuration;
     }
+    /**
+     * Returns service id meta data attribute.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getServiceIdMetaDataAttribute() {
         return !StringUtils.isEmpty(serviceIdMetaDataAttribute) ? serviceIdMetaDataAttribute : SERVICE_ID;
     }
+    /**
+     * Returns session id meta data attribute.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getSessionIdMetaDataAttribute() {
         return !StringUtils.isEmpty(sessionIdMetaDataAttribute) ? sessionIdMetaDataAttribute : SESSION_ID;
     }
+    /**
+     * Returns request id meta data attribute.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getRequestIdMetaDataAttribute() {
         return !StringUtils.isEmpty(requestIdMetaDataAttribute) ? requestIdMetaDataAttribute : REQUEST_ID;

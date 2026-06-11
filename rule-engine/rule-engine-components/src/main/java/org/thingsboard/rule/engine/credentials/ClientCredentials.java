@@ -24,8 +24,9 @@ import org.thingsboard.rule.engine.mqtt.azure.AzureIotHubSasCredentials;
 
 import javax.net.ssl.SSLException;
 /**
- * Rule engine client credentials API.
+ * client credentials contract (credentials helper types).
  */
+
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
@@ -34,8 +35,20 @@ import javax.net.ssl.SSLException;
         @JsonSubTypes.Type(value = AzureIotHubSasCredentials.class, name = "sas"),
         @JsonSubTypes.Type(value = CertPemCredentials.class, name = "cert.PEM")})
 public interface ClientCredentials {
+    /**
+     * Returns type.
+     *
+     * @return {@link CredentialsType}
+     * @throws SSLException if sslexception is thrown during processing
+     */
     @JsonIgnore
     CredentialsType getType();
+    /**
+     * Init ssl context.
+     *
+     * @return {@link SslContext}
+     * @throws SSLException if sslexception is thrown during processing
+     */
 
     @JsonIgnore
     default SslContext initSslContext() throws SSLException{

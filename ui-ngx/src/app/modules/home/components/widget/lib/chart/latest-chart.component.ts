@@ -48,15 +48,18 @@ export interface LatestChartComponentCallbacks {
   onItemClick?: ($event: Event, item: LatestChartDataItem) => void;
 }
 
+
+/**
+ * Angular component: latest chart (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-latest-chart`.
+ */
 @Component({
     selector: 'tb-latest-chart',
     templateUrl: './latest-chart.component.html',
     styleUrls: ['./latest-chart.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: latest chart UI.
- */
+standalone: false
 })
 export class LatestChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -107,6 +110,11 @@ export class LatestChartComponent implements OnInit, OnDestroy, AfterViewInit {
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.showLegend = this.settings.showLegend;
 
@@ -126,6 +134,11 @@ export class LatestChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.latestChart = this.callbacks.createChart(this.chartShape, this.renderer);
     this.latestChart.onItemClick(this.callbacks.onItemClick);
@@ -136,6 +149,11 @@ export class LatestChartComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onResize();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.shapeResize$) {
       this.shapeResize$.disconnect();
@@ -145,11 +163,21 @@ export class LatestChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     if (this.latestChart) {
@@ -165,11 +193,23 @@ export class LatestChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Event handler for legend item enter.
+   *
+   * @param item item (LatestChartLegendItem)
+   */
+
   public onLegendItemEnter(item: LatestChartLegendItem) {
     if (!item.total && item.hasValue) {
       this.latestChart.keyEnter(item.dataKey);
     }
   }
+
+  /**
+   * Event handler for legend item leave.
+   *
+   * @param item item (LatestChartLegendItem)
+   */
 
   public onLegendItemLeave(item: LatestChartLegendItem) {
     if (!item.total && item.hasValue) {
@@ -177,11 +217,22 @@ export class LatestChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * toggle legend item.
+   *
+   * @param item item (LatestChartLegendItem)
+   */
+
   public toggleLegendItem(item: LatestChartLegendItem) {
     if (!item.total && item.hasValue) {
       this.latestChart.toggleKey(item.dataKey);
     }
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     if (this.legendHorizontal) {

@@ -33,6 +33,12 @@ import { coerceBoolean } from '@shared/public-api';
 import { isEqual } from '@core/public-api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: kv map config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-kv-map-config`.
+ */
 @Component({
     selector: 'tb-kv-map-config',
     templateUrl: './kv-map-config.component.html',
@@ -49,10 +55,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: kv map config UI.
- */
+standalone: false
 })
 export class KvMapConfigComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -96,6 +99,11 @@ export class KvMapConfigComponent implements ControlValueAccessor, OnInit, Valid
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ngControl = this.injector.get(NgControl);
     if (this.ngControl != null) {
@@ -113,16 +121,40 @@ export class KvMapConfigComponent implements ControlValueAccessor, OnInit, Valid
       });
   }
 
+  /**
+   * key vals form array.
+   *
+   * @returns FormArray observable or value
+   */
+
   keyValsFormArray(): FormArray {
     return this.kvListFormGroup.get('keyVals') as FormArray;
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -175,6 +207,12 @@ export class KvMapConfigComponent implements ControlValueAccessor, OnInit, Valid
     return !isEqual(errors, {}) ? errors : null;
   };
 
+  /**
+   * write value.
+   *
+   * @param keyValMap key val map ({ [key: string]: string })
+   */
+
   writeValue(keyValMap: { [key: string]: string }): void {
     const keyValuesData = Object.keys(keyValMap ?? {}).map(key => ({key, value: keyValMap[key]}));
     if (this.keyValsFormArray().length === keyValuesData.length) {
@@ -191,9 +229,20 @@ export class KvMapConfigComponent implements ControlValueAccessor, OnInit, Valid
     }
   }
 
+  /**
+   * DELETE — remove key val.
+   *
+   * @param index index (number)
+   */
+
   public removeKeyVal(index: number) {
     this.keyValsFormArray().removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add key val.
+   *
+   */
 
   public addKeyVal() {
     this.keyValsFormArray().push(this.fb.group({
@@ -201,6 +250,11 @@ export class KvMapConfigComponent implements ControlValueAccessor, OnInit, Valid
       value: ['', [Validators.required, Validators.pattern(/(?:.|\s)*\S(&:.|\s)*/)]]
     }, {validators: this.uniqueKeyValuePairValidator ? [this.duplicateValuesValidator] : []}));
   }
+
+  /**
+   * validate.
+   *
+   */
 
   public validate() {
     const kvList: { key: string; value: string }[] = this.kvListFormGroup.get('keyVals').value;
@@ -225,6 +279,11 @@ export class KvMapConfigComponent implements ControlValueAccessor, OnInit, Valid
     }
     return null;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const kvList: { key: string; value: string }[] = this.kvListFormGroup.get('keyVals').value;

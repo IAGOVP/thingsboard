@@ -38,6 +38,12 @@ import { EntityDebugSettingsService } from '@home/components/entity/debug/entity
 import { AdditionalDebugActionConfig } from '@home/components/entity/debug/entity-debug-settings.model';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
+/**
+ * Angular component: entity debug settings button (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-debug-settings-button`.
+ */
 @Component({
     selector: 'tb-entity-debug-settings-button',
     templateUrl: './entity-debug-settings-button.component.html',
@@ -54,10 +60,7 @@ import { EntityType } from '@shared/models/entity-type.models';
         },
         EntityDebugSettingsService
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
-/**
- * Angular component: entity debug settings button UI.
- */
+changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntityDebugSettingsButtonComponent implements ControlValueAccessor {
 
@@ -118,6 +121,12 @@ export class EntityDebugSettingsButtonComponent implements ControlValueAccessor 
     return this.debugSettingsFormGroup.get('allEnabledUntil').value;
   }
 
+  /**
+   * Event handler for open debug strategy panel.
+   *
+   * @param matButton mat button (MatButton)
+   */
+
   onOpenDebugStrategyPanel($event: Event, matButton: MatButton): void {
     if ($event) {
       $event.stopPropagation();
@@ -143,11 +152,23 @@ export class EntityDebugSettingsButtonComponent implements ControlValueAccessor 
 
   registerOnTouched(_: () => void): void {}
 
+  /**
+   * write value.
+   *
+   * @param settings settings (EntityDebugSettings)
+   */
+
   writeValue(settings: EntityDebugSettings): void {
     this.debugSettingsFormGroup.patchValue(settings, {emitEvent: false});
     this.allEnabledSubject.next(settings?.allEnabled);
     this.debugSettingsFormGroup.get('allEnabled').updateValueAndValidity({onlySelf: true});
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;

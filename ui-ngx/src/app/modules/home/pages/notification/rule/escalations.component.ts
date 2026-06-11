@@ -34,6 +34,12 @@ import { NonConfirmedNotificationEscalation } from '@shared/models/notification.
 import { takeUntil } from 'rxjs/operators';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: escalations (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-escalations-component`.
+ */
 @Component({
     selector: 'tb-escalations-component',
     templateUrl: './escalations.component.html',
@@ -50,10 +56,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: escalations UI.
- */
+standalone: false
 })
 export class EscalationsComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
 
@@ -74,17 +77,39 @@ export class EscalationsComponent implements ControlValueAccessor, Validator, On
               private fb: FormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.escalationsFormGroup = this.fb.group({
@@ -100,6 +125,12 @@ export class EscalationsComponent implements ControlValueAccessor, Validator, On
     return this.escalationsFormGroup.get('escalations') as FormArray;
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -108,6 +139,12 @@ export class EscalationsComponent implements ControlValueAccessor, Validator, On
       this.escalationsFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param escalations escalations ({[key: string]: Array<string>} | null)
+   */
 
   writeValue(escalations: {[key: string]: Array<string>} | null): void {
     const escalationParse: Array<NonConfirmedNotificationEscalation> = [];
@@ -133,9 +170,20 @@ export class EscalationsComponent implements ControlValueAccessor, Validator, On
     }
   }
 
+  /**
+   * DELETE — remove escalation.
+   *
+   * @param index index (number)
+   */
+
   public removeEscalation(index: number) {
     (this.escalationsFormGroup.get('escalations') as FormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add escalation.
+   *
+   */
 
   public addEscalation(delay = 3600000) {
     const escalation = {
@@ -146,6 +194,13 @@ export class EscalationsComponent implements ControlValueAccessor, Validator, On
     escalationArray.push(this.fb.control(escalation, []), {emitEvent: false});
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   public validate(c: AbstractControl): ValidationErrors | null {
     return this.escalationsFormGroup.valid ? null : {
       escalation: {
@@ -153,6 +208,11 @@ export class EscalationsComponent implements ControlValueAccessor, Validator, On
       },
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const escalations = {};

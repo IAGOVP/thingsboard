@@ -24,14 +24,17 @@ import { ActionNotificationShow } from '@core/notification/notification.actions'
 import { TranslateService } from '@ngx-translate/core';
 import { validateEmail } from '@app/core/utils';
 
+
+/**
+ * Angular component: reset password request (login pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-reset-password-request`.
+ */
 @Component({
     selector: 'tb-reset-password-request',
     templateUrl: './reset-password-request.component.html',
     styleUrls: ['./password.component.scss'],
-    standalone: false
-/**
- * Angular component: reset password request UI.
- */
+standalone: false
 })
 export class ResetPasswordRequestComponent extends PageComponent {
 
@@ -48,10 +51,20 @@ export class ResetPasswordRequestComponent extends PageComponent {
     super(store);
   }
 
+  /**
+   * disable inputs.
+   *
+   */
+
   disableInputs() {
     this.requestPasswordRequest.disable();
     this.clicked = true;
   }
+
+  /**
+   * send reset password link.
+   *
+   */
 
   sendResetPasswordLink() {
     if (this.requestPasswordRequest.valid) {

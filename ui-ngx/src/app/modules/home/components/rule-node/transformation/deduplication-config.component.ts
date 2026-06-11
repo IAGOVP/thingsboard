@@ -20,17 +20,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { deduplicationStrategiesTranslations, FetchMode } from '@home/components/rule-node/rule-node-config.models';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+
+/**
+ * Angular component: deduplication config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-transformation-node-deduplication-config`.
+ */
 @Component({
     selector: 'tb-transformation-node-deduplication-config',
     templateUrl: './deduplication-config.component.html',
     styleUrls: [],
-    standalone: false
 
-/**
-
- * Angular component: deduplication config UI.
-
- */
+standalone: false
 })
 
 export class DeduplicationConfigComponent extends RuleNodeConfigurationComponent {
@@ -44,9 +46,21 @@ export class DeduplicationConfigComponent extends RuleNodeConfigurationComponent
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.deduplicationConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.deduplicationConfigForm = this.fb.group({
@@ -61,6 +75,13 @@ export class DeduplicationConfigComponent extends RuleNodeConfigurationComponent
     });
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (!configuration) {
       configuration = {};
@@ -71,6 +92,12 @@ export class DeduplicationConfigComponent extends RuleNodeConfigurationComponent
     return super.prepareInputConfig(configuration);
   }
 
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
+
   protected updateValidators(emitEvent: boolean) {
     if (this.deduplicationConfigForm.get('strategy').value === this.deduplicationStrategie.ALL) {
       this.deduplicationConfigForm.get('outMsgType').enable({emitEvent: false});
@@ -79,6 +106,12 @@ export class DeduplicationConfigComponent extends RuleNodeConfigurationComponent
     }
     this.deduplicationConfigForm.get('outMsgType').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected validatorTriggers(): string[] {
     return ['strategy'];

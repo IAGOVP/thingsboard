@@ -30,15 +30,18 @@ export interface AlarmRuleScheduleDialogData {
   arguments: Record<string, CalculatedFieldArgument>;
 }
 
+
+/**
+ * Angular component: cf alarm schedule dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-cf-alarm-schedule-dialog`.
+ */
 @Component({
     selector: 'tb-cf-alarm-schedule-dialog',
     templateUrl: './cf-alarm-schedule-dialog.component.html',
     providers: [],
     styleUrls: ['./cf-alarm-rules-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: cf alarm schedule dialog UI.
- */
+standalone: false
 })
 export class CfAlarmScheduleDialogComponent extends DialogComponent<CfAlarmScheduleDialogComponent, AlarmRuleSchedule>{
 
@@ -64,9 +67,19 @@ export class CfAlarmScheduleDialogComponent extends DialogComponent<CfAlarmSched
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close(this.alarmScheduleControl.value);

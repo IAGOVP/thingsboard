@@ -16,11 +16,11 @@
 
 import { HasUUID } from '@shared/models/id/has-uuid';
 
+
 /**
-
- * TypeScript models and enums for device credentials id.
-
+ * TypeScript interfaces, types, and enums for device credentials id (shared TypeScript models).
  */
+
 
 export class DeviceCredentialsId implements HasUUID {
   id: string;

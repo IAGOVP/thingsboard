@@ -20,14 +20,17 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 
 type Channel = 'R' | 'G' | 'B';
 
+
+/**
+ * Angular component: rgba input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rgba-input`.
+ */
 @Component({
   selector: 'tb-rgba-input',
   templateUrl: './rgba-input.component.html',
   styleUrl: './color-input.base.scss',
-  standalone: false
-/**
- * Angular component: rgba input UI.
- */
+standalone: false
 })
 export class RgbaInputComponent {
 
@@ -52,6 +55,12 @@ export class RgbaInputComponent {
     return this.color ? Math.round(this.color.getRgba().getAlpha() * 100).toString() : '';
   }
 
+  /**
+   * Event handler for alpha input change.
+   *
+   * @param inputValue input value (number)
+   */
+
   public onAlphaInputChange(inputValue: number): void {
     if (!this.color) return;
     const color = this.color.getRgba();
@@ -61,6 +70,13 @@ export class RgbaInputComponent {
       this.colorChange.emit(new Color(newColor));
     }
   }
+
+  /**
+   * Event handler for input change.
+   *
+   * @param newValue new value (number)
+   * @param channel channel (Channel)
+   */
 
   onInputChange(newValue: number, channel: Channel) {
     if (!this.color) return;

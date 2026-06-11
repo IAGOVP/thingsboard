@@ -43,6 +43,12 @@ import { EntityType, entityTypeTranslations } from '@shared/models/entity-type.m
 import { isDefinedAndNotNull } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: entity types version create (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-types-version-create`.
+ */
 @Component({
     selector: 'tb-entity-types-version-create',
     templateUrl: './entity-types-version-create.component.html',
@@ -59,10 +65,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity types version create UI.
- */
+standalone: false
 })
 export class EntityTypesVersionCreateComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -93,6 +96,11 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.entityTypesVersionCreateFormGroup = this.fb.group({
       entityTypes: this.fb.array([], [])
@@ -104,12 +112,30 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -123,11 +149,23 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value ({[entityType: string]: EntityTypeVersionCreateConfig} | undefined)
+   */
+
   writeValue(value: {[entityType: string]: EntityTypeVersionCreateConfig} | undefined): void {
     this.modelValue = value;
     this.entityTypesVersionCreateFormGroup.setControl('entityTypes',
       this.prepareEntityTypesFormArray(value), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.entityTypesVersionCreateFormGroup.valid && this.entityTypesFormGroupArray().length ? null : {
@@ -136,6 +174,13 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
       },
     };
   }
+
+  /**
+   * prepare entity types form array.
+   *
+   * @param entityTypes entity types ({[entityType: string]: EntityTypeVersionCreateConfig} | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareEntityTypesFormArray(entityTypes: {[entityType: string]: EntityTypeVersionCreateConfig} | undefined): UntypedFormArray {
     const entityTypesControls: Array<AbstractControl> = [];
@@ -147,6 +192,14 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     }
     return this.fb.array(entityTypesControls);
   }
+
+  /**
+   * POST/PUT entity — create entity type control.
+   *
+   * @param entityType entity type (EntityType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns AbstractControl observable or value
+   */
 
   private createEntityTypeControl(entityType: EntityType, config: EntityTypeVersionCreateConfig): AbstractControl {
     const entityTypeControl = this.fb.group(
@@ -172,6 +225,12 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     return entityTypeControl;
   }
 
+  /**
+   * update entity type validators.
+   *
+   * @param entityTypeControl entity type control (AbstractControl)
+   */
+
   private updateEntityTypeValidators(entityTypeControl: AbstractControl): void {
     const allEntities: boolean = entityTypeControl.get('config').get('allEntities').value;
     if (allEntities) {
@@ -182,22 +241,52 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     entityTypeControl.get('config').get('entityIds').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * entity types form group array.
+   *
+   * @returns UntypedFormGroup[] observable or value
+   */
+
   entityTypesFormGroupArray(): UntypedFormGroup[] {
     return (this.entityTypesVersionCreateFormGroup.get('entityTypes') as UntypedFormArray).controls as UntypedFormGroup[];
   }
+
+  /**
+   * entity types form group expanded.
+   *
+   * @param entityTypeControl entity type control (AbstractControl)
+   * @returns boolean observable or value
+   */
 
   entityTypesFormGroupExpanded(entityTypeControl: AbstractControl): boolean {
     return !!(entityTypeControl as any).expanded;
   }
 
+  /**
+   * DELETE — remove entity type.
+   *
+   * @param index index (number)
+   */
+
   public removeEntityType(index: number) {
     (this.entityTypesVersionCreateFormGroup.get('entityTypes') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add enabled.
+   *
+   * @returns boolean observable or value
+   */
 
   public addEnabled(): boolean {
     const entityTypesArray = this.entityTypesVersionCreateFormGroup.get('entityTypes') as UntypedFormArray;
     return entityTypesArray.length < exportableEntityTypes.length;
   }
+
+  /**
+   * POST/PUT entity — add entity type.
+   *
+   */
 
   public addEntityType() {
     const entityTypesArray = this.entityTypesVersionCreateFormGroup.get('entityTypes') as UntypedFormArray;
@@ -221,11 +310,23 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     this.entityTypesVersionCreateFormGroup.updateValueAndValidity();
   }
 
+  /**
+   * DELETE — remove all.
+   *
+   */
+
   public removeAll() {
     const entityTypesArray = this.entityTypesVersionCreateFormGroup.get('entityTypes') as UntypedFormArray;
     entityTypesArray.clear();
     this.entityTypesVersionCreateFormGroup.updateValueAndValidity();
   }
+
+  /**
+   * entity type text.
+   *
+   * @param entityTypeControl entity type control (AbstractControl)
+   * @returns string observable or value
+   */
 
   entityTypeText(entityTypeControl: AbstractControl): string {
     const entityType: EntityType = entityTypeControl.get('entityType').value;
@@ -242,6 +343,13 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     }
   }
 
+  /**
+   * allowed entity types.
+   *
+   * @param entityTypeControl entity type control (AbstractControl)
+   * @returns Array<EntityType> observable or value
+   */
+
   allowedEntityTypes(entityTypeControl?: AbstractControl): Array<EntityType> {
     let res = [...exportableEntityTypes];
     const currentEntityType: EntityType = entityTypeControl?.get('entityType')?.value;
@@ -251,6 +359,11 @@ export class EntityTypesVersionCreateComponent extends PageComponent implements 
     res = res.filter(entityType => !usedEntityTypes.includes(entityType) || entityType === currentEntityType);
     return res;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: [{entityType: string; config: EntityTypeVersionCreateConfig}] =

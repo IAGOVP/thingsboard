@@ -22,11 +22,11 @@ import { EntityId } from '@shared/models/id/entity-id';
 import { EntitySearchQuery } from '@shared/models/relation.models';
 import { HasTenantId, HasVersion } from '@shared/models/entity.models';
 
+
 /**
-
- * TypeScript models and enums for attributes entity view.
-
+ * TypeScript interfaces, types, and enums for attributes entity view (shared TypeScript models).
  */
+
 
 export interface AttributesEntityView {
   cs: Array<string>;

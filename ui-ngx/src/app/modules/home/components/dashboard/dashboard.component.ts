@@ -61,15 +61,18 @@ import { TbPopoverComponent } from '@shared/components/popover.component';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { TbContextMenuEvent } from '@shared/models/jquery-event.models';
 
+
+/**
+ * Angular component: dashboard (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard`.
+ */
 @Component({
     selector: 'tb-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: dashboard UI.
- */
+standalone: false
 })
 export class DashboardComponent extends PageComponent implements IDashboardComponent, DoCheck, OnInit, OnDestroy, AfterViewInit, OnChanges {
 
@@ -223,6 +226,11 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     this.authUser = getCurrentAuthUser(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.dashboardWidgets.parentDashboard = this.parentDashboard;
     this.dashboardWidgets.popoverComponent = this.popoverComponent;
@@ -281,6 +289,11 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
 
     this.updateWidgets();
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
@@ -349,14 +362,29 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * update widgets.
+   *
+   */
+
   private updateWidgets() {
     this.dashboardWidgets.setWidgets(this.widgets, this.widgetLayouts);
     this.dashboardWidgets.doCheck();
   }
 
+  /**
+   * update widget layouts.
+   *
+   */
+
   private updateWidgetLayouts() {
     this.dashboardWidgets.widgetLayoutsUpdated();
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.gridsterResize$ = new ResizeObserver(() => {
@@ -366,6 +394,15 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     });
     this.gridsterResize$.observe(this.gridster.el.parentElement);
   }
+
+  /**
+   * Event handler for update timewindow.
+   *
+   * @param startTimeMs start time ms (number)
+   * @param endTimeMs end time ms (number)
+   * @param interval interval (number)
+   * @param persist persist (boolean)
+   */
 
   onUpdateTimewindow(startTimeMs: number, endTimeMs: number, interval?: number, persist?: boolean): void {
     this.ngZone.run(() => {
@@ -378,6 +415,11 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     });
   }
 
+  /**
+   * Event handler for reset timewindow.
+   *
+   */
+
   onResetTimewindow(): void {
     this.ngZone.run(() => {
       if (this.originalDashboardTimewindow) {
@@ -388,6 +430,12 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     });
   }
 
+  /**
+   * is autofill height.
+   *
+   * @returns boolean observable or value
+   */
+
   isAutofillHeight(): boolean {
     if (this.isMobileSize) {
       return isDefined(this.mobileAutofillHeight) ? this.mobileAutofillHeight : false;
@@ -395,6 +443,11 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
       return isDefined(this.autofillHeight) ? this.autofillHeight : false;
     }
   }
+
+  /**
+   * Event handler for dashboard mouse down.
+   *
+   */
 
   onDashboardMouseDown($event: MouseEvent) {
     if (this.callbacks && this.callbacks.onDashboardMouseDown) {
@@ -404,6 +457,11 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
       this.callbacks.onDashboardMouseDown($event);
     }
   }
+
+  /**
+   * open dashboard context menu.
+   *
+   */
 
   openDashboardContextMenu($event: TbContextMenuEvent) {
     if (this.callbacks && this.callbacks.prepareDashboardContextMenu) {
@@ -420,6 +478,12 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * open widget context menu.
+   *
+   * @param widget widget (DashboardWidget)
+   */
+
   private openWidgetContextMenu($event: TbContextMenuEvent, widget: DashboardWidget) {
     if (this.callbacks && this.callbacks.prepareWidgetContextMenu) {
       const items = this.callbacks.prepareWidgetContextMenu($event, widget.widget, widget.isReference);
@@ -435,9 +499,22 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * Event handler for widget fullscreen changed.
+   *
+   * @param expanded expanded (boolean)
+   */
+
   onWidgetFullscreenChanged(expanded: boolean) {
     this.isWidgetExpanded = expanded;
   }
+
+  /**
+   * Event handler for widget component action.
+   *
+   * @param action action (WidgetComponentAction)
+   * @param widget widget (DashboardWidget)
+   */
 
   onWidgetComponentAction(action: WidgetComponentAction, widget: DashboardWidget) {
     const $event = action.event;
@@ -466,17 +543,35 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * widget mouse down.
+   *
+   * @param widget widget (DashboardWidget)
+   */
+
   private widgetMouseDown($event: Event, widget: DashboardWidget) {
     if (this.callbacks && this.callbacks.onWidgetMouseDown) {
       this.callbacks.onWidgetMouseDown($event, widget.widget);
     }
   }
 
+  /**
+   * widget clicked.
+   *
+   * @param widget widget (DashboardWidget)
+   */
+
   private widgetClicked($event: Event, widget: DashboardWidget) {
     if (this.callbacks && this.callbacks.onWidgetClicked) {
       this.callbacks.onWidgetClicked($event, widget.widget);
     }
   }
+
+  /**
+   * edit widget.
+   *
+   * @param widget widget (DashboardWidget)
+   */
 
   private editWidget($event: Event, widget: DashboardWidget) {
     if ($event) {
@@ -487,6 +582,12 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * replace reference with widget copy.
+   *
+   * @param widget widget (DashboardWidget)
+   */
+
   private replaceReferenceWithWidgetCopy($event: Event, widget: DashboardWidget) {
     if ($event) {
       $event.stopPropagation();
@@ -495,6 +596,12 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
       this.callbacks.replaceReferenceWithWidgetCopy($event, widget.widget);
     }
   }
+
+  /**
+   * export widget.
+   *
+   * @param widget widget (DashboardWidget)
+   */
 
   private exportWidget($event: Event, widget: DashboardWidget) {
     if ($event) {
@@ -509,6 +616,12 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * DELETE — remove widget.
+   *
+   * @param widget widget (DashboardWidget)
+   */
+
   private removeWidget($event: Event, widget: DashboardWidget) {
     if ($event) {
       $event.stopPropagation();
@@ -518,12 +631,26 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * highlight widget.
+   *
+   * @param widgetId widget id (string)
+   * @param delay delay (number)
+   */
+
   highlightWidget(widgetId: string, delay?: number) {
     const highlighted = this.dashboardWidgets.highlightWidget(widgetId);
     if (highlighted) {
       this.scrollToWidget(highlighted, delay);
     }
   }
+
+  /**
+   * select widget.
+   *
+   * @param widgetId widget id (string)
+   * @param delay delay (number)
+   */
 
   selectWidget(widgetId: string, delay?: number) {
     const selected = this.dashboardWidgets.selectWidget(widgetId);
@@ -532,10 +659,23 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * get selected widget.
+   *
+   * @returns Widget observable or value
+   */
+
   getSelectedWidget(): Widget {
     const dashboardWidget = this.dashboardWidgets.getSelectedWidget();
     return dashboardWidget ? dashboardWidget.widget : null;
   }
+
+  /**
+   * get event grid position.
+   *
+   * @param event DOM or Angular event object
+   * @returns WidgetPosition observable or value
+   */
 
   getEventGridPosition(event: TbContextMenuEvent | KeyboardEvent): WidgetPosition {
     const pos: WidgetPosition = {
@@ -557,6 +697,11 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     return pos;
   }
 
+  /**
+   * reset highlight.
+   *
+   */
+
   resetHighlight() {
     const highlighted = this.dashboardWidgets.resetHighlight();
     if (highlighted) {
@@ -565,6 +710,13 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
       }, 0);
     }
   }
+
+  /**
+   * scroll to widget.
+   *
+   * @param widget widget (DashboardWidget)
+   * @param delay delay (number)
+   */
 
   private scrollToWidget(widget: DashboardWidget, delay?: number) {
     const parentElement = this.gridster.el as HTMLElement;
@@ -584,6 +736,11 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     });
   }
 
+  /**
+   * Event handler for gridster parent resize.
+   *
+   */
+
   private onGridsterParentResize() {
     const parentHeight = this.gridster.el.offsetHeight;
     if (this.isMobileSize && this.mobileAutofillHeight && parentHeight) {
@@ -591,6 +748,12 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
     this.notifyGridsterOptionsChanged();
   }
+
+  /**
+   * update grid opts.
+   *
+   * @param parentHeight parent height (number)
+   */
 
   private updateGridOpts(parentHeight?: number) {
     let updateWidgetRowsAndSort = false;
@@ -615,20 +778,40 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * update column opts.
+   *
+   */
+
   private updateColumnOpts() {
     this.gridsterOpts.minCols = this.columns ? this.columns : 24;
     this.gridsterOpts.outerMargin = isDefined(this.outerMargin) ? this.outerMargin : true;
     this.gridsterOpts.margin = isDefined(this.margin) ? this.margin : 10;
   }
 
+  /**
+   * update editing opts.
+   *
+   */
+
   private updateEditingOpts() {
     this.gridsterOpts.resizable.enabled = this.isEdit && !this.isEditingWidget;
     this.gridsterOpts.draggable.enabled = this.isEdit && !this.isEditingWidget;
   }
 
+  /**
+   * update display grid opts.
+   *
+   */
+
   private updateDisplayGridOpts() {
     this.gridsterOpts.displayGrid = this.displayGrid;
   }
+
+  /**
+   * notify gridster options changed.
+   *
+   */
 
   public notifyGridsterOptionsChanged() {
     if (!this.optionsChangeNotificationsPaused) {
@@ -638,17 +821,41 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
   }
 
+  /**
+   * pause change notifications.
+   *
+   */
+
   public pauseChangeNotifications() {
     this.optionsChangeNotificationsPaused = true;
   }
+
+  /**
+   * resume change notifications.
+   *
+   */
 
   public resumeChangeNotifications() {
     this.optionsChangeNotificationsPaused = false;
   }
 
+  /**
+   * notify layout updated.
+   *
+   */
+
   public notifyLayoutUpdated() {
     this.updateWidgetLayouts();
   }
+
+  /**
+   * detect row size.
+   *
+   * @param isMobile is mobile (boolean)
+   * @param autofillHeight autofill height (boolean)
+   * @param parentHeight parent height (number)
+   * @returns number | null observable or value
+   */
 
   private detectRowSize(isMobile: boolean, autofillHeight: boolean, parentHeight?: number): number | null {
     let rowHeight = null;
@@ -671,6 +878,12 @@ export class DashboardComponent extends PageComponent implements IDashboardCompo
     }
     return rowHeight;
   }
+
+  /**
+   * check is mobile size.
+   *
+   * @returns boolean observable or value
+   */
 
   private checkIsMobileSize(): boolean {
     const isMobileDisabled = this.isMobileDisabled === true;

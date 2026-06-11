@@ -22,20 +22,28 @@ import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 import { OtaPackage } from '@shared/models/ota-package.models';
 
+
+/**
+ * Angular component: ota update tabs (home/ota-update pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-ota-update-tabs`.
+ */
 @Component({
     selector: 'tb-ota-update-tabs',
     templateUrl: './ota-update-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: ota update tabs UI.
- */
+standalone: false
 })
 export class OtaUpdateTabsComponent extends EntityTabsComponent<OtaPackage> {
 
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * is tenant ota update.
+   *
+   */
 
   isTenantOtaUpdate() {
     return this.entity && this.entity.tenantId.id !== NULL_UUID;

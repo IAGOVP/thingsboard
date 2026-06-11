@@ -15,11 +15,18 @@
  */
 package org.thingsboard.mqtt;
 
+
+
+
 /**
 
- * Raised when {@link RetransmissionHandler} exhausts max attempts.
+
+ * Thrown when {@link RetransmissionHandler} exhausts the configured maximum attempts.
+
 
  */
+
+
 
 public class MaxRetransmissionsReachedException extends RuntimeException {
 

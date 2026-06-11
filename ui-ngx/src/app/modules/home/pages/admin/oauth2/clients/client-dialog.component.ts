@@ -26,15 +26,18 @@ import { OAuth2Service } from '@core/http/oauth2.service';
 import { ClientComponent } from '@home/pages/admin/oauth2/clients/client.component';
 import { ErrorStateMatcher } from '@angular/material/core';
 
+
+/**
+ * Angular component: client dialog (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-client-dialog`.
+ */
 @Component({
     selector: 'tb-client-dialog',
     templateUrl: './client-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: ClientDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: client dialog UI.
- */
+standalone: false
 })
 export class ClientDialogComponent extends DialogComponent<ClientDialogComponent, OAuth2Client> implements OnDestroy, AfterViewInit {
 
@@ -50,11 +53,24 @@ export class ClientDialogComponent extends DialogComponent<ClientDialogComponent
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.clientComponent.entityForm.markAsDirty();
     }, 0);
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -62,9 +78,19 @@ export class ClientDialogComponent extends DialogComponent<ClientDialogComponent
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save() {
     this.submitted = true;
@@ -76,6 +102,11 @@ export class ClientDialogComponent extends DialogComponent<ClientDialogComponent
       );
     }
   }
+
+  /**
+   * help link id.
+   *
+   */
 
   helpLinkId() {
     return getProviderHelpLink(this.clientComponent.entityForm.get('additionalInfo.providerName')?.value);

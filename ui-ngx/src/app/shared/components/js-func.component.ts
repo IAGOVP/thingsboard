@@ -52,6 +52,12 @@ import { map, Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { tbelUtilsAutocompletes, tbelUtilsFuncHighlightRules } from '@shared/models/ace/tbel-utils.models';
 
+
+/**
+ * Angular component: js func (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-js-func`.
+ */
 @Component({
     selector: 'tb-js-func',
     templateUrl: './js-func.component.html',
@@ -69,10 +75,7 @@ import { tbelUtilsAutocompletes, tbelUtilsFuncHighlightRules } from '@shared/mod
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: js func UI.
- */
+standalone: false
 })
 export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor, Validator {
 
@@ -186,6 +189,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
               private http: HttpClient) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (!this.resultType || this.resultType.length === 0) {
       this.resultType = 'nocheck';
@@ -265,6 +273,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.editorResize$) {
       this.editorResize$.disconnect();
@@ -273,6 +286,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
       this.jsEditor.destroy();
     }
   }
+
+  /**
+   * Event handler for ace editor resize.
+   *
+   */
 
   private onAceEditorResize() {
     if (this.editorsResizeCaf) {
@@ -285,13 +303,31 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
     this._onTouched = fn;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -300,6 +336,12 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return (this.functionValid && !this.hasErrors) ? null : {
       jsFunc: {
@@ -307,6 +349,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
       },
     };
   }
+
+  /**
+   * beautify js.
+   *
+   */
 
   beautifyJs() {
     beautifyJs(this.modelValue, {indent_size: 4, wrap_line_length: 60}).subscribe(
@@ -317,12 +364,22 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     );
   }
 
+  /**
+   * update function args string.
+   *
+   */
+
   private updateFunctionArgsString(): void {
     this.functionArgsString = '';
     if (this.functionArgs) {
       this.functionArgsString = this.functionArgs.join(', ');
     }
   }
+
+  /**
+   * update function label.
+   *
+   */
 
   private updateFunctionLabel(): void {
     if (this.functionTitle || this.label) {
@@ -339,9 +396,20 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     this.cd.markForCheck();
   }
 
+  /**
+   * updated script language.
+   *
+   */
+
   private updatedScriptLanguage() {
     this.jsEditor?.session?.setMode(`ace/mode/${ScriptLanguage.TBEL === this.scriptLanguage ? 'tbel' : 'javascript'}`);
   }
+
+  /**
+   * validate on submit.
+   *
+   * @returns Observable<void> observable or value
+   */
 
   validateOnSubmit(): Observable<void> {
     if (!this.disabled) {
@@ -369,10 +437,21 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * focus.
+   *
+   */
+
   public focus() {
     this.javascriptEditorElmRef.nativeElement.scrollIntoView();
     this.jsEditor?.focus();
   }
+
+  /**
+   * validate js func.
+   *
+   * @returns Observable<boolean> observable or value
+   */
 
   private validateJsFunc(): Observable<boolean> {
     let toCompile: TbFunction;
@@ -386,6 +465,10 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     }
     const args = this.functionArgs || [];
     return compileTbFunction(this.http, toCompile, ...args).pipe(
+      /**
+       * map.
+       *
+       */
       map(toValidate => {
         if (this.noValidate) {
           return true;
@@ -465,6 +548,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     );
   }
 
+  /**
+   * cleanup js errors.
+   *
+   */
+
   private cleanupJsErrors(): void {
     if (this.errorShowed) {
       this.store.dispatch(new ActionNotificationHide(
@@ -485,6 +573,12 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TbFunction)
+   */
+
   writeValue(value: TbFunction): void {
     if (isUndefinedOrNull(value) || typeof value === 'string') {
       this.modelValue = value as any;
@@ -504,6 +598,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   updateView(force = false) {
     const editorValue = this.jsEditor.getValue();
     if (this.modelValue !== editorValue || force) {
@@ -513,6 +612,12 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * edit modules.
+   *
+   * @param element element (Element)
+   */
 
   editModules($event: Event, element: Element) {
     if ($event) {
@@ -544,6 +649,12 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * propagate value.
+   *
+   * @param value value (string)
+   */
+
   private propagateValue(value: string) {
     if (this.withModules && this.modules && Object.keys(this.modules).length) {
       const tbFunction: TbFunction = {
@@ -555,6 +666,12 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
       this.propagateChange(value);
     }
   }
+
+  /**
+   * update by changes prop name.
+   *
+   * @param propName prop name (string)
+   */
 
   private updateByChangesPropName(propName: string): void {
     switch (propName) {
@@ -587,6 +704,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
     }
   }
 
+  /**
+   * update highlight rules.
+   *
+   */
+
   private updateHighlightRules(): void {
     // @ts-ignore
     if (!!this.jsEditor?.session?.$mode) {
@@ -613,6 +735,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
       this.jsEditor.session.$onChangeMode(newMode);
     }
   }
+
+  /**
+   * update js worker globals.
+   *
+   */
 
   private updateJsWorkerGlobals() {
     // @ts-ignore
@@ -643,6 +770,11 @@ export class JsFuncComponent implements OnInit, OnChanges, OnDestroy, ControlVal
       this.jsEditor.session.$worker.send('changeOptions', [jsWorkerOptions]);
     }
   }
+
+  /**
+   * update completers.
+   *
+   */
 
   updateCompleters() {
     if (!this.jsEditor) {

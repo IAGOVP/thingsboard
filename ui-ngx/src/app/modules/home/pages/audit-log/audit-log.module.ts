@@ -23,11 +23,14 @@ import { AuditLogRoutingModule } from '@modules/home/pages/audit-log/audit-log-r
 /**
  * Angular NgModule: audit log feature area.
  */
+/**
+ * Angular NgModule bundling audit log (home/audit-log pages).
+ */
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     SharedModule,
     AuditLogRoutingModule
-  ]})
+]})
 export class AuditLogModule { }

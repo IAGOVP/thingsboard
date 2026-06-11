@@ -32,6 +32,9 @@ import { TargetDeviceComponent } from '@home/components/widget/config/target-dev
 /**
  * Angular NgModule: widget config components feature area.
  */
+/**
+ * Angular NgModule bundling widget config components (ThingsBoard web UI).
+ */
 @NgModule({
   declarations:
     [
@@ -60,5 +63,5 @@ import { TargetDeviceComponent } from '@home/components/widget/config/target-dev
     TimewindowStylePanelComponent,
     TimewindowConfigPanelComponent,
     WidgetSettingsCommonModule
-  ]})
+]})
 export class WidgetConfigComponentsModule { }

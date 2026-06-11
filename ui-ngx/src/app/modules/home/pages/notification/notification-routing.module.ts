@@ -134,5 +134,8 @@ const routes: Routes = [
     RuleTableConfigResolver
   ],
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling notification routing (home/notification pages).
+ */
   exports: [RouterModule]})
 export class NotificationRoutingModule { }

@@ -49,13 +49,16 @@ interface MarkdownWidgetSettings {
 
 type MarkdownTextFunction = (data: FormattedData[], ctx: WidgetContext) => string;
 
+
+/**
+ * Angular component: markdown widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-markdown-widget`.
+ */
 @Component({
     selector: 'tb-markdown-widget',
     templateUrl: './markdown-widget.component.html',
-    standalone: false
-/**
- * Angular component: markdown widget UI.
- */
+standalone: false
 })
 export class MarkdownWidgetComponent extends PageComponent implements OnInit {
 
@@ -82,6 +85,11 @@ export class MarkdownWidgetComponent extends PageComponent implements OnInit {
               private cd: ChangeDetectorRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.ctx.$scope.markdownWidget = this;
@@ -116,6 +124,11 @@ export class MarkdownWidgetComponent extends PageComponent implements OnInit {
     }
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     let initialData: DatasourceData[];
     if (this.ctx.data?.length) {
@@ -147,6 +160,13 @@ export class MarkdownWidgetComponent extends PageComponent implements OnInit {
     }
   }
 
+  /**
+   * update markdown text.
+   *
+   * @param markdownText markdown text (string)
+   * @param data dialog or route input data
+   */
+
   private updateMarkdownText(markdownText: string, data: FormattedData[]) {
     const allData: FormattedData = flatDataWithoutOverride(data);
     markdownText = createLabelFromPattern(markdownText, allData);
@@ -155,6 +175,11 @@ export class MarkdownWidgetComponent extends PageComponent implements OnInit {
     }
     this.cd.detectChanges();
   }
+
+  /**
+   * markdown click.
+   *
+   */
 
   markdownClick($event: MouseEvent) {
     this.ctx.actionsApi.elementClick($event);

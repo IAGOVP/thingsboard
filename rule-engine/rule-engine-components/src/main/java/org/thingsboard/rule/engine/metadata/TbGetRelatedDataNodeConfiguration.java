@@ -26,14 +26,23 @@ import org.thingsboard.server.common.data.relation.RelationEntityTypeFilter;
 import java.util.Collections;
 import java.util.HashMap;
 /**
- * JSON configuration for TbGetRelatedData rule node.
+ * JSON configuration POJO for {@link TbGetRelatedData} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TbGetRelatedDataNodeConfiguration extends TbGetEntityDataNodeConfiguration {
 
     private RelationsQuery relationsQuery;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGetRelatedDataNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGetRelatedDataNodeConfiguration defaultConfiguration() {

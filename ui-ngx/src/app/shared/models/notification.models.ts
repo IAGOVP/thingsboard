@@ -29,11 +29,11 @@ import { ApiFeature, ApiUsageStateValue } from '@shared/models/api-usage.models'
 import { LimitedApi } from '@shared/models/limited-api.models';
 import { HasTenantId } from '@shared/models/entity.models';
 
+
 /**
-
- * TypeScript models and enums for notification.
-
+ * TypeScript interfaces, types, and enums for notification (shared TypeScript models).
  */
+
 
 export interface Notification {
   readonly id: NotificationId;

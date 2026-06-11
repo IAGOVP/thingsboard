@@ -16,11 +16,11 @@
 
 import { AnalogueGaugeSettings } from '@home/components/widget/lib/analogue-gauge.models';
 
+
 /**
-
- * TypeScript models and enums for analogue radial gauge settings.
-
+ * Analogue radial gauge settings (ThingsBoard web UI).
  */
+
 
 export interface AnalogueRadialGaugeSettings extends AnalogueGaugeSettings {
   startAngle: number;

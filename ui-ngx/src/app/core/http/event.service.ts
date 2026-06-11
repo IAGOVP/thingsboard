@@ -24,7 +24,9 @@ import { EntityId } from '@shared/models/id/entity-id';
 import { DebugEventType, Event, EventType, FilterEventBody } from '@shared/models/event.models';
 
 /**
- * Angular HTTP service: event REST wrappers (`@core/http`).
+ * Angular injectable service: event (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -35,7 +37,18 @@ export class EventService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/events/${entityId.entityType}/${entityId.id}/${eventType}, ...`. */
+  
+  /**
+   * get events.
+   *
+   * @param entityId entity UUID
+   * @param eventType event type (EventType | DebugEventType)
+   * @param tenantId tenant UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<Event>> observable or value
+   */
+
 
   public getEvents(entityId: EntityId, eventType: EventType | DebugEventType, tenantId: string, pageLink: TimePageLink,
                    config?: RequestConfig): Observable<PageData<Event>> {
@@ -44,13 +57,36 @@ export class EventService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/events/${entityId.entityType}/${entityId.id}, ...`. */
+  
+  /**
+   * get filter events.
+   *
+   * @param entityId entity UUID
+   * @param eventType event type (EventType | DebugEventType)
+   * @param tenantId tenant UUID
+   * @param filters filters (FilterEventBody)
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<Event>> observable or value
+   */
+
 
   public getFilterEvents(entityId: EntityId, eventType: EventType | DebugEventType, tenantId: string,
                          filters: FilterEventBody, pageLink: TimePageLink, config?: RequestConfig): Observable<PageData<Event>> {
     return this.http.post<PageData<Event>>(`/api/events/${entityId.entityType}/${entityId.id}` +
       `${pageLink.toQuery()}&tenantId=${tenantId}`, {...filters, eventType}, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * clear events.
+   *
+   * @param entityId entity UUID
+   * @param eventType event type (EventType | DebugEventType)
+   * @param filters filters (FilterEventBody)
+   * @param tenantId tenant UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public clearEvents(entityId: EntityId, eventType: EventType | DebugEventType, filters: FilterEventBody, tenantId: string,
                      pageLink: TimePageLink, config?: RequestConfig) {

@@ -49,6 +49,12 @@ interface CountrySearchData extends Country {
   searchText?: string;
 }
 
+
+/**
+ * Angular component: country autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-country-autocomplete`.
+ */
 @Component({
     selector: 'tb-country-autocomplete',
     templateUrl: 'country-autocomplete.component.html',
@@ -66,10 +72,7 @@ interface CountrySearchData extends Country {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: country autocomplete UI.
- */
+standalone: false
 })
 export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
 
@@ -144,9 +147,18 @@ export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlV
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.filteredCountries = this.countryFormGroup.get('country').valueChanges.pipe(
       debounceTime(150),
+      /**
+       * tap.
+       *
+       */
       tap(value => {
         let modelValue: Country;
         if (typeof value === 'string' || !value) {
@@ -166,13 +178,31 @@ export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlV
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -183,11 +213,23 @@ export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlV
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.countryFormGroup.valid ? null : {
       countryFormGroup: false
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param country country (string)
+   */
 
   writeValue(country: string) {
     this.dirty = true;
@@ -199,9 +241,21 @@ export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlV
     this.selectCountryCode.emit(this.modelValue ? this.modelValue.iso2 : null);
   }
 
+  /**
+   * display country fn.
+   *
+   * @param country country (Country)
+   * @returns string | undefined observable or value
+   */
+
   displayCountryFn(country?: Country): string | undefined {
     return country ? country.name : undefined;
   }
+
+  /**
+   * Event handler for focus.
+   *
+   */
 
   onFocus() {
     if (this.dirty) {
@@ -209,6 +263,11 @@ export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlV
       this.dirty = false;
     }
   }
+
+  /**
+   * check input and auto select.
+   *
+   */
 
   checkInputAndAutoSelect() {
     const control = this.countryFormGroup.get('country');
@@ -225,9 +284,21 @@ export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlV
     this.onTouched();
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.countryFormGroup.get('country').patchValue('', {emitEvent: true});
@@ -236,6 +307,13 @@ export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlV
       this.countryInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * fetch countries.
+   *
+   * @param searchText search text (string)
+   * @returns Country[] observable or value
+   */
 
   private fetchCountries(searchText: string): Country[] {
     this.searchText = searchText;
@@ -251,6 +329,12 @@ export class CountryAutocompleteComponent implements OnInit, OnChanges, ControlV
     }
     return this.allCountries;
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (Country | null)
+   */
 
   private updateView(value: Country | null) {
     if (this.modelValue?.name !== value?.name) {

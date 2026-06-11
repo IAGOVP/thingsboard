@@ -66,14 +66,17 @@ import { ResourcesService } from '@core/services/resources.service';
 import { UtilsService } from '@core/services/utils.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: liquid level card basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-liquid-level-card-basic-config`.
+ */
 @Component({
     selector: 'tb-liquid-level-card-basic-config',
     templateUrl: './liquid-level-card-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: liquid level card basic config UI.
- */
+standalone: false
 })
 export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -103,6 +106,12 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     const datasources = this.levelCardWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.levelCardWidgetConfigForm.get('datasources').value;
@@ -152,9 +161,21 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.levelCardWidgetConfigForm;
   }
+
+  /**
+   * setup config.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected setupConfig(widgetConfig: WidgetConfigComponentData) {
     this.createSvgShapesMapping();
@@ -168,9 +189,21 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     super.setupConfig(widgetConfig);
   }
 
+  /**
+   * setup defaults.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
+
   protected setupDefaults(configData: WidgetConfigComponentData) {
     this.setupDefaultDatasource(configData, [{ name: 'fuelLevel', label: 'Fuel Level', type: DataKeyType.timeseries }]);
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: LevelCardWidgetSettings = {...levelCardDefaultSettings, ...(configData.config.settings || {})};
@@ -242,6 +275,13 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -305,12 +345,25 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return [
       'showTooltip', 'showTooltipLevel', 'tankSelectionType', 'datasourceUnits', 'showTitleIcon', 'volumeSource',
       'showTooltipDate', 'layout', 'showTitle', 'widgetUnitsSource', 'volumeUnitsSource'
     ];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     updatedFormSettingsValidators(this.levelCardWidgetConfigForm);
@@ -345,6 +398,13 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableDataExport) || config.enableDataExport) {
@@ -355,6 +415,13 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableDataExport = buttons.includes('dataExport');
@@ -393,6 +460,11 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     return processor.formatted;
   }
 
+  /**
+   * POST/PUT entity — create svg shapes mapping.
+   *
+   */
+
   private createSvgShapesMapping(): void {
     loadSvgShapesMapping(this.resourcesService).subscribe(shapeMap => {
       this.shapesImageMap = shapeMap;
@@ -403,9 +475,24 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     });
   }
 
+  /**
+   * POST/PUT entity — create shape.
+   *
+   * @param svg svg (string)
+   * @param layout layout (LevelCardLayout)
+   * @returns SafeUrl observable or value
+   */
+
   createShape(svg: string, layout: LevelCardLayout): SafeUrl {
     return createShapeLayout(svg, layout, this.sanitizer);
   }
+
+  /**
+   * fetch options.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   public fetchOptions(searchText: string): Observable<Array<string>> {
     if (this.keySearchText !== searchText || !this.lastFetchedKeys) {
@@ -419,6 +506,12 @@ export class LiquidLevelCardBasicConfigComponent extends BasicWidgetConfigCompon
     }
     return of(this.latestKeySearchTextResult);
   }
+
+  /**
+   * get keys.
+   *
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   private getKeys(): Observable<Array<DataKey>> {
     let fetchObservable: Observable<Array<DataKey>>;

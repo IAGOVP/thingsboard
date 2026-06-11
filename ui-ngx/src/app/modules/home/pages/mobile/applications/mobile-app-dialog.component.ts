@@ -32,15 +32,18 @@ export interface MobileAppDialogData {
   name?: string
 }
 
+
+/**
+ * Angular component: mobile app dialog (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-app-dialog`.
+ */
 @Component({
     selector: 'tb-mobile-app-dialog',
     templateUrl: './mobile-app-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: MobileAppDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: mobile app dialog UI.
- */
+standalone: false
 })
 export class MobileAppDialogComponent extends DialogComponent<MobileAppDialogComponent, MobileApp> implements OnDestroy, AfterViewInit, ErrorStateMatcher {
 
@@ -57,6 +60,11 @@ export class MobileAppDialogComponent extends DialogComponent<MobileAppDialogCom
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.mobileAppComponent.entityForm.markAsDirty();
@@ -69,15 +77,33 @@ export class MobileAppDialogComponent extends DialogComponent<MobileAppDialogCom
     }, 0);
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save() {
     this.submitted = true;

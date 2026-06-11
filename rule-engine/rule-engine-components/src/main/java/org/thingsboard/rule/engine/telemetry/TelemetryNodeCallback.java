@@ -25,17 +25,30 @@ import org.thingsboard.server.common.msg.TbMsg;
  * Created by ashvayka on 02.04.18.
  */
 /**
- * Rule engine component: telemetry node callback.
+ * Telemetry node callback (telemetry and attribute persistence nodes).
  */
+
 @Data
 class TelemetryNodeCallback implements FutureCallback<Void> {
     private final TbContext ctx;
     private final TbMsg msg;
+    /**
+     * Handles success.
+     *
+     * @param result result ({@link Void})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onSuccess(@Nullable Void result) {
         ctx.tellSuccess(msg);
     }
+    /**
+     * Handles failure.
+     *
+     * @param t t ({@link Throwable})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void onFailure(Throwable t) {

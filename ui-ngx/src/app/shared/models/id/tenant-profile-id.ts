@@ -17,11 +17,11 @@
 import { EntityId } from './entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for tenant profile id.
-
+ * TypeScript interfaces, types, and enums for tenant profile id (shared TypeScript models).
  */
+
 
 export class TenantProfileId implements EntityId {
   entityType = EntityType.TENANT_PROFILE;

@@ -31,6 +31,12 @@ import { DataKey, DatasourceType, widgetType } from '@shared/models/widget.model
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 
+
+/**
+ * Angular component: image map source settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-image-map-source-settings`.
+ */
 @Component({
     selector: 'tb-image-map-source-settings',
     templateUrl: './image-map-source-settings.component.html',
@@ -47,10 +53,7 @@ import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: image map source settings UI.
- */
+standalone: false
 })
 export class ImageMapSourceSettingsComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -75,6 +78,11 @@ export class ImageMapSourceSettingsComponent implements OnInit, ControlValueAcce
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.imageMapSourceFormGroup = this.fb.group({
       sourceType: [null, [Validators.required]],
@@ -94,12 +102,30 @@ export class ImageMapSourceSettingsComponent implements OnInit, ControlValueAcce
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -111,6 +137,12 @@ export class ImageMapSourceSettingsComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ImageMapSourceSettings)
+   */
+
   writeValue(value: ImageMapSourceSettings): void {
     this.modelValue = value;
     this.imageMapSourceFormGroup.patchValue(
@@ -118,6 +150,11 @@ export class ImageMapSourceSettingsComponent implements OnInit, ControlValueAcce
     );
     this.updateValidators();
   }
+
+  /**
+   * edit key.
+   *
+   */
 
   editKey() {
     const entityKey: DataKey = this.imageMapSourceFormGroup.get('entityKey').value;
@@ -131,6 +168,12 @@ export class ImageMapSourceSettingsComponent implements OnInit, ControlValueAcce
     );
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     const valid = this.imageMapSourceFormGroup.valid;
     return valid ? null : {
@@ -139,6 +182,18 @@ export class ImageMapSourceSettingsComponent implements OnInit, ControlValueAcce
       },
     };
   }
+
+
+  /**
+
+
+   * update validators.
+
+
+   *
+
+
+   */
 
 
   private updateValidators() {
@@ -153,6 +208,11 @@ export class ImageMapSourceSettingsComponent implements OnInit, ControlValueAcce
       this.imageMapSourceFormGroup.get('entityKey').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.imageMapSourceFormGroup.getRawValue();

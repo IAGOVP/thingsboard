@@ -31,14 +31,17 @@ import { WidgetConfigComponentData } from '@home/models/widget-component.models'
 import { DateFormatProcessor, DateFormatSettings, getLabel } from '@shared/models/widget-settings.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: value card widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-card-widget-settings`.
+ */
 @Component({
     selector: 'tb-value-card-widget-settings',
     templateUrl: './value-card-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: value card widget settings UI.
- */
+standalone: false
 })
 export class ValueCardWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -76,9 +79,21 @@ export class ValueCardWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.valueCardWidgetSettingsForm;
   }
+
+  /**
+   * Event handler for widget config set.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected onWidgetConfigSet(widgetConfig: WidgetConfigComponentData) {
     const params = widgetConfig.typeParameters as any;
@@ -86,9 +101,21 @@ export class ValueCardWidgetSettingsComponent extends WidgetSettingsComponent {
     this.valueCardLayouts = valueCardLayouts(this.horizontal);
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return valueCardDefaultSettings(this.horizontal);
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.valueCardWidgetSettingsForm = this.fb.group({
@@ -118,9 +145,21 @@ export class ValueCardWidgetSettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['layout', 'showLabel', 'showIcon', 'showDate'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const layout: ValueCardLayout = this.valueCardWidgetSettingsForm.get('layout').value;

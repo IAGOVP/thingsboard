@@ -52,11 +52,11 @@ import {
 import { deepClone } from '@app/core/utils';
 import { AuditLogHeaderComponent } from '@home/components/audit-log/audit-log-header.component';
 
+
 /**
-
- * audit log table config.
-
+ * Audit log table config (ThingsBoard web UI).
  */
+
 
 export class AuditLogTableConfig extends EntityTableConfig<AuditLog, TimePageLink> {
 
@@ -131,12 +131,26 @@ export class AuditLogTableConfig extends EntityTableConfig<AuditLog, TimePageLin
     );
   }
 
+  /**
+   * get entity type translation.
+   *
+   * @param entityType entity type (EntityType | AliasEntityType)
+   * @returns string observable or value
+   */
+
   private getEntityTypeTranslation(entityType: EntityType | AliasEntityType): string {
     if (entityTypeTranslations.has(entityType) && entityTypeTranslations.get(entityType).type) {
       return this.translate.instant(entityTypeTranslations.get(entityType).type);
     }
     return entityType;
   }
+
+  /**
+   * get action type translation.
+   *
+   * @param actionType action type (ActionType)
+   * @returns string observable or value
+   */
 
   private getActionTypeTranslation(actionType: ActionType): string {
     if (actionTypeTranslations.has(actionType)) {
@@ -145,12 +159,26 @@ export class AuditLogTableConfig extends EntityTableConfig<AuditLog, TimePageLin
     return actionType;
   }
 
+  /**
+   * get action status translation.
+   *
+   * @param actionStatus action status (ActionStatus)
+   * @returns string observable or value
+   */
+
   private getActionStatusTranslation(actionStatus: ActionStatus): string {
     if (actionStatusTranslations.has(actionStatus)) {
       return this.translate.instant(actionStatusTranslations.get(actionStatus));
     }
     return actionStatus;
   }
+
+  /**
+   * fetch audit logs.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<AuditLog>> observable or value
+   */
 
   fetchAuditLogs(pageLink: TimePageLink): Observable<PageData<AuditLog>> {
     const auditLogFilter: AuditLogFilter = deepClone(this.componentsData?.auditLogFilter) || {};
@@ -165,6 +193,12 @@ export class AuditLogTableConfig extends EntityTableConfig<AuditLog, TimePageLin
         return this.auditLogService.getAuditLogsByCustomerId(this.customerId.id, pageLink, auditLogFilter);
     }
   }
+
+  /**
+   * show audit log details.
+   *
+   * @param entity entity (AuditLog)
+   */
 
   showAuditLogDetails(entity: AuditLog) {
     this.dialog.open<AuditLogDetailsDialogComponent, AuditLogDetailsDialogData>(AuditLogDetailsDialogComponent, {

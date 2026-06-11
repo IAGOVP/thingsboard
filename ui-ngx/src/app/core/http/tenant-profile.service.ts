@@ -26,7 +26,9 @@ import { sortEntitiesByIds } from '@shared/models/base-data';
 import { map } from 'rxjs/operators';
 
 /**
- * Angular HTTP service: tenant profile REST wrappers (`@core/http`).
+ * Angular injectable service: tenant profile (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -37,53 +39,123 @@ export class TenantProfileService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/tenantProfiles${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant profiles.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<TenantProfile>> observable or value
+   */
+
 
   public getTenantProfiles(pageLink: PageLink, config?: RequestConfig): Observable<PageData<TenantProfile>> {
     return this.http.get<PageData<TenantProfile>>(`/api/tenantProfiles${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenantProfile/${tenantProfileId}, ...`. */
+  
+  /**
+   * get tenant profile.
+   *
+   * @param tenantProfileId tenant profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TenantProfile> observable or value
+   */
+
 
   public getTenantProfile(tenantProfileId: string, config?: RequestConfig): Observable<TenantProfile> {
     return this.http.get<TenantProfile>(`/api/tenantProfile/${tenantProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenantProfile, ...`. */
+  
+  /**
+   * POST/PUT entity — save tenant profile.
+   *
+   * @param tenantProfile tenant profile (TenantProfile)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TenantProfile> observable or value
+   */
+
 
   public saveTenantProfile(tenantProfile: TenantProfile, config?: RequestConfig): Observable<TenantProfile> {
     return this.http.post<TenantProfile>('/api/tenantProfile', tenantProfile, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete tenant profile.
+   *
+   * @param tenantProfileId tenant profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteTenantProfile(tenantProfileId: string, config?: RequestConfig) {
     return this.http.delete(`/api/tenantProfile/${tenantProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenantProfile/${tenantProfileId}/default, ...`. */
+  
+  /**
+   * set default tenant profile.
+   *
+   * @param tenantProfileId tenant profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TenantProfile> observable or value
+   */
+
 
   public setDefaultTenantProfile(tenantProfileId: string, config?: RequestConfig): Observable<TenantProfile> {
     return this.http.post<TenantProfile>(`/api/tenantProfile/${tenantProfileId}/default`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenantProfileInfo/default, ...`. */
+  
+  /**
+   * get default tenant profile info.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntityInfoData> observable or value
+   */
+
 
   public getDefaultTenantProfileInfo(config?: RequestConfig): Observable<EntityInfoData> {
     return this.http.get<EntityInfoData>('/api/tenantProfileInfo/default', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenantProfileInfo/${tenantProfileId}, ...`. */
+  
+  /**
+   * get tenant profile info.
+   *
+   * @param tenantProfileId tenant profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntityInfoData> observable or value
+   */
+
 
   public getTenantProfileInfo(tenantProfileId: string, config?: RequestConfig): Observable<EntityInfoData> {
     return this.http.get<EntityInfoData>(`/api/tenantProfileInfo/${tenantProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenantProfileInfos${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant profile infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EntityInfoData>> observable or value
+   */
+
 
   public getTenantProfileInfos(pageLink: PageLink, config?: RequestConfig): Observable<PageData<EntityInfoData>> {
     return this.http.get<PageData<EntityInfoData>>(`/api/tenantProfileInfos${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenantProfiles?ids=${tenantProfileIds.join(`. */
+  
+  /**
+   * get tenant profiles by ids.
+   *
+   * @param tenantProfileIds tenant profile ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityInfoData>> observable or value
+   */
+
 
   public getTenantProfilesByIds(tenantProfileIds: Array<string>, config?: RequestConfig): Observable<Array<EntityInfoData>> {
     return this.http.get<Array<EntityInfoData>>(`/api/tenantProfiles?ids=${tenantProfileIds.join(',')}`,

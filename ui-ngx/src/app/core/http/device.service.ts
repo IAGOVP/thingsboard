@@ -40,7 +40,9 @@ import { ResourcesService } from '@core/services/resources.service';
 import { SaveEntityParams } from '@shared/models/entity.models';
 
 /**
- * HTTP client for device CRUD, credentials, claim, and RPC under `/api/.../device*`.
+ * Angular HTTP service for device CRUD, credentials, claim, bulk import, and RPC.
+ *
+ * <p>Wraps ThingsBoard REST endpoints under `/api/device*`, `/api/tenant/deviceInfos`, `/api/customer/{id}/device*`, and `/api/rpc/*`.
  */
 @Injectable({
   providedIn: 'root'
@@ -52,14 +54,31 @@ export class DeviceService {
     private resourcesService: ResourcesService
   ) { }
 
-  /** Calls ThingsBoard REST `/api/tenant/deviceInfos${pageLink.toQuery()}&type=${type}, ...`. */
+  
+  /**
+   * get device infos by query.
+   *
+   * @param deviceInfoQuery device info query (DeviceInfoQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DeviceInfo>> observable or value
+   */
+
 
   public getDeviceInfosByQuery(deviceInfoQuery: DeviceInfoQuery, config?: RequestConfig): Observable<PageData<DeviceInfo>> {
     return this.http.get<PageData<DeviceInfo>>(`/api${deviceInfoQuery.toQuery()}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/deviceInfos${pageLink.toQuery()}&type=${type}, ...`. */
+  
+  /**
+   * get tenant device infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param type type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DeviceInfo>> observable or value
+   */
+
 
   public getTenantDeviceInfos(pageLink: PageLink, type: string = '',
                               config?: RequestConfig): Observable<PageData<DeviceInfo>> {
@@ -67,7 +86,16 @@ export class DeviceService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/deviceInfos${pageLink.toQuery()}&deviceProfileId=${deviceProfileId}, ...`. */
+  
+  /**
+   * get tenant device infos by device profile id.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DeviceInfo>> observable or value
+   */
+
 
   public getTenantDeviceInfosByDeviceProfileId(pageLink: PageLink, deviceProfileId: string = '',
                                                config?: RequestConfig): Observable<PageData<DeviceInfo>> {
@@ -75,7 +103,17 @@ export class DeviceService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}/deviceInfos${pageLink.toQuery()}&type=${type}, ...`. */
+  
+  /**
+   * get customer device infos.
+   *
+   * @param customerId customer UUID
+   * @param pageLink pagination and sort parameters
+   * @param type type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DeviceInfo>> observable or value
+   */
+
 
   public getCustomerDeviceInfos(customerId: string, pageLink: PageLink, type: string = '',
                                 config?: RequestConfig): Observable<PageData<DeviceInfo>> {
@@ -83,7 +121,17 @@ export class DeviceService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}/deviceInfos${pageLink.toQuery()}&deviceProfileId=${deviceProfileId}, ...`. */
+  
+  /**
+   * get customer device infos by device profile id.
+   *
+   * @param customerId customer UUID
+   * @param pageLink pagination and sort parameters
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DeviceInfo>> observable or value
+   */
+
 
   public getCustomerDeviceInfosByDeviceProfileId(customerId: string, pageLink: PageLink, deviceProfileId: string = '',
                                                  config?: RequestConfig): Observable<PageData<DeviceInfo>> {
@@ -91,19 +139,43 @@ export class DeviceService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/device/${deviceId}, ...`. */
+  
+  /**
+   * get device.
+   *
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Device> observable or value
+   */
+
 
   public getDevice(deviceId: string, config?: RequestConfig): Observable<Device> {
     return this.http.get<Device>(`/api/device/${deviceId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/devices?deviceIds=${deviceIds.join(, ...`. */
+  
+  /**
+   * get devices.
+   *
+   * @param deviceIds device ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<Device>> observable or value
+   */
+
 
   public getDevices(deviceIds: Array<string>, config?: RequestConfig): Observable<Array<Device>> {
     return this.http.get<Array<Device>>(`/api/devices?deviceIds=${deviceIds.join(',')}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/device/info/${deviceId}, ...`. */
+  
+  /**
+   * get device info.
+   *
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceInfo> observable or value
+   */
+
 
   public getDeviceInfo(deviceId: string, config?: RequestConfig): Observable<DeviceInfo> {
     return this.http.get<DeviceInfo>(`/api/device/info/${deviceId}`, defaultHttpOptionsFromConfig(config));
@@ -113,6 +185,14 @@ export class DeviceService {
 
   public saveDevice(device: Device, config?: RequestConfig): Observable<Device>;
   public saveDevice(device: Device, saveParams?: SaveDeviceParams, config?: RequestConfig): Observable<Device>;
+  /**
+   * POST/PUT entity — save device.
+   *
+   * @param device device (Device)
+   * @param saveParamsOrConfig save params or config (SaveDeviceParams | RequestConfig)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Device> observable or value
+   */
   public saveDevice(device: Device, saveParamsOrConfig?: SaveDeviceParams | RequestConfig, config?: RequestConfig): Observable<Device> {
     return this.http.post<Device>('/api/device', device, createDefaultHttpOptions(saveParamsOrConfig, config));
   }
@@ -121,6 +201,15 @@ export class DeviceService {
 
   public saveDeviceWithCredentials(device: Device, credentials: DeviceCredentials, config?: RequestConfig): Observable<Device>;
   public saveDeviceWithCredentials(device: Device, credentials: DeviceCredentials, saveParams: SaveEntityParams, config?: RequestConfig): Observable<Device>;
+  /**
+   * POST/PUT entity — save device with credentials.
+   *
+   * @param device device (Device)
+   * @param credentials credentials (DeviceCredentials)
+   * @param saveParamsOrConfig save params or config (SaveEntityParams | RequestConfig)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Device> observable or value
+   */
   public saveDeviceWithCredentials(device: Device, credentials: DeviceCredentials, saveParamsOrConfig?: SaveEntityParams | RequestConfig, config?: RequestConfig): Observable<Device> {
     return this.http.post<Device>('/api/device-with-credentials', {
       device,
@@ -128,17 +217,40 @@ export class DeviceService {
     }, createDefaultHttpOptions(saveParamsOrConfig, config));
   }
 
+  /**
+   * DELETE — delete device.
+   *
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteDevice(deviceId: string, config?: RequestConfig) {
     return this.http.delete(`/api/device/${deviceId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/device/types, ...`. */
+  
+  /**
+   * get device types.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntitySubtype>> observable or value
+   */
+
 
   public getDeviceTypes(config?: RequestConfig): Observable<Array<EntitySubtype>> {
     return this.http.get<Array<EntitySubtype>>('/api/device/types', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/device/${deviceId}/credentials, ...`. */
+  
+  /**
+   * get device credentials.
+   *
+   * @param deviceId device UUID
+   * @param sync sync (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceCredentials> observable or value
+   */
+
 
   public getDeviceCredentials(deviceId: string, sync: boolean = false, config?: RequestConfig): Observable<DeviceCredentials> {
     const url = `/api/device/${deviceId}/credentials`;
@@ -164,52 +276,127 @@ export class DeviceService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/device/credentials, ...`. */
+  
+  /**
+   * POST/PUT entity — save device credentials.
+   *
+   * @param deviceCredentials device credentials (DeviceCredentials)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceCredentials> observable or value
+   */
+
 
   public saveDeviceCredentials(deviceCredentials: DeviceCredentials, config?: RequestConfig): Observable<DeviceCredentials> {
     return this.http.post<DeviceCredentials>('/api/device/credentials', deviceCredentials, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/public/device/${deviceId}, ...`. */
+  
+  /**
+   * make device public.
+   *
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Device> observable or value
+   */
+
 
   public makeDevicePublic(deviceId: string, config?: RequestConfig): Observable<Device> {
     return this.http.post<Device>(`/api/customer/public/device/${deviceId}`, null, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}/device/${deviceId}, ...`. */
+  
+  /**
+   * assign device to customer.
+   *
+   * @param customerId customer UUID
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Device> observable or value
+   */
+
 
   public assignDeviceToCustomer(customerId: string, deviceId: string,
                                 config?: RequestConfig): Observable<Device> {
     return this.http.post<Device>(`/api/customer/${customerId}/device/${deviceId}`, null, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * unassign device from customer.
+   *
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public unassignDeviceFromCustomer(deviceId: string, config?: RequestConfig) {
     return this.http.delete(`/api/customer/device/${deviceId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/rpc/oneway/${deviceId}, ...`. */
+  
+  /**
+   * send one way rpc command.
+   *
+   * @param deviceId device UUID
+   * @param requestBody request body (any)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public sendOneWayRpcCommand(deviceId: string, requestBody: any, config?: RequestConfig): Observable<any> {
     return this.http.post<any>(`/api/rpc/oneway/${deviceId}`, requestBody, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/rpc/twoway/${deviceId}, ...`. */
+  
+  /**
+   * send two way rpc command.
+   *
+   * @param deviceId device UUID
+   * @param requestBody request body (any)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public sendTwoWayRpcCommand(deviceId: string, requestBody: any, config?: RequestConfig): Observable<any> {
     return this.http.post<any>(`/api/rpc/twoway/${deviceId}`, requestBody, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/rpc/persistent/${rpcId}, ...`. */
+  
+  /**
+   * get persisted rpc.
+   *
+   * @param rpcId rpc id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PersistentRpc> observable or value
+   */
+
 
   public getPersistedRpc(rpcId: string, fullResponse = false, config?: RequestConfig): Observable<PersistentRpc> {
     return this.http.get<PersistentRpc>(`/api/rpc/persistent/${rpcId}`, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete persisted rpc.
+   *
+   * @param rpcId rpc id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deletePersistedRpc(rpcId: string, config?: RequestConfig) {
     return this.http.delete<PersistentRpc>(`/api/rpc/persistent/${rpcId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/rpc/persistent/device/${deviceId}${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get persisted rpc requests.
+   *
+   * @param deviceId device UUID
+   * @param pageLink pagination and sort parameters
+   * @param rpcStatus rpc status (RpcStatus)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<PersistentRpc>> observable or value
+   */
+
 
   public getPersistedRpcRequests(deviceId: string, pageLink: PageLink,
                                  rpcStatus?: RpcStatus, config?: RequestConfig): Observable<PageData<PersistentRpc>> {
@@ -220,31 +407,72 @@ export class DeviceService {
     return this.http.get<PageData<PersistentRpc>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/devices, ...`. */
+  
+  /**
+   * find by query.
+   *
+   * @param query query (DeviceSearchQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<Device>> observable or value
+   */
+
 
   public findByQuery(query: DeviceSearchQuery,
                      config?: RequestConfig): Observable<Array<Device>> {
     return this.http.post<Array<Device>>('/api/devices', query, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/devices?deviceName=${deviceName}, ...`. */
+  
+  /**
+   * find by name.
+   *
+   * @param deviceName device name (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Device> observable or value
+   */
+
 
   public findByName(deviceName: string, config?: RequestConfig): Observable<Device> {
     return this.http.get<Device>(`/api/tenant/devices?deviceName=${deviceName}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/device/${deviceName}/claim, ...`. */
+  
+  /**
+   * claim device.
+   *
+   * @param deviceName device name (string)
+   * @param claimRequest claim request (ClaimRequest)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ClaimResult> observable or value
+   */
+
 
   public claimDevice(deviceName: string, claimRequest: ClaimRequest,
                      config?: RequestConfig): Observable<ClaimResult> {
     return this.http.post<ClaimResult>(`/api/customer/device/${deviceName}/claim`, claimRequest, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * unclaim device.
+   *
+   * @param deviceName device name (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public unclaimDevice(deviceName: string, config?: RequestConfig) {
     return this.http.delete(`/api/customer/device/${deviceName}/claim`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}/device/${deviceId}, ...`. */
+  
+  /**
+   * assign device to edge.
+   *
+   * @param edgeId edge id (string)
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Device> observable or value
+   */
+
 
   public assignDeviceToEdge(edgeId: string, deviceId: string,
                             config?: RequestConfig): Observable<Device> {
@@ -252,13 +480,31 @@ export class DeviceService {
       defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * unassign device from edge.
+   *
+   * @param edgeId edge id (string)
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public unassignDeviceFromEdge(edgeId: string, deviceId: string,
                                 config?: RequestConfig) {
     return this.http.delete(`/api/edge/${edgeId}/device/${deviceId}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}/devices${pageLink.toQuery()}&type=${type}, ...`. */
+  
+  /**
+   * get edge devices.
+   *
+   * @param edgeId edge id (string)
+   * @param pageLink pagination and sort parameters
+   * @param type type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DeviceInfo>> observable or value
+   */
+
 
   public getEdgeDevices(edgeId: string, pageLink: PageLink, type: string = '',
                         config?: RequestConfig): Observable<PageData<DeviceInfo>> {
@@ -266,23 +512,57 @@ export class DeviceService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/device/bulk_import, ...`. */
+  
+  /**
+   * bulk import devices.
+   *
+   * @param entitiesData entities data (BulkImportRequest)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<BulkImportResult> observable or value
+   */
+
 
   public bulkImportDevices(entitiesData: BulkImportRequest, config?: RequestConfig): Observable<BulkImportResult> {
     return this.http.post<BulkImportResult>('/api/device/bulk_import', entitiesData, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/device-connectivity/${deviceId}, ...`. */
+  
+  /**
+   * get device publish telemetry commands.
+   *
+   * @param deviceId device UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PublishTelemetryCommand> observable or value
+   */
+
 
   public getDevicePublishTelemetryCommands(deviceId: string, config?: RequestConfig): Observable<PublishTelemetryCommand> {
     return this.http.get<PublishTelemetryCommand>(`/api/device-connectivity/${deviceId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/device-connectivity/gateway-launch/${deviceId}/docker-compose/download`. */
+  
+  /**
+   * Calls ThingsBoard REST `/api/device-connectivity/gateway-launch/*`.
+   *
+   * REST endpoint(s): `/api/device-connectivity/gateway-launch/*`
+   *
+   * @param deviceId device UUID
+   * @returns Observable<any> observable or value
+   */
+
 
   public downloadGatewayDockerComposeFile(deviceId: string): Observable<any> {
     return this.resourcesService.downloadResource(`/api/device-connectivity/gateway-launch/${deviceId}/docker-compose/download`);
   }
+
+  /**
+   * reboot device.
+   *
+   * @param deviceId device UUID
+   * @param isBootstrapServer is bootstrap server (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable< observable or value
+   */
 
   public rebootDevice(deviceId: string, isBootstrapServer: boolean, config?: RequestConfig): Observable<{
     result: string,
@@ -331,6 +611,15 @@ export class DeviceService {
       )
     );
   }
+
+  /**
+   * reboot trigger.
+   *
+   * @param deviceId device UUID
+   * @param resourcePath resource path (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable< observable or value
+   */
 
   private rebootTrigger(deviceId: string, resourcePath: string, config?: RequestConfig): Observable<{ result: string, msg?: string }> {
     return this.sendTwoWayRpcCommand(deviceId, {method: 'Execute', params: {id: resourcePath}}, config).pipe(

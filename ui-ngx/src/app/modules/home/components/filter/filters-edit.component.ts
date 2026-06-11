@@ -41,14 +41,17 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { UserFilterDialogComponent, UserFilterDialogData } from '@home/components/filter/user-filter-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
+
+/**
+ * Angular component: filters edit (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filters-edit`.
+ */
 @Component({
     selector: 'tb-filters-edit',
     templateUrl: './filters-edit.component.html',
     styleUrls: ['./filters-edit.component.scss'],
-    standalone: false
-/**
- * Angular component: filters edit UI.
- */
+standalone: false
 })
 export class FiltersEditComponent implements OnInit, OnDestroy {
 
@@ -87,6 +90,12 @@ export class FiltersEditComponent implements OnInit, OnDestroy {
               private dialog: MatDialog) {
   }
 
+  /**
+   * setup alias controller.
+   *
+   * @param aliasController alias controller (IAliasController)
+   */
+
   private setupAliasController(aliasController: IAliasController) {
     this.rxSubscriptions.forEach((subscription) => {
       subscription.unsubscribe();
@@ -106,8 +115,18 @@ export class FiltersEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     this.rxSubscriptions.forEach((subscription) => {
@@ -115,6 +134,11 @@ export class FiltersEditComponent implements OnInit, OnDestroy {
     });
     this.rxSubscriptions.length = 0;
   }
+
+  /**
+   * open edit mode.
+   *
+   */
 
   openEditMode() {
     if (this.disabled || !this.hasEditableFilters) {
@@ -176,6 +200,11 @@ export class FiltersEditComponent implements OnInit, OnDestroy {
     ];
     return Injector.create({parent: this.viewContainerRef.injector, providers});
   }
+
+  /**
+   * update filters info.
+   *
+   */
 
   private updateFiltersInfo() {
     const allFilters = this.aliasController.getFilters();

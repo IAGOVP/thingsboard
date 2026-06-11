@@ -35,6 +35,12 @@ import { ArgumentEntityType, RelationPathLevel } from '@shared/models/calculated
 import { AliasFilterType } from '@shared/models/alias.models';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
+/**
+ * Angular component: related aggregation arguments table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-related-aggregation-arguments-table`.
+ */
 @Component({
     selector: 'tb-related-aggregation-arguments-table',
     templateUrl: './calculated-field-arguments-table.component.html',
@@ -51,10 +57,7 @@ import { EntityType } from '@shared/models/entity-type.models';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: related aggregation arguments table UI.
- */
+standalone: false
 })
 export class RelatedAggregationArgumentsTableComponent extends CalculatedFieldArgumentsTableComponent {
 

@@ -36,13 +36,23 @@ import org.thingsboard.server.common.data.id.UserId;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
+
 /**
 
- * Rule engine component: entities fields async loader.
+ * Entities fields async loader (shared rule-engine utilities and async loaders).
 
  */
 
+
 public class EntitiesFieldsAsyncLoader {
+    /**
+     * Finds async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originatorId originator id ({@link EntityId})
+     * @return future completing with {@link EntityFieldsData}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ListenableFuture<EntityFieldsData> findAsync(TbContext ctx, EntityId originatorId) {
         switch (originatorId.getEntityType()) {  // TODO: use EntityServiceRegistry

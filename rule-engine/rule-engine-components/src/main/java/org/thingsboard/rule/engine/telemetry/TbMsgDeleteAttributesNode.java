@@ -35,7 +35,13 @@ import static org.thingsboard.server.common.data.DataConstants.NOTIFY_DEVICE_MET
 import static org.thingsboard.server.common.data.DataConstants.SCOPE;
 
 /**
- * Rule engine action node 'delete attributes': Delete attributes for Message Originator. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>delete attributes</b>.
+ *
+ * <p>Delete attributes for Message Originator.
+ * <br>Attempt to remove attributes by selected keys. If msg originator doesn't have an attribute with 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgDeleteAttributesNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/delete-attributes/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/delete-attributes/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -54,12 +60,28 @@ public class TbMsgDeleteAttributesNode implements TbNode {
 
     private TbMsgDeleteAttributesNodeConfiguration config;
     private List<String> keys;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         config = TbNodeUtils.convert(configuration, TbMsgDeleteAttributesNodeConfiguration.class);
         keys = config.getKeys();
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {

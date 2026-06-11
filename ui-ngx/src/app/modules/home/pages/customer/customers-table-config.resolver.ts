@@ -36,8 +36,9 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { HomeDialogsService } from '@home/dialogs/home-dialogs.service';
 /**
- * Route resolver: loads customers table config before activate.
+ * Route resolver: preloads data for customers table config (home/customer pages).
  */
+
 
 @Injectable()
 export class CustomersTableConfigResolver  {
@@ -136,11 +137,24 @@ export class CustomersTableConfigResolver  {
     this.config.detailsReadonly = (customer) => customer && customer.additionalInfo && customer.additionalInfo.isPublic;
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<Customer> observable or value
+   */
+
   resolve(): EntityTableConfig<Customer> {
     this.config.tableTitle = this.translate.instant('customer.customers');
 
     return this.config;
   }
+
+  /**
+   * open customer.
+   *
+   * @param customer customer (Customer)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private openCustomer($event: Event, customer: Customer, config: EntityTableConfig<Customer>) {
     if ($event) {
@@ -150,12 +164,24 @@ export class CustomersTableConfigResolver  {
     this.router.navigateByUrl(url);
   }
 
+  /**
+   * manage customer users.
+   *
+   * @param customer customer (Customer)
+   */
+
   manageCustomerUsers($event: Event, customer: Customer) {
     if ($event) {
       $event.stopPropagation();
     }
     this.router.navigateByUrl(`customers/${customer.id.id}/users`);
   }
+
+  /**
+   * manage customer assets.
+   *
+   * @param customer customer (Customer)
+   */
 
   manageCustomerAssets($event: Event, customer: Customer) {
     if ($event) {
@@ -164,12 +190,24 @@ export class CustomersTableConfigResolver  {
     this.router.navigateByUrl(`customers/${customer.id.id}/assets`);
   }
 
+  /**
+   * manage customer devices.
+   *
+   * @param customer customer (Customer)
+   */
+
   manageCustomerDevices($event: Event, customer: Customer) {
     if ($event) {
       $event.stopPropagation();
     }
     this.router.navigateByUrl(`customers/${customer.id.id}/devices`);
   }
+
+  /**
+   * manage customer dashboards.
+   *
+   * @param customer customer (Customer)
+   */
 
   manageCustomerDashboards($event: Event, customer: Customer) {
     if ($event) {
@@ -178,12 +216,26 @@ export class CustomersTableConfigResolver  {
     this.router.navigateByUrl(`customers/${customer.id.id}/dashboards`);
   }
 
+  /**
+   * manage customer edges.
+   *
+   * @param customer customer (Customer)
+   */
+
   manageCustomerEdges($event: Event, customer: Customer) {
     if ($event) {
       $event.stopPropagation();
     }
     this.router.navigateByUrl(`customers/${customer.id.id}/edgeInstances`);
   }
+
+  /**
+   * Event handler for customer action.
+   *
+   * @param action action (EntityAction<Customer>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
 
   onCustomerAction(action: EntityAction<Customer>, config: EntityTableConfig<Customer>): boolean {
     switch (action.action) {

@@ -49,6 +49,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: device key autocomplete (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-key-autocomplete`.
+ */
 @Component({
     selector: 'tb-device-key-autocomplete',
     templateUrl: './device-key-autocomplete.component.html',
@@ -60,10 +66,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: device key autocomplete UI.
- */
+standalone: false
 })
 export class DeviceKeyAutocompleteComponent extends PageComponent implements OnInit, ControlValueAccessor, OnChanges {
 
@@ -125,6 +128,11 @@ export class DeviceKeyAutocompleteComponent extends PageComponent implements OnI
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.deviceKeyFormGroup = this.fb.group({
       key: [null, this.required ? [Validators.required] : []]
@@ -153,12 +161,30 @@ export class DeviceKeyAutocompleteComponent extends PageComponent implements OnI
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -169,12 +195,23 @@ export class DeviceKeyAutocompleteComponent extends PageComponent implements OnI
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string): void {
     this.modelValue = value;
     this.deviceKeyFormGroup.patchValue(
       {key: value}, {emitEvent: false}
     );
   }
+
+  /**
+   * clear key.
+   *
+   */
 
   clearKey() {
     this.deviceKeyFormGroup.get('key').patchValue(null, {emitEvent: true});
@@ -184,9 +221,19 @@ export class DeviceKeyAutocompleteComponent extends PageComponent implements OnI
     }, 0);
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     this.deviceKeyFormGroup.get('key').updateValueAndValidity({onlySelf: true, emitEvent: true});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: string = this.deviceKeyFormGroup.get('key').value;
@@ -194,10 +241,22 @@ export class DeviceKeyAutocompleteComponent extends PageComponent implements OnI
     this.propagateChange(this.modelValue);
   }
 
+  /**
+   * clear keys cache.
+   *
+   */
+
   private clearKeysCache(): void {
     this.latestKeySearchResult = null;
     this.keysFetchObservable$ = null;
   }
+
+  /**
+   * fetch keys.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchKeys(searchText?: string): Observable<Array<string>> {
     if (this.keySearchText !== searchText || this.latestKeySearchResult === null) {
@@ -210,6 +269,11 @@ export class DeviceKeyAutocompleteComponent extends PageComponent implements OnI
     }
     return of(this.latestKeySearchResult);
   }
+
+  /**
+   * get keys.
+   *
+   */
 
   private getKeys() {
     if (this.keysFetchObservable$ === null) {
@@ -228,6 +292,14 @@ export class DeviceKeyAutocompleteComponent extends PageComponent implements OnI
     }
     return this.keysFetchObservable$;
   }
+
+  /**
+   * fetch entity keys.
+   *
+   * @param targetDevice target device (TargetDevice)
+   * @param dataKeyTypes data key types (Array<DataKeyType>)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   private fetchEntityKeys(targetDevice: TargetDevice, dataKeyTypes: Array<DataKeyType>): Observable<Array<DataKey>> {
     let entityFilter$: Observable<EntityFilter>;
@@ -251,6 +323,13 @@ export class DeviceKeyAutocompleteComponent extends PageComponent implements OnI
       catchError(() => of([] as Array<DataKey>))
     );
   }
+
+  /**
+   * POST/PUT entity — create key filter.
+   *
+   * @param query query (string)
+   * @returns (key: string) => boolean observable or value
+   */
 
   private createKeyFilter(query: string): (key: string) => boolean {
     const lowercaseQuery = query.toLowerCase();

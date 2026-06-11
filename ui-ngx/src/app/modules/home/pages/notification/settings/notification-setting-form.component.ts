@@ -24,6 +24,12 @@ import {
   NotificationUserSetting
 } from '@shared/models/notification.models';
 
+
+/**
+ * Angular component: notification setting form (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-notification-setting-form`.
+ */
 @Component({
     selector: 'tb-notification-setting-form',
     templateUrl: './notification-setting-form.component.html',
@@ -35,10 +41,7 @@ import {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: notification setting form UI.
- */
+standalone: false
 })
 export class NotificationSettingFormComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
@@ -59,12 +62,29 @@ export class NotificationSettingFormComponent implements ControlValueAccessor, O
   constructor(private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     const deliveryMethod = {};
@@ -84,12 +104,23 @@ export class NotificationSettingFormComponent implements ControlValueAccessor, O
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.valueChange$) {
       this.valueChange$.unsubscribe();
       this.valueChange$ = null;
     }
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -99,6 +130,13 @@ export class NotificationSettingFormComponent implements ControlValueAccessor, O
       this.notificationSettingsFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * get checked.
+   *
+   * @param deliveryMethod delivery method (NotificationDeliveryMethod)
+   * @returns boolean observable or value
+   */
 
   getChecked(deliveryMethod?: NotificationDeliveryMethod): boolean {
     if (deliveryMethod) {
@@ -113,10 +151,22 @@ export class NotificationSettingFormComponent implements ControlValueAccessor, O
     }
   }
 
+  /**
+   * toggle deliviry method.
+   *
+   * @param deliveryMethod delivery method (NotificationDeliveryMethod)
+   */
+
   toggleDeliviryMethod(deliveryMethod: NotificationDeliveryMethod) {
     this.notificationSettingsFormGroup.get('enabledDeliveryMethods').get(deliveryMethod)
       .patchValue(!this.notificationSettingsFormGroup.get('enabledDeliveryMethods').get(deliveryMethod).value);
   }
+
+  /**
+   * change instance type check box.
+   *
+   * @param value value (any)
+   */
 
   changeInstanceTypeCheckBox(value: any) {
     const enabledDeliveryMethod = deepClone(this.notificationSettingsFormGroup.get('enabledDeliveryMethods').value);
@@ -128,6 +178,11 @@ export class NotificationSettingFormComponent implements ControlValueAccessor, O
     this.notificationSettingsFormGroup.markAsDirty();
   }
 
+  /**
+   * get indeterminate.
+   *
+   */
+
   getIndeterminate() {
     if (!this.notificationSettingsFormGroup.get('enabled').value) {
       return false;
@@ -137,11 +192,22 @@ export class NotificationSettingFormComponent implements ControlValueAccessor, O
     return checkedResource.length !== 0 && checkedResource.length !== enabledDeliveryMethod.length;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (NotificationUserSetting)
+   */
+
   writeValue(value: NotificationUserSetting): void {
     if (isDefinedAndNotNull(value)) {
       this.notificationSettingsFormGroup.patchValue(value, {emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
       this.propagateChange(this.notificationSettingsFormGroup.value);

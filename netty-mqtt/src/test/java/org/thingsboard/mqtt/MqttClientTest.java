@@ -48,6 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Unit test for netty-mqtt mqtt client.
  */
 
+
 @Slf4j
 @Testcontainers
 class MqttClientTest {

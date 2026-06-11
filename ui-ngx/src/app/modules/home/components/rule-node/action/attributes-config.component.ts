@@ -32,14 +32,17 @@ import {
   defaultAttributeAdvancedProcessingStrategy
 } from '@home/components/rule-node/action/attributes-config.model';
 
+
+/**
+ * Angular component: attributes config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-attributes-config`.
+ */
 @Component({
     selector: 'tb-action-node-attributes-config',
     templateUrl: './attributes-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: attributes config UI.
- */
+standalone: false
 })
 export class AttributesConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -59,13 +62,32 @@ export class AttributesConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.attributesConfigForm;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['processingSettings.isAdvanced', 'processingSettings.type'];
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns AttributeNodeConfigurationForm observable or value
+   */
 
   protected prepareInputConfig(config: AttributeNodeConfiguration): AttributeNodeConfigurationForm {
     let processingSettings: ProcessingSettingsForm;
@@ -91,6 +113,13 @@ export class AttributesConfigComponent extends RuleNodeConfigurationComponent {
     }
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns AttributeNodeConfiguration observable or value
+   */
+
   protected prepareOutputConfig(config: AttributeNodeConfigurationForm): AttributeNodeConfiguration {
     let processingSettings: ProcessingSettings;
     if (config.processingSettings.isAdvanced) {
@@ -109,6 +138,12 @@ export class AttributesConfigComponent extends RuleNodeConfigurationComponent {
       processingSettings
     };
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.attributesConfigForm = this.fb.group({
@@ -139,6 +174,13 @@ export class AttributesConfigComponent extends RuleNodeConfigurationComponent {
       this.attributesConfigForm.get('updateAttributesOnlyOnValueChange').patchValue(false, {emitEvent: false});
     });
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param _trigger  trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, _trigger?: string) {
     const processingForm = this.attributesConfigForm.get('processingSettings') as FormGroup;

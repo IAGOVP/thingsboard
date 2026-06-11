@@ -33,15 +33,18 @@ export interface FooterFabButtons {
   buttons: Array<FooterFabButton>;
 }
 
+
+/**
+ * Angular component: footer fab buttons (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-footer-fab-buttons`.
+ */
 @Component({
     selector: 'tb-footer-fab-buttons',
     templateUrl: './footer-fab-buttons.component.html',
     styleUrls: ['./footer-fab-buttons.component.scss'],
     animations: speedDialFabAnimations,
-    standalone: false
-/**
- * Angular component: footer fab buttons UI.
- */
+standalone: false
 })
 export class FooterFabButtonsComponent extends PageComponent {
 
@@ -63,6 +66,10 @@ export class FooterFabButtonsComponent extends PageComponent {
   closeTimeout = null;
 
   @HostListener('focusout', ['$event'])
+  /**
+   * Event handler for focus out.
+   *
+   */
   onFocusOut($event) {
     if (!this.closeTimeout) {
       this.closeTimeout = setTimeout(() => {
@@ -72,6 +79,10 @@ export class FooterFabButtonsComponent extends PageComponent {
   }
 
   @HostListener('focusin', ['$event'])
+  /**
+   * Event handler for focus in.
+   *
+   */
   onFocusIn($event) {
     if (this.closeTimeout) {
       clearTimeout(this.closeTimeout);
@@ -83,15 +94,30 @@ export class FooterFabButtonsComponent extends PageComponent {
     super(store);
   }
 
+  /**
+   * show items.
+   *
+   */
+
   showItems() {
     this.fabTogglerState = 'active';
     this.buttons = this.footerFabButtons.buttons;
   }
 
+  /**
+   * hide items.
+   *
+   */
+
   hideItems() {
     this.fabTogglerState = 'inactive';
     this.buttons = [];
   }
+
+  /**
+   * Event handler for toggle fab.
+   *
+   */
 
   onToggleFab() {
     this.buttons.length ? this.hideItems() : this.showItems();

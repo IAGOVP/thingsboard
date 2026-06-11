@@ -81,15 +81,18 @@ import {
 import { WidgetService } from '@core/http/widget.service';
 import { ActionNotificationShow } from '@core/notification/notification.actions';
 
+
+/**
+ * Angular component: scada symbol (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol`.
+ */
 @Component({
     selector: 'tb-scada-symbol',
     templateUrl: './scada-symbol.component.html',
     styleUrls: ['./scada-symbol.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol UI.
- */
+standalone: false
 })
 export class ScadaSymbolComponent extends PageComponent
   implements OnInit, OnDestroy, HasDirtyFlag, ScadaSymbolEditObjectCallbacks {
@@ -173,6 +176,11 @@ export class ScadaSymbolComponent extends PageComponent
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.scadaSymbolFormGroup = this.fb.group({
       metadata: [null]
@@ -205,11 +213,21 @@ export class ScadaSymbolComponent extends PageComponent
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * Event handler for apply scada symbol config.
+   *
+   */
 
   onApplyScadaSymbolConfig() {
     if (this.scadaSymbolFormGroup.valid) {
@@ -251,9 +269,19 @@ export class ScadaSymbolComponent extends PageComponent
     }
   }
 
+  /**
+   * Event handler for revert scada symbol config.
+   *
+   */
+
   onRevertScadaSymbolConfig() {
     this.init(this.origSymbolData);
   }
+
+  /**
+   * enter preview mode.
+   *
+   */
 
   enterPreviewMode() {
     this.previewMetadata = this.scadaSymbolFormGroup.get('metadata').value;
@@ -300,12 +328,22 @@ export class ScadaSymbolComponent extends PageComponent
     }
   }
 
+  /**
+   * exit preview mode.
+   *
+   */
+
   exitPreviewMode() {
     this.symbolEditorData = {
       scadaSymbolContent: this.symbolData.scadaSymbolContent
     };
     this.previewMode = false;
   }
+
+  /**
+   * Event handler for revert preview settings.
+   *
+   */
 
   onRevertPreviewSettings() {
     this.scadaPreviewFormGroup.patchValue({
@@ -314,15 +352,33 @@ export class ScadaSymbolComponent extends PageComponent
     this.scadaPreviewFormGroup.markAsPristine();
   }
 
+  /**
+   * Event handler for apply preview settings.
+   *
+   */
+
   onApplyPreviewSettings() {
     this.scadaPreviewFormGroup.markAsPristine();
     this.previewScadaSymbolObjectSettings = this.scadaPreviewFormGroup.get('scadaSymbolObjectSettings').value;
     this.updatePreviewWidgetSettings();
   }
 
+  /**
+   * tags updated.
+   *
+   * @param tags tags (string[])
+   */
+
   tagsUpdated(tags: string[]) {
     this.tags = tags;
   }
+
+  /**
+   * tag has state render function.
+   *
+   * @param tag tag (string)
+   * @returns boolean observable or value
+   */
 
   tagHasStateRenderFunction(tag: string): boolean {
     const metadata: ScadaSymbolMetadata = this.scadaSymbolFormGroup.get('metadata').value;
@@ -333,6 +389,13 @@ export class ScadaSymbolComponent extends PageComponent
     return false;
   }
 
+  /**
+   * tag has click action.
+   *
+   * @param tag tag (string)
+   * @returns boolean observable or value
+   */
+
   tagHasClickAction(tag: string): boolean {
     const metadata: ScadaSymbolMetadata = this.scadaSymbolFormGroup.get('metadata').value;
     if (metadata.tags) {
@@ -342,21 +405,50 @@ export class ScadaSymbolComponent extends PageComponent
     return false;
   }
 
+  /**
+   * edit tag state render function.
+   *
+   * @param tag tag (string)
+   */
+
   editTagStateRenderFunction(tag: string) {
     this.symbolMetadata.editTagStateRenderFunction(tag);
   }
+
+  /**
+   * edit tag click action.
+   *
+   * @param tag tag (string)
+   */
 
   editTagClickAction(tag: string) {
     this.symbolMetadata.editTagClickAction(tag);
   }
 
+  /**
+   * Event handler for symbol edit object dirty.
+   *
+   * @param dirty dirty (boolean)
+   */
+
   onSymbolEditObjectDirty(dirty: boolean) {
     this.symbolEditorDirty = dirty;
   }
 
+  /**
+   * Event handler for symbol edit object valid.
+   *
+   * @param valid valid (boolean)
+   */
+
   onSymbolEditObjectValid(valid: boolean) {
     this.symbolEditorValid = valid;
   }
+
+  /**
+   * update scada symbol.
+   *
+   */
 
   updateScadaSymbol() {
     this.dialog.open<UploadImageDialogComponent, UploadImageDialogData,
@@ -378,6 +470,11 @@ export class ScadaSymbolComponent extends PageComponent
       }
     });
   }
+
+  /**
+   * download scada symbol.
+   *
+   */
 
   downloadScadaSymbol() {
     let metadata: ScadaSymbolMetadata;
@@ -405,6 +502,11 @@ export class ScadaSymbolComponent extends PageComponent
       this.store.dispatch(new ActionNotificationShow({ message: e.message, type: 'error' }));
     }
   }
+
+  /**
+   * POST/PUT entity — create widget.
+   *
+   */
 
   createWidget() {
     const metadata: ScadaSymbolMetadata = this.scadaSymbolFormGroup.get('metadata').value;
@@ -467,16 +569,33 @@ export class ScadaSymbolComponent extends PageComponent
     );
   }
 
+  /**
+   * update preview widget settings.
+   *
+   */
+
   private updatePreviewWidgetSettings() {
     this.previewWidget = deepClone(this.previewWidget);
     this.previewWidget.config.settings.scadaSymbolObjectSettings = this.previewScadaSymbolObjectSettings;
     this.previewWidgets = [this.previewWidget];
   }
 
+  /**
+   * prepare scada symbol content.
+   *
+   * @param metadata metadata (ScadaSymbolMetadata)
+   * @returns string observable or value
+   */
+
   private prepareScadaSymbolContent(metadata: ScadaSymbolMetadata): string {
     const svgContent = this.symbolEditor.getContent();
     return updateScadaSymbolMetadataInContent(svgContent, metadata);
   }
+
+  /**
+   * reset.
+   *
+   */
 
   private reset(): void {
     if (this.symbolMetadata) {
@@ -484,6 +603,12 @@ export class ScadaSymbolComponent extends PageComponent
     }
     this.previewMode = false;
   }
+
+  /**
+   * init.
+   *
+   * @param data dialog or route input data
+   */
 
   private init(data: ScadaSymbolData) {
     if (this.authUser.authority === Authority.TENANT_ADMIN) {

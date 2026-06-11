@@ -26,17 +26,25 @@ import org.thingsboard.server.msa.ui.pages.CustomerPageHelper;
 import org.thingsboard.server.msa.ui.pages.LoginPageHelper;
 import org.thingsboard.server.msa.ui.pages.SideBarMenuViewElements;
 
+
 /**
 
- * Manage customers users test.
+ * Black-box test: manage customers users (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class ManageCustomersUsersTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewElements sideBarMenuView;
     private CustomerPageHelper customerPage;
     private final String iconText = "Customer Users";
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -44,6 +52,12 @@ public class ManageCustomersUsersTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewElements(driver);
         customerPage = new CustomerPageHelper(driver);
     }
+    /**
+     * Open window by right corner btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Manage customer users")
@@ -59,6 +73,12 @@ public class ManageCustomersUsersTest extends AbstractDriverBaseTest {
         Assert.assertTrue(customerPage.customerUserIconHeader().isDisplayed());
         Assert.assertTrue(customerPage.customerManageWindowIconHead().getText().contains(iconText));
     }
+    /**
+     * Open window by view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Customers smoke tests")
     @Feature("Manage customer users")

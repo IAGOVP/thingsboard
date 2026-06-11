@@ -284,11 +284,11 @@ const powerLineStroke = 'M0 2.5C0 1.11929 1.11929 0 2.5 0C3.88071 0 5 1.11929 5 
 
 const powerButtonAnimation = (element: Element): Runner => element.animate(200, 0, 'now');
 
+
 /**
-
- * TypeScript models and enums for power button shape.
-
+ * Power button shape (ThingsBoard web UI).
  */
+
 
 export abstract class PowerButtonShape {
 
@@ -361,6 +361,14 @@ export abstract class PowerButtonShape {
     this._drawShape();
   }
 
+  /**
+   * POST/PUT entity — create icon element.
+   *
+   * @param icon icon (string)
+   * @param size size (number)
+   * @returns Observable<Element> observable or value
+   */
+
   public createIconElement(icon: string, size: number): Observable<Element> {
     const isSvg = isSvgIcon(icon);
     if (isSvg) {
@@ -410,6 +418,12 @@ export abstract class PowerButtonShape {
     }
   }
 
+  /**
+   * set value.
+   *
+   * @param value value (boolean)
+   */
+
   public setValue(value: boolean) {
     if (this.value !== value) {
       this.value = value;
@@ -417,12 +431,24 @@ export abstract class PowerButtonShape {
     }
   }
 
+  /**
+   * set disabled.
+   *
+   * @param disabled disabled (boolean)
+   */
+
   public setDisabled(disabled: boolean) {
     if (this.disabled !== disabled) {
       this.disabled = disabled;
       this._drawState();
     }
   }
+
+  /**
+   * set pressed.
+   *
+   * @param pressed pressed (boolean)
+   */
 
   public setPressed(pressed: boolean) {
     if (this.forcePressed !== pressed) {
@@ -434,6 +460,15 @@ export abstract class PowerButtonShape {
       }
     }
   }
+
+  /**
+   * draw off shape.
+   *
+   * @param centerGroup center group (G)
+   * @param label label (boolean)
+   * @param labelWeight label weight (string)
+   * @param circleStroke circle stroke (boolean)
+   */
 
   public drawOffShape(centerGroup: G, label: boolean, labelWeight?: string, circleStroke?: boolean) {
     if (this.icons.offButtonIcon.showIcon) {
@@ -455,6 +490,16 @@ export abstract class PowerButtonShape {
       }
     }
   }
+
+  /**
+   * draw on shape.
+   *
+   * @param onCenterGroup on center group (G)
+   * @param label label (boolean)
+   * @param labelWeight label weight (string)
+   * @param circleStroke circle stroke (boolean)
+   * @param mask mask (Circle)
+   */
 
   public drawOnShape(onCenterGroup?: G, label?: boolean, labelWeight?: string, circleStroke?: boolean, mask?: Circle) {
     if (this.icons.onButtonIcon.showIcon) {
@@ -496,6 +541,13 @@ export abstract class PowerButtonShape {
     }
   }
 
+  /**
+   * Event handler for center time line.
+   *
+   * @param timeline timeline (Timeline)
+   * @param label label (boolean)
+   */
+
   public onCenterTimeLine(timeline: Timeline, label: boolean) {
     if (this.icons.onButtonIcon.showIcon) {
       if (this.onIcon$) {
@@ -511,6 +563,13 @@ export abstract class PowerButtonShape {
     }
   }
 
+  /**
+   * off center color.
+   *
+   * @param mainColor main color (PowerButtonColor)
+   * @param label label (boolean)
+   */
+
   public offCenterColor(mainColor: PowerButtonColor, label: boolean) {
     if (this.icons.offButtonIcon.showIcon) {
       this.offIcon$.subscribe(icon => icon.attr({ fill: mainColor.hex, 'fill-opacity': mainColor.opacity}))
@@ -524,6 +583,13 @@ export abstract class PowerButtonShape {
     }
   }
 
+  /**
+   * Event handler for center color.
+   *
+   * @param mainColor main color (PowerButtonColor)
+   * @param label label (boolean)
+   */
+
   public onCenterColor(mainColor: PowerButtonColor, label: boolean) {
     if (this.icons.onButtonIcon.showIcon) {
       this.onIcon$.subscribe((icon)=> icon.attr({ fill: mainColor.hex, 'fill-opacity': mainColor.opacity}))
@@ -536,6 +602,13 @@ export abstract class PowerButtonShape {
       }
     }
   }
+
+  /**
+   * button animation.
+   *
+   * @param scale scale (number)
+   * @param label label (boolean)
+   */
 
   public buttonAnimation(scale: number, label: boolean) {
     if (this.icons.onButtonIcon.showIcon) {
@@ -641,21 +714,65 @@ export abstract class PowerButtonShape {
     }
   }
 
+  /**
+   * draw background state.
+   *
+   * @param backgroundColor background color (PowerButtonColor)
+   */
+
   private drawBackgroundState(backgroundColor: PowerButtonColor) {
     this.backgroundShape.attr({ fill: backgroundColor.hex, 'fill-opacity': backgroundColor.opacity});
   }
 
+  /**
+   * draw shape.
+   *
+   */
+
   protected drawShape() {}
+
+  /**
+   * draw color state.
+   *
+   * @param _mainColor  main color (PowerButtonColor)
+   */
 
   protected drawColorState(_mainColor: PowerButtonColor) {}
 
+  /**
+   * draw off.
+   *
+   */
+
   protected drawOff() {}
+
+  /**
+   * draw on.
+   *
+   */
 
   protected drawOn() {}
 
+  /**
+   * Event handler for press start.
+   *
+   */
+
   protected onPressStart() {}
 
+  /**
+   * Event handler for press end.
+   *
+   */
+
   protected onPressEnd() {}
+
+  /**
+   * POST/PUT entity — create mask.
+   *
+   * @param shape shape (Element)
+   * @param maskElements mask elements (Element[])
+   */
 
   protected createMask(shape: Element, maskElements: Element[]) {
     const mask =
@@ -666,13 +783,32 @@ export abstract class PowerButtonShape {
     shape.maskWith(mask);
   }
 
+  /**
+   * POST/PUT entity — create on label.
+   *
+   * @returns Text observable or value
+   */
+
   protected createOnLabel(fontWeight = '500'): Text {
     return this.createLabel(this.onLabel, fontWeight);
   }
 
+  /**
+   * POST/PUT entity — create off label.
+   *
+   * @returns Text observable or value
+   */
+
   protected createOffLabel(fontWeight = '500'): Text {
     return this.createLabel(this.offLabel, fontWeight);
   }
+
+  /**
+   * POST/PUT entity — create label.
+   *
+   * @param text text (string)
+   * @returns Text observable or value
+   */
 
   private createLabel(text: string, fontWeight = '500'): Text {
     return this.svgShape.text(text).font({

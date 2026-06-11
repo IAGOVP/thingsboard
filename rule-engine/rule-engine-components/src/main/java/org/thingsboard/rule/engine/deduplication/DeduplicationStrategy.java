@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.deduplication;
 
+
 /**
 
- * Rule engine component: deduplication strategy.
+ * Enumerates deduplication strategy values used by rule engine message deduplication nodes.
 
  */
+
 
 public enum DeduplicationStrategy {
 

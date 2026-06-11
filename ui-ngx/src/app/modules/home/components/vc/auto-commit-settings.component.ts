@@ -33,14 +33,17 @@ import {
 import { EntityType, entityTypeTranslations } from '@shared/models/entity-type.models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+
+/**
+ * Angular component: auto commit settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-auto-commit-settings`.
+ */
 @Component({
     selector: 'tb-auto-commit-settings',
     templateUrl: './auto-commit-settings.component.html',
     styleUrls: ['./auto-commit-settings.component.scss', './../../pages/admin/settings-card.scss'],
-    standalone: false
-/**
- * Angular component: auto commit settings UI.
- */
+standalone: false
 })
 export class AutoCommitSettingsComponent extends PageComponent implements OnInit {
 
@@ -61,6 +64,11 @@ export class AutoCommitSettingsComponent extends PageComponent implements OnInit
               public fb: UntypedFormBuilder) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.autoCommitSettingsForm = this.fb.group({
@@ -86,27 +94,65 @@ export class AutoCommitSettingsComponent extends PageComponent implements OnInit
     this.isReadOnly = this.adminService.getRepositorySettingsInfo().pipe(map(settings => settings.readOnly));
   }
 
+  /**
+   * entity types form group array.
+   *
+   * @returns UntypedFormGroup[] observable or value
+   */
+
   entityTypesFormGroupArray(): UntypedFormGroup[] {
     return (this.autoCommitSettingsForm.get('entityTypes') as UntypedFormArray).controls as UntypedFormGroup[];
   }
+
+  /**
+   * entity types form group expanded.
+   *
+   * @param entityTypeControl entity type control (AbstractControl)
+   * @returns boolean observable or value
+   */
 
   entityTypesFormGroupExpanded(entityTypeControl: AbstractControl): boolean {
     return !!(entityTypeControl as any).expanded;
   }
 
+  /**
+   * track by entity type.
+   *
+   * @param index index (number)
+   * @param entityTypeControl entity type control (AbstractControl)
+   * @returns any observable or value
+   */
+
   public trackByEntityType(index: number, entityTypeControl: AbstractControl): any {
     return entityTypeControl;
   }
+
+  /**
+   * DELETE — remove entity type.
+   *
+   * @param index index (number)
+   */
 
   public removeEntityType(index: number) {
     (this.autoCommitSettingsForm.get('entityTypes') as UntypedFormArray).removeAt(index);
     this.autoCommitSettingsForm.markAsDirty();
   }
 
+  /**
+   * POST/PUT entity — add enabled.
+   *
+   * @returns boolean observable or value
+   */
+
   public addEnabled(): boolean {
     const entityTypesArray = this.autoCommitSettingsForm.get('entityTypes') as UntypedFormArray;
     return entityTypesArray.length < exportableEntityTypes.length;
   }
+
+  /**
+   * POST/PUT entity — add entity type.
+   *
+   */
 
   public addEntityType() {
     const entityTypesArray = this.autoCommitSettingsForm.get('entityTypes') as UntypedFormArray;
@@ -129,12 +175,24 @@ export class AutoCommitSettingsComponent extends PageComponent implements OnInit
     this.autoCommitSettingsForm.markAsDirty();
   }
 
+  /**
+   * DELETE — remove all.
+   *
+   */
+
   public removeAll() {
     const entityTypesArray = this.autoCommitSettingsForm.get('entityTypes') as UntypedFormArray;
     entityTypesArray.clear();
     this.autoCommitSettingsForm.updateValueAndValidity();
     this.autoCommitSettingsForm.markAsDirty();
   }
+
+  /**
+   * entity type text.
+   *
+   * @param entityTypeControl entity type control (AbstractControl)
+   * @returns SafeHtml observable or value
+   */
 
   entityTypeText(entityTypeControl: AbstractControl): SafeHtml {
     const entityType: EntityType = entityTypeControl.get('entityType').value;
@@ -150,6 +208,13 @@ export class AutoCommitSettingsComponent extends PageComponent implements OnInit
     return this.sanitizer.bypassSecurityTrustHtml(message);
   }
 
+  /**
+   * allowed entity types.
+   *
+   * @param entityTypeControl entity type control (AbstractControl)
+   * @returns Array<EntityType> observable or value
+   */
+
   allowedEntityTypes(entityTypeControl?: AbstractControl): Array<EntityType> {
     let res = [...exportableEntityTypes];
     const currentEntityType: EntityType = entityTypeControl?.get('entityType')?.value;
@@ -159,6 +224,11 @@ export class AutoCommitSettingsComponent extends PageComponent implements OnInit
     res = res.filter(entityType => !usedEntityTypes.includes(entityType) || entityType === currentEntityType);
     return res;
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const value: [{entityType: string, config: AutoVersionCreateConfig}] =
@@ -179,6 +249,12 @@ export class AutoCommitSettingsComponent extends PageComponent implements OnInit
     );
   }
 
+  /**
+   * DELETE — delete.
+   *
+   * @param formDirective form directive (FormGroupDirective)
+   */
+
   delete(formDirective: FormGroupDirective): void {
     this.dialogService.confirm(
       this.translate.instant('admin.delete-auto-commit-settings-title', ),
@@ -198,6 +274,13 @@ export class AutoCommitSettingsComponent extends PageComponent implements OnInit
     });
   }
 
+  /**
+   * prepare entity types form array.
+   *
+   * @param settings settings (AutoCommitSettings | null)
+   * @returns UntypedFormArray observable or value
+   */
+
   private prepareEntityTypesFormArray(settings: AutoCommitSettings | null): UntypedFormArray {
     const entityTypesControls: Array<AbstractControl> = [];
     if (settings) {
@@ -208,6 +291,14 @@ export class AutoCommitSettingsComponent extends PageComponent implements OnInit
     }
     return this.fb.array(entityTypesControls);
   }
+
+  /**
+   * POST/PUT entity — create entity type control.
+   *
+   * @param entityType entity type (EntityType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns AbstractControl observable or value
+   */
 
   private createEntityTypeControl(entityType: EntityType, config: AutoVersionCreateConfig): AbstractControl {
     const entityTypeControl = this.fb.group(

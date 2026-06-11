@@ -22,7 +22,13 @@ import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.plugin.ComponentType;
 
 /**
- * Rule engine filter node 'entity type switch': Route incoming messages by Message Originator Type Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>entity type switch</b>.
+ *
+ * <p>Route incoming messages by Message Originator Type
+ * <br>Routes messages to chain according to the entity type ('Device', 'Asset', etc.).  
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link EmptyNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/entity-type-switch/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/entity-type-switch/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -36,6 +42,14 @@ import org.thingsboard.server.common.data.plugin.ComponentType;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/entity-type-switch/"
 )
 public class TbOriginatorTypeSwitchNode extends TbAbstractTypeSwitchNode {
+    /**
+     * Returns relation type.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originator message originator entity id
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getRelationType(TbContext ctx, EntityId originator) {

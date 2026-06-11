@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: update json attribute widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-json-attribute-widget-settings`.
+ */
 @Component({
     selector: 'tb-update-json-attribute-widget-settings',
     templateUrl: './update-json-attribute-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update json attribute widget settings UI.
- */
+standalone: false
 })
 export class UpdateJsonAttributeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class UpdateJsonAttributeWidgetSettingsComponent extends WidgetSettingsCo
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateJsonAttributeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -56,6 +71,12 @@ export class UpdateJsonAttributeWidgetSettingsComponent extends WidgetSettingsCo
       attributeRequired: true
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateJsonAttributeWidgetSettingsForm = this.fb.group({
@@ -75,9 +96,21 @@ export class UpdateJsonAttributeWidgetSettingsComponent extends WidgetSettingsCo
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showLabel', 'widgetMode'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showLabel: boolean = this.updateJsonAttributeWidgetSettingsForm.get('showLabel').value;

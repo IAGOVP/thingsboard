@@ -26,6 +26,12 @@ import {
 } from '@shared/models/device.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: default device transport configuration (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-default-device-transport-configuration`.
+ */
 @Component({
     selector: 'tb-default-device-transport-configuration',
     templateUrl: './default-device-transport-configuration.component.html',
@@ -35,10 +41,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => DefaultDeviceTransportConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: default device transport configuration UI.
- */
+standalone: false
 })
 export class DefaultDeviceTransportConfigurationComponent implements ControlValueAccessor, OnInit {
 
@@ -63,12 +66,29 @@ export class DefaultDeviceTransportConfigurationComponent implements ControlValu
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.defaultDeviceTransportConfigurationFormGroup = this.fb.group({
@@ -81,6 +101,12 @@ export class DefaultDeviceTransportConfigurationComponent implements ControlValu
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -90,9 +116,20 @@ export class DefaultDeviceTransportConfigurationComponent implements ControlValu
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DefaultDeviceTransportConfiguration | null)
+   */
+
   writeValue(value: DefaultDeviceTransportConfiguration | null): void {
     this.defaultDeviceTransportConfigurationFormGroup.patchValue({configuration: value}, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: DeviceTransportConfiguration = null;

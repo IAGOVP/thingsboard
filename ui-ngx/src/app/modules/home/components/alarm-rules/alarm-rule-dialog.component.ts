@@ -64,15 +64,18 @@ export interface AlarmRuleDialogData {
   getTestScriptDialogFn: AlarmRuleTestScriptFn,
 }
 
+
+/**
+ * Angular component: alarm rule dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-dialog`.
+ */
 @Component({
     selector: 'tb-alarm-rule-dialog',
     templateUrl: './alarm-rule-dialog.component.html',
     styleUrls: ['./alarm-rule-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: alarm rule dialog UI.
- */
+standalone: false
 })
 export class AlarmRuleDialogComponent extends DialogComponent<AlarmRuleDialogComponent, CalculatedFieldAlarmRule> {
 
@@ -149,10 +152,20 @@ export class AlarmRuleDialogComponent extends DialogComponent<AlarmRuleDialogCom
     return this.fieldFormGroup.get('configuration.arguments').value;
   }
 
+  /**
+   * DELETE — remove clear alarm rule.
+   *
+   */
+
   public removeClearAlarmRule() {
     this.configFormGroup.patchValue({clearRule: null});
     this.fieldFormGroup.markAsDirty();
   }
+
+  /**
+   * POST/PUT entity — add clear alarm rule.
+   *
+   */
 
   public addClearAlarmRule() {
     const clearAlarmRule: AlarmRule = {
@@ -170,9 +183,19 @@ export class AlarmRuleDialogComponent extends DialogComponent<AlarmRuleDialogCom
     return deepTrim(this.fieldFormGroup.value as CalculatedFieldAlarmRule);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     if (this.fieldFormGroup.valid && Object.keys(this.arguments ?? {}).length > 0) {
@@ -192,10 +215,22 @@ export class AlarmRuleDialogComponent extends DialogComponent<AlarmRuleDialogCom
     }
   }
 
+  /**
+   * apply dialog data.
+   *
+   */
+
   private applyDialogData(): void {
     const { configuration = {}, type = CalculatedFieldType.ALARM, debugSettings = { failuresEnabled: true, allEnabled: true }, entityId = this.data.entityId, ...value } = this.data.value ?? {};
     this.fieldFormGroup.patchValue({ configuration, type, debugSettings, entityId, ...value }, {emitEvent: false});
   }
+
+  /**
+   * Event handler for test script.
+   *
+   * @param expression expression (string)
+   * @returns Observable<string> observable or value
+   */
 
   onTestScript(expression: string): Observable<string> {
     return this.cfFormService.testScript(
@@ -206,6 +241,11 @@ export class AlarmRuleDialogComponent extends DialogComponent<AlarmRuleDialogCom
       expression
     );
   }
+
+  /**
+   * update rules validators.
+   *
+   */
 
   private updateRulesValidators(): void {
     if (Object.keys(this.arguments ?? {}).length > 0) {
@@ -233,12 +273,25 @@ export class AlarmRuleDialogComponent extends DialogComponent<AlarmRuleDialogCom
     }));
   }
 
+  /**
+   * change entity.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   */
+
   changeEntity(entity: BaseData<EntityId>): void {
     this.entityName = entity.name;
     if (this.isAssignedToCustomer(entity as AssetInfo | DeviceInfo)) {
       this.ownerId = (entity as AssetInfo | DeviceInfo).customerId;
     }
   }
+
+  /**
+   * is assigned to customer.
+   *
+   * @param entity entity (AssetInfo | DeviceInfo)
+   * @returns boolean observable or value
+   */
 
   private isAssignedToCustomer(entity: AssetInfo | DeviceInfo): boolean {
     return entity && entity.customerId && entity.customerId.id !== NULL_UUID;

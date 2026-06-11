@@ -44,11 +44,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+
 /**
 
- * Unit test for tb msg to email node rule node.
+ * Unit test for tb msg to email node (email notification nodes).
 
  */
+
 
 public class TbMsgToEmailNodeTest {
 
@@ -88,6 +90,12 @@ public class TbMsgToEmailNodeTest {
         assertThat(config.getSubjectTemplate()).isEqualTo("Device ${deviceType} temperature high");
         assertThat(config.getBodyTemplate()).isEqualTo("Device ${deviceName} has high temperature $[temperature]");
     }
+    /**
+     * Given mail body type test config when on msg then verify.
+     *
+     * @param testConfig test config ({@link MailBodyTypeTestConfig})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource("MailBodyTypeTestConfig")
@@ -163,6 +171,9 @@ public class TbMsgToEmailNodeTest {
                 new MailBodyTypeTestConfig(true, "true", null)
         );
     }
+    /**
+     * Mail body type test config (email notification nodes).
+     */
 
     @Data
     @RequiredArgsConstructor

@@ -58,6 +58,12 @@ import {
 } from '@home/components/widget/lib/settings/common/dynamic-form/dynamic-form-property-panel.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: dynamic form property row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dynamic-form-property-row`.
+ */
 @Component({
     selector: 'tb-dynamic-form-property-row',
     templateUrl: './dynamic-form-property-row.component.html',
@@ -75,10 +81,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: dynamic form property row UI.
- */
+standalone: false
 })
 export class DynamicFormPropertyRowComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -118,6 +121,11 @@ export class DynamicFormPropertyRowComponent implements ControlValueAccessor, On
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.propertyRowFormGroup = this.fb.group({
       id: [null, [this.propertyIdValidator()]],
@@ -136,12 +144,30 @@ export class DynamicFormPropertyRowComponent implements ControlValueAccessor, On
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -151,6 +177,12 @@ export class DynamicFormPropertyRowComponent implements ControlValueAccessor, On
       this.propertyRowFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (FormProperty)
+   */
 
   writeValue(value: FormProperty): void {
     this.modelValue = value;
@@ -207,6 +239,11 @@ export class DynamicFormPropertyRowComponent implements ControlValueAccessor, On
     }
   }
 
+  /**
+   * focus.
+   *
+   */
+
   focus() {
     this.idInput.nativeElement.scrollIntoView();
     this.idInput.nativeElement.focus();
@@ -216,6 +253,12 @@ export class DynamicFormPropertyRowComponent implements ControlValueAccessor, On
     this.idInput.nativeElement.scrollIntoView();
     this.editProperty(null, this.editButton, true, onCanceled);
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   public validate(_c: UntypedFormControl) {
     const idControl = this.propertyRowFormGroup.get('id');
@@ -237,6 +280,12 @@ export class DynamicFormPropertyRowComponent implements ControlValueAccessor, On
     return null;
   }
 
+  /**
+   * property id validator.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private propertyIdValidator(): ValidatorFn {
     return control => {
       if (!control.value) {
@@ -253,10 +302,21 @@ export class DynamicFormPropertyRowComponent implements ControlValueAccessor, On
     };
   }
 
+  /**
+   * Event handler for type changed.
+   *
+   * @param newType new type (FormPropertyType)
+   */
+
   private onTypeChanged(newType: FormPropertyType) {
     this.modelValue = {...this.modelValue, ...{type: newType}};
     this.modelValue.default = defaultPropertyValue(newType);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: FormProperty = this.propertyRowFormGroup.value;

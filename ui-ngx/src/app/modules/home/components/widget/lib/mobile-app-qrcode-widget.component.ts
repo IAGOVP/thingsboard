@@ -29,14 +29,17 @@ import { backgroundStyle, ComponentStyle, overlayStyle } from '@shared/models/wi
 import { ImagePipe } from '@shared/pipe/image.pipe';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
+/**
+ * Angular component: mobile app qrcode widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-app-qrcode-widget`.
+ */
 @Component({
     selector: 'tb-mobile-app-qrcode-widget',
     templateUrl: './mobile-app-qrcode-widget.component.html',
     styleUrls: ['./mobile-app-qrcode-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: mobile app qrcode widget UI.
- */
+standalone: false
 })
 export class MobileAppQrcodeWidgetComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -90,6 +93,11 @@ export class MobileAppQrcodeWidgetComponent extends PageComponent implements OnI
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (!this.mobileAppSettings) {
       this.mobileAppService.getMobileAppSettings().subscribe((settings => {
@@ -124,6 +132,11 @@ export class MobileAppQrcodeWidgetComponent extends PageComponent implements OnI
     this.initMobileAppQRCode();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.widgetResize$) {
       this.widgetResize$.disconnect();
@@ -134,12 +147,22 @@ export class MobileAppQrcodeWidgetComponent extends PageComponent implements OnI
     clearTimeout(this.deepLinkTTLTimeoutID);
   }
 
+  /**
+   * navigate by deep link.
+   *
+   */
+
   navigateByDeepLink($event: Event) {
     $event?.stopPropagation();
     if (this.ctx.isMobile) {
       window.open(this.deepLink, '_blank');
     }
   }
+
+  /**
+   * init mobile app qrcode.
+   *
+   */
 
   private initMobileAppQRCode() {
     if (this.deepLinkTTLTimeoutID) {
@@ -153,6 +176,12 @@ export class MobileAppQrcodeWidgetComponent extends PageComponent implements OnI
       this.deepLinkTTLTimeoutID = setTimeout(() => this.initMobileAppQRCode(), this.deepLinkTTL);
     });
   }
+
+  /**
+   * update qrcode.
+   *
+   * @param link link (string)
+   */
 
   private updateQRCode(link: string) {
     import('qrcode').then((QRCode) => {

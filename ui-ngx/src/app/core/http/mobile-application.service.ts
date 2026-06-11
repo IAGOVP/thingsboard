@@ -21,7 +21,9 @@ import { Observable } from 'rxjs';
 import { QrCodeSettings } from '@shared/models/mobile-app.models';
 
 /**
- * Angular HTTP service: mobile application REST wrappers (`@core/http`).
+ * Angular injectable service: mobile application (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -32,19 +34,41 @@ export class MobileApplicationService {
     private http: HttpClient
   ) {}
 
-  /** Calls ThingsBoard REST `/api/mobile/qr/settings, ...`. */
+  
+  /**
+   * get mobile app settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<QrCodeSettings> observable or value
+   */
+
 
   public getMobileAppSettings(config?: RequestConfig): Observable<QrCodeSettings> {
     return this.http.get<QrCodeSettings>(`/api/mobile/qr/settings`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/qr/settings, ...`. */
+  
+  /**
+   * POST/PUT entity — save mobile app settings.
+   *
+   * @param mobileAppSettings mobile app settings (QrCodeSettings)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<QrCodeSettings> observable or value
+   */
+
 
   public saveMobileAppSettings(mobileAppSettings: QrCodeSettings, config?: RequestConfig): Observable<QrCodeSettings> {
     return this.http.post<QrCodeSettings>(`/api/mobile/qr/settings`, mobileAppSettings, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/qr/deepLink`. */
+  
+  /**
+   * get mobile app deep link.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<string> observable or value
+   */
+
 
   public getMobileAppDeepLink(config?: RequestConfig): Observable<string> {
     return this.http.get<string>(`/api/mobile/qr/deepLink`, defaultHttpOptionsFromConfig(config));

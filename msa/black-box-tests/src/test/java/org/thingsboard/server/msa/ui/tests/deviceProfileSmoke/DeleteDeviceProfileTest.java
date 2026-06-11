@@ -30,16 +30,24 @@ import org.thingsboard.server.msa.ui.utils.EntityPrototypes;
 import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 
+
 /**
 
- * Delete device profile test.
+ * Black-box test: delete device profile (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class DeleteDeviceProfileTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -47,6 +55,12 @@ public class DeleteDeviceProfileTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Removes device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete one device profile")
@@ -63,6 +77,12 @@ public class DeleteDeviceProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.assertEntityIsNotPresent(name));
     }
+    /**
+     * Removes device profile from view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete one device profile")
@@ -80,6 +100,12 @@ public class DeleteDeviceProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.assertEntityIsNotPresent(name));
     }
+    /**
+     * Removes selected device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete one device profile")
@@ -97,6 +123,12 @@ public class DeleteDeviceProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.assertEntityIsNotPresent(name));
     }
+    /**
+     * Removes default device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete one device profile")
@@ -107,6 +139,12 @@ public class DeleteDeviceProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertFalse(profilesPage.deleteBtn("default").isEnabled());
     }
+    /**
+     * Removes default device profile from view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete one device profile")
@@ -118,6 +156,12 @@ public class DeleteDeviceProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.deleteDeviceProfileFromViewBtnIsNotDisplayed());
     }
+    /**
+     * Removes selected default device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Delete one device profile")
@@ -129,6 +173,12 @@ public class DeleteDeviceProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.presentCheckBox("default"));
         Assert.assertFalse(profilesPage.presentCheckBox("default").isDisplayed());
     }
+    /**
+     * Removes device profile without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     @Epic("Device profile smoke tests")
     @Feature("Delete one device profile")
     @Test(priority = 30, groups = "smoke")

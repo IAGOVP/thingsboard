@@ -36,14 +36,17 @@ import {
 import { isUndefined } from '@core/utils';
 import { getLabel, setLabel } from '@shared/models/widget-settings.models';
 
+
+/**
+ * Angular component: simple card basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-simple-card-basic-config`.
+ */
 @Component({
     selector: 'tb-simple-card-basic-config',
     templateUrl: './simple-card-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: simple card basic config UI.
- */
+standalone: false
 })
 export class SimpleCardBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -51,6 +54,12 @@ export class SimpleCardBasicConfigComponent extends BasicWidgetConfigComponent {
     const datasources = this.simpleCardWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.simpleCardWidgetConfigForm.get('datasources').value;
@@ -67,13 +76,32 @@ export class SimpleCardBasicConfigComponent extends BasicWidgetConfigComponent {
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.simpleCardWidgetConfigForm;
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'temperature', label: 'Temperature', type: DataKeyType.timeseries }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     this.simpleCardWidgetConfigForm = this.fb.group({
@@ -90,6 +118,13 @@ export class SimpleCardBasicConfigComponent extends BasicWidgetConfigComponent {
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -105,6 +140,13 @@ export class SimpleCardBasicConfigComponent extends BasicWidgetConfigComponent {
     return this.widgetConfig;
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -112,6 +154,13 @@ export class SimpleCardBasicConfigComponent extends BasicWidgetConfigComponent {
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

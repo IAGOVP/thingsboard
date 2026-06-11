@@ -57,8 +57,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.spy;
 import static org.mockito.BDDMockito.then;
 /**
- * Unit test for tb get device attr node rule node.
+ * Unit test for tb get device attr node (entity metadata and related-data fetch nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbGetDeviceAttrNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -75,12 +76,22 @@ public class TbGetDeviceAttrNodeTest extends AbstractRuleNodeUpgradeTest {
     private TbContext ctxMock;
     @Mock
     private DeviceService deviceServiceMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
         node = spy(new TbGetDeviceAttrNode());
         config = new TbGetDeviceAttrNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -100,6 +111,11 @@ public class TbGetDeviceAttrNodeTest extends AbstractRuleNodeUpgradeTest {
 
         assertThat(config.getDeviceRelationsQuery()).isEqualTo(deviceRelationsQuery);
     }
+    /**
+     * Given fetch to is null when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFetchToIsNull_whenInit_thenThrowsException() {
@@ -108,6 +124,11 @@ public class TbGetDeviceAttrNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(TbNodeException.class)
                 .hasMessage("FetchTo option can't be null! Allowed values: " + Arrays.toString(TbMsgSource.values()));
     }
+    /**
+     * Given device does not exist when on msg then tell failure.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenDeviceDoesNotExist_whenOnMsg_thenTellFailure() throws TbNodeException {
@@ -249,6 +270,12 @@ public class TbGetDeviceAttrNodeTest extends AbstractRuleNodeUpgradeTest {
         );
 
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

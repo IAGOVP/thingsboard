@@ -20,14 +20,17 @@ import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shar
 import { HttpRequestType, IntLimit } from '../rule-node-config.models';
 import { isDefinedAndNotNull } from '@core/utils';
 
+
+/**
+ * Angular component: rest api call config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-rest-api-call-config`.
+ */
 @Component({
     selector: 'tb-external-node-rest-api-call-config',
     templateUrl: './rest-api-call-config.component.html',
     styleUrls: ['./rest-api-call-config.component.scss'],
-    standalone: false
-/**
- * Angular component: rest api call config UI.
- */
+standalone: false
 })
 export class RestApiCallConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -44,9 +47,21 @@ export class RestApiCallConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.restApiCallConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.restApiCallConfigForm = this.fb.group({
@@ -70,9 +85,22 @@ export class RestApiCallConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['enableProxy', 'useSystemProxyProperties'];
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     this.isQueryParamsExpanded = configuration && isDefinedAndNotNull(configuration.queryParams) && !!Object.keys(configuration.queryParams).length;
@@ -80,10 +108,23 @@ export class RestApiCallConfigComponent extends RuleNodeConfigurationComponent {
     return super.prepareInputConfig(configuration);
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     configuration.queryParams = isDefinedAndNotNull(configuration.queryParams) ? configuration.queryParams : [];
     return super.prepareOutputConfig(configuration);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const enableProxy: boolean = this.restApiCallConfigForm.get('enableProxy').value;

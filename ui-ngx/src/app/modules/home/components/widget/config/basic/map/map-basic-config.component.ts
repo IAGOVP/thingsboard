@@ -31,14 +31,17 @@ import {
 } from '@home/components/widget/config/timewindow-config-panel.component';
 import { MapModelDefinition } from '@shared/models/widget/maps/map-model.definition';
 
+
+/**
+ * Angular component: map basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-basic-config`.
+ */
 @Component({
     selector: 'tb-map-basic-config',
     templateUrl: './map-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: map basic config UI.
- */
+standalone: false
 })
 export class MapBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -55,9 +58,21 @@ export class MapBasicConfigComponent extends BasicWidgetConfigComponent {
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.mapWidgetConfigForm;
   }
+
+  /**
+   * setup config.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected setupConfig(widgetConfig: WidgetConfigComponentData) {
     const params = widgetConfig.typeParameters as any;
@@ -66,6 +81,12 @@ export class MapBasicConfigComponent extends BasicWidgetConfigComponent {
     }
     super.setupConfig(widgetConfig);
   }
+
+  /**
+   * setup defaults.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected setupDefaults(configData: WidgetConfigComponentData) {
     const settings = configData.config.settings as MapWidgetSettings;
@@ -84,6 +105,12 @@ export class MapBasicConfigComponent extends BasicWidgetConfigComponent {
       }
     }
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: MapWidgetSettings = mergeDeepIgnoreArray<MapWidgetSettings>({} as MapWidgetSettings,
@@ -115,6 +142,13 @@ export class MapBasicConfigComponent extends BasicWidgetConfigComponent {
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.settings = config.mapSettings || {};
@@ -140,9 +174,22 @@ export class MapBasicConfigComponent extends BasicWidgetConfigComponent {
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.mapWidgetConfigForm.get('showTitle').value;
@@ -176,6 +223,13 @@ export class MapBasicConfigComponent extends BasicWidgetConfigComponent {
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -183,6 +237,13 @@ export class MapBasicConfigComponent extends BasicWidgetConfigComponent {
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

@@ -35,6 +35,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { OriginatorFieldsMappingValues, SvMapOption } from '../rule-node-config.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: sv map config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-sv-map-config`.
+ */
 @Component({
     selector: 'tb-sv-map-config',
     templateUrl: './sv-map-config.component.html',
@@ -51,10 +57,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: sv map config UI.
- */
+standalone: false
 })
 export class SvMapConfigComponent extends PageComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -98,6 +101,11 @@ export class SvMapConfigComponent extends PageComponent implements ControlValueA
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ngControl = this.injector.get(NgControl);
     if (this.ngControl != null) {
@@ -115,16 +123,40 @@ export class SvMapConfigComponent extends PageComponent implements ControlValueA
       });
   }
 
+  /**
+   * key vals form array.
+   *
+   * @returns FormArray observable or value
+   */
+
   keyValsFormArray(): FormArray {
     return this.svListFormGroup.get('keyVals') as FormArray;
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -168,6 +200,12 @@ export class SvMapConfigComponent extends PageComponent implements ControlValueA
     return !isEqual(errors, {}) ? errors : null;
   };
 
+  /**
+   * write value.
+   *
+   * @param keyValMap key val map ({ [key: string]: string })
+   */
+
   writeValue(keyValMap: { [key: string]: string }): void {
     const keyValuesData = Object.keys(keyValMap).map(key => ({key, value: keyValMap[key]}));
     if (this.keyValsFormArray().length === keyValuesData.length) {
@@ -186,6 +224,12 @@ export class SvMapConfigComponent extends PageComponent implements ControlValueA
       }
     }
   }
+
+  /**
+   * filter select options.
+   *
+   * @param keyValControl key val control (AbstractControl)
+   */
 
   public filterSelectOptions(keyValControl?: AbstractControl) {
     const deleteFieldsArray = [];
@@ -207,9 +251,20 @@ export class SvMapConfigComponent extends PageComponent implements ControlValueA
     return filterSelectOptions;
   }
 
+  /**
+   * DELETE — remove key val.
+   *
+   * @param index index (number)
+   */
+
   public removeKeyVal(index: number) {
     this.keyValsFormArray().removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add key val.
+   *
+   */
 
   public addKeyVal() {
     this.keyValsFormArray().push(this.fb.group({
@@ -219,6 +274,12 @@ export class SvMapConfigComponent extends PageComponent implements ControlValueA
     this.keyChangeSubscribe(this.keyValsFormArray().at(this.keyValsFormArray().length - 1) as FormGroup);
   }
 
+  /**
+   * key change subscribe.
+   *
+   * @param formGroup form group (FormGroup)
+   */
+
   private keyChangeSubscribe(formGroup: FormGroup) {
     formGroup.get('key').valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
@@ -227,6 +288,11 @@ export class SvMapConfigComponent extends PageComponent implements ControlValueA
       formGroup.get('value').patchValue(this.targetKeyPrefix + mappedValue[0].toUpperCase() + mappedValue.slice(1));
     });
   }
+
+  /**
+   * validate.
+   *
+   */
 
   public validate() {
     const svList: { key: string; value: string }[] = this.svListFormGroup.get('keyVals').value;
@@ -242,6 +308,11 @@ export class SvMapConfigComponent extends PageComponent implements ControlValueA
     }
     return null;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const svList: { key: string; value: string }[] = this.svListFormGroup.get('keyVals').value;

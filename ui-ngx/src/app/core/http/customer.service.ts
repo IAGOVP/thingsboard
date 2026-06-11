@@ -24,7 +24,9 @@ import { Customer } from '@shared/models/customer.model';
 import { SaveEntityParams } from '@shared/models/entity.models';
 
 /**
- * Angular HTTP service: customer REST wrappers (`@core/http`).
+ * Angular injectable service: customer (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -35,20 +37,44 @@ export class CustomerService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/customers${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get customers.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<Customer>> observable or value
+   */
+
 
   public getCustomers(pageLink: PageLink, config?: RequestConfig): Observable<PageData<Customer>> {
     return this.http.get<PageData<Customer>>(`/api/customers${pageLink.toQuery()}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}, ...`. */
+  
+  /**
+   * get customer.
+   *
+   * @param customerId customer UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Customer> observable or value
+   */
+
 
   public getCustomer(customerId: string, config?: RequestConfig): Observable<Customer> {
     return this.http.get<Customer>(`/api/customer/${customerId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customers?customerIds=${customerIds.join(, ...`. */
+  
+  /**
+   * get customers by ids.
+   *
+   * @param customerIds customer ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<Customer>> observable or value
+   */
+
 
   public getCustomersByIds(customerIds: Array<string>, config?: RequestConfig): Observable<Array<Customer>> {
     return this.http.get<Array<Customer>>(`/api/customers?customerIds=${customerIds.join(',')}`, defaultHttpOptionsFromConfig(config));
@@ -58,9 +84,24 @@ export class CustomerService {
 
   public saveCustomer(customer: Customer, config?: RequestConfig): Observable<Customer>;
   public saveCustomer(customer: Customer, saveParams: SaveEntityParams, config?: RequestConfig): Observable<Customer>;
+  /**
+   * POST/PUT entity — save customer.
+   *
+   * @param customer customer (Customer)
+   * @param saveParamsOrConfig save params or config (SaveEntityParams | RequestConfig)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Customer> observable or value
+   */
   public saveCustomer(customer: Customer, saveParamsOrConfig?: SaveEntityParams | RequestConfig, config?: RequestConfig): Observable<Customer> {
     return this.http.post<Customer>('/api/customer', customer, createDefaultHttpOptions(saveParamsOrConfig, config));
   }
+
+  /**
+   * DELETE — delete customer.
+   *
+   * @param customerId customer UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public deleteCustomer(customerId: string, config?: RequestConfig) {
     return this.http.delete(`/api/customer/${customerId}`, defaultHttpOptionsFromConfig(config));

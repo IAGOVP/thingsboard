@@ -27,15 +27,23 @@ import org.thingsboard.server.msa.ui.pages.LoginPageHelper;
 import org.thingsboard.server.msa.ui.pages.ProfilesPageHelper;
 import org.thingsboard.server.msa.ui.pages.SideBarMenuViewHelper;
 
+
 /**
 
- * Make device profile default test.
+ * Black-box test: make device profile default (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class MakeDeviceProfileDefaultTest extends AbstractDriverBaseTest {
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -43,11 +51,23 @@ public class MakeDeviceProfileDefaultTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Make profile default.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void makeProfileDefault() {
         testRestClient.setDefaultDeviceProfile(getDeviceProfileByName("default").getId());
     }
+    /**
+     * Make device profile default by right corner btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Make device profile default")
@@ -62,6 +82,12 @@ public class MakeDeviceProfileDefaultTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.defaultCheckbox(profile).isDisplayed());
     }
+    /**
+     * Make device profile default from view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Device profile smoke tests")
     @Feature("Make device profile default")

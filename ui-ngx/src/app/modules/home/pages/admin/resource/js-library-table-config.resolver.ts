@@ -58,8 +58,9 @@ import {
 } from "@shared/components/resource/resources-in-use-dialog.component";
 import { ResourcesDatasource } from "@home/pages/admin/resource/resources-datasource";
 /**
- * Route resolver: loads js library table config before activate.
+ * Route resolver: preloads data for js library table config (home/admin pages).
  */
+
 
 @Injectable()
 export class JsLibraryTableConfigResolver  {
@@ -146,6 +147,12 @@ export class JsLibraryTableConfigResolver  {
     this.config.onEntityAction = action => this.onResourceAction(action);
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<Resource, PageLink, ResourceInfo> observable or value
+   */
+
   resolve(): EntityTableConfig<Resource, PageLink, ResourceInfo> {
     this.config.tableTitle = this.translate.instant('javascript.javascript-library');
     this.config.componentsData = {
@@ -158,6 +165,12 @@ export class JsLibraryTableConfigResolver  {
     return this.config;
   }
 
+  /**
+   * open resource.
+   *
+   * @param resourceInfo resource info (ResourceInfo)
+   */
+
   private openResource($event: Event, resourceInfo: ResourceInfo) {
     if ($event) {
       $event.stopPropagation();
@@ -166,12 +179,25 @@ export class JsLibraryTableConfigResolver  {
     this.router.navigateByUrl(url).then(() => {});
   }
 
+  /**
+   * download resource.
+   *
+   * @param resource resource (ResourceInfo)
+   */
+
   downloadResource($event: Event, resource: ResourceInfo) {
     if ($event) {
       $event.stopPropagation();
     }
     this.resourceService.downloadResource(resource.id.id).subscribe();
   }
+
+  /**
+   * Event handler for resource action.
+   *
+   * @param action action (EntityAction<ResourceInfo>)
+   * @returns boolean observable or value
+   */
 
   onResourceAction(action: EntityAction<ResourceInfo>): boolean {
     switch (action.action) {
@@ -187,9 +213,25 @@ export class JsLibraryTableConfigResolver  {
     return false;
   }
 
+  /**
+   * details readonly.
+   *
+   * @param resource resource (ResourceInfo)
+   * @param authority authority (Authority)
+   * @returns boolean observable or value
+   */
+
   private detailsReadonly(resource: ResourceInfo, authority: Authority): boolean {
     return !this.isResourceEditable(resource, authority);
   }
+
+  /**
+   * is resource editable.
+   *
+   * @param resource resource (ResourceInfo)
+   * @param authority authority (Authority)
+   * @returns boolean observable or value
+   */
 
   private isResourceEditable(resource: ResourceInfo, authority: Authority): boolean {
     if (authority === Authority.TENANT_ADMIN) {
@@ -198,6 +240,12 @@ export class JsLibraryTableConfigResolver  {
       return authority === Authority.SYS_ADMIN;
     }
   }
+
+  /**
+   * DELETE — delete resource.
+   *
+   * @param resource resource (ResourceInfo)
+   */
 
   private deleteResource($event: Event, resource: ResourceInfo) {
     if ($event) {
@@ -262,6 +310,12 @@ export class JsLibraryTableConfigResolver  {
       }
     });
   }
+
+  /**
+   * DELETE — delete resources.
+   *
+   * @param resources resources (ResourceInfo[])
+   */
 
   private deleteResources($event: Event, resources: ResourceInfo[]) {
     if ($event) {
@@ -332,6 +386,12 @@ export class JsLibraryTableConfigResolver  {
       });
     }
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<ResourceInfo>> observable or value
+   */
 
   private configureCellActions(): Array<CellActionDescriptor<ResourceInfo>> {
     const actions: Array<CellActionDescriptor<ResourceInfo>> = [];

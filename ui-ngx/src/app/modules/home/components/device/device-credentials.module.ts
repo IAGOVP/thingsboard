@@ -27,6 +27,9 @@ import { DeviceCredentialsMqttBasicComponent } from '@home/components/device/dev
 /**
  * Angular NgModule: device credentials feature area.
  */
+/**
+ * Angular NgModule bundling device credentials (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     CopyDeviceCredentialsComponent,
@@ -45,5 +48,5 @@ import { DeviceCredentialsMqttBasicComponent } from '@home/components/device/dev
     DeviceCredentialsLwm2mComponent,
     DeviceCredentialsLwm2mServerComponent,
     DeviceCredentialsMqttBasicComponent
-  ]})
+]})
 export class DeviceCredentialsModule { }

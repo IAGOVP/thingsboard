@@ -44,6 +44,12 @@ import {
 } from '@home/components/widget/lib/settings/common/dynamic-form/dynamic-form-select-item-row.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: dynamic form select items (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dynamic-form-select-items`.
+ */
 @Component({
     selector: 'tb-dynamic-form-select-items',
     templateUrl: './dynamic-form-select-items.component.html',
@@ -61,10 +67,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: dynamic form select items UI.
- */
+standalone: false
 })
 export class DynamicFormSelectItemsComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -91,6 +94,11 @@ export class DynamicFormSelectItemsComponent implements ControlValueAccessor, On
               private translate: TranslateService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.selectItemsFormGroup = this.fb.group({
       selectItems: this.fb.array([])
@@ -108,12 +116,30 @@ export class DynamicFormSelectItemsComponent implements ControlValueAccessor, On
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -124,10 +150,22 @@ export class DynamicFormSelectItemsComponent implements ControlValueAccessor, On
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (FormSelectItem[] | undefined)
+   */
+
   writeValue(value: FormSelectItem[] | undefined): void {
     const items= value || [];
     this.selectItemsFormGroup.setControl('selectItems', this.prepareSelectItemsFormArray(items), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   public validate(_c: UntypedFormControl) {
     this.errorText = '';
@@ -153,6 +191,14 @@ export class DynamicFormSelectItemsComponent implements ControlValueAccessor, On
     };
   }
 
+  /**
+   * select item value unique.
+   *
+   * @param value value (any)
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public selectItemValueUnique(value: any, index: number): boolean {
     const itemsArray = this.selectItemsFormGroup.get('selectItems') as UntypedFormArray;
     for (let i = 0; i < itemsArray.controls.length; i++) {
@@ -166,6 +212,12 @@ export class DynamicFormSelectItemsComponent implements ControlValueAccessor, On
     return true;
   }
 
+  /**
+   * select item drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   selectItemDrop(event: CdkDragDrop<string[]>) {
     const itemsArray = this.selectItemsFormGroup.get('selectItems') as UntypedFormArray;
     const item = itemsArray.at(event.previousIndex);
@@ -173,17 +225,42 @@ export class DynamicFormSelectItemsComponent implements ControlValueAccessor, On
     itemsArray.insert(event.currentIndex, item, {emitEvent: true});
   }
 
+  /**
+   * select items form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   selectItemsFormArray(): UntypedFormArray {
     return this.selectItemsFormGroup.get('selectItems') as UntypedFormArray;
   }
+
+  /**
+   * track by select item.
+   *
+   * @param _index  index (number)
+   * @param selectItemControl select item control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackBySelectItem(_index: number, selectItemControl: AbstractControl): any {
     return selectItemControl;
   }
 
+  /**
+   * DELETE — remove select item.
+   *
+   * @param index index (number)
+   */
+
   removeSelectItem(index: number, emitEvent = true) {
     (this.selectItemsFormGroup.get('selectItems') as UntypedFormArray).removeAt(index, {emitEvent});
   }
+
+  /**
+   * POST/PUT entity — add select item.
+   *
+   */
 
   addSelectItem() {
     const item: FormSelectItem = {
@@ -194,6 +271,13 @@ export class DynamicFormSelectItemsComponent implements ControlValueAccessor, On
     const itemControl = this.fb.control(item, []);
     itemsArray.push(itemControl);
   }
+
+  /**
+   * prepare select items form array.
+   *
+   * @param items items (FormSelectItem[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareSelectItemsFormArray(items: FormSelectItem[] | undefined): UntypedFormArray {
     const selectItemsControls: Array<AbstractControl> = [];

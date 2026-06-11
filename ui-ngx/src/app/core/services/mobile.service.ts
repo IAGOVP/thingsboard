@@ -34,7 +34,9 @@ const mobileReadyHandler = 'tbMobileReadyHandler';
 
 // @dynamic
 /**
- * Angular HTTP service: mobile REST wrappers (`@core/http`).
+ * Angular injectable service: mobile (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -62,9 +64,21 @@ export class MobileService {
     }
   }
 
+  /**
+   * is mobile app.
+   *
+   * @returns boolean observable or value
+   */
+
   public isMobileApp(): boolean {
     return this.mobileApp;
   }
+
+  /**
+   * handle dashboard state name.
+   *
+   * @param name name (string)
+   */
 
   public handleDashboardStateName(name: string) {
     if (this.mobileApp) {
@@ -72,11 +86,24 @@ export class MobileService {
     }
   }
 
+  /**
+   * Event handler for dashboard loaded.
+   *
+   * @param hasRightLayout has right layout (boolean)
+   * @param rightLayoutOpened right layout opened (boolean)
+   */
+
   public onDashboardLoaded(hasRightLayout: boolean, rightLayoutOpened: boolean) {
     if (this.mobileApp) {
       this.mobileChannel.callHandler(dashboardLoadedHandler, hasRightLayout, rightLayoutOpened);
     }
   }
+
+  /**
+   * Event handler for dashboard right layout changed.
+   *
+   * @param opened opened (boolean)
+   */
 
   public onDashboardRightLayoutChanged(opened: boolean) {
     if (this.mobileApp) {
@@ -87,6 +114,11 @@ export class MobileService {
   public registerToggleLayoutFunction(toggleLayoutFunction: () => void) {
     this.toggleLayoutFunction = toggleLayoutFunction;
   }
+
+  /**
+   * unregister toggle layout function.
+   *
+   */
 
   public unregisterToggleLayoutFunction() {
     this.toggleLayoutFunction = null;
@@ -109,11 +141,25 @@ export class MobileService {
     }
   }
 
+  /**
+   * handle mobile navigation.
+   *
+   * @param path path (string)
+   * @param params params (Params)
+   * @param queryParams query params (Params)
+   */
+
   public handleMobileNavigation(path?: string, params?: Params, queryParams?: Params) {
     if (this.mobileApp) {
       this.mobileChannel.callHandler(navigationHandler, path, params, queryParams);
     }
   }
+
+  /**
+   * Event handler for window message.
+   *
+   * @param event DOM or Angular event object
+   */
 
   private onWindowMessage(event: MessageEvent) {
     if (event.data) {
@@ -141,6 +187,12 @@ export class MobileService {
     }
   }
 
+  /**
+   * open dashboard.
+   *
+   * @param openDashboardMessage open dashboard message (OpenDashboardMessage)
+   */
+
   private openDashboard(openDashboardMessage: OpenDashboardMessage) {
     if (openDashboardMessage && openDashboardMessage.dashboardId) {
       if (this.reloadUserObservable) {
@@ -156,6 +208,12 @@ export class MobileService {
       }
     }
   }
+
+  /**
+   * do dashboard navigation.
+   *
+   * @param openDashboardMessage open dashboard message (OpenDashboardMessage)
+   */
 
   private doDashboardNavigation(openDashboardMessage: OpenDashboardMessage) {
     let url = `/dashboard/${openDashboardMessage.dashboardId}`;
@@ -178,6 +236,12 @@ export class MobileService {
     this.lastDashboardId = openDashboardMessage.dashboardId;
     this.router.navigateByUrl(url, {replaceUrl: true});
   }
+
+  /**
+   * reload user.
+   *
+   * @param reloadUserMessage reload user message (ReloadUserMessage)
+   */
 
   private reloadUser(reloadUserMessage: ReloadUserMessage) {
     if (reloadUserMessage && reloadUserMessage.accessToken && reloadUserMessage.refreshToken) {

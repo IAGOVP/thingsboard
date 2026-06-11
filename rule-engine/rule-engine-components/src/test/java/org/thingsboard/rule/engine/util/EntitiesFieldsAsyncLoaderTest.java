@@ -73,8 +73,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for entities fields async loader rule node.
+ * Unit test for entities fields async loader (shared rule-engine utilities and async loaders).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class EntitiesFieldsAsyncLoaderTest {
@@ -103,6 +104,11 @@ public class EntitiesFieldsAsyncLoaderTest {
     private EntityViewService entityViewServiceMock;
     @Mock
     private EdgeService edgeServiceMock;
+    /**
+     * Setup.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeAll
     public static void setup() {
@@ -120,6 +126,12 @@ public class EntitiesFieldsAsyncLoaderTest {
                 EntityType.EDGE
         );
     }
+    /**
+     * Given supported entity types when find async then ok.
+     *
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenSupportedEntityTypes_whenFindAsync_thenOK() throws ExecutionException, InterruptedException {
@@ -136,6 +148,11 @@ public class EntitiesFieldsAsyncLoaderTest {
             Assertions.assertEquals(expectedEntityFieldsData, actualEntityFieldsData);
         }
     }
+    /**
+     * Given unsupported entity types when find async then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenUnsupportedEntityTypes_whenFindAsync_thenException() {
@@ -153,6 +170,11 @@ public class EntitiesFieldsAsyncLoaderTest {
             }
         }
     }
+    /**
+     * Given supported type but entity does not exist when find async then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenSupportedTypeButEntityDoesNotExist_whenFindAsync_thenException() {

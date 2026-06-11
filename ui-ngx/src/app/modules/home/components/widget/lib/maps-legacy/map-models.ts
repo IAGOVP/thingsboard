@@ -35,11 +35,11 @@ export type MarkerIconInfo = {
   size: [number, number];
 };
 
+
 /**
-
- * map image.
-
+ * Map image (ThingsBoard web UI).
  */
+
 
 export interface MapImage {
   imageUrl: string;

@@ -34,14 +34,17 @@ export interface FilterEntityColumn {
 }
 
 
+
+/**
+ * Angular component: event filter panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-event-filter-panel`.
+ */
 @Component({
     selector: 'tb-event-filter-panel',
     templateUrl: './event-filter-panel.component.html',
     styleUrls: ['./event-filter-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: event filter panel UI.
- */
+standalone: false
 })
 export class EventFilterPanelComponent {
 
@@ -74,13 +77,34 @@ export class EventFilterPanelComponent {
     });
   }
 
+  /**
+   * is selector.
+   *
+   * @param key key (string)
+   * @returns string observable or value
+   */
+
   isSelector(key: string): string {
     return ['msgDirectionType', 'status', 'entityName'].includes(key) ? key : '';
   }
 
+  /**
+   * is number fields.
+   *
+   * @param key key (string)
+   * @returns string observable or value
+   */
+
   isNumberFields(key: string): string {
     return ['minMessagesProcessed', 'maxMessagesProcessed', 'minErrorsOccurred', 'maxErrorsOccurred'].includes(key) ? key : '';
   }
+
+  /**
+   * selector values.
+   *
+   * @param key key (string)
+   * @returns string[] observable or value
+   */
 
   selectorValues(key: string): string[] {
     switch (key) {
@@ -93,6 +117,11 @@ export class EventFilterPanelComponent {
     }
   }
 
+  /**
+   * update.
+   *
+   */
+
   update() {
     const filter = deepTrim(Object.fromEntries(Object.entries(this.eventFilterFormGroup.value).filter(([_, v]) => v !== '')));
     this.result = {
@@ -102,13 +131,29 @@ export class EventFilterPanelComponent {
     this.overlayRef.dispose();
   }
 
+  /**
+   * show error msg fields.
+   *
+   */
+
   showErrorMsgFields() {
     return !this.conditionError || this.eventFilterFormGroup.get('isError').value !== '';
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.overlayRef.dispose();
   }
+
+  /**
+   * change is error.
+   *
+   * @param value value (boolean | string)
+   */
 
   changeIsError(value: boolean | string) {
     if (this.conditionError && value === '') {

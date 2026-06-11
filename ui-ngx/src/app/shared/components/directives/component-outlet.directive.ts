@@ -25,14 +25,18 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
+
+/**
+ * Angular directive: tb component outlet.
+ */
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[tbComponentOutlet]',
     exportAs: 'tbComponentOutlet',
-    standalone: false
 /**
- * Angular directive: tb component outlet.
+ * Angular directive: tb component outlet (shared UI components).
  */
+    standalone: false
 })
 export class TbComponentOutletDirective<_T = unknown> implements OnChanges {
   private componentRef: ComponentRef<any> | null = null;
@@ -50,6 +54,11 @@ export class TbComponentOutletDirective<_T = unknown> implements OnChanges {
     return true;
   }
 
+  /**
+   * recreate component.
+   *
+   */
+
   private recreateComponent(): void {
     this.viewContainer.clear();
     this.componentRef = this.viewContainer.createComponent(this.tbComponentOutlet, {index: 0, injector: this.tbComponentInjector});
@@ -65,6 +74,11 @@ export class TbComponentOutletDirective<_T = unknown> implements OnChanges {
       }
     }
   }
+
+  /**
+   * update context.
+   *
+   */
 
   private updateContext(): void {
     const newCtx = this.tbComponentOutletContext;

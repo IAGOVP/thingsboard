@@ -31,13 +31,22 @@ import { CalculatedFieldsService } from '@core/http/calculated-fields.service';
 import { CalculatedFieldsTableEntity } from '@home/components/calculated-fields/calculated-fields-table-config';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 /**
- * Angular HTTP service: calculated field form REST wrappers (`@core/http`).
+ * Angular injectable service: calculated field form (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 @Injectable({ providedIn: 'root' })
 export class CalculatedFieldFormService {
   private fb = inject(FormBuilder);
   private calculatedFieldsService = inject(CalculatedFieldsService);
+
+  /**
+   * build form.
+   *
+   * @returns FormGroup observable or value
+   */
 
   buildForm(): FormGroup {
     return this.fb.group({
@@ -48,6 +57,12 @@ export class CalculatedFieldFormService {
       configuration: this.fb.control<CalculatedFieldConfiguration>({} as CalculatedFieldConfiguration),
     });
   }
+
+  /**
+   * build alarm rule form.
+   *
+   * @returns FormGroup observable or value
+   */
 
   buildAlarmRuleForm(): FormGroup {
     return this.fb.group({
@@ -83,6 +98,13 @@ export class CalculatedFieldFormService {
     });
   }
 
+  /**
+   * prepare config.
+   *
+   * @param configuration configuration (CalculatedFieldConfiguration)
+   * @returns CalculatedFieldConfiguration observable or value
+   */
+
   prepareConfig(configuration: CalculatedFieldConfiguration): CalculatedFieldConfiguration {
     const config = configuration || ({} as CalculatedFieldConfiguration);
     if (config.type !== CalculatedFieldType.ALARM) {
@@ -103,6 +125,10 @@ export class CalculatedFieldFormService {
     if (calculatedFieldId) {
       return this.calculatedFieldsService.getLatestCalculatedFieldDebugEvent(calculatedFieldId, {ignoreLoading: true})
         .pipe(
+          /**
+           * switch map.
+           *
+           */
           switchMap(event => {
             let args = null;
             if (event?.arguments) {

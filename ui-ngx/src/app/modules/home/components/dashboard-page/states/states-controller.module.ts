@@ -27,6 +27,9 @@ import { DefaultStateControllerComponent } from '@home/components/dashboard-page
 /**
  * Angular NgModule: states controller feature area.
  */
+/**
+ * Angular NgModule bundling states controller (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     StatesComponentDirective,
@@ -43,7 +46,7 @@ import { DefaultStateControllerComponent } from '@home/components/dashboard-page
   ],
   providers: [
     StatesControllerService
-  ]})
+]})
 export class StatesControllerModule {
 
   constructor(private statesControllerService: StatesControllerService) {

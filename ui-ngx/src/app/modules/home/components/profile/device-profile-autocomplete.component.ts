@@ -53,6 +53,12 @@ import { AuthUser } from '@shared/models/user.model';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { Authority } from '@shared/models/authority.enum';
 
+
+/**
+ * Angular component: device profile autocomplete (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-profile-autocomplete`.
+ */
 @Component({
     selector: 'tb-device-profile-autocomplete',
     templateUrl: './device-profile-autocomplete.component.html',
@@ -62,10 +68,7 @@ import { Authority } from '@shared/models/authority.enum';
             useExisting: forwardRef(() => DeviceProfileAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: device profile autocomplete UI.
- */
+standalone: false
 })
 export class DeviceProfileAutocompleteComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -165,12 +168,29 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredDeviceProfiles = this.selectDeviceProfileFormGroup.get('deviceProfile').valueChanges
@@ -186,6 +206,10 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
             this.updateView(modelValue);
           }
         }),
+        /**
+         * map.
+         *
+         */
         map(value => {
           if (value) {
             if (typeof value === 'string') {
@@ -219,6 +243,11 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * select default device profile if needed.
+   *
+   */
+
   selectDefaultDeviceProfileIfNeeded(): void {
     if (this.selectDefaultProfile && !this.modelValue) {
       this.deviceProfileService.getDefaultDeviceProfileInfo().subscribe(
@@ -235,6 +264,11 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
       this.selectFirstDeviceProfileIfNeeded();
     }
   }
+
+  /**
+   * select first device profile if needed.
+   *
+   */
 
   selectFirstDeviceProfileIfNeeded(): void {
     if (this.selectFirstProfile && !this.modelValue) {
@@ -254,6 +288,12 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -262,6 +302,12 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
       this.selectDeviceProfileFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DeviceProfileId | null)
+   */
 
   writeValue(value: DeviceProfileId | null): void {
     this.searchText = '';
@@ -287,12 +333,22 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectDeviceProfileFormGroup.get('deviceProfile').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * Event handler for panel closed.
+   *
+   */
 
   onPanelClosed() {
     if (this.ignoreClosedPanel) {
@@ -306,6 +362,12 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param deviceProfile device profile (DeviceProfileInfo | null)
+   */
+
   updateView(deviceProfile: DeviceProfileInfo | null) {
     const idValue = deviceProfile && deviceProfile.id ? new DeviceProfileId(deviceProfile.id.id) : null;
     if (!entityIdEquals(this.modelValue, idValue)) {
@@ -315,9 +377,23 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * display device profile fn.
+   *
+   * @param profile profile (DeviceProfileInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayDeviceProfileFn(profile?: DeviceProfileInfo): string | undefined {
     return profile ? profile.name : undefined;
   }
+
+  /**
+   * fetch device profiles.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<DeviceProfileInfo>> observable or value
+   */
 
   fetchDeviceProfiles(searchText?: string): Observable<Array<DeviceProfileInfo>> {
     this.searchText = searchText;
@@ -327,6 +403,10 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     });
     return this.deviceProfileService.getDeviceProfileInfos(pageLink, this.transportType, {ignoreLoading: true}).pipe(
       catchError(() => of(emptyPageData<DeviceProfileInfo>())),
+      /**
+       * map.
+       *
+       */
       map(pageData => {
         let data = pageData.data;
         if (this.displayAllOnEmpty) {
@@ -337,6 +417,11 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     );
   }
 
+  /**
+   * clear.
+   *
+   */
+
   clear() {
     this.ignoreClosedPanel = true;
     this.selectDeviceProfileFormGroup.get('deviceProfile').patchValue(null, {emitEvent: true});
@@ -346,9 +431,21 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     }, 0);
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * device profile enter.
+   *
+   */
 
   deviceProfileEnter($event: KeyboardEvent) {
     if (this.editProfileEnabled && $event.keyCode === ENTER) {
@@ -358,6 +455,12 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
       }
     }
   }
+
+  /**
+   * POST/PUT entity — create device profile.
+   *
+   * @param profileName profile name (string)
+   */
 
   createDeviceProfile($event: Event, profileName: string) {
     $event.stopPropagation();
@@ -370,6 +473,11 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * edit device profile.
+   *
+   */
+
   editDeviceProfile($event: Event) {
     $event.stopPropagation();
     this.deviceProfileService.getDeviceProfile(this.modelValue.id).subscribe(
@@ -378,6 +486,13 @@ export class DeviceProfileAutocompleteComponent implements ControlValueAccessor,
       }
     );
   }
+
+  /**
+   * open device profile dialog.
+   *
+   * @param deviceProfile device profile (DeviceProfile)
+   * @param isAdd is add (boolean)
+   */
 
   openDeviceProfileDialog(deviceProfile: DeviceProfile, isAdd: boolean) {
     let deviceProfileObservable: Observable<DeviceProfile>;

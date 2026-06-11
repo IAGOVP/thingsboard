@@ -33,8 +33,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 /**
- * Fw lw m2mdevice.
+ * Fw lw m2mdevice (black-box test infrastructure — LwM2M transport tests).
  */
+
 
 @Slf4j
 public class FwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
@@ -46,6 +47,14 @@ public class FwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
     private final AtomicInteger state = new AtomicInteger(0);
 
     private final AtomicInteger updateResult = new AtomicInteger(0);
+    /**
+     * Read.
+     *
+     * @param identity identity ({@link LwM2mServer})
+     * @param resourceId resource id
+     * @return {@link ReadResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ReadResponse read(LwM2mServer identity, int resourceId) {
@@ -66,6 +75,15 @@ public class FwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
                 return super.read(identity, resourceId);
         }
     }
+    /**
+     * Executes the requested data.
+     *
+     * @param identity identity ({@link LwM2mServer})
+     * @param resourceId resource id
+     * @param arguments arguments ({@link Arguments})
+     * @return {@link ExecuteResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ExecuteResponse execute(LwM2mServer identity, int resourceId, Arguments arguments) {
@@ -83,6 +101,16 @@ public class FwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
                 return super.execute(identity, resourceId, arguments);
         }
     }
+    /**
+     * Write.
+     *
+     * @param identity identity ({@link LwM2mServer})
+     * @param replace replace
+     * @param resourceId resource id
+     * @param value value ({@link LwM2mResource})
+     * @return {@link WriteResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WriteResponse write(LwM2mServer identity, boolean replace, int resourceId, LwM2mResource value) {
@@ -119,11 +147,24 @@ public class FwLwM2MDevice extends BaseInstanceEnabler implements Destroyable {
     private int getFirmwareUpdateDeliveryMethod() {
         return 1;
     }
+    /**
+     * Returns available resource ids.
+     *
+     * @param model model ({@link ObjectModel})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<Integer> getAvailableResourceIds(ObjectModel model) {
         return supportedResources;
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {

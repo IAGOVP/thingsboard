@@ -26,7 +26,9 @@ import { EntityId } from '@shared/models/id/entity-id';
 import { BulkImportRequest, BulkImportResult } from '@shared/import-export/import-export.models';
 
 /**
- * Angular HTTP service: edge REST wrappers (`@core/http`).
+ * Angular injectable service: edge (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -37,42 +39,98 @@ export class EdgeService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/edges?edgeIds=${edgeIds.join(, ...`. */
+  
+  /**
+   * get edges.
+   *
+   * @param edgeIds edge ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<Edge>> observable or value
+   */
+
 
   public getEdges(edgeIds: Array<string>, config?: RequestConfig): Observable<Array<Edge>> {
     return this.http.get<Array<Edge>>(`/api/edges?edgeIds=${edgeIds.join(',')}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}, ...`. */
+  
+  /**
+   * get edge.
+   *
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Edge> observable or value
+   */
+
 
   public getEdge(edgeId: string, config?: RequestConfig): Observable<Edge> {
     return this.http.get<Edge>(`/api/edge/${edgeId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/info/${edgeId}, ...`. */
+  
+  /**
+   * get edge info.
+   *
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EdgeInfo> observable or value
+   */
+
 
   public getEdgeInfo(edgeId: string, config?: RequestConfig): Observable<EdgeInfo> {
     return this.http.get<EdgeInfo>(`/api/edge/info/${edgeId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge, ...`. */
+  
+  /**
+   * POST/PUT entity — save edge.
+   *
+   * @param edge edge (Edge)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Edge> observable or value
+   */
+
 
   public saveEdge(edge: Edge, config?: RequestConfig): Observable<Edge> {
     return this.http.post<Edge>('/api/edge', edge, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete edge.
+   *
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteEdge(edgeId: string, config?: RequestConfig) {
     return this.http.delete(`/api/edge/${edgeId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/types, ...`. */
+  
+  /**
+   * get edge types.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntitySubtype>> observable or value
+   */
+
 
   public getEdgeTypes(config?: RequestConfig): Observable<Array<EntitySubtype>> {
     return this.http.get<Array<EntitySubtype>>('/api/edge/types', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}/edgeInfos${pageLink.toQuery()}&type=${type}, ...`. */
+  
+  /**
+   * get customer edge infos.
+   *
+   * @param customerId customer UUID
+   * @param pageLink pagination and sort parameters
+   * @param type type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EdgeInfo>> observable or value
+   */
+
 
   public getCustomerEdgeInfos(customerId: string, pageLink: PageLink, type: string = '',
                               config?: RequestConfig): Observable<PageData<EdgeInfo>> {
@@ -80,7 +138,16 @@ export class EdgeService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}/edge/${edgeId}, ...`. */
+  
+  /**
+   * assign edge to customer.
+   *
+   * @param customerId customer UUID
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Edge> observable or value
+   */
+
 
   public assignEdgeToCustomer(customerId: string, edgeId: string,
                               config?: RequestConfig): Observable<Edge> {
@@ -88,19 +155,43 @@ export class EdgeService {
       defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * unassign edge from customer.
+   *
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public unassignEdgeFromCustomer(edgeId: string, config?: RequestConfig) {
     return this.http.delete(`/api/customer/edge/${edgeId}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/public/edge/${edgeId}, ...`. */
+  
+  /**
+   * make edge public.
+   *
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Edge> observable or value
+   */
+
 
   public makeEdgePublic(edgeId: string, config?: RequestConfig): Observable<Edge> {
     return this.http.post<Edge>(`/api/customer/public/edge/${edgeId}`, null,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/edgeInfos${pageLink.toQuery()}&type=${type}, ...`. */
+  
+  /**
+   * get tenant edge infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param type type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EdgeInfo>> observable or value
+   */
+
 
   public getTenantEdgeInfos(pageLink: PageLink, type: string = '',
                             config?: RequestConfig): Observable<PageData<EdgeInfo>> {
@@ -108,14 +199,31 @@ export class EdgeService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edges, ...`. */
+  
+  /**
+   * find by query.
+   *
+   * @param query query (EdgeSearchQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<Edge>> observable or value
+   */
+
 
   public findByQuery(query: EdgeSearchQuery, config?: RequestConfig): Observable<Array<Edge>> {
     return this.http.post<Array<Edge>>('/api/edges', query,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${entityId.id}/events, ...`. */
+  
+  /**
+   * get edge events.
+   *
+   * @param entityId entity UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<EdgeEvent>> observable or value
+   */
+
 
   public getEdgeEvents(entityId: EntityId, pageLink: TimePageLink,
                        config?: RequestConfig): Observable<PageData<EdgeEvent>> {
@@ -123,41 +231,98 @@ export class EdgeService {
       defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * sync edge.
+   *
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public syncEdge(edgeId: string, config?: RequestConfig) {
     return this.http.post(`/api/edge/sync/${edgeId}`, edgeId, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/missingToRelatedRuleChains/${edgeId}, ...`. */
+  
+  /**
+   * find missing to related rule chains.
+   *
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<string> observable or value
+   */
+
 
   public findMissingToRelatedRuleChains(edgeId: string, config?: RequestConfig): Observable<string> {
     return this.http.get<string>(`/api/edge/missingToRelatedRuleChains/${edgeId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/edges?edgeName=${edgeName}, ...`. */
+  
+  /**
+   * find by name.
+   *
+   * @param edgeName edge name (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Edge> observable or value
+   */
+
 
   public findByName(edgeName: string, config?: RequestConfig): Observable<Edge> {
     return this.http.get<Edge>(`/api/tenant/edges?edgeName=${edgeName}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/bulk_import, ...`. */
+  
+  /**
+   * bulk import edges.
+   *
+   * @param entitiesData entities data (BulkImportRequest)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<BulkImportResult> observable or value
+   */
+
 
   public bulkImportEdges(entitiesData: BulkImportRequest, config?: RequestConfig): Observable<BulkImportResult> {
     return this.http.post<BulkImportResult>('/api/edge/bulk_import', entitiesData, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/instructions/install/${edgeId}/${method}, ...`. */
+  
+  /**
+   * get edge install instructions.
+   *
+   * @param edgeId edge id (string)
+   * @param method method (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EdgeInstructions> observable or value
+   */
+
 
   public getEdgeInstallInstructions(edgeId: string, method: string = 'ubuntu', config?: RequestConfig): Observable<EdgeInstructions> {
     return this.http.get<EdgeInstructions>(`/api/edge/instructions/install/${edgeId}/${method}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/instructions/upgrade/${edgeVersion}/${method}, ...`. */
+  
+  /**
+   * get edge upgrade instructions.
+   *
+   * @param edgeVersion edge version (string)
+   * @param method method (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EdgeInstructions> observable or value
+   */
+
 
   public getEdgeUpgradeInstructions(edgeVersion: string, method: string = 'ubuntu', config?: RequestConfig): Observable<EdgeInstructions> {
     return this.http.get<EdgeInstructions>(`/api/edge/instructions/upgrade/${edgeVersion}/${method}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}/upgrade/available`. */
+  
+  /**
+   * is edge upgrade available.
+   *
+   * @param edgeId edge id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<boolean> observable or value
+   */
+
 
   public isEdgeUpgradeAvailable(edgeId: string, config?: RequestConfig): Observable<boolean> {
     return this.http.get<boolean>(`/api/edge/${edgeId}/upgrade/available`, defaultHttpOptionsFromConfig(config));

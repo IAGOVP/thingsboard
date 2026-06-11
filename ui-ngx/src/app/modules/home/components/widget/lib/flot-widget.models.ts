@@ -36,11 +36,11 @@ export declare type TooltipValueFormatFunction = (value: any, latestData: Format
 
 export declare type TbFlotTicksFormatterFunction = (t: number, a?: TbFlotPlotAxis) => string;
 
+
 /**
-
- * TypeScript models and enums for tb flot series.
-
+ * Tb flot series (ThingsBoard web UI).
  */
+
 
 export interface TbFlotSeries extends DatasourceData, JQueryPlotSeriesOptions {
   dataKey: TbFlotDataKey;

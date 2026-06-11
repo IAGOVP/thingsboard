@@ -35,14 +35,17 @@ export interface SaveWidgetTypeAsDialogData {
   saveAsActionTitle?: string;
 }
 
+
+/**
+ * Angular component: save widget type as dialog (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-save-widget-type-as-dialog`.
+ */
 @Component({
     selector: 'tb-save-widget-type-as-dialog',
     templateUrl: './save-widget-type-as-dialog.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: save widget type as dialog UI.
- */
+standalone: false
 })
 export class SaveWidgetTypeAsDialogComponent extends
   DialogComponent<SaveWidgetTypeAsDialogComponent, SaveWidgetTypeAsDialogResult> implements OnInit {
@@ -74,6 +77,11 @@ export class SaveWidgetTypeAsDialogComponent extends
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.saveWidgetTypeAsFormGroup = this.fb.group({
       title: [this.data?.title, [Validators.required]],
@@ -81,9 +89,19 @@ export class SaveWidgetTypeAsDialogComponent extends
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save as.
+   *
+   */
 
   saveAs(): void {
     const widgetName: string = this.saveWidgetTypeAsFormGroup.get('title').value;

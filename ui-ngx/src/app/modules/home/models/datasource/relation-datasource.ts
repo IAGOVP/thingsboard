@@ -26,11 +26,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { EntityType, entityTypeTranslations } from '@shared/models/entity-type.models';
 import { getEntityDetailsPageURL } from '@core/utils';
 
+
 /**
-
- * TypeScript models and enums for relations datasource.
-
+ * TypeScript interfaces, types, and enums for relations datasource (ThingsBoard web UI).
  */
+
 
 export class RelationsDatasource implements DataSource<EntityRelationInfo> {
 
@@ -46,14 +46,37 @@ export class RelationsDatasource implements DataSource<EntityRelationInfo> {
   constructor(private entityRelationService: EntityRelationService,
               private translate: TranslateService) {}
 
+  /**
+   * connect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   * @returns Observable<EntityRelationInfo[] | ReadonlyArray<EntityRelationInfo>> observable or value
+   */
+
   connect(collectionViewer: CollectionViewer): Observable<EntityRelationInfo[] | ReadonlyArray<EntityRelationInfo>> {
     return this.relationsSubject.asObservable();
   }
+
+  /**
+   * disconnect.
+   *
+   * @param collectionViewer collection viewer (CollectionViewer)
+   */
 
   disconnect(collectionViewer: CollectionViewer): void {
     this.relationsSubject.complete();
     this.pageDataSubject.complete();
   }
+
+  /**
+   * load relations.
+   *
+   * @param direction direction (EntitySearchDirection)
+   * @param entityId entity UUID
+   * @param pageLink pagination and sort parameters
+   * @param reload reload (boolean)
+   * @returns Observable<PageData<EntityRelationInfo>> observable or value
+   */
 
   loadRelations(direction: EntitySearchDirection, entityId: EntityId,
                 pageLink: PageLink, reload: boolean = false): Observable<PageData<EntityRelationInfo>> {
@@ -76,12 +99,29 @@ export class RelationsDatasource implements DataSource<EntityRelationInfo> {
     return result;
   }
 
+  /**
+   * fetch relations.
+   *
+   * @param direction direction (EntitySearchDirection)
+   * @param entityId entity UUID
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<EntityRelationInfo>> observable or value
+   */
+
   fetchRelations(direction: EntitySearchDirection, entityId: EntityId,
                  pageLink: PageLink): Observable<PageData<EntityRelationInfo>> {
     return this.getAllRelations(direction, entityId).pipe(
       map((data) => pageLink.filterData(data))
     );
   }
+
+  /**
+   * get all relations.
+   *
+   * @param direction direction (EntitySearchDirection)
+   * @param entityId entity UUID
+   * @returns Observable<Array<EntityRelationInfo>> observable or value
+   */
 
   getAllRelations(direction: EntitySearchDirection, entityId: EntityId): Observable<Array<EntityRelationInfo>> {
     if (!this.allRelations) {
@@ -95,6 +135,10 @@ export class RelationsDatasource implements DataSource<EntityRelationInfo> {
           break;
       }
       this.allRelations = relationsObservable.pipe(
+        /**
+         * map.
+         *
+         */
         map(relations => {
           relations.forEach(relation => {
             if (direction === EntitySearchDirection.FROM) {
@@ -114,6 +158,12 @@ export class RelationsDatasource implements DataSource<EntityRelationInfo> {
     return this.allRelations;
   }
 
+  /**
+   * is all selected.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isAllSelected(): Observable<boolean> {
     const numSelected = this.selection.selected.length;
     return this.relationsSubject.pipe(
@@ -121,17 +171,34 @@ export class RelationsDatasource implements DataSource<EntityRelationInfo> {
     );
   }
 
+  /**
+   * is empty.
+   *
+   * @returns Observable<boolean> observable or value
+   */
+
   isEmpty(): Observable<boolean> {
     return this.relationsSubject.pipe(
       map((relations) => !relations.length)
     );
   }
 
+  /**
+   * total.
+   *
+   * @returns Observable<number> observable or value
+   */
+
   total(): Observable<number> {
     return this.pageDataSubject.pipe(
       map((pageData) => pageData.totalElements)
     );
   }
+
+  /**
+   * master toggle.
+   *
+   */
 
   masterToggle() {
     this.relationsSubject.pipe(

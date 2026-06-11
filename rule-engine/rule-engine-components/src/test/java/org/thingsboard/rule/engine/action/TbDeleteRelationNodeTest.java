@@ -93,8 +93,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb delete relation node rule node.
+ * Unit test for tb delete relation node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbDeleteRelationNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -157,6 +158,11 @@ public class TbDeleteRelationNodeTest extends AbstractRuleNodeUpgradeTest {
 
     private TbDeleteRelationNode node;
     private TbDeleteRelationNodeConfiguration config;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
@@ -576,6 +582,12 @@ public class TbDeleteRelationNodeTest extends AbstractRuleNodeUpgradeTest {
         metaData.putValue("name", "EntityName");
         return metaData;
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @Override

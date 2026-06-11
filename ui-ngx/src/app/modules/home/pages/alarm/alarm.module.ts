@@ -26,6 +26,9 @@ import { AlarmRulesTabsComponent } from '@home/pages/alarm/alarm-rules-tabs.comp
 /**
  * Angular NgModule: alarm feature area.
  */
+/**
+ * Angular NgModule bundling alarm (home/alarm pages).
+ */
 @NgModule({
   declarations: [
     AlarmRulesTabsComponent
@@ -36,5 +39,5 @@ import { AlarmRulesTabsComponent } from '@home/pages/alarm/alarm-rules-tabs.comp
     HomeComponentsModule,
     HomeDialogsModule,
     AlarmRoutingModule
-  ]})
+]})
 export class AlarmModule { }

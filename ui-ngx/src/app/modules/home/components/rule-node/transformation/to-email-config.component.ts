@@ -19,14 +19,17 @@ import { isDefinedAndNotNull } from '@core/public-api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 
+
+/**
+ * Angular component: to email config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-transformation-node-to-email-config`.
+ */
 @Component({
     selector: 'tb-transformation-node-to-email-config',
     templateUrl: './to-email-config.component.html',
     styleUrls: ['./to-email-config.component.scss'],
-    standalone: false
-/**
- * Angular component: to email config UI.
- */
+standalone: false
 })
 export class ToEmailConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -53,9 +56,21 @@ export class ToEmailConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.toEmailConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.toEmailConfigForm = this.fb.group({
@@ -70,6 +85,13 @@ export class ToEmailConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
       fromTemplate: isDefinedAndNotNull(configuration?.fromTemplate) ? configuration.fromTemplate : null,
@@ -83,6 +105,12 @@ export class ToEmailConfigComponent extends RuleNodeConfigurationComponent {
     };
   }
 
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
+
   protected updateValidators(emitEvent: boolean) {
     if (this.toEmailConfigForm.get('mailBodyType').value === 'dynamic') {
       this.toEmailConfigForm.get('isHtmlTemplate').enable({emitEvent: false});
@@ -92,9 +120,21 @@ export class ToEmailConfigComponent extends RuleNodeConfigurationComponent {
     this.toEmailConfigForm.get('isHtmlTemplate').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['mailBodyType'];
   }
+
+  /**
+   * get body type name.
+   *
+   * @returns string observable or value
+   */
 
   getBodyTypeName(): string {
     return this.mailBodyTypes.find(type => type.value === this.toEmailConfigForm.get('mailBodyType').value).name;

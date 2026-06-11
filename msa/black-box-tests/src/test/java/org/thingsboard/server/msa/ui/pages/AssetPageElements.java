@@ -18,11 +18,17 @@ package org.thingsboard.server.msa.ui.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+
 /**
 
- * Asset page elements.
+ * Selenium element locators for asset page page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class AssetPageElements extends OtherPageElements {
     public AssetPageElements(WebDriver driver) {
@@ -31,10 +37,22 @@ public class AssetPageElements extends OtherPageElements {
 
     private static final String ASSET_DETAILS_VIEW = "//tb-details-panel";
     private static final String ASSET_DETAILS_ALARMS = ASSET_DETAILS_VIEW + "//span[text()='Alarms']";
+    /**
+     * Asset details view.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assetDetailsView() {
         return waitUntilPresenceOfElementLocated(ASSET_DETAILS_VIEW);
     }
+    /**
+     * Asset details alarms btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assetDetailsAlarmsBtn() {
         return waitUntilElementToBeClickable(ASSET_DETAILS_ALARMS);

@@ -16,14 +16,17 @@
 
 import { Component } from '@angular/core';
 
+
+/**
+ * Angular component: footer (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-footer`.
+ */
 @Component({
     selector: 'tb-footer',
     templateUrl: './footer.component.html',
     styleUrls: ['./footer.component.scss'],
-    standalone: false
-/**
- * Angular component: footer UI.
- */
+standalone: false
 })
 export class FooterComponent {
 

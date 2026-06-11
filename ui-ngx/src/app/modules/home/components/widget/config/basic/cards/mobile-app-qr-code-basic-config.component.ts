@@ -30,14 +30,17 @@ import {
 } from '@home/components/widget/lib/cards/mobile-app-qr-code-widget.models';
 import { badgePositionTranslationsMap } from '@app/shared/models/mobile-app.models';
 
+
+/**
+ * Angular component: mobile app qr code basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-app-qr-code-basic-config`.
+ */
 @Component({
     selector: 'tb-mobile-app-qr-code-basic-config',
     templateUrl: './mobile-app-qr-code-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: mobile app qr code basic config UI.
- */
+standalone: false
 })
 export class MobileAppQrCodeBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -50,13 +53,31 @@ export class MobileAppQrCodeBasicConfigComponent extends BasicWidgetConfigCompon
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.mobileAppQrCodeWidgetConfigForm;
   }
 
+  /**
+   * setup config.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
+
   protected setupConfig(widgetConfig: WidgetConfigComponentData) {
     super.setupConfig(widgetConfig);
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: MobileAppQrCodeWidgetSettings = {...mobileAppQrCodeWidgetDefaultSettings, ...(configData.config.settings || {})};
@@ -90,6 +111,13 @@ export class MobileAppQrCodeBasicConfigComponent extends BasicWidgetConfigCompon
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.showTitle = config.showTitle;
     this.widgetConfig.config.title = config.title;
@@ -119,9 +147,22 @@ export class MobileAppQrCodeBasicConfigComponent extends BasicWidgetConfigCompon
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitleIcon', 'badgeEnabled', 'qrCodeLabelEnabled', 'showTitleIcon', 'showTitle'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const useSystemSettings = this.mobileAppQrCodeWidgetConfigForm.get('useSystemSettings').value;
@@ -171,6 +212,13 @@ export class MobileAppQrCodeBasicConfigComponent extends BasicWidgetConfigCompon
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -178,6 +226,13 @@ export class MobileAppQrCodeBasicConfigComponent extends BasicWidgetConfigCompon
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

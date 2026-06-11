@@ -25,14 +25,17 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
+
+/**
+ * Angular component: power mode setting (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-power-mode-settings`.
+ */
 @Component({
     selector: 'tb-power-mode-settings',
     templateUrl: './power-mode-setting.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: power mode setting UI.
- */
+standalone: false
 })
 export class PowerModeSettingComponent implements OnInit, OnDestroy {
 
@@ -46,6 +49,11 @@ export class PowerModeSettingComponent implements OnInit, OnDestroy {
 
   @Input()
   isDeviceSetting = false;
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.parentForm.get('powerMode').valueChanges.pipe(
@@ -65,15 +73,30 @@ export class PowerModeSettingComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * disable pskmode.
+   *
+   */
+
   private disablePSKMode() {
     this.parentForm.get('psmActivityTimer').disable({emitEvent: false});
     this.parentForm.get('psmActivityTimer').reset(DEFAULT_PSM_ACTIVITY_TIMER, {emitEvent: false});
   }
+
+  /**
+   * disable edrx mode.
+   *
+   */
 
   private disableEdrxMode() {
     this.parentForm.get('edrxCycle').disable({emitEvent: false});

@@ -94,15 +94,18 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { AggregationType, defaultTimewindow } from '@shared/models/time/time.models';
 import { TimeService } from '@core/services/time.service';
 
+
+/**
+ * Angular component: attribute table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-attribute-table`.
+ */
 @Component({
     selector: 'tb-attribute-table',
     templateUrl: './attribute-table.component.html',
     styleUrls: ['./attribute-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: attribute table UI.
- */
+standalone: false
 })
 export class AttributeTableComponent extends PageComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -225,6 +228,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     this.dataSource = new AttributeDatasource(this.attributeService, this.telemetryWsService, this.zone, this.translate);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.widgetResize$ = new ResizeObserver(() => {
       this.zone.run(() => {
@@ -246,6 +254,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.widgetResize$) {
       this.widgetResize$.disconnect();
@@ -254,6 +267,12 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     this.destroy$.complete();
   }
 
+  /**
+   * attribute scope changed.
+   *
+   * @param attributeScope attribute scope (TelemetryType)
+   */
+
   attributeScopeChanged(attributeScope: TelemetryType) {
     this.attributeScope = attributeScope;
     this.mode = 'default';
@@ -261,6 +280,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     this.selectAllModel = false;
     this.updateData(true);
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.textSearch.valueChanges.pipe(
@@ -285,6 +309,12 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     }
   }
 
+  /**
+   * update data.
+   *
+   * @param reload reload (boolean)
+   */
+
   updateData(reload: boolean = false) {
     this.pageLink.page = this.paginator.pageIndex;
     this.pageLink.pageSize = this.paginator.pageSize;
@@ -292,6 +322,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     this.pageLink.sortOrder.direction = Direction[this.sort.direction.toUpperCase()];
     this.dataSource.loadAttributes(this.entityIdValue, this.attributeScope, this.pageLink, reload);
   }
+
+  /**
+   * enter filter mode.
+   *
+   */
 
   enterFilterMode() {
     this.textSearchMode = true;
@@ -301,10 +336,21 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
   }
+
+  /**
+   * reset sort and filter.
+   *
+   * @param update update (boolean)
+   */
 
   resetSortAndFilter(update: boolean = true) {
     const entityType = this.entityIdValue.entityType;
@@ -332,9 +378,19 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     }
   }
 
+  /**
+   * reload attributes.
+   *
+   */
+
   reloadAttributes() {
     this.updateData(true);
   }
+
+  /**
+   * POST/PUT entity — add attribute.
+   *
+   */
 
   addAttribute($event: Event) {
     if ($event) {
@@ -361,6 +417,12 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
       }
     );
   }
+
+  /**
+   * edit attribute.
+   *
+   * @param attribute attribute (AttributeData)
+   */
 
   editAttribute($event: Event, attribute: AttributeData) {
     if ($event) {
@@ -415,6 +477,12 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
       }
     });
   }
+
+  /**
+   * DELETE — delete timeseries.
+   *
+   * @param telemetry telemetry (AttributeData)
+   */
 
   deleteTimeseries($event: Event, telemetry?: AttributeData) {
     if ($event) {
@@ -494,6 +562,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     });
   }
 
+  /**
+   * DELETE — delete attributes.
+   *
+   */
+
   deleteAttributes($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -518,6 +591,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     }
   }
 
+  /**
+   * DELETE — delete telemetry.
+   *
+   */
+
   deleteTelemetry($event: Event) {
     if (this.attributeScope === this.latestTelemetryTypes.LATEST_TELEMETRY) {
       this.deleteTimeseries($event);
@@ -525,6 +603,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
       this.deleteAttributes($event);
     }
   }
+
+  /**
+   * enter widget mode.
+   *
+   */
 
   enterWidgetMode() {
     this.mode = 'widget';
@@ -577,6 +660,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     }
   }
 
+  /**
+   * Event handler for widgets carousel index changed.
+   *
+   */
+
   onWidgetsCarouselIndexChanged() {
     if (this.mode === 'widget') {
       for (let i = 0; i < this.widgetsList.length; i++) {
@@ -587,6 +675,12 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
       }
     }
   }
+
+  /**
+   * Event handler for widgets bundle changed.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   */
 
   onWidgetsBundleChanged(widgetsBundle: WidgetsBundle) {
     this.widgetBundleSet = !!widgetsBundle;
@@ -642,6 +736,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
     }
   }
 
+  /**
+   * POST/PUT entity — add widget to dashboard.
+   *
+   */
+
   addWidgetToDashboard() {
     if (this.mode === 'widget' && this.widgetsListCache.length > 0) {
       const widget = this.widgetsListCache[this.widgetsCarouselIndex][0];
@@ -657,6 +756,11 @@ export class AttributeTableComponent extends PageComponent implements AfterViewI
       }).afterClosed();
     }
   }
+
+  /**
+   * exit widget mode.
+   *
+   */
 
   exitWidgetMode() {
     this.selectedWidgetsBundleAlias = null;

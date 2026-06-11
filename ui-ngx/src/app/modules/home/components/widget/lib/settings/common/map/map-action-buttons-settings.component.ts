@@ -30,6 +30,12 @@ import {
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: map action buttons settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-action-button-settings`.
+ */
 @Component({
     selector: 'tb-map-action-button-settings',
     templateUrl: './map-action-buttons-settings.component.html',
@@ -43,10 +49,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => MapActionButtonsSettingsComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: map action buttons settings UI.
- */
+standalone: false
 })
 export class MapActionButtonsSettingsComponent implements ControlValueAccessor, Validator {
 
@@ -60,11 +63,29 @@ export class MapActionButtonsSettingsComponent implements ControlValueAccessor, 
     ).subscribe(value => this.propagateChange(value));
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void { }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -74,11 +95,23 @@ export class MapActionButtonsSettingsComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.mapActionButtonsForm.valid ? null : {
       mapActionButtons: false
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param buttons buttons (MapActionButtonSettings[])
+   */
 
   writeValue(buttons: MapActionButtonSettings[] = []) {
     if (buttons?.length === this.mapActionButtonsForm.length) {
@@ -95,15 +128,32 @@ export class MapActionButtonsSettingsComponent implements ControlValueAccessor, 
     return this.mapActionButtonsForm.length > 1;
   }
 
+  /**
+   * button drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   buttonDrop(event: CdkDragDrop<string[]>) {
     const actionButton = this.mapActionButtonsForm.at(event.previousIndex);
     this.mapActionButtonsForm.removeAt(event.previousIndex, {emitEvent: false});
     this.mapActionButtonsForm.insert(event.currentIndex, actionButton);
   }
 
+  /**
+   * POST/PUT entity — add button.
+   *
+   */
+
   addButton() {
     this.mapActionButtonsForm.push(this.fb.control(defaultMapActionButtonSettings));
   }
+
+  /**
+   * DELETE — remove button.
+   *
+   * @param index index (number)
+   */
 
   removeButton(index: number) {
     this.mapActionButtonsForm.removeAt(index);

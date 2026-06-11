@@ -16,11 +16,11 @@
 
 import LeafletMap from '@home/components/widget/lib/maps-legacy/leaflet-map';
 
+
 /**
-
- * map widget interface.
-
+ * Map widget interface (ThingsBoard web UI).
  */
+
 
 export interface MapWidgetInterface {
     map?: LeafletMap;

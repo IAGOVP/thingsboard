@@ -22,13 +22,20 @@ import org.thingsboard.server.common.data.alarm.AlarmStatus;
 import java.util.Arrays;
 import java.util.List;
 /**
- * Rule engine component: tb check alarm status node config.
+ * Tb check alarm status node config (message filtering and branching rule nodes).
  */
+
 
 @Data
 public class TbCheckAlarmStatusNodeConfig implements NodeConfiguration<TbCheckAlarmStatusNodeConfig> {
 
     private List<AlarmStatus> alarmStatusList;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbCheckAlarmStatusNodeConfig}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbCheckAlarmStatusNodeConfig defaultConfiguration() {

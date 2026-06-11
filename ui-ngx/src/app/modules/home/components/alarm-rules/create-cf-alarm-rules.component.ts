@@ -34,6 +34,12 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { coerceBoolean } from "@shared/decorators/coercion";
 import { Observable } from "rxjs";
 
+
+/**
+ * Angular component: create cf alarm rules (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-create-cf-alarm-rules`.
+ */
 @Component({
     selector: 'tb-create-cf-alarm-rules',
     templateUrl: './create-cf-alarm-rules.component.html',
@@ -50,10 +56,7 @@ import { Observable } from "rxjs";
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: create cf alarm rules UI.
- */
+standalone: false
 })
 export class CreateCfAlarmRulesComponent implements ControlValueAccessor, Validator {
 
@@ -88,16 +91,40 @@ export class CreateCfAlarmRulesComponent implements ControlValueAccessor, Valida
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * POST/PUT entity — create alarm rules form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
 
   createAlarmRulesFormArray(): UntypedFormArray {
     return this.createAlarmRulesFormGroup.get('createAlarmRules') as UntypedFormArray;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -107,6 +134,12 @@ export class CreateCfAlarmRulesComponent implements ControlValueAccessor, Valida
       this.createAlarmRulesFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param createAlarmRules create alarm rules (Record<AlarmSeverity, AlarmRule>)
+   */
 
   writeValue(createAlarmRules: Record<AlarmSeverity, AlarmRule>): void {
     const createAlarmRulesControls: Array<AbstractControl> = [];
@@ -136,9 +169,20 @@ export class CreateCfAlarmRulesComponent implements ControlValueAccessor, Valida
     }
   }
 
+  /**
+   * DELETE — remove create alarm rule.
+   *
+   * @param index index (number)
+   */
+
   public removeCreateAlarmRule(index: number) {
     (this.createAlarmRulesFormGroup.get('createAlarmRules') as FormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add create alarm rule.
+   *
+   */
 
   public addCreateAlarmRule() {
     const createAlarmRulesArray = this.createAlarmRulesFormGroup.get('createAlarmRules') as FormArray;
@@ -152,6 +196,12 @@ export class CreateCfAlarmRulesComponent implements ControlValueAccessor, Valida
     }
   }
 
+  /**
+   * get first unused severity.
+   *
+   * @returns AlarmSeverity observable or value
+   */
+
   private getFirstUnusedSeverity(): AlarmSeverity {
     for (const severityKey of Object.keys(AlarmSeverity)) {
       const severity = AlarmSeverity[severityKey];
@@ -162,6 +212,12 @@ export class CreateCfAlarmRulesComponent implements ControlValueAccessor, Valida
     return null;
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   public validate(): ValidationErrors | null {
     return this.createAlarmRulesFormGroup.valid && this.createAlarmRulesFormArray().length > 0 ? null : {
       createAlarmRules: {
@@ -170,10 +226,23 @@ export class CreateCfAlarmRulesComponent implements ControlValueAccessor, Valida
     };
   }
 
+  /**
+   * is disabled severity.
+   *
+   * @param severity severity (AlarmSeverity)
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public isDisabledSeverity(severity: AlarmSeverity, index: number): boolean {
     const usedIndex = this.usedSeverities.indexOf(severity);
     return usedIndex > -1 && usedIndex !== index;
   }
+
+  /**
+   * update used severities.
+   *
+   */
 
   private updateUsedSeverities() {
     this.usedSeverities = [];
@@ -182,6 +251,11 @@ export class CreateCfAlarmRulesComponent implements ControlValueAccessor, Valida
       this.usedSeverities[index] = AlarmSeverity[rule.severity];
     });
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.createAlarmRulesFormGroup.get('createAlarmRules').value;

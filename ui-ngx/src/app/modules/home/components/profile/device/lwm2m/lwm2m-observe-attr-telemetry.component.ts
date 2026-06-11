@@ -38,6 +38,13 @@ import {
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
 
+
+
+/**
+ * Angular component: lwm2m observe attr telemetry (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-observe-attr-telemetry`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-observe-attr-telemetry',
     templateUrl: './lwm2m-observe-attr-telemetry.component.html',
@@ -54,13 +61,8 @@ import { Subscription } from 'rxjs';
             multi: true
         }
     ],
-    standalone: false
 
-/**
-
- * Angular component: lwm2m observe attr telemetry UI.
-
- */
+standalone: false
 })
 
 export class Lwm2mObserveAttrTelemetryComponent implements ControlValueAccessor, OnDestroy, Validator {
@@ -97,18 +99,41 @@ export class Lwm2mObserveAttrTelemetryComponent implements ControlValueAccessor,
     this.valueChange$ = this.modelsFormGroup.valueChanges.subscribe(value => this.updateModel(value.models));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.valueChange$) {
       this.valueChange$.unsubscribe();
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -119,11 +144,23 @@ export class Lwm2mObserveAttrTelemetryComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ObjectLwM2M[])
+   */
+
   writeValue(value: ObjectLwM2M[]): void {
     if (isDefinedAndNotNull(value)) {
       this.updateModels(value);
     }
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.modelsFormGroup.valid ? null : {
@@ -134,6 +171,12 @@ export class Lwm2mObserveAttrTelemetryComponent implements ControlValueAccessor,
   get modelsFormArray(): UntypedFormArray {
     return this.modelsFormGroup.get('models') as UntypedFormArray;
   }
+
+  /**
+   * update models.
+   *
+   * @param models models (ObjectLwM2M[])
+   */
 
   private updateModels(models: ObjectLwM2M[]) {
     if (models.length === this.modelsFormArray.length) {
@@ -149,6 +192,13 @@ export class Lwm2mObserveAttrTelemetryComponent implements ControlValueAccessor,
       }
     }
   }
+
+  /**
+   * POST/PUT entity — create model form group.
+   *
+   * @param objectLwM2M object lw m2m (ObjectLwM2M)
+   * @returns UntypedFormGroup observable or value
+   */
 
   private createModelFormGroup(objectLwM2M: ObjectLwM2M): UntypedFormGroup {
     return this.fb.group({
@@ -221,6 +271,14 @@ export class Lwm2mObserveAttrTelemetryComponent implements ControlValueAccessor,
     );
   }
 
+  /**
+   * update instances ids.
+   *
+   * @param instancesId instances id (Set<number>)
+   * @param control control (AbstractControl)
+   * @param prevInstancesId prev instances id (Set<number>)
+   */
+
   private updateInstancesIds(instancesId: Set<number>, control: AbstractControl, prevInstancesId: Set<number>) {
     let instancesValue: Instance[] = control.get('instances').value;
     const instanceTemplate = deepClone(instancesValue[0]);
@@ -261,6 +319,13 @@ export class Lwm2mObserveAttrTelemetryComponent implements ControlValueAccessor,
   private diffBetweenSet<T>(firstSet: Set<T>, secondSet: Set<T>): Set<T> {
     return new Set([...Array.from(firstSet)].filter(x => !secondSet.has(x)));
   }
+
+  /**
+   * instances to set id.
+   *
+   * @param instances instances (Instance[])
+   * @returns Set<number> observable or value
+   */
 
   private instancesToSetId(instances: Instance[]): Set<number> {
     return new Set(instances.map(x => x.id));

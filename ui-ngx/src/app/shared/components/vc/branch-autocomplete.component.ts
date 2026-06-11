@@ -37,6 +37,12 @@ import { isNotEmptyStr } from '@core/utils';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: branch autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-branch-autocomplete`.
+ */
 @Component({
     selector: 'tb-branch-autocomplete',
     templateUrl: './branch-autocomplete.component.html',
@@ -47,10 +53,7 @@ import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-
             multi: true
         }],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: branch autocomplete UI.
- */
+standalone: false
 })
 export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit, AfterViewInit {
 
@@ -127,12 +130,29 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredBranches = this.branchFormGroup.get('branch').valueChanges
@@ -152,6 +172,10 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
             this.updateView(modelValue);
           }
         }),
+        /**
+         * map.
+         *
+         */
         map(value => {
           if (value) {
             if (typeof value === 'string') {
@@ -170,16 +194,38 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * is default branch selected.
+   *
+   * @returns boolean observable or value
+   */
+
   isDefaultBranchSelected(): boolean {
     return this.defaultBranch && this.defaultBranch.name === this.modelValue;
   }
+
+  /**
+   * select default branch if needed.
+   *
+   */
 
   selectDefaultBranchIfNeeded(force = false): void {
     if ((this.selectDefaultBranch && !this.modelValue) || force) {
@@ -207,6 +253,12 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
+
   writeValue(value: string | null): void {
     this.searchText = '';
     this.modelValue = value;
@@ -219,12 +271,22 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.branchFormGroup.get('branch').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * Event handler for blur.
+   *
+   */
 
   onBlur() {
     if (this.clearButtonClicked) {
@@ -234,9 +296,19 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * Event handler for panel closed.
+   *
+   */
+
   onPanelClosed() {
     this.selectAvailableValue();
   }
+
+  /**
+   * select available value.
+   *
+   */
 
   selectAvailableValue() {
     if (this.selectionMode) {
@@ -260,6 +332,12 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (BranchInfo | null)
+   */
+
   updateView(value: BranchInfo | null) {
     if (this.modelValue !== value?.name) {
       this.modelValue = value?.name;
@@ -267,9 +345,23 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * display branch fn.
+   *
+   * @param branch branch (BranchInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayBranchFn(branch?: BranchInfo): string | undefined {
     return branch ? branch.name : undefined;
   }
+
+  /**
+   * fetch branches.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<BranchInfo>> observable or value
+   */
 
   private fetchBranches(searchText?: string): Observable<Array<BranchInfo>> {
     this.searchText = searchText;
@@ -285,6 +377,12 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
     );
   }
 
+  /**
+   * get branches.
+   *
+   * @returns Observable<Array<BranchInfo>> observable or value
+   */
+
   private getBranches(): Observable<Array<BranchInfo>> {
     return this.entitiesVersionControlService.listBranches().pipe(
       tap((data) => {
@@ -292,6 +390,11 @@ export class BranchAutocompleteComponent implements ControlValueAccessor, OnInit
       })
     );
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.clearButtonClicked = true;

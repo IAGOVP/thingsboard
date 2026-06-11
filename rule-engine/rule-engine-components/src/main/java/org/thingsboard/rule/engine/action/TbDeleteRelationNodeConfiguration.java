@@ -21,14 +21,23 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.relation.EntityRelation;
 import org.thingsboard.server.common.data.relation.EntitySearchDirection;
 /**
- * JSON configuration for TbDeleteRelation rule node.
+ * JSON configuration POJO for {@link TbDeleteRelation} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TbDeleteRelationNodeConfiguration extends TbAbstractRelationActionNodeConfiguration implements NodeConfiguration<TbDeleteRelationNodeConfiguration> {
 
     private boolean deleteForSingleEntity;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbDeleteRelationNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbDeleteRelationNodeConfiguration defaultConfiguration() {

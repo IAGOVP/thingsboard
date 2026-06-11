@@ -27,14 +27,17 @@ import { Router } from '@angular/router';
 import { NotificationSubscriber } from '@shared/models/telemetry/telemetry.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: show notification popover (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-show-notification-popover`.
+ */
 @Component({
     selector: 'tb-show-notification-popover',
     templateUrl: './show-notification-popover.component.html',
     styleUrls: ['show-notification-popover.component.scss'],
-    standalone: false
-/**
- * Angular component: show notification popover UI.
- */
+standalone: false
 })
 export class ShowNotificationPopoverComponent extends PageComponent implements OnDestroy {
 
@@ -68,16 +71,32 @@ export class ShowNotificationPopoverComponent extends PageComponent implements O
     this.notificationSubscriber.subscribe();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.notificationSubscriber.unsubscribe();
     this.onClose();
   }
 
+  /**
+   * mark as read.
+   *
+   * @param id id (string)
+   */
+
   markAsRead(id: string) {
     const cmd = NotificationSubscriber.createMarkAsReadCommand(this.notificationWsService, [id]);
     cmd.subscribe();
   }
+
+  /**
+   * mark as all read.
+   *
+   */
 
   markAsAllRead($event: Event) {
     if ($event) {
@@ -86,6 +105,11 @@ export class ShowNotificationPopoverComponent extends PageComponent implements O
     const cmd = NotificationSubscriber.createMarkAllAsReadCommand(this.notificationWsService);
     cmd.subscribe();
   }
+
+  /**
+   * view all.
+   *
+   */
 
   viewAll($event: Event) {
     if ($event) {

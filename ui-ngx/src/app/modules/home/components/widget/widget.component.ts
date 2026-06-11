@@ -129,16 +129,19 @@ import { CompiledTbFunction, compileTbFunction, isNotEmptyTbFunction } from '@sh
 import { HttpClient } from '@angular/common/http';
 import { addDiagnosticChain } from '@angular/compiler-cli/src/ngtsc/diagnostics';
 
+
+/**
+ * Angular component: widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget`.
+ */
 @Component({
     selector: 'tb-widget',
     templateUrl: './widget.component.html',
     styleUrls: ['./widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: widget UI.
- */
+standalone: false
 })
 export class WidgetComponent extends PageComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -231,6 +234,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     this.cssParser.testMode = false;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
 
     this.loadingData = true;
@@ -301,6 +309,10 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       }
       return showWidgetHeaderActionFunction$.pipe(
         catchError(() => { return of(null) }),
+        /**
+         * map.
+         *
+         */
         map(showWidgetHeaderActionFunction => {
           if (!showWidgetHeaderActionFunction) {
             useShowWidgetHeaderActionFunction = false;
@@ -374,6 +386,16 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * header button style.
+   *
+   * @param buttonType button type (WidgetHeaderActionButtonType)
+   * @param customButtonStyle custom button style ({[key: string]: string})
+   * @param buttonColor button color (string)
+   * @param backgroundColor background color (string)
+   * @param borderColor border color (string)
+   */
+
   headerButtonStyle(buttonType: WidgetHeaderActionButtonType = WidgetHeaderActionButtonType.icon,
                     customButtonStyle:{[key: string]: string},
                     buttonColor: string = this.widget.config.color,
@@ -420,6 +442,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.destroyed = true;
     this.rxSubscriptions.forEach((subscription) => {
@@ -428,6 +455,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     this.rxSubscriptions.length = 0;
     this.onDestroy();
   }
+
+  /**
+   * display widget instance.
+   *
+   * @returns boolean observable or value
+   */
 
   private displayWidgetInstance(): boolean {
     if (this.widget.type === widgetType.static || this.typeParameters?.processNoDataByWidget) {
@@ -442,6 +475,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
     return false;
   }
+
+  /**
+   * Event handler for destroy.
+   *
+   */
 
   private onDestroy() {
     if (this.widgetContext) {
@@ -476,6 +514,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * Event handler for timewindow changed.
+   *
+   * @param timewindow timewindow (Timewindow)
+   */
+
   public onTimewindowChanged(timewindow: Timewindow) {
     for (const id of Object.keys(this.widgetContext.subscriptions)) {
       const subscription = this.widgetContext.subscriptions[id];
@@ -484,6 +528,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       }
     }
   }
+
+  /**
+   * load from widget info.
+   *
+   */
 
   private loadFromWidgetInfo() {
     this.widgetContext.widgetNamespace =
@@ -540,6 +589,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     });
   }
 
+  /**
+   * detect changes.
+   *
+   */
+
   private detectChanges(detectContainerChanges = false) {
     if (!this.destroyed) {
       try {
@@ -553,9 +607,21 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * is ready.
+   *
+   * @returns boolean observable or value
+   */
+
   private isReady(): boolean {
     return this.subscriptionInited && this.widgetSizeDetected;
   }
+
+  /**
+   * Event handler for init.
+   *
+   * @param skipSizeCheck skip size check (boolean)
+   */
 
   private onInit(skipSizeCheck?: boolean) {
     if (!this.widgetContext.$containerParent || this.destroyed) {
@@ -608,6 +674,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * Event handler for resize.
+   *
+   */
+
   private onResize() {
     if (this.checkSize()) {
       if (this.widgetContext.inited) {
@@ -632,6 +703,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * Event handler for edit mode changed.
+   *
+   */
+
   private onEditModeChanged() {
     if (this.widgetContext.isEdit !== this.isEdit) {
       this.widgetContext.isEdit = this.isEdit;
@@ -652,6 +728,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       }
     }
   }
+
+  /**
+   * Event handler for mobile mode changed.
+   *
+   */
 
   private onMobileModeChanged() {
     if (this.widgetContext.isMobile !== this.isMobile) {
@@ -674,6 +755,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * re init.
+   *
+   */
+
   private reInit() {
     if (this.cafs.reinit) {
       this.cafs.reinit();
@@ -685,6 +771,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       });
     });
   }
+
+  /**
+   * re init impl.
+   *
+   */
 
   private reInitImpl() {
     this.onDestroy();
@@ -717,6 +808,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       this.onInit();
     }
   }
+
+  /**
+   * initialize.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   private initialize(): Observable<any> {
 
@@ -789,6 +886,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     return initSubject.asObservable();
   }
 
+  /**
+   * destroy dynamic widget component.
+   *
+   */
+
   private destroyDynamicWidgetComponent() {
     if (this.widgetContext.$containerParent && this.widgetResize$) {
       this.widgetResize$.disconnect();
@@ -799,19 +901,43 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * handle widget exception.
+   *
+   * @param e e (any)
+   */
+
   private handleWidgetException(e: any) {
     console.error(e);
     this.widgetErrorData = this.utils.processWidgetException(e);
     this.detectChanges();
   }
 
+  /**
+   * display message.
+   *
+   * @param type type (NotificationType)
+   * @param message message (string)
+   * @param duration duration (number)
+   */
+
   private displayMessage(type: NotificationType, message: string, duration?: number) {
     this.widgetContext.showToast(type, message, duration, 'bottom', 'right', this.toastTargetId);
   }
 
+  /**
+   * clear message.
+   *
+   */
+
   private clearMessage() {
     this.widgetContext.hideToast(this.toastTargetId);
   }
+
+  /**
+   * configure dynamic widget component.
+   *
+   */
 
   private configureDynamicWidgetComponent() {
       this.widgetContentContainer.clear();
@@ -870,6 +996,14 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       this.widgetResize$.observe(this.widgetContext.$containerParent[0]);
   }
 
+  /**
+   * POST/PUT entity — create subscription.
+   *
+   * @param options options (WidgetSubscriptionOptions)
+   * @param subscribe subscribe (boolean)
+   * @returns Observable<IWidgetSubscription> observable or value
+   */
+
   private createSubscription(options: WidgetSubscriptionOptions, subscribe?: boolean): Observable<IWidgetSubscription> {
     const createSubscriptionSubject = new ReplaySubject<IWidgetSubscription>();
     options.dashboardTimewindow = this.widgetContext.dashboardTimewindow;
@@ -889,6 +1023,17 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     });
     return createSubscriptionSubject.asObservable();
   }
+
+  /**
+   * POST/PUT entity — create subscription from info.
+   *
+   * @param type type (widgetType)
+   * @param subscriptionsInfo subscriptions info (Array<SubscriptionInfo>)
+   * @param options options (WidgetSubscriptionOptions)
+   * @param useDefaultComponents use default components (boolean)
+   * @param subscribe subscribe (boolean)
+   * @returns Observable<IWidgetSubscription> observable or value
+   */
 
   private createSubscriptionFromInfo(type: widgetType, subscriptionsInfo: Array<SubscriptionInfo>,
                                      options: WidgetSubscriptionOptions, useDefaultComponents: boolean,
@@ -919,6 +1064,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     });
     return createSubscriptionSubject.asObservable();
   }
+
+  /**
+   * default components options.
+   *
+   * @param options options (WidgetSubscriptionOptions)
+   */
 
   private defaultComponentsOptions(options: WidgetSubscriptionOptions) {
     options.useDashboardTimewindow = isDefined(this.widget.config.useDashboardTimewindow)
@@ -998,6 +1149,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       }
     };
   }
+
+  /**
+   * POST/PUT entity — create default subscription.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   private createDefaultSubscription(): Observable<any> {
     const createSubscriptionSubject = new ReplaySubject<void>();
@@ -1121,6 +1278,13 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     return createSubscriptionSubject.asObservable();
   }
 
+  /**
+   * get action descriptors.
+   *
+   * @param actionSourceId action source id (string)
+   * @returns Array<WidgetActionDescriptor> observable or value
+   */
+
   private getActionDescriptors(actionSourceId: string): Array<WidgetActionDescriptor> {
     let result = this.widgetContext.actionsApi.actionDescriptorsBySourceId[actionSourceId];
     if (!result) {
@@ -1128,6 +1292,16 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
     return result;
   }
+
+  /**
+   * handle widget action.
+   *
+   * @param descriptor descriptor (WidgetAction)
+   * @param entityId entity UUID
+   * @param entityName entity name (string)
+   * @param additionalParams additional params (any)
+   * @param entityLabel entity label (string)
+   */
 
   private handleWidgetAction($event: Event, descriptor: WidgetAction,
                              entityId?: EntityId, entityName?: string, additionalParams?: any, entityLabel?: string): void {
@@ -1221,6 +1395,16 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
         break;
     }
   }
+
+  /**
+   * handle mobile action.
+   *
+   * @param mobileAction mobile action (WidgetMobileActionDescriptor)
+   * @param entityId entity UUID
+   * @param entityName entity name (string)
+   * @param additionalParams additional params (any)
+   * @param entityLabel entity label (string)
+   */
 
   private handleMobileAction($event: Event, mobileAction: WidgetMobileActionDescriptor,
                              entityId?: EntityId, entityName?: string, additionalParams?: any, entityLabel?: string) {
@@ -1470,6 +1654,17 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       });
   }
 
+  /**
+   * handle widget mobile action error.
+   *
+   * @param error error (string)
+   * @param mobileAction mobile action (WidgetMobileActionDescriptor)
+   * @param entityId entity UUID
+   * @param entityName entity name (string)
+   * @param additionalParams additional params (any)
+   * @param entityLabel entity label (string)
+   */
+
   private handleWidgetMobileActionError(error: string, $event: Event, mobileAction: WidgetMobileActionDescriptor,
                                         entityId?: EntityId, entityName?: string, additionalParams?: any, entityLabel?: string) {
     if (isNotEmptyTbFunction(mobileAction.handleErrorFunction)) {
@@ -1490,6 +1685,15 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       );
     }
   }
+
+  /**
+   * open dashboard state in popover.
+   *
+   * @param targetDashboardStateId target dashboard state id (string)
+   * @param params params (StateParams)
+   * @param preferredPlacement preferred placement (PopoverPlacement)
+   * @param popoverStyle popover style ({ [klass: string]: any })
+   */
 
   private openDashboardStateInPopover($event: Event,
                                       targetDashboardStateId: string,
@@ -1539,6 +1743,17 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       this.widgetContext.registerPopoverComponent(component);
     }
   }
+
+  /**
+   * open dashboard state in separate dialog.
+   *
+   * @param targetDashboardStateId target dashboard state id (string)
+   * @param params params (StateParams)
+   * @param dialogTitle dialog title (string)
+   * @param dialogWidth dialog width (number)
+   * @param dialogHeight dialog height (number)
+   * @returns MatDialogRef<any> observable or value
+   */
 
   private openDashboardStateInSeparateDialog(targetDashboardStateId: string, params?: StateParams, dialogTitle?: string,
                                              hideDashboardToolbar = true, dialogWidth?: number, dialogHeight?: number): MatDialogRef<any> {
@@ -1592,6 +1807,11 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     return dashboard.dialogRef;
   }
 
+  /**
+   * element click.
+   *
+   */
+
   private elementClick($event: Event) {
     const elementClicked = ($event.target) as Element;
     const descriptors = this.getActionDescriptors('elementClick');
@@ -1605,13 +1825,29 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * card click.
+   *
+   */
+
   private cardClick($event: Event) {
     this.onClick($event, 'cardClick');
   }
 
+  /**
+   * click.
+   *
+   */
+
   private click($event: Event) {
     this.onClick($event, 'click');
   }
+
+  /**
+   * Event handler for click.
+   *
+   * @param sourceId source id (string)
+   */
 
   private onClick($event: Event, sourceId: string) {
     const descriptors = this.getActionDescriptors(sourceId);
@@ -1619,6 +1855,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       this.onWidgetAction($event, descriptors[0]);
     }
   }
+
+  /**
+   * Event handler for widget action.
+   *
+   * @param action action (WidgetAction)
+   */
 
   private onWidgetAction($event: Event, action: WidgetAction) {
     if ($event) {
@@ -1630,6 +1872,16 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     const entityLabel = entityInfo && entityInfo.entityLabel ? entityInfo.entityLabel : null;
     this.handleWidgetAction($event, action, entityId, entityName, null, entityLabel);
   }
+
+  /**
+   * execute custom pretty action.
+   *
+   * @param descriptor descriptor (WidgetAction)
+   * @param entityId entity UUID
+   * @param entityName entity name (string)
+   * @param additionalParams additional params (any)
+   * @param entityLabel entity label (string)
+   */
 
   private executeCustomPrettyAction($event: Event, descriptor: WidgetAction, entityId?: EntityId,
                                     entityName?: string, additionalParams?: any, entityLabel?: string) {
@@ -1669,6 +1921,16 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
       }
     });
   }
+
+  /**
+   * load custom action resources.
+   *
+   * @param actionNamespace action namespace (string)
+   * @param customCss custom css (string)
+   * @param customResources custom resources (Array<WidgetResource>)
+   * @param actionDescriptor action descriptor (WidgetAction)
+   * @returns Observable<any> observable or value
+   */
 
   private loadCustomActionResources(actionNamespace: string, customCss: string, customResources: Array<WidgetResource>,
                                     actionDescriptor: WidgetAction): Observable<any> {
@@ -1735,6 +1997,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
   }
 
+  /**
+   * process resources load errors.
+   *
+   * @param errorMessages error messages (string[])
+   */
+
   private processResourcesLoadErrors(errorMessages: string[]) {
     let messageToShow = '';
     errorMessages.forEach(error => {
@@ -1742,6 +2010,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     });
     this.store.dispatch(new ActionNotificationShow({message: messageToShow, type: 'error'}));
   }
+
+  /**
+   * get active entity info.
+   *
+   * @returns SubscriptionEntityInfo observable or value
+   */
 
   private getActiveEntityInfo(): SubscriptionEntityInfo {
     let entityInfo = this.widgetContext.activeEntityInfo;
@@ -1756,6 +2030,12 @@ export class WidgetComponent extends PageComponent implements OnInit, OnChanges,
     }
     return entityInfo;
   }
+
+  /**
+   * check size.
+   *
+   * @returns boolean observable or value
+   */
 
   private checkSize(): boolean {
     const width = this.widgetContext.$containerParent.width();

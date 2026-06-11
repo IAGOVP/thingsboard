@@ -23,8 +23,9 @@ import lombok.Getter;
 
 import java.util.function.Consumer;
 /**
- * UNSUBSCRIBE sent, waiting for UNSUBACK.
+ * UNSUBSCRIBE message sent; awaiting UNSUBACK from broker.
  */
+
 
 @Getter(AccessLevel.PACKAGE)
 final class MqttPendingUnsubscription {
@@ -67,6 +68,12 @@ final class MqttPendingUnsubscription {
     static Builder builder() {
         return new Builder();
     }
+
+    /**
+
+     * Builder (netty-mqtt client library).
+
+     */
 
     static class Builder {
 

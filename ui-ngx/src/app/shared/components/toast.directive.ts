@@ -37,12 +37,16 @@ import { MediaBreakpoints } from '@shared/models/constants';
 import { MatButton } from '@angular/material/button';
 import Timeout = NodeJS.Timeout;
 
-@Directive({
-    selector: '[tb-toast]',
-    standalone: false
+
 /**
  * Angular directive: toast.
  */
+@Directive({
+    selector: '[tb-toast]',
+/**
+ * Angular directive: toast (shared UI components).
+ */
+    standalone: false
 })
 export class ToastDirective implements AfterViewInit, OnDestroy {
 
@@ -66,6 +70,11 @@ export class ToastDirective implements AfterViewInit, OnDestroy {
               private breakpointObserver: BreakpointObserver,
               private cd: ChangeDetectorRef) {
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.notificationSubscription = this.notificationService.getNotification().subscribe(
@@ -101,6 +110,12 @@ export class ToastDirective implements AfterViewInit, OnDestroy {
       }
     );
   }
+
+  /**
+   * show toast panel.
+   *
+   * @param notificationMessage notification message (NotificationMessage)
+   */
 
   private showToastPanel(notificationMessage: NotificationMessage) {
     this.ngZone.run(() => {
@@ -174,6 +189,13 @@ export class ToastDirective implements AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * show snack bar.
+   *
+   * @param notificationMessage notification message (NotificationMessage)
+   * @param isGtSm is gt sm (boolean)
+   */
+
   private showSnackBar(notificationMessage: NotificationMessage, isGtSm: boolean) {
     this.ngZone.run(() => {
       if (this.snackBarRef) {
@@ -217,6 +239,13 @@ export class ToastDirective implements AfterViewInit, OnDestroy {
     });
   }
 
+  /**
+   * should display message.
+   *
+   * @param notificationMessage notification message (NotificationMessage)
+   * @returns boolean observable or value
+   */
+
   private shouldDisplayMessage(notificationMessage: NotificationMessage): boolean {
     if (notificationMessage && notificationMessage.message) {
       const target = notificationMessage.target || 'root';
@@ -229,6 +258,11 @@ export class ToastDirective implements AfterViewInit, OnDestroy {
     }
     return false;
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.toastComponentRef) {

@@ -33,17 +33,25 @@ import static org.thingsboard.server.msa.ui.utils.Const.EMPTY_ASSET_PROFILE_MESS
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.SAME_NAME_WARNING_ASSET_PROFILE_MESSAGE;
 
+
 /**
 
- * Create asset profile test.
+ * Black-box test: create asset profile (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class CreateAssetProfileTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
     private String name;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -51,6 +59,12 @@ public class CreateAssetProfileTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -59,6 +73,12 @@ public class CreateAssetProfileTest extends AbstractDriverBaseTest {
             name = null;
         }
     }
+    /**
+     * Creates asset profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Create asset profile")
@@ -77,6 +97,12 @@ public class CreateAssetProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.entity(name));
         Assert.assertTrue(profilesPage.entity(name).isDisplayed());
     }
+    /**
+     * Creates asset profile with details.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Create asset profile")
@@ -114,6 +140,12 @@ public class CreateAssetProfileTest extends AbstractDriverBaseTest {
         Assert.assertEquals(queue, profilesPage.getQueue());
         Assert.assertEquals(description, profilesPage.getDescription());
     }
+    /**
+     * Creates asset profile with same name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Create asset profile")
@@ -135,6 +167,12 @@ public class CreateAssetProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.addAssetProfileView());
         Assert.assertTrue(profilesPage.addAssetProfileView().isDisplayed());
     }
+    /**
+     * Creates asset profile without name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Create asset profile")
@@ -146,6 +184,12 @@ public class CreateAssetProfileTest extends AbstractDriverBaseTest {
 
         Assert.assertFalse(profilesPage.addBtnV().isEnabled());
     }
+    /**
+     * Creates asset profile with only space in name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Create asset profile")
@@ -163,6 +207,12 @@ public class CreateAssetProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.addAssetProfileView());
         Assert.assertTrue(profilesPage.addAssetProfileView().isDisplayed());
     }
+    /**
+     * Creates asset profile without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Create asset profile")
@@ -180,6 +230,12 @@ public class CreateAssetProfileTest extends AbstractDriverBaseTest {
         Assert.assertNotNull(profilesPage.entity(name));
         Assert.assertTrue(profilesPage.entity(name).isDisplayed());
     }
+    /**
+     * Documentation.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Create asset profile")

@@ -19,22 +19,38 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.UUID;
 
+
 /**
 
- * Rule engine component: on every message processing strategy.
+ * On every message processing strategy (telemetry and attribute persistence nodes).
 
  */
+
 
 final class OnEveryMessageProcessingStrategy implements ProcessingStrategy {
 
     private static final OnEveryMessageProcessingStrategy INSTANCE = new OnEveryMessageProcessingStrategy();
 
     private OnEveryMessageProcessingStrategy() {}
+    /**
+     * Returns instance.
+     *
+     * @return {@link OnEveryMessageProcessingStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @JsonCreator
     public static OnEveryMessageProcessingStrategy getInstance() {
         return INSTANCE;
     }
+    /**
+     * Should process.
+     *
+     * @param ts ts
+     * @param originatorUuid originator uuid ({@link UUID})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean shouldProcess(long ts, UUID originatorUuid) {

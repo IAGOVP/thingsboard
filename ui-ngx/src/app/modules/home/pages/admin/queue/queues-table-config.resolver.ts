@@ -38,8 +38,9 @@ import { QueueService } from '@core/http/queue.service';
 import { selectAuthUser } from '@core/auth/auth.selectors';
 import { EntityAction } from '@home/models/entity/entity-component.models';
 /**
- * Route resolver: loads queues table config before activate.
+ * Route resolver: preloads data for queues table config (home/admin pages).
  */
+
 
 @Injectable()
 export class QueuesTableConfigResolver  {
@@ -70,6 +71,13 @@ export class QueuesTableConfigResolver  {
     this.config.onEntityAction = action => this.onQueueAction(action);
   }
 
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<EntityTableConfig<QueueInfo>> observable or value
+   */
+
   resolve(route: ActivatedRouteSnapshot): Observable<EntityTableConfig<QueueInfo>> {
     this.config.componentsData = {
       queueType: this.queueType
@@ -84,6 +92,12 @@ export class QueuesTableConfigResolver  {
       })
     );
   }
+
+  /**
+   * configure columns.
+   *
+   * @returns Array<EntityTableColumn<QueueInfo>> observable or value
+   */
 
   configureColumns(): Array<EntityTableColumn<QueueInfo>> {
     return [
@@ -106,6 +120,11 @@ export class QueuesTableConfigResolver  {
     ];
   }
 
+  /**
+   * configure entity functions.
+   *
+   */
+
   configureEntityFunctions(): void {
     this.config.entitiesFetchFunction = pageLink => this.queueService.getTenantQueuesByServiceType(pageLink, this.queueType);
     this.config.loadEntity = id => this.queueService.getQueueById(id.id);
@@ -117,6 +136,13 @@ export class QueuesTableConfigResolver  {
     this.config.entitySelectionEnabled = (queue) => queue && queue.name !== 'Main';
   }
 
+  /**
+   * Event handler for queue action.
+   *
+   * @param action action (EntityAction<QueueInfo>)
+   * @returns boolean observable or value
+   */
+
   onQueueAction(action: EntityAction<QueueInfo>): boolean {
     switch (action.action) {
       case 'open':
@@ -125,6 +151,11 @@ export class QueuesTableConfigResolver  {
     }
     return false;
   }
+
+  /**
+   * open queue.
+   *
+   */
 
   private openQueue($event: Event, queue) {
     if ($event) {

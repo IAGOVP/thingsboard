@@ -48,6 +48,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isJSResource } from '@shared/models/resource.models';
 import { WidgetService } from '@core/http/widget.service';
 
+
+/**
+ * Angular component: html container settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-html-container-settings`.
+ */
 @Component({
   selector: 'tb-html-container-settings',
   templateUrl: './html-container-settings.component.html',
@@ -65,10 +71,7 @@ import { WidgetService } from '@core/http/widget.service';
     }
   ],
   encapsulation: ViewEncapsulation.None,
-  standalone: false
-/**
- * Angular component: html container settings UI.
- */
+standalone: false
 })
 export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator {
 
@@ -115,6 +118,11 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
     return this.resourcesFormArray.controls as UntypedFormGroup[];
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.htmlContainerSettingsForm = this.fb.group({
       type: [null, []],
@@ -133,12 +141,24 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
     });
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.leftPanelElmRef && this.rightPanelElmRef) {
       this.initSplitLayout(this.leftPanelElmRef.nativeElement,
         this.rightPanelElmRef.nativeElement);
     }
   }
+
+  /**
+   * init split layout.
+   *
+   * @param leftPanel left panel (any)
+   * @param rightPanel right panel (any)
+   */
 
   private initSplitLayout(leftPanel: any, rightPanel: any) {
     Split([leftPanel, rightPanel], {
@@ -148,12 +168,30 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -163,6 +201,12 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
       this.htmlContainerSettingsForm.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (HtmlContainerWidgetSettings)
+   */
 
   writeValue(value: HtmlContainerWidgetSettings): void {
     this.modelValue = value;
@@ -176,6 +220,12 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
     });
   }
 
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
+
   validate(_c: UntypedFormControl) {
     return this.htmlContainerSettingsForm.valid ? null : {
       htmlContainerSettings: {
@@ -183,6 +233,11 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
       }
     };
   }
+
+  /**
+   * POST/PUT entity — add resource.
+   *
+   */
 
   addResource() {
     const newResource: WidgetResource = {
@@ -192,9 +247,20 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
     this.resourcesFormArray.push(this.buildResourceFormGroup(newResource));
   }
 
+  /**
+   * DELETE — remove resource.
+   *
+   * @param index index (number)
+   */
+
   removeResource(index: number) {
     this.resourcesFormArray.removeAt(index);
   }
+
+  /**
+   * toggle full screen.
+   *
+   */
 
   toggleFullScreen(): void {
     this.fullscreen = !this.fullscreen;
@@ -206,10 +272,20 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
 
   private propagateChange = (_v: any) => { };
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.modelValue = this.htmlContainerSettingsForm.value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update resources.
+   *
+   */
 
   private updateResources() {
     if (this.htmlContainerSettingsForm.get('type').value === HtmlContainerWidgetType.PLAIN) {
@@ -230,6 +306,13 @@ export class HtmlContainerSettingsComponent implements OnInit, AfterViewInit, Co
       }
     }
   }
+
+  /**
+   * build resource form group.
+   *
+   * @param resource resource (WidgetResource)
+   * @returns UntypedFormGroup observable or value
+   */
 
   private buildResourceFormGroup(resource: WidgetResource): UntypedFormGroup {
     return this.fb.group({

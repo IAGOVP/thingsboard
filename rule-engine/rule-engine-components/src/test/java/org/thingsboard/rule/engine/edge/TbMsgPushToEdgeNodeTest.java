@@ -51,8 +51,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.thingsboard.server.dao.edge.BaseRelatedEdgesService.RELATED_EDGES_CACHE_ITEMS;
 /**
- * Unit test for tb msg push to edge node rule node.
+ * Unit test for tb msg push to edge node (ThingsBoard Edge synchronization nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbMsgPushToEdgeNodeTest {
@@ -74,6 +75,11 @@ public class TbMsgPushToEdgeNodeTest {
     private EdgeEventService edgeEventService;
     @Mock
     private ListeningExecutor dbCallbackExecutor;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
@@ -81,6 +87,11 @@ public class TbMsgPushToEdgeNodeTest {
         TbMsgPushToEdgeNodeConfiguration config = new TbMsgPushToEdgeNodeConfiguration().defaultConfiguration();
         node.init(ctx, new TbNodeConfiguration(JacksonUtil.valueToTree(config)));
     }
+    /**
+     * Ack msg in case no edge related.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void ackMsgInCaseNoEdgeRelated() {
@@ -100,6 +111,11 @@ public class TbMsgPushToEdgeNodeTest {
 
         verify(ctx).ack(msg);
     }
+    /**
+     * Test attribute update msg user entity.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testAttributeUpdateMsg_userEntity() {
@@ -126,6 +142,11 @@ public class TbMsgPushToEdgeNodeTest {
 
         verify(edgeEventService).saveAsync(any());
     }
+    /**
+     * Test misc events processed as attributes updated.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testMiscEventsProcessedAsAttributesUpdated() {
@@ -135,6 +156,11 @@ public class TbMsgPushToEdgeNodeTest {
             testEvent(event, metaData, EdgeEventActionType.ATTRIBUTES_UPDATED, "kv");
         }
     }
+    /**
+     * Test misc events processed as timeseries updated.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testMiscEventsProcessedAsTimeseriesUpdated() {

@@ -20,11 +20,17 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
+
 /**
 
- * Alarm details entity tab elements.
+ * Selenium element locators for alarm details entity tab page (page object element locators and helpers — Selenium page objects).
+
+ *
+
+ * <p>Defines CSS/XPath selectors; use with matching *Helper for interactions.
 
  */
+
 
 public class AlarmDetailsEntityTabElements extends OtherPageElements {
     public AlarmDetailsEntityTabElements(WebDriver driver) {
@@ -42,46 +48,117 @@ public class AlarmDetailsEntityTabElements extends OtherPageElements {
     private static final String ACCESS_FORBIDDEN_DIALOG_VIEW = "//h2[text() = 'Access Forbidden']/parent::tb-confirm-dialog";
     private static final String ALARM_ASSIGNEE_DROPDOWN = "//tb-alarm-assignee-panel";
     private static final String NO_USERS_FOUND_MESSAGE = "//div[@class='tb-not-found-content']/span";
+    /**
+     * Assigns btn.
+     *
+     * @param type type ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assignBtn(String type) {
         return waitUntilElementToBeClickable(String.format(ASSIGN_BTN, type));
     }
+    /**
+     * User from assign drop down.
+     *
+     * @param userEmail user email ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement userFromAssignDropDown(String userEmail) {
         return waitUntilElementToBeClickable(String.format(USER_ASSIGN_DROPDOWN, userEmail));
     }
+    /**
+     * Assigns ed user.
+     *
+     * @param userEmail user email ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement assignedUser(String userEmail) {
         return waitUntilElementToBeClickable(String.format(ASSIGN_USER_DISPLAY_NAME, userEmail));
     }
+    /**
+     * Assigns users.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<WebElement> assignUsers() {
         return waitUntilElementsToBeClickable(ASSIGN_USERS_DISPLAY_NAME);
     }
+    /**
+     * Search user field.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement searchUserField() {
         return waitUntilElementToBeClickable(SEARCH_FIELD);
     }
+    /**
+     * Unassigns ed btn.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement unassignedBtn() {
         return waitUntilElementToBeClickable(UNASSIGNED_BTN);
     }
+    /**
+     * Unassigns ed.
+     *
+     * @param alarmType alarm type ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement unassigned(String alarmType) {
         return waitUntilVisibilityOfElementLocated(String.format(UNASSIGNED, alarmType));
     }
+    /**
+     * Alarm details btn.
+     *
+     * @param alarmType alarm type ({@link String})
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement alarmDetailsBtn(String alarmType) {
         return waitUntilElementToBeClickable(String.format(ALARM_DETAILS_BTN, alarmType));
     }
+    /**
+     * Access forbidden dialog view.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement accessForbiddenDialogView() {
         return waitUntilVisibilityOfElementLocated(ACCESS_FORBIDDEN_DIALOG_VIEW);
     }
+    /**
+     * Alarm assignee dropdown.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement alarmAssigneeDropdown() {
         return waitUntilVisibilityOfElementLocated(ALARM_ASSIGNEE_DROPDOWN);
     }
+    /**
+     * No users found message.
+     *
+     * @return {@link WebElement}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public WebElement noUsersFoundMessage() {
         return waitUntilVisibilityOfElementLocated(NO_USERS_FOUND_MESSAGE);

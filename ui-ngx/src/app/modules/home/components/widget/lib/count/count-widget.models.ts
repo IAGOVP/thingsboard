@@ -51,11 +51,11 @@ export const entityCountCardLayoutImages = new Map<CountCardLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for count widget settings.
-
+ * Count widget settings (ThingsBoard web UI).
  */
+
 
 export interface CountWidgetSettings {
   layout: CountCardLayout;

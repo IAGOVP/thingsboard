@@ -28,6 +28,12 @@ export interface RpcButtonStyle {
   textColor: string;
 }
 
+
+/**
+ * Angular component: rpc button style (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rpc-button-style`.
+ */
 @Component({
     selector: 'tb-rpc-button-style',
     templateUrl: './rpc-button-style.component.html',
@@ -39,10 +45,7 @@ export interface RpcButtonStyle {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: rpc button style UI.
- */
+standalone: false
 })
 export class RpcButtonStyleComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -61,6 +64,11 @@ export class RpcButtonStyleComponent extends PageComponent implements OnInit, Co
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.rpcButtonStyleFormGroup = this.fb.group({
       isRaised: [true, []],
@@ -75,12 +83,30 @@ export class RpcButtonStyleComponent extends PageComponent implements OnInit, Co
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -91,12 +117,23 @@ export class RpcButtonStyleComponent extends PageComponent implements OnInit, Co
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (RpcButtonStyle)
+   */
+
   writeValue(value: RpcButtonStyle): void {
     this.modelValue = value;
     this.rpcButtonStyleFormGroup.patchValue(
       value, {emitEvent: false}
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.rpcButtonStyleFormGroup.value;

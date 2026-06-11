@@ -19,8 +19,9 @@ import lombok.Data;
 
 import java.util.List;
 /**
- * Batch of WebSocket commands sent to ThingsBoard.
+ * Batch of WebSocket commands sent to ThingsBoard during subscription setup.
  */
+
 
 @Data
 public class CmdsWrapper {

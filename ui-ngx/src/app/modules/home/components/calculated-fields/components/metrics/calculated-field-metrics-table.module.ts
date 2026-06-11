@@ -28,6 +28,9 @@ import {
 /**
  * Angular NgModule: calculated field metrics table feature area.
  */
+/**
+ * Angular NgModule bundling calculated field metrics table (ThingsBoard web UI).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -39,7 +42,7 @@ import {
   ],
   exports: [
     CalculatedFieldMetricsTableComponent
-  ]})
+]})
 export class CalculatedFieldMetricsTableModule {
 
 }

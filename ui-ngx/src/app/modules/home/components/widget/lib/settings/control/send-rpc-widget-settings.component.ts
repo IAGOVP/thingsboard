@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { ContentType } from '@shared/models/constants';
 
+
+/**
+ * Angular component: send rpc widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-send-rpc-widget-settings`.
+ */
 @Component({
     selector: 'tb-send-rpc-widget-settings',
     templateUrl: './send-rpc-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: send rpc widget settings UI.
- */
+standalone: false
 })
 export class SendRpcWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -41,9 +44,21 @@ export class SendRpcWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.sendRpcWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -64,6 +79,12 @@ export class SendRpcWidgetSettingsComponent extends WidgetSettingsComponent {
       }
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.sendRpcWidgetSettingsForm = this.fb.group({
@@ -87,9 +108,21 @@ export class SendRpcWidgetSettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['requestPersistent'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean): void {
     const requestPersistent: boolean = this.sendRpcWidgetSettingsForm.get('requestPersistent').value;

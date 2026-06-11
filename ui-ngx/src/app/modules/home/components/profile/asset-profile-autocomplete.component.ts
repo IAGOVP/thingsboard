@@ -50,6 +50,12 @@ import { AuthUser } from '@shared/models/user.model';
 import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { Authority } from '@shared/models/authority.enum';
 
+
+/**
+ * Angular component: asset profile autocomplete (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-asset-profile-autocomplete`.
+ */
 @Component({
     selector: 'tb-asset-profile-autocomplete',
     templateUrl: './asset-profile-autocomplete.component.html',
@@ -59,10 +65,7 @@ import { Authority } from '@shared/models/authority.enum';
             useExisting: forwardRef(() => AssetProfileAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: asset profile autocomplete UI.
- */
+standalone: false
 })
 export class AssetProfileAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -150,12 +153,29 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredAssetProfiles = this.selectAssetProfileFormGroup.get('assetProfile').valueChanges
@@ -171,6 +191,10 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
             this.updateView(modelValue);
           }
         }),
+        /**
+         * map.
+         *
+         */
         map(value => {
           if (value) {
             if (typeof value === 'string') {
@@ -193,6 +217,11 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
       );
   }
 
+  /**
+   * select default asset profile if needed.
+   *
+   */
+
   selectDefaultAssetProfileIfNeeded(): void {
     if (this.selectDefaultProfile && !this.modelValue) {
       this.assetProfileService.getDefaultAssetProfileInfo().subscribe(
@@ -209,6 +238,11 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
       this.selectFirstAssetProfileIfNeeded();
     }
   }
+
+  /**
+   * select first asset profile if needed.
+   *
+   */
 
   selectFirstAssetProfileIfNeeded(): void {
     if (this.selectFirstProfile && !this.modelValue) {
@@ -228,6 +262,12 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -236,6 +276,12 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
       this.selectAssetProfileFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (AssetProfileId | null)
+   */
 
   writeValue(value: AssetProfileId | null): void {
     this.searchText = '';
@@ -261,12 +307,22 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectAssetProfileFormGroup.get('assetProfile').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * Event handler for panel closed.
+   *
+   */
 
   onPanelClosed() {
     if (this.ignoreClosedPanel) {
@@ -280,6 +336,12 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param assetProfile asset profile (AssetProfileInfo | null)
+   */
+
   updateView(assetProfile: AssetProfileInfo | null) {
     const idValue = assetProfile && assetProfile.id ? new AssetProfileId(assetProfile.id.id) : null;
     if (!entityIdEquals(this.modelValue, idValue)) {
@@ -289,9 +351,23 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * display asset profile fn.
+   *
+   * @param profile profile (AssetProfileInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayAssetProfileFn(profile?: AssetProfileInfo): string | undefined {
     return profile ? profile.name : undefined;
   }
+
+  /**
+   * fetch asset profiles.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<AssetProfileInfo>> observable or value
+   */
 
   fetchAssetProfiles(searchText?: string): Observable<Array<AssetProfileInfo>> {
     this.searchText = searchText;
@@ -301,6 +377,10 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     });
     return this.assetProfileService.getAssetProfileInfos(pageLink, {ignoreLoading: true}).pipe(
       catchError(() => of(emptyPageData<AssetProfileInfo>())),
+      /**
+       * map.
+       *
+       */
       map(pageData => {
         let data = pageData.data;
         if (this.displayAllOnEmpty) {
@@ -311,6 +391,11 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     );
   }
 
+  /**
+   * clear.
+   *
+   */
+
   clear() {
     this.ignoreClosedPanel = true;
     this.selectAssetProfileFormGroup.get('assetProfile').patchValue(null, {emitEvent: true});
@@ -320,9 +405,21 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     }, 0);
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * asset profile enter.
+   *
+   */
 
   assetProfileEnter($event: KeyboardEvent) {
     if (this.editProfileEnabled && $event.keyCode === ENTER) {
@@ -332,6 +429,12 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
       }
     }
   }
+
+  /**
+   * POST/PUT entity — create asset profile.
+   *
+   * @param profileName profile name (string)
+   */
 
   createAssetProfile($event: Event, profileName: string) {
     $event.stopPropagation();
@@ -343,6 +446,11 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * edit asset profile.
+   *
+   */
+
   editAssetProfile($event: Event) {
     $event.stopPropagation();
     this.assetProfileService.getAssetProfile(this.modelValue.id).subscribe(
@@ -351,6 +459,13 @@ export class AssetProfileAutocompleteComponent implements ControlValueAccessor, 
       }
     );
   }
+
+  /**
+   * open asset profile dialog.
+   *
+   * @param assetProfile asset profile (AssetProfile)
+   * @param isAdd is add (boolean)
+   */
 
   openAssetProfileDialog(assetProfile: AssetProfile, isAdd: boolean) {
     this.dialog.open<AssetProfileDialogComponent, AssetProfileDialogData,

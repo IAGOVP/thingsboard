@@ -54,11 +54,11 @@ export const OtaUpdateTypeTranslationMap = new Map<OtaUpdateType, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for ota update translation.
-
+ * TypeScript interfaces, types, and enums for ota update translation (shared TypeScript models).
  */
+
 
 export interface OtaUpdateTranslation {
   label: string;

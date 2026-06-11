@@ -40,6 +40,12 @@ import {
 } from '@home/components/widget/lib/chart/time-series-chart.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: time series chart state row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-state-row`.
+ */
 @Component({
     selector: 'tb-time-series-chart-state-row',
     templateUrl: './time-series-chart-state-row.component.html',
@@ -52,10 +58,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart state row UI.
- */
+standalone: false
 })
 export class TimeSeriesChartStateRowComponent implements ControlValueAccessor, OnInit {
 
@@ -82,6 +85,11 @@ export class TimeSeriesChartStateRowComponent implements ControlValueAccessor, O
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.stateFormGroup = this.fb.group({
       label: [null, []],
@@ -103,12 +111,30 @@ export class TimeSeriesChartStateRowComponent implements ControlValueAccessor, O
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -120,6 +146,12 @@ export class TimeSeriesChartStateRowComponent implements ControlValueAccessor, O
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartStateSettings)
+   */
+
   writeValue(value: TimeSeriesChartStateSettings): void {
     this.modelValue = value;
     this.stateFormGroup.patchValue(
@@ -128,6 +160,11 @@ export class TimeSeriesChartStateRowComponent implements ControlValueAccessor, O
     this.updateValidators();
     this.cd.markForCheck();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const sourceType: TimeSeriesChartStateSourceType = this.stateFormGroup.get('sourceType').value;
@@ -141,6 +178,11 @@ export class TimeSeriesChartStateRowComponent implements ControlValueAccessor, O
       this.stateFormGroup.get('sourceRangeTo').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.stateFormGroup.value;

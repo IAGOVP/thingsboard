@@ -30,14 +30,17 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { unwrapModule } from '@core/utils';
 
+
+/**
+ * Angular component: totp auth dialog (home/security pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-totp-auth-dialog`.
+ */
 @Component({
     selector: 'tb-totp-auth-dialog',
     templateUrl: './totp-auth-dialog.component.html',
     styleUrls: ['./authentication-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: totp auth dialog UI.
- */
+standalone: false
 })
 export class TotpAuthDialogComponent extends DialogComponent<TotpAuthDialogComponent> {
 
@@ -78,6 +81,11 @@ export class TotpAuthDialogComponent extends DialogComponent<TotpAuthDialogCompo
     });
   }
 
+  /**
+   * Event handler for save config.
+   *
+   */
+
   onSaveConfig() {
     if (this.totpConfigForm.valid) {
       this.twoFaService.verifyAndSaveTwoFaAccountConfig(this.authAccountConfig,
@@ -92,6 +100,11 @@ export class TotpAuthDialogComponent extends DialogComponent<TotpAuthDialogCompo
       });
     }
   }
+
+  /**
+   * close dialog.
+   *
+   */
 
   closeDialog() {
     return this.dialogRef.close(this.config);

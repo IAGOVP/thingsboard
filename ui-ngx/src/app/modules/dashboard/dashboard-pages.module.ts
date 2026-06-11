@@ -25,6 +25,9 @@ import { DashboardPagesRoutingModule } from './dashboard-pages.routing.module';
 /**
  * Angular NgModule: dashboard pages feature area.
  */
+/**
+ * Angular NgModule bundling dashboard pages (dashboard module).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -32,5 +35,5 @@ import { DashboardPagesRoutingModule } from './dashboard-pages.routing.module';
     HomeComponentsModule,
     HomeDialogsModule,
     DashboardPagesRoutingModule
-  ]})
+]})
 export class DashboardPagesModule { }

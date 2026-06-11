@@ -27,15 +27,18 @@ export interface MoveWidgetsDialogResult {
   rows: number;
 }
 
+
+/**
+ * Angular component: move widgets dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-move-widgets-dialog`.
+ */
 @Component({
     selector: 'tb-move-widgets-dialog',
     templateUrl: './move-widgets-dialog.component.html',
     providers: [],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: move widgets dialog UI.
- */
+standalone: false
 })
 export class MoveWidgetsDialogComponent extends DialogComponent<MoveWidgetsDialogComponent, MoveWidgetsDialogResult> {
 
@@ -55,9 +58,19 @@ export class MoveWidgetsDialogComponent extends DialogComponent<MoveWidgetsDialo
     );
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * move.
+   *
+   */
 
   move(): void {
     const result: MoveWidgetsDialogResult = this.moveWidgetsFormGroup.value;

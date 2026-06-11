@@ -19,14 +19,23 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbAssignToCustomer rule node.
+ * JSON configuration POJO for {@link TbAssignToCustomer} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TbAssignToCustomerNodeConfiguration extends TbAbstractCustomerActionNodeConfiguration implements NodeConfiguration<TbAssignToCustomerNodeConfiguration> {
 
     private boolean createCustomerIfNotExists;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbAssignToCustomerNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbAssignToCustomerNodeConfiguration defaultConfiguration() {

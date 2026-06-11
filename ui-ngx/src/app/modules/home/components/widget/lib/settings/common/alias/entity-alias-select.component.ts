@@ -38,6 +38,12 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-field';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: entity alias select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-alias-select`.
+ */
 @Component({
     selector: 'tb-entity-alias-select',
     templateUrl: './entity-alias-select.component.html',
@@ -47,10 +53,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => EntityAliasSelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: entity alias select UI.
- */
+standalone: false
 })
 export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit, ErrorStateMatcher {
 
@@ -109,18 +112,39 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.loadEntityAliases();
 
     this.filteredEntityAliases = this.selectEntityAliasFormGroup.get('entityAlias').valueChanges
       .pipe(
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue: EntityAlias;
           if (typeof value === 'string' || !value) {
@@ -145,11 +169,25 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
     });
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (FormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = this.tbRequired && !this.modelValue;
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -159,6 +197,12 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
       this.selectEntityAliasFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.searchText = '';
@@ -179,12 +223,23 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectEntityAliasFormGroup.get('entityAlias').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (EntityAlias | null)
+   */
 
   updateView(value: EntityAlias | null) {
     const aliasId = value ? value.id : null;
@@ -194,9 +249,23 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * display entity alias fn.
+   *
+   * @param entityAlias entity alias (EntityAlias)
+   * @returns string | undefined observable or value
+   */
+
   displayEntityAliasFn(entityAlias?: EntityAlias): string | undefined {
     return entityAlias ? entityAlias.alias : undefined;
   }
+
+  /**
+   * fetch entity aliases.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<EntityAlias>> observable or value
+   */
 
   fetchEntityAliases(searchText?: string): Observable<Array<EntityAlias>> {
     this.searchText = searchText;
@@ -207,6 +276,12 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
     return of(result);
   }
 
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
+
   clear(value: string = '') {
     this.entityAliasInput.nativeElement.value = value;
     this.selectEntityAliasFormGroup.get('entityAlias').patchValue(value, {emitEvent: true});
@@ -216,9 +291,21 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
     }, 0);
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return text?.length > 0;
   }
+
+  /**
+   * entity alias enter.
+   *
+   */
 
   entityAliasEnter($event: KeyboardEvent) {
     if ($event.keyCode === ENTER) {
@@ -228,6 +315,11 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
       }
     }
   }
+
+  /**
+   * edit entity alias.
+   *
+   */
 
   editEntityAlias($event: Event) {
     $event.preventDefault();
@@ -242,6 +334,12 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
       });
     }
   }
+
+  /**
+   * POST/PUT entity — create entity alias.
+   *
+   * @param alias alias (string)
+   */
 
   createEntityAlias($event: Event, alias: string, focusOnCancel = true) {
     $event.preventDefault();
@@ -264,6 +362,11 @@ export class EntityAliasSelectComponent implements ControlValueAccessor, OnInit,
       );
     }
   }
+
+  /**
+   * load entity aliases.
+   *
+   */
 
   private loadEntityAliases(): void {
     this.entityAliasList = [];

@@ -34,15 +34,18 @@ export interface ManageDashboardCustomersDialogData {
   assignedCustomersIds?: Array<string>;
 }
 
+
+/**
+ * Angular component: manage dashboard customers dialog (home/dashboard pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-manage-dashboard-customers-dialog`.
+ */
 @Component({
     selector: 'tb-manage-dashboard-customers-dialog',
     templateUrl: './manage-dashboard-customers-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: ManageDashboardCustomersDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: manage dashboard customers dialog UI.
- */
+standalone: false
 })
 export class ManageDashboardCustomersDialogComponent extends
   DialogComponent<ManageDashboardCustomersDialogComponent, boolean> implements OnInit, ErrorStateMatcher {
@@ -88,11 +91,24 @@ export class ManageDashboardCustomersDialogComponent extends
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.dashboardCustomersFormGroup = this.fb.group({
       assignedCustomerIds: [[...this.assignedCustomersIds]]
     });
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -100,9 +116,19 @@ export class ManageDashboardCustomersDialogComponent extends
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(false);
   }
+
+  /**
+   * submit.
+   *
+   */
 
   submit(): void {
     this.submitted = true;
@@ -120,6 +146,14 @@ export class ManageDashboardCustomersDialogComponent extends
       }
     );
   }
+
+  /**
+   * get manage dashboard customers task.
+   *
+   * @param dashboardId dashboard UUID
+   * @param customerIds customer ids (Array<string>)
+   * @returns Observable<any> observable or value
+   */
 
   private getManageDashboardCustomersTask(dashboardId: string, customerIds: Array<string>): Observable<any> {
     switch (this.data.actionType) {

@@ -21,13 +21,22 @@ import lombok.EqualsAndHashCode;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.rule.engine.util.TbMsgSource;
 /**
- * JSON configuration for TbFetchDeviceCredentials rule node.
+ * JSON configuration POJO for {@link TbFetchDeviceCredentials} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TbFetchDeviceCredentialsNodeConfiguration extends TbAbstractFetchToNodeConfiguration implements NodeConfiguration<TbFetchDeviceCredentialsNodeConfiguration> {
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbFetchDeviceCredentialsNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbFetchDeviceCredentialsNodeConfiguration defaultConfiguration() {

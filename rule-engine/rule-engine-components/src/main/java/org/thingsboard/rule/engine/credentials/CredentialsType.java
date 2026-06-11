@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.credentials;
 
+
 /**
 
- * Rule engine component: credentials type.
+ * Enumerates credentials type values used by rule engine credentials helper types.
 
  */
+
 
 public enum CredentialsType {
     ANONYMOUS("anonymous"),

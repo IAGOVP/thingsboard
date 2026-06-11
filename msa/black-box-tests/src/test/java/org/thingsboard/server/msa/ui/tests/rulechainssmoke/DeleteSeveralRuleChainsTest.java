@@ -24,8 +24,9 @@ import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.ROOT_RULE_CHAIN_NAME;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultRuleChainPrototype;
 /**
- * Delete several rule chains test.
+ * Black-box test: delete several rule chains (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Delete several rule chains")
 public class DeleteSeveralRuleChainsTest extends AbstractRuleChainTest {
@@ -33,6 +34,12 @@ public class DeleteSeveralRuleChainsTest extends AbstractRuleChainTest {
     @Test(priority = 10, groups = "smoke")
     @Description("Remove several rule chains by mark in the checkbox and then click on the trash can icon in the menu " +
             "that appears at the top")
+    /**
+     * Can delete several rule chains by top btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void canDeleteSeveralRuleChainsByTopBtn() {
         ruleChainName = ENTITY_NAME + random();
         testRestClient.postRuleChain(defaultRuleChainPrototype(ruleChainName + 1));
@@ -48,6 +55,12 @@ public class DeleteSeveralRuleChainsTest extends AbstractRuleChainTest {
     @Test(priority = 10, groups = "smoke")
     @Description("Remove several rule chains by mark all the rule chains on the page by clicking in the topmost checkbox" +
             " and then clicking on the trash icon in the menu that appears")
+    /**
+     * Select all rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void selectAllRuleChain() {
         ruleChainName = ENTITY_NAME + random();
         testRestClient.postRuleChain(defaultRuleChainPrototype(ruleChainName + 1));
@@ -65,6 +78,12 @@ public class DeleteSeveralRuleChainsTest extends AbstractRuleChainTest {
     @Test(priority = 20, groups = "smoke")
     @Description("Remove the root rule chain by mark in the checkbox and then click on the trash can icon in the menu " +
             "that appears at the top")
+    /**
+     * Removes root rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void removeRootRuleChain() {
         sideBarMenuView.ruleChainsBtn().click();
         ruleChainsPage.selectAllCheckBox().click();
@@ -75,6 +94,12 @@ public class DeleteSeveralRuleChainsTest extends AbstractRuleChainTest {
     @Test(priority = 20, groups = "smoke")
     @Description("Remove the root rule chain by mark all the rule chains on the page by clicking in the topmost checkbox" +
             " and then clicking on the trash icon in the menu that appears")
+    /**
+     * Removes selected root rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void removeSelectedRootRuleChain() {
         sideBarMenuView.ruleChainsBtn().click();
         ruleChainsPage.selectAllCheckBox().click();
@@ -85,6 +110,12 @@ public class DeleteSeveralRuleChainsTest extends AbstractRuleChainTest {
     @Test(priority = 30, groups = "smoke")
     @Description("Remove several rule chains by mark in the checkbox and then click on the trash can icon in the menu " +
             "that appears at the top without refresh")
+    /**
+     * Deletes several rule chains by top btn without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public void deleteSeveralRuleChainsByTopBtnWithoutRefresh() {
         String ruleChainName = ENTITY_NAME + random();
         testRestClient.postRuleChain(defaultRuleChainPrototype(ruleChainName + 1));

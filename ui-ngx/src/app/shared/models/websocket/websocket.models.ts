@@ -24,11 +24,11 @@ export interface WsService<T extends WsSubscriber> {
   unsubscribe(subscriber: T);
 }
 
+
 /**
-
- * TypeScript models and enums for cmd wrapper.
-
+ * TypeScript interfaces, types, and enums for cmd wrapper (shared TypeScript models).
  */
+
 
 export abstract class CmdWrapper {
   abstract setAuth(token: string);

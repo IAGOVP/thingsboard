@@ -61,8 +61,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb rule chain input node rule node.
+ * Unit test for tb rule chain input node (rule chain flow control (input, output, ack, checkpoint)).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -83,6 +84,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
     private RuleEngineDeviceProfileCache deviceProfileCacheMock;
     @Mock
     private RuleEngineAssetProfileCache assetProfileCacheMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -90,12 +96,24 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
         config = new TbRuleChainInputNodeConfiguration().defaultConfiguration();
         nodeConfiguration = new TbNodeConfiguration(JacksonUtil.valueToTree(config));
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
         assertThat(config.getRuleChainId()).isNull();
         assertThat(config.isForwardMsgToDefaultRuleChain()).isFalse();
     }
+    /**
+     * Given valid config when init then ok.
+     *
+     * @param ruleChainIdStr rule chain id str ({@link String})
+     * @param forwardMsgToDefaultRuleChain forward msg to default rule chain
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -119,6 +137,12 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
                 Arguments.of("52d57e1b-70bb-480e-bcc4-6710e1dcc9d8", true)
         );
     }
+    /**
+     * Given invalid rule chain id when init then throws exception.
+     *
+     * @param ruleChainIdStr rule chain id str ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @ValueSource(strings = {"91acbce0-079fdb", "", "  ", "my test string"})
@@ -132,6 +156,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(TbNodeException.class)
                 .hasMessage("Failed to parse rule chain id: " + ruleChainIdStr);
     }
+    /**
+     * Given rule chain id is not set when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRuleChainIdIsNotSet_whenInit_thenThrowsException() {
@@ -139,6 +168,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(TbNodeException.class)
                 .hasMessage("Rule chain must be set!");
     }
+    /**
+     * Given forward msg to default is true when on msg then should transfer to device default rule chain.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForwardMsgToDefaultIsTrue_whenOnMsg_thenShouldTransferToDeviceDefaultRuleChain() throws TbNodeException {
@@ -173,6 +207,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
         RuleChainId ruleChainId = (RuleChainId) ReflectionTestUtils.getField(node, "ruleChainId");
         assertThat(ruleChainId).isEqualTo(new RuleChainId(UUID.fromString(ruleChainIdFromConfigStr)));
     }
+    /**
+     * Given forward msg to default is true when on msg then should transfer to asset default rule chain.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForwardMsgToDefaultIsTrue_whenOnMsg_thenShouldTransferToAssetDefaultRuleChain() throws TbNodeException {
@@ -207,6 +246,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
         RuleChainId ruleChainId = (RuleChainId) ReflectionTestUtils.getField(node, "ruleChainId");
         assertThat(ruleChainId).isEqualTo(new RuleChainId(UUID.fromString(ruleChainIdFromConfigStr)));
     }
+    /**
+     * Given forward msg to default is true without device default rule chain when on msg then should transfer to rule chain from config.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForwardMsgToDefaultIsTrueWithoutDeviceDefaultRuleChain_whenOnMsg_thenShouldTransferToRuleChainFromConfig() throws TbNodeException {
@@ -236,6 +280,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock).input(eq(msg), ruleChainArgumentCaptor.capture());
         assertThat(ruleChainArgumentCaptor.getValue()).isEqualTo(ruleChainIdFromConfig);
     }
+    /**
+     * Given forward msg to default is true without asset default rule chain when on msg then should transfer to rule chain from config.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForwardMsgToDefaultIsTrueWithoutAssetDefaultRuleChain_whenOnMsg_thenShouldTransferToRuleChainFromConfig() throws TbNodeException {
@@ -265,6 +314,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock).input(eq(msg), ruleChainArgumentCaptor.capture());
         assertThat(ruleChainArgumentCaptor.getValue()).isEqualTo(ruleChainIdFromConfig);
     }
+    /**
+     * Given rule chain in config when on msg then should transfer to rule chain from config.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenRuleChainInConfig_whenOnMsg_thenShouldTransferToRuleChainFromConfig() throws TbNodeException {
@@ -290,6 +344,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock).input(eq(msg), ruleChainArgumentCaptor.capture());
         assertThat(ruleChainArgumentCaptor.getValue()).isEqualTo(ruleChainIdFromConfig);
     }
+    /**
+     * Given forward msg to default is true and device default rule chain is same as current when on msg then tell failure to prevent direct loop.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenForwardMsgToDefaultIsTrueAndDeviceDefaultRuleChainIsSameAsCurrent_whenOnMsg_thenTellFailureToPreventDirectLoop() throws TbNodeException {
@@ -319,6 +378,11 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock).tellFailure(eq(msg), any(RuntimeException.class));
         verify(ctxMock, never()).input(any(), any());
     }
+    /**
+     * Given configured rule chain is same as current when on msg then tell failure to prevent direct loop.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenConfiguredRuleChainIsSameAsCurrent_whenOnMsg_thenTellFailureToPreventDirectLoop() throws TbNodeException {
@@ -357,6 +421,12 @@ public class TbRuleChainInputNodeTest extends AbstractRuleNodeUpgradeTest {
                 )
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

@@ -36,15 +36,18 @@ import { EntityDetailsPanelComponent } from '@home/components/entity/entity-deta
 import { DialogService } from '@core/services/dialog.service';
 import { IEntityDetailsPageComponent } from '@home/models/entity/entity-details-page-component.models';
 
+
+/**
+ * Angular component: entity details page (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-details-page`.
+ */
 @Component({
     selector: 'tb-entity-details-page',
     templateUrl: './entity-details-page.component.html',
     styleUrls: ['./entity-details-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: entity details page UI.
- */
+standalone: false
 })
 export class EntityDetailsPageComponent extends EntityDetailsPanelComponent implements IEntityDetailsPageComponent, OnInit, OnDestroy {
 
@@ -85,6 +88,11 @@ export class EntityDetailsPageComponent extends EntityDetailsPanelComponent impl
     this.backNavigationCommands = this.route.snapshot.data.backNavigationCommands;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.headerSubtitle = '';
     this.headerSubtitle = this.translate.instant(this.entitiesTableConfig.entityTranslations.details);
@@ -106,15 +114,30 @@ export class EntityDetailsPageComponent extends EntityDetailsPanelComponent impl
     }));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }
+
+  /**
+   * reload.
+   *
+   */
 
   reload(): void {
     this.reloadEntity().subscribe(() => {
       this.onUpdateEntity();
     });
   }
+
+  /**
+   * Event handler for toggle details edit mode.
+   *
+   */
 
   onToggleDetailsEditMode() {
     if (this.isEdit) {
@@ -136,6 +159,11 @@ export class EntityDetailsPageComponent extends EntityDetailsPanelComponent impl
     }
   }
 
+  /**
+   * Event handler for apply details.
+   *
+   */
+
   onApplyDetails() {
     this.saveEntity(false).subscribe((entity) => {
       if (entity) {
@@ -144,20 +172,42 @@ export class EntityDetailsPageComponent extends EntityDetailsPanelComponent impl
     });
   }
 
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   confirmForm(): UntypedFormGroup {
     return this.detailsForm;
   }
+
+  /**
+   * go back.
+   *
+   */
 
   goBack(): void {
     const commands = this.backNavigationCommands || ['../'];
     this.router.navigate(commands, { relativeTo: this.route });
   }
 
+  /**
+   * Event handler for update entity.
+   *
+   */
+
   private onUpdateEntity() {
     this.broadcast.broadcast('updateBreadcrumb');
     this.isReadOnly = this.entitiesTableConfig.detailsReadonly(this.entity);
     this.headerTitle = this.entitiesTableConfig.entityTitle(this.entity);
   }
+
+  /**
+   * DELETE — delete entity.
+   *
+   * @param entity entity (BaseData<HasId>)
+   */
 
   private deleteEntity($event: Event, entity: BaseData<HasId>) {
     if ($event) {

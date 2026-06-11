@@ -28,15 +28,18 @@ export interface EditAttributeValuePanelData {
   attributeValue: any;
 }
 
+
+/**
+ * Angular component: edit attribute value panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edit-attribute-value-panel`.
+ */
 @Component({
     selector: 'tb-edit-attribute-value-panel',
     templateUrl: './edit-attribute-value-panel.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: EditAttributeValuePanelComponent }],
     styleUrls: ['./edit-attribute-value-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: edit attribute value panel UI.
- */
+standalone: false
 })
 export class EditAttributeValuePanelComponent extends PageComponent implements OnInit, ErrorStateMatcher {
 
@@ -54,11 +57,24 @@ export class EditAttributeValuePanelComponent extends PageComponent implements O
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.attributeFormGroup = this.fb.group({
       value: [this.data.attributeValue, [Validators.required]]
     });
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -66,14 +82,30 @@ export class EditAttributeValuePanelComponent extends PageComponent implements O
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * invalid.
+   *
+   * @returns boolean observable or value
+   */
+
   invalid(): boolean {
     const value = this.attributeFormGroup.get('value').value;
     return !Array.isArray(value) && this.attributeFormGroup.invalid;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.overlayRef.dispose();
   }
+
+  /**
+   * update.
+   *
+   */
 
   update(): void {
     this.submitted = true;

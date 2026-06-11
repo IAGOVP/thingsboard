@@ -21,11 +21,11 @@ import { HasUUID } from '@shared/models/id/has-uuid';
 
 export const smtpPortPattern: RegExp = /^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/;
 
+
 /**
-
- * TypeScript models and enums for admin settings.
-
+ * TypeScript interfaces, types, and enums for admin settings (shared TypeScript models).
  */
+
 
 export interface AdminSettings<T> {
   key: string;

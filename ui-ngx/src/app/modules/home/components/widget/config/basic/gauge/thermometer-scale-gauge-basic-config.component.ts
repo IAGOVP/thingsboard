@@ -24,14 +24,17 @@ import {
 import { WidgetConfigComponent } from '@home/components/widget/widget-config.component';
 import { WidgetConfigComponentData } from '@home/models/widget-component.models';
 
+
+/**
+ * Angular component: thermometer scale gauge basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-thermometer-scale-gauge-basic-config`.
+ */
 @Component({
     selector: 'tb-thermometer-scale-gauge-basic-config',
     templateUrl: './analog-gauge-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: thermometer scale gauge basic config UI.
- */
+standalone: false
 })
 export class ThermometerScaleGaugeBasicConfigComponent extends GaugeBasicConfigComponent {
 
@@ -43,6 +46,12 @@ export class ThermometerScaleGaugeBasicConfigComponent extends GaugeBasicConfigC
     super(store, widgetConfigComponent, fb);
   }
 
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
+
   protected onConfigSet(configData: WidgetConfigComponentData) {
     super.onConfigSet(configData);
     this.radialGaugeWidgetConfigForm.addControl('colorBarStroke',
@@ -52,6 +61,12 @@ export class ThermometerScaleGaugeBasicConfigComponent extends GaugeBasicConfigC
     this.radialGaugeWidgetConfigForm.addControl('colorBarProgressEnd',
       this.fb.control(configData.config.settings?.colorBarProgressEnd, []));
   }
+
+  /**
+   * prepare output config.
+   *
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config): WidgetConfigComponentData {
     const outputConfig = super.prepareOutputConfig(config);

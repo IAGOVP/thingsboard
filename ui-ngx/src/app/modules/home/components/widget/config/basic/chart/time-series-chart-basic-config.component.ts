@@ -55,14 +55,17 @@ import {
 import { TimeSeriesChartTooltipTrigger } from '@home/components/widget/lib/chart/time-series-chart-tooltip.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: time series chart basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-basic-config`.
+ */
 @Component({
     selector: 'tb-time-series-chart-basic-config',
     templateUrl: './time-series-chart-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: time series chart basic config UI.
- */
+standalone: false
 })
 export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -107,6 +110,12 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * y axis removed.
+   *
+   * @param yAxisId y axis id (TimeSeriesChartYAxisId)
+   */
+
   public yAxisRemoved(yAxisId: TimeSeriesChartYAxisId): void {
     if (this.widgetConfig.config.datasources && this.widgetConfig.config.datasources.length > 1) {
       for (let i = 1; i < this.widgetConfig.config.datasources.length; i++) {
@@ -116,14 +125,32 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     }
   }
 
+  /**
+   * series mode change.
+   *
+   * @param seriesMode series mode (string)
+   */
+
   seriesModeChange(seriesMode: string) {
     this.seriesMode = seriesMode;
     this.updateSeriesState();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.timeSeriesChartWidgetConfigForm;
   }
+
+  /**
+   * setup config.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected setupConfig(widgetConfig: WidgetConfigComponentData) {
     const params = widgetConfig.typeParameters as any;
@@ -133,9 +160,22 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     super.setupConfig(widgetConfig);
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'temperature', label: 'Temperature', type: DataKeyType.timeseries, units: '°C', decimals: 0 }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: TimeSeriesChartWidgetSettings = mergeDeep<TimeSeriesChartWidgetSettings>({} as TimeSeriesChartWidgetSettings,
@@ -219,6 +259,13 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     ).subscribe(() => this.updateSeriesState());
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -294,9 +341,22 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['comparisonEnabled', 'showTitle', 'showIcon', 'showLegend', 'showTooltip', 'tooltipShowDate', 'stack'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const comparisonEnabled: boolean = this.timeSeriesChartWidgetConfigForm.get('comparisonEnabled').value;
@@ -406,6 +466,13 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     }
   }
 
+  /**
+   * get series.
+   *
+   * @param datasources datasources (Datasource[])
+   * @returns DataKey[] observable or value
+   */
+
   private getSeries(datasources?: Datasource[]): DataKey[] {
     if (datasources && datasources.length) {
       return datasources[0].dataKeys || [];
@@ -413,11 +480,23 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     return [];
   }
 
+  /**
+   * set series.
+   *
+   * @param series series (DataKey[])
+   * @param datasources datasources (Datasource[])
+   */
+
   private setSeries(series: DataKey[], datasources?: Datasource[]) {
     if (datasources && datasources.length) {
       datasources[0].dataKeys = series;
     }
   }
+
+  /**
+   * update series state.
+   *
+   */
 
   private updateSeriesState() {
     if (this.seriesMode === 'series') {
@@ -431,6 +510,14 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
       }
     }
   }
+
+  /**
+   * DELETE — remove yaxis id.
+   *
+   * @param series series (DataKey[])
+   * @param yAxisId y axis id (TimeSeriesChartYAxisId)
+   * @returns boolean observable or value
+   */
 
   private removeYaxisId(series: DataKey[], yAxisId: TimeSeriesChartYAxisId): boolean {
     let changed = false;
@@ -446,6 +533,13 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     return changed;
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -453,6 +547,13 @@ export class TimeSeriesChartBasicConfigComponent extends BasicWidgetConfigCompon
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

@@ -15,8 +15,11 @@
 ///
 
 /**
- * Angular component: isearchable UI.
+ * Angular component: isearchable (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export interface ISearchableComponent {
   onSearchTextUpdated(searchText: string);
 }

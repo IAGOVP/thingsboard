@@ -23,11 +23,14 @@ import { ProfilesRoutingModule } from './profiles-routing.module';
 /**
  * Angular NgModule: profiles feature area.
  */
+/**
+ * Angular NgModule bundling profiles (home/profiles pages).
+ */
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     SharedModule,
     ProfilesRoutingModule
-  ]})
+]})
 export class ProfilesModule { }

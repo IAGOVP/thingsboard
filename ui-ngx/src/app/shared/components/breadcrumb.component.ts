@@ -27,20 +27,29 @@ import { UtilsService } from '@core/services/utils.service';
 import { MenuSection, menuSectionMap } from '@core/services/menu.models';
 import { MenuService } from '@core/services/menu.service';
 
+
+/**
+ * Angular component: breadcrumb (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-breadcrumb`.
+ */
 @Component({
     selector: 'tb-breadcrumb',
     templateUrl: './breadcrumb.component.html',
     styleUrls: ['./breadcrumb.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: breadcrumb UI.
- */
+standalone: false
 })
 export class BreadcrumbComponent implements OnInit, OnDestroy {
 
   activeComponentValue: any;
   updateBreadcrumbsSubscription: Subscription = null;
+
+  /**
+   * set active component.
+   *
+   * @param activeComponent active component (any)
+   */
 
   setActiveComponent(activeComponent: any) {
     if (this.updateBreadcrumbsSubscription) {
@@ -82,12 +91,22 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
               public utils: UtilsService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.broadcast.on('updateBreadcrumb', () => {
       this.cd.markForCheck();
     });
     this.setActiveComponent(this.activeComponentService.getCurrentActiveComponent());
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.routerEventsSubscription) {
@@ -98,6 +117,12 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * last child.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   */
+
   private lastChild(route: ActivatedRouteSnapshot) {
     let child = route;
     while (child.firstChild !== null) {
@@ -105,6 +130,16 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
     return child;
   }
+
+  /**
+   * build bread crumbs.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @param availableMenuSections available menu sections (MenuSection[])
+   * @param breadcrumbs breadcrumbs (Array<BreadCrumb>)
+   * @param lastChild last child (ActivatedRouteSnapshot)
+   * @returns Array<BreadCrumb> observable or value
+   */
 
   buildBreadCrumbs(route: ActivatedRouteSnapshot, availableMenuSections: MenuSection[],
                    breadcrumbs: Array<BreadCrumb> = [],
@@ -149,6 +184,13 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     }
     return newBreadcrumbs;
   }
+
+  /**
+   * track by breadcrumbs.
+   *
+   * @param _index  index (number)
+   * @param breadcrumb breadcrumb (BreadCrumb)
+   */
 
   trackByBreadcrumbs(_index: number, breadcrumb: BreadCrumb){
     return breadcrumb.id;

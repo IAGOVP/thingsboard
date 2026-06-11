@@ -26,14 +26,17 @@ export interface DashboardSelectPanelData {
   onDashboardSelected: (dashboardId: string) => void;
 }
 
+
+/**
+ * Angular component: dashboard select panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-select-panel`.
+ */
 @Component({
     selector: 'tb-dashboard-select-panel',
     templateUrl: './dashboard-select-panel.component.html',
     styleUrls: ['./dashboard-select-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: dashboard select panel UI.
- */
+standalone: false
 })
 export class DashboardSelectPanelComponent {
 
@@ -45,6 +48,12 @@ export class DashboardSelectPanelComponent {
     this.dashboards$ = this.data.dashboards$;
     this.dashboardId = this.data.dashboardId;
   }
+
+  /**
+   * dashboard selected.
+   *
+   * @param dashboardId dashboard UUID
+   */
 
   public dashboardSelected(dashboardId: string) {
     this.data.onDashboardSelected(dashboardId);

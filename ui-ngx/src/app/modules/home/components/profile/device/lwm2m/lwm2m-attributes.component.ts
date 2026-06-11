@@ -24,6 +24,12 @@ import { AttributesNameValueMap } from './lwm2m-profile-config.models';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: lwm2m attributes (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-attributes`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-attributes',
     templateUrl: './lwm2m-attributes.component.html',
@@ -33,10 +39,7 @@ import { takeUntil } from 'rxjs/operators';
             useExisting: forwardRef(() => Lwm2mAttributesComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: lwm2m attributes UI.
- */
+standalone: false
 })
 export class Lwm2mAttributesComponent implements ControlValueAccessor, OnDestroy {
   attributesFormGroup: UntypedFormGroup;
@@ -76,17 +79,40 @@ export class Lwm2mAttributesComponent implements ControlValueAccessor, OnDestroy
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -97,6 +123,12 @@ export class Lwm2mAttributesComponent implements ControlValueAccessor, OnDestroy
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (AttributesNameValueMap | null)
+   */
+
   writeValue(value: AttributesNameValueMap | null) {
     this.attributesFormGroup.patchValue({attributes: value}, {emitEvent: false});
   }
@@ -105,9 +137,21 @@ export class Lwm2mAttributesComponent implements ControlValueAccessor, OnDestroy
     return this.attributesFormGroup.get('attributes').value;
   }
 
+  /**
+   * is disable btn.
+   *
+   * @returns boolean observable or value
+   */
+
   isDisableBtn(): boolean {
     return !this.disabled && this.isAttributeTelemetry;
   }
+
+  /**
+   * is empty.
+   *
+   * @returns boolean observable or value
+   */
 
   isEmpty(): boolean {
     const value = this.attributesValueMap;

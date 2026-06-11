@@ -59,6 +59,9 @@ import { AlarmRulesComponent } from '@home/components/alarm-rules/alarm-rules.co
 /**
  * Angular NgModule: alarm rule feature area.
  */
+/**
+ * Angular NgModule bundling alarm rule (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     AlarmRuleDialogComponent,
@@ -90,5 +93,5 @@ import { AlarmRulesComponent } from '@home/components/alarm-rules/alarm-rules.co
   exports: [
     AlarmRuleDialogComponent,
     AlarmRulesComponent
-  ]})
+]})
 export class AlarmRuleModule { }

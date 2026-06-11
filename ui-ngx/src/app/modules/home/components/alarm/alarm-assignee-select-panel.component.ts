@@ -46,14 +46,17 @@ export interface AlarmAssigneeSelectPanelData {
   userMode?: boolean;
 }
 
+
+/**
+ * Angular component: alarm assignee select panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-assignee-select-panel`.
+ */
 @Component({
     selector: 'tb-alarm-assignee-select-panel',
     templateUrl: './alarm-assignee-panel.component.html',
     styleUrls: ['./alarm-assignee-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm assignee select panel UI.
- */
+standalone: false
 })
 export class AlarmAssigneeSelectPanelComponent implements  OnInit, AfterViewInit, OnDestroy {
 
@@ -103,6 +106,11 @@ export class AlarmAssigneeSelectPanelComponent implements  OnInit, AfterViewInit
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.filteredUsers = this.selectUserFormGroup.get('user').valueChanges
       .pipe(
@@ -115,20 +123,43 @@ export class AlarmAssigneeSelectPanelComponent implements  OnInit, AfterViewInit
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     setTimeout(() => {
       this.userInput.nativeElement.focus();
     }, 0);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * display user fn.
+   *
+   * @param user user (User)
+   * @returns string | undefined observable or value
+   */
+
   displayUserFn(user?: User): string | undefined {
     return user ? user.email : undefined;
   }
+
+  /**
+   * selected.
+   *
+   * @param event DOM or Angular event object
+   */
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.clear();
@@ -140,6 +171,13 @@ export class AlarmAssigneeSelectPanelComponent implements  OnInit, AfterViewInit
     }
     this.overlayRef.dispose();
   }
+
+  /**
+   * fetch users.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<UserEmailInfo>> observable or value
+   */
 
   fetchUsers(searchText?: string): Observable<Array<UserEmailInfo>> {
     this.searchText = searchText;
@@ -154,12 +192,22 @@ export class AlarmAssigneeSelectPanelComponent implements  OnInit, AfterViewInit
       );
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus(): void {
     if (!this.dirty) {
       this.selectUserFormGroup.get('user').updateValueAndValidity({onlySelf: true});
       this.dirty = true;
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectUserFormGroup.get('user').patchValue('', {emitEvent: true});
@@ -169,9 +217,23 @@ export class AlarmAssigneeSelectPanelComponent implements  OnInit, AfterViewInit
     }, 0);
   }
 
+  /**
+   * get user initials.
+   *
+   * @param entity entity (UserEmailInfo)
+   * @returns string observable or value
+   */
+
   getUserInitials(entity: UserEmailInfo): string {
     return getUserInitials(entity);
   }
+
+  /**
+   * get full name.
+   *
+   * @param entity entity (UserEmailInfo)
+   * @returns string observable or value
+   */
 
   getFullName(entity: UserEmailInfo): string {
     let fullName = '';
@@ -189,6 +251,12 @@ export class AlarmAssigneeSelectPanelComponent implements  OnInit, AfterViewInit
     }
     return fullName;
   }
+
+  /**
+   * get avatar bg color.
+   *
+   * @param entity entity (UserEmailInfo)
+   */
 
   getAvatarBgColor(entity: UserEmailInfo) {
     return this.utilsService.stringToHslColor(getUserDisplayName(entity), 40, 60);

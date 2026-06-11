@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.math;
 
+
 /**
 
- * Rule engine component: tb math argument type.
+ * Enumerates tb math argument type values used by rule engine expression evaluation nodes.
 
  */
+
 
 public enum TbMathArgumentType {
 

@@ -45,15 +45,18 @@ export interface EntityAliasDialogData {
   alias?: EntityAlias;
 }
 
+
+/**
+ * Angular component: entity alias dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-alias-dialog`.
+ */
 @Component({
     selector: 'tb-entity-alias-dialog',
     templateUrl: './entity-alias-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: EntityAliasDialogComponent }],
     styleUrls: ['./entity-alias-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: entity alias dialog UI.
- */
+standalone: false
 })
 export class EntityAliasDialogComponent extends DialogComponent<EntityAliasDialogComponent, EntityAlias>
   implements OnInit, ErrorStateMatcher {
@@ -107,6 +110,12 @@ export class EntityAliasDialogComponent extends DialogComponent<EntityAliasDialo
     });
   }
 
+  /**
+   * validate duplicate alias name.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   validateDuplicateAliasName(): ValidatorFn {
     return (c: UntypedFormControl) => {
       const newAlias = c.value.trim();
@@ -124,8 +133,21 @@ export class EntityAliasDialogComponent extends DialogComponent<EntityAliasDialo
     };
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -133,13 +155,29 @@ export class EntityAliasDialogComponent extends DialogComponent<EntityAliasDialo
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
 
+  /**
+   * validate.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   private validate(): Observable<any> {
     return this.entityService.resolveAliasFilter(this.alias.filter, null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

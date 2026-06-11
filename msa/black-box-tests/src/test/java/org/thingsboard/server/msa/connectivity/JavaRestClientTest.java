@@ -114,11 +114,13 @@ import static org.thingsboard.server.common.data.notification.NotificationDelive
 import static org.thingsboard.server.msa.prototypes.DevicePrototypes.defaultDevicePrototype;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultTenantAdmin;
 
+
 /**
 
- * Java rest client test.
+ * Black-box test: java rest client (black-box test infrastructure — device transport connectivity tests).
 
  */
+
 
 public class JavaRestClientTest extends AbstractContainerTest {
 
@@ -129,6 +131,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
     private Tenant tenant2;
     private User tenantAdmin1;
     private User tenantAdmin2;
+    /**
+     * Before class.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void beforeClass() throws Exception {
@@ -153,6 +161,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         RestTemplate rt = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
         restClient = new RestClient(rt, TestProperties.getBaseUrl());
     }
+    /**
+     * Set up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -179,6 +193,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         // tenant 1 tenant admin by default
         restClient.login(tenantAdmin1.getEmail(), "password123");
     }
+    /**
+     * Tear down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void tearDown() {
@@ -190,6 +210,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
             restClient.deleteTenant(tenant2.getId());
         }
     }
+    /**
+     * Test get alarms v2.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testGetAlarmsV2() {
@@ -231,6 +257,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         PageData<AlarmInfo> allClearedAlarms = restClient.getAllAlarms(AlarmSearchStatus.CLEARED, null, new TimePageLink(10, 0), null);
         assertThat(allClearedAlarms.getData()).hasSize(0);
     }
+    /**
+     * Test time series by read ts kv queries.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testTimeSeriesByReadTsKvQueries() {
@@ -259,6 +291,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         assertThat(availableEntityKeys).isNotNull();
         assertThat(availableEntityKeys.timeseries()).contains("temperature", "humidity");
     }
+    /**
+     * Test find notifications.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testFindNotifications() {
@@ -309,6 +347,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         List<NotificationDeliveryMethod> availableDeliveryMethods = restClient.getAvailableDeliveryMethods();
         assertThat(availableDeliveryMethods).contains(WEB, EMAIL, MICROSOFT_TEAMS);
     }
+    /**
+     * Test save notification settings.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSaveNotificationSettings() {
@@ -342,6 +386,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         UserNotificationSettings retrieved = restClient.getUserNotificationSettings().get();
         assertThat(retrieved).isEqualTo(saved);
     }
+    /**
+     * Test save domain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSaveDomain() {
@@ -356,6 +406,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         PageData<DomainInfo> domainInfos = restClient.getTenantDomainInfos(new PageLink(10, 0, prefix));
         assertThat(domainInfos.getData()).hasSize(1);
     }
+    /**
+     * Test save mobile app.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSaveMobileApp() {
@@ -445,6 +501,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
                 .build();
         return restClient.saveNotificationRequest(notificationRequest);
     }
+    /**
+     * Test api key operations.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testApiKeyOperations() {
@@ -493,6 +555,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         PageData<ApiKeyInfo> apiKeysAfterDelete = restClient.getUserApiKeys(tenantAdmin1.getId(), new PageLink(10));
         assertThat(apiKeysAfterDelete.getData()).isEmpty();
     }
+    /**
+     * Test get device profile infos by ids.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testGetDeviceProfileInfosByIds() {
@@ -545,6 +613,12 @@ public class JavaRestClientTest extends AbstractContainerTest {
         assertThat(profiles).hasSize(1);
         assertThat(profiles.get(0).getId()).isEqualTo(deviceProfile3.getId());
     }
+    /**
+     * Test get asset profiles by ids.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testGetAssetProfilesByIds() {

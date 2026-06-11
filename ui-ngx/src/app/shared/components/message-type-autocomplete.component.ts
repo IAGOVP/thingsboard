@@ -26,6 +26,12 @@ import { MessageType, messageTypeNames } from '@shared/models/rule-node.models';
 import { objectValues } from '@core/utils';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: message type autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-message-type-autocomplete`.
+ */
 @Component({
     selector: 'tb-message-type-autocomplete',
     templateUrl: './message-type-autocomplete.component.html',
@@ -35,10 +41,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             useExisting: forwardRef(() => MessageTypeAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: message type autocomplete UI.
- */
+standalone: false
 })
 export class MessageTypeAutocompleteComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
 
@@ -79,12 +82,29 @@ export class MessageTypeAutocompleteComponent implements ControlValueAccessor, O
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredMessageTypes = this.messageTypeFormGroup.get('messageType').valueChanges
@@ -98,11 +118,27 @@ export class MessageTypeAutocompleteComponent implements ControlValueAccessor, O
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -112,6 +148,12 @@ export class MessageTypeAutocompleteComponent implements ControlValueAccessor, O
       this.messageTypeFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.searchText = '';
@@ -128,12 +170,23 @@ export class MessageTypeAutocompleteComponent implements ControlValueAccessor, O
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.messageTypeFormGroup.get('messageType').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (MessageType | string | null)
+   */
 
   updateView(value: MessageType | string | null) {
     let res: string = null;
@@ -150,6 +203,13 @@ export class MessageTypeAutocompleteComponent implements ControlValueAccessor, O
     }
   }
 
+  /**
+   * display message type fn.
+   *
+   * @param messageType message type (MessageType | string)
+   * @returns string | undefined observable or value
+   */
+
   displayMessageTypeFn(messageType?: MessageType | string): string | undefined {
     if (messageType) {
       if (objectValues(MessageType).includes(messageType)) {
@@ -160,6 +220,13 @@ export class MessageTypeAutocompleteComponent implements ControlValueAccessor, O
     }
     return undefined;
   }
+
+  /**
+   * fetch message types.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<MessageType | string>> observable or value
+   */
 
   fetchMessageTypes(searchText?: string): Observable<Array<MessageType | string>> {
     this.searchText = searchText;
@@ -175,6 +242,11 @@ export class MessageTypeAutocompleteComponent implements ControlValueAccessor, O
       return of([searchText]);
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.messageTypeFormGroup.get('messageType').patchValue(null, {emitEvent: true});

@@ -44,6 +44,12 @@ import { EntityFilter } from '@shared/models/query/query.models';
 import { isEqual } from '@core/utils';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: entity key autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-key-autocomplete`.
+ */
 @Component({
     selector: 'tb-entity-key-autocomplete',
     templateUrl: './entity-key-autocomplete.component.html',
@@ -59,10 +65,7 @@ import { TranslateService } from '@ngx-translate/core';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity key autocomplete UI.
- */
+standalone: false
 })
 export class EntityKeyAutocompleteComponent implements ControlValueAccessor, Validator, OnChanges {
 
@@ -150,6 +153,11 @@ export class EntityKeyAutocompleteComponent implements ControlValueAccessor, Val
     }
   }
 
+  /**
+   * clear.
+   *
+   */
+
   clear(): void {
     this.keyControl.patchValue('', {emitEvent: true});
     setTimeout(() => {
@@ -162,15 +170,38 @@ export class EntityKeyAutocompleteComponent implements ControlValueAccessor, Val
     this.propagateChange = onChange;
   }
 
+  /**
+   * register on touched.
+   *
+   */
+
   registerOnTouched(_): void {}
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.keyControl.valid || this.keyControl.disabled ? null : { keyControl: false };
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string): void {
     this.keyControl.patchValue(value, {emitEvent: false});
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {

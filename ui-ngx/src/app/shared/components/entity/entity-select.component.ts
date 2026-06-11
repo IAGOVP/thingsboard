@@ -29,6 +29,12 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { BaseData } from '@shared/models/base-data';
 import { EntityAutocompleteComponent } from '@shared/components/entity/entity-autocomplete.component';
 
+
+/**
+ * Angular component: entity select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-select`.
+ */
 @Component({
     selector: 'tb-entity-select',
     templateUrl: './entity-select.component.html',
@@ -38,10 +44,7 @@ import { EntityAutocompleteComponent } from '@shared/components/entity/entity-au
             useExisting: forwardRef(() => EntitySelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: entity select UI.
- */
+standalone: false
 })
 export class EntitySelectComponent implements ControlValueAccessor, OnInit {
 
@@ -120,12 +123,29 @@ export class EntitySelectComponent implements ControlValueAccessor, OnInit {
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.entitySelectFormGroup.get('entityType').valueChanges.pipe(
@@ -162,6 +182,12 @@ export class EntitySelectComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -170,6 +196,12 @@ export class EntitySelectComponent implements ControlValueAccessor, OnInit {
       this.entitySelectFormGroup.enable();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (EntityId | null)
+   */
 
   writeValue(value: EntityId | null): void {
     if (value != null) {
@@ -186,6 +218,13 @@ export class EntitySelectComponent implements ControlValueAccessor, OnInit {
     this.entitySelectFormGroup.get('entityType').patchValue(this.modelValue.entityType, {emitEvent: false});
     this.entitySelectFormGroup.get('entityId').patchValue(this.modelValue, {emitEvent: false});
   }
+
+  /**
+   * update view.
+   *
+   * @param entityType entity type (EntityType | AliasEntityType | null)
+   * @param entityId entity UUID
+   */
 
   updateView(entityType: EntityType | AliasEntityType | null, entityId: string | null) {
     if (this.modelValue.entityType !== entityType || this.modelValue.id !== entityId) {
@@ -208,9 +247,20 @@ export class EntitySelectComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * change entity.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   */
+
   changeEntity(entity: BaseData<EntityId>): void {
     this.entityChanged.emit(entity);
   }
+
+  /**
+   * entity autocomplete mark as touched.
+   *
+   */
 
   entityAutocompleteMarkAsTouched() {
     this.entityAutocompleteComponent.markAsTouched();

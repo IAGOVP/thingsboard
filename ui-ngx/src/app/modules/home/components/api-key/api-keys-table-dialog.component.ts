@@ -26,14 +26,17 @@ export interface ApiKeysTableDialogData {
   userId: UserId;
 }
 
+
+/**
+ * Angular component: api keys table dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-api-keys-table-dialog`.
+ */
 @Component({
     selector: 'tb-api-keys-table-dialog',
     templateUrl: './api-keys-table-dialog.component.html',
     styleUrls: ['api-keys-table-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: api keys table dialog UI.
- */
+standalone: false
 })
 export class ApiKeysTableDialogComponent {
 
@@ -44,6 +47,11 @@ export class ApiKeysTableDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: ApiKeysTableDialogData,
   ) {
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     this.dialogRef.close(null);

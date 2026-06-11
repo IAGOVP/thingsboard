@@ -47,6 +47,12 @@ import {
 } from '@home/components/widget/lib/settings/common/auto-date-format-settings-panel.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: date format select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-date-format-select`.
+ */
 @Component({
     selector: 'tb-date-format-select',
     templateUrl: './date-format-select.component.html',
@@ -58,10 +64,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: date format select UI.
- */
+standalone: false
 })
 export class DateFormatSelectComponent implements OnInit, ControlValueAccessor {
 
@@ -98,6 +101,11 @@ export class DateFormatSelectComponent implements OnInit, ControlValueAccessor {
               private viewContainerRef: ViewContainerRef,
               private destroyRef: DestroyRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const targetDateFormats = this.includeAuto ? dateFormatsWithAuto : dateFormats;
     this.dateFormatList = this.excludeLastUpdateAgo ?
@@ -115,12 +123,30 @@ export class DateFormatSelectComponent implements OnInit, ControlValueAccessor {
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -131,10 +157,22 @@ export class DateFormatSelectComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DateFormatSettings)
+   */
+
   writeValue(value: DateFormatSettings): void {
     this.modelValue = value;
     this.dateFormatFormControl.patchValue(this.modelValue, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   * @param value value (DateFormatSettings)
+   */
 
   updateModel(value: DateFormatSettings): void {
     if (!compareDateFormats(this.modelValue, value)) {
@@ -142,6 +180,13 @@ export class DateFormatSelectComponent implements OnInit, ControlValueAccessor {
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * date format display value.
+   *
+   * @param value value (DateFormatSettings)
+   * @returns string observable or value
+   */
 
   dateFormatDisplayValue(value: DateFormatSettings): string {
     if (value.custom) {
@@ -157,6 +202,12 @@ export class DateFormatSelectComponent implements OnInit, ControlValueAccessor {
       return this.formatCache[value.format];
     }
   }
+
+  /**
+   * open date format settings popup.
+   *
+   * @param matButton mat button (MatIconButton)
+   */
 
   openDateFormatSettingsPopup($event: Event, matButton: MatIconButton) {
     if ($event) {
@@ -184,6 +235,12 @@ export class DateFormatSelectComponent implements OnInit, ControlValueAccessor {
       });
     }
   }
+
+  /**
+   * open auto format settings popup.
+   *
+   * @param matButton mat button (MatIconButton)
+   */
 
   openAutoFormatSettingsPopup($event: Event, matButton: MatIconButton) {
     if ($event) {

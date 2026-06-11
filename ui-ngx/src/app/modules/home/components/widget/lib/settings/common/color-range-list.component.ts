@@ -52,6 +52,12 @@ export function advancedRangeValidator(control: AbstractControl): ValidationErro
   return null;
 }
 
+
+/**
+ * Angular component: color range list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-color-range-list`.
+ */
 @Component({
     selector: 'tb-color-range-list',
     templateUrl: './color-range-list.component.html',
@@ -64,10 +70,7 @@ export function advancedRangeValidator(control: AbstractControl): ValidationErro
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: color range list UI.
- */
+standalone: false
 })
 export class ColorRangeListComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
@@ -107,6 +110,11 @@ export class ColorRangeListComponent implements OnInit, ControlValueAccessor, On
 
   constructor(private fb: UntypedFormBuilder) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.colorRangeListFormGroup = this.fb.group({
       advancedMode: [false],
@@ -119,21 +127,50 @@ export class ColorRangeListComponent implements OnInit, ControlValueAccessor, On
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (any)
+   */
 
   writeValue(value: any): void {
     if (value) {
@@ -154,6 +191,13 @@ export class ColorRangeListComponent implements OnInit, ControlValueAccessor, On
     }
   }
 
+  /**
+   * color range control.
+   *
+   * @param range range (ColorRange)
+   * @returns UntypedFormGroup observable or value
+   */
+
   private colorRangeControl(range: ColorRange): UntypedFormGroup {
     return this.fb.group({
       from: [range?.from, []],
@@ -170,13 +214,35 @@ export class ColorRangeListComponent implements OnInit, ControlValueAccessor, On
     return this.rangeListFormArray.controls as FormGroup[];
   }
 
+  /**
+   * track by range.
+   *
+   * @param index index (number)
+   * @param rangeControl range control (AbstractControl)
+   * @returns any observable or value
+   */
+
   trackByRange(index: number, rangeControl: AbstractControl): any {
     return rangeControl;
   }
 
+  /**
+   * track by advanced range.
+   *
+   * @param index index (number)
+   * @param advancedRangeControl advanced range control (AbstractControl)
+   * @returns any observable or value
+   */
+
   public trackByAdvancedRange(index: number, advancedRangeControl: AbstractControl): any {
     return advancedRangeControl;
   }
+
+  /**
+   * DELETE — remove advanced range.
+   *
+   * @param index index (number)
+   */
 
   public removeAdvancedRange(index: number) {
     (this.colorRangeListFormGroup.get('rangeAdvanced') as UntypedFormArray).removeAt(index);
@@ -190,10 +256,23 @@ export class ColorRangeListComponent implements OnInit, ControlValueAccessor, On
     return this.advancedRangeFormArray.controls as FormControl[];
   }
 
+  /**
+   * DELETE — remove range.
+   *
+   * @param index index (number)
+   */
+
   removeRange(index: number) {
     this.rangeListFormArray.removeAt(index);
     this.colorRangeListFormGroup.markAsDirty();
   }
+
+  /**
+   * range drop.
+   *
+   * @param event DOM or Angular event object
+   * @param range range (string)
+   */
 
   rangeDrop(event: CdkDragDrop<string[]>, range: string) {
     const rangeColorsArray = this.colorRangeListFormGroup.get(range) as UntypedFormArray;
@@ -201,6 +280,11 @@ export class ColorRangeListComponent implements OnInit, ControlValueAccessor, On
     rangeColorsArray.removeAt(event.previousIndex);
     rangeColorsArray.insert(event.currentIndex, rangeColor);
   }
+
+  /**
+   * POST/PUT entity — add advanced range.
+   *
+   */
 
   public addAdvancedRange() {
     const advancedRange: AdvancedColorRange = {
@@ -217,6 +301,11 @@ export class ColorRangeListComponent implements OnInit, ControlValueAccessor, On
     advancedRangeColorsArray.push(advancedRangeColorControl);
   }
 
+  /**
+   * POST/PUT entity — add range.
+   *
+   */
+
   addRange() {
     if (this.colorRangeListFormGroup.get('advancedMode').value) {
       this.addAdvancedRange();
@@ -228,6 +317,11 @@ export class ColorRangeListComponent implements OnInit, ControlValueAccessor, On
       this.colorRangeListFormGroup.markAsDirty();
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   updateModel() {
     if (this.simpleRange) {

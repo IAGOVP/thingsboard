@@ -34,6 +34,12 @@ import {
 } from '@shared/models/query/query.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: string filter predicate (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-string-filter-predicate`.
+ */
 @Component({
     selector: 'tb-string-filter-predicate',
     templateUrl: './string-filter-predicate.component.html',
@@ -50,10 +56,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: string filter predicate UI.
- */
+standalone: false
 })
 export class StringFilterPredicateComponent implements ControlValueAccessor, Validator, OnInit {
 
@@ -77,6 +80,11 @@ export class StringFilterPredicateComponent implements ControlValueAccessor, Val
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.stringFilterPredicateFormGroup = this.fb.group({
       operation: [StringOperation.STARTS_WITH, [Validators.required]],
@@ -90,9 +98,21 @@ export class StringFilterPredicateComponent implements ControlValueAccessor, Val
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -106,17 +126,34 @@ export class StringFilterPredicateComponent implements ControlValueAccessor, Val
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param predicate predicate (StringFilterPredicate)
+   */
+
   writeValue(predicate: StringFilterPredicate): void {
     this.stringFilterPredicateFormGroup.get('operation').patchValue(predicate.operation, {emitEvent: false});
     this.stringFilterPredicateFormGroup.get('value').patchValue(predicate.value, {emitEvent: false});
     this.stringFilterPredicateFormGroup.get('ignoreCase').patchValue(predicate.ignoreCase, {emitEvent: false});
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors observable or value
+   */
+
   validate(c): ValidationErrors {
     return this.stringFilterPredicateFormGroup.valid ? null : {
       stringFilterPredicate: {valid: false}
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const predicate: StringFilterPredicate = this.stringFilterPredicateFormGroup.getRawValue();

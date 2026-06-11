@@ -28,6 +28,12 @@ import {
 import { isDefined } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: grouping interval options (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-grouping-interval-options`.
+ */
 @Component({
     selector: 'tb-grouping-interval-options',
     templateUrl: './grouping-interval-options.component.html',
@@ -39,10 +45,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: grouping interval options UI.
- */
+standalone: false
 })
 export class GroupingIntervalOptionsComponent implements OnInit, ControlValueAccessor {
 
@@ -94,9 +97,20 @@ export class GroupingIntervalOptionsComponent implements OnInit, ControlValueAcc
     ).subscribe(() => this.updateView());
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.updateIntervalsList();
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
@@ -105,8 +119,20 @@ export class GroupingIntervalOptionsComponent implements OnInit, ControlValueAcc
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -117,6 +143,12 @@ export class GroupingIntervalOptionsComponent implements OnInit, ControlValueAcc
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param intervalOptions interval options (TimewindowAggIntervalOptions)
+   */
+
   writeValue(intervalOptions: TimewindowAggIntervalOptions): void {
     this.modelValue = intervalOptions;
     this.rendered = true;
@@ -124,10 +156,21 @@ export class GroupingIntervalOptionsComponent implements OnInit, ControlValueAcc
     this.setIntervals(intervalOptions.aggIntervals);
   }
 
+  /**
+   * update intervals list.
+   *
+   */
+
   private updateIntervalsList() {
     this.allIntervals = this.timeService.getIntervals(this.min, this.max, this.useCalendarIntervals);
     this.allIntervalValues = this.allIntervals.map(interval => interval.value);
   }
+
+  /**
+   * set intervals.
+   *
+   * @param intervals intervals (Array<Interval>)
+   */
 
   private setIntervals(intervals: Array<Interval>) {
     const selectedIntervals = !intervals?.length ? this.allIntervalValues : intervals;
@@ -136,6 +179,12 @@ export class GroupingIntervalOptionsComponent implements OnInit, ControlValueAcc
       {emitEvent: false});
     this.setSelectedIntervals(selectedIntervals);
   }
+
+  /**
+   * set selected intervals.
+   *
+   * @param selectedIntervalValues selected interval values (Array<Interval>)
+   */
 
   private setSelectedIntervals(selectedIntervalValues: Array<Interval>) {
     if (!selectedIntervalValues.length || selectedIntervalValues.length === this.allIntervalValues.length) {
@@ -148,6 +197,11 @@ export class GroupingIntervalOptionsComponent implements OnInit, ControlValueAcc
       this.timeintervalFormGroup.get('defaultAggInterval').patchValue(null);
     }
   }
+
+  /**
+   * update view.
+   *
+   */
 
   private updateView() {
     if (!this.rendered) {

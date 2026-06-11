@@ -32,7 +32,13 @@ import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine action node 'assign to customer': Assign message originator entity to customer Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>assign to customer</b>.
+ *
+ * <p>Assign message originator entity to customer
+ * <br>Finds target customer by title and assign message originator entity to this customer. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbAssignToCustomerNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/assign-to-customer/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/assign-to-customer/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -47,16 +53,37 @@ import org.thingsboard.server.common.msg.TbMsg;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/assign-to-customer/"
 )
 public class TbAssignToCustomerNode extends TbAbstractCustomerActionNode<TbAssignToCustomerNodeConfiguration> {
+    /**
+     * Creates customer if not exists.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean createCustomerIfNotExists() {
         return config.isCreateCustomerIfNotExists();
     }
+    /**
+     * Loads customer node action config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbAssignToCustomerNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbAssignToCustomerNodeConfiguration loadCustomerNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbAssignToCustomerNodeConfiguration.class);
     }
+    /**
+     * Processes customer action.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link Void}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<Void> processCustomerAction(TbContext ctx, TbMsg msg) {

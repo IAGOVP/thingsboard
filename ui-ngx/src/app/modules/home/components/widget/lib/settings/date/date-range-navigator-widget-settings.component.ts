@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: date range navigator widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-date-range-navigator-widget-settings`.
+ */
 @Component({
     selector: 'tb-date-range-navigator-widget-settings',
     templateUrl: './date-range-navigator-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: date range navigator widget settings UI.
- */
+standalone: false
 })
 export class DateRangeNavigatorWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class DateRangeNavigatorWidgetSettingsComponent extends WidgetSettingsCom
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.dateRangeNavigatorWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -57,6 +72,12 @@ export class DateRangeNavigatorWidgetSettingsComponent extends WidgetSettingsCom
       useSessionStorage: true
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.dateRangeNavigatorWidgetSettingsForm = this.fb.group({
@@ -84,9 +105,21 @@ export class DateRangeNavigatorWidgetSettingsComponent extends WidgetSettingsCom
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['hidePicker', 'hideInterval', 'hideStepSize'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const hidePicker: boolean = this.dateRangeNavigatorWidgetSettingsForm.get('hidePicker').value;

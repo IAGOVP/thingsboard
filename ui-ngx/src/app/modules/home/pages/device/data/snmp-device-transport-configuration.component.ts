@@ -41,6 +41,12 @@ import {
 import { isDefinedAndNotNull } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: snmp device transport configuration (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-snmp-device-transport-configuration`.
+ */
 @Component({
     selector: 'tb-snmp-device-transport-configuration',
     templateUrl: './snmp-device-transport-configuration.component.html',
@@ -56,10 +62,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: snmp device transport configuration UI.
- */
+standalone: false
 })
 export class SnmpDeviceTransportConfigurationComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -92,12 +95,29 @@ export class SnmpDeviceTransportConfigurationComponent implements ControlValueAc
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.snmpDeviceTransportConfigurationFormGroup = this.fb.group({
@@ -126,11 +146,23 @@ export class SnmpDeviceTransportConfigurationComponent implements ControlValueAc
     });
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.snmpDeviceTransportConfigurationFormGroup.valid ?  null : {
       snmpDeviceTransportConfiguration: false
     };
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -144,6 +176,12 @@ export class SnmpDeviceTransportConfigurationComponent implements ControlValueAc
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (SnmpDeviceTransportConfiguration | null)
+   */
+
   writeValue(value: SnmpDeviceTransportConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
       this.snmpDeviceTransportConfigurationFormGroup.patchValue(value, {emitEvent: false});
@@ -153,9 +191,21 @@ export class SnmpDeviceTransportConfigurationComponent implements ControlValueAc
     }
   }
 
+  /**
+   * is v3protocol version.
+   *
+   * @returns boolean observable or value
+   */
+
   isV3protocolVersion(): boolean {
     return this.snmpDeviceTransportConfigurationFormGroup.get('protocolVersion').value === SnmpDeviceProtocolVersion.V3;
   }
+
+  /**
+   * update disabled form value.
+   *
+   * @param protocol protocol (SnmpDeviceProtocolVersion)
+   */
 
   private updateDisabledFormValue(protocol: SnmpDeviceProtocolVersion) {
     if (protocol === SnmpDeviceProtocolVersion.V3) {
@@ -180,6 +230,11 @@ export class SnmpDeviceTransportConfigurationComponent implements ControlValueAc
       this.snmpDeviceTransportConfigurationFormGroup.get('engineId').disable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: DeviceTransportConfiguration = null;

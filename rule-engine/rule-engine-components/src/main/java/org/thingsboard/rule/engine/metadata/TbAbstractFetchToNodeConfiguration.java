@@ -18,8 +18,11 @@ package org.thingsboard.rule.engine.metadata;
 import lombok.Data;
 import org.thingsboard.rule.engine.util.TbMsgSource;
 /**
- * JSON configuration for TbAbstractFetchTo rule node.
+ * JSON configuration POJO for {@link TbAbstractFetchTo} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public abstract class TbAbstractFetchToNodeConfiguration {

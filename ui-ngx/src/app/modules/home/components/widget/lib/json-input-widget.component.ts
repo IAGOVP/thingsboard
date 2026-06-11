@@ -48,14 +48,17 @@ interface JsonInputWidgetSettings {
   showResultMessage: boolean;
 }
 
+
+/**
+ * Angular component: json input widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-json-input-widget `.
+ */
 @Component({
     selector: 'tb-json-input-widget ',
     templateUrl: './json-input-widget.component.html',
     styleUrls: ['./json-input-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: json input widget UI.
- */
+standalone: false
 })
 export class JsonInputWidgetComponent extends PageComponent implements OnInit {
 
@@ -87,6 +90,11 @@ export class JsonInputWidgetComponent extends PageComponent implements OnInit {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.jsonInputWidget = this;
     this.settings = this.ctx.settings;
@@ -99,6 +107,11 @@ export class JsonInputWidgetComponent extends PageComponent implements OnInit {
     this.ctx.updateWidgetParams();
   }
 
+  /**
+   * initialize config.
+   *
+   */
+
   private initializeConfig() {
     if (this.settings.widgetTitle && this.settings.widgetTitle.length) {
       this.ctx.widgetTitle = this.settings.widgetTitle;
@@ -110,6 +123,11 @@ export class JsonInputWidgetComponent extends PageComponent implements OnInit {
       this.labelValue = this.translate.instant('widgets.input-widgets.value');
     }
   }
+
+  /**
+   * validate datasources.
+   *
+   */
 
   private validateDatasources() {
     this.datasourceDetected = isDefinedAndNotNull(this.datasource);
@@ -135,6 +153,11 @@ export class JsonInputWidgetComponent extends PageComponent implements OnInit {
     }
   }
 
+  /**
+   * build form.
+   *
+   */
+
   private buildForm() {
     const validators: ValidatorFn[] = [];
     if (this.settings.attributeRequired) {
@@ -149,6 +172,12 @@ export class JsonInputWidgetComponent extends PageComponent implements OnInit {
       this.ctx.detectChanges();
     });
   }
+
+  /**
+   * update widget data.
+   *
+   * @param data dialog or route input data
+   */
 
   private updateWidgetData(data: Array<DatasourceData>) {
     if (!this.errorMessage) {
@@ -168,9 +197,19 @@ export class JsonInputWidgetComponent extends PageComponent implements OnInit {
     }
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.updateWidgetData(this.subscription.data);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   public save() {
     this.isFocused = false;
@@ -217,6 +256,11 @@ export class JsonInputWidgetComponent extends PageComponent implements OnInit {
         }
       });
   }
+
+  /**
+   * discard.
+   *
+   */
 
   public discard() {
     this.attributeUpdateFormGroup.reset({currentValue: this.originalValue}, {emitEvent: false});

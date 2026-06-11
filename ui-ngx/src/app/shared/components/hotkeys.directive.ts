@@ -20,13 +20,17 @@ import { MousetrapInstance } from 'mousetrap';
 import Mousetrap from 'mousetrap';
 import { TbCheatSheetComponent } from '@shared/components/cheatsheet.component';
 
-@Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[tb-hotkeys]',
-    standalone: false
+
 /**
  * Angular directive: tb hotkeys.
  */
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: '[tb-hotkeys]',
+/**
+ * Angular directive: tb hotkeys (shared UI components).
+ */
+    standalone: false
 })
 export class TbHotkeysDirective implements OnInit, OnDestroy {
   @Input('tb-hotkeys') hotkeys: Hotkey[] = [];
@@ -42,6 +46,11 @@ export class TbHotkeysDirective implements OnInit, OnDestroy {
     (this.elementRef.nativeElement as HTMLElement).tabIndex = -1;
     (this.elementRef.nativeElement as HTMLElement).style.outline = '0';
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     for (const hotkey of this.hotkeys) {
@@ -64,6 +73,12 @@ export class TbHotkeysDirective implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * bind event.
+   *
+   * @param hotkey hotkey (Hotkey)
+   */
+
   private bindEvent(hotkey: Hotkey): void {
     this.mousetrap.bind((hotkey as Hotkey).combo, (event: KeyboardEvent, combo: string) => {
       let shouldExecute = true;
@@ -83,6 +98,11 @@ export class TbHotkeysDirective implements OnInit, OnDestroy {
       }
     });
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     for (const hotkey of this.hotkeysList) {

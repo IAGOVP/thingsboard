@@ -15,8 +15,9 @@
 ///
 
 /**
- * TypeScript models and enums for page data.
+ * TypeScript interfaces, types, and enums for page data (shared TypeScript models).
  */
+
 export interface PageData<T> {
   data: Array<T>;
   totalPages: number;

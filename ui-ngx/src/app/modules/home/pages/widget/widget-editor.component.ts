@@ -77,15 +77,18 @@ import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 import Timeout = NodeJS.Timeout;
 
 // @dynamic
+
+/**
+ * Angular component: widget editor (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-editor`.
+ */
 @Component({
     selector: 'tb-widget-editor',
     templateUrl: './widget-editor.component.html',
     styleUrls: ['./widget-editor.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widget editor UI.
- */
+standalone: false
 })
 export class WidgetEditorComponent extends PageComponent implements OnInit, OnDestroy, HasDirtyFlag {
 
@@ -205,6 +208,12 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     this.initHotKeys();
   }
 
+  /**
+   * init.
+   *
+   * @param data dialog or route input data
+   */
+
   private init(data: any) {
     this.widgetTypeDetails = data.widgetEditorData.widgetTypeDetails;
     this.widget = data.widgetEditorData.widget;
@@ -223,6 +232,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.initSplitLayout();
     this.initAceEditors();
@@ -231,6 +245,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     this.iframe.attr('data-widget', JSON.stringify(this.widget));
     this.iframe.attr('src', '/widget-editor');
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     this.window.removeEventListener('message', this.onWindowMessageListener);
@@ -241,6 +260,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     });
     this.rxSubscriptions.length = 0;
   }
+
+  /**
+   * init hot keys.
+   *
+   */
 
   private initHotKeys(): void {
     this.hotKeys.push(
@@ -291,6 +315,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * init split layout.
+   *
+   */
+
   private initSplitLayout() {
     Split([this.topPanelElmRef.nativeElement, this.bottomPanelElmRef.nativeElement], {
       sizes: [35, 65],
@@ -309,6 +338,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
       cursor: 'col-resize'
     });
   }
+
+  /**
+   * init ace editors.
+   *
+   */
 
   private initAceEditors() {
     this.aceResize$ = new ResizeObserver((entries) => {
@@ -378,12 +412,25 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
 
   }
 
+  /**
+   * set ace editor values.
+   *
+   */
+
   private setAceEditorValues() {
     this.htmlEditor.setValue(this.widget.templateHtml ? this.widget.templateHtml : '', -1);
     this.cssEditor.setValue(this.widget.templateCss ? this.widget.templateCss : '', -1);
     this.jsEditor.setValue(this.controllerScriptBody ? this.controllerScriptBody : '', -1);
     this.updateControllerScriptCompleters();
   }
+
+  /**
+   * POST/PUT entity — create ace editor.
+   *
+   * @param editorElementRef editor element ref (ElementRef)
+   * @param mode mode (string)
+   * @returns Observable<Ace.Editor> observable or value
+   */
 
   private createAceEditor(editorElementRef: ElementRef, mode: string): Observable<Ace.Editor> {
     const editorElement = editorElementRef.nativeElement;
@@ -409,6 +456,12 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * Event handler for ace editor resize.
+   *
+   * @param aceEditor ace editor (Ace.Editor)
+   */
+
   private onAceEditorResize(aceEditor: Ace.Editor) {
     if (this.editorsResizeCafs[aceEditor.id]) {
       this.editorsResizeCafs[aceEditor.id]();
@@ -419,6 +472,12 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
       aceEditor.renderer.updateFull();
     });
   }
+
+  /**
+   * Event handler for window message.
+   *
+   * @param event DOM or Angular event object
+   */
 
   private onWindowMessage(event: MessageEvent) {
     let message: WindowMessage;
@@ -446,6 +505,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * Event handler for widget edit mode inited.
+   *
+   */
+
   private onWidgetEditModeInited() {
     this.iframeWidgetEditModeInited = true;
     if (this.saveWidgetPending || this.saveWidgetAsPending) {
@@ -469,6 +533,12 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * Event handler for widget edit updated.
+   *
+   * @param widget widget (Widget)
+   */
+
   private onWidgetEditUpdated(widget: Widget) {
     this.widget.sizeX = widget.sizeX / 2;
     this.widget.sizeY = widget.sizeY / 2;
@@ -477,9 +547,21 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     this.isDirty = true;
   }
 
+  /**
+   * Event handler for widget edit mode toggled.
+   *
+   * @param mode mode (boolean)
+   */
+
   private onWidgetEditModeToggled(mode: boolean) {
     this.isEditModeWidget = mode;
   }
+
+  /**
+   * Event handler for widget exception.
+   *
+   * @param details details (ExceptionData)
+   */
 
   private onWidgetException(details: ExceptionData) {
     if (!this.gotError) {
@@ -521,6 +603,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * cleanup js errors.
+   *
+   */
+
   private cleanupJsErrors() {
     this.store.dispatch(new ActionNotificationHide({}));
     this.errorMarkers.forEach((errorMarker) => {
@@ -534,6 +621,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
       this.errorAnnotationId = -1;
     }
   }
+
+  /**
+   * commit save widget.
+   *
+   */
 
   private commitSaveWidget() {
     const id = (this.widgetTypeDetails && this.widgetTypeDetails.id) ? this.widgetTypeDetails.id : undefined;
@@ -578,6 +670,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
       }
     });
   }
+
+  /**
+   * commit save widget as.
+   *
+   */
 
   private commitSaveWidgetAs() {
     this.dialog.open<SaveWidgetTypeAsDialogComponent, any,
@@ -624,6 +721,12 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * set widget type details.
+   *
+   * @param widgetTypeDetails widget type details (WidgetTypeDetails)
+   */
+
   private setWidgetTypeDetails(widgetTypeDetails: WidgetTypeDetails) {
     this.widgetTypeDetails = widgetTypeDetails;
     this.widget = detailsToWidgetInfo(this.widgetTypeDetails);
@@ -633,6 +736,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     this.isDirty = false;
     this.updateBreadcrumbs.emit();
   }
+
+  /**
+   * apply widget script.
+   *
+   */
 
   applyWidgetScript(): void {
     this.cleanupJsErrors();
@@ -648,12 +756,22 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     this.iframe[0].contentWindow.location.reload(true);
   }
 
+  /**
+   * undo widget.
+   *
+   */
+
   undoWidget(): void {
     this.widget = deepClone(this.origWidget);
     this.setAceEditorValues();
     this.isDirty = false;
     this.applyWidgetScript();
   }
+
+  /**
+   * POST/PUT entity — save widget.
+   *
+   */
 
   saveWidget(): void {
     if (!this.widget.widgetName) {
@@ -665,10 +783,21 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * POST/PUT entity — save widget as.
+   *
+   */
+
   saveWidgetAs(): void {
     this.saveWidgetAsPending = true;
     this.applyWidgetScript();
   }
+
+  /**
+   * undo disabled.
+   *
+   * @returns boolean observable or value
+   */
 
   undoDisabled(): boolean {
     return !this._isDirty
@@ -676,6 +805,12 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     || this.saveWidgetPending
     || this.saveWidgetAsPending;
   }
+
+  /**
+   * POST/PUT entity — save disabled.
+   *
+   * @returns boolean observable or value
+   */
 
   saveDisabled(): boolean {
     return this.isReadOnly
@@ -685,11 +820,22 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
       || this.saveWidgetAsPending;
   }
 
+  /**
+   * POST/PUT entity — save as disabled.
+   *
+   * @returns boolean observable or value
+   */
+
   saveAsDisabled(): boolean {
     return !this.iframeWidgetEditModeInited
       || this.saveWidgetPending
       || this.saveWidgetAsPending;
   }
+
+  /**
+   * beautify css.
+   *
+   */
 
   beautifyCss(): void {
     beautifyCss(this.widget.templateCss, {indent_size: 4}).subscribe(
@@ -703,6 +849,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * beautify html.
+   *
+   */
+
   beautifyHtml(): void {
     beautifyHtml(this.widget.templateHtml, {indent_size: 4, wrap_line_length: 60}).subscribe(
       (res) => {
@@ -714,6 +865,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
       }
     );
   }
+
+  /**
+   * beautify js.
+   *
+   */
 
   beautifyJs(): void {
     beautifyJs(this.controllerScriptBody, {indent_size: 4, wrap_line_length: 60}).subscribe(
@@ -727,6 +883,12 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * DELETE — remove resource.
+   *
+   * @param index index (number)
+   */
+
   removeResource(index: number) {
     if (index > -1) {
       if (this.widget.resources.splice(index, 1).length > 0) {
@@ -735,10 +897,20 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * POST/PUT entity — add resource.
+   *
+   */
+
   addResource() {
     this.widget.resources.push({url: ''});
     this.isDirty = true;
   }
+
+  /**
+   * widget type changed.
+   *
+   */
 
   widgetTypeChanged() {
     const config: WidgetConfig = JSON.parse(this.widget.defaultConfig);
@@ -797,18 +969,39 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     this.isDirty = true;
   }
 
+  /**
+   * settings form updated.
+   *
+   */
+
   settingsFormUpdated() {
     this.isDirty = true;
     this.updateControllerScriptCompleters();
   }
 
+  /**
+   * data key settings form updated.
+   *
+   */
+
   dataKeySettingsFormUpdated() {
     this.isDirty = true;
   }
 
+  /**
+   * latest data key settings form updated.
+   *
+   */
+
   latestDataKeySettingsFormUpdated() {
     this.isDirty = true;
   }
+
+  /**
+   * edit controller script modules.
+   *
+   * @param button button (MatIconButton)
+   */
 
   editControllerScriptModules($event: Event, button: MatIconButton) {
     if ($event) {
@@ -887,6 +1080,11 @@ export class WidgetEditorComponent extends PageComponent implements OnInit, OnDe
     }
     return '';
   }
+
+  /**
+   * update controller script completers.
+   *
+   */
 
   private updateControllerScriptCompleters() {
     const modulesCompleterObservable = loadModulesCompleter(this.http, this.controllerScriptModules);

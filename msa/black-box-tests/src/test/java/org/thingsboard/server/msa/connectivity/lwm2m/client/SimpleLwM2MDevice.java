@@ -40,8 +40,9 @@ import java.util.TimeZone;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 /**
- * Simple lw m2mdevice.
+ * Simple lw m2mdevice (black-box test infrastructure — LwM2M transport tests).
  */
+
 
 @Slf4j
 @Data
@@ -72,6 +73,14 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
             e.printStackTrace();
         }
     }
+    /**
+     * Read.
+     *
+     * @param identity identity ({@link LwM2mServer})
+     * @param resourceId resource id
+     * @return {@link ReadResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ReadResponse read(LwM2mServer identity, int resourceId) {
@@ -116,6 +125,15 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
                 return super.read(identity, resourceId);
         }
     }
+    /**
+     * Executes the requested data.
+     *
+     * @param identity identity ({@link LwM2mServer})
+     * @param resourceId resource id
+     * @param arguments arguments ({@link Arguments})
+     * @return {@link ExecuteResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public ExecuteResponse execute(LwM2mServer identity, int resourceId, Arguments arguments) {
@@ -125,6 +143,16 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
         log.info("Execute on Device resource /{}/{}/{} {}", getModel().id, getId(), resourceId, withArguments);
         return ExecuteResponse.success();
     }
+    /**
+     * Write.
+     *
+     * @param identity identity ({@link LwM2mServer})
+     * @param replace replace
+     * @param resourceId resource id
+     * @param value value ({@link LwM2mResource})
+     * @return {@link WriteResponse}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public WriteResponse write(LwM2mServer identity, boolean replace, int resourceId, LwM2mResource value) {
@@ -233,15 +261,35 @@ public class SimpleLwM2MDevice extends BaseInstanceEnabler implements Destroyabl
     private long getMemoryTotal() {
         return Runtime.getRuntime().totalMemory() / 1024;
     }
+    /**
+     * Returns available resource ids.
+     *
+     * @param model model ({@link ObjectModel})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<Integer> getAvailableResourceIds(ObjectModel model) {
         return supportedResources;
     }
+    /**
+     * Set lw m2mtest client.
+     *
+     * @param lwM2MTestClient lw m2mtest client ({@link LwM2MTestClient})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void setLwM2MTestClient(LwM2MTestClient lwM2MTestClient){
         this.lwM2MTestClient = lwM2MTestClient;
     }
+    /**
+     * Destroy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void destroy() {

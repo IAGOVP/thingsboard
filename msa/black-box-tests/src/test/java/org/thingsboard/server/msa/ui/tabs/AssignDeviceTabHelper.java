@@ -17,16 +17,25 @@ package org.thingsboard.server.msa.ui.tabs;
 
 import org.openqa.selenium.WebDriver;
 
+
 /**
 
- * Assign device tab helper.
+ * Page object helper for assign device tab UI actions (modal/tab page fragments for UI tests).
 
  */
+
 
 public class AssignDeviceTabHelper extends AssignDeviceTabElements {
     public AssignDeviceTabHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Assigns on customer.
+     *
+     * @param customerTitle customer title ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void assignOnCustomer(String customerTitle) {
         assignOnCustomerField().click();

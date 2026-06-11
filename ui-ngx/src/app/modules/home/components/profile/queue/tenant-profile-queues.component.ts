@@ -36,6 +36,12 @@ import { UtilsService } from '@core/services/utils.service';
 import { guid } from '@core/utils';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: tenant profile queues (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tenant-profile-queues`.
+ */
 @Component({
     selector: 'tb-tenant-profile-queues',
     templateUrl: './tenant-profile-queues.component.html',
@@ -52,10 +58,7 @@ import { takeUntil } from 'rxjs/operators';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: tenant profile queues UI.
- */
+standalone: false
 })
 export class TenantProfileQueuesComponent implements ControlValueAccessor, Validator, OnDestroy, OnInit {
 
@@ -83,12 +86,29 @@ export class TenantProfileQueuesComponent implements ControlValueAccessor, Valid
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.tenantProfileQueuesFormGroup = this.fb.group({
@@ -100,6 +120,11 @@ export class TenantProfileQueuesComponent implements ControlValueAccessor, Valid
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -108,6 +133,12 @@ export class TenantProfileQueuesComponent implements ControlValueAccessor, Valid
   get queuesFormArray(): UntypedFormArray {
     return this.tenantProfileQueuesFormGroup.get('queues') as UntypedFormArray;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -118,6 +149,12 @@ export class TenantProfileQueuesComponent implements ControlValueAccessor, Valid
       this.tenantProfileQueuesFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param queues queues (Array<QueueInfo> | null)
+   */
 
   writeValue(queues: Array<QueueInfo> | null): void {
     if (queues?.length === this.queuesFormArray.length) {
@@ -144,6 +181,13 @@ export class TenantProfileQueuesComponent implements ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * track by queue.
+   *
+   * @param index index (number)
+   * @param queueControl queue control (AbstractControl)
+   */
+
   public trackByQueue(index: number, queueControl: AbstractControl) {
     if (queueControl) {
       return queueControl.value.id;
@@ -151,10 +195,21 @@ export class TenantProfileQueuesComponent implements ControlValueAccessor, Valid
     return null;
   }
 
+  /**
+   * DELETE — remove queue.
+   *
+   * @param index index (number)
+   */
+
   public removeQueue(index: number) {
     (this.tenantProfileQueuesFormGroup.get('queues') as UntypedFormArray).removeAt(index);
     this.idMap.splice(index, 1);
   }
+
+  /**
+   * POST/PUT entity — add queue.
+   *
+   */
 
   public addQueue() {
     const queue = {
@@ -192,9 +247,22 @@ export class TenantProfileQueuesComponent implements ControlValueAccessor, Valid
     }
   }
 
+  /**
+   * get title.
+   *
+   * @returns string observable or value
+   */
+
   getTitle(value): string {
     return this.utils.customTranslation(value, value);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
 
   public validate(c: AbstractControl): ValidationErrors | null {
     return this.tenantProfileQueuesFormGroup.valid ? null : {
@@ -203,6 +271,11 @@ export class TenantProfileQueuesComponent implements ControlValueAccessor, Valid
       },
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const queues: Array<QueueInfo> = this.tenantProfileQueuesFormGroup.get('queues').value;

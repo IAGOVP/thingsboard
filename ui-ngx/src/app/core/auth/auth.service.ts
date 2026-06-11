@@ -48,10 +48,12 @@ import { TwoFactorAuthProviderType, TwoFaProviderInfo } from '@shared/models/two
 import { UserPasswordPolicy } from '@shared/models/settings.models';
 
 /**
- * JWT login, refresh, logout; coordinates with GlobalHttpInterceptor.
+ * JWT login, token refresh, and logout for the web UI.
+ *
+ * <p>Uses `/api/auth/login`, `/api/auth/token`, `/api/auth/logout`.
  */
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class AuthService {
 
@@ -80,14 +82,29 @@ export class AuthService {
     return localStorage.getItem(key);
   }
 
+  /**
+   * is token valid.
+   *
+   */
+
   private static isTokenValid(prefix) {
     const clientExpiration = AuthService._storeGet(prefix + '_expiration');
     return clientExpiration && Number(clientExpiration) > (new Date().valueOf() + 2000);
   }
 
+  /**
+   * is jwt token valid.
+   *
+   */
+
   public static isJwtTokenValid() {
     return AuthService.isTokenValid('jwt_token');
   }
+
+  /**
+   * clear token data.
+   *
+   */
 
   private static clearTokenData() {
     localStorage.removeItem('jwt_token');
@@ -96,9 +113,19 @@ export class AuthService {
     localStorage.removeItem('refresh_token_expiration');
   }
 
+  /**
+   * get jwt token.
+   *
+   */
+
   public static getJwtToken() {
     return AuthService._storeGet('jwt_token');
   }
+
+  /**
+   * reload user.
+   *
+   */
 
   public reloadUser() {
     this.loadUser(true).subscribe(
@@ -112,6 +139,24 @@ export class AuthService {
       }
     );
   }
+
+
+  /**
+
+
+   * login.
+
+
+   *
+
+
+   * @param loginRequest login request (LoginRequest)
+
+
+   * @returns Observable<LoginResponse> observable or value
+
+
+   */
 
 
   public login(loginRequest: LoginRequest): Observable<LoginResponse> {
@@ -128,6 +173,14 @@ export class AuthService {
       ));
   }
 
+  /**
+   * check two fa verification code.
+   *
+   * @param providerType provider type (TwoFactorAuthProviderType)
+   * @param verificationCode verification code (number)
+   * @returns Observable<LoginResponse> observable or value
+   */
+
   public checkTwoFaVerificationCode(providerType: TwoFactorAuthProviderType, verificationCode: number): Observable<LoginResponse> {
     return this.http.post<LoginResponse>
     (`/api/auth/2fa/verification/check?providerType=${providerType}&verificationCode=${verificationCode}`,
@@ -138,6 +191,13 @@ export class AuthService {
       ));
   }
 
+  /**
+   * public login.
+   *
+   * @param publicId public id (string)
+   * @returns Observable<LoginResponse> observable or value
+   */
+
   public publicLogin(publicId: string): Observable<LoginResponse> {
     const publicLoginRequest: PublicLoginRequest = {
       publicId
@@ -145,10 +205,25 @@ export class AuthService {
     return this.http.post<LoginResponse>('/api/auth/login/public', publicLoginRequest, defaultHttpOptions());
   }
 
+  /**
+   * send reset password link.
+   *
+   * @param email email (string)
+   */
+
   public sendResetPasswordLink(email: string) {
     return this.http.post('/api/noauth/resetPasswordByEmail',
       {email}, defaultHttpOptions());
   }
+
+  /**
+   * activate.
+   *
+   * @param activateToken activate token (string)
+   * @param password password (string)
+   * @param sendActivationMail send activation mail (boolean)
+   * @returns Observable<LoginResponse> observable or value
+   */
 
   public activate(activateToken: string, password: string, sendActivationMail: boolean): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`/api/noauth/activate?sendActivationMail=${sendActivationMail}`,
@@ -159,9 +234,25 @@ export class AuthService {
       ));
   }
 
+  /**
+   * reset password.
+   *
+   * @param resetToken reset token (string)
+   * @param password password (string)
+   * @returns Observable<void> observable or value
+   */
+
   public resetPassword(resetToken: string, password: string): Observable<void> {
     return this.http.post<void>('/api/noauth/resetPassword', {resetToken, password}, defaultHttpOptions());
   }
+
+  /**
+   * change password.
+   *
+   * @param currentPassword current password (string)
+   * @param newPassword new password (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public changePassword(currentPassword: string, newPassword: string, config?: RequestConfig) {
     return this.http.post('/api/auth/changePassword', {currentPassword, newPassword}, defaultHttpOptionsFromConfig(config)).pipe(
@@ -171,20 +262,45 @@ export class AuthService {
       ));
   }
 
+  /**
+   * get user password policy.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public getUserPasswordPolicy(config?: RequestConfig) {
     return this.http.get<UserPasswordPolicy>(`/api/noauth/userPasswordPolicy`, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * activate by email code.
+   *
+   * @param emailCode email code (string)
+   * @returns Observable<LoginResponse> observable or value
+   */
 
   public activateByEmailCode(emailCode: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`/api/noauth/activateByEmailCode?emailCode=${emailCode}`,
       null, defaultHttpOptions());
   }
 
+  /**
+   * resend email activation.
+   *
+   * @param email email (string)
+   */
+
   public resendEmailActivation(email: string) {
     const encodeEmail = encodeURIComponent(email);
     return this.http.post(`/api/noauth/resendEmailActivation?email=${encodeEmail}`,
       null, defaultHttpOptions());
   }
+
+  /**
+   * login as user.
+   *
+   * @param userId user UUID
+   */
 
   public loginAsUser(userId: string) {
     return this.http.get<LoginResponse>(`/api/user/${userId}/token`, defaultHttpOptions()).pipe(
@@ -193,6 +309,12 @@ export class AuthService {
         }
       ));
   }
+
+  /**
+   * logout.
+   *
+   * @param captureLastUrl capture last url (boolean)
+   */
 
   public logout(captureLastUrl: boolean = false, ignoreRequest = false) {
     if (captureLastUrl) {
@@ -212,9 +334,21 @@ export class AuthService {
     }
   }
 
+  /**
+   * notify user loaded.
+   *
+   * @param isUserLoaded is user loaded (boolean)
+   */
+
   private notifyUserLoaded(isUserLoaded: boolean) {
     this.store.dispatch(new ActionAuthLoadUser({isUserLoaded}));
   }
+
+  /**
+   * goto default place.
+   *
+   * @param isAuthenticated is authenticated (boolean)
+   */
 
   public gotoDefaultPlace(isAuthenticated: boolean) {
     if (!isMobileApp()) {
@@ -225,6 +359,12 @@ export class AuthService {
       });
     }
   }
+
+  /**
+   * load oauth2clients.
+   *
+   * @returns Observable<Array<OAuth2ClientLoginInfo>> observable or value
+   */
 
   public loadOAuth2Clients(): Observable<Array<OAuth2ClientLoginInfo>> {
     const url = '/api/noauth/oauth2Clients?platform=' + PlatformType.WEB;
@@ -237,6 +377,12 @@ export class AuthService {
     );
   }
 
+  /**
+   * get available two fa login providers.
+   *
+   * @returns Observable<Array<TwoFaProviderInfo>> observable or value
+   */
+
   public getAvailableTwoFaLoginProviders(): Observable<Array<TwoFaProviderInfo>> {
     return this.http.get<Array<TwoFaProviderInfo>>(`/api/auth/2fa/providers`, defaultHttpOptions()).pipe(
       catchError(() => of([])),
@@ -246,6 +392,12 @@ export class AuthService {
     );
   }
 
+  /**
+   * get available two fa providers.
+   *
+   * @returns Observable<Array<TwoFaProviderInfo>> observable or value
+   */
+
   public getAvailableTwoFaProviders(): Observable<Array<TwoFaProviderInfo>> {
     return this.http.get<Array<TwoFaProviderInfo>>(`/api/2fa/providers`, defaultHttpOptions()).pipe(
       catchError(() => of([])),
@@ -254,6 +406,15 @@ export class AuthService {
       })
     );
   }
+
+  /**
+   * force default place.
+   *
+   * @param authState auth state (AuthState)
+   * @param path path (string)
+   * @param params params (any)
+   * @returns boolean observable or value
+   */
 
   public forceDefaultPlace(authState?: AuthState, path?: string, params?: any): boolean {
     if (authState && authState.authUser) {
@@ -276,6 +437,16 @@ export class AuthService {
     }
     return false;
   }
+
+  /**
+   * default url.
+   *
+   * @param isAuthenticated is authenticated (boolean)
+   * @param authState auth state (AuthState)
+   * @param path path (string)
+   * @param params params (any)
+   * @returns UrlTree observable or value
+   */
 
   public defaultUrl(isAuthenticated: boolean, authState?: AuthState, path?: string, params?: any): UrlTree {
     let result: UrlTree = null;
@@ -310,6 +481,12 @@ export class AuthService {
     }
     return result;
   }
+
+  /**
+   * load user.
+   *
+   * @returns Observable<AuthPayload> observable or value
+   */
 
   private loadUser(doTokenRefresh): Observable<AuthPayload> {
     const authUser = getCurrentAuthUser(this.store);
@@ -374,6 +551,12 @@ export class AuthService {
     }
   }
 
+  /**
+   * show login error dialog.
+   *
+   * @param loginError login error (string)
+   */
+
   private showLoginErrorDialog(loginError: string) {
     this.translate.get(['login.error', 'action.close']).subscribe(
       (translations) => {
@@ -390,6 +573,13 @@ export class AuthService {
       }
     );
   }
+
+  /**
+   * procceed jwt token validate.
+   *
+   * @param doTokenRefresh do token refresh (boolean)
+   * @returns Observable<AuthPayload> observable or value
+   */
 
   private procceedJwtTokenValidate(doTokenRefresh?: boolean): Observable<AuthPayload> {
     const loadUserSubject = new ReplaySubject<AuthPayload>();
@@ -455,6 +645,12 @@ export class AuthService {
     return loadUserSubject;
   }
 
+  /**
+   * load system params.
+   *
+   * @returns Observable<SysParamsState> observable or value
+   */
+
   private loadSystemParams(): Observable<SysParamsState> {
     return this.http.get<SysParams>('/api/system/params', defaultHttpOptions()).pipe(
       map((sysParams) => {
@@ -464,6 +660,12 @@ export class AuthService {
       catchError(() => of({} as SysParamsState))
     );
   }
+
+  /**
+   * refresh jwt token.
+   *
+   * @returns Observable<LoginResponse> observable or value
+   */
 
   public refreshJwtToken(loadUserElseStoreJwtToken = true): Observable<LoginResponse> {
     let response: Observable<LoginResponse> = this.refreshTokenSubject;
@@ -505,6 +707,12 @@ export class AuthService {
     return response;
   }
 
+  /**
+   * updated auth user from token.
+   *
+   * @param token token (string)
+   */
+
   private updatedAuthUserFromToken(token: string) {
     const authUser = getCurrentAuthUser(this.store);
     const tokenData = this.jwtHelper.decodeToken(token);
@@ -516,6 +724,12 @@ export class AuthService {
       }));
     }
   }
+
+  /**
+   * validate jwt token.
+   *
+   * @returns Observable<void> observable or value
+   */
 
   private validateJwtToken(doRefresh): Observable<void> {
     const subject = new ReplaySubject<void>();
@@ -541,9 +755,20 @@ export class AuthService {
     return subject;
   }
 
+  /**
+   * refresh token pending.
+   *
+   */
+
   public refreshTokenPending() {
     return this.refreshTokenSubject !== null;
   }
+
+  /**
+   * set user from jwt token.
+   *
+   * @returns Observable<boolean> observable or value
+   */
 
   public setUserFromJwtToken(jwtToken, refreshToken, notify): Observable<boolean> {
     const authenticatedSubject = new ReplaySubject<boolean>();
@@ -588,10 +813,22 @@ export class AuthService {
     return authenticatedSubject;
   }
 
+  /**
+   * update and validate tokens.
+   *
+   * @param notify notify (boolean)
+   */
+
   private updateAndValidateTokens(jwtToken, refreshToken, notify: boolean) {
     this.updateAndValidateToken(jwtToken, 'jwt_token', notify);
     this.updateAndValidateToken(refreshToken, 'refresh_token', notify);
   }
+
+  /**
+   * parse public id.
+   *
+   * @returns string observable or value
+   */
 
   public parsePublicId(): string {
     const token = AuthService.getJwtToken();
@@ -604,13 +841,29 @@ export class AuthService {
     return null;
   }
 
+  /**
+   * notify unauthenticated.
+   *
+   */
+
   private notifyUnauthenticated() {
     this.store.dispatch(new ActionAuthUnauthenticated());
   }
 
+  /**
+   * notify authenticated.
+   *
+   * @param authPayload auth payload (AuthPayload)
+   */
+
   private notifyAuthenticated(authPayload: AuthPayload) {
     this.store.dispatch(new ActionAuthAuthenticated(authPayload));
   }
+
+  /**
+   * update and validate token.
+   *
+   */
 
   private updateAndValidateToken(token, prefix, notify) {
     let valid = false;
@@ -631,9 +884,21 @@ export class AuthService {
     }
   }
 
+  /**
+   * clear jwt token.
+   *
+   */
+
   private clearJwtToken() {
     this.setUserFromJwtToken(null, null, true);
   }
+
+  /**
+   * user force fullscreen.
+   *
+   * @param authPayload auth payload (AuthPayload)
+   * @returns boolean observable or value
+   */
 
   private userForceFullscreen(authPayload: AuthPayload): boolean {
     return (authPayload.authUser && authPayload.authUser.isPublic) ||
@@ -643,9 +908,23 @@ export class AuthService {
         authPayload.userDetails.additionalInfo.defaultDashboardFullscreen === true);
   }
 
+  /**
+   * user has profile.
+   *
+   * @param authUser auth user (AuthUser)
+   * @returns boolean observable or value
+   */
+
   private userHasProfile(authUser: AuthUser): boolean {
     return authUser && !authUser.isPublic;
   }
+
+  /**
+   * user has default dashboard.
+   *
+   * @param authState auth state (AuthState)
+   * @returns boolean observable or value
+   */
 
   private userHasDefaultDashboard(authState: AuthState): boolean {
     if (authState && authState.userDetails && authState.userDetails.additionalInfo

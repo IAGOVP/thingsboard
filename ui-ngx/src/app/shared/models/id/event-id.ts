@@ -16,11 +16,11 @@
 
 import { HasUUID } from '@shared/models/id/has-uuid';
 
+
 /**
-
- * TypeScript models and enums for event id.
-
+ * TypeScript interfaces, types, and enums for event id (shared TypeScript models).
  */
+
 
 export class EventId implements HasUUID {
   id: string;

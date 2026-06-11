@@ -18,11 +18,11 @@ import { Widget, WidgetTypeDetails } from '@app/shared/models/widget.models';
 import { DashboardLayoutId } from '@shared/models/dashboard.models';
 import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
 
+
 /**
-
- * TypeScript models and enums for import widget result.
-
+ * Import widget result (ThingsBoard web UI).
  */
+
 
 export interface ImportWidgetResult {
   widget: Widget;

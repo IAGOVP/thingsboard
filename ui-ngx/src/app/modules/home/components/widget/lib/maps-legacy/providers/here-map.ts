@@ -20,11 +20,11 @@ import { DEFAULT_ZOOM_LEVEL, WidgetUnitedMapSettings } from '../map-models';
 import { WidgetContext } from '@home/models/widget-component.models';
 import { isDefinedAndNotNull } from '@core/utils';
 
+
 /**
-
- * heremap.
-
+ * Heremap (ThingsBoard web UI).
  */
+
 
 export class HEREMap extends LeafletMap {
     constructor(ctx: WidgetContext, $container: HTMLElement, options: WidgetUnitedMapSettings) {

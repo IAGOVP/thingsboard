@@ -15,11 +15,13 @@
  */
 package org.thingsboard.monitoring.data;
 
+
 /**
 
- * Constants for latency metric names (login, subscribe, per-transport request/ws).
+ * Constants for latency metric names (login, subscribe, per-transport request/WebSocket).
 
  */
+
 
 public class Latencies {
 
@@ -31,6 +33,13 @@ public class Latencies {
     public static String request(String key) {
         return String.format("%sRequest", key);
     }
+    /**
+     * Ws update.
+     *
+     * @param key monitored service step identifier
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String wsUpdate(String key) {
         return String.format("%sWsUpdate", key);

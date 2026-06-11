@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: rule chain output (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flow-node-rule-chain-output-config`.
+ */
 @Component({
     selector: 'tb-flow-node-rule-chain-output-config',
     templateUrl: './rule-chain-output.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: rule chain output UI.
- */
+standalone: false
 })
 export class RuleChainOutputComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class RuleChainOutputComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.ruleChainOutputConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.ruleChainOutputConfigForm = this.fb.group({});

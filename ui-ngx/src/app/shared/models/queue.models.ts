@@ -34,11 +34,11 @@ export enum QueueSubmitStrategyTypes {
   BATCH = 'BATCH'
 }
 
+
 /**
-
- * TypeScript models and enums for queue strategy data.
-
+ * TypeScript interfaces, types, and enums for queue strategy data (shared TypeScript models).
  */
+
 
 export interface QueueStrategyData {
   label: string;

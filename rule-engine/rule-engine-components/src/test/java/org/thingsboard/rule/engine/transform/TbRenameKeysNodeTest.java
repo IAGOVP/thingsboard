@@ -48,11 +48,13 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+
 /**
 
- * Unit test for tb rename keys node rule node.
+ * Unit test for tb rename keys node (message transformation and originator change nodes).
 
  */
+
 
 public class TbRenameKeysNodeTest {
     DeviceId deviceId;

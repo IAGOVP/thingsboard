@@ -35,6 +35,12 @@ import { IntervalType } from '@shared/models/telemetry/telemetry.models';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
+
+/**
+ * Angular component: timeinterval (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timeinterval`.
+ */
 @Component({
     selector: 'tb-timeinterval',
     templateUrl: './timeinterval.component.html',
@@ -46,10 +52,7 @@ import { Subject } from 'rxjs';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: timeinterval UI.
- */
+standalone: false
 })
 export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnChanges, OnDestroy {
 
@@ -155,6 +158,11 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     ).subscribe((days) => this.onDaysChange(days));
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.boundInterval();
   }
@@ -166,6 +174,12 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (isDefined(this.propagateChangeValue)) {
@@ -173,8 +187,20 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -185,11 +211,22 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param interval interval (Interval)
+   */
+
   writeValue(interval: Interval): void {
     this.modelValue = interval;
     this.rendered = true;
     this.updateIntervalValue();
   }
+
+  /**
+   * update interval value.
+   *
+   */
 
   private updateIntervalValue(forceBoundInterval = false) {
     if (typeof this.modelValue !== 'undefined') {
@@ -216,6 +253,12 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     }
   }
 
+  /**
+   * set interval.
+   *
+   * @param interval interval (Interval)
+   */
+
   private setInterval(interval: Interval) {
     if (!this.advanced) {
       this.timeintervalFormGroup.get('interval').patchValue(interval, {emitEvent: false});
@@ -224,6 +267,12 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
       this.setCustomInterval(interval);
     }
   }
+
+  /**
+   * set custom interval.
+   *
+   * @param interval interval (Interval)
+   */
 
   private setCustomInterval(interval: Interval) {
     const intervalSeconds = Math.floor(IntervalMath.numberValue(interval) / 1000);
@@ -234,6 +283,11 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
       secs: intervalSeconds % 60
     }, {emitEvent: false});
   }
+
+  /**
+   * bound interval.
+   *
+   */
 
   private boundInterval(updateToPreferred = false) {
     const min = this.timeService.boundMinInterval(this.minValue);
@@ -268,6 +322,11 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   private updateView(updateToPreferred = false) {
     if (!this.rendered) {
       return;
@@ -290,6 +349,12 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     this.boundInterval(updateToPreferred);
   }
 
+  /**
+   * calculate interval ms.
+   *
+   * @returns number observable or value
+   */
+
   private calculateIntervalMs(): number {
     const customInterval = this.timeintervalFormGroup.get('customInterval').value;
     return (customInterval.days * 86400 +
@@ -297,6 +362,11 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
       customInterval.mins * 60 +
       customInterval.secs) * 1000;
   }
+
+  /**
+   * Event handler for interval change.
+   *
+   */
 
   onIntervalChange() {
     const customIntervalSelected = this.timeintervalFormGroup.get('interval').value === IntervalType.CUSTOM;
@@ -308,6 +378,12 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     }
     this.updateView();
   }
+
+  /**
+   * Event handler for secs change.
+   *
+   * @param secs secs (number)
+   */
 
   private onSecsChange(secs: number) {
     const customInterval = this.timeintervalFormGroup.get('customInterval').value;
@@ -327,6 +403,12 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     }
   }
 
+  /**
+   * Event handler for mins change.
+   *
+   * @param mins mins (number)
+   */
+
   private onMinsChange(mins: number) {
     const customInterval = this.timeintervalFormGroup.get('customInterval').value;
     if (typeof mins === 'undefined') {
@@ -344,6 +426,12 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
       this.timeintervalFormGroup.get('customInterval.hours').patchValue(customInterval.hours + 1, {emitEvent: true});
     }
   }
+
+  /**
+   * Event handler for hours change.
+   *
+   * @param hours hours (number)
+   */
 
   private onHoursChange(hours: number) {
     const customInterval = this.timeintervalFormGroup.get('customInterval').value;
@@ -363,6 +451,12 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
     }
   }
 
+  /**
+   * Event handler for days change.
+   *
+   * @param days days (number)
+   */
+
   private onDaysChange(days: number) {
     if (typeof days === 'undefined') {
       return;
@@ -371,6 +465,11 @@ export class TimeintervalComponent implements OnInit, ControlValueAccessor, OnCh
       this.timeintervalFormGroup.get('customInterval.days').patchValue(0, {emitEvent: false});
     }
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();

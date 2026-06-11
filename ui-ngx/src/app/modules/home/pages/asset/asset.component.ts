@@ -26,14 +26,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { AssetInfo } from '@app/shared/models/asset.models';
 import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
 
+
+/**
+ * Angular component: asset (home/asset pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-asset`.
+ */
 @Component({
     selector: 'tb-asset',
     templateUrl: './asset.component.html',
     styleUrls: ['./asset.component.scss'],
-    standalone: false
-/**
- * Angular component: asset UI.
- */
+standalone: false
 })
 export class AssetComponent extends EntityComponent<AssetInfo> {
 
@@ -50,10 +53,20 @@ export class AssetComponent extends EntityComponent<AssetInfo> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.assetScope = this.entitiesTableConfig.componentsData.assetScope;
     super.ngOnInit();
   }
+
+  /**
+   * hide delete.
+   *
+   */
 
   hideDelete() {
     if (this.entitiesTableConfig) {
@@ -63,9 +76,23 @@ export class AssetComponent extends EntityComponent<AssetInfo> {
     }
   }
 
+  /**
+   * is assigned to customer.
+   *
+   * @param entity entity (AssetInfo)
+   * @returns boolean observable or value
+   */
+
   isAssignedToCustomer(entity: AssetInfo): boolean {
     return entity && entity.customerId && entity.customerId.id !== NULL_UUID;
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (AssetInfo)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: AssetInfo): UntypedFormGroup {
     return this.fb.group(
@@ -83,6 +110,12 @@ export class AssetComponent extends EntityComponent<AssetInfo> {
     );
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (AssetInfo)
+   */
+
   updateForm(entity: AssetInfo) {
     this.entityForm.patchValue({name: entity.name});
     this.entityForm.patchValue({assetProfileId: entity.assetProfileId});
@@ -90,6 +123,18 @@ export class AssetComponent extends EntityComponent<AssetInfo> {
     this.entityForm.patchValue({customerId: entity.customerId});
     this.entityForm.patchValue({additionalInfo: {description: entity.additionalInfo ? entity.additionalInfo.description : ''}});
   }
+
+
+  /**
+
+
+   * Event handler for asset id copied.
+
+
+   *
+
+
+   */
 
 
   onAssetIdCopied($event) {
@@ -102,6 +147,11 @@ export class AssetComponent extends EntityComponent<AssetInfo> {
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * Event handler for asset profile updated.
+   *
+   */
 
   onAssetProfileUpdated() {
     this.entitiesTableConfig.updateData(false, false);

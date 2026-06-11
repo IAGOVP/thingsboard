@@ -38,6 +38,12 @@ import {
 } from '@shared/models/widget-settings.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: value source data key (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-source-data-key`.
+ */
 @Component({
     selector: 'tb-value-source-data-key',
     templateUrl: './value-source-data-key.component.html',
@@ -49,10 +55,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: value source data key UI.
- */
+standalone: false
 })
 export class ValueSourceDataKeyComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -91,6 +94,11 @@ export class ValueSourceDataKeyComponent extends PageComponent implements OnInit
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.valueSourceFormGroup = this.fb.group({
       type: [ValueSourceType.constant, []],
@@ -121,12 +129,30 @@ export class ValueSourceDataKeyComponent extends PageComponent implements OnInit
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -139,6 +165,12 @@ export class ValueSourceDataKeyComponent extends PageComponent implements OnInit
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ValueSourceConfig)
+   */
 
   writeValue(value: ValueSourceConfig): void {
     this.modelValue = value;
@@ -165,6 +197,11 @@ export class ValueSourceDataKeyComponent extends PageComponent implements OnInit
     this.cd.markForCheck();
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: ValueSourceConfig = this.valueSourceFormGroup.value;
     this.modelValue.type = value.type;
@@ -182,6 +219,11 @@ export class ValueSourceDataKeyComponent extends PageComponent implements OnInit
     }
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators(): void {
     const type: ValueSourceType = this.valueSourceFormGroup.get('type').value;

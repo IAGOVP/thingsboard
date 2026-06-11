@@ -20,14 +20,17 @@ import { MobileAppBundleInfo } from '@shared/models/mobile-app.models';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: mobile bundle table header (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-bundle-table-header`.
+ */
 @Component({
     selector: 'tb-mobile-bundle-table-header',
     templateUrl: './mobile-bundle-table-header.component.html',
     styleUrls: ['./mobile-bundle-table-header.component.scss'],
-    standalone: false
-/**
- * Angular component: mobile bundle table header UI.
- */
+standalone: false
 })
 export class MobileBundleTableHeaderComponent extends EntityTableHeaderComponent<MobileAppBundleInfo> {
 

@@ -64,8 +64,9 @@ import {
 } from '@home/pages/edge/edge-instructions-dialog.component';
 import { AddEntityDialogComponent } from '@home/components/entity/add-entity-dialog.component';
 /**
- * Route resolver: loads edges table config before activate.
+ * Route resolver: preloads data for edges table config (home/edge pages).
  */
+
 
 @Injectable()
 export class EdgesTableConfigResolver  {
@@ -109,6 +110,13 @@ export class EdgesTableConfigResolver  {
     this.config.headerComponent = EdgeTableHeaderComponent;
   }
 
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<EntityTableConfig<EdgeInfo>> observable or value
+   */
+
   resolve(route: ActivatedRouteSnapshot): Observable<EntityTableConfig<EdgeInfo>> {
     const routeParams = route.params;
     this.config.componentsData = {
@@ -150,6 +158,13 @@ export class EdgesTableConfigResolver  {
     );
   }
 
+  /**
+   * configure columns.
+   *
+   * @param edgeScope edge scope (string)
+   * @returns Array<EntityTableColumn<EdgeInfo>> observable or value
+   */
+
   configureColumns(edgeScope: string): Array<EntityTableColumn<EdgeInfo>> {
     const columns: Array<EntityTableColumn<EdgeInfo>> = [
       new DateEntityTableColumn<EdgeInfo>('createdTime', 'common.created-time', this.datePipe, '150px'),
@@ -169,6 +184,12 @@ export class EdgesTableConfigResolver  {
     return columns;
   }
 
+  /**
+   * configure entity functions.
+   *
+   * @param edgeScope edge scope (string)
+   */
+
   configureEntityFunctions(edgeScope: string): void {
     if (edgeScope === 'tenant') {
       this.config.entitiesFetchFunction = pageLink =>
@@ -186,6 +207,13 @@ export class EdgesTableConfigResolver  {
       this.config.deleteEntity = id => this.edgeService.unassignEdgeFromCustomer(id.id);
     }
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @param edgeScope edge scope (string)
+   * @returns Array<CellActionDescriptor<EdgeInfo>> observable or value
+   */
 
   configureCellActions(edgeScope: string): Array<CellActionDescriptor<EdgeInfo>> {
     const actions: Array<CellActionDescriptor<EdgeInfo>> = [];
@@ -294,6 +322,13 @@ export class EdgesTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * configure group actions.
+   *
+   * @param edgeScope edge scope (string)
+   * @returns Array<GroupActionDescriptor<EdgeInfo>> observable or value
+   */
+
   configureGroupActions(edgeScope: string): Array<GroupActionDescriptor<EdgeInfo>> {
     const actions: Array<GroupActionDescriptor<EdgeInfo>> = [];
     if (edgeScope === 'tenant') {
@@ -318,6 +353,13 @@ export class EdgesTableConfigResolver  {
     }
     return actions;
   }
+
+  /**
+   * configure add actions.
+   *
+   * @param edgeScope edge scope (string)
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
 
   configureAddActions(edgeScope: string): Array<HeaderActionDescriptor> {
     const actions: Array<HeaderActionDescriptor> = [];
@@ -350,6 +392,11 @@ export class EdgesTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * import edges.
+   *
+   */
+
   importEdges($event: Event) {
     this.homeDialogs.importEntities(EntityType.EDGE).subscribe((res) => {
       if (res) {
@@ -358,6 +405,11 @@ export class EdgesTableConfigResolver  {
       }
     });
   }
+
+  /**
+   * POST/PUT entity — add edges to customer.
+   *
+   */
 
   addEdgesToCustomer($event: Event) {
     if ($event) {
@@ -379,6 +431,13 @@ export class EdgesTableConfigResolver  {
       });
   }
 
+  /**
+   * open edge.
+   *
+   * @param edge edge (Edge)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   private openEdge($event: Event, edge: Edge, config: EntityTableConfig<EdgeInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -386,6 +445,12 @@ export class EdgesTableConfigResolver  {
     const url = this.router.createUrlTree([edge.id.id], {relativeTo: config.getActivatedRoute()});
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * make public.
+   *
+   * @param edge edge (Edge)
+   */
 
   makePublic($event: Event, edge: Edge) {
     if ($event) {
@@ -408,6 +473,13 @@ export class EdgesTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * open edge entities by type.
+   *
+   * @param edge edge (Edge)
+   * @param entityType entity type (EntityType)
+   */
 
   openEdgeEntitiesByType($event: Event, edge: Edge, entityType: EntityType) {
     if ($event) {
@@ -437,6 +509,12 @@ export class EdgesTableConfigResolver  {
     this.router.navigateByUrl(`edgeManagement/instances/${edge.id.id}/${suffix}`);
   }
 
+  /**
+   * assign to customer.
+   *
+   * @param edgesIds edges ids (Array<EdgeId>)
+   */
+
   assignToCustomer($event: Event, edgesIds: Array<EdgeId>) {
     if ($event) {
       $event.stopPropagation();
@@ -456,6 +534,12 @@ export class EdgesTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * unassign from customer.
+   *
+   * @param edge edge (EdgeInfo)
+   */
 
   unassignFromCustomer($event: Event, edge: EdgeInfo) {
     if ($event) {
@@ -489,6 +573,12 @@ export class EdgesTableConfigResolver  {
     );
   }
 
+  /**
+   * unassign edges from customer.
+   *
+   * @param edges edges (Array<EdgeInfo>)
+   */
+
   unassignEdgesFromCustomer($event: Event, edges: Array<EdgeInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -517,6 +607,11 @@ export class EdgesTableConfigResolver  {
     );
   }
 
+  /**
+   * sync edge.
+   *
+   */
+
   syncEdge($event, edge) {
     if ($event) {
       $event.stopPropagation();
@@ -534,6 +629,11 @@ export class EdgesTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * POST/PUT entity — add edge.
+   *
+   */
 
   addEdge() {
     this.dialog.open<AddEntityDialogComponent, AddEntityDialogData<EdgeInfo>,
@@ -561,6 +661,12 @@ export class EdgesTableConfigResolver  {
     );
   }
 
+  /**
+   * open instructions.
+   *
+   * @param edge edge (EdgeInfo)
+   */
+
   openInstructions($event: Event, edge: EdgeInfo, afterAdd = false, upgradeAvailable = false) {
     if ($event) {
       $event.stopPropagation();
@@ -581,6 +687,14 @@ export class EdgesTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * Event handler for edge action.
+   *
+   * @param action action (EntityAction<EdgeInfo>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
 
   onEdgeAction(action: EntityAction<EdgeInfo>, config: EntityTableConfig<EdgeInfo>): boolean {
     switch (action.action) {

@@ -32,7 +32,7 @@ import { isObject } from '@core/utils';
 import { MobileService } from '@core/services/mobile.service';
 
 /**
- * Route guard: auth.
+ * Route guard: auth (route guards).
  */
 @Injectable({
   providedIn: 'root'
@@ -48,6 +48,12 @@ export class AuthGuard  {
               private mobileService: MobileService,
               private zone: NgZone) {}
 
+  /**
+   * get auth state.
+   *
+   * @returns Observable<AuthState> observable or value
+   */
+
   getAuthState(): Observable<AuthState> {
     return this.store.pipe(
       select(selectAuth),
@@ -56,6 +62,13 @@ export class AuthGuard  {
       enterZone(this.zone)
     );
   }
+
+  /**
+   * can activate.
+   *
+   * @param next next (ActivatedRouteSnapshot)
+   * @param state state (RouterStateSnapshot)
+   */
 
   canActivate(next: ActivatedRouteSnapshot,
               state: RouterStateSnapshot) {
@@ -167,6 +180,13 @@ export class AuthGuard  {
       catchError((err => { console.error(err); return of(false); } ))
     );
   }
+
+  /**
+   * can activate child.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @param state state (RouterStateSnapshot)
+   */
 
   canActivateChild(
     route: ActivatedRouteSnapshot,

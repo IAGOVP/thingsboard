@@ -22,11 +22,13 @@ import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 /**
 
- * Unit test for processing strategy rule node.
+ * Unit test for processing strategy (telemetry and attribute persistence nodes).
 
  */
+
 
 class ProcessingStrategyTest {
 

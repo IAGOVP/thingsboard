@@ -28,8 +28,9 @@ import org.thingsboard.monitoring.service.transport.TransportHealthChecker;
 
 import java.time.Duration;
 /**
- * POSTs test telemetry over HTTP transport API.
+ * POSTs test telemetry over the HTTP device API and validates WebSocket echo.
  */
+
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -41,6 +42,12 @@ public class HttpTransportHealthChecker extends TransportHealthChecker<HttpTrans
     protected HttpTransportHealthChecker(HttpTransportMonitoringConfig config, TransportMonitoringTarget target) {
         super(config, target);
     }
+    /**
+     * Init client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void initClient() throws Exception {
@@ -52,15 +59,34 @@ public class HttpTransportHealthChecker extends TransportHealthChecker<HttpTrans
             log.debug("Initialized HTTP client");
         }
     }
+    /**
+     * Send test payload.
+     *
+     * @param payload payload ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void sendTestPayload(String payload) throws Exception {
         String accessToken = target.getDevice().getCredentials().getCredentialsId();
         restTemplate.postForObject(target.getBaseUrl() + "/api/v1/" + accessToken + "/telemetry", payload, String.class);
     }
+    /**
+     * Destroy client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void destroyClient() throws Exception {}
+    /**
+     * Returns transport type.
+     *
+     * @return {@link TransportType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TransportType getTransportType() {

@@ -14,6 +14,9 @@
 /// limitations under the License.
 ///
 
+/**
+ * TypeScript interfaces, types, and enums for api usage state value (shared TypeScript models).
+ */
 export enum ApiUsageStateValue {
   ENABLED = 'ENABLED',
   WARNING = 'WARNING',

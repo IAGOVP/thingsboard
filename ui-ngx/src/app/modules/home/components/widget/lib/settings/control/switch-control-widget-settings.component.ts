@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { switchRpcDefaultSettings } from '@home/components/widget/lib/settings/control/switch-rpc-settings.component';
 import { deepClone } from '@core/utils';
 
+
+/**
+ * Angular component: switch control widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-switch-control-widget-settings`.
+ */
 @Component({
     selector: 'tb-switch-control-widget-settings',
     templateUrl: './switch-control-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: switch control widget settings UI.
- */
+standalone: false
 })
 export class SwitchControlWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -44,9 +47,21 @@ export class SwitchControlWidgetSettingsComponent extends WidgetSettingsComponen
     return this.widgetConfig?.config?.targetDevice;
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.switchControlWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -56,6 +71,12 @@ export class SwitchControlWidgetSettingsComponent extends WidgetSettingsComponen
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.switchControlWidgetSettingsForm = this.fb.group({
       title: [settings.title, []],
@@ -63,6 +84,13 @@ export class SwitchControlWidgetSettingsComponent extends WidgetSettingsComponen
       switchRpcSettings: [settings.switchRpcSettings, []]
     });
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     const switchRpcSettings = deepClone(settings, ['title', 'showOnOffLabels']);
@@ -72,6 +100,13 @@ export class SwitchControlWidgetSettingsComponent extends WidgetSettingsComponen
       switchRpcSettings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return {

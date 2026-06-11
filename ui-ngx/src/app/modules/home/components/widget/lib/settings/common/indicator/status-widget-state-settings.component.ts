@@ -24,6 +24,12 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { widgetTitleAutocompleteValues } from '@app/shared/public-api';
 
+
+/**
+ * Angular component: status widget state settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-status-widget-state-settings`.
+ */
 @Component({
     selector: 'tb-status-widget-state-settings',
     templateUrl: './status-widget-state-settings.component.html',
@@ -35,10 +41,7 @@ import { widgetTitleAutocompleteValues } from '@app/shared/public-api';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: status widget state settings UI.
- */
+standalone: false
 })
 export class StatusWidgetStateSettingsComponent implements OnInit, OnChanges, ControlValueAccessor {
 
@@ -61,6 +64,11 @@ export class StatusWidgetStateSettingsComponent implements OnInit, OnChanges, Co
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.stateSettingsFormGroup = this.fb.group({
@@ -105,12 +113,30 @@ export class StatusWidgetStateSettingsComponent implements OnInit, OnChanges, Co
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -122,6 +148,12 @@ export class StatusWidgetStateSettingsComponent implements OnInit, OnChanges, Co
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (StatusWidgetStateSettings)
+   */
+
   writeValue(value: StatusWidgetStateSettings): void {
     this.modelValue = value;
     this.stateSettingsFormGroup.patchValue(
@@ -129,6 +161,11 @@ export class StatusWidgetStateSettingsComponent implements OnInit, OnChanges, Co
     );
     this.updateValidators();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     if (this.layout === StatusWidgetLayout.icon) {
@@ -163,6 +200,11 @@ export class StatusWidgetStateSettingsComponent implements OnInit, OnChanges, Co
       }
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.stateSettingsFormGroup.getRawValue();

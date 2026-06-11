@@ -55,8 +55,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.times;
 /**
- * Unit test for tb msg count node rule node.
+ * Unit test for tb msg count node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -79,6 +80,11 @@ public class TbMsgCountNodeTest {
 
     @Mock
     private TbContext ctxMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -86,6 +92,11 @@ public class TbMsgCountNodeTest {
         config = new TbMsgCountNodeConfiguration().defaultConfiguration();
         executorService = ThingsBoardExecutors.newSingleThreadScheduledExecutor("msg-count-node-test");
     }
+    /**
+     * Tear down.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterEach
     public void tearDown() {
@@ -94,12 +105,23 @@ public class TbMsgCountNodeTest {
         }
         node.destroy();
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
         assertThat(config.getInterval()).isEqualTo(1);
         assertThat(config.getTelemetryPrefix()).isEqualTo("messageCount");
     }
+    /**
+     * Given incoming msgs when on msg then sends msg with msg count.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenIncomingMsgs_whenOnMsg_thenSendsMsgWithMsgCount() throws TbNodeException, InterruptedException {

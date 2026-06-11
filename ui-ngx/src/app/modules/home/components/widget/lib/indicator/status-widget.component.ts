@@ -47,15 +47,18 @@ import { ValueType } from '@shared/models/constants';
 
 const initialStatusWidgetSize = 147;
 
+
+/**
+ * Angular component: status widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-status-widget`.
+ */
 @Component({
     selector: 'tb-status-widget',
     templateUrl: './status-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './status-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: status widget UI.
- */
+standalone: false
 })
 export class StatusWidgetComponent extends
   BasicActionWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -111,6 +114,11 @@ export class StatusWidgetComponent extends
     super(cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
     this.settings = {...statusWidgetDefaultSettings, ...this.ctx.settings};
@@ -145,6 +153,11 @@ export class StatusWidgetComponent extends
     this.updateStyle(this.state, this.disabled);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     this.renderer.setStyle(this.statusWidgetContent.nativeElement, 'overflow', 'visible');
     this.renderer.setStyle(this.statusWidgetContent.nativeElement, 'position', 'absolute');
@@ -159,6 +172,11 @@ export class StatusWidgetComponent extends
     super.ngAfterViewInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.panelResize$) {
       this.panelResize$.disconnect();
@@ -166,12 +184,23 @@ export class StatusWidgetComponent extends
     super.ngOnDestroy();
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     super.onInit();
     this.borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius: this.borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for state.
+   *
+   * @param value value (boolean)
+   */
 
   private onState(value: boolean): void {
     const newState = !!value;
@@ -181,6 +210,12 @@ export class StatusWidgetComponent extends
     }
   }
 
+  /**
+   * Event handler for disabled.
+   *
+   * @param value value (boolean)
+   */
+
   private onDisabled(value: boolean): void {
     const newDisabled = !!value;
     if (this.disabled !== newDisabled) {
@@ -189,10 +224,21 @@ export class StatusWidgetComponent extends
     }
   }
 
+  /**
+   * update disabled state.
+   *
+   * @param disabled disabled (boolean)
+   */
+
   private updateDisabledState(disabled: boolean) {
     this.disabledState = disabled;
     this.updateStyle(this.state, this.disabledState);
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const computedStyle = getComputedStyle(this.statusWidgetPanel.nativeElement);
@@ -212,6 +258,13 @@ export class StatusWidgetComponent extends
     this.overlayInset = (Math.floor(12 * scale * 100) / 100) + 'px';
     this.cd.markForCheck();
   }
+
+  /**
+   * update style.
+   *
+   * @param state state (boolean)
+   * @param disabled disabled (boolean)
+   */
 
   private updateStyle(state: boolean, disabled: boolean) {
     let stateSettings: StatusWidgetStateSettings;

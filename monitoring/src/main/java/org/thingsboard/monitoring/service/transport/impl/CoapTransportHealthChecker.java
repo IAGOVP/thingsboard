@@ -31,8 +31,9 @@ import org.thingsboard.monitoring.service.transport.TransportHealthChecker;
 
 import java.io.IOException;
 /**
- * Sends CoAP test payload to the transport endpoint.
+ * Sends a CoAP test payload to the transport endpoint and validates echo.
  */
+
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -48,6 +49,12 @@ public class CoapTransportHealthChecker extends TransportHealthChecker<CoapTrans
     protected CoapTransportHealthChecker(CoapTransportMonitoringConfig config, TransportMonitoringTarget target) {
         super(config, target);
     }
+    /**
+     * Init client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void initClient() throws Exception {
@@ -59,6 +66,13 @@ public class CoapTransportHealthChecker extends TransportHealthChecker<CoapTrans
             log.debug("Initialized CoAP client for URI {}", uri);
         }
     }
+    /**
+     * Send test payload.
+     *
+     * @param payload payload ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void sendTestPayload(String payload) throws Exception {
@@ -68,6 +82,12 @@ public class CoapTransportHealthChecker extends TransportHealthChecker<CoapTrans
             throw new IOException("COAP client didn't receive success response from transport");
         }
     }
+    /**
+     * Destroy client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void destroyClient() throws Exception {
@@ -77,6 +97,12 @@ public class CoapTransportHealthChecker extends TransportHealthChecker<CoapTrans
             log.info("Disconnected CoAP client");
         }
     }
+    /**
+     * Returns transport type.
+     *
+     * @return {@link TransportType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TransportType getTransportType() {

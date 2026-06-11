@@ -84,8 +84,9 @@ import static org.testng.Assert.fail;
 import static org.thingsboard.server.common.data.AttributeScope.SHARED_SCOPE;
 import static org.thingsboard.server.msa.prototypes.DevicePrototypes.defaultDevicePrototype;
 /**
- * Mqtt client test.
+ * Black-box test: mqtt client (black-box test infrastructure — device transport connectivity tests).
  */
+
 
 @DisableUIListeners
 @Slf4j
@@ -96,6 +97,12 @@ public class MqttClientTest extends AbstractContainerTest {
 
     private Device device;
     AbstractListeningExecutor handlerExecutor;
+    /**
+     * Set up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -110,6 +117,12 @@ public class MqttClientTest extends AbstractContainerTest {
         testRestClient.login("tenant@thingsboard.org", "tenant");
         device = testRestClient.postDevice("", defaultDevicePrototype("http_"));
     }
+    /**
+     * Tear down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void tearDown() {
@@ -118,6 +131,12 @@ public class MqttClientTest extends AbstractContainerTest {
             handlerExecutor.destroy();
         }
     }
+    /**
+     * Telemetry upload.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void telemetryUpload() throws Exception {
@@ -138,6 +157,12 @@ public class MqttClientTest extends AbstractContainerTest {
         assertThat(actualLatestTelemetry.getDataValuesByKey("doubleKey").get(1)).isEqualTo(Double.toString(42.0));
         assertThat(actualLatestTelemetry.getDataValuesByKey("longKey").get(1)).isEqualTo(Long.toString(73));
     }
+    /**
+     * Telemetry upload with ts.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void telemetryUploadWithTs() throws Exception {
@@ -159,6 +184,12 @@ public class MqttClientTest extends AbstractContainerTest {
         assertThat(actualLatestTelemetry.getDataValuesByKey("doubleKey").get(1)).isEqualTo(Double.toString(42.0));
         assertThat(actualLatestTelemetry.getDataValuesByKey("longKey").get(1)).isEqualTo(Long.toString(73));
     }
+    /**
+     * Publish attribute update to server.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void publishAttributeUpdateToServer() throws Exception {
@@ -185,6 +216,12 @@ public class MqttClientTest extends AbstractContainerTest {
         assertThat(actualLatestTelemetry.getDataValuesByKey("attr3").get(1)).isEqualTo(Double.toString(42.0));
         assertThat(actualLatestTelemetry.getDataValuesByKey("attr4").get(1)).isEqualTo(Long.toString(73));
     }
+    /**
+     * Request attribute values from server.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void requestAttributeValuesFromServer() throws Exception {
@@ -236,6 +273,12 @@ public class MqttClientTest extends AbstractContainerTest {
         assertThat(attributes.getShared()).hasSize(1);
         assertThat(attributes.getShared().get("sharedAttr")).isEqualTo(sharedAttributeValue);
     }
+    /**
+     * Subscribe to attribute updates from server.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void subscribeToAttributeUpdatesFromServer() throws Exception {
@@ -272,6 +315,12 @@ public class MqttClientTest extends AbstractContainerTest {
         assertThat(mapper.readValue(Objects.requireNonNull(event).getMessage(), JsonNode.class).get(sharedAttributeName).asText())
                 .isEqualTo(updatedSharedAttributeValue);
     }
+    /**
+     * Server side rpc.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void serverSideRpc() throws Exception {
@@ -312,6 +361,12 @@ public class MqttClientTest extends AbstractContainerTest {
         service.shutdownNow();
         assertThat(serverResponse).isEqualTo(mapper.readTree(clientResponse.toString()));
     }
+    /**
+     * Server side persisted rpc.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void serverSidePersistedRpc() throws Exception {
@@ -366,6 +421,12 @@ public class MqttClientTest extends AbstractContainerTest {
 
         assertThat(persistentRpc.getResponse()).isEqualTo(mapper.readTree(clientResponse.toString()));
     }
+    /**
+     * Client side rpc.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void clientSideRpc() throws Exception {
@@ -402,6 +463,12 @@ public class MqttClientTest extends AbstractContainerTest {
         // Delete the created rule chain
         testRestClient.deleteRuleChain(ruleChainId);
     }
+    /**
+     * Device deleted closing session.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void deviceDeletedClosingSession() throws Exception {
@@ -418,6 +485,12 @@ public class MqttClientTest extends AbstractContainerTest {
                 .atMost(10, TimeUnit.SECONDS)
                 .until(() -> !mqttClient.isConnected());
     }
+    /**
+     * Provision request for device with pre provisioned strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForDeviceWithPreProvisionedStrategy() throws Exception {
@@ -452,6 +525,12 @@ public class MqttClientTest extends AbstractContainerTest {
 
         updateDeviceProfileWithProvisioningStrategy(deviceProfile, DeviceProfileProvisionType.DISABLED);
     }
+    /**
+     * Provision request for device with allow to create new devices strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForDeviceWithAllowToCreateNewDevicesStrategy() throws Exception {
@@ -492,6 +571,12 @@ public class MqttClientTest extends AbstractContainerTest {
 
         updateDeviceProfileWithProvisioningStrategy(deviceProfile, DeviceProfileProvisionType.DISABLED);
     }
+    /**
+     * Provision request for check sub ack received.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void provisionRequestForCheckSubAckReceived() throws Exception {
@@ -532,6 +617,12 @@ public class MqttClientTest extends AbstractContainerTest {
         testRestClient.deleteDeviceIfExists(device.getId());
         updateDeviceProfileWithProvisioningStrategy(deviceProfile, DeviceProfileProvisionType.DISABLED);
     }
+    /**
+     * Provision request for device with disabled provisioning strategy.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
 
@@ -558,6 +649,12 @@ public class MqttClientTest extends AbstractContainerTest {
 
         assertThat(provisionResponse.get("status").asText()).isEqualTo("NOT_FOUND");
     }
+    /**
+     * Client session taken over disconnect.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void clientSessionTakenOverDisconnect() throws Exception {
@@ -592,6 +689,12 @@ public class MqttClientTest extends AbstractContainerTest {
 
         assertThat(returnCode).isEqualTo(MqttReasonCodes.Disconnect.SESSION_TAKEN_OVER);
     }
+    /**
+     * Client publish for regular topic by provision client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void clientPublishForRegularTopicByProvisionClient() throws Exception {
@@ -605,6 +708,12 @@ public class MqttClientTest extends AbstractContainerTest {
         MqttReasonCodes.Disconnect returnCode = MqttReasonCodes.Disconnect.valueOf(returnCodeByteValue.get(0));
         assertThat(returnCode).isEqualTo(MqttReasonCodes.Disconnect.TOPIC_NAME_INVALID);
     }
+    /**
+     * Client connect with bad credentials.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void clientConnectWithBadCredentials() throws Exception {
@@ -709,6 +818,9 @@ public class MqttClientTest extends AbstractContainerTest {
         }
         return mqttClient;
     }
+    /**
+     * Mqtt message listener (black-box test infrastructure — device transport connectivity tests).
+     */
 
     @Data
     private class MqttMessageListener implements MqttHandler {
@@ -725,6 +837,9 @@ public class MqttClientTest extends AbstractContainerTest {
             return Futures.immediateVoidFuture();
         }
     }
+    /**
+     * Mqtt event (black-box test infrastructure — device transport connectivity tests).
+     */
 
     @Data
     private class MqttEvent {

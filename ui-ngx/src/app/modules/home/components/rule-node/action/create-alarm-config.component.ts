@@ -31,14 +31,17 @@ import { AlarmSeverity, alarmSeverityTranslations } from '@app/shared/models/ala
 import { DebugRuleNodeEventBody } from '@shared/models/event.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: create alarm config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-create-alarm-config`.
+ */
 @Component({
     selector: 'tb-action-node-create-alarm-config',
     templateUrl: './create-alarm-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: create alarm config UI.
- */
+standalone: false
 })
 export class CreateAlarmConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -68,9 +71,21 @@ export class CreateAlarmConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.createAlarmConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.createAlarmConfigForm = this.fb.group({
@@ -101,9 +116,30 @@ export class CreateAlarmConfigComponent extends RuleNodeConfigurationComponent {
   }
 
 
+  /**
+
+
+   * validator triggers.
+
+
+   *
+
+
+   * @returns string[] observable or value
+
+
+   */
+
+
   protected validatorTriggers(): string[] {
     return ['useMessageAlarmData', 'overwriteAlarmDetails', 'scriptLang'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const useMessageAlarmData: boolean = this.createAlarmConfigForm.get('useMessageAlarmData').value;
@@ -133,6 +169,13 @@ export class CreateAlarmConfigComponent extends RuleNodeConfigurationComponent {
     this.createAlarmConfigForm.get('alarmDetailsBuildTbel').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (configuration) {
       if (!configuration.scriptLang) {
@@ -141,6 +184,12 @@ export class CreateAlarmConfigComponent extends RuleNodeConfigurationComponent {
     }
     return configuration;
   }
+
+  /**
+   * test script.
+   *
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   */
 
   testScript(debugEventBody?: DebugRuleNodeEventBody) {
     const scriptLang: ScriptLanguage = this.createAlarmConfigForm.get('scriptLang').value;
@@ -165,6 +214,13 @@ export class CreateAlarmConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * DELETE — remove key.
+   *
+   * @param key key (string)
+   * @param keysField keys field (string)
+   */
+
   removeKey(key: string, keysField: string): void {
     const keys: string[] = this.createAlarmConfigForm.get(keysField).value;
     const index = keys.indexOf(key);
@@ -173,6 +229,13 @@ export class CreateAlarmConfigComponent extends RuleNodeConfigurationComponent {
       this.createAlarmConfigForm.get(keysField).setValue(keys, {emitEvent: true});
     }
   }
+
+  /**
+   * POST/PUT entity — add key.
+   *
+   * @param event DOM or Angular event object
+   * @param keysField keys field (string)
+   */
 
   addKey(event: MatChipInputEvent, keysField: string): void {
     const input = event.input;
@@ -192,6 +255,11 @@ export class CreateAlarmConfigComponent extends RuleNodeConfigurationComponent {
       input.value = '';
     }
   }
+
+  /**
+   * Event handler for validate.
+   *
+   */
 
   protected onValidate() {
     const useMessageAlarmData: boolean = this.createAlarmConfigForm.get('useMessageAlarmData').value;

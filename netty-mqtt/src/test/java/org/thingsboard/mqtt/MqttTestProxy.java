@@ -36,8 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.net.InetSocketAddress;
 import java.util.function.Predicate;
 /**
- * Test-side MQTT proxy for integration tests.
+ * Test-side MQTT broker proxy for integration tests.
  */
+
 
 @Slf4j
 public class MqttTestProxy {
@@ -112,6 +113,12 @@ public class MqttTestProxy {
         return proxyToBrokerBootstrap.connect(brokerHost, brokerPort);
     }
 
+    /**
+
+     * Mqtt relay handler (netty-mqtt tests).
+
+     */
+
     private static class MqttRelayHandler extends SimpleChannelInboundHandler<MqttMessage> {
 
         private final Channel targetChannel;
@@ -121,6 +128,14 @@ public class MqttTestProxy {
             this.targetChannel = targetChannel;
             this.interceptor = interceptor;
         }
+    /**
+     * Dispatches decoded MQTT frames to type-specific handler methods.
+     *
+     * @param ctx Netty channel handler context
+     * @param msg decoded MQTT wire message
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) {
@@ -165,10 +180,32 @@ public class MqttTestProxy {
     public int getPort() {
         return assignedPort;
     }
+    
+    
+    
+    
+    
+    /**
+     * Builder.
+     *
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
+
+
+
 
     public static Builder builder() {
         return new Builder();
     }
+
+    /**
+
+     * Builder (netty-mqtt tests).
+
+     */
 
     public static class Builder {
 

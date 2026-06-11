@@ -25,11 +25,11 @@ import { InterceptorConfig } from '../interceptors/interceptor-config';
 
 export type QueryParams = { [param:string]: any };
 
+
 /**
-
- * request config.
-
+ * Request config (HTTP service layer).
  */
+
 
 export interface RequestConfig {
   ignoreLoading?: boolean;

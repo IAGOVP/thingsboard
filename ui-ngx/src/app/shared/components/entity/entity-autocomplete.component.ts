@@ -30,6 +30,12 @@ import { Authority } from '@shared/models/authority.enum';
 import { getEntityDetailsPageURL, isDefinedAndNotNull, isEqual } from '@core/utils';
 import { coerceArray, coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: entity autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-autocomplete`.
+ */
 @Component({
     selector: 'tb-entity-autocomplete',
     templateUrl: './entity-autocomplete.component.html',
@@ -39,10 +45,7 @@ import { coerceArray, coerceBoolean } from '@shared/decorators/coercion';
             useExisting: forwardRef(() => EntityAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: entity autocomplete UI.
- */
+standalone: false
 })
 export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -177,12 +180,29 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredEntities = merge(
@@ -190,6 +210,10 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
       this.selectEntityFormGroup.get('entity').valueChanges
         .pipe(
           debounceTime(150),
+          /**
+           * tap.
+           *
+           */
           tap(value => {
             let modelValue: string | EntityId;
             if (typeof value === 'string' || !value) {
@@ -209,6 +233,11 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
         )
     );
   }
+
+  /**
+   * load.
+   *
+   */
 
   private load(): void {
     if (this.entityTypeValue) {
@@ -346,6 +375,12 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * get current entity.
+   *
+   * @returns BaseData<EntityId> | null observable or value
+   */
+
   private getCurrentEntity(): BaseData<EntityId> | null {
     const currentEntity = this.selectEntityFormGroup.get('entity').value;
     if (currentEntity && typeof currentEntity !== 'string') {
@@ -355,6 +390,12 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -363,6 +404,13 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
       this.selectEntityFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | EntityId | null)
+   * @returns Promise<void> observable or value
+   */
 
   async writeValue(value: string | EntityId | null): Promise<void> {
     this.searchText = '';
@@ -394,6 +442,11 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
     this.dirty = true;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectEntityFormGroup.get('entity').updateValueAndValidity({onlySelf: true, emitEvent: true});
@@ -401,9 +454,21 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   private reset() {
     this.selectEntityFormGroup.get('entity').patchValue('', {emitEvent: false});
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (string | EntityId | null)
+   * @param entity entity (BaseData<EntityId> | null)
+   */
 
   private updateView(value: string | EntityId | null, entity: BaseData<EntityId> | null) {
     if (!isEqual(this.modelValue, value)) {
@@ -414,9 +479,23 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * display entity fn.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   * @returns string | undefined observable or value
+   */
+
   displayEntityFn(entity?: BaseData<EntityId>): string | undefined {
     return entity ? (this.useEntityDisplayName ? getEntityDisplayName(entity) : entity.name) : undefined;
   }
+
+  /**
+   * fetch entities.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<BaseData<EntityId>>> observable or value
+   */
 
   private fetchEntities(searchText?: string): Observable<Array<BaseData<EntityId>>> {
     this.searchText = searchText;
@@ -441,9 +520,21 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
     ));
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectEntityFormGroup.get('entity').patchValue('', {emitEvent: true});
@@ -452,6 +543,13 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
       this.entityInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * check entity type.
+   *
+   * @param entityType entity type (EntityType | AliasEntityType)
+   * @returns EntityType observable or value
+   */
 
   private checkEntityType(entityType: EntityType | AliasEntityType): EntityType {
     if (entityType === AliasEntityType.CURRENT_CUSTOMER) {
@@ -471,6 +569,12 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
     return entityType;
   }
 
+  /**
+   * POST/PUT entity — create new entity.
+   *
+   * @param searchText search text (string)
+   */
+
   createNewEntity($event: Event, searchText?: string) {
     $event.stopPropagation();
     this.createNew.emit(searchText);
@@ -479,6 +583,11 @@ export class EntityAutocompleteComponent implements ControlValueAccessor, OnInit
   get showEntityLink(): boolean {
     return this.selectEntityFormGroup.get('entity').value && this.disabled && this.entityURL !== '';
   }
+
+  /**
+   * mark as touched.
+   *
+   */
 
   markAsTouched(): void {
     this.selectEntityFormGroup.get('entity').markAsTouched();

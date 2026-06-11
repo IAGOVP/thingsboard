@@ -25,11 +25,18 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.EMPTY_RULE_CHAIN_MESSAGE;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 /**
- * Create rule chain test.
+ * Black-box test: create rule chain (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Create rule chain")
 public class CreateRuleChainTest extends AbstractRuleChainTest {
+    /**
+     * Creates rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Add rule chain after specifying the name (text/numbers /special characters)")
@@ -45,6 +52,12 @@ public class CreateRuleChainTest extends AbstractRuleChainTest {
 
         assertIsDisplayed(ruleChainsPage.entity(ruleChainName));
     }
+    /**
+     * Creates rule chain with description.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Add rule chain after specifying the name and description (text/numbers /special characters)")
@@ -64,6 +77,12 @@ public class CreateRuleChainTest extends AbstractRuleChainTest {
         assertThat(ruleChainsPage.descriptionEntityView().getAttribute("value"))
                 .as("Description in rule chain details tab").isEqualTo(ruleChainName);
     }
+    /**
+     * Creates rule chain without name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Add rule chain without the name")
@@ -73,6 +92,12 @@ public class CreateRuleChainTest extends AbstractRuleChainTest {
 
         assertIsDisable(ruleChainsPage.addBtnV());
     }
+    /**
+     * Creates rule chain with only space.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Create rule chain only with spase in name")
@@ -86,6 +111,12 @@ public class CreateRuleChainTest extends AbstractRuleChainTest {
         assertThat(ruleChainsPage.warningMessage().getText()).as("Text of warning message").isEqualTo(EMPTY_RULE_CHAIN_MESSAGE);
         assertIsDisplayed(ruleChainsPage.addEntityView());
     }
+    /**
+     * Creates rule chain with same name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Create a rule chain with the same name")
@@ -103,6 +134,12 @@ public class CreateRuleChainTest extends AbstractRuleChainTest {
                 as("More than 1 rule chains have been created").isTrue();
         ruleChainsPage.entities(ruleChainName).forEach(this::assertIsDisplayed);
     }
+    /**
+     * Creates rule chain without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 30, groups = "smoke")
     @Description("Add rule chain after specifying the name (text/numbers /special characters) without refresh")
@@ -116,6 +153,12 @@ public class CreateRuleChainTest extends AbstractRuleChainTest {
 
         assertIsDisplayed(ruleChainsPage.entity(ruleChainName));
     }
+    /**
+     * Documentation.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 40, groups = "smoke")
     @Description("Go to rule chain documentation page")

@@ -39,6 +39,12 @@ import { DialogService } from '@core/services/dialog.service';
 import { FileSizePipe } from '@shared/pipe/file-size.pipe';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: file input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-file-input`.
+ */
 @Component({
     selector: 'tb-file-input',
     templateUrl: './file-input.component.html',
@@ -50,10 +56,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: file input UI.
- */
+standalone: false
 })
 export class FileInputComponent extends PageComponent implements AfterViewInit, OnDestroy, ControlValueAccessor, OnChanges {
 
@@ -160,6 +163,11 @@ export class FileInputComponent extends PageComponent implements AfterViewInit, 
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.autoUploadSubscription = this.flow.events$.subscribe(event => {
       if (event.type === 'filesAdded') {
@@ -207,6 +215,13 @@ export class FileInputComponent extends PageComponent implements AfterViewInit, 
     }
   }
 
+  /**
+   * reader as file.
+   *
+   * @param file file (flowjs.FlowFile)
+   * @returns Promise<any> observable or value
+   */
+
   private readerAsFile(file: flowjs.FlowFile): Promise<any> {
     return new Promise((resolve) => {
       if (this.workFromFileObj) {
@@ -247,9 +262,23 @@ export class FileInputComponent extends PageComponent implements AfterViewInit, 
     });
   }
 
+  /**
+   * check max size.
+   *
+   * @param file file (flowjs.FlowFile)
+   * @returns boolean observable or value
+   */
+
   private checkMaxSize(file: flowjs.FlowFile): boolean {
     return !this.maxSizeByte || file.size <= this.maxSizeByte;
   }
+
+  /**
+   * filter file.
+   *
+   * @param file file (flowjs.FlowFile)
+   * @returns boolean observable or value
+   */
 
   private filterFile(file: flowjs.FlowFile): boolean {
     if (this.allowedExtensions) {
@@ -259,22 +288,51 @@ export class FileInputComponent extends PageComponent implements AfterViewInit, 
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.autoUploadSubscription) {
       this.autoUploadSubscription.unsubscribe();
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (any)
+   */
 
   writeValue(value: any): void {
     let fileName = null;
@@ -295,6 +353,11 @@ export class FileInputComponent extends PageComponent implements AfterViewInit, 
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     if (this.workFromFileObj) {
       this.propagateChange(this.files);
@@ -305,12 +368,23 @@ export class FileInputComponent extends PageComponent implements AfterViewInit, 
     }
   }
 
+  /**
+   * clear file.
+   *
+   */
+
   clearFile() {
     this.fileName = null;
     this.fileContent = null;
     this.files = null;
     this.updateModel();
   }
+
+  /**
+   * update multiple file mode.
+   *
+   * @param multiple multiple (boolean)
+   */
 
   private updateMultipleFileMode(multiple: boolean) {
     this.flow.flowJs.opts.singleFile = !multiple;

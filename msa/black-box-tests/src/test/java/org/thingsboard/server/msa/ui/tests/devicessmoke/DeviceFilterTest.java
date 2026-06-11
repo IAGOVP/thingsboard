@@ -33,8 +33,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 /**
- * Device filter test.
+ * Black-box test: device filter (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Filter devices (By device profile and state)")
 public class DeviceFilterTest extends AbstractDeviceTest {
@@ -42,6 +43,12 @@ public class DeviceFilterTest extends AbstractDeviceTest {
     private String activeDeviceName;
     private String deviceWithProfileName;
     private String activeDeviceWithProfileName;
+    /**
+     * Creates test entities.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void createTestEntities() {
@@ -60,12 +67,24 @@ public class DeviceFilterTest extends AbstractDeviceTest {
         activeDeviceName = activeDevice.getName();
         activeDeviceWithProfileName = activeDeviceWithProfile.getName();
     }
+    /**
+     * Deletes test entities.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterClass
     public void deleteTestEntities() {
         deleteDevicesByName(List.of(deviceWithProfileName, activeDeviceName, activeDeviceWithProfileName));
         deleteDeviceProfileByTitle(deviceProfileTitle);
     }
+    /**
+     * Filter devices by profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Filter by device profile")
@@ -78,6 +97,13 @@ public class DeviceFilterTest extends AbstractDeviceTest {
                 .as("There are only devices with the selected profile(%s) on the page", deviceProfileTitle)
                 .isEqualTo(deviceProfileTitle));
     }
+    /**
+     * Filter devices by state.
+     *
+     * @param state state ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "filterData")
     @Description("Filter by state")
@@ -90,6 +116,13 @@ public class DeviceFilterTest extends AbstractDeviceTest {
                 .as("There are only devices with '%s' state on the page", state)
                 .isEqualTo(state));
     }
+    /**
+     * Filter devices by device profile and state.
+     *
+     * @param state state ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "filterData")
     @Description("Filter device by device profile and state")

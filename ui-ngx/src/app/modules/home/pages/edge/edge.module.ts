@@ -28,9 +28,10 @@ import { EdgeInstructionsDialogComponent } from './edge-instructions-dialog.comp
 
 
 /**
-
  * Angular NgModule: edge feature area.
-
+ */
+/**
+ * Angular NgModule bundling edge (home/edge pages).
  */
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { EdgeInstructionsDialogComponent } from './edge-instructions-dialog.comp
     HomeDialogsModule,
     HomeComponentsModule,
     EdgeRoutingModule
-  ]})
+
+]})
 
 export class EdgeModule { }

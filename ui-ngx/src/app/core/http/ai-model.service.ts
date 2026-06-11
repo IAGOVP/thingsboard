@@ -23,7 +23,9 @@ import { PageLink } from '@shared/models/page/page-link';
 import { PageData } from '@shared/models/page/page-data';
 
 /**
- * Angular HTTP service: ai model REST wrappers (`@core/http`).
+ * Angular injectable service: ai model (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -34,29 +36,68 @@ export class AiModelService {
     private http: HttpClient
   ) {}
 
-  /** Calls ThingsBoard REST `/api/ai/model, ...`. */
+  
+  /**
+   * POST/PUT entity — save ai model.
+   *
+   * @param aiModel ai model (AiModel)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AiModel> observable or value
+   */
+
 
   public saveAiModel(aiModel: AiModel, config?: RequestConfig): Observable<AiModel> {
     return this.http.post<AiModel>('/api/ai/model', aiModel, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ai/model${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get ai models.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<AiModel>> observable or value
+   */
+
 
   public getAiModels(pageLink: PageLink, config?: RequestConfig): Observable<PageData<AiModel>> {
     return this.http.get<PageData<AiModel>>(`/api/ai/model${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ai/model/${aiModelId}, ...`. */
+  
+  /**
+   * get ai model by id.
+   *
+   * @param aiModelId ai model id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<AiModel> observable or value
+   */
+
 
   public getAiModelById(aiModelId: string, config?: RequestConfig): Observable<AiModel> {
     return this.http.get<AiModel>(`/api/ai/model/${aiModelId}`, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete ai model.
+   *
+   * @param aiModelId ai model id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteAiModel(aiModelId: string, config?: RequestConfig) {
     return this.http.delete(`/api/ai/model/${aiModelId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/ai/model/chat`. */
+  
+  /**
+   * check connectivity.
+   *
+   * @param aiModelWithUserMsg ai model with user msg (AiModelWithUserMsg)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<CheckConnectivityResult> observable or value
+   */
+
 
   public checkConnectivity(aiModelWithUserMsg: AiModelWithUserMsg, config?: RequestConfig): Observable<CheckConnectivityResult> {
     return this.http.post<CheckConnectivityResult>('/api/ai/model/chat', aiModelWithUserMsg, defaultHttpOptionsFromConfig(config));

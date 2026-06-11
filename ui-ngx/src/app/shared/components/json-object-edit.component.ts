@@ -46,6 +46,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 
 export const jsonRequired = (control: AbstractControl): ValidationErrors | null => !control.value ? {required: true} : null;
 
+
+/**
+ * Angular component: json object edit (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-json-object-edit`.
+ */
 @Component({
     selector: 'tb-json-object-edit',
     templateUrl: './json-object-edit.component.html',
@@ -63,10 +69,7 @@ export const jsonRequired = (control: AbstractControl): ValidationErrors | null 
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: json object edit UI.
- */
+standalone: false
 })
 export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Validator, OnDestroy {
 
@@ -121,6 +124,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     const editorElement = this.jsonEditorElmRef.nativeElement;
     let editorOptions: Partial<Ace.EditorOptions> = {
@@ -157,6 +165,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.editorResize$) {
       this.editorResize$.disconnect();
@@ -165,6 +178,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
       this.jsonEditor.destroy();
     }
   }
+
+  /**
+   * Event handler for ace editor resize.
+   *
+   */
 
   private onAceEditorResize() {
     if (this.editorsResizeCaf) {
@@ -177,12 +195,30 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -191,6 +227,12 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return (this.objectValid) ? null : {
       jsonParseError: {
@@ -198,6 +240,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
       },
     };
   }
+
+  /**
+   * validate on submit.
+   *
+   */
 
   validateOnSubmit(): void {
     if (!this.disabled && !this.readonly) {
@@ -216,6 +263,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
     }
   }
 
+  /**
+   * cleanup json errors.
+   *
+   */
+
   cleanupJsonErrors(): void {
     if (this.errorShowed) {
       this.store.dispatch(new ActionNotificationHide(
@@ -226,6 +278,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
     }
   }
 
+  /**
+   * beautify json.
+   *
+   */
+
   beautifyJSON() {
     if (this.jsonEditor && this.objectValid) {
       const res = JSON.stringify(this.modelValue, null, 2);
@@ -234,6 +291,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
     }
   }
 
+  /**
+   * minify json.
+   *
+   */
+
   minifyJSON() {
     if (this.jsonEditor && this.objectValid) {
       const res = JSON.stringify(this.modelValue);
@@ -241,6 +303,12 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
       this.updateView();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (any)
+   */
 
   writeValue(value: any): void {
     this.modelValue = value;
@@ -264,6 +332,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
       this.ignoreChange = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   */
 
   updateView() {
     const editorValue = this.jsonEditor.getValue();
@@ -298,6 +371,11 @@ export class JsonObjectEditComponent implements OnInit, ControlValueAccessor, Va
       this.cd.markForCheck();
     }
   }
+
+  /**
+   * Event handler for fullscreen.
+   *
+   */
 
   onFullscreen() {
     if (this.jsonEditor) {

@@ -311,11 +311,11 @@ export const alarmFields: {[fieldName: string]: AlarmField} = {
   }
 };
 
+
 /**
-
- * TypeScript models and enums for alarm query.
-
+ * TypeScript interfaces, types, and enums for alarm query (shared TypeScript models).
  */
+
 
 export class AlarmQuery {
 
@@ -336,6 +336,12 @@ export class AlarmQuery {
     this.fetchOriginator = fetchOriginator;
     this.assigneeId = assigneeId;
   }
+
+  /**
+   * to query.
+   *
+   * @returns string observable or value
+   */
 
   public toQuery(): string {
     let query = this.affectedEntityId ? `/${this.affectedEntityId.entityType}/${this.affectedEntityId.id}` : '';

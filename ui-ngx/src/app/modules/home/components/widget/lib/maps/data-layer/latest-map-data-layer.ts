@@ -26,11 +26,11 @@ import L from 'leaflet';
 import { createTooltip, updateTooltip } from './data-layer-utils';
 import { TbDataLayerItem, TbMapDataLayer } from '@home/components/widget/lib/maps/data-layer/map-data-layer';
 
+
 /**
-
- * tb latest data layer item.
-
+ * Tb latest data layer item (ThingsBoard web UI).
  */
+
 
 export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = MapDataLayerSettings,
   D extends TbLatestMapDataLayer<S,D> = TbLatestMapDataLayer<any>, L extends L.Layer = L.Layer> extends TbDataLayerItem<S,D,L> {
@@ -63,9 +63,20 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     }
   }
 
+  /**
+   * invalidate coordinates.
+   *
+   */
+
   public invalidateCoordinates(): void {
     this.doInvalidateCoordinates(this.data, this.dataLayer.getMap().getData());
   }
+
+  /**
+   * select.
+   *
+   * @returns L.TB.ToolbarButtonOptions[] observable or value
+   */
 
   public select(): L.TB.ToolbarButtonOptions[] {
     if (!this.selected) {
@@ -91,6 +102,12 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     }
   }
 
+  /**
+   * deselect.
+   *
+   * @returns boolean observable or value
+   */
+
   public deselect(cancel = false, force = false): boolean {
     if (this.selected) {
       if (this.canDeselect(cancel) || force) {
@@ -106,9 +123,19 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     return true;
   }
 
+  /**
+   * is selected.
+   *
+   */
+
   public isSelected() {
     return this.selected;
   }
+
+  /**
+   * edit mode updated.
+   *
+   */
 
   public editModeUpdated() {
     if (this.dataLayer.isEditMode() && !this.selected) {
@@ -119,6 +146,11 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     this.updateSelectedState();
     this.updateBubblingMouseEvents();
   }
+
+  /**
+   * drag mode updated.
+   *
+   */
 
   public dragModeUpdated() {
     if (this.dataLayer.isEditMode() && !this.selected) {
@@ -133,10 +165,22 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     }
   }
 
+  /**
+   * update.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
+
   public update(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]): void {
     this.data = data;
     this.doUpdate(data, dsData);
   }
+
+  /**
+   * DELETE — remove.
+   *
+   */
 
   public remove() {
     if (this.selected) {
@@ -146,9 +190,19 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     this.layer.off();
   }
 
+  /**
+   * is editing.
+   *
+   */
+
   public isEditing() {
     return false;
   }
+
+  /**
+   * bind events.
+   *
+   */
 
   protected bindEvents(): void {
     if (this.dataLayer.isSelectable()) {
@@ -166,6 +220,11 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     }
   }
 
+  /**
+   * enable edit.
+   *
+   */
+
   protected enableEdit(): void {
     if (this.dataLayer.isHoverable()) {
       this.addItemClass('tb-hoverable');
@@ -177,6 +236,11 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     }
   }
 
+  /**
+   * disable edit.
+   *
+   */
+
   protected disableEdit(): void {
     if (this.dataLayer.isHoverable()) {
       this.removeItemClass('tb-hoverable');
@@ -187,6 +251,11 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     }
   }
 
+  /**
+   * update selected state.
+   *
+   */
+
   protected updateSelectedState() {
     if (this.selected) {
       this.addItemClass('tb-selected');
@@ -195,12 +264,26 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     }
   }
 
+  /**
+   * update tooltip.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
+
   protected updateTooltip(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]) {
     if (this.settings.tooltip.show) {
       updateTooltip(this.dataLayer.getMap(), this.tooltip,
         this.settings.tooltip, this.dataLayer.dataLayerTooltipProcessor, data, dsData);
     }
   }
+
+  /**
+   * update label.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
 
   protected updateLabel(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]) {
     if (this.settings.label.show) {
@@ -212,13 +295,30 @@ export abstract class TbLatestDataLayerItem<S extends MapDataLayerSettings = Map
     }
   }
 
+  /**
+   * can deselect.
+   *
+   * @returns boolean observable or value
+   */
+
   protected canDeselect(cancel = false): boolean {
     return true;
   }
 
+  /**
+   * Event handler for selected.
+   *
+   * @returns L.TB.ToolbarButtonOptions[] observable or value
+   */
+
   protected onSelected(): L.TB.ToolbarButtonOptions[] {
     return [];
   }
+
+  /**
+   * Event handler for deselected.
+   *
+   */
 
   protected onDeselected(): void {}
 

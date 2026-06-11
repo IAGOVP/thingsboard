@@ -20,20 +20,28 @@ import { AppState } from '@core/core.state';
 import { EdgeInfo } from '@shared/models/edge.models';
 import { EntityTabsComponent } from '@home/components/entity/entity-tabs.component';
 
+
+/**
+ * Angular component: edge tabs (home/edge pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edge-tabs`.
+ */
 @Component({
     selector: 'tb-edge-tabs',
     templateUrl: './edge-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: edge tabs UI.
- */
+standalone: false
 })
 export class EdgeTabsComponent extends EntityTabsComponent<EdgeInfo> {
 
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     super.ngOnInit();

@@ -39,8 +39,11 @@ import { MatButton } from '@angular/material/button';
 import ITooltipsterInstance = JQueryTooltipster.ITooltipsterInstance;
 import { TranslateService } from '@ngx-translate/core';
 /**
- * Angular component: scada symbol panel UI.
+ * Angular component: scada symbol panel (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 
 @Directive()
 abstract class ScadaSymbolPanelComponent implements AfterViewInit {
@@ -53,6 +56,11 @@ abstract class ScadaSymbolPanelComponent implements AfterViewInit {
 
   protected constructor(public element: ElementRef<HTMLElement>) {
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.viewInited.emit();

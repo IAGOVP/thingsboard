@@ -24,17 +24,30 @@ import org.thingsboard.server.msa.ui.utils.EntityPrototypes;
 
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 /**
- * Delete device test.
+ * Black-box test: delete device (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Delete device")
 public class DeleteDeviceTest extends AbstractDeviceTest {
+    /**
+     * Creates a test device via REST API and returns its id.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void createDevice() {
         Device device = testRestClient.postDevice("", EntityPrototypes.defaultDevicePrototype(ENTITY_NAME));
         deviceName = device.getName();
     }
+    /**
+     * Deletes device by right side btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Remove the device by clicking on the trash icon in the right side of device")
@@ -45,6 +58,12 @@ public class DeleteDeviceTest extends AbstractDeviceTest {
 
         devicePage.assertEntityIsNotPresent(deviceName);
     }
+    /**
+     * Deletes selected device.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Remove device by mark in the checkbox and then click on the trash can icon in the menu that appears at the top")
@@ -55,6 +74,12 @@ public class DeleteDeviceTest extends AbstractDeviceTest {
 
         devicePage.assertEntityIsNotPresent(deviceName);
     }
+    /**
+     * Deletes device from details tab.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Remove the device by clicking on the 'Delete device' btn in the entity view")
@@ -66,6 +91,12 @@ public class DeleteDeviceTest extends AbstractDeviceTest {
 
         devicePage.assertEntityIsNotPresent(deviceName);
     }
+    /**
+     * Deletes device without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Remove the device by clicking on the trash icon in the right side of device without refresh")

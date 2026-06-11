@@ -31,6 +31,12 @@ import { Subject } from 'rxjs';
 import { isUndefinedOrNull } from '@core/utils';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: snmp device profile communication config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-snmp-device-profile-communication-config`.
+ */
 @Component({
     selector: 'tb-snmp-device-profile-communication-config',
     templateUrl: './snmp-device-profile-communication-config.component.html',
@@ -47,10 +53,7 @@ import { takeUntil } from 'rxjs/operators';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: snmp device profile communication config UI.
- */
+standalone: false
 })
 export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
@@ -68,6 +71,11 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
 
   constructor(private fb: UntypedFormBuilder) { }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.deviceProfileCommunicationConfig = this.fb.group({
       communicationConfig: this.fb.array([])
@@ -76,6 +84,11 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
       takeUntil(this.destroy$)
     ).subscribe(() => this.updateModel());
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -86,12 +99,30 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
     return this.deviceProfileCommunicationConfig.get('communicationConfig') as FormArray<FormGroup>;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -101,6 +132,12 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
       this.deviceProfileCommunicationConfig.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param communicationConfig communication config (SnmpCommunicationConfig[])
+   */
 
   writeValue(communicationConfig: SnmpCommunicationConfig[]) {
     if (communicationConfig?.length === this.communicationConfigFormArray.length) {
@@ -130,11 +167,22 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
     }
   }
 
+  /**
+   * validate.
+   *
+   */
+
   public validate() {
     return this.deviceProfileCommunicationConfig.valid && this.deviceProfileCommunicationConfig.value.communicationConfig.length ? null : {
       communicationConfig: false
     };
   }
+
+  /**
+   * DELETE — remove communication config.
+   *
+   * @param index index (number)
+   */
 
   public removeCommunicationConfig(index: number) {
     this.communicationConfigFormArray.removeAt(index);
@@ -145,6 +193,11 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
     return this.communicationConfigFormArray.length !== Object.keys(SnmpSpecType).length;
   }
 
+  /**
+   * POST/PUT entity — add communication config.
+   *
+   */
+
   public addCommunicationConfig() {
     this.communicationConfigFormArray.push(this.createdFormGroup());
     this.deviceProfileCommunicationConfig.updateValueAndValidity();
@@ -152,6 +205,12 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
       this.updateModel();
     }
   }
+
+  /**
+   * get first unused severity.
+   *
+   * @returns SnmpSpecType observable or value
+   */
 
   private getFirstUnusedSeverity(): SnmpSpecType {
     for (const type of Object.values(SnmpSpecType)) {
@@ -162,14 +221,34 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
     return null;
   }
 
+  /**
+   * is disabled severity.
+   *
+   * @param type type (SnmpSpecType)
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public isDisabledSeverity(type: SnmpSpecType, index: number): boolean {
     const usedIndex = this.usedSpecType.indexOf(type);
     return usedIndex > -1 && usedIndex !== index;
   }
 
+  /**
+   * is show frequency.
+   *
+   * @param type type (SnmpSpecType)
+   * @returns boolean observable or value
+   */
+
   public isShowFrequency(type: SnmpSpecType): boolean {
     return type === SnmpSpecType.TELEMETRY_QUERYING || type === SnmpSpecType.CLIENT_ATTRIBUTES_QUERYING;
   }
+
+  /**
+   * update used spec type.
+   *
+   */
 
   private updateUsedSpecType() {
     this.usedSpecType = [];
@@ -178,6 +257,13 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
       this.usedSpecType[index] = rule.spec;
     });
   }
+
+  /**
+   * POST/PUT entity — created form group.
+   *
+   * @param value value (SnmpCommunicationConfig)
+   * @returns UntypedFormGroup observable or value
+   */
 
   private createdFormGroup(value?: SnmpCommunicationConfig): UntypedFormGroup {
     if (isUndefinedOrNull(value)) {
@@ -207,6 +293,11 @@ export class SnmpDeviceProfileCommunicationConfigComponent implements OnInit, On
     });
     return form;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: SnmpCommunicationConfig[] = this.deviceProfileCommunicationConfig.get('communicationConfig').value;

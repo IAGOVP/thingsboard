@@ -31,11 +31,18 @@ import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.NAME_IS_REQUIRED_MESSAGE;
 import static org.thingsboard.server.msa.ui.utils.Const.SAME_NAME_WARNING_DEVICE_MESSAGE;
 /**
- * Create device test.
+ * Black-box test: create device (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Create device")
 public class CreateDeviceTest extends AbstractDeviceTest {
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -46,6 +53,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
             deviceProfileTitle = null;
         }
     }
+    /**
+     * Creates a test device via REST API and returns its id.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device after specifying the name (text/numbers /special characters)")
@@ -60,6 +73,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
 
         assertIsDisplayed(devicePage.entity(deviceName));
     }
+    /**
+     * Creates device with description.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device after specifying the name and description (text/numbers /special characters)")
@@ -79,6 +98,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertThat(devicePage.descriptionEntityView().getAttribute("value"))
                 .as("Description in device details tab").isEqualTo(deviceName);
     }
+    /**
+     * Creates device without name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device without the name")
@@ -91,6 +116,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertIsDisplayed(devicePage.addDeviceView());
         assertThat(devicePage.errorMessage().getText()).as("Text of warning message").isEqualTo(NAME_IS_REQUIRED_MESSAGE);
     }
+    /**
+     * Creates device with only space.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Create device only with spase in name")
@@ -104,6 +135,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertThat(devicePage.warningMessage().getText()).as("Text of warning message").isEqualTo(EMPTY_DEVICE_MESSAGE);
         assertIsDisplayed(devicePage.addDeviceView());
     }
+    /**
+     * Creates device with same name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Create a device with the same name")
@@ -120,6 +157,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertThat(devicePage.warningMessage().getText()).as("Text of warning message").isEqualTo(SAME_NAME_WARNING_DEVICE_MESSAGE);
         assertIsDisplayed(devicePage.addDeviceView());
     }
+    /**
+     * Creates device without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device after specifying the name (text/numbers /special characters) without refresh")
@@ -133,6 +176,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
 
         assertIsDisplayed(devicePage.entity(deviceName));
     }
+    /**
+     * Creates device without device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device without device profile")
@@ -149,6 +198,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertThat(devicePage.errorMessage().getText()).as("Text of warning message").isEqualTo(DEVICE_PROFILE_IS_REQUIRED_MESSAGE);
         assertIsDisplayed(devicePage.addDeviceView());
     }
+    /**
+     * Creates device with enable gateway.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device with enabled gateway")
@@ -164,6 +219,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertIsDisplayed(devicePage.device(deviceName));
         assertIsDisplayed(devicePage.checkboxGatewayPage(deviceName));
     }
+    /**
+     * Creates device with enable overwrite activity time for connected.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device with enabled overwrite activity time for connected")
@@ -181,6 +242,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertThat(devicePage.checkboxOverwriteActivityTimeDetails().getAttribute("class").contains("selected"))
                 .as("Overwrite activity time for connected is enable").isTrue();
     }
+    /**
+     * Creates device with label.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device with label")
@@ -197,6 +264,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertIsDisplayed(devicePage.deviceLabelOnPage(deviceName));
         assertThat(devicePage.deviceLabelOnPage(deviceName).getText()).as("Label added correctly").isEqualTo(deviceLabel);
     }
+    /**
+     * Creates device with assignee.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device with assignee on customer")
@@ -214,6 +287,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertThat(devicePage.deviceCustomerOnPage(deviceName).getText())
                 .as("Customer added correctly").isEqualTo(customer);
     }
+    /**
+     * Documentation.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Go to devices documentation page")
@@ -226,6 +305,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
 
         assertThat(urlContains(urlPath)).as("Redirected URL contains " + urlPath).isTrue();
     }
+    /**
+     * Creates new device profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Create new device profile from create device")
@@ -246,6 +331,12 @@ public class CreateDeviceTest extends AbstractDeviceTest {
         assertThat(deviceProfileColumn).as("Profile changed correctly").isEqualTo(deviceProfileTitle);
         assertIsDisplayed(profilesPage.entity(deviceProfileTitle));
     }
+    /**
+     * Creates device with changed profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(groups = "smoke")
     @Description("Add device with changed device profile (from default to another)")

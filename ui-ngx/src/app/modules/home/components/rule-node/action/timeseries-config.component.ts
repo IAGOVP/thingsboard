@@ -28,14 +28,17 @@ import {
   TimeseriesNodeConfigurationForm
 } from '@home/components/rule-node/action/timeseries-config.models';
 
+
+/**
+ * Angular component: timeseries config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-timeseries-config`.
+ */
 @Component({
     selector: 'tb-action-node-timeseries-config',
     templateUrl: './timeseries-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: timeseries config UI.
- */
+standalone: false
 })
 export class TimeseriesConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -51,13 +54,32 @@ export class TimeseriesConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.timeseriesConfigForm;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['processingSettings.isAdvanced', 'processingSettings.type'];
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns TimeseriesNodeConfigurationForm observable or value
+   */
 
   protected prepareInputConfig(config: TimeseriesNodeConfiguration): TimeseriesNodeConfigurationForm {
     let processingSettings: ProcessingSettingsForm;
@@ -83,6 +105,13 @@ export class TimeseriesConfigComponent extends RuleNodeConfigurationComponent {
     }
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns TimeseriesNodeConfiguration observable or value
+   */
+
   protected prepareOutputConfig(config: TimeseriesNodeConfigurationForm): TimeseriesNodeConfiguration {
     let processingSettings: ProcessingSettings;
     if (config.processingSettings.isAdvanced) {
@@ -102,6 +131,12 @@ export class TimeseriesConfigComponent extends RuleNodeConfigurationComponent {
     };
   }
 
+  /**
+   * Event handler for configuration set.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   protected onConfigurationSet(config: TimeseriesNodeConfigurationForm) {
     this.timeseriesConfigForm = this.fb.group({
       processingSettings: this.fb.group({
@@ -117,6 +152,13 @@ export class TimeseriesConfigComponent extends RuleNodeConfigurationComponent {
       useServerTs: [config?.useServerTs ?? false]
     });
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param _trigger  trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, _trigger?: string) {
     const processingForm = this.timeseriesConfigForm.get('processingSettings') as FormGroup;

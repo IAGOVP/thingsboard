@@ -96,11 +96,11 @@ const imageLoader = (imageUrl: string): Observable<HTMLImageElement> => new Obse
 const loadImageAspect = (imageUrl: string): Observable<number> =>
   imageLoader(imageUrl).pipe(map(image => image.width / image.height));
 
+
 /**
-
- * image with aspect.
-
+ * Image with aspect (ThingsBoard web UI).
  */
+
 
 export interface ImageWithAspect {
   url: string;

@@ -27,15 +27,18 @@ export interface AlarmRuleDetailsDialogData {
   readonly: boolean;
 }
 
+
+/**
+ * Angular component: alarm rule details dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edit-alarm-details-dialog`.
+ */
 @Component({
     selector: 'tb-edit-alarm-details-dialog',
     templateUrl: './alarm-rule-details-dialog.component.html',
     providers: [],
     styleUrls: ['./cf-alarm-rules-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm rule details dialog UI.
- */
+standalone: false
 })
 export class AlarmRuleDetailsDialogComponent extends DialogComponent<AlarmRuleDetailsDialogComponent, string> {
 
@@ -54,9 +57,19 @@ export class AlarmRuleDetailsDialogComponent extends DialogComponent<AlarmRuleDe
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close(this.alarmDetailsControl.value);

@@ -35,8 +35,9 @@ import { getCurrentAuthUser } from '@core/auth/auth.selectors';
 import { ConfirmOnExitGuard } from '@core/guards/confirm-on-exit.guard';
 import { MenuId } from '@core/services/menu.models';
 /**
- * Route resolver: loads dashboard before activate.
+ * Route resolver: preloads data for dashboard (home/dashboard pages).
  */
+
 
 @Injectable()
 export class DashboardResolver  {
@@ -46,6 +47,13 @@ export class DashboardResolver  {
               private userSettingService: UserSettingsService,
               private dashboardUtils: DashboardUtilsService) {
   }
+
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<Dashboard> observable or value
+   */
 
   resolve(route: ActivatedRouteSnapshot): Observable<Dashboard> {
     const dashboardId = route.params.dashboardId;

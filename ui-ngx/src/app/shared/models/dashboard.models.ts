@@ -25,11 +25,11 @@ import { Filters } from '@shared/models/query/query.models';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HasTenantId, HasVersion } from '@shared/models/entity.models';
 
+
 /**
-
- * TypeScript models and enums for dashboard info.
-
+ * TypeScript interfaces, types, and enums for dashboard info (shared TypeScript models).
  */
+
 
 export interface DashboardInfo extends BaseData<DashboardId>, HasTenantId, HasVersion, ExportableEntity<DashboardId> {
   tenantId?: TenantId;

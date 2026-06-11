@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: msg delay config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-msg-delay-config`.
+ */
 @Component({
     selector: 'tb-action-node-msg-delay-config',
     templateUrl: './msg-delay-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: msg delay config UI.
- */
+standalone: false
 })
 export class MsgDelayConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class MsgDelayConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.msgDelayConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.msgDelayConfigForm = this.fb.group({
@@ -49,9 +64,21 @@ export class MsgDelayConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useMetadataPeriodInSecondsPatterns'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const useMetadataPeriodInSecondsPatterns: boolean = this.msgDelayConfigForm.get('useMetadataPeriodInSecondsPatterns').value;

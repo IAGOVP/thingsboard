@@ -42,14 +42,17 @@ import {
 } from '@home/components/widget/lib/chart/chart.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: range chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-range-chart-widget-settings`.
+ */
 @Component({
     selector: 'tb-range-chart-widget-settings',
     templateUrl: './range-chart-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: range chart widget settings UI.
- */
+standalone: false
 })
 export class RangeChartWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -96,13 +99,31 @@ export class RangeChartWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.rangeChartWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return rangeChartDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.rangeChartWidgetSettingsForm = this.fb.group({
@@ -164,10 +185,21 @@ export class RangeChartWidgetSettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showRangeThresholds', 'fillArea', 'showLine', 'step', 'showPointLabel', 'enablePointLabelBackground',
       'showLegend', 'showTooltip', 'tooltipShowDate'];
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   protected updateValidators() {
     const showRangeThresholds: boolean = this.rangeChartWidgetSettingsForm.get('showRangeThresholds').value;
@@ -271,6 +303,12 @@ export class RangeChartWidgetSettingsComponent extends WidgetSettingsComponent {
       this.rangeChartWidgetSettingsForm.get('tooltipBackgroundBlur').disable();
     }
   }
+
+  /**
+   * Event handler for settings changed.
+   *
+   * @param updated updated (WidgetSettings)
+   */
 
   protected onSettingsChanged(updated: WidgetSettings) {
     updateLatestDataKeys([updated.yAxis], this.datasource, this.dataKeyCallbacks);

@@ -29,14 +29,17 @@ import {
 import { DateFormatProcessor, DateFormatSettings } from '@shared/models/widget-settings.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: signal strength widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-signal-strength-widget-settings`.
+ */
 @Component({
     selector: 'tb-signal-strength-widget-settings',
     templateUrl: './signal-strength-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: signal strength widget settings UI.
- */
+standalone: false
 })
 export class SignalStrengthWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -57,13 +60,31 @@ export class SignalStrengthWidgetSettingsComponent extends WidgetSettingsCompone
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.signalStrengthWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return signalStrengthDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.signalStrengthWidgetSettingsForm = this.fb.group({
@@ -97,9 +118,21 @@ export class SignalStrengthWidgetSettingsComponent extends WidgetSettingsCompone
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showDate', 'showTooltip', 'showTooltipValue', 'showTooltipDate'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showDate: boolean = this.signalStrengthWidgetSettingsForm.get('showDate').value;

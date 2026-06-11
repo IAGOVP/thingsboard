@@ -17,13 +17,22 @@ package org.thingsboard.rule.engine.api.sms;
 
 import org.thingsboard.server.common.data.sms.config.SmsProviderConfiguration;
 
+
 /**
 
- * Rule engine sms sender factory API.
+ * sms sender factory contract (rule engine public API contracts and services).
 
  */
 
+
 public interface SmsSenderFactory {
+    /**
+     * Creates sms sender.
+     *
+     * @param config deserialized node configuration POJO
+     * @return {@link SmsSender}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     SmsSender createSmsSender(SmsProviderConfiguration config);
 

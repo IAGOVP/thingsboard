@@ -44,8 +44,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
 /**
- * Abstract container test.
+ * Base class for Docker-based black-box integration tests.
+ *
+ * <p>Bootstraps {@link ContainerTestSuite}, {@link TestRestClient}, and shared device profile fixtures.
  */
+
 
 @Slf4j
 @Listeners(TestListener.class)
@@ -59,6 +62,12 @@ public abstract class AbstractContainerTest {
     protected ObjectMapper mapper = new ObjectMapper();
     private static final ContainerTestSuite containerTestSuite = ContainerTestSuite.getInstance();
     protected static TestRestClient testRestClient;
+    /**
+     * TestNG hook: starts containers and initializes REST client.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeSuite
     public void beforeSuite() {
@@ -70,6 +79,12 @@ public abstract class AbstractContainerTest {
             timeoutMultiplier = 10;
         }
     }
+    /**
+     * TestNG hook: stops containers and cleans temporary files.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterSuite()
     public void afterSuite() {
@@ -77,6 +92,15 @@ public abstract class AbstractContainerTest {
             containerTestSuite.stop();
         }
     }
+    /**
+     * Subscribe to web socket.
+     *
+     * @param deviceId device under test
+     * @param scope scope ({@link String})
+     * @param property property ({@link CmdsType})
+     * @return {@link WsClient}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected WsClient subscribeToWebSocket(DeviceId deviceId, String scope, CmdsType property) throws Exception {
         String webSocketUrl = TestProperties.getWebSocketUrl();
@@ -102,6 +126,13 @@ public abstract class AbstractContainerTest {
         wsClient.waitForFirstReply();
         return wsClient;
     }
+    /**
+     * Returns expected latest values.
+     *
+     * @param ts ts
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected Map<String, Long> getExpectedLatestValues(long ts) {
         return ImmutableMap.<String, Long>builder()
@@ -111,18 +142,40 @@ public abstract class AbstractContainerTest {
                 .put("longKey", ts)
                 .build();
     }
+    /**
+     * Creates gateway connect payload.
+     *
+     * @param deviceName device name ({@link String})
+     * @return {@link JsonObject}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected JsonObject createGatewayConnectPayload(String deviceName){
         JsonObject payload = new JsonObject();
         payload.addProperty("device", deviceName);
         return payload;
     }
+    /**
+     * Creates gateway payload.
+     *
+     * @param deviceName device name ({@link String})
+     * @param ts ts
+     * @return {@link JsonObject}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected JsonObject createGatewayPayload(String deviceName, long ts){
         JsonObject payload = new JsonObject();
         payload.add(deviceName, createGatewayTelemetryArray(ts));
         return payload;
     }
+    /**
+     * Creates gateway telemetry array.
+     *
+     * @param ts ts
+     * @return {@link JsonArray}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected JsonArray createGatewayTelemetryArray(long ts){
         JsonArray telemetryArray = new JsonArray();
@@ -132,6 +185,13 @@ public abstract class AbstractContainerTest {
             telemetryArray.add(createPayload());
         return telemetryArray;
     }
+    /**
+     * Creates payload.
+     *
+     * @param ts ts
+     * @return {@link JsonObject}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected JsonObject createPayload(long ts) {
         JsonObject values = createPayload();
@@ -140,6 +200,12 @@ public abstract class AbstractContainerTest {
         payload.add("values", values);
         return payload;
     }
+    /**
+     * Creates payload.
+     *
+     * @return {@link JsonObject}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected JsonObject createPayload() {
         JsonObject values = new JsonObject();
@@ -150,6 +216,12 @@ public abstract class AbstractContainerTest {
 
         return values;
     }
+
+    /**
+
+     * Enumerates cmds type values (black-box test infrastructure).
+
+     */
 
     protected enum CmdsType {
         TS_SUB_CMDS("tsSubCmds"),
@@ -167,6 +239,14 @@ public abstract class AbstractContainerTest {
             return text;
         }
     }
+    /**
+     * Updates device profile with provisioning strategy.
+     *
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @param provisionType provision type ({@link DeviceProfileProvisionType})
+     * @return {@link DeviceProfile}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected DeviceProfile updateDeviceProfileWithProvisioningStrategy(DeviceProfile deviceProfile, DeviceProfileProvisionType provisionType) {
         DeviceProfileProvisionConfiguration provisionConfiguration;
@@ -186,6 +266,13 @@ public abstract class AbstractContainerTest {
         deviceProfile.setProvisionDeviceKey(testProvisionDeviceKey);
         return testRestClient.postDeviceProfile(deviceProfile);
     }
+    /**
+     * Updates default tenant profile.
+     *
+     * @param updater updater ({@link Consumer})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void updateDefaultTenantProfile(Consumer<TenantProfile> updater) {
         EntityInfo defaultTenantProfileInfo = testRestClient.getDefaultTenantProfileInfo();

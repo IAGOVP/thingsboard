@@ -22,14 +22,23 @@ import org.thingsboard.rule.engine.util.TbMsgSource;
 
 import java.util.HashMap;
 /**
- * JSON configuration for TbGetEntityData rule node.
+ * JSON configuration POJO for {@link TbGetEntityData} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TbGetEntityDataNodeConfiguration extends TbGetMappedDataNodeConfiguration implements NodeConfiguration<TbGetEntityDataNodeConfiguration> {
 
     private DataToFetch dataToFetch;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGetEntityDataNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGetEntityDataNodeConfiguration defaultConfiguration() {

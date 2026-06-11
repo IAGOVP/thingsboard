@@ -79,8 +79,9 @@ import static org.thingsboard.server.common.data.msg.TbMsgType.POST_ATTRIBUTES_R
 import static org.thingsboard.server.common.data.msg.TbMsgType.POST_TELEMETRY_REQUEST;
 import static org.thingsboard.server.common.data.msg.TbMsgType.TIMESERIES_UPDATED;
 /**
- * Rule engine component: device state.
+ * Device state (device profile state nodes).
  */
+
 
 @Slf4j
 @Deprecated
@@ -129,6 +130,14 @@ class DeviceState {
             }
         }
     }
+    /**
+     * Updates profile.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param deviceProfile device profile ({@link DeviceProfile})
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     public void updateProfile(TbContext ctx, DeviceProfile deviceProfile) throws ExecutionException, InterruptedException {
         Set<AlarmConditionFilterKey> oldKeys = Set.copyOf(this.deviceProfile.getEntityKeys());
@@ -173,6 +182,14 @@ class DeviceState {
         DynamicValue<Long> dynamicValue = spec.getPredicate().getDynamicValue();
         return dynamicValue != null && dynamicValue.getSourceType() == DynamicValueSourceType.CURRENT_DEVICE;
     }
+    /**
+     * Harvest alarms.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param ts ts
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     public void harvestAlarms(TbContext ctx, long ts) throws ExecutionException, InterruptedException {
         log.debug("[{}] Going to harvest alarms: {}", ctx.getSelfId(), ts);
@@ -186,6 +203,14 @@ class DeviceState {
             state = ctx.saveRuleNodeState(state);
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     public void process(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException {
         if (latestValues == null) {
@@ -292,6 +317,15 @@ class DeviceState {
         ctx.tellSuccess(msg);
         return stateChanged;
     }
+    /**
+     * Processes attributes update request.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return the boolean result
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     protected boolean processAttributesUpdateRequest(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException {
         return processAttributes(ctx, msg, DataConstants.CLIENT_SCOPE);
@@ -311,10 +345,28 @@ class DeviceState {
         ctx.tellSuccess(msg);
         return stateChanged;
     }
+    /**
+     * Processes telemetry request.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return the boolean result
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     protected boolean processTelemetryRequest(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException {
         return processTelemetryUpdate(ctx, msg, JsonParser.parseString(msg.getData()));
     }
+    /**
+     * Processes telemetry updated notification.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return the boolean result
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     protected boolean processTelemetryUpdatedNotification(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException {
         JsonElement msgData = JsonParser.parseString(msg.getData());
@@ -457,6 +509,13 @@ class DeviceState {
             }
         }
     }
+    /**
+     * To entity value.
+     *
+     * @param entry entry ({@link KvEntry})
+     * @return {@link EntityKeyValue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static EntityKeyValue toEntityValue(KvEntry entry) {
         switch (entry.getDataType()) {
@@ -474,6 +533,12 @@ class DeviceState {
                 throw new RuntimeException("Can't parse entry: " + entry.getDataType());
         }
     }
+    /**
+     * Returns profile id.
+     *
+     * @return {@link DeviceProfileId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DeviceProfileId getProfileId() {
         return deviceProfile.getProfileId();

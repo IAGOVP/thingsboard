@@ -20,20 +20,28 @@ import { AppState } from '@core/core.state';
 import { EntityTabsComponent } from '../../components/entity/entity-tabs.component';
 import { TenantProfile } from '@shared/models/tenant.model';
 
+
+/**
+ * Angular component: tenant profile tabs (home/tenant-profile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tenant-profile-tabs`.
+ */
 @Component({
     selector: 'tb-tenant-profile-tabs',
     templateUrl: './tenant-profile-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: tenant profile tabs UI.
- */
+standalone: false
 })
 export class TenantProfileTabsComponent extends EntityTabsComponent<TenantProfile> {
 
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     super.ngOnInit();

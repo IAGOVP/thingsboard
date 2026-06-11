@@ -32,6 +32,12 @@ import { merge } from 'rxjs';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: time series no aggregation bar width settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-no-aggregation-bar-width-settings`.
+ */
 @Component({
     selector: 'tb-time-series-no-aggregation-bar-width-settings',
     templateUrl: './time-series-no-aggregation-bar-width-settings.component.html',
@@ -43,10 +49,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: time series no aggregation bar width settings UI.
- */
+standalone: false
 })
 export class TimeSeriesNoAggregationBarWidthSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -72,6 +75,11 @@ export class TimeSeriesNoAggregationBarWidthSettingsComponent implements OnInit,
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.barWidthSettingsFormGroup = this.fb.group({
@@ -102,12 +110,30 @@ export class TimeSeriesNoAggregationBarWidthSettingsComponent implements OnInit,
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -119,6 +145,12 @@ export class TimeSeriesNoAggregationBarWidthSettingsComponent implements OnInit,
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TimeSeriesChartNoAggregationBarWidthSettings)
+   */
+
   writeValue(value: TimeSeriesChartNoAggregationBarWidthSettings): void {
     this.modelValue = value;
     this.barWidthSettingsFormGroup.patchValue(
@@ -126,6 +158,11 @@ export class TimeSeriesNoAggregationBarWidthSettingsComponent implements OnInit,
     );
     this.updateValidators();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const strategy: TimeSeriesChartNoAggregationBarWidthStrategy =
@@ -154,6 +191,11 @@ export class TimeSeriesNoAggregationBarWidthSettingsComponent implements OnInit,
       }
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.barWidthSettingsFormGroup.getRawValue();

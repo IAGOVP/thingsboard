@@ -35,17 +35,25 @@ import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.EMPTY_ASSET_PROFILE_MESSAGE;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 
+
 /**
 
- * Asset profile edit menu test.
+ * Black-box test: asset profile edit menu (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class AssetProfileEditMenuTest extends AbstractDriverBaseTest {
 
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
     private String name;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -53,6 +61,12 @@ public class AssetProfileEditMenuTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void delete() {
@@ -61,6 +75,12 @@ public class AssetProfileEditMenuTest extends AbstractDriverBaseTest {
             name = null;
         }
     }
+    /**
+     * Change name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Edit asset profile")
@@ -86,6 +106,12 @@ public class AssetProfileEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertNotEquals(nameBefore, nameAfter);
         Assert.assertEquals(nameAfter, newName);
     }
+    /**
+     * Deletes name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Edit asset profile")
@@ -103,6 +129,12 @@ public class AssetProfileEditMenuTest extends AbstractDriverBaseTest {
 
         Assert.assertFalse(profilesPage.doneBtnEditViewVisible().isEnabled());
     }
+    /**
+     * Saves or persists with only space in name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Edit asset profile")
@@ -123,6 +155,15 @@ public class AssetProfileEditMenuTest extends AbstractDriverBaseTest {
         Assert.assertTrue(profilesPage.warningMessage().isDisplayed());
         Assert.assertEquals(profilesPage.warningMessage().getText(), EMPTY_ASSET_PROFILE_MESSAGE);
     }
+    /**
+     * Edit description.
+     *
+     * @param description description ({@link String})
+     * @param newDescription new description ({@link String})
+     * @param finalDescription final description ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Edit asset profile")

@@ -23,8 +23,9 @@ import { mergeMap, withLatestFrom } from 'rxjs/operators';
 import { AuthActions, AuthActionTypes } from '@core/auth/auth.actions';
 import { selectAuthState } from '@core/auth/auth.selectors';
 /**
- * auth effects.
+ * Auth effects (authentication).
  */
+
 
 @Injectable()
 export class AuthEffects {

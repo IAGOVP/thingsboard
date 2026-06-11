@@ -31,8 +31,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 /**
- * Exponential-backoff retransmission for unacknowledged MQTT messages.
+ * Schedules exponential-backoff retransmission for unacknowledged MQTT messages.
  */
+
 
 @Slf4j
 @RequiredArgsConstructor

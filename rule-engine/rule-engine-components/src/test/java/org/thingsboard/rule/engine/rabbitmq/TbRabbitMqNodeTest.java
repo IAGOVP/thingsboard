@@ -70,8 +70,9 @@ import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.BDDMockito.willReturn;
 /**
- * Unit test for tb rabbit mq node rule node.
+ * Unit test for tb rabbit mq node (RabbitMQ publish nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbRabbitMqNodeTest {
@@ -94,12 +95,22 @@ public class TbRabbitMqNodeTest {
     private Connection connectionMock;
     @Mock
     private Channel channelMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
         node = spy(new TbRabbitMqNode());
         config = new TbRabbitMqNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -116,6 +127,11 @@ public class TbRabbitMqNodeTest {
         assertThat(config.getHandshakeTimeout()).isEqualTo(ConnectionFactory.DEFAULT_HANDSHAKE_TIMEOUT);
         assertThat(config.getClientProperties()).isEqualTo(Collections.emptyMap());
     }
+    /**
+     * Verify get connection factory method.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyGetConnectionFactoryMethod() {
@@ -135,6 +151,16 @@ public class TbRabbitMqNodeTest {
         expectedClientProperties.putAll(config.getClientProperties());
         assertThat(connectionFactory.getClientProperties()).isEqualTo(expectedClientProperties);
     }
+    /**
+     * Given force ack is true and exchange name and routing key patterns and basic properties when on msg then publish msg and enqueue for tell next.
+     *
+     * @param exchangeNamePattern exchange name pattern ({@link String})
+     * @param routingKeyPattern routing key pattern ({@link String})
+     * @param basicProperties basic properties ({@link String})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -178,6 +204,11 @@ public class TbRabbitMqNodeTest {
                         TbMsgMetaData.EMPTY, "{\"msgExchangeName\":\"msg_topic_logs\",\"msgRoutingKey\":\"msg.kern.critical\"}")
         );
     }
+    /**
+     * Given force ack is false and exchange name and routing key patterns and basic properties when on msg then publish msg and tell success.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenForceAckIsFalseAndExchangeNameAndRoutingKeyPatternsAndBasicProperties_whenOnMsg_thenPublishMsgAndTellSuccess() throws Exception {
@@ -200,6 +231,12 @@ public class TbRabbitMqNodeTest {
         then(ctxMock).should().tellSuccess(actualMsg.capture());
         assertThat(actualMsg.getValue()).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(msg);
     }
+    /**
+     * Given force ack and error occurs during publishing when on msg then verify tell failure.
+     *
+     * @param forceAck force ack
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
@@ -236,6 +273,13 @@ public class TbRabbitMqNodeTest {
         assertThat(actualMsg.getValue()).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(expectedMsg);
         assertThat(throwable.getValue()).isInstanceOf(RuntimeException.class).hasMessage(errorMsg);
     }
+    /**
+     * Given amqpbasic properties name when convert then return amqpbasic properties.
+     *
+     * @param name name ({@link String})
+     * @param expectedBasicProperties expected basic properties
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -254,6 +298,12 @@ public class TbRabbitMqNodeTest {
                 Arguments.of("PERSISTENT_TEXT_PLAIN", MessageProperties.PERSISTENT_TEXT_PLAIN)
         );
     }
+    /**
+     * Given undefined properties when convert then throws exception.
+     *
+     * @param name name ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @ValueSource(strings = {"Basic", "TEXT_plain", "minimal basic", "", "    "})
@@ -263,6 +313,11 @@ public class TbRabbitMqNodeTest {
                 .hasMessage("Undefined message properties type '" + name +
                         "'! Only " + supportedPropertiesStr + " message properties types are supported!");
     }
+    /**
+     * Given connection when destroy then should close.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     */
 
     @Test
     public void givenConnection_whenDestroy_thenShouldClose() throws IOException {
@@ -270,6 +325,12 @@ public class TbRabbitMqNodeTest {
         node.destroy();
         then(connectionMock).should().close();
     }
+    /**
+     * Given connection is null when destroy then verify no interactions.
+     *
+     * @throws IOException if ioexception is thrown during processing
+     * @throws TimeoutException if timeout exception is thrown during processing
+     */
 
     @Test
     public void givenConnectionIsNull_whenDestroy_thenVerifyNoInteractions() {

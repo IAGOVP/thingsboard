@@ -29,7 +29,9 @@ import { WebsocketService } from '@core/ws/websocket.service';
 
 // @dynamic
 /**
- * Angular HTTP service: notification websocket REST wrappers (`@core/http`).
+ * Angular injectable service: notification websocket (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -44,17 +46,41 @@ export class NotificationWebsocketService extends WebsocketService<TelemetrySubs
     super(store, authService, ngZone, 'api/ws/plugins/telemetry', new TelemetryPluginCmdsWrapper(), window);
   }
 
+  /**
+   * subscribe.
+   *
+   * @param subscriber subscriber (TelemetrySubscriber)
+   */
+
   public subscribe(subscriber: TelemetrySubscriber) {
     this.telemetryWebsocketService.subscribe(subscriber);
   }
+
+  /**
+   * update.
+   *
+   * @param subscriber subscriber (TelemetrySubscriber)
+   */
 
   public update(subscriber: TelemetrySubscriber) {
     this.telemetryWebsocketService.update(subscriber);
   }
 
+  /**
+   * unsubscribe.
+   *
+   * @param subscriber subscriber (TelemetrySubscriber)
+   */
+
   public unsubscribe(subscriber: TelemetrySubscriber) {
     this.telemetryWebsocketService.unsubscribe(subscriber);
   }
+
+  /**
+   * process on message.
+   *
+   * @param message message (WebsocketDataMsg)
+   */
 
   processOnMessage(message: WebsocketDataMsg) {
     this.telemetryWebsocketService.processOnMessage(message);

@@ -24,11 +24,11 @@ import {
   getUniqueDataKeys
 } from '@home/components/widget/lib/settings/cards/api-usage-settings.component.models';
 
+
 /**
-
- * TypeScript models and enums for alias filter pair.
-
+ * TypeScript interfaces, types, and enums for alias filter pair (shared TypeScript models).
  */
+
 
 interface AliasFilterPair {
   alias?: EntityAliasInfo;

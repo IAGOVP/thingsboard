@@ -17,13 +17,23 @@ package org.thingsboard.monitoring.notification.channels;
 
 import org.thingsboard.monitoring.data.notification.Notification;
 
+
 /**
 
- * Outbound notification sink (e.g. Slack webhook).
+ * Outbound notification sink contract (Slack webhook, etc.).
 
  */
 
+
 public interface NotificationChannel {
+    /**
+     * Dispatches a notification to all configured channels asynchronously.
+     *
+     * @param message Slack or notification message body
+     * @param notification alert payload to deliver to notification channels
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendNotification(String message, Notification notification);
 

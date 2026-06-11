@@ -28,13 +28,22 @@ import RadialGauge = CanvasGauges.RadialGauge;
 
 // @dynamic
 /**
- * tb analogue compass.
+ * Tb analogue compass (ThingsBoard web UI).
  */
+
 export class TbAnalogueCompass extends TbBaseGauge<AnalogueCompassSettings, RadialGaugeOptions> {
 
   constructor(ctx: WidgetContext, canvasId: string) {
     super(ctx, canvasId);
   }
+
+  /**
+   * POST/PUT entity — create gauge options.
+   *
+   * @param gaugeElement gauge element (HTMLElement)
+   * @param settings settings (AnalogueCompassSettings)
+   * @returns RadialGaugeOptions observable or value
+   */
 
   protected createGaugeOptions(gaugeElement: HTMLElement, settings: AnalogueCompassSettings): RadialGaugeOptions {
 
@@ -97,6 +106,13 @@ export class TbAnalogueCompass extends TbBaseGauge<AnalogueCompassSettings, Radi
       animationTarget: settings.animationTarget || 'needle'
     };
   }
+
+  /**
+   * POST/PUT entity — create gauge.
+   *
+   * @param gaugeData gauge data (RadialGaugeOptions)
+   * @returns BaseGauge observable or value
+   */
 
   protected createGauge(gaugeData: RadialGaugeOptions): BaseGauge {
     return new RadialGauge(gaugeData);

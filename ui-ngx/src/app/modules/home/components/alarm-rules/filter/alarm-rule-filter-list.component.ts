@@ -43,6 +43,12 @@ import { AlarmRuleFilter, areFilterAndPredicateArgumentsValid } from "@shared/mo
 import { CalculatedFieldArgument } from "@shared/models/calculated-field.models";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
+
+/**
+ * Angular component: alarm rule filter list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-filter-list`.
+ */
 @Component({
     selector: 'tb-alarm-rule-filter-list',
     templateUrl: './alarm-rule-filter-list.component.html',
@@ -59,10 +65,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm rule filter list UI.
- */
+standalone: false
 })
 export class AlarmRuleFilterListComponent implements ControlValueAccessor, Validator {
 
@@ -102,18 +105,42 @@ export class AlarmRuleFilterListComponent implements ControlValueAccessor, Valid
     return this.filterListFormGroup.get('filters') as FormArray;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.filterListFormGroup.valid && this.filterListFormGroup.get('filters').value?.length ? null : {
       filterList: {valid: false}
     };
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -123,6 +150,12 @@ export class AlarmRuleFilterListComponent implements ControlValueAccessor, Valid
       this.filterListFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param filters filters (Array<AlarmRuleFilter>)
+   */
 
   writeValue(filters: Array<AlarmRuleFilter>): void {
     const keyFilterControls: Array<AbstractControl> = [];
@@ -135,9 +168,20 @@ export class AlarmRuleFilterListComponent implements ControlValueAccessor, Valid
     keyFilterControls.forEach(c => this.filtersFormArray.push(c));
   }
 
+  /**
+   * DELETE — remove filter.
+   *
+   * @param index index (number)
+   */
+
   public removeFilter(index: number) {
     (this.filterListFormGroup.get('filters') as FormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add filter.
+   *
+   */
 
   public addFilter() {
     const filtersFormArray = this.filterListFormGroup.get('filters') as FormArray;
@@ -148,6 +192,12 @@ export class AlarmRuleFilterListComponent implements ControlValueAccessor, Valid
     });
   }
 
+  /**
+   * edit filter.
+   *
+   * @param index index (number)
+   */
+
   public editFilter(index: number, readonly = false) {
     const filter: AlarmRuleFilter =
       (this.filterListFormGroup.get('filters') as FormArray).at(index).value;
@@ -157,6 +207,13 @@ export class AlarmRuleFilterListComponent implements ControlValueAccessor, Valid
       }
     });
   }
+
+  /**
+   * open filter dialog.
+   *
+   * @param filter filter (AlarmRuleFilter)
+   * @returns Observable<AlarmRuleFilter> observable or value
+   */
 
   private openFilterDialog(filter?: AlarmRuleFilter, readonly = false): Observable<AlarmRuleFilter> {
     const isAdd = !filter;
@@ -186,6 +243,11 @@ export class AlarmRuleFilterListComponent implements ControlValueAccessor, Valid
     const filters = this.filterListFormGroup.get('filters').value as Array<AlarmRuleFilter>;
     return filters.length ? filters.map((filter: AlarmRuleFilter) => filter.argument) : [];
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const filters = this.filterListFormGroup.value.filters as Array<AlarmRuleFilter>;

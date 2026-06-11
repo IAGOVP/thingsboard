@@ -45,14 +45,17 @@ interface UserInputForm {
   value: FormControl<string | number | boolean>;
 }
 
+
+/**
+ * Angular component: user filter dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-user-filter-dialog`.
+ */
 @Component({
     selector: 'tb-user-filter-dialog',
     templateUrl: './user-filter-dialog.component.html',
     styleUrls: ['./user-filter-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: user filter dialog UI.
- */
+standalone: false
 })
 export class UserFilterDialogComponent extends DialogComponent<UserFilterDialogComponent, Filter> {
 
@@ -77,6 +80,13 @@ export class UserFilterDialogComponent extends DialogComponent<UserFilterDialogC
     const userInputControls = userInputs.map(input => this.createUserInputFormControl(input));
     this.userInputsFormArray = this.fb.array(userInputControls);
   }
+
+  /**
+   * POST/PUT entity — create user input form control.
+   *
+   * @param userInput user input (UserFilterInputInfo)
+   * @returns FormGroup<UserInputForm> observable or value
+   */
 
   private createUserInputFormControl(userInput: UserFilterInputInfo): FormGroup<UserInputForm> {
     const predicateValue: FilterPredicateValue<string | number | boolean> = (userInput.info.keyFilterPredicate as any).value;
@@ -109,9 +119,19 @@ export class UserFilterDialogComponent extends DialogComponent<UserFilterDialogC
     return userInputControl;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close(this.filter);

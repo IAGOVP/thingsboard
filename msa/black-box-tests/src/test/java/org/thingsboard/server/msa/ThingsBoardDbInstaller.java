@@ -32,8 +32,9 @@ import java.util.stream.IntStream;
 
 import static org.thingsboard.server.msa.TestUtils.addComposeVersion;
 /**
- * Things board db installer.
+ * Prepares database schema/data before black-box Docker stack starts.
  */
+
 
 @Slf4j
 public class ThingsBoardDbInstaller {
@@ -166,10 +167,22 @@ public class ThingsBoardDbInstaller {
         }
         return new File(targetDir + "docker-compose.valkey.yml");
     }
+    /**
+     * Returns env.
+     *
+     * @return {@link Map}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public Map<String, String> getEnv() {
         return env;
     }
+    /**
+     * Creates volumes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createVolumes() {
         try {
@@ -249,6 +262,12 @@ public class ThingsBoardDbInstaller {
             }
         }
     }
+    /**
+     * Saves or persists logs and remove volumes.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void saveLogsAndRemoveVolumes() {
         copyLogs(tbLogVolume, "./target/tb-logs/");

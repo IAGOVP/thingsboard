@@ -18,15 +18,18 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MenuService } from '@core/services/menu.service';
 import { MenuSection } from '@core/services/menu.models';
 
+
+/**
+ * Angular component: side menu (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-side-menu`.
+ */
 @Component({
     selector: 'tb-side-menu',
     templateUrl: './side-menu.component.html',
     styleUrls: ['./side-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: side menu UI.
- */
+standalone: false
 })
 export class SideMenuComponent implements OnInit {
 
@@ -35,9 +38,21 @@ export class SideMenuComponent implements OnInit {
   constructor(private menuService: MenuService) {
   }
 
+  /**
+   * track by menu section.
+   *
+   * @param index index (number)
+   * @param section section (MenuSection)
+   */
+
   trackByMenuSection(index: number, section: MenuSection){
     return section.id;
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
   }

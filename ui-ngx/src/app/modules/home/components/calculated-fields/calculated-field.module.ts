@@ -56,6 +56,9 @@ import { CalculatedFieldComponent } from '@home/components/calculated-fields/cal
 /**
  * Angular NgModule: calculated fields feature area.
  */
+/**
+ * Angular NgModule bundling calculated fields (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     CalculatedFieldDialogComponent,
@@ -79,5 +82,5 @@ import { CalculatedFieldComponent } from '@home/components/calculated-fields/cal
     CalculatedFieldDialogComponent,
     CalculatedFieldScriptTestDialogComponent,
     CalculatedFieldComponent,
-  ]})
+]})
 export class CalculatedFieldsModule {}

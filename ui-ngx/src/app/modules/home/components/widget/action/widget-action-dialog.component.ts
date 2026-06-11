@@ -65,15 +65,18 @@ export interface WidgetActionDialogData {
   additionalWidgetActionTypes?: WidgetActionType[];
 }
 
+
+/**
+ * Angular component: widget action dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-action-dialog`.
+ */
 @Component({
     selector: 'tb-widget-action-dialog',
     templateUrl: './widget-action-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: WidgetActionDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: widget action dialog UI.
- */
+standalone: false
 })
 export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDialogComponent,
                                                  WidgetActionDescriptorInfo> implements OnInit, ErrorStateMatcher {
@@ -129,6 +132,11 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
       this.getCellClickColumnsInfo();
     }
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.widgetActionFormGroup = this.fb.group({
@@ -197,6 +205,11 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
     });
   }
 
+  /**
+   * widget header button validators.
+   *
+   */
+
   private widgetHeaderButtonValidators(ignoreUpdatedButtonColor = false) {
     const buttonType = this.widgetActionFormGroup.get('buttonType').value;
     if (!ignoreUpdatedButtonColor) {
@@ -233,9 +246,21 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
     }
   }
 
+  /**
+   * display show widget action form.
+   *
+   * @returns boolean observable or value
+   */
+
   displayShowWidgetActionForm(): boolean {
     return !!this.data.actionsData.actionSources[this.widgetActionFormGroup.get('actionSourceId').value]?.hasShowCondition;
   }
+
+  /**
+   * get widget action function help id.
+   *
+   * @returns string | undefined observable or value
+   */
 
   getWidgetActionFunctionHelpId(): string | undefined {
     const actionSourceId = this.widgetActionFormGroup.get('actionSourceId').value;
@@ -246,6 +271,11 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
     }
     return undefined;
   }
+
+  /**
+   * update show widget action form.
+   *
+   */
 
   private updateShowWidgetActionForm() {
     const actionSourceId = this.widgetActionFormGroup.get('actionSourceId').value;
@@ -258,9 +288,21 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
     this.widgetActionFormGroup.get('showWidgetActionFunction').updateValueAndValidity();
   }
 
+  /**
+   * check column index.
+   *
+   * @param columnIndex column index (number)
+   * @returns number | null observable or value
+   */
+
   private checkColumnIndex(columnIndex: number): number | null {
     return isDefinedAndNotNull(columnIndex) && this.configuredColumns.length - 1 < columnIndex ? null : columnIndex;
   }
+
+  /**
+   * get cell click columns info.
+   *
+   */
 
   private getCellClickColumnsInfo(): void {
     if (!this.configuredColumns.length) {
@@ -274,6 +316,12 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
     }
   }
 
+  /**
+   * validate action name.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private validateActionName(): ValidatorFn {
     return (c: FormControl) => {
       const newName = c.value;
@@ -283,6 +331,14 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
       } : null;
     };
   }
+
+  /**
+   * check action name.
+   *
+   * @param name name (string)
+   * @param actionSourceId action source id (string)
+   * @returns boolean observable or value
+   */
 
   private checkActionName(name: string, actionSourceId: string): boolean {
     let actionNameIsUnique = true;
@@ -298,11 +354,26 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
     return actionNameIsUnique;
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (FormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
+
+  /**
+   * action source name.
+   *
+   * @param actionSource action source (WidgetActionSource)
+   * @returns string observable or value
+   */
 
   public actionSourceName(actionSource: WidgetActionSource): string {
     if (actionSource) {
@@ -312,13 +383,31 @@ export class WidgetActionDialogComponent extends DialogComponent<WidgetActionDia
     }
   }
 
+  /**
+   * get cell click column info.
+   *
+   * @param index index (number)
+   * @param columnInfo column info (CellClickColumnInfo)
+   * @returns string observable or value
+   */
+
   public getCellClickColumnInfo(index: number, columnInfo: CellClickColumnInfo): string {
     return `${index} (${isNotEmptyStr(columnInfo.label) ? columnInfo.label : columnInfo.name})`;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

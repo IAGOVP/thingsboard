@@ -20,16 +20,20 @@ import { ContentObserver } from '@angular/cdk/observers';
 import { merge } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular directive: truncate with tooltip.
+ */
 @Directive({
     selector: '[tbTruncateWithTooltip]',
     hostDirectives: [{
             directive: MatTooltip,
             inputs: ['matTooltipClass', 'matTooltipTouchGestures'],
         }],
-    standalone: false
 /**
- * Angular directive: truncate with tooltip.
+ * Angular directive: truncate with tooltip (ThingsBoard web UI).
  */
+    standalone: false
 })
 export class TruncateWithTooltipDirective implements OnInit {
 
@@ -52,11 +56,22 @@ export class TruncateWithTooltipDirective implements OnInit {
     })
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.applyTruncationStyles();
     this.tooltip.position = this.position();
     this.showTooltipOnOverflow(this);
   }
+
+  /**
+   * show tooltip on overflow.
+   *
+   * @param ctx Angular template or component context
+   */
 
   private showTooltipOnOverflow(ctx: TruncateWithTooltipDirective) {
     ctx.tooltip.show = (function(old) {
@@ -69,11 +84,22 @@ export class TruncateWithTooltipDirective implements OnInit {
     })(ctx.tooltip.show);
   }
 
+  /**
+   * apply truncation styles.
+   *
+   */
+
   private applyTruncationStyles(): void {
     this.renderer.setStyle(this.elementRef.nativeElement, 'white-space', 'nowrap');
     this.renderer.setStyle(this.elementRef.nativeElement, 'overflow', 'hidden');
     this.renderer.setStyle(this.elementRef.nativeElement, 'text-overflow', 'ellipsis');
   }
+
+  /**
+   * is overflown.
+   *
+   * @returns boolean observable or value
+   */
 
   private isOverflown(): boolean {
     return this.elementRef.nativeElement.clientWidth < this.elementRef.nativeElement.scrollWidth;

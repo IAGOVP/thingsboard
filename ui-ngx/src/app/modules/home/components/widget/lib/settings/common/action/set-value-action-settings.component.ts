@@ -38,6 +38,12 @@ import {
 } from '@home/components/widget/lib/settings/common/action/set-value-action-settings-panel.component';
 import { ValueType } from '@shared/models/constants';
 
+
+/**
+ * Angular component: set value action settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-set-value-action-settings`.
+ */
 @Component({
     selector: 'tb-set-value-action-settings',
     templateUrl: './action-settings-button.component.html',
@@ -50,10 +56,7 @@ import { ValueType } from '@shared/models/constants';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: set value action settings UI.
- */
+standalone: false
 })
 export class SetValueActionSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -90,15 +93,38 @@ export class SetValueActionSettingsComponent implements OnInit, ControlValueAcce
               private viewContainerRef: ViewContainerRef,
               private cd: ChangeDetectorRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (this.disabled !== isDisabled) {
@@ -106,10 +132,22 @@ export class SetValueActionSettingsComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (SetValueSettings)
+   */
+
   writeValue(value: SetValueSettings): void {
     this.modelValue = value;
     this.updateDisplayValue();
   }
+
+  /**
+   * open action settings popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openActionSettingsPopup($event: Event, matButton: MatButton) {
     if ($event) {
@@ -144,6 +182,11 @@ export class SetValueActionSettingsComponent implements OnInit, ControlValueAcce
       });
     }
   }
+
+  /**
+   * update display value.
+   *
+   */
 
   private updateDisplayValue() {
     let value: any;

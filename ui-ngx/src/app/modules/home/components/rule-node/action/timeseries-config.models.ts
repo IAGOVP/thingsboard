@@ -18,11 +18,11 @@ import { DAY, SECOND } from '@shared/models/time/time.models';
 
 export const maxDeduplicateTimeSecs = DAY / SECOND;
 
+
 /**
-
- * TypeScript models and enums for timeseries node configuration.
-
+ * Timeseries node configuration (ThingsBoard web UI).
  */
+
 
 export interface TimeseriesNodeConfiguration {
   processingSettings: ProcessingSettings;

@@ -21,17 +21,40 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.thingsboard.rule.engine.telemetry.strategy.ProcessingStrategy;
 
+
 /**
 
- * Rule engine processing settings API.
+ * processing settings contract (telemetry and attribute persistence nodes).
 
  */
 
+
 sealed interface ProcessingSettings permits TimeseriesProcessingSettings, AttributesProcessingSettings {
+
+    
+ /**
+  * On every message.
+  *
+  * @return the record value
+  * @throws Exception if an unexpected error occurs during processing
+  */
+
 
     record OnEveryMessage() implements TimeseriesProcessingSettings, AttributesProcessingSettings {}
 
+    
+  /**
+   * Web sockets only.
+   *
+   * @return the record value
+   * @throws Exception if an unexpected error occurs during processing
+   */
+
+
     record WebSocketsOnly() implements TimeseriesProcessingSettings, AttributesProcessingSettings {}
+    /**
+     * Deduplicate (telemetry and attribute persistence nodes).
+     */
 
     @Getter
     final class Deduplicate implements TimeseriesProcessingSettings, AttributesProcessingSettings {

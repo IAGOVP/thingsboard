@@ -52,14 +52,17 @@ export interface ManageDashboardStatesDialogResult {
   addWidgets?: {[id: string]: Widget };
 }
 
+
+/**
+ * Angular component: manage dashboard states dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-manage-dashboard-states-dialog`.
+ */
 @Component({
     selector: 'tb-manage-dashboard-states-dialog',
     templateUrl: './manage-dashboard-states-dialog.component.html',
     styleUrls: ['./manage-dashboard-states-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: manage dashboard states dialog UI.
- */
+standalone: false
 })
 export class ManageDashboardStatesDialogComponent
   extends DialogComponent<ManageDashboardStatesDialogComponent, ManageDashboardStatesDialogResult>
@@ -104,9 +107,19 @@ export class ManageDashboardStatesDialogComponent
     this.dataSource = new DashboardStatesDatasource(this.states);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.dataSource.loadStates(this.pageLink);
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     fromEvent(this.searchInputField.nativeElement, 'keyup')
@@ -129,6 +142,12 @@ export class ManageDashboardStatesDialogComponent
       .subscribe();
   }
 
+  /**
+   * update data.
+   *
+   * @param reload reload (boolean)
+   */
+
   updateData(reload: boolean = false) {
     this.pageLink.page = this.paginator.pageIndex;
     this.pageLink.pageSize = this.paginator.pageSize;
@@ -137,13 +156,30 @@ export class ManageDashboardStatesDialogComponent
     this.dataSource.loadStates(this.pageLink, reload);
   }
 
+  /**
+   * POST/PUT entity — add state.
+   *
+   */
+
   addState($event: Event) {
     this.openStateDialog($event);
   }
 
+  /**
+   * edit state.
+   *
+   * @param state state (DashboardStateInfo)
+   */
+
   editState($event: Event, state: DashboardStateInfo) {
     this.openStateDialog($event, state);
   }
+
+  /**
+   * DELETE — delete state.
+   *
+   * @param state state (DashboardStateInfo)
+   */
 
   deleteState($event: Event, state: DashboardStateInfo) {
     if ($event) {
@@ -164,6 +200,11 @@ export class ManageDashboardStatesDialogComponent
     );
   }
 
+  /**
+   * enter filter mode.
+   *
+   */
+
   enterFilterMode() {
     this.textSearchMode = true;
     this.pageLink.textSearch = '';
@@ -173,12 +214,23 @@ export class ManageDashboardStatesDialogComponent
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.pageLink.textSearch = null;
     this.paginator.pageIndex = 0;
     this.updateData();
   }
+
+  /**
+   * open state dialog.
+   *
+   * @param state state (DashboardStateInfo)
+   */
 
   openStateDialog($event: Event, state: DashboardStateInfo = null) {
     if ($event) {
@@ -208,6 +260,14 @@ export class ManageDashboardStatesDialogComponent
       }
     );
   }
+
+  /**
+   * POST/PUT entity — save state.
+   *
+   * @param state state (DashboardStateInfo)
+   * @param prevStateId prev state id (string)
+   * @param prevStateName prev state name (string)
+   */
 
   saveState(state: DashboardStateInfo, prevStateId: string, prevStateName: string) {
     const newState: DashboardState = {
@@ -248,6 +308,12 @@ export class ManageDashboardStatesDialogComponent
     }
     this.onStatesUpdated();
   }
+
+  /**
+   * duplicate state.
+   *
+   * @param state state (DashboardStateInfo)
+   */
 
   duplicateState($event: Event, state: DashboardStateInfo) {
     const suffix = ` - ${this.translate.instant('action.copy')} `;
@@ -295,14 +361,29 @@ export class ManageDashboardStatesDialogComponent
     }
   }
 
+  /**
+   * Event handler for states updated.
+   *
+   */
+
   private onStatesUpdated() {
     this.isDirty = true;
     this.updateData(true);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const result: ManageDashboardStatesDialogResult = {states: this.states};

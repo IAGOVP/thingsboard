@@ -52,6 +52,12 @@ import {
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 
 // @dynamic
+
+/**
+ * Angular component: dashboard select (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-select`.
+ */
 @Component({
     selector: 'tb-dashboard-select',
     templateUrl: './dashboard-select.component.html',
@@ -61,10 +67,7 @@ import { NULL_UUID } from '@shared/models/id/has-uuid';
             useExisting: forwardRef(() => DashboardSelectComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: dashboard select UI.
- */
+standalone: false
 })
 export class DashboardSelectComponent implements ControlValueAccessor, OnInit {
 
@@ -107,12 +110,29 @@ export class DashboardSelectComponent implements ControlValueAccessor, OnInit {
               @Inject(WINDOW) private window: Window) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
 
@@ -124,17 +144,39 @@ export class DashboardSelectComponent implements ControlValueAccessor, OnInit {
     );
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.dashboardId = value;
   }
 
+  /**
+   * dashboard id changed.
+   *
+   */
+
   dashboardIdChanged() {
     this.updateView();
   }
+
+  /**
+   * open dashboard select panel.
+   *
+   */
 
   openDashboardSelectPanel() {
     if (!this.disabled) {
@@ -181,9 +223,21 @@ export class DashboardSelectComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   private updateView() {
     this.propagateChange(this.dashboardId);
   }
+
+  /**
+   * get dashboards.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<DashboardInfo>> observable or value
+   */
 
   private getDashboards(pageLink: PageLink): Observable<PageData<DashboardInfo>> {
     let dashboardsObservable: Observable<PageData<DashboardInfo>>;

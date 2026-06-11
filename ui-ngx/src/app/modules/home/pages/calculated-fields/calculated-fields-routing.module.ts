@@ -112,5 +112,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
+/**
+ * Angular NgModule bundling calculated fields routing (home/calculated-fields pages).
+ */
   providers: []})
 export class CalculatedFieldsRoutingModule { }

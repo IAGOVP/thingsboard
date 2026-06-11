@@ -24,11 +24,11 @@ import { RuleChainId } from '@shared/models/id/rule-chain-id';
 import { DashboardId } from '@shared/models/id/dashboard-id';
 import { EntityInfoData, HasTenantId, HasVersion } from '@shared/models/entity.models';
 
+
 /**
-
- * TypeScript models and enums for asset profile.
-
+ * TypeScript interfaces, types, and enums for asset profile (shared TypeScript models).
  */
+
 
 export interface AssetProfile extends BaseData<AssetProfileId>, HasTenantId, HasVersion, ExportableEntity<AssetProfileId> {
   tenantId?: TenantId;

@@ -66,11 +66,11 @@ import Timeout = NodeJS.Timeout;
 
 const moment = moment_;
 
+
 /**
-
- * tb flot.
-
+ * Tb flot (ThingsBoard web UI).
  */
+
 
 export class TbFlot {
 
@@ -364,6 +364,12 @@ export class TbFlot {
     }
   }
 
+  /**
+   * init.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   */
+
   private init($element: JQuery<any>, subscription: IWidgetSubscription) {
     this.$element = $element;
     this.$element.css('letter-spacing', 'normal');
@@ -608,6 +614,11 @@ export class TbFlot {
     this.createPlot();
   }
 
+  /**
+   * update.
+   *
+   */
+
   public update() {
     if (this.updateTimeoutHandle) {
       clearTimeout(this.updateTimeoutHandle);
@@ -706,6 +717,11 @@ export class TbFlot {
     }
   }
 
+  /**
+   * latest data update.
+   *
+   */
+
   public latestDataUpdate() {
     if (this.latestUpdateTimeoutHandle) {
       clearTimeout(this.latestUpdateTimeoutHandle);
@@ -736,6 +752,12 @@ export class TbFlot {
     }
   }
 
+  /**
+   * update series color.
+   *
+   * @param color color (string)
+   */
+
   public updateSeriesColor(color: string) {
     if (this.subscription?.data?.length) {
       const series = this.subscription.data[0] as TbFlotSeries;
@@ -745,6 +767,13 @@ export class TbFlot {
     }
   }
 
+  /**
+   * latest data by data index.
+   *
+   * @param index index (number)
+   * @returns FormattedData observable or value
+   */
+
   private latestDataByDataIndex(index: number): FormattedData {
     if (this.latestData[index]) {
       return this.latestData[index];
@@ -753,12 +782,22 @@ export class TbFlot {
     }
   }
 
+  /**
+   * scaling pie radius.
+   *
+   */
+
   private scalingPieRadius() {
       let scalingLine;
       this.ctx.width > this.ctx.height ? scalingLine = this.ctx.height : scalingLine = this.ctx.width;
       const changeRadius = this.options.series.pie.stroke.width / scalingLine;
       this.options.series.pie.radius = changeRadius < 1 ? this.settings.radius - changeRadius : 0;
   }
+
+  /**
+   * resize.
+   *
+   */
 
   public resize() {
     if (this.resizeTimeoutHandle) {
@@ -785,6 +824,11 @@ export class TbFlot {
     }
   }
 
+  /**
+   * check mouse events.
+   *
+   */
+
   public checkMouseEvents() {
     const enabled = !this.ctx.isEdit;
     if (isUndefined(this.mouseEventsEnabled) || this.mouseEventsEnabled !== enabled) {
@@ -800,6 +844,11 @@ export class TbFlot {
     }
   }
 
+  /**
+   * destroy.
+   *
+   */
+
   public destroy() {
     this.cleanup();
     if (this.tooltip) {
@@ -812,6 +861,11 @@ export class TbFlot {
       this.plotInited = false;
     }
   }
+
+  /**
+   * cleanup.
+   *
+   */
 
   private cleanup() {
     if (this.updateTimeoutHandle) {
@@ -834,6 +888,11 @@ export class TbFlot {
     this.yMaxSubject.complete();
   }
 
+  /**
+   * POST/PUT entity — create plot.
+   *
+   */
+
   private createPlot() {
     if (this.createPlotTimeoutHandle) {
       clearTimeout(this.createPlotTimeoutHandle);
@@ -855,6 +914,11 @@ export class TbFlot {
     }
   }
 
+  /**
+   * update data.
+   *
+   */
+
   private updateData() {
     this.plot.setData(this.subscription.data);
     if (this.chartType !== 'pie') {
@@ -863,6 +927,11 @@ export class TbFlot {
     this.plot.draw();
     this.updateYMinMax();
   }
+
+  /**
+   * update ymin max.
+   *
+   */
 
   private updateYMinMax() {
     if (this.plot?.getYAxes().length) {
@@ -877,6 +946,11 @@ export class TbFlot {
     }
   }
 
+  /**
+   * redraw plot.
+   *
+   */
+
   private redrawPlot() {
     if (this.plot && this.plotInited) {
       this.plot.destroy();
@@ -884,6 +958,14 @@ export class TbFlot {
       this.createPlot();
     }
   }
+
+  /**
+   * POST/PUT entity — create yaxis.
+   *
+   * @param keySettings key settings (TbFlotKeySettings)
+   * @param units units (string)
+   * @returns TbFlotAxisOptions observable or value
+   */
 
   private createYAxis(keySettings: TbFlotKeySettings, units: string): TbFlotAxisOptions {
     const yaxis = deepClone(this.yaxis);
@@ -928,6 +1010,12 @@ export class TbFlot {
     return yaxis;
   }
 
+  /**
+   * subscribe for thresholds attributes.
+   *
+   * @param datasources datasources (Datasource[])
+   */
+
   private subscribeForThresholdsAttributes(datasources: Datasource[]) {
     const thresholdsSourcesSubscriptionOptions: WidgetSubscriptionOptions = {
       datasources,
@@ -955,6 +1043,14 @@ export class TbFlot {
     );
   }
 
+  /**
+   * thresholds sources data updated.
+   *
+   * @param existingThresholds existing thresholds (TbFlotThresholdMarking[])
+   * @param data dialog or route input data
+   * @returns TbFlotThresholdMarking[] observable or value
+   */
+
   private thresholdsSourcesDataUpdated(existingThresholds: TbFlotThresholdMarking[], data: DatasourceData[],
                                        isLatest = false): TbFlotThresholdMarking[] {
     const thresholds: TbFlotThresholdMarking[] = [];
@@ -973,6 +1069,13 @@ export class TbFlot {
     return thresholds;
   }
 
+  /**
+   * parse threshold data.
+   *
+   * @param value value (any)
+   * @returns Array<any> observable or value
+   */
+
   private parseThresholdData(value: any): Array<any> {
     let values;
     try {
@@ -983,6 +1086,15 @@ export class TbFlot {
     }
     return values;
   }
+
+  /**
+   * process single data value.
+   *
+   * @param attrValue attr value (number)
+   * @param keyData key data (DatasourceData)
+   * @param latestSettings latest settings (TbFlotLatestKeySettings)
+   * @param existingThresholds existing thresholds (TbFlotThresholdMarking[])
+   */
 
   private processSingleDataValue(attrValue: number, keyData: DatasourceData, latestSettings: TbFlotLatestKeySettings,
                                  existingThresholds: TbFlotThresholdMarking[], isLatest = false) {
@@ -1004,6 +1116,18 @@ export class TbFlot {
       return this.generateThreshold(existingThresholds, yaxis, lineWidth, color, colorIndex, attrValue);
     }
   }
+
+  /**
+   * generate threshold.
+   *
+   * @param existingThresholds existing thresholds (TbFlotThresholdMarking[])
+   * @param yaxis yaxis (number)
+   * @param lineWidth line width (number)
+   * @param color color (string)
+   * @param defaultColorIndex default color index (number)
+   * @param thresholdValue threshold value (number)
+   * @returns TbFlotThresholdMarking observable or value
+   */
 
   private generateThreshold(existingThresholds: TbFlotThresholdMarking[], yaxis: number, lineWidth: number,
                             color: string, defaultColorIndex: number, thresholdValue: number): TbFlotThresholdMarking {
@@ -1040,6 +1164,12 @@ export class TbFlot {
     return null;
   }
 
+  /**
+   * subscribe for label patterns sources.
+   *
+   * @param datasources datasources (Datasource[])
+   */
+
   private subscribeForLabelPatternsSources(datasources: Datasource[]) {
     const labelPatternsSourcesSubscriptionOptions: WidgetSubscriptionOptions = {
       datasources,
@@ -1058,6 +1188,12 @@ export class TbFlot {
     );
   }
 
+  /**
+   * label patterns params data updated.
+   *
+   * @param data dialog or route input data
+   */
+
   private labelPatternsParamsDataUpdated(data: DatasourceData[]) {
     this.labelPatternsSourcesData = data;
     for (let i = 0; i < this.subscription.data.length; i++) {
@@ -1069,6 +1205,13 @@ export class TbFlot {
     }
     this.ctx.detectChanges();
   }
+
+  /**
+   * substitute label patterns.
+   *
+   * @param series series (TbFlotSeries)
+   * @param seriesIndex series index (number)
+   */
 
   private substituteLabelPatterns(series: TbFlotSeries, seriesIndex: number) {
     const seriesLabelPatternsSourcesData = this.labelPatternsSourcesData.filter((item) => {
@@ -1094,6 +1237,21 @@ export class TbFlot {
     }
     series.dataKey.label = label;
   }
+
+  /**
+   * series info div.
+   *
+   * @param label label (string)
+   * @param color color (string)
+   * @param value value (any)
+   * @param units units (string)
+   * @param trackDecimals track decimals (number)
+   * @param active active (boolean)
+   * @param percent percent (number)
+   * @param seriesIndex series index (number)
+   * @param valueFormatFunction value format function (TooltipValueFormatFunction)
+   * @returns JQuery<HTMLElement> observable or value
+   */
 
   private seriesInfoDiv(label: string, color: string, value: any,
                         units: string, trackDecimals: number, active: boolean,
@@ -1149,6 +1307,14 @@ export class TbFlot {
     return divElement;
   }
 
+  /**
+   * series info div from info.
+   *
+   * @param seriesHoverInfo series hover info (TbFlotSeriesHoverInfo)
+   * @param seriesIndex series index (number)
+   * @returns string observable or value
+   */
+
   private seriesInfoDivFromInfo(seriesHoverInfo: TbFlotSeriesHoverInfo, seriesIndex: number): string {
     const units = seriesHoverInfo.units && seriesHoverInfo.units.length ? seriesHoverInfo.units : this.trackUnits;
     const decimals = isDefinedAndNotNull(seriesHoverInfo.decimals) ? seriesHoverInfo.decimals : this.trackDecimals;
@@ -1157,6 +1323,12 @@ export class TbFlot {
       seriesHoverInfo.tooltipValueFormatFunction);
     return divElement.prop('outerHTML');
   }
+
+  /**
+   * POST/PUT entity — create tooltip element.
+   *
+   * @returns JQuery<any> observable or value
+   */
 
   private createTooltipElement(): JQuery<any> {
     const tooltip = $('<div id="flot-series-tooltip" class="flot-mouse-value"></div>');
@@ -1177,6 +1349,13 @@ export class TbFlot {
     return tooltip;
   }
 
+  /**
+   * format pie tooltip.
+   *
+   * @param item item (TbFlotPlotItem)
+   * @returns string observable or value
+   */
+
   private formatPieTooltip(item: TbFlotPlotItem): string {
     const units = getSourceTbUnitSymbol(isNotEmptyTbUnits(item.series.dataKey.units) ? item.series.dataKey.units : this.trackUnits);
     const decimals = isDefinedAndNotNull(item.series.dataKey.decimals) ? item.series.dataKey.decimals : this.trackDecimals;
@@ -1185,6 +1364,14 @@ export class TbFlot {
       item.series.dataKey.tooltipValueFormatFunction);
     return divElement.prop('outerHTML');
   }
+
+  /**
+   * format chart tooltip.
+   *
+   * @param hoverInfo hover info (TbFlotHoverInfo[])
+   * @param seriesIndex series index (number)
+   * @returns string observable or value
+   */
 
   private formatChartTooltip(hoverInfo: TbFlotHoverInfo[], seriesIndex: number): string {
     let content = '';
@@ -1277,6 +1464,14 @@ export class TbFlot {
     return content;
   }
 
+  /**
+   * format yaxis ticks.
+   *
+   * @param value value (number)
+   * @param axis axis (TbFlotPlotAxis)
+   * @returns string observable or value
+   */
+
   private formatYAxisTicks(value: number, axis?: TbFlotPlotAxis): string {
     if (this.settings.yaxis && this.settings.yaxis.showLabels === false) {
       return '';
@@ -1299,6 +1494,11 @@ export class TbFlot {
     return formatted;
   }
 
+  /**
+   * enable mouse events.
+   *
+   */
+
   private enableMouseEvents() {
     this.$element.css('pointer-events', '');
     this.$element.addClass('mouse-events');
@@ -1314,6 +1514,11 @@ export class TbFlot {
     this.$element.bind('plotclick', this.flotClickHandler);
   }
 
+  /**
+   * disable mouse events.
+   *
+   */
+
   private disableMouseEvents() {
     this.$element.css('pointer-events', 'none');
     this.$element.removeClass('mouse-events');
@@ -1328,6 +1533,14 @@ export class TbFlot {
     this.$element.unbind('mouseleave', this.mouseleaveHandler);
     this.$element.unbind('plotclick', this.flotClickHandler);
   }
+
+  /**
+   * Event handler for flot hover.
+   *
+   * @param e e (any)
+   * @param pos pos (JQueryPlotPoint)
+   * @param item item (TbFlotPlotItem)
+   */
 
   private onFlotHover(e: any, pos: JQueryPlotPoint, item: TbFlotPlotItem) {
     if (!this.plot || !this.tooltip) {
@@ -1396,6 +1609,13 @@ export class TbFlot {
     }
   }
 
+  /**
+   * Event handler for flot select.
+   *
+   * @param e e (any)
+   * @param ranges ranges (JQueryPlotSelectionRanges)
+   */
+
   private onFlotSelect(e: any, ranges: JQueryPlotSelectionRanges) {
     if (!this.plot) {
       return;
@@ -1404,17 +1624,37 @@ export class TbFlot {
     this.subscription.onUpdateTimewindow(ranges.xaxis.from, ranges.xaxis.to);
   }
 
+  /**
+   * Event handler for flot dbl click.
+   *
+   */
+
   private onFlotDblClick() {
     this.subscription.onResetTimewindow();
   }
+
+  /**
+   * Event handler for flot mouse down.
+   *
+   */
 
   private onFlotMouseDown() {
     this.isMouseInteraction = true;
   }
 
+  /**
+   * Event handler for flot mouse up.
+   *
+   */
+
   private onFlotMouseUp() {
     this.isMouseInteraction = false;
   }
+
+  /**
+   * Event handler for flot mouse leave.
+   *
+   */
 
   private onFlotMouseLeave() {
     if (!this.tooltip) {
@@ -1428,12 +1668,28 @@ export class TbFlot {
     this.isMouseInteraction = false;
   }
 
+  /**
+   * Event handler for flot click.
+   *
+   * @param e e (any)
+   * @param pos pos (JQueryPlotPoint)
+   * @param item item (TbFlotPlotItem)
+   */
+
   private onFlotClick(e: any, pos: JQueryPlotPoint, item: TbFlotPlotItem) {
     if (!this.plot) {
       return;
     }
     this.onPieSliceClick(e, item);
   }
+
+  /**
+   * get hover info.
+   *
+   * @param seriesList series list (TbFlotPlotDataSeries[])
+   * @param pos pos (JQueryPlotPoint)
+   * @returns TbFlotHoverInfo[] observable or value
+   */
 
   private getHoverInfo(seriesList: TbFlotPlotDataSeries[], pos: JQueryPlotPoint): TbFlotHoverInfo[] {
     let i: number;
@@ -1532,6 +1788,14 @@ export class TbFlot {
     return results;
   }
 
+  /**
+   * find hover index from data.
+   *
+   * @param posX pos x (number)
+   * @param series series (TbFlotPlotDataSeries)
+   * @returns number observable or value
+   */
+
   private findHoverIndexFromData(posX: number, series: TbFlotPlotDataSeries): number {
     let lower = 0;
     let upper = series.data.length - 1;
@@ -1552,6 +1816,15 @@ export class TbFlot {
     }
   }
 
+  /**
+   * find hover index from data points.
+   *
+   * @param posX pos x (number)
+   * @param series series (TbFlotPlotDataSeries)
+   * @param last last (number)
+   * @returns number observable or value
+   */
+
   private findHoverIndexFromDataPoints(posX: number, series: TbFlotPlotDataSeries, last: number): number {
     const ps = series.datapoints.pointsize;
     const initial = last * ps;
@@ -1566,6 +1839,11 @@ export class TbFlot {
     return j / ps - 1;
   }
 
+  /**
+   * pie data rendered.
+   *
+   */
+
   pieDataRendered() {
     for (let i = 0; i < this.pieTargetData.length; i++) {
       const value = this.pieTargetData[i] ? this.pieTargetData[i] : 0;
@@ -1576,6 +1854,11 @@ export class TbFlot {
       this.pieData[i].data[0][1] = value;
     }
   }
+
+  /**
+   * next pie data animation.
+   *
+   */
 
   nextPieDataAnimation(start) {
     if (start) {
@@ -1592,6 +1875,11 @@ export class TbFlot {
     }
     this.pieAnimationCaf = this.ctx.$scope.raf.raf(this.onPieDataAnimation.bind(this));
   }
+
+  /**
+   * Event handler for pie data animation.
+   *
+   */
 
   onPieDataAnimation() {
     const time = Date.now();
@@ -1618,11 +1906,22 @@ export class TbFlot {
     }
   }
 
+  /**
+   * finish pie data animation.
+   *
+   */
+
   private finishPieDataAnimation() {
     this.pieDataRendered();
     this.plot.setData(this.pieData);
     this.plot.draw();
   }
+
+  /**
+   * Event handler for pie slice click.
+   *
+   * @param item item (TbFlotPlotItem)
+   */
 
   private onPieSliceClick($event: any, item: TbFlotPlotItem) {
     const descriptors = this.ctx.actionsApi.getActionDescriptors('sliceClick');

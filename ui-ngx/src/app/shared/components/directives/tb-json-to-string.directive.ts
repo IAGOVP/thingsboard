@@ -28,6 +28,11 @@ import {
 import { ErrorStateMatcher } from '@angular/material/core';
 import { isObject } from '@core/utils';
 
+
+
+/**
+ * Angular directive: tb json to string.
+ */
 @Directive({
     selector: '[tb-json-to-string]',
     // eslint-disable-next-line @angular-eslint/no-host-metadata-property
@@ -48,13 +53,11 @@ import { isObject } from '@core/utils';
             provide: ErrorStateMatcher,
             useExisting: TbJsonToStringDirective
         }],
-    standalone: false
 
 /**
-
- * Angular directive: tb json to string.
-
+ * Angular directive: tb json to string (shared UI components).
  */
+    standalone: false
 })
 
 export class TbJsonToStringDirective implements ControlValueAccessor, Validator, ErrorStateMatcher {
@@ -91,9 +94,24 @@ export class TbJsonToStringDirective implements ControlValueAccessor, Validator,
 
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     return !!(control && control.invalid && !Array.isArray(control.value) && control.touched);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   * @returns ValidationErrors observable or value
+   */
 
   validate(c: UntypedFormControl): ValidationErrors {
     return (!this.parseError) ? null : {
@@ -103,15 +121,33 @@ export class TbJsonToStringDirective implements ControlValueAccessor, Validator,
     };
   }
 
+  /**
+   * write value.
+   *
+   * @param obj obj (any)
+   */
+
   writeValue(obj: any): void {
     this.data = obj;
     this.parseError = false;
     this.render.setProperty(this.element.nativeElement, 'value', obj ? JSON.stringify(obj) : '');
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;

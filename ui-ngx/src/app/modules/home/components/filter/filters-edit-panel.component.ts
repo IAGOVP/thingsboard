@@ -28,14 +28,17 @@ export interface FiltersEditPanelData {
   filtersInfo: {[filterId: string]: FilterInfo};
 }
 
+
+/**
+ * Angular component: filters edit panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filters-edit-panel`.
+ */
 @Component({
     selector: 'tb-filters-edit-panel',
     templateUrl: './filters-edit-panel.component.html',
     styleUrls: ['./filters-edit-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: filters edit panel UI.
- */
+standalone: false
 })
 export class FiltersEditPanelComponent {
 
@@ -45,6 +48,13 @@ export class FiltersEditPanelComponent {
               private dialog: MatDialog) {
     this.filtersInfo = this.data.filtersInfo;
   }
+
+  /**
+   * edit filter.
+   *
+   * @param filterId filter id (string)
+   * @param filter filter (FilterInfo)
+   */
 
   public editFilter(filterId: string, filter: FilterInfo) {
     const singleFilter: Filter = {id: filterId, ...deepClone(filter)};

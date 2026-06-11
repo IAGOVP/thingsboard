@@ -67,8 +67,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.common.data.AttributeScope.SHARED_SCOPE;
 import static org.thingsboard.server.msa.prototypes.DevicePrototypes.defaultGatewayPrototype;
 /**
- * Mqtt gateway client test.
+ * Gateway device session test over MQTT transport.
  */
+
 
 @DisableUIListeners
 @Slf4j
@@ -79,6 +80,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
     private MqttMessageListener listener;
 
     AbstractListeningExecutor handlerExecutor;
+    /**
+     * Creates gateway.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void createGateway() throws Exception {
@@ -98,6 +105,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         this.mqttClient = getMqttClient(gatewayDeviceCredentials, listener);
         this.createdDevice = createDeviceThroughGateway(mqttClient, gatewayDevice);
     }
+    /**
+     * Removes gateway.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void removeGateway() {
@@ -110,6 +123,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
             handlerExecutor.destroy();
         }
     }
+    /**
+     * Telemetry upload.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void telemetryUpload() throws Exception {
@@ -127,6 +146,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         assertThat(actualLatestTelemetry.getDataValuesByKey("doubleKey").get(1)).isEqualTo(Double.toString(42.0));
         assertThat(actualLatestTelemetry.getDataValuesByKey("longKey").get(1)).isEqualTo(Long.toString(73));
     }
+    /**
+     * Telemetry upload with ts.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void telemetryUploadWithTs() throws Exception {
@@ -146,6 +171,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         assertThat(actualLatestTelemetry.getDataValuesByKey("doubleKey").get(1)).isEqualTo(Double.toString(42.0));
         assertThat(actualLatestTelemetry.getDataValuesByKey("longKey").get(1)).isEqualTo(Long.toString(73));
     }
+    /**
+     * Publish attribute update to server.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void publishAttributeUpdateToServer() throws Exception {
@@ -172,6 +203,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         assertThat(actualLatestTelemetry.getDataValuesByKey("attr3").get(1)).isEqualTo(Double.toString(42.0));
         assertThat(actualLatestTelemetry.getDataValuesByKey("attr4").get(1)).isEqualTo(Long.toString(73));
     }
+    /**
+     * Response data on attributes request check.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void responseDataOnAttributesRequestCheck() throws Exception {
@@ -237,6 +274,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         assertThat(responseData.get("values").getAsJsonObject().get("attr1").getAsString()).isEqualTo(sharedAttributes.get("attr1").getAsString());
         assertThat(responseData.get("values").getAsJsonObject().entrySet()).hasSize(1);
     }
+    /**
+     * Request attribute values from server.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void requestAttributeValuesFromServer() throws Exception {
@@ -282,6 +325,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         checkAttribute(true, clientAttributeValue);
         checkAttribute(false, sharedAttributeValue);
     }
+    /**
+     * Subscribe to attribute updates from server.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void subscribeToAttributeUpdatesFromServer() throws Exception {
@@ -319,6 +368,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         assertThat(mapper.readValue(Objects.requireNonNull(event).getMessage(), JsonNode.class).get("data").get(sharedAttributeName).asText())
                 .isEqualTo(updatedSharedAttributeValue);
     }
+    /**
+     * Server side rpc.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void serverSideRpc() throws Exception {
@@ -366,6 +421,12 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
 
         assertThat(serverResponse).isEqualTo(mapper.readTree(clientResponse.toString()));
     }
+    /**
+     * Device creation after deleted.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void deviceCreationAfterDeleted() throws Exception {
@@ -432,6 +493,9 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         mqttClient.connect("localhost", 1883).get();
         return mqttClient;
     }
+    /**
+     * Mqtt message listener (black-box test infrastructure — device transport connectivity tests).
+     */
 
     @Data
     private class MqttMessageListener implements MqttHandler {
@@ -449,6 +513,9 @@ public class MqttGatewayClientTest extends AbstractContainerTest {
         }
 
     }
+    /**
+     * Mqtt event (black-box test infrastructure — device transport connectivity tests).
+     */
 
     @Data
     private class MqttEvent {

@@ -26,14 +26,17 @@ import {
   HtmlContainerWidgetSettings
 } from '@home/components/widget/lib/html/html-container-widget.models';
 
+
+/**
+ * Angular component: html container basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-html-container-basic-config`.
+ */
 @Component({
   selector: 'tb-html-container-basic-config',
   templateUrl: './html-container-basic-config.component.html',
   styleUrls: ['../basic-config.scss'],
-  standalone: false
-/**
- * Angular component: html container basic config UI.
- */
+standalone: false
 })
 export class HtmlContainerBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -47,9 +50,21 @@ export class HtmlContainerBasicConfigComponent extends BasicWidgetConfigComponen
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.htmlContainerWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: HtmlContainerWidgetSettings = {...htmlContainerDefaultSettings, ...(configData.config.settings || {})};
@@ -57,6 +72,13 @@ export class HtmlContainerBasicConfigComponent extends BasicWidgetConfigComponen
       settings: [settings, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.settings = {...(this.widgetConfig.config.settings || {}), ...config.settings};

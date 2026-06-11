@@ -112,11 +112,11 @@ interface DashboardWidgetUpdateRecord {
 export const maxGridsterCol = 3000;
 export const maxGridsterRow = 3000;
 
+
 /**
-
- * TypeScript models and enums for dashboard widgets.
-
+ * TypeScript interfaces, types, and enums for dashboard widgets (ThingsBoard web UI).
  */
+
 
 export class DashboardWidgets implements Iterable<DashboardWidget> {
 
@@ -149,6 +149,11 @@ export class DashboardWidgets implements Iterable<DashboardWidget> {
               private widgetsDiffer: IterableDiffer<Widget>,
               private widgetLayoutsDiffer: KeyValueDiffer<string, WidgetLayout>) {
   }
+
+  /**
+   * do check.
+   *
+   */
 
   doCheck() {
     const widgetChange = this.widgetsDiffer.diff(this.widgets);
@@ -229,6 +234,11 @@ export class DashboardWidgets implements Iterable<DashboardWidget> {
     }
   }
 
+  /**
+   * widget layouts updated.
+   *
+   */
+
   widgetLayoutsUpdated() {
     for (const w of Object.keys(this.widgetLayouts)) {
       const widgetLayout = this.widgetLayouts[w];
@@ -240,11 +250,25 @@ export class DashboardWidgets implements Iterable<DashboardWidget> {
     this.updateRowsAndSort();
   }
 
+  /**
+   * set widgets.
+   *
+   * @param widgets widgets (Iterable<Widget>)
+   * @param widgetLayouts widget layouts (WidgetLayouts)
+   */
+
   setWidgets(widgets: Iterable<Widget>, widgetLayouts: WidgetLayouts) {
     this.highlightedMode = false;
     this.widgets = widgets;
     this.widgetLayouts = widgetLayouts;
   }
+
+  /**
+   * highlight widget.
+   *
+   * @param widgetId widget id (string)
+   * @returns DashboardWidget observable or value
+   */
 
   highlightWidget(widgetId: string): DashboardWidget {
     const widget = this.findWidgetById(widgetId);
@@ -271,6 +295,13 @@ export class DashboardWidgets implements Iterable<DashboardWidget> {
     }
   }
 
+  /**
+   * select widget.
+   *
+   * @param widgetId widget id (string)
+   * @returns DashboardWidget observable or value
+   */
+
   selectWidget(widgetId: string): DashboardWidget {
     const widget = this.findWidgetById(widgetId);
     if (widget && (!widget.selected)) {
@@ -286,6 +317,12 @@ export class DashboardWidgets implements Iterable<DashboardWidget> {
     }
   }
 
+  /**
+   * reset highlight.
+   *
+   * @returns DashboardWidget observable or value
+   */
+
   resetHighlight(): DashboardWidget {
     const highlighted = this.dashboardWidgets.find((dashboardWidget) => dashboardWidget.highlighted);
     this.highlightedMode = false;
@@ -296,21 +333,53 @@ export class DashboardWidgets implements Iterable<DashboardWidget> {
     return highlighted;
   }
 
+  /**
+   * is highlighted.
+   *
+   * @param widget widget (DashboardWidget)
+   * @returns boolean observable or value
+   */
+
   isHighlighted(widget: DashboardWidget): boolean {
     return (this.highlightedMode && widget.highlighted) || (widget.selected);
   }
+
+  /**
+   * is not highlighted.
+   *
+   * @param widget widget (DashboardWidget)
+   * @returns boolean observable or value
+   */
 
   isNotHighlighted(widget: DashboardWidget): boolean {
     return this.highlightedMode && !widget.highlighted;
   }
 
+  /**
+   * get selected widget.
+   *
+   * @returns DashboardWidget observable or value
+   */
+
   getSelectedWidget(): DashboardWidget {
     return this.dashboardWidgets.find((dashboardWidget) => dashboardWidget.selected);
   }
 
+  /**
+   * find widget by id.
+   *
+   * @param widgetId widget id (string)
+   * @returns DashboardWidget observable or value
+   */
+
   private findWidgetById(widgetId: string): DashboardWidget {
     return this.dashboardWidgets.find((dashboardWidget) => dashboardWidget.widgetId === widgetId);
   }
+
+  /**
+   * update rows and sort.
+   *
+   */
 
   updateRowsAndSort() {
     let maxRows = this.dashboard.gridsterOpts.maxRows;
@@ -322,6 +391,11 @@ export class DashboardWidgets implements Iterable<DashboardWidget> {
     this.dashboard.gridsterOpts.maxRows = maxRows;
     this.dashboard.notifyGridsterOptionsChanged();
   }
+
+  /**
+   * sort widgets.
+   *
+   */
 
   sortWidgets() {
     this.dashboardWidgets.sort((widget1, widget2) => {

@@ -37,6 +37,12 @@ import {
 import { WidgetService } from '@core/http/widget.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: trip animation point settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-trip-animation-point-settings`.
+ */
 @Component({
     selector: 'tb-trip-animation-point-settings',
     templateUrl: './trip-animation-point-settings.component.html',
@@ -53,10 +59,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: trip animation point settings UI.
- */
+standalone: false
 })
 export class TripAnimationPointSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -78,6 +81,11 @@ export class TripAnimationPointSettingsComponent extends PageComponent implement
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.tripAnimationPointSettingsFormGroup = this.fb.group({
@@ -113,12 +121,30 @@ export class TripAnimationPointSettingsComponent extends PageComponent implement
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -129,6 +155,12 @@ export class TripAnimationPointSettingsComponent extends PageComponent implement
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (PointsSettings)
+   */
+
   writeValue(value: PointsSettings): void {
     this.modelValue = value;
     this.tripAnimationPointSettingsFormGroup.patchValue(
@@ -136,6 +168,12 @@ export class TripAnimationPointSettingsComponent extends PageComponent implement
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.tripAnimationPointSettingsFormGroup.valid ? null : {
@@ -145,11 +183,22 @@ export class TripAnimationPointSettingsComponent extends PageComponent implement
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: PointsSettings = this.tripAnimationPointSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const showPoints: boolean = this.tripAnimationPointSettingsFormGroup.get('showPoints').value;

@@ -42,11 +42,13 @@ import static org.mockito.Mockito.verify;
 import static org.thingsboard.server.common.data.msg.TbMsgType.ATTRIBUTES_UPDATED;
 import static org.thingsboard.server.common.data.msg.TbMsgType.POST_ATTRIBUTES_REQUEST;
 
+
 /**
 
- * Unit test for tb msg type filter node rule node.
+ * Unit test for tb msg type filter node (message filtering and branching rule nodes).
 
  */
+
 
 class TbMsgTypeFilterNodeTest {
 

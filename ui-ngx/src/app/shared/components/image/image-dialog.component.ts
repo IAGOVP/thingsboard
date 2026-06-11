@@ -36,14 +36,17 @@ export interface ImageDialogData {
   image: ImageResourceInfo;
 }
 
+
+/**
+ * Angular component: image dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-image-dialog`.
+ */
 @Component({
     selector: 'tb-image-dialog',
     templateUrl: './image-dialog.component.html',
     styleUrls: ['./image-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: image dialog UI.
- */
+standalone: false
 })
 export class ImageDialogComponent extends
   DialogComponent<ImageDialogComponent, ImageResourceInfo> implements OnInit {
@@ -74,6 +77,11 @@ export class ImageDialogComponent extends
     };
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.imageFormGroup = this.fb.group({
       title: [this.image.title, [Validators.required]]
@@ -83,14 +91,29 @@ export class ImageDialogComponent extends
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(this.imageChanged ? this.image : null);
   }
+
+  /**
+   * revert info.
+   *
+   */
 
   revertInfo(): void {
     this.imageFormGroup.get('title').setValue(this.image.title);
     this.imageFormGroup.markAsPristine();
   }
+
+  /**
+   * POST/PUT entity — save info.
+   *
+   */
 
   saveInfo(): void {
     const title: string = this.imageFormGroup.get('title').value;
@@ -104,6 +127,11 @@ export class ImageDialogComponent extends
     );
   }
 
+  /**
+   * download image.
+   *
+   */
+
   downloadImage($event) {
     if ($event) {
       $event.stopPropagation();
@@ -111,12 +139,22 @@ export class ImageDialogComponent extends
     this.imageService.downloadImage(imageResourceType(this.image), this.image.resourceKey).subscribe();
   }
 
+  /**
+   * export image.
+   *
+   */
+
   exportImage($event) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExportService.exportImage(imageResourceType(this.image), this.image.resourceKey);
   }
+
+  /**
+   * embed image.
+   *
+   */
 
   embedImage($event: Event) {
     if ($event) {
@@ -140,6 +178,11 @@ export class ImageDialogComponent extends
       }
     });
   }
+
+  /**
+   * update image.
+   *
+   */
 
   updateImage($event): void {
     if ($event) {

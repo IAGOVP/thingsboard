@@ -64,6 +64,12 @@ export const switchRpcDefaultSettings = (): SwitchRpcSettings => ({
     persistentPollingInterval: 5000
   });
 
+
+/**
+ * Angular component: switch rpc settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-switch-rpc-settings`.
+ */
 @Component({
     selector: 'tb-switch-rpc-settings',
     templateUrl: './switch-rpc-settings.component.html',
@@ -80,10 +86,7 @@ export const switchRpcDefaultSettings = (): SwitchRpcSettings => ({
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: switch rpc settings UI.
- */
+standalone: false
 })
 export class SwitchRpcSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -116,6 +119,11 @@ export class SwitchRpcSettingsComponent extends PageComponent implements OnInit,
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.switchRpcSettingsFormGroup = this.fb.group({
@@ -163,12 +171,30 @@ export class SwitchRpcSettingsComponent extends PageComponent implements OnInit,
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -179,6 +205,12 @@ export class SwitchRpcSettingsComponent extends PageComponent implements OnInit,
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (SwitchRpcSettings)
+   */
+
   writeValue(value: SwitchRpcSettings): void {
     this.modelValue = value;
     this.switchRpcSettingsFormGroup.patchValue(
@@ -186,6 +218,12 @@ export class SwitchRpcSettingsComponent extends PageComponent implements OnInit,
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.switchRpcSettingsFormGroup.valid ? null : {
@@ -195,10 +233,21 @@ export class SwitchRpcSettingsComponent extends PageComponent implements OnInit,
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.modelValue = this.switchRpcSettingsFormGroup.value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const retrieveValueMethod: RpcRetrieveValueMethod = this.switchRpcSettingsFormGroup.get('retrieveValueMethod').value;

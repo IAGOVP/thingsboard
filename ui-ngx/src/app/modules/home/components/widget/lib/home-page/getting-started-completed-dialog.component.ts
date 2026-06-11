@@ -22,15 +22,18 @@ import { UntypedFormGroup } from '@angular/forms';
 import { DialogComponent } from '@shared/components/dialog.component';
 import { Router } from '@angular/router';
 
+
+/**
+ * Angular component: getting started completed dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-getting-started-completed-dialog`.
+ */
 @Component({
     selector: 'tb-getting-started-completed-dialog',
     templateUrl: './getting-started-completed-dialog.component.html',
     styleUrls: ['./getting-started-completed-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: getting started completed dialog UI.
- */
+standalone: false
 })
 export class GettingStartedCompletedDialogComponent extends
   DialogComponent<GettingStartedCompletedDialogComponent, void> {
@@ -43,6 +46,11 @@ export class GettingStartedCompletedDialogComponent extends
     super(store, router, dialogRef);
     dialogRef.addPanelClass('tb-getting-started-completed-dialog');
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     this.dialogRef.close();

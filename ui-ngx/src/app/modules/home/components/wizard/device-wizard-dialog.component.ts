@@ -34,14 +34,17 @@ import { deepTrim } from '@core/utils';
 import { CustomerId } from '@shared/models/id/customer-id';
 import { HttpErrorResponse } from '@angular/common/http';
 
+
+/**
+ * Angular component: device wizard dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-wizard`.
+ */
 @Component({
     selector: 'tb-device-wizard',
     templateUrl: './device-wizard-dialog.component.html',
     styleUrls: ['./device-wizard-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: device wizard dialog UI.
- */
+standalone: false
 })
 export class DeviceWizardDialogComponent extends DialogComponent<DeviceWizardDialogComponent, Device> {
 
@@ -96,17 +99,39 @@ export class DeviceWizardDialogComponent extends DialogComponent<DeviceWizardDia
     );
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * previous step.
+   *
+   */
 
   previousStep(): void {
     this.addDeviceWizardStepper.previous();
   }
 
+  /**
+   * next step.
+   *
+   */
+
   nextStep(): void {
     this.addDeviceWizardStepper.next();
   }
+
+  /**
+   * get form label.
+   *
+   * @param index index (number)
+   * @returns string observable or value
+   */
 
   getFormLabel(index: number): string {
     switch (index) {
@@ -121,6 +146,11 @@ export class DeviceWizardDialogComponent extends DialogComponent<DeviceWizardDia
     return this.addDeviceWizardStepper?._steps?.length - 1;
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   */
+
   add(): void {
     if (this.allValid()) {
       this.createDevice().subscribe(
@@ -133,12 +163,24 @@ export class DeviceWizardDialogComponent extends DialogComponent<DeviceWizardDia
     return this.currentDeviceProfileTransportType;
   }
 
+  /**
+   * device profile changed.
+   *
+   * @param deviceProfile device profile (DeviceProfileInfo)
+   */
+
   deviceProfileChanged(deviceProfile: DeviceProfileInfo) {
     if (deviceProfile) {
       this.currentDeviceProfileTransportType = deviceProfile.transportType;
       this.credentialsOptionalStep = this.currentDeviceProfileTransportType !== DeviceTransportType.LWM2M;
     }
   }
+
+  /**
+   * POST/PUT entity — create device.
+   *
+   * @returns Observable<Device> observable or value
+   */
 
   private createDevice(): Observable<Device> {
     const device: Device = {
@@ -172,6 +214,12 @@ export class DeviceWizardDialogComponent extends DialogComponent<DeviceWizardDia
     );
   }
 
+  /**
+   * all valid.
+   *
+   * @returns boolean observable or value
+   */
+
   allValid(): boolean {
     return !this.addDeviceWizardStepper.steps.find((item, index) => {
       if (item.stepControl.invalid) {
@@ -183,6 +231,11 @@ export class DeviceWizardDialogComponent extends DialogComponent<DeviceWizardDia
       }
     });
   }
+
+  /**
+   * change step.
+   *
+   */
 
   changeStep($event: StepperSelectionEvent): void {
     this.selectedIndex = $event.selectedIndex;

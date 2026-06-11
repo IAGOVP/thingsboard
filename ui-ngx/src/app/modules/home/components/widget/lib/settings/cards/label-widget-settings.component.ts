@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { LabelWidgetLabel } from '@home/components/widget/lib/settings/cards/label-widget-label.component';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
+
+/**
+ * Angular component: label widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-label-widget-settings`.
+ */
 @Component({
     selector: 'tb-label-widget-settings',
     templateUrl: './label-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: label widget settings UI.
- */
+standalone: false
 })
 export class LabelWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class LabelWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.labelWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -51,6 +66,12 @@ export class LabelWidgetSettingsComponent extends WidgetSettingsComponent {
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.labelWidgetSettingsForm = this.fb.group({
       backgroundImageUrl: [settings.backgroundImageUrl, [Validators.required]],
@@ -58,9 +79,23 @@ export class LabelWidgetSettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * do update settings.
+   *
+   * @param settingsForm settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
+
   protected doUpdateSettings(settingsForm: UntypedFormGroup, settings: WidgetSettings) {
     settingsForm.setControl('labels', this.prepareLabelsFormArray(settings.labels), {emitEvent: false});
   }
+
+  /**
+   * prepare labels form array.
+   *
+   * @param labels labels (LabelWidgetLabel[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareLabelsFormArray(labels: LabelWidgetLabel[] | undefined): UntypedFormArray {
     const labelsControls: Array<AbstractControl> = [];
@@ -72,6 +107,12 @@ export class LabelWidgetSettingsComponent extends WidgetSettingsComponent {
     return this.fb.array(labelsControls);
   }
 
+  /**
+   * labels form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   labelsFormArray(): UntypedFormArray {
     return this.labelWidgetSettingsForm.get('labels') as UntypedFormArray;
   }
@@ -79,13 +120,32 @@ export class LabelWidgetSettingsComponent extends WidgetSettingsComponent {
     return this.labelsFormArray().controls as (AbstractControl & { new?: boolean })[];
   }
 
+  /**
+   * track by label control.
+   *
+   * @param index index (number)
+   * @param labelControl label control (AbstractControl)
+   * @returns any observable or value
+   */
+
   public trackByLabelControl(index: number, labelControl: AbstractControl): any {
     return labelControl;
   }
 
+  /**
+   * DELETE — remove label.
+   *
+   * @param index index (number)
+   */
+
   public removeLabel(index: number) {
     (this.labelWidgetSettingsForm.get('labels') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add label.
+   *
+   */
 
   public addLabel() {
     const label: LabelWidgetLabel = {
@@ -107,6 +167,12 @@ export class LabelWidgetSettingsComponent extends WidgetSettingsComponent {
     labelsArray.push(labelControl);
     this.labelWidgetSettingsForm.updateValueAndValidity();
   }
+
+  /**
+   * label drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   labelDrop(event: CdkDragDrop<string[]>) {
     const labelsArray = this.labelWidgetSettingsForm.get('labels') as UntypedFormArray;

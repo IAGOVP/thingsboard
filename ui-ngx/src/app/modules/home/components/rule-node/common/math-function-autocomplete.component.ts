@@ -23,6 +23,12 @@ import { map, tap } from 'rxjs/operators';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
+
+/**
+ * Angular component: math function autocomplete (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-math-function-autocomplete`.
+ */
 @Component({
     selector: 'tb-math-function-autocomplete',
     templateUrl: './math-function-autocomplete.component.html',
@@ -34,10 +40,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: math function autocomplete UI.
- */
+standalone: false
 })
 export class MathFunctionAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -77,11 +80,20 @@ export class MathFunctionAutocompleteComponent implements ControlValueAccessor, 
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.mathFunctionForm = this.fb.group({
       operation: ['']
     });
     this.filteredOptions = this.mathFunctionForm.get('operation').valueChanges.pipe(
+      /**
+       * tap.
+       *
+       */
       tap(value => {
         let modelValue: MathFunction;
         if (typeof value === 'string' && MathFunction[value]) {
@@ -105,12 +117,30 @@ export class MathFunctionAutocompleteComponent implements ControlValueAccessor, 
       || option.value.toLowerCase().includes(filterValue));
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -121,6 +151,12 @@ export class MathFunctionAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * math function display fn.
+   *
+   * @param value value (MathFunction | null)
+   */
+
   mathFunctionDisplayFn(value: MathFunction | null) {
     if (value) {
       const funcData = MathFunctionMap.get(value)
@@ -129,11 +165,23 @@ export class MathFunctionAutocompleteComponent implements ControlValueAccessor, 
     return '';
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MathFunction | null)
+   */
+
   writeValue(value: MathFunction | null): void {
     this.modelValue = value;
     this.mathFunctionForm.get('operation').setValue(value, {emitEvent: false});
     this.dirty = true;
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (MathFunction | null)
+   */
 
   updateView(value: MathFunction | null) {
     if (this.modelValue !== value) {
@@ -142,12 +190,22 @@ export class MathFunctionAutocompleteComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.mathFunctionForm.get('operation').updateValueAndValidity({onlySelf: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.mathFunctionForm.get('operation').patchValue('');

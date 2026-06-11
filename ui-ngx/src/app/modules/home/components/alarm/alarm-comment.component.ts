@@ -58,14 +58,17 @@ interface AlarmCommentsDisplayData {
   userExists?: boolean;
 }
 
+
+/**
+ * Angular component: alarm comment (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-comment`.
+ */
 @Component({
     selector: 'tb-alarm-comment',
     templateUrl: './alarm-comment.component.html',
     styleUrls: ['./alarm-comment.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm comment UI.
- */
+standalone: false
 })
 export class AlarmCommentComponent implements OnInit {
   @Input()
@@ -117,11 +120,21 @@ export class AlarmCommentComponent implements OnInit {
     );
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.loadAlarmComments();
     this.currentUserAvatarColor = this.utilsService.stringToHslColor(this.currentUserDisplayName,
       60, 40);
   }
+
+  /**
+   * load alarm comments.
+   *
+   */
 
   loadAlarmComments(): void {
     this.alarmCommentService.getAlarmComments(this.alarmId, new PageLink(MAX_SAFE_PAGE_SIZE, 0, null,
@@ -156,6 +169,13 @@ export class AlarmCommentComponent implements OnInit {
     );
   }
 
+  /**
+   * parse system comment.
+   *
+   * @param alarm alarm (AlarmCommentInfo)
+   * @returns string observable or value
+   */
+
   private parseSystemComment(alarm: AlarmCommentInfo): string {
     const subTypeKey = alarm.comment?.subtype;
     if (subTypeKey && AlarmMessage[subTypeKey]) {
@@ -178,16 +198,31 @@ export class AlarmCommentComponent implements OnInit {
     return alarm.comment.text;
   }
 
+  /**
+   * change sort direction.
+   *
+   */
+
   changeSortDirection() {
     const currentDirection = this.alarmCommentSortOrder.direction;
     this.alarmCommentSortOrder.direction = currentDirection === Direction.DESC ? Direction.ASC : Direction.DESC;
     this.loadAlarmComments();
   }
 
+  /**
+   * export alarm activity.
+   *
+   */
+
   exportAlarmActivity() {
     const fileName = this.translate.instant('alarm.alarm') + '_' + this.translate.instant('alarm-activity.activity');
     this.importExportService.exportCsv(this.getDataForExport(), fileName.toLowerCase());
   }
+
+  /**
+   * POST/PUT entity — save comment.
+   *
+   */
 
   saveComment(): void {
     const commentInputValue: string = this.getAlarmCommentValue();
@@ -207,6 +242,12 @@ export class AlarmCommentComponent implements OnInit {
     }
   }
 
+  /**
+   * POST/PUT entity — save edited comment.
+   *
+   * @param commentId comment id (string)
+   */
+
   saveEditedComment(commentId: string): void {
     const commentEditInputValue: string = this.getAlarmCommentEditValue();
     if (commentEditInputValue) {
@@ -219,6 +260,12 @@ export class AlarmCommentComponent implements OnInit {
     }
   }
 
+  /**
+   * do save.
+   *
+   * @param comment comment (AlarmComment)
+   */
+
   private doSave(comment: AlarmComment): void {
     this.alarmCommentService.saveAlarmComment(this.alarmId, comment, {ignoreLoading: true}).subscribe(
       () => {
@@ -226,6 +273,12 @@ export class AlarmCommentComponent implements OnInit {
       }
     );
   }
+
+  /**
+   * edit comment.
+   *
+   * @param commentId comment id (string)
+   */
 
   editComment(commentId: string): void {
     const commentDisplayData = this.getDataElementByCommentId(commentId);
@@ -235,12 +288,24 @@ export class AlarmCommentComponent implements OnInit {
     this.getAlarmCommentFormControl().disable({emitEvent: false});
   }
 
+  /**
+   * cancel edit.
+   *
+   * @param commentId comment id (string)
+   */
+
   cancelEdit(commentId: string): void {
     const commentDisplayData = this.getDataElementByCommentId(commentId);
     commentDisplayData.edit = false;
     this.editMode = false;
     this.getAlarmCommentFormControl().enable({emitEvent: false});
   }
+
+  /**
+   * DELETE — delete comment.
+   *
+   * @param commentId comment id (string)
+   */
 
   deleteComment(commentId: string): void {
     const alarmCommentInfo: AlarmComment = this.getAlarmCommentById(commentId);
@@ -262,9 +327,19 @@ export class AlarmCommentComponent implements OnInit {
     );
   }
 
+  /**
+   * get sort direction icon.
+   *
+   */
+
   getSortDirectionIcon() {
     return this.alarmCommentSortOrder.direction === Direction.DESC ? 'mdi:sort-descending' : 'mdi:sort-ascending';
   }
+
+  /**
+   * get sort direction tooltip text.
+   *
+   */
 
   getSortDirectionTooltipText() {
     const text = this.alarmCommentSortOrder.direction === Direction.DESC ? 'alarm-activity.newest-first' :
@@ -272,9 +347,21 @@ export class AlarmCommentComponent implements OnInit {
     return this.translate.instant(text);
   }
 
+  /**
+   * is direction ascending.
+   *
+   */
+
   isDirectionAscending() {
     return this.alarmCommentSortOrder.direction === Direction.ASC;
   }
+
+  /**
+   * Event handler for comment mouse enter.
+   *
+   * @param commentId comment id (string)
+   * @param displayDataIndex display data index (number)
+   */
 
   onCommentMouseEnter(commentId: string, displayDataIndex: number): void {
     if (!this.editMode) {
@@ -285,9 +372,22 @@ export class AlarmCommentComponent implements OnInit {
     }
   }
 
+  /**
+   * Event handler for comment mouse leave.
+   *
+   * @param displayDataIndex display data index (number)
+   */
+
   onCommentMouseLeave(displayDataIndex: number): void {
     this.displayData[displayDataIndex].showActions = false;
   }
+
+  /**
+   * get user initials.
+   *
+   * @param userName user name (string)
+   * @returns string observable or value
+   */
 
   getUserInitials(userName: string): string {
     let initials = '';
@@ -299,41 +399,100 @@ export class AlarmCommentComponent implements OnInit {
     return initials;
   }
 
+  /**
+   * get current user bg color.
+   *
+   * @param userDisplayName user display name (string)
+   */
+
   getCurrentUserBgColor(userDisplayName: string) {
     return this.utilsService.stringToHslColor(userDisplayName, 40, 60);
   }
+
+  /**
+   * get alarm comment form control.
+   *
+   * @returns AbstractControl observable or value
+   */
 
   getAlarmCommentFormControl(): AbstractControl {
     return this.alarmCommentFormGroup.get('alarmComment');
   }
 
+  /**
+   * get alarm comment edit form control.
+   *
+   * @returns AbstractControl observable or value
+   */
+
   getAlarmCommentEditFormControl(): AbstractControl {
     return this.alarmCommentFormGroup.get('alarmCommentEdit');
   }
+
+  /**
+   * get alarm comment value.
+   *
+   * @returns string observable or value
+   */
 
   getAlarmCommentValue(): string {
     return this.alarmCommentFormGroup.get('alarmComment').value.trim();
   }
 
+  /**
+   * get alarm comment edit value.
+   *
+   * @returns string observable or value
+   */
+
   private getAlarmCommentEditValue(): string {
     return this.alarmCommentFormGroup.get('alarmCommentEdit').value.trim();
   }
+
+  /**
+   * clear comment input.
+   *
+   */
 
   private clearCommentInput(): void {
     this.getAlarmCommentFormControl().patchValue('');
   }
 
+  /**
+   * clear comment edit input.
+   *
+   */
+
   private clearCommentEditInput(): void {
     this.getAlarmCommentEditFormControl().patchValue('');
   }
+
+  /**
+   * get alarm comment by id.
+   *
+   * @param id id (string)
+   * @returns AlarmComment observable or value
+   */
 
   private getAlarmCommentById(id: string): AlarmComment {
     return this.alarmComments.find(comment => comment.id.id === id);
   }
 
+  /**
+   * get data element by comment id.
+   *
+   * @param commentId comment id (string)
+   * @returns AlarmCommentsDisplayData observable or value
+   */
+
   private getDataElementByCommentId(commentId: string): AlarmCommentsDisplayData {
     return this.displayData.find(commentDisplayData => commentDisplayData.commentId === commentId);
   }
+
+  /**
+   * get data for export.
+   *
+   */
 
   private getDataForExport() {
     const dataToExport = [];

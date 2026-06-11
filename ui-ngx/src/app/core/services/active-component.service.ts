@@ -18,7 +18,9 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 /**
- * Angular HTTP service: active component REST wrappers (`@core/http`).
+ * Angular injectable service: active component (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -28,14 +30,32 @@ export class ActiveComponentService {
   private activeComponent: any;
   private activeComponentChangedSubject: Subject<any> = new Subject<any>();
 
+  /**
+   * get current active component.
+   *
+   * @returns any observable or value
+   */
+
   public getCurrentActiveComponent(): any {
     return this.activeComponent;
   }
+
+  /**
+   * set current active component.
+   *
+   * @param component component (any)
+   */
 
   public setCurrentActiveComponent(component: any): void {
     this.activeComponent = component;
     this.activeComponentChangedSubject.next(component);
   }
+
+  /**
+   * Event handler for active component changed.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   public onActiveComponentChanged(): Observable<any> {
     return this.activeComponentChangedSubject.asObservable();

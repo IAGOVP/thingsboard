@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap, startWith } from 'rxjs/operators';
 
+
+/**
+ * Angular component: dashboard state widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-state-widget-settings`.
+ */
 @Component({
     selector: 'tb-dashboard-state-widget-settings',
     templateUrl: './dashboard-state-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: dashboard state widget settings UI.
- */
+standalone: false
 })
 export class DashboardStateWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -45,9 +48,21 @@ export class DashboardStateWidgetSettingsComponent extends WidgetSettingsCompone
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.dashboardStateWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -58,6 +73,12 @@ export class DashboardStateWidgetSettingsComponent extends WidgetSettingsCompone
       syncParentStateParams: true
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.dashboardStateWidgetSettingsForm = this.fb.group({
@@ -76,6 +97,12 @@ export class DashboardStateWidgetSettingsComponent extends WidgetSettingsCompone
       );
   }
 
+  /**
+   * clear dashboard state.
+   *
+   * @param value value (string)
+   */
+
   public clearDashboardState(value: string = '') {
     this.dashboardStateInput.nativeElement.value = value;
     this.dashboardStateWidgetSettingsForm.get('stateId').patchValue(value, {emitEvent: true});
@@ -84,6 +111,13 @@ export class DashboardStateWidgetSettingsComponent extends WidgetSettingsCompone
       this.dashboardStateInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * fetch dashboard states.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchDashboardStates(searchText?: string): Observable<Array<string>> {
     this.dashboardStateSearchText = searchText;
@@ -95,6 +129,13 @@ export class DashboardStateWidgetSettingsComponent extends WidgetSettingsCompone
       return of([searchText]);
     }
   }
+
+  /**
+   * POST/PUT entity — create filter for dashboard state.
+   *
+   * @param query query (string)
+   * @returns (stateId: string) => boolean observable or value
+   */
 
   private createFilterForDashboardState(query: string): (stateId: string) => boolean {
     const lowercaseQuery = query.toLowerCase();

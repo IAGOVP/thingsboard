@@ -31,15 +31,18 @@ export interface AssetProfileDialogData {
   isAdd: boolean;
 }
 
+
+/**
+ * Angular component: asset profile dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-asset-profile-dialog`.
+ */
 @Component({
     selector: 'tb-asset-profile-dialog',
     templateUrl: './asset-profile-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: AssetProfileDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: asset profile dialog UI.
- */
+standalone: false
 })
 export class AssetProfileDialogComponent extends
   DialogComponent<AssetProfileDialogComponent, AssetProfile> implements ErrorStateMatcher, AfterViewInit {
@@ -62,6 +65,11 @@ export class AssetProfileDialogComponent extends
     this.assetProfile = this.data.assetProfile;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.isAdd) {
       setTimeout(() => {
@@ -70,15 +78,33 @@ export class AssetProfileDialogComponent extends
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

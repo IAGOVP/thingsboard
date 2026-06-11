@@ -251,6 +251,9 @@ export function MarkedOptionsFactory(markedOptionsService: MarkedOptionsService)
 /**
  * Angular NgModule: shared feature area.
  */
+/**
+ * Angular NgModule bundling shared (ThingsBoard web UI).
+ */
 @NgModule({
   providers: [
     DatePipe,
@@ -748,5 +751,5 @@ export function MarkedOptionsFactory(markedOptionsService: MarkedOptionsService)
     TimeUnitInputComponent,
     StringPatternAutocompleteComponent,
     DynamicMatDialogModule
-  ]})
+]})
 export class SharedModule { }

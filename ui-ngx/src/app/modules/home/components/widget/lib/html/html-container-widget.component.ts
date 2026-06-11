@@ -53,6 +53,12 @@ import { MODULES_MAP } from '@shared/models/constants';
 import { IModulesMap } from '@modules/common/modules-map.models';
 import { TbAnchorComponent } from '@shared/components/tb-anchor.component';
 
+
+/**
+ * Angular component: html container widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-html-container-widget`.
+ */
 @Component({
   selector: 'tb-html-container-widget',
   template: '<div #container class="tb-absolute-fill"><tb-anchor #angularContainer></tb-anchor></div>' +
@@ -70,10 +76,7 @@ import { TbAnchorComponent } from '@shared/components/tb-anchor.component';
     '    }\n' +
     '  }',
   encapsulation: ViewEncapsulation.None,
-  standalone: false
-/**
- * Angular component: html container widget UI.
- */
+standalone: false
 })
 export class HtmlContainerWidgetComponent implements OnInit {
 
@@ -101,6 +104,11 @@ export class HtmlContainerWidgetComponent implements OnInit {
               private utils: UtilsService,
               private resources: ResourcesService) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.settings = {...htmlContainerDefaultSettings, ...(this.ctx.settings || {})};
     this.loadWidgetResources().subscribe(
@@ -118,6 +126,11 @@ export class HtmlContainerWidgetComponent implements OnInit {
       }
     );
   }
+
+  /**
+   * init plain.
+   *
+   */
 
   private initPlain(): void {
     try {
@@ -138,6 +151,11 @@ export class HtmlContainerWidgetComponent implements OnInit {
     }
   }
 
+  /**
+   * compile and execute plain function.
+   *
+   */
+
   private compileAndExecutePlainFunction(): void {
     if (isNotEmptyTbFunction(this.settings.js)) {
       const jsFunction: Observable<CompiledTbFunction<WidgetContainerPlainFunction>> = parseTbFunction(this.ctx.http, this.settings.js, ['ctx', 'container']);
@@ -155,6 +173,11 @@ export class HtmlContainerWidgetComponent implements OnInit {
       });
     }
   }
+
+  /**
+   * init angular.
+   *
+   */
 
   private initAngular(): void {
     this.loadAngularModules().subscribe(
@@ -182,6 +205,12 @@ export class HtmlContainerWidgetComponent implements OnInit {
     );
   }
 
+  /**
+   * compile angular function.
+   *
+   * @returns Observable<CompiledTbFunction<WidgetContainerAngularFunction>> observable or value
+   */
+
   private compileAngularFunction(): Observable<CompiledTbFunction<WidgetContainerAngularFunction>> {
     if (isNotEmptyTbFunction(this.settings.js)) {
         return parseTbFunction(this.ctx.http, this.settings.js, ['ctx']);
@@ -189,6 +218,13 @@ export class HtmlContainerWidgetComponent implements OnInit {
       return of(null);
     }
   }
+
+  /**
+   * init angular component.
+   *
+   * @param imports imports (Type<any>[])
+   * @param containerFunction container function (CompiledTbFunction<WidgetContainerAngularFunction>)
+   */
 
   private initAngularComponent(imports?: Type<any>[], containerFunction?: CompiledTbFunction<WidgetContainerAngularFunction>): void {
     this.angularContainer.viewContainerRef.clear();
@@ -205,6 +241,10 @@ export class HtmlContainerWidgetComponent implements OnInit {
     const self = () => this;
     this.dynamicComponentFactoryService.createDynamicComponent(
       class TbContainerInstance {
+        /**
+         * Angular lifecycle hook: initialize component state and subscriptions.
+         *
+         */
         ngOnInit(): void {
           if (containerFunction) {
             const instance = self();
@@ -215,6 +255,10 @@ export class HtmlContainerWidgetComponent implements OnInit {
             }
           }
         }
+        /**
+         * Angular lifecycle hook: unsubscribe and release resources.
+         *
+         */
         ngOnDestroy(): void {
           destroyContainerInstanceResources();
         }
@@ -240,6 +284,11 @@ export class HtmlContainerWidgetComponent implements OnInit {
     });
   }
 
+  /**
+   * destroy container instance resources.
+   *
+   */
+
   private destroyContainerInstanceResources() {
     if (this.containerInstanceComponentType) {
       this.dynamicComponentFactoryService.destroyDynamicComponent(this.containerInstanceComponentType);
@@ -247,11 +296,23 @@ export class HtmlContainerWidgetComponent implements OnInit {
     }
   }
 
+  /**
+   * handle widget exception.
+   *
+   * @param e e (any)
+   */
+
   private handleWidgetException(e: any) {
     console.error(e);
     this.widgetErrorData = this.utils.processWidgetException(e);
     this.ctx.detectChanges();
   }
+
+  /**
+   * load widget resources.
+   *
+   * @returns Observable<any> observable or value
+   */
 
   private loadWidgetResources(): Observable<any> {
     const resourceTasks: Observable<string>[] = [];
@@ -266,6 +327,10 @@ export class HtmlContainerWidgetComponent implements OnInit {
     );
     if (resourceTasks.length) {
       return forkJoin(resourceTasks).pipe(
+        /**
+         * switch map.
+         *
+         */
         switchMap(msgs => {
             let errors: string[];
             if (msgs && msgs.length) {
@@ -282,6 +347,12 @@ export class HtmlContainerWidgetComponent implements OnInit {
       return of(null);
     }
   }
+
+  /**
+   * load angular modules.
+   *
+   * @returns Observable<Type<any>[]> observable or value
+   */
 
   private loadAngularModules(): Observable<Type<any>[]> {
     const modulesTasks: Observable<ModulesWithComponents | string>[] = [];
@@ -305,6 +376,10 @@ export class HtmlContainerWidgetComponent implements OnInit {
             return flatModulesWithComponents(modulesWithComponentsList);
           }
         }),
+        /**
+         * switch map.
+         *
+         */
         switchMap(modulesWithComponentsList => {
           if (typeof modulesWithComponentsList === 'string') {
             return throwError(() => new Error(modulesWithComponentsList));

@@ -17,11 +17,11 @@
 import { EntityId } from './entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for widgets bundle id.
-
+ * TypeScript interfaces, types, and enums for widgets bundle id (shared TypeScript models).
  */
+
 
 export class WidgetsBundleId implements EntityId {
   entityType = EntityType.WIDGETS_BUNDLE;

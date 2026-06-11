@@ -19,6 +19,12 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { MousetrapInstance } from 'mousetrap';
 import Mousetrap from 'mousetrap';
 
+
+/**
+ * Angular component: tb cheat sheet (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-hotkeys-cheatsheet`.
+ */
 @Component({
     selector: 'tb-hotkeys-cheatsheet',
     styles: [`
@@ -132,10 +138,7 @@ import Mousetrap from 'mousetrap';
     }
     <div class="tb-hotkeys-close" (click)="toggleCheatSheet()">&#215;</div>
   </div></div>`,
-    standalone: false
-/**
- * Angular component: tb cheat sheet UI.
- */
+standalone: false
 })
 export class TbCheatSheetComponent implements OnInit, OnDestroy {
 
@@ -157,19 +160,40 @@ export class TbCheatSheetComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   public ngOnInit(): void {
     if (this.hotkeys) {
       this.hotkeysList = this.hotkeys.filter(hotkey => hotkey.description);
     }
   }
 
+  /**
+   * set hot keys.
+   *
+   * @param hotkeys hotkeys (Hotkey[])
+   */
+
   public setHotKeys(hotkeys: Hotkey[]) {
     this.hotkeysList = hotkeys.filter(hotkey => hotkey.description);
   }
 
+  /**
+   * toggle cheat sheet.
+   *
+   */
+
   public toggleCheatSheet(): void {
     this.helpVisible = !this.helpVisible;
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.mousetrap.unbind('?');

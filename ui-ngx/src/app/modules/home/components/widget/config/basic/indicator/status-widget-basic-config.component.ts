@@ -32,14 +32,17 @@ import {
   StatusWidgetSettings
 } from '@home/components/widget/lib/indicator/status-widget.models';
 
+
+/**
+ * Angular component: status widget basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-status-widget-basic-config`.
+ */
 @Component({
     selector: 'tb-status-widget-basic-config',
     templateUrl: './status-widget-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: status widget basic config UI.
- */
+standalone: false
 })
 export class StatusWidgetBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -64,9 +67,21 @@ export class StatusWidgetBasicConfigComponent extends BasicWidgetConfigComponent
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.statusWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: StatusWidgetSettings = {...statusWidgetDefaultSettings, ...(configData.config.settings || {})};
@@ -89,6 +104,13 @@ export class StatusWidgetBasicConfigComponent extends BasicWidgetConfigComponent
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.targetDevice = config.targetDevice;
 
@@ -110,6 +132,13 @@ export class StatusWidgetBasicConfigComponent extends BasicWidgetConfigComponent
     return this.widgetConfig;
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -117,6 +146,13 @@ export class StatusWidgetBasicConfigComponent extends BasicWidgetConfigComponent
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

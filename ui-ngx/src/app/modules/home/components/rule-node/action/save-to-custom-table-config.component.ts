@@ -18,14 +18,17 @@ import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: save to custom table config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-custom-table-config`.
+ */
 @Component({
     selector: 'tb-action-node-custom-table-config',
     templateUrl: './save-to-custom-table-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: save to custom table config UI.
- */
+standalone: false
 })
 export class SaveToCustomTableConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -35,9 +38,21 @@ export class SaveToCustomTableConfigComponent extends RuleNodeConfigurationCompo
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.saveToCustomTableConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.saveToCustomTableConfigForm = this.fb.group({
@@ -46,6 +61,13 @@ export class SaveToCustomTableConfigComponent extends RuleNodeConfigurationCompo
       defaultTtl: [configuration ? configuration.defaultTtl : 0, [Validators.required, Validators.min(0)]]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     configuration.tableName = configuration.tableName.trim();

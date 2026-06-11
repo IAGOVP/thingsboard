@@ -31,11 +31,11 @@ import { FormattedData } from '@shared/models/widget.models';
 import { ImagePipe } from '@shared/pipe/image.pipe';
 import { ReplaySubject } from 'rxjs';
 
+
 /**
-
- * marker.
-
+ * Marker (ThingsBoard web UI).
  */
+
 
 export class Marker {
 
@@ -104,11 +104,24 @@ export class Marker {
         }
     }
 
+    /**
+     * set data sources.
+     *
+     * @param data dialog or route input data
+     * @param dataSources data sources (FormattedData[])
+     */
+
     setDataSources(data: FormattedData, dataSources: FormattedData[]) {
       this.data = data;
       this.dataSources = dataSources;
       this.leafletMarker.options.tbMarkerData = data as any;
     }
+
+    /**
+     * update marker tooltip.
+     *
+     * @param data dialog or route input data
+     */
 
     updateMarkerTooltip(data: FormattedData) {
       if (!this.map.markerTooltipText || this.settings.useTooltipFunction) {
@@ -123,12 +136,24 @@ export class Marker {
       }
     }
 
+    /**
+     * update marker position.
+     *
+     * @param position position (L.LatLng)
+     */
+
     updateMarkerPosition(position: L.LatLng) {
       if (!this.leafletMarker.getLatLng().equals(position) && !this.editing) {
         this.location = position;
         this.leafletMarker.setLatLng(position);
       }
     }
+
+    /**
+     * update marker label.
+     *
+     * @param settings settings (Partial<WidgetMarkersSettings>)
+     */
 
     updateMarkerLabel(settings: Partial<WidgetMarkersSettings>) {
         this.leafletMarker.unbindTooltip();
@@ -146,11 +171,23 @@ export class Marker {
         }
     }
 
+    /**
+     * update marker color.
+     *
+     * @param color color (tinycolor.Instance)
+     */
+
     updateMarkerColor(color: tinycolor.Instance) {
         this.createDefaultMarkerIcon(color, (iconInfo) => {
             this.leafletMarker.setIcon(iconInfo.icon);
         });
     }
+
+    /**
+     * update marker icon.
+     *
+     * @param settings settings (Partial<WidgetMarkersSettings>)
+     */
 
     updateMarkerIcon(settings: Partial<WidgetMarkersSettings>) {
         this.createMarkerIcon((iconInfo) => {
@@ -165,6 +202,12 @@ export class Marker {
             this.createMarkerIconSubject.next(iconInfo);
         });
     }
+
+    /**
+     * POST/PUT entity — create marker icon.
+     *
+     * @param onMarkerIconReady on marker icon ready (MarkerIconReadyFunction)
+     */
 
     private createMarkerIcon(onMarkerIconReady: MarkerIconReadyFunction) {
         if (this.settings.icon) {
@@ -229,6 +272,13 @@ export class Marker {
         }
     }
 
+    /**
+     * POST/PUT entity — create default marker icon.
+     *
+     * @param color color (tinycolor.Instance)
+     * @param onMarkerIconReady on marker icon ready (MarkerIconReadyFunction)
+     */
+
     createDefaultMarkerIcon(color: tinycolor.Instance, onMarkerIconReady: MarkerIconReadyFunction) {
       let icon: MarkerIconInfo;
       if (!tinycolor.equals(color, this.settings.tinyColor)) {
@@ -241,6 +291,13 @@ export class Marker {
       }
       onMarkerIconReady(icon);
     }
+
+    /**
+     * POST/PUT entity — create colored marker icon.
+     *
+     * @param color color (tinycolor.Instance)
+     * @returns MarkerIconInfo observable or value
+     */
 
     createColoredMarkerIcon(color: tinycolor.Instance): MarkerIconInfo {
       return {
@@ -257,6 +314,13 @@ export class Marker {
       };
     }
 
+    /**
+     * POST/PUT entity — create color icon uri.
+     *
+     * @param color color (tinycolor.Instance)
+     * @returns string observable or value
+     */
+
     createColorIconURI(color: tinycolor.Instance): string {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-191.35 -351.18 1083.58 1730.46">` +
                          `<path fill-rule="evenodd" clip-rule="evenodd" fill="#${color.toHex()}" stroke="#000" stroke-width="37" ` +
@@ -270,18 +334,40 @@ export class Marker {
       return 'data:image/svg+xml;base64,' + btoa(svg);
     }
 
+    /**
+     * DELETE — remove marker.
+     *
+     */
+
     removeMarker() {
         /*     this.map$.subscribe(map =>
                  this.leafletMarker.addTo(map))*/
     }
 
+    /**
+     * extend bounds with marker.
+     *
+     * @param bounds bounds (L.LatLngBounds)
+     */
+
     extendBoundsWithMarker(bounds: L.LatLngBounds) {
         bounds.extend(this.leafletMarker.getLatLng());
     }
 
+    /**
+     * get marker position.
+     *
+     */
+
     getMarkerPosition() {
         return this.leafletMarker.getLatLng();
     }
+
+    /**
+     * set marker position.
+     *
+     * @param latLng lat lng (L.LatLngExpression)
+     */
 
     setMarkerPosition(latLng: L.LatLngExpression) {
         this.leafletMarker.setLatLng(latLng);

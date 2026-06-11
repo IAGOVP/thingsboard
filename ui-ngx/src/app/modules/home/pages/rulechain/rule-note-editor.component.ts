@@ -27,14 +27,17 @@ import {
 import { isNotEmptyStr } from '@core/utils';
 import tinycolor from 'tinycolor2';
 
+
+/**
+ * Angular component: rule note editor (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-note-editor`.
+ */
 @Component({
   selector: 'tb-rule-note-editor',
   templateUrl: './rule-note-editor.component.html',
   styleUrls: ['./rule-note-editor.component.scss'],
-  standalone: false
-/**
- * Angular component: rule note editor UI.
- */
+standalone: false
 })
 export class RuleNoteEditorComponent implements OnChanges, OnInit {
 
@@ -55,6 +58,11 @@ export class RuleNoteEditorComponent implements OnChanges, OnInit {
     markdownCss: ['', Validators.maxLength(65536)]
   });
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.noteForm.get('backgroundColor').valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -72,10 +80,22 @@ export class RuleNoteEditorComponent implements OnChanges, OnInit {
     }
   }
 
+  /**
+   * border color from.
+   *
+   * @param bg bg (string)
+   * @returns string observable or value
+   */
+
   private borderColorFrom(bg: string): string {
     const color = tinycolor(bg || DEFAULT_BACKGROUND_COLOR);
     return color.isDark() ? color.lighten(20).toString() : color.darken(20).toString();
   }
+
+  /**
+   * updated form.
+   *
+   */
 
   private updatedForm(): void {
     const bg = this.note?.backgroundColor || DEFAULT_BACKGROUND_COLOR;
@@ -97,6 +117,13 @@ export class RuleNoteEditorComponent implements OnChanges, OnInit {
       this.noteForm.markAsPristine();
     }, 0);
   }
+
+  /**
+   * has non default advanced settings.
+   *
+   * @param bg bg (string)
+   * @returns boolean observable or value
+   */
 
   private hasNonDefaultAdvancedSettings(bg: string): boolean {
     const note = this.note;

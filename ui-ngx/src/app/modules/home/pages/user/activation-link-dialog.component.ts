@@ -29,13 +29,16 @@ export interface ActivationLinkDialogData {
   activationLinkInfo: ActivationLinkInfo;
 }
 
+
+/**
+ * Angular component: activation link dialog (home/user pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-activation-link-dialog`.
+ */
 @Component({
     selector: 'tb-activation-link-dialog',
     templateUrl: './activation-link-dialog.component.html',
-    standalone: false
-/**
- * Angular component: activation link dialog UI.
- */
+standalone: false
 })
 export class ActivationLinkDialogComponent extends DialogComponent<ActivationLinkDialogComponent, void> {
 
@@ -53,9 +56,19 @@ export class ActivationLinkDialogComponent extends DialogComponent<ActivationLin
     this.activationLinkTtl = this.millisecondsToTimeStringPipe.transform(this.data.activationLinkInfo.ttlMs);
   }
 
+  /**
+   * close.
+   *
+   */
+
   close(): void {
     this.dialogRef.close();
   }
+
+  /**
+   * Event handler for activation link copied.
+   *
+   */
 
   onActivationLinkCopied() {
      this.store.dispatch(new ActionNotificationShow(

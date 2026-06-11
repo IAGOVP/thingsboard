@@ -47,7 +47,14 @@ import static org.thingsboard.rule.engine.util.GpsGeofencingEvents.LEFT;
 import static org.thingsboard.rule.engine.util.GpsGeofencingEvents.OUTSIDE;
 
 /**
- * Rule engine action node 'gps geofencing events': Produces incoming messages using GPS based geofencing Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>gps geofencing events</b>.
+ *
+ * <p>Produces incoming messages using GPS based geofencing
+ * <br>Extracts latitude and longitude parameters from incoming message and returns different events based on configuration parameters. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGpsGeofencingActionNodeConfiguration}.
+ * <br>Output relations: {@code "Success", "Entered", "Left", "Inside", "Outside"}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/gps-geofencing-events/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/gps-geofencing-events/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -72,6 +79,13 @@ public class TbGpsGeofencingActionNode extends AbstractGeofencingNode<TbGpsGeofe
     private static final String REPORT_PRESENCE_STATUS_ON_EACH_MESSAGE = "reportPresenceStatusOnEachMessage";
     private final ConcurrentMap<EntityId, EntityGeofencingState> entityStates = new ConcurrentHashMap<>();
     private final Gson gson = new Gson();
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws TbNodeException {
@@ -143,11 +157,25 @@ public class TbGpsGeofencingActionNode extends AbstractGeofencingNode<TbGpsGeofe
         List<AttributeKvEntry> attributeKvEntryList = Collections.singletonList(entry);
         ctx.getAttributesService().save(ctx.getTenantId(), entityId, AttributeScope.SERVER_SCOPE, attributeKvEntryList);
     }
+    /**
+     * Returns config clazz.
+     *
+     * @return {@link Class}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected Class<TbGpsGeofencingActionNodeConfiguration> getConfigClazz() {
         return TbGpsGeofencingActionNodeConfiguration.class;
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

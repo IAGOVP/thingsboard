@@ -17,21 +17,36 @@ package org.thingsboard.server.msa.ui.pages;
 
 import org.openqa.selenium.WebDriver;
 
+
 /**
 
- * Alarm details view helper.
+ * Page object helper for alarm details view UI actions (page object element locators and helpers — Selenium page objects).
 
  */
+
 
 public class AlarmDetailsViewHelper extends AlarmDetailsViewElements {
     public AlarmDetailsViewHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Assigns alarm to.
+     *
+     * @param emailOrName email or name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void assignAlarmTo(String emailOrName) {
         assignField().click();
         userFromAssignDropdown(emailOrName).click();
     }
+    /**
+     * Unassigns ed alarm.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void unassignedAlarm() {
         assignField().click();

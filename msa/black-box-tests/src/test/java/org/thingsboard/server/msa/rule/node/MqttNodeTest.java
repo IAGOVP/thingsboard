@@ -60,8 +60,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.fail;
 import static org.thingsboard.server.msa.prototypes.DevicePrototypes.defaultDevicePrototype;
 /**
- * Mqtt node test.
+ * Integration test for MQTT rule-engine node publish/subscribe against a live transport.
  */
+
 
 @DisableUIListeners
 @Slf4j
@@ -71,17 +72,35 @@ public class MqttNodeTest extends AbstractContainerTest {
     private static final String CONTAINER_MQTT_URL = "tcp://localhost:1883";
 
     private Device device;
+    /**
+     * Set up.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void setUp() {
         testRestClient.login("tenant@thingsboard.org", "tenant");
         device = testRestClient.postDevice("", defaultDevicePrototype("mqtt_"));
     }
+    /**
+     * Tear down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void tearDown() {
         testRestClient.deleteDeviceIfExists(device.getId());
     }
+    /**
+     * Telemetry upload.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void telemetryUpload() throws Exception {
@@ -132,6 +151,9 @@ public class MqttNodeTest extends AbstractContainerTest {
 
         testRestClient.setRootRuleChain(defaultRuleChainId);
     }
+    /**
+     * Mqtt message listener (black-box test infrastructure).
+     */
 
     @Data
     private class MqttMessageListener implements IMqttMessageListener {
@@ -140,17 +162,34 @@ public class MqttNodeTest extends AbstractContainerTest {
         private MqttMessageListener() {
             events = new ArrayBlockingQueue<>(100);
         }
+    /**
+     * Message arrived.
+     *
+     * @param s s ({@link String})
+     * @param mqttMessage mqtt message ({@link MqttMessage})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Override
         public void messageArrived(String s, MqttMessage mqttMessage) {
             log.info("MQTT message [{}], topic [{}]", mqttMessage.toString(), s);
             events.add(new MqttEvent(s, mqttMessage.toString()));
         }
+    /**
+     * Returns events.
+     *
+     * @return {@link BlockingQueue}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public BlockingQueue<MqttEvent> getEvents() {
             return events;
         }
     }
+    /**
+     * Mqtt event (black-box test infrastructure).
+     */
 
     @Data
     private class MqttEvent {
@@ -170,6 +209,15 @@ public class MqttNodeTest extends AbstractContainerTest {
         }
         return defaultRuleChain.get().getId();
     }
+    /**
+     * Creates root rule chain with test node.
+     *
+     * @param ruleChainMetadataFile rule chain metadata file ({@link String})
+     * @param ruleNodeType rule node type ({@link String})
+     * @param eventsCount events count
+     * @return {@link RuleChainId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected RuleChainId createRootRuleChainWithTestNode(String ruleChainMetadataFile, String ruleNodeType, int eventsCount) throws Exception {
         RuleChain newRuleChain = new RuleChain();

@@ -21,8 +21,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.relation.EntityRelation;
 import org.thingsboard.server.common.data.relation.EntitySearchDirection;
 /**
- * JSON configuration for TbCreateRelation rule node.
+ * JSON configuration POJO for {@link TbCreateRelation} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -31,6 +34,12 @@ public class TbCreateRelationNodeConfiguration extends TbAbstractRelationActionN
     private boolean createEntityIfNotExists;
     private boolean changeOriginatorToRelatedEntity;
     private boolean removeCurrentRelations;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbCreateRelationNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbCreateRelationNodeConfiguration defaultConfiguration() {

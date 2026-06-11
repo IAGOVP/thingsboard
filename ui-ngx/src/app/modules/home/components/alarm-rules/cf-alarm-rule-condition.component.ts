@@ -53,6 +53,12 @@ import {
 import { coerceBoolean } from "@shared/decorators/coercion";
 import { Observable } from "rxjs";
 
+
+/**
+ * Angular component: cf alarm rule condition (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-cf-alarm-rule-condition`.
+ */
 @Component({
     selector: 'tb-cf-alarm-rule-condition',
     templateUrl: './cf-alarm-rule-condition.component.html',
@@ -69,10 +75,7 @@ import { Observable } from "rxjs";
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: cf alarm rule condition UI.
- */
+standalone: false
 })
 export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Validator, OnChanges {
 
@@ -118,9 +121,21 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
               private translate: TranslateService) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -128,6 +143,12 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
   registerOnValidatorChange(fn: () => void): void {
     this.onValidatorChange = fn;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -137,6 +158,12 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
       this.alarmRuleConditionFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (AlarmRuleCondition)
+   */
 
   writeValue(value: AlarmRuleCondition): void {
     this.modelValue = value;
@@ -152,6 +179,11 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
     }
   }
 
+  /**
+   * recalculate argument validity.
+   *
+   */
+
   private recalculateArgumentValidity(): void {
     if (!this.modelValue || !this.arguments) {
       this.filtersArgumentsValid = true;
@@ -162,10 +194,26 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
     this.schedulerArgumentsValid = this.isScheduleArgumentValid(this.modelValue, Object.keys(this.arguments));
   }
 
+  /**
+   * is schedule argument valid.
+   *
+   * @param obj obj (any)
+   * @param validArguments valid arguments (string[])
+   * @returns boolean observable or value
+   */
+
   private isScheduleArgumentValid(obj: any, validArguments: string[]): boolean {
     const arg = obj?.schedule?.dynamicValueArgument;
     return !arg || validArguments.includes(arg);
   }
+
+  /**
+   * are filter and predicate arguments valid.
+   *
+   * @param obj obj (any)
+   * @param args args (Record<string, CalculatedFieldArgument>)
+   * @returns boolean observable or value
+   */
 
   private areFilterAndPredicateArgumentsValid(obj: any, args: Record<string, CalculatedFieldArgument>): boolean {
     const validSet = new Set(Object.keys(args));
@@ -185,15 +233,33 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
     return true;
   }
 
+  /**
+   * condition set.
+   *
+   * @returns boolean observable or value
+   */
+
   public conditionSet(): boolean {
     return !!this.modelValue && !!(this.modelValue.expression?.expression || this.modelValue.expression?.filters);
   }
+
+  /**
+   * validate.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
 
   public validate(control: AbstractControl): ValidationErrors | null {
     const hasCondition = this.conditionSet();
     const argsValid = this.filtersArgumentsValid && this.schedulerArgumentsValid;
     return (hasCondition && argsValid) ? null : { alarmRuleCondition: { valid: false } };
   }
+
+  /**
+   * open filter dialog.
+   *
+   */
 
   public openFilterDialog($event: Event) {
     if ($event) {
@@ -217,6 +283,11 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
     });
   }
 
+  /**
+   * update condition info.
+   *
+   */
+
   private updateConditionInfo() {
     this.alarmRuleConditionFormGroup.patchValue(
       this.modelValue ? {
@@ -228,6 +299,11 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
     this.updateScheduleText();
     this.updateSpecText();
   }
+
+  /**
+   * update spec text.
+   *
+   */
 
   private updateSpecText() {
     this.specText = '';
@@ -276,6 +352,11 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.updateConditionInfo();
     this.recalculateArgumentValidity();
@@ -283,6 +364,11 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
     this.onValidatorChange();
     this.cd.detectChanges();
   }
+
+  /**
+   * open schedule dialog.
+   *
+   */
 
   public openScheduleDialog($event: Event) {
     if ($event) {
@@ -307,6 +393,11 @@ export class CfAlarmRuleConditionComponent implements ControlValueAccessor, Vali
       }
     });
   }
+
+  /**
+   * update schedule text.
+   *
+   */
 
   private updateScheduleText() {
     const schedule = this.modelValue?.schedule;

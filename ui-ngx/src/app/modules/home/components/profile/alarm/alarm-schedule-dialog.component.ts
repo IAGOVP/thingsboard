@@ -31,15 +31,18 @@ export interface AlarmScheduleDialogData {
   alarmSchedule: AlarmSchedule;
 }
 
+
+/**
+ * Angular component: alarm schedule dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-schedule-dialog`.
+ */
 @Component({
     selector: 'tb-alarm-schedule-dialog',
     templateUrl: './alarm-schedule-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: AlarmScheduleDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: alarm schedule dialog UI.
- */
+standalone: false
 })
 export class AlarmScheduleDialogComponent extends DialogComponent<AlarmScheduleDialogComponent, AlarmSchedule>
   implements OnInit, ErrorStateMatcher {
@@ -69,8 +72,21 @@ export class AlarmScheduleDialogComponent extends DialogComponent<AlarmScheduleD
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -78,9 +94,19 @@ export class AlarmScheduleDialogComponent extends DialogComponent<AlarmScheduleD
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

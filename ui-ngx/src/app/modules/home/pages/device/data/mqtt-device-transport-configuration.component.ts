@@ -25,6 +25,12 @@ import {
 } from '@shared/models/device.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: mqtt device transport configuration (home/device pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mqtt-device-transport-configuration`.
+ */
 @Component({
     selector: 'tb-mqtt-device-transport-configuration',
     templateUrl: './mqtt-device-transport-configuration.component.html',
@@ -34,10 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => MqttDeviceTransportConfigurationComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: mqtt device transport configuration UI.
- */
+standalone: false
 })
 export class MqttDeviceTransportConfigurationComponent implements ControlValueAccessor, OnInit {
 
@@ -62,12 +65,29 @@ export class MqttDeviceTransportConfigurationComponent implements ControlValueAc
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.mqttDeviceTransportConfigurationFormGroup = this.fb.group({
@@ -80,6 +100,12 @@ export class MqttDeviceTransportConfigurationComponent implements ControlValueAc
     });
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -89,9 +115,20 @@ export class MqttDeviceTransportConfigurationComponent implements ControlValueAc
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MqttDeviceTransportConfiguration | null)
+   */
+
   writeValue(value: MqttDeviceTransportConfiguration | null): void {
     this.mqttDeviceTransportConfigurationFormGroup.patchValue({configuration: value}, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let configuration: DeviceTransportConfiguration = null;

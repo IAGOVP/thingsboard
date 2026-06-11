@@ -42,8 +42,9 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { UtilsService } from '@core/services/utils.service';
 import { DomSanitizer } from '@angular/platform-browser';
 /**
- * Route resolver: loads inbox table config before activate.
+ * Route resolver: preloads data for inbox table config (home/notification pages).
  */
+
 
 @Injectable()
 export class InboxTableConfigResolver  {
@@ -107,9 +108,22 @@ export class InboxTableConfigResolver  {
 
   }
 
+  /**
+   * resolve.
+   *
+   * @param _route  route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<Notification> observable or value
+   */
+
   resolve(_route: ActivatedRouteSnapshot): EntityTableConfig<Notification> {
     return this.config;
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @returns Array<CellActionDescriptor<Notification>> observable or value
+   */
 
   private configureCellActions(): Array<CellActionDescriptor<Notification>> {
     return [{
@@ -119,6 +133,11 @@ export class InboxTableConfigResolver  {
       onAction: ($event, entity) => this.markAsRead($event, entity)
     }];
   }
+
+  /**
+   * mark all read.
+   *
+   */
 
   private markAllRead($event: Event) {
     if ($event) {
@@ -132,6 +151,11 @@ export class InboxTableConfigResolver  {
       }
     });
   }
+
+  /**
+   * mark as read.
+   *
+   */
 
   private markAsRead($event: Event, entity){
     if ($event) {
@@ -154,6 +178,12 @@ export class InboxTableConfigResolver  {
       }
     });
   }
+
+  /**
+   * show notification.
+   *
+   * @param notification notification (Notification)
+   */
 
   private showNotification($event: Event, notification: Notification) {
     if ($event) {

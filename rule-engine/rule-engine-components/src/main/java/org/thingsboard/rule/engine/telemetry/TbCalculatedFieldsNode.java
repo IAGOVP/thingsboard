@@ -40,7 +40,13 @@ import java.util.Map;
 import static org.thingsboard.server.common.data.DataConstants.SCOPE;
 
 /**
- * Rule engine action node 'calculated fields and alarm rules': Pushes incoming messages to calculated fields and alarm rules services Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>calculated fields and alarm rules</b>.
+ *
+ * <p>Pushes incoming messages to calculated fields and alarm rules services
+ * <br>Node enables the processing of calculated fields and alarm rules without persisting incoming messages to the database. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link EmptyNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/calculated-fields/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/calculated-fields/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -56,9 +62,23 @@ import static org.thingsboard.server.common.data.DataConstants.SCOPE;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/calculated-fields/"
 )
 public class TbCalculatedFieldsNode implements TbNode {
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) {}
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

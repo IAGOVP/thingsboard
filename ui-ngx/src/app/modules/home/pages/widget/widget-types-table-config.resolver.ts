@@ -48,8 +48,9 @@ import { WidgetTypeTabsComponent } from '@home/pages/widget/widget-type-tabs.com
 import { SelectWidgetTypeDialogComponent } from '@home/pages/widget/select-widget-type-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 /**
- * Route resolver: loads widget types table config before activate.
+ * Route resolver: preloads data for widget types table config (home/widget pages).
  */
+
 
 @Injectable()
 export class WidgetTypesTableConfigResolver  {
@@ -151,6 +152,12 @@ export class WidgetTypesTableConfigResolver  {
     };
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<WidgetTypeInfo | WidgetTypeDetails> observable or value
+   */
+
   resolve(): EntityTableConfig<WidgetTypeInfo | WidgetTypeDetails> {
     this.config.tableTitle = this.translate.instant('widget.widgets');
     const authUser = getCurrentAuthUser(this.store);
@@ -161,6 +168,14 @@ export class WidgetTypesTableConfigResolver  {
     return this.config;
   }
 
+  /**
+   * is widget type editable.
+   *
+   * @param widgetType widget type (BaseWidgetType)
+   * @param authority authority (Authority)
+   * @returns boolean observable or value
+   */
+
   isWidgetTypeEditable(widgetType: BaseWidgetType, authority: Authority): boolean {
     if (authority === Authority.TENANT_ADMIN) {
       return widgetType && widgetType.tenantId && widgetType.tenantId.id !== NULL_UUID;
@@ -168,6 +183,11 @@ export class WidgetTypesTableConfigResolver  {
       return authority === Authority.SYS_ADMIN;
     }
   }
+
+  /**
+   * POST/PUT entity — add widget type.
+   *
+   */
 
   addWidgetType($event: Event): void {
     if ($event) {
@@ -186,6 +206,11 @@ export class WidgetTypesTableConfigResolver  {
     );
   }
 
+  /**
+   * import widget type.
+   *
+   */
+
   importWidgetType($event: Event) {
     this.importExport.importWidgetType().subscribe(
       (widgetType) => {
@@ -196,12 +221,25 @@ export class WidgetTypesTableConfigResolver  {
     );
   }
 
+  /**
+   * open widget editor.
+   *
+   * @param widgetType widget type (BaseWidgetType)
+   */
+
   openWidgetEditor($event: Event, widgetType: BaseWidgetType) {
     if ($event) {
       $event.stopPropagation();
     }
     this.router.navigateByUrl(`resources/widgets-library/widget-types/${widgetType.id.id}`);
   }
+
+  /**
+   * open widget type details.
+   *
+   * @param widgetType widget type (BaseWidgetType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private openWidgetTypeDetails($event: Event, widgetType: BaseWidgetType, config: EntityTableConfig<BaseWidgetType>) {
     if ($event) {
@@ -211,12 +249,24 @@ export class WidgetTypesTableConfigResolver  {
     this.router.navigateByUrl(url);
   }
 
+  /**
+   * export widget type.
+   *
+   * @param widgetType widget type (BaseWidgetType)
+   */
+
   exportWidgetType($event: Event, widgetType: BaseWidgetType) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExport.exportWidgetType(widgetType.id.id);
   }
+
+  /**
+   * export widget types.
+   *
+   * @param widgetTypes widget types (BaseWidgetType[])
+   */
 
   exportWidgetTypes($event: Event, widgetTypes: BaseWidgetType[]) {
     if ($event) {
@@ -228,6 +278,14 @@ export class WidgetTypesTableConfigResolver  {
         }
     );
   }
+
+  /**
+   * Event handler for widget type action.
+   *
+   * @param action action (EntityAction<BaseWidgetType>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
 
   onWidgetTypeAction(action: EntityAction<BaseWidgetType>, config: EntityTableConfig<BaseWidgetType>): boolean {
     switch (action.action) {

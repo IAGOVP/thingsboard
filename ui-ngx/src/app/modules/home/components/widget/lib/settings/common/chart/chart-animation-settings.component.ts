@@ -25,6 +25,12 @@ import {
 import { chartAnimationEasings, ChartAnimationSettings } from '@home/components/widget/lib/chart/chart.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: chart animation settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-chart-animation-settings`.
+ */
 @Component({
     selector: 'tb-chart-animation-settings',
     templateUrl: './chart-animation-settings.component.html',
@@ -36,10 +42,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: chart animation settings UI.
- */
+standalone: false
 })
 export class ChartAnimationSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -59,6 +62,11 @@ export class ChartAnimationSettingsComponent implements OnInit, ControlValueAcce
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.animationSettingsFormGroup = this.fb.group({
@@ -83,12 +91,30 @@ export class ChartAnimationSettingsComponent implements OnInit, ControlValueAcce
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -99,6 +125,12 @@ export class ChartAnimationSettingsComponent implements OnInit, ControlValueAcce
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ChartAnimationSettings)
+   */
 
   writeValue(value: ChartAnimationSettings): void {
     this.modelValue = value;
@@ -113,6 +145,11 @@ export class ChartAnimationSettingsComponent implements OnInit, ControlValueAcce
     });
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     const animation: boolean = this.animationSettingsFormGroup.get('animation').value;
     if (animation) {
@@ -122,6 +159,11 @@ export class ChartAnimationSettingsComponent implements OnInit, ControlValueAcce
       this.animationSettingsFormGroup.get('animation').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.animationSettingsFormGroup.getRawValue();

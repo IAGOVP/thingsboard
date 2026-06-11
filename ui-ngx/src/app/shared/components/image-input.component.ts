@@ -39,6 +39,12 @@ import { FileSizePipe } from '@shared/pipe/file-size.pipe';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { ImagePipe } from '@shared/pipe/image.pipe';
 
+
+/**
+ * Angular component: image input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-image-input`.
+ */
 @Component({
     selector: 'tb-image-input',
     templateUrl: './image-input.component.html',
@@ -50,10 +56,7 @@ import { ImagePipe } from '@shared/pipe/image.pipe';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: image input UI.
- */
+standalone: false
 })
 export class ImageInputComponent extends PageComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
 
@@ -136,6 +139,11 @@ export class ImageInputComponent extends PageComponent implements AfterViewInit,
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.autoUploadSubscription = this.flow.events$.subscribe(event => {
       if (event.type === 'fileAdded') {
@@ -168,20 +176,49 @@ export class ImageInputComponent extends PageComponent implements AfterViewInit,
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.autoUploadSubscription.unsubscribe();
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
 
   writeValue(value: string): void {
     this.imageUrl = value;
@@ -200,6 +237,11 @@ export class ImageInputComponent extends PageComponent implements AfterViewInit,
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     this.cd.markForCheck();
     if (this.resultAsFile) {
@@ -210,6 +252,13 @@ export class ImageInputComponent extends PageComponent implements AfterViewInit,
     this.fileNameChanged.emit(this.fileName);
   }
 
+  /**
+   * filter file.
+   *
+   * @param file file (flowjs.FlowFile)
+   * @returns boolean observable or value
+   */
+
   private filterFile(file: flowjs.FlowFile): boolean {
     if (this.allowedExtensions) {
       return this.allowedExtensions.split(',').indexOf(file.getExtension()) > -1;
@@ -217,6 +266,11 @@ export class ImageInputComponent extends PageComponent implements AfterViewInit,
       return true;
     }
   }
+
+  /**
+   * clear image.
+   *
+   */
 
   clearImage() {
     this.imageUrl = null;

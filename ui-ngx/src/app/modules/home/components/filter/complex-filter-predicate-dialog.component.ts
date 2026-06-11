@@ -30,15 +30,18 @@ import {
 } from '@shared/models/query/query.models';
 import { ComplexFilterPredicateDialogData } from '@home/components/filter/filter-component.models';
 
+
+/**
+ * Angular component: complex filter predicate dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-complex-filter-predicate-dialog`.
+ */
 @Component({
     selector: 'tb-complex-filter-predicate-dialog',
     templateUrl: './complex-filter-predicate-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: ComplexFilterPredicateDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: complex filter predicate dialog UI.
- */
+standalone: false
 })
 export class ComplexFilterPredicateDialogComponent extends
   DialogComponent<ComplexFilterPredicateDialogComponent, ComplexFilterPredicateInfo>
@@ -75,8 +78,21 @@ export class ComplexFilterPredicateDialogComponent extends
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
 
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
@@ -84,9 +100,19 @@ export class ComplexFilterPredicateDialogComponent extends
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;

@@ -42,15 +42,18 @@
   readonly: boolean;
 }
 
+
+/**
+ * Angular component: alarm rule filter dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-filter-dialog`.
+ */
 @Component({
     selector: 'tb-alarm-rule-filter-dialog',
     templateUrl: './alarm-rule-filter-dialog.component.html',
     providers: [],
     styleUrls: ['./alarm-rule-filter-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm rule filter dialog UI.
- */
+standalone: false
 })
 export class AlarmRuleFilterDialogComponent extends DialogComponent<AlarmRuleFilterDialogComponent, AlarmRuleFilter> {
 
@@ -127,13 +130,30 @@ export class AlarmRuleFilterDialogComponent extends DialogComponent<AlarmRuleFil
     }
   }
 
+  /**
+   * argument in use.
+   *
+   * @param argument argument (string)
+   * @returns boolean observable or value
+   */
+
   argumentInUse(argument: string): boolean {
     return this.data.usedArguments.includes(argument);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close(this.filterFormGroup.value as AlarmRuleFilter);

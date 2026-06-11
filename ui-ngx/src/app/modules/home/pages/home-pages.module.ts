@@ -53,6 +53,9 @@ import { AiModelModule } from '@home/pages/ai-model/ai-model.module';
 /**
  * Angular NgModule: home pages feature area.
  */
+/**
+ * Angular NgModule bundling home pages (home pages).
+ */
 @NgModule({
   exports: [
     AdminModule,
@@ -87,5 +90,5 @@ import { AiModelModule } from '@home/pages/ai-model/ai-model.module';
     AccountModule,
     ScadaSymbolModule,
     AiModelModule,
-  ]})
+]})
 export class HomePagesModule { }

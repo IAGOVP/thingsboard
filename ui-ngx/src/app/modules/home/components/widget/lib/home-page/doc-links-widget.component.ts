@@ -99,14 +99,17 @@ interface DocLinksWidgetSettings {
   columns: number;
 }
 
+
+/**
+ * Angular component: doc links widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-doc-links-widget`.
+ */
 @Component({
     selector: 'tb-doc-links-widget',
     templateUrl: './doc-links-widget.component.html',
     styleUrls: ['./home-page-widget.scss', './links-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: doc links widget UI.
- */
+standalone: false
 })
 export class DocLinksWidgetComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -131,6 +134,11 @@ export class DocLinksWidgetComponent extends PageComponent implements OnInit, On
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.settings = this.ctx.settings;
     this.columns = this.settings.columns || 3;
@@ -153,12 +161,22 @@ export class DocLinksWidgetComponent extends PageComponent implements OnInit, On
     this.loadDocLinks();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.observeBreakpointSubscription) {
       this.observeBreakpointSubscription.unsubscribe();
     }
     super.ngOnDestroy();
   }
+
+  /**
+   * load doc links.
+   *
+   */
 
   private loadDocLinks() {
     this.userSettingsService.getDocumentationLinks().pipe(
@@ -177,6 +195,11 @@ export class DocLinksWidgetComponent extends PageComponent implements OnInit, On
     );
   }
 
+  /**
+   * edit.
+   *
+   */
+
   edit() {
     this.dialog.open<EditLinksDialogComponent, EditLinksDialogData,
       boolean>(EditLinksDialogComponent, {
@@ -194,6 +217,11 @@ export class DocLinksWidgetComponent extends PageComponent implements OnInit, On
         }
       });
   }
+
+  /**
+   * POST/PUT entity — add link.
+   *
+   */
 
   addLink() {
     this.dialog.open<AddDocLinkDialogComponent, any,

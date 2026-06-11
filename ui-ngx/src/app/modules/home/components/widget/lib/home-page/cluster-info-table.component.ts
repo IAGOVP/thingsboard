@@ -42,14 +42,17 @@ export interface SystemInfoData {
   totalDiscSpace: number;
 }
 
+
+/**
+ * Angular component: cluster info table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-cluster-info-table`.
+ */
 @Component({
     selector: 'tb-cluster-info-table',
     templateUrl: './cluster-info-table.component.html',
     styleUrls: ['./cluster-info-table.component.scss'],
-    standalone: false
-/**
- * Angular component: cluster info table UI.
- */
+standalone: false
 })
 export class ClusterInfoTableComponent extends PageComponent implements OnInit, AfterViewInit {
 
@@ -68,6 +71,11 @@ export class ClusterInfoTableComponent extends PageComponent implements OnInit, 
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.dataSource = new SystemInfoDataSource(this.telemetryWsService, this.zone);
     const sortOrder: SortOrder = {
@@ -78,15 +86,32 @@ export class ClusterInfoTableComponent extends PageComponent implements OnInit, 
     this.dataSource.loadData(this.pageLink);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => this.updateData());
   }
+
+  /**
+   * update data.
+   *
+   */
 
   updateData() {
     this.pageLink.sortOrder.property = this.sort.active;
     this.pageLink.sortOrder.direction = Direction[this.sort.direction.toUpperCase()];
     this.dataSource.loadData(this.pageLink);
   }
+
+  /**
+   * status class.
+   *
+   * @param value value (number)
+   * @returns string observable or value
+   */
 
   statusClass(value: number): string {
     let status = '';
@@ -97,6 +122,14 @@ export class ClusterInfoTableComponent extends PageComponent implements OnInit, 
     }
     return status;
   }
+
+  /**
+   * info tooltip.
+   *
+   * @param serviceData service data (SystemInfoData)
+   * @param type type ('cpu' | 'ram' | 'disc')
+   * @returns string observable or value
+   */
 
   infoTooltip(serviceData: SystemInfoData, type: 'cpu' | 'ram' | 'disc'): string {
     let tooltip = '';

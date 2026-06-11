@@ -49,11 +49,11 @@ export interface PointItem {
   tooltip?: L.Popup;
 }
 
+
 /**
-
- * tb trip data item.
-
+ * Tb trip data item (ThingsBoard web UI).
  */
+
 
 class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsDataLayer, L.FeatureGroup> {
 
@@ -81,6 +81,12 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     this.create();
   }
 
+  /**
+   * update.
+   *
+   * @param rawRouteData raw route data (FormattedData<TbMapDatasource>[])
+   */
+
   public update(rawRouteData: FormattedData<TbMapDatasource>[]) {
     this.rawRouteData = rawRouteData;
     this.tripRouteData = this.prepareTripRouteData();
@@ -94,6 +100,12 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     this.updateMarker();
   }
 
+  /**
+   * update latest data.
+   *
+   * @param latestData latest data (FormattedData<TbMapDatasource>)
+   */
+
   public updateLatestData(latestData: FormattedData<TbMapDatasource>) {
     this.latestData = latestData;
     this.pointData = this.currentPositionData;
@@ -102,6 +114,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     }
     this.updateAppearance();
   }
+
+  /**
+   * update appearance.
+   *
+   */
 
   public updateAppearance() {
     this.updatePathAppearance();
@@ -114,6 +131,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     this.updateMarkerIcon(this.pointData, dsData);
   }
 
+  /**
+   * update current time.
+   *
+   */
+
   public updateCurrentTime() {
     this.updateCurrentPosition();
     this.pointData = this.currentPositionData;
@@ -124,12 +146,22 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     this.updateMarker();
   }
 
+  /**
+   * invalidate coordinates.
+   *
+   */
+
   public invalidateCoordinates(): void {
     this.tripRouteData = this.prepareTripRouteData();
     this.updatePath();
     this.updatePoints();
     this.updateMarker();
   }
+
+  /**
+   * DELETE — remove.
+   *
+   */
 
   public remove() {
     if (this.marker) {
@@ -143,12 +175,23 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     this.layer.off();
   }
 
+  /**
+   * calculate anchors.
+   *
+   * @returns number[] observable or value
+   */
+
   public calculateAnchors(): number[] {
     const entries = Object.entries(this.tripRouteData);
     const dsData = this.dataLayer.getMap().getData();
     return entries.filter(data => this.dataLayer.getMap().getLocationSnapFilterFunction().execute(data[1], dsData))
     .map(data => parseInt(data[0], 10));
   }
+
+  /**
+   * POST/PUT entity — create.
+   *
+   */
 
   private create() {
     this.updateCurrentPosition();
@@ -166,6 +209,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
       console.warn(e);
     }
   }
+
+  /**
+   * POST/PUT entity — create marker.
+   *
+   */
 
   private createMarker() {
     if (this.settings.showMarker) {
@@ -192,6 +240,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     }
   }
 
+  /**
+   * update marker.
+   *
+   */
+
   private updateMarker() {
     if (this.settings.showMarker) {
       const dsData = this.dataLayer.getMap().getData();
@@ -204,6 +257,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
       this.updateMarkerIcon(this.pointData, dsData);
     }
   }
+
+  /**
+   * POST/PUT entity — create path.
+   *
+   */
 
   private createPath() {
     if (this.settings.showPath) {
@@ -220,6 +278,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     }
   }
 
+  /**
+   * update path.
+   *
+   */
+
   private updatePath() {
     if (this.settings.showPath) {
       const formattedRouteData = _.values(this.tripRouteData);
@@ -232,6 +295,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
       this.updatePathAppearance();
     }
   }
+
+  /**
+   * update points.
+   *
+   */
 
   private updatePoints() {
     if (this.settings.showPoints) {
@@ -293,6 +361,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     }
   }
 
+  /**
+   * update path appearance.
+   *
+   */
+
   private updatePathAppearance() {
     if (this.settings.showPath) {
       const dsData = this.dataLayer.getMap().getData();
@@ -304,12 +377,26 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     }
   }
 
+  /**
+   * update marker location.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
+
   private updateMarkerLocation(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]) {
     const location = this.dataLayer.dataProcessor.extractLocation(data, dsData);
     if (!this.marker.getLatLng().equals(location)) {
       this.marker.setLatLng(location);
     }
   }
+
+  /**
+   * update marker icon.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
 
   private updateMarkerIcon(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]) {
     if (this.settings.showMarker) {
@@ -329,6 +416,13 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     }
   }
 
+  /**
+   * update marker label.
+   *
+   * @param data dialog or route input data
+   * @param dsData ds data (FormattedData<TbMapDatasource>[])
+   */
+
   private updateMarkerLabel(data: FormattedData<TbMapDatasource>, dsData: FormattedData<TbMapDatasource>[]) {
     if (this.settings.label.show) {
       this.marker.unbindTooltip();
@@ -338,6 +432,12 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
       this.marker.bindTooltip(content, { className: 'tb-marker-label', permanent: true, direction: 'top', offset: this.labelOffset });
     }
   }
+
+  /**
+   * prepare trip route data.
+   *
+   * @returns TripRouteData observable or value
+   */
 
   private prepareTripRouteData(): TripRouteData {
     const result: TripRouteData = {};
@@ -390,6 +490,11 @@ class TbTripDataItem extends TbDataLayerItem<TripsDataLayerSettings, TbTripsData
     }
     return result;
   }
+
+  /**
+   * update current position.
+   *
+   */
 
   private updateCurrentPosition(force = false) {
     if (this.currentTime !== this.dataLayer.getMap().getCurrentTime() || force) {

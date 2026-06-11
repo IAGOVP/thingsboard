@@ -25,13 +25,24 @@ import org.thingsboard.server.common.data.id.DeviceId;
 import org.thingsboard.server.common.data.id.EntityId;
 import org.thingsboard.server.common.data.relation.RelationsSearchParameters;
 
+
 /**
 
- * Rule engine component: entities related device id async loader.
+ * Entities related device id async loader (shared rule-engine utilities and async loaders).
 
  */
 
+
 public class EntitiesRelatedDeviceIdAsyncLoader {
+    /**
+     * Finds device async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originator message originator entity id
+     * @param deviceRelationsQuery device relations query ({@link DeviceRelationsQuery})
+     * @return future completing with {@link DeviceId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ListenableFuture<DeviceId> findDeviceAsync(
             TbContext ctx,

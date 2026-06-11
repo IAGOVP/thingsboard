@@ -33,13 +33,16 @@ import { ActionNotificationShow } from '@core/notification/notification.actions'
 import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { isNotEmptyStr } from '@core/utils';
 
+
+/**
+ * Angular component: ota update (home/ota-update pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-ota-update`.
+ */
 @Component({
     selector: 'tb-ota-update',
     templateUrl: './ota-update.component.html',
-    standalone: false
-/**
- * Angular component: ota update UI.
- */
+standalone: false
 })
 export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements OnInit, OnDestroy {
 
@@ -58,6 +61,11 @@ export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements O
               protected cd: ChangeDetectorRef) {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     super.ngOnInit();
@@ -90,11 +98,21 @@ export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements O
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * hide delete.
+   *
+   */
 
   hideDelete() {
     if (this.entitiesTableConfig) {
@@ -103,6 +121,13 @@ export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements O
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (OtaPackage)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: OtaPackage): UntypedFormGroup {
     const form = this.fb.group({
@@ -132,6 +157,12 @@ export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements O
     return form;
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (OtaPackage)
+   */
+
   updateForm(entity: OtaPackage) {
     this.entityForm.patchValue({
       title: entity.title,
@@ -156,6 +187,11 @@ export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements O
     }
   }
 
+  /**
+   * Event handler for package id copied.
+   *
+   */
+
   onPackageIdCopied() {
     this.store.dispatch(new ActionNotificationShow(
       {
@@ -166,6 +202,11 @@ export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements O
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * Event handler for package checksum copied.
+   *
+   */
 
   onPackageChecksumCopied() {
     this.store.dispatch(new ActionNotificationShow(
@@ -178,6 +219,11 @@ export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements O
       }));
   }
 
+  /**
+   * Event handler for package direct url copied.
+   *
+   */
+
   onPackageDirectUrlCopied() {
     this.store.dispatch(new ActionNotificationShow(
       {
@@ -188,6 +234,13 @@ export class OtaUpdateComponent extends EntityComponent<OtaPackage> implements O
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * prepare form value.
+   *
+   * @param formValue form value (OtaPackage & {generateChecksum?: boolean})
+   * @returns any observable or value
+   */
 
   prepareFormValue(formValue: OtaPackage & {generateChecksum?: boolean}): any {
     if (formValue.isURL) {

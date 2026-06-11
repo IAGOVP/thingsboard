@@ -34,6 +34,12 @@ import {
 } from '@shared/models/query/query.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: boolean filter predicate (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-boolean-filter-predicate`.
+ */
 @Component({
     selector: 'tb-boolean-filter-predicate',
     templateUrl: './boolean-filter-predicate.component.html',
@@ -50,10 +56,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: boolean filter predicate UI.
- */
+standalone: false
 })
 export class BooleanFilterPredicateComponent implements ControlValueAccessor, Validator, OnInit {
 
@@ -77,6 +80,11 @@ export class BooleanFilterPredicateComponent implements ControlValueAccessor, Va
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.booleanFilterPredicateFormGroup = this.fb.group({
       operation: [BooleanOperation.EQUAL, [Validators.required]],
@@ -89,12 +97,30 @@ export class BooleanFilterPredicateComponent implements ControlValueAccessor, Va
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -105,16 +131,33 @@ export class BooleanFilterPredicateComponent implements ControlValueAccessor, Va
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.booleanFilterPredicateFormGroup ? null : {
       booleanFilterPredicate: {valid: false}
     };
   }
 
+  /**
+   * write value.
+   *
+   * @param predicate predicate (BooleanFilterPredicate)
+   */
+
   writeValue(predicate: BooleanFilterPredicate): void {
     this.booleanFilterPredicateFormGroup.get('operation').patchValue(predicate.operation, {emitEvent: false});
     this.booleanFilterPredicateFormGroup.get('value').patchValue(predicate.value, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let predicate: BooleanFilterPredicate = null;

@@ -21,6 +21,12 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { RelationsQuery } from '../rule-node-config.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: relations query config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-relations-query-config`.
+ */
 @Component({
     selector: 'tb-relations-query-config',
     templateUrl: './relations-query-config.component.html',
@@ -31,10 +37,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: relations query config UI.
- */
+standalone: false
 })
 export class RelationsQueryConfigComponent extends PageComponent implements ControlValueAccessor, OnInit {
 
@@ -63,6 +66,11 @@ export class RelationsQueryConfigComponent extends PageComponent implements Cont
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.relationsQueryFormGroup = this.fb.group({
       fetchLastLevelOnly: [false, []],
@@ -81,12 +89,30 @@ export class RelationsQueryConfigComponent extends PageComponent implements Cont
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -96,6 +122,12 @@ export class RelationsQueryConfigComponent extends PageComponent implements Cont
       this.relationsQueryFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param query query (RelationsQuery)
+   */
 
   writeValue(query: RelationsQuery): void {
     this.relationsQueryFormGroup.reset(query || {}, {emitEvent: false});

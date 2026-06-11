@@ -56,8 +56,9 @@ import { ResourcesDatasource } from "@home/pages/admin/resource/resources-dataso
 import { MatDialog } from "@angular/material/dialog";
 import { DialogService } from "@core/services/dialog.service";
 /**
- * Route resolver: loads resources library table config before activate.
+ * Route resolver: preloads data for resources library table config (home/admin pages).
  */
+
 
 @Injectable()
 export class ResourcesLibraryTableConfigResolver  {
@@ -123,6 +124,13 @@ export class ResourcesLibraryTableConfigResolver  {
     this.config.onEntityAction = action => this.onResourceAction(action);
   }
 
+  /**
+   * POST/PUT entity — save resource.
+   *
+   * @param resource resource (Resource & {data?: File | File[]})
+   * @param originalResource original resource (Resource)
+   */
+
   saveResource(resource: Resource & {data?: File | File[]}, originalResource: Resource) {
     if (Array.isArray(resource.data)) {
       const resources = [];
@@ -151,6 +159,12 @@ export class ResourcesLibraryTableConfigResolver  {
     }
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<Resource, PageLink, ResourceInfo> observable or value
+   */
+
   resolve(): EntityTableConfig<Resource, PageLink, ResourceInfo> {
     this.config.tableTitle = this.translate.instant('resource.resources-library');
     this.config.componentsData = {
@@ -163,6 +177,12 @@ export class ResourcesLibraryTableConfigResolver  {
     return this.config;
   }
 
+  /**
+   * open resource.
+   *
+   * @param resourceInfo resource info (ResourceInfo)
+   */
+
   private openResource($event: Event, resourceInfo: ResourceInfo) {
     if ($event) {
       $event.stopPropagation();
@@ -171,12 +191,25 @@ export class ResourcesLibraryTableConfigResolver  {
     this.router.navigateByUrl(url).then(() => {});
   }
 
+  /**
+   * download resource.
+   *
+   * @param resource resource (ResourceInfo)
+   */
+
   downloadResource($event: Event, resource: ResourceInfo) {
     if ($event) {
       $event.stopPropagation();
     }
     this.resourceService.downloadResource(resource.id.id).subscribe();
   }
+
+  /**
+   * Event handler for resource action.
+   *
+   * @param action action (EntityAction<ResourceInfo>)
+   * @returns boolean observable or value
+   */
 
   onResourceAction(action: EntityAction<ResourceInfo>): boolean {
     switch (action.action) {
@@ -192,12 +225,28 @@ export class ResourcesLibraryTableConfigResolver  {
     return false;
   }
 
+  /**
+   * details readonly.
+   *
+   * @param resource resource (ResourceInfo)
+   * @param authority authority (Authority)
+   * @returns boolean observable or value
+   */
+
   private detailsReadonly(resource: ResourceInfo, authority: Authority): boolean {
     if (resource?.resourceType === ResourceType.LWM2M_MODEL) {
       return true;
     }
     return !this.isResourceEditable(resource, authority);
   }
+
+  /**
+   * is resource editable.
+   *
+   * @param resource resource (ResourceInfo)
+   * @param authority authority (Authority)
+   * @returns boolean observable or value
+   */
 
   private isResourceEditable(resource: ResourceInfo, authority: Authority): boolean {
     if (authority === Authority.TENANT_ADMIN) {
@@ -206,6 +255,12 @@ export class ResourcesLibraryTableConfigResolver  {
       return authority === Authority.SYS_ADMIN;
     }
   }
+
+  /**
+   * DELETE — delete resource.
+   *
+   * @param resource resource (ResourceInfo)
+   */
 
   private deleteResource($event: Event, resource: ResourceInfo) {
     if ($event) {
@@ -270,6 +325,12 @@ export class ResourcesLibraryTableConfigResolver  {
       }
     });
   }
+
+  /**
+   * DELETE — delete resources.
+   *
+   * @param resources resources (ResourceInfo[])
+   */
 
   private deleteResources($event: Event, resources: ResourceInfo[]) {
     if ($event) {

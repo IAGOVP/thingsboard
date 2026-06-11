@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { EdgeInfo } from '@shared/models/edge.models';
 
+
+/**
+ * Angular component: edge table header (home/edge pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edge-table-header`.
+ */
 @Component({
     selector: 'tb-edge-table-header',
     templateUrl: './edge-table-header.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: edge table header UI.
- */
+standalone: false
 })
 export class EdgeTableHeaderComponent extends EntityTableHeaderComponent<EdgeInfo> {
 
@@ -37,6 +40,12 @@ export class EdgeTableHeaderComponent extends EntityTableHeaderComponent<EdgeInf
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * edge type changed.
+   *
+   * @param edgeType edge type (string)
+   */
 
   edgeTypeChanged(edgeType: string) {
     this.entitiesTableConfig.componentsData.edgeType = edgeType;

@@ -26,14 +26,17 @@ import {
 import type { JsFuncComponent } from '@app/shared/components/js-func.component';
 import { DebugRuleNodeEventBody } from '@shared/models/event.models';
 
+
+/**
+ * Angular component: log config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-log-config`.
+ */
 @Component({
     selector: 'tb-action-node-log-config',
     templateUrl: './log-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: log config UI.
- */
+standalone: false
 })
 export class LogConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -58,9 +61,21 @@ export class LogConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.logConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.logConfigForm = this.fb.group({
@@ -70,9 +85,21 @@ export class LogConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['scriptLang'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     let scriptLang: ScriptLanguage = this.logConfigForm.get('scriptLang').value;
@@ -87,6 +114,13 @@ export class LogConfigComponent extends RuleNodeConfigurationComponent {
     this.logConfigForm.get('tbelScript').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (configuration) {
       if (!configuration.scriptLang) {
@@ -95,6 +129,12 @@ export class LogConfigComponent extends RuleNodeConfigurationComponent {
     }
     return configuration;
   }
+
+  /**
+   * test script.
+   *
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   */
 
   testScript(debugEventBody?: DebugRuleNodeEventBody) {
     const scriptLang: ScriptLanguage = this.logConfigForm.get('scriptLang').value;
@@ -118,6 +158,11 @@ export class LogConfigComponent extends RuleNodeConfigurationComponent {
       }
     });
   }
+
+  /**
+   * Event handler for validate.
+   *
+   */
 
   protected onValidate() {
     const scriptLang: ScriptLanguage = this.logConfigForm.get('scriptLang').value;

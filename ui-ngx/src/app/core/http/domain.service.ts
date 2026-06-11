@@ -23,7 +23,9 @@ import { PageLink } from '@shared/models/page/page-link';
 import { PageData } from '@shared/models/page/page-data';
 
 /**
- * Angular HTTP service: domain REST wrappers (`@core/http`).
+ * Angular injectable service: domain (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -35,7 +37,16 @@ export class DomainService {
   ) {
   }
 
-  /** Calls ThingsBoard REST `/api/domain, ...`. */
+  
+  /**
+   * POST/PUT entity — save domain.
+   *
+   * @param domain domain (Domain)
+   * @param oauth2ClientIds oauth2client ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Domain> observable or value
+   */
+
 
   public saveDomain(domain: Domain, oauth2ClientIds?: Array<string>, config?: RequestConfig): Observable<Domain> {
     let url = '/api/domain';
@@ -45,25 +56,58 @@ export class DomainService {
     return this.http.post<Domain>(url, domain, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/domain/${id}/oauth2Clients, ...`. */
+  
+  /**
+   * update oauth2clients.
+   *
+   * @param id id (string)
+   * @param oauth2ClientIds oauth2client ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public updateOauth2Clients(id: string, oauth2ClientIds: Array<string>, config?: RequestConfig): Observable<void> {
     return this.http.put<void>(`/api/domain/${id}/oauth2Clients`, oauth2ClientIds, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/domain/infos${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant domain infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DomainInfo>> observable or value
+   */
+
 
   public getTenantDomainInfos(pageLink: PageLink, config?: RequestConfig): Observable<PageData<DomainInfo>> {
     return this.http.get<PageData<DomainInfo>>(`/api/domain/infos${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/domain/info/${id}, ...`. */
+  
+  /**
+   * get domain info by id.
+   *
+   * @param id id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DomainInfo> observable or value
+   */
+
 
   public getDomainInfoById(id: string, config?: RequestConfig): Observable<DomainInfo> {
     return this.http.get<DomainInfo>(`/api/domain/info/${id}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/domain/${id}`. */
+  
+  /**
+   * DELETE — delete domain.
+   *
+   * @param id id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public deleteDomain(id: string, config?: RequestConfig): Observable<void> {
     return this.http.delete<void>(`/api/domain/${id}`, defaultHttpOptionsFromConfig(config));

@@ -31,16 +31,24 @@ import org.thingsboard.server.msa.ui.utils.EntityPrototypes;
 import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 
+
 /**
 
- * Make asset profile default test.
+ * Black-box test: make asset profile default (TestNG smoke and regression test cases — UI smoke/regression tests).
 
  */
+
 
 public class MakeAssetProfileDefaultTest extends AbstractDriverBaseTest {
     private SideBarMenuViewHelper sideBarMenuView;
     private ProfilesPageHelper profilesPage;
     private String name;
+    /**
+     * Fills credentials and submits the login form.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void login() {
@@ -48,12 +56,24 @@ public class MakeAssetProfileDefaultTest extends AbstractDriverBaseTest {
         sideBarMenuView = new SideBarMenuViewHelper(driver);
         profilesPage = new ProfilesPageHelper(driver);
     }
+    /**
+     * Make profile default.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void makeProfileDefault() {
         testRestClient.setDefaultAssetProfile(getAssetProfileByName("default").getId());
         testRestClient.deleteAssetProfile(getAssetProfileByName(name).getId());
     }
+    /**
+     * Make device profile default by right corner btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Make asset profile default")
@@ -70,6 +90,12 @@ public class MakeAssetProfileDefaultTest extends AbstractDriverBaseTest {
 
         Assert.assertTrue(profilesPage.defaultCheckbox(name).isDisplayed());
     }
+    /**
+     * Make device profile default from view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Asset profiles smoke")
     @Feature("Make asset profile default")

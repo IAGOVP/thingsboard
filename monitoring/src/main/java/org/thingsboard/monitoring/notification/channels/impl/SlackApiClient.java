@@ -25,8 +25,9 @@ import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.chat.ChatUpdateResponse;
 import lombok.extern.slf4j.Slf4j;
 /**
- * HTTP client for Slack chat.postMessage / incident APIs.
+ * HTTP client for Slack chat.postMessage and incident APIs.
  */
+
 
 @Slf4j
 public class SlackApiClient {
@@ -48,6 +49,14 @@ public class SlackApiClient {
         config.setHttpClientWriteTimeoutMillis(callTimeoutMs);
         this.slack = Slack.getInstance(config);
     }
+    /**
+     * Post message.
+     *
+     * @param channelId channel id ({@link String})
+     * @param text text ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String postMessage(String channelId, String text) {
         ChatPostMessageRequest request = ChatPostMessageRequest.builder()
@@ -57,6 +66,15 @@ public class SlackApiClient {
         ChatPostMessageResponse response = sendRequest(request);
         return response.getTs();
     }
+    /**
+     * Post thread reply.
+     *
+     * @param channelId channel id ({@link String})
+     * @param threadTs thread ts ({@link String})
+     * @param text text ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String postThreadReply(String channelId, String threadTs, String text) {
         ChatPostMessageRequest request = ChatPostMessageRequest.builder()
@@ -67,6 +85,12 @@ public class SlackApiClient {
         ChatPostMessageResponse response = sendRequest(request);
         return response.getTs();
     }
+    /**
+     * Close.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void close() {
         try {
@@ -75,6 +99,15 @@ public class SlackApiClient {
             log.warn("Failed to close Slack client", e);
         }
     }
+    /**
+     * Updates message.
+     *
+     * @param channelId channel id ({@link String})
+     * @param ts ts ({@link String})
+     * @param text text ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateMessage(String channelId, String ts, String text) {
         ChatUpdateRequest request = ChatUpdateRequest.builder()

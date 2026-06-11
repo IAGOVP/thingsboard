@@ -35,8 +35,9 @@ import { Direction } from '@app/shared/models/page/sort-order';
 import { map, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 /**
- * Route resolver: loads domain table config before activate.
+ * Route resolver: preloads data for domain table config (home/admin pages).
  */
+
 
 @Injectable()
 export class DomainTableConfigResolver  {
@@ -106,9 +107,22 @@ export class DomainTableConfigResolver  {
     this.config.deleteEntity = id => this.domainService.deleteDomain(id.id);
   }
 
+  /**
+   * resolve.
+   *
+   * @param _route  route (ActivatedRouteSnapshot)
+   * @returns EntityTableConfig<DomainInfo> observable or value
+   */
+
   resolve(_route: ActivatedRouteSnapshot): EntityTableConfig<DomainInfo> {
     return this.config;
   }
+
+  /**
+   * toggle enable oauth.
+   *
+   * @param domain domain (DomainInfo)
+   */
 
   private toggleEnableOAuth($event: Event, domain: DomainInfo): void {
     if ($event) {
@@ -124,6 +138,12 @@ export class DomainTableConfigResolver  {
         this.config.getTable().detectChanges();
       });
   }
+
+  /**
+   * toggle propagate to edge.
+   *
+   * @param domain domain (DomainInfo)
+   */
 
   private togglePropagateToEdge($event: Event, domain: DomainInfo): void {
     if ($event) {

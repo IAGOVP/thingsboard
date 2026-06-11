@@ -75,6 +75,12 @@ export const dataKeyRowValidator = (control: AbstractControl): ValidationErrors 
   return null;
 };
 
+
+/**
+ * Angular component: data key row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-data-key-row`.
+ */
 @Component({
     selector: 'tb-data-key-row',
     templateUrl: './data-key-row.component.html',
@@ -87,10 +93,7 @@ export const dataKeyRowValidator = (control: AbstractControl): ValidationErrors 
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: data key row UI.
- */
+standalone: false
 })
 export class DataKeyRowComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -242,6 +245,11 @@ export class DataKeyRowComponent implements ControlValueAccessor, OnInit, OnChan
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.keyFormControl = this.fb.control(null, this.required ? [Validators.required] : []);
     this.keyRowFormGroup = this.fb.group({
@@ -278,12 +286,30 @@ export class DataKeyRowComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -295,6 +321,12 @@ export class DataKeyRowComponent implements ControlValueAccessor, OnInit, OnChan
       this.keyRowFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DataKey)
+   */
 
   writeValue(value: DataKey): void {
     this.modelValue = (value?.name && value?.type) ? value : null;
@@ -323,6 +355,11 @@ export class DataKeyRowComponent implements ControlValueAccessor, OnInit, OnChan
     this.keyFormControl.patchValue(deepClone(this.modelValue), {emitEvent: false});
     this.cd.markForCheck();
   }
+
+  /**
+   * edit key.
+   *
+   */
 
   editKey(advanced = false) {
     this.dialog.open<DataKeyConfigDialogComponent, DataKeyConfigDialogData, DataKey>(DataKeyConfigDialogComponent,
@@ -378,6 +415,11 @@ export class DataKeyRowComponent implements ControlValueAccessor, OnInit, OnChan
     }
     return key;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.keyFormControl.value;

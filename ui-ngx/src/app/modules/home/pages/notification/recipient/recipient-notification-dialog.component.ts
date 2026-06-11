@@ -45,14 +45,17 @@ export interface RecipientNotificationDialogData {
   isAdd?: boolean;
 }
 
+
+/**
+ * Angular component: recipient notification dialog (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-target-notification-dialog`.
+ */
 @Component({
     selector: 'tb-target-notification-dialog',
     templateUrl: './recipient-notification-dialog.component.html',
     styleUrls: ['recipient-notification-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: recipient notification dialog UI.
- */
+standalone: false
 })
 export class RecipientNotificationDialogComponent extends
   DialogComponent<RecipientNotificationDialogComponent, NotificationTarget> implements OnDestroy {
@@ -182,15 +185,30 @@ export class RecipientNotificationDialogComponent extends
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save() {
     let formValue = deepTrim(this.targetNotificationForm.value);
@@ -206,9 +224,21 @@ export class RecipientNotificationDialogComponent extends
     );
   }
 
+  /**
+   * is sys admin.
+   *
+   * @returns boolean observable or value
+   */
+
   isSysAdmin(): boolean {
     return this.authUser.authority === Authority.SYS_ADMIN;
   }
+
+  /**
+   * allow notification target config types.
+   *
+   * @returns NotificationTargetConfigType[] observable or value
+   */
 
   private allowNotificationTargetConfigTypes(): NotificationTargetConfigType[] {
     if (this.isSysAdmin()) {

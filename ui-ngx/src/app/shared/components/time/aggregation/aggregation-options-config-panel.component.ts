@@ -19,14 +19,17 @@ import { aggregationTranslations, AggregationType } from '@shared/models/time/ti
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TbPopoverComponent } from '@shared/components/popover.component';
 
+
+/**
+ * Angular component: aggregation options config panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aggregation-options-config-panel`.
+ */
 @Component({
     selector: 'tb-aggregation-options-config-panel',
     templateUrl: './aggregation-options-config-panel.component.html',
     styleUrls: ['./aggregation-options-config-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: aggregation options config panel UI.
- */
+standalone: false
 })
 export class AggregationOptionsConfigPanelComponent implements OnInit {
 
@@ -49,11 +52,21 @@ export class AggregationOptionsConfigPanelComponent implements OnInit {
 
   constructor(private fb: FormBuilder) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.aggregationOptionsConfigForm = this.fb.group({
       allowedAggregationTypes: [this.allowedAggregationTypes?.length ? this.allowedAggregationTypes : this.allAggregationTypes]
     });
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     if (this.onClose) {
@@ -62,6 +75,11 @@ export class AggregationOptionsConfigPanelComponent implements OnInit {
       this.onClose(allowedAggregationTypes?.length < this.allAggregationTypes.length ? allowedAggregationTypes : []);
     }
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel() {
     if (this.onClose) {

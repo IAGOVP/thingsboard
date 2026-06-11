@@ -29,6 +29,12 @@ import { AdvancedProcessingStrategy } from '@home/components/rule-node/action/ti
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { AttributeAdvancedProcessingStrategy } from '@home/components/rule-node/action/attributes-config.model';
 
+
+/**
+ * Angular component: advanced processing setting (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-advanced-processing-settings`.
+ */
 @Component({
     selector: 'tb-advanced-processing-settings',
     templateUrl: './advanced-processing-setting.component.html',
@@ -41,10 +47,7 @@ import { AttributeAdvancedProcessingStrategy } from '@home/components/rule-node/
             useExisting: forwardRef(() => AdvancedProcessingSettingComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: advanced processing setting UI.
- */
+standalone: false
 })
 export class AdvancedProcessingSettingComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -76,6 +79,11 @@ export class AdvancedProcessingSettingComponent implements OnInit, ControlValueA
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.processingForm = this.fb.group({});
     if (this.timeseries) {
@@ -98,12 +106,30 @@ export class AdvancedProcessingSettingComponent implements OnInit, ControlValueA
     ).subscribe(value => this.propagateChange(value));
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any) {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
@@ -113,11 +139,23 @@ export class AdvancedProcessingSettingComponent implements OnInit, ControlValueA
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.processingForm.valid ? null : {
       processingForm: false
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (AdvancedProcessingStrategy | AttributeAdvancedProcessingStrategy)
+   */
 
   writeValue(value: AdvancedProcessingStrategy | AttributeAdvancedProcessingStrategy) {
     this.processingForm.patchValue(value, {emitEvent: false});

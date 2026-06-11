@@ -21,13 +21,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 import { deepTrim, isDefinedAndNotNull } from '@app/core/utils';
 
+
+/**
+ * Angular component: calculate delta config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-calculate-delta-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-calculate-delta-config',
     templateUrl: './calculate-delta-config.component.html',
-    standalone: false
-/**
- * Angular component: calculate delta config UI.
- */
+standalone: false
 })
 export class CalculateDeltaConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -40,9 +43,21 @@ export class CalculateDeltaConfigComponent extends RuleNodeConfigurationComponen
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.calculateDeltaConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.calculateDeltaConfigForm = this.fb.group({
@@ -56,6 +71,13 @@ export class CalculateDeltaConfigComponent extends RuleNodeConfigurationComponen
       excludeZeroDeltas: [configuration.excludeZeroDeltas, []]
     });
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
@@ -71,9 +93,22 @@ export class CalculateDeltaConfigComponent extends RuleNodeConfigurationComponen
     };
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return deepTrim(configuration);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const addPeriodBetweenMsgs: boolean = this.calculateDeltaConfigForm.get('addPeriodBetweenMsgs').value;
@@ -84,6 +119,12 @@ export class CalculateDeltaConfigComponent extends RuleNodeConfigurationComponen
     }
     this.calculateDeltaConfigForm.get('periodValueKey').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected validatorTriggers(): string[] {
     return ['addPeriodBetweenMsgs'];

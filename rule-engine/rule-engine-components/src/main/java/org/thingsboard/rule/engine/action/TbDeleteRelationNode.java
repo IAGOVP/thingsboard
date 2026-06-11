@@ -32,7 +32,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 
 /**
- * Rule engine action node 'delete relation': Deletes relation with the incoming message originator based on the configured direction and type. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>delete relation</b>.
+ *
+ * <p>Deletes relation with the incoming message originator based on the configured direction and type.
+ * <br>Useful when you need to remove relations between entities dynamically depending on incoming message payload, 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbDeleteRelationNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/delete-relation/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/delete-relation/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -59,6 +65,13 @@ import static org.thingsboard.common.util.DonAsynchron.withCallback;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/delete-relation/"
 )
 public class TbDeleteRelationNode extends TbAbstractRelationActionNode<TbDeleteRelationNodeConfiguration> {
+    /**
+     * Loads entity node action config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbDeleteRelationNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbDeleteRelationNodeConfiguration loadEntityNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException {
@@ -69,11 +82,24 @@ public class TbDeleteRelationNode extends TbAbstractRelationActionNode<TbDeleteR
         checkIfConfigEntityTypeIsSupported(deleteRelationNodeConfiguration.getEntityType());
         return deleteRelationNodeConfiguration;
     }
+    /**
+     * Creates entity if not exists.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean createEntityIfNotExists() {
         return false;
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

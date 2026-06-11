@@ -62,11 +62,11 @@ export enum AliasEntityType {
   CURRENT_USER_OWNER = 'CURRENT_USER_OWNER'
 }
 
+
 /**
-
- * TypeScript models and enums for entity type translation.
-
+ * TypeScript interfaces, types, and enums for entity type translation (shared TypeScript models).
  */
+
 
 export interface EntityTypeTranslation {
   type?: string;

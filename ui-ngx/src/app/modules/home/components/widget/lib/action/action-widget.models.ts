@@ -63,8 +63,11 @@ import { StateObject } from '@core/api/widget-api.models';
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: basic action widget UI.
+ * Angular component: basic action widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class BasicActionWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input()
@@ -82,9 +85,19 @@ export abstract class BasicActionWidgetComponent implements OnInit, OnDestroy, A
   protected constructor(protected cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.actionWidget = this;
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     const getValueObservables: Array<Observable<any>> = [];
@@ -104,14 +117,29 @@ export abstract class BasicActionWidgetComponent implements OnInit, OnDestroy, A
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.valueActions.forEach(v => v.destroy());
     this.loadingSubject.complete();
     this.loadingSubject.unsubscribe();
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
   }
+
+  /**
+   * clear error.
+   *
+   */
 
   public clearError() {
     this.ctx.hideToast(this.ctx.toastTargetId);
@@ -147,6 +175,12 @@ export abstract class BasicActionWidgetComponent implements OnInit, OnDestroy, A
     this.valueActions.push(valueSetter);
     return valueSetter;
   }
+
+  /**
+   * Event handler for error.
+   *
+   * @param error error (string)
+   */
 
   private onError(error: string) {
     this.ctx.showErrorToast(error, 'bottom', 'center', this.ctx.toastTargetId, true);

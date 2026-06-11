@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.profile;
 
+
 /**
 
- * Rule engine component: numeric parse exception.
+ * Numeric parse exception (device profile state nodes).
 
  */
+
 
 public class NumericParseException extends RuntimeException {
     public NumericParseException(String message) {

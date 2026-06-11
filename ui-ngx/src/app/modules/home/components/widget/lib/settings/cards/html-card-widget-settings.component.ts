@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: html card widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-html-card-widget-settings`.
+ */
 @Component({
     selector: 'tb-html-card-widget-settings',
     templateUrl: './html-card-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: html card widget settings UI.
- */
+standalone: false
 })
 export class HtmlCardWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class HtmlCardWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.htmlCardWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -48,6 +63,12 @@ export class HtmlCardWidgetSettingsComponent extends WidgetSettingsComponent {
       cardCss: '.card {\n font-weight: bold; \n}'
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.htmlCardWidgetSettingsForm = this.fb.group({

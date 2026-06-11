@@ -17,16 +17,25 @@ package org.thingsboard.server.msa.ui.pages;
 
 import org.openqa.selenium.WebDriver;
 
+
 /**
 
- * Entity view page helper.
+ * Page object helper for entity view page UI actions (page object element locators and helpers — Selenium page objects).
 
  */
+
 
 public class EntityViewPageHelper extends EntityViewPageElements {
     public EntityViewPageHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Open entity view alarms.
+     *
+     * @param customerName customer name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void openEntityViewAlarms(String customerName) {
         if (!entityViewDetailsView().isDisplayed()) {

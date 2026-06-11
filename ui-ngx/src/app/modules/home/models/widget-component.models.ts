@@ -159,11 +159,11 @@ export interface IDashboardWidget {
   updateParamsFromData(detectChanges?: boolean): void;
 }
 
+
 /**
-
- * TypeScript models and enums for widget context.
-
+ * TypeScript interfaces, types, and enums for widget context (ThingsBoard web UI).
  */
+
 
 export class WidgetContext {
 
@@ -369,6 +369,12 @@ export class WidgetContext {
     ...RxJSOperators
   };
 
+  /**
+   * register popover component.
+   *
+   * @param popoverComponent popover component (TbPopoverComponent)
+   */
+
   registerPopoverComponent(popoverComponent: TbPopoverComponent) {
     this.popoverComponents.push(popoverComponent);
     popoverComponent.tbDestroy.subscribe(() => {
@@ -379,17 +385,35 @@ export class WidgetContext {
     });
   }
 
+  /**
+   * update popover positions.
+   *
+   */
+
   updatePopoverPositions() {
     this.popoverComponents.forEach(comp => {
       comp.updatePosition();
     });
   }
 
+  /**
+   * set popovers hidden.
+   *
+   * @param hidden hidden (boolean)
+   */
+
   setPopoversHidden(hidden: boolean) {
     this.popoverComponents.forEach(comp => {
       comp.tbHidden = hidden;
     });
   }
+
+  /**
+   * register label pattern.
+   *
+   * @param label label (string)
+   * @returns Observable<string> observable or value
+   */
 
   registerLabelPattern(label: string, label$: Observable<string>): Observable<string> {
     let labelPattern = label$ ? this.labelPatterns.get(label$) : null;
@@ -402,11 +426,26 @@ export class WidgetContext {
     return labelPattern.label$;
   }
 
+  /**
+   * update label patterns.
+   *
+   */
+
   updateLabelPatterns() {
     for (const labelPattern of this.labelPatterns.values()) {
       labelPattern.update();
     }
   }
+
+  /**
+   * show success toast.
+   *
+   * @param message message (string)
+   * @param duration duration (number)
+   * @param verticalPosition vertical position (NotificationVerticalPosition)
+   * @param horizontalPosition horizontal position (NotificationHorizontalPosition)
+   * @param target target (string)
+   */
 
   showSuccessToast(message: string, duration: number = 1000,
                    verticalPosition: NotificationVerticalPosition = 'bottom',
@@ -415,12 +454,30 @@ export class WidgetContext {
     this.showToast('success', message, duration, verticalPosition, horizontalPosition, target, modern);
   }
 
+  /**
+   * show info toast.
+   *
+   * @param message message (string)
+   * @param verticalPosition vertical position (NotificationVerticalPosition)
+   * @param horizontalPosition horizontal position (NotificationHorizontalPosition)
+   * @param target target (string)
+   */
+
   showInfoToast(message: string,
                 verticalPosition: NotificationVerticalPosition = 'bottom',
                 horizontalPosition: NotificationHorizontalPosition = 'left',
                 target: string = 'dashboardRoot', modern = false) {
     this.showToast('info', message, undefined, verticalPosition, horizontalPosition, target, modern);
   }
+
+  /**
+   * show warn toast.
+   *
+   * @param message message (string)
+   * @param verticalPosition vertical position (NotificationVerticalPosition)
+   * @param horizontalPosition horizontal position (NotificationHorizontalPosition)
+   * @param target target (string)
+   */
 
   showWarnToast(message: string,
                 verticalPosition: NotificationVerticalPosition = 'bottom',
@@ -429,12 +486,32 @@ export class WidgetContext {
     this.showToast('warn', message, undefined, verticalPosition, horizontalPosition, target, modern);
   }
 
+  /**
+   * show error toast.
+   *
+   * @param message message (string)
+   * @param verticalPosition vertical position (NotificationVerticalPosition)
+   * @param horizontalPosition horizontal position (NotificationHorizontalPosition)
+   * @param target target (string)
+   */
+
   showErrorToast(message: string,
                  verticalPosition: NotificationVerticalPosition = 'bottom',
                  horizontalPosition: NotificationHorizontalPosition = 'left',
                  target: string = 'dashboardRoot', modern = false) {
     this.showToast('error', message, undefined, verticalPosition, horizontalPosition, target, modern);
   }
+
+  /**
+   * show toast.
+   *
+   * @param type type (NotificationType)
+   * @param message message (string)
+   * @param duration duration (number)
+   * @param verticalPosition vertical position (NotificationVerticalPosition)
+   * @param horizontalPosition horizontal position (NotificationHorizontalPosition)
+   * @param target target (string)
+   */
 
   showToast(type: NotificationType, message: string, duration: number,
             verticalPosition: NotificationVerticalPosition = 'bottom',
@@ -454,12 +531,24 @@ export class WidgetContext {
       }));
   }
 
+  /**
+   * hide toast.
+   *
+   * @param target target (string)
+   */
+
   hideToast(target?: string) {
     this.store.dispatch(new ActionNotificationHide(
       {
         target,
       }));
   }
+
+  /**
+   * detect changes.
+   *
+   * @param updateWidgetParams update widget params (boolean)
+   */
 
   detectChanges(updateWidgetParams: boolean = false) {
     if (!this.destroyed) {
@@ -480,6 +569,11 @@ export class WidgetContext {
     }
   }
 
+  /**
+   * detect container changes.
+   *
+   */
+
   detectContainerChanges() {
     if (!this.destroyed) {
       try {
@@ -496,6 +590,11 @@ export class WidgetContext {
     }
   }
 
+  /**
+   * update widget params.
+   *
+   */
+
   updateWidgetParams() {
     if (!this.destroyed) {
       setTimeout(() => {
@@ -504,13 +603,29 @@ export class WidgetContext {
     }
   }
 
+  /**
+   * update params from data.
+   *
+   */
+
   updateParamsFromData(detectChanges = false) {
     this.dashboardWidget.updateParamsFromData(detectChanges);
   }
 
+  /**
+   * update aliases.
+   *
+   * @param aliasIds alias ids (Array<string>)
+   */
+
   updateAliases(aliasIds?: Array<string>) {
     this.aliasController.updateAliases(aliasIds);
   }
+
+  /**
+   * reset.
+   *
+   */
 
   reset() {
     this.destroyed = false;
@@ -518,6 +633,11 @@ export class WidgetContext {
     this.widgetTitle = undefined;
     this.widgetActions = undefined;
   }
+
+  /**
+   * destroy.
+   *
+   */
 
   destroy() {
     for (const labelPattern of this.labelPatterns.values()) {
@@ -529,6 +649,12 @@ export class WidgetContext {
     this.destroyed = true;
   }
 
+  /**
+   * close dialog.
+   *
+   * @param resultData result data (any)
+   */
+
   closeDialog(resultData: any = null) {
     const dialogRef = this.$scope.dialogRef || this.stateController.dashboardCtrl.dashboardCtx.getDashboard().dialogRef;
     if (dialogRef) {
@@ -536,14 +662,46 @@ export class WidgetContext {
     }
   }
 
+  /**
+   * page link.
+   *
+   * @param pageSize page size (number)
+   * @param page page (number)
+   * @param textSearch text search (string)
+   * @param sortOrder sort order (SortOrder)
+   * @returns PageLink observable or value
+   */
+
   pageLink(pageSize: number, page: number = 0, textSearch: string = null, sortOrder: SortOrder = null): PageLink {
     return new PageLink(pageSize, page, textSearch, sortOrder);
   }
+
+  /**
+   * time page link.
+   *
+   * @param startTime start time (number)
+   * @param endTime end time (number)
+   * @param pageSize page size (number)
+   * @param page page (number)
+   * @param textSearch text search (string)
+   * @param sortOrder sort order (SortOrder)
+   */
 
   timePageLink(startTime: number, endTime: number, pageSize: number, page: number = 0,
                textSearch: string = null, sortOrder: SortOrder = null) {
     return new TimePageLink(pageSize, page, textSearch, sortOrder, startTime, endTime);
   }
+
+  /**
+   * alarm query.
+   *
+   * @param entityId entity UUID
+   * @param pageLink pagination and sort parameters
+   * @param searchStatus search status (AlarmSearchStatus)
+   * @param status status (AlarmStatus)
+   * @param fetchOriginator fetch originator (boolean)
+   * @param assigneeId assignee id (UserId)
+   */
 
   alarmQuery(entityId: EntityId, pageLink: TimePageLink, searchStatus: AlarmSearchStatus,
              status: AlarmStatus, fetchOriginator: boolean, assigneeId: UserId) {

@@ -49,5 +49,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
+/**
+ * Angular NgModule bundling audit log routing (home/audit-log pages).
+ */
   providers: []})
 export class AuditLogRoutingModule { }

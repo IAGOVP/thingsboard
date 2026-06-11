@@ -30,14 +30,17 @@ import { HasConfirmForm } from '@core/guards/confirm-on-exit.guard';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: general settings (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-general-settings`.
+ */
 @Component({
     selector: 'tb-general-settings',
     templateUrl: './general-settings.component.html',
     styleUrls: ['./general-settings.component.scss', './settings-card.scss'],
-    standalone: false
-/**
- * Angular component: general settings UI.
- */
+standalone: false
 })
 export class GeneralSettingsComponent extends PageComponent implements HasConfirmForm, OnDestroy {
 
@@ -63,11 +66,21 @@ export class GeneralSettingsComponent extends PageComponent implements HasConfir
       .subscribe(deviceConnectivitySettings => this.processDeviceConnectivitySettings(deviceConnectivitySettings));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * build general server settings form.
+   *
+   */
 
   private buildGeneralServerSettingsForm() {
     this.generalSettings = this.fb.group({
@@ -75,6 +88,11 @@ export class GeneralSettingsComponent extends PageComponent implements HasConfir
       prohibitDifferentUrl: ['',[]]
     });
   }
+
+  /**
+   * build device connectivity settings form.
+   *
+   */
 
   private buildDeviceConnectivitySettingsForm() {
     this.deviceConnectivitySettingsForm = this.fb.group({
@@ -86,6 +104,12 @@ export class GeneralSettingsComponent extends PageComponent implements HasConfir
       coaps: this.buildDeviceConnectivityInfoForm()
     });
   }
+
+  /**
+   * build device connectivity info form.
+   *
+   * @returns FormGroup observable or value
+   */
 
   private buildDeviceConnectivityInfoForm(): FormGroup {
     const formGroup = this.fb.group({
@@ -107,11 +131,21 @@ export class GeneralSettingsComponent extends PageComponent implements HasConfir
     return formGroup;
   }
 
+  /**
+   * POST/PUT entity — save.
+   *
+   */
+
   save(): void {
     this.adminSettings.jsonValue = {...this.adminSettings.jsonValue, ...this.generalSettings.value};
     this.adminService.saveAdminSettings(this.adminSettings)
       .subscribe(adminSettings => this.processGeneralSettings(adminSettings));
   }
+
+  /**
+   * POST/PUT entity — save device connectivity settings.
+   *
+   */
 
   saveDeviceConnectivitySettings(): void {
     this.deviceConnectivitySettings.jsonValue = {
@@ -122,23 +156,51 @@ export class GeneralSettingsComponent extends PageComponent implements HasConfir
       .subscribe(deviceConnectivitySettings => this.processDeviceConnectivitySettings(deviceConnectivitySettings));
   }
 
+  /**
+   * discard general settings.
+   *
+   */
+
   discardGeneralSettings(): void {
     this.generalSettings.reset(this.adminSettings.jsonValue);
   }
 
+  /**
+   * discard device connectivity settings.
+   *
+   */
+
   discardDeviceConnectivitySettings(): void {
     this.deviceConnectivitySettingsForm.reset(this.deviceConnectivitySettings.jsonValue);
   }
+
+  /**
+   * process general settings.
+   *
+   * @param generalSettings general settings (AdminSettings<GeneralSettings>)
+   */
 
   private processGeneralSettings(generalSettings: AdminSettings<GeneralSettings>): void {
     this.adminSettings = generalSettings;
     this.generalSettings.reset(this.adminSettings.jsonValue);
   }
 
+  /**
+   * process device connectivity settings.
+   *
+   * @param deviceConnectivitySettings device connectivity settings (AdminSettings<DeviceConnectivitySettings>)
+   */
+
   private processDeviceConnectivitySettings(deviceConnectivitySettings: AdminSettings<DeviceConnectivitySettings>): void {
     this.deviceConnectivitySettings = deviceConnectivitySettings;
     this.deviceConnectivitySettingsForm.reset(this.deviceConnectivitySettings.jsonValue);
   }
+
+  /**
+   * confirm form.
+   *
+   * @returns FormGroup observable or value
+   */
 
   confirmForm(): FormGroup {
     return this.generalSettings.dirty ? this.generalSettings : this.deviceConnectivitySettingsForm;

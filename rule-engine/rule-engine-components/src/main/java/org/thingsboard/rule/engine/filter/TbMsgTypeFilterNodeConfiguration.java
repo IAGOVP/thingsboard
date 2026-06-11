@@ -29,12 +29,21 @@ import static org.thingsboard.server.common.data.msg.TbMsgType.TO_SERVER_RPC_REQ
  * Created by ashvayka on 19.01.18.
  */
 /**
- * JSON configuration for TbMsgTypeFilter rule node.
+ * JSON configuration POJO for {@link TbMsgTypeFilter} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 @Data
 public class TbMsgTypeFilterNodeConfiguration implements NodeConfiguration<TbMsgTypeFilterNodeConfiguration> {
 
     private List<String> messageTypes;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbMsgTypeFilterNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbMsgTypeFilterNodeConfiguration defaultConfiguration() {

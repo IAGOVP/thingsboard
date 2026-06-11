@@ -38,6 +38,12 @@ import { WidgetService } from '@core/http/widget.service';
 import { Widget } from '@shared/models/widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: polygon settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-polygon-settings`.
+ */
 @Component({
     selector: 'tb-polygon-settings',
     templateUrl: './polygon-settings.component.html',
@@ -54,10 +60,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: polygon settings UI.
- */
+standalone: false
 })
 export class PolygonSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -86,6 +89,11 @@ export class PolygonSettingsComponent extends PageComponent implements OnInit, C
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.polygonSettingsFormGroup = this.fb.group({
@@ -155,12 +163,30 @@ export class PolygonSettingsComponent extends PageComponent implements OnInit, C
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -171,6 +197,12 @@ export class PolygonSettingsComponent extends PageComponent implements OnInit, C
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (PolygonSettings)
+   */
+
   writeValue(value: PolygonSettings): void {
     this.modelValue = value;
     this.polygonSettingsFormGroup.patchValue(
@@ -178,6 +210,12 @@ export class PolygonSettingsComponent extends PageComponent implements OnInit, C
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.polygonSettingsFormGroup.valid ? null : {
@@ -187,11 +225,22 @@ export class PolygonSettingsComponent extends PageComponent implements OnInit, C
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: PolygonSettings = this.polygonSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const showPolygon: boolean = this.polygonSettingsFormGroup.get('showPolygon').value;

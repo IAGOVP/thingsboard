@@ -22,19 +22,41 @@ import org.thingsboard.rule.engine.api.TbNodeException;
 import org.thingsboard.rule.engine.util.TbMsgSource;
 import org.thingsboard.server.common.data.util.TbPair;
 
+
 /**
 
- * Base implementation for transform node with tb msg source rule nodes.
+ * Abstract base class for transform node with tb msg source rule nodes (message transformation and originator change nodes).
 
  */
+
 
 public abstract class TbAbstractTransformNodeWithTbMsgSource implements TbNode {
 
     protected static final String FROM_METADATA_PROPERTY = "fromMetadata";
+    /**
+     * Returns new key for upgrade from version zero.
+     *
+     * @return {@link String}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract String getNewKeyForUpgradeFromVersionZero();
+    /**
+     * Returns key to upgrade from version one.
+     *
+     * @return {@link String}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract String getKeyToUpgradeFromVersionOne();
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

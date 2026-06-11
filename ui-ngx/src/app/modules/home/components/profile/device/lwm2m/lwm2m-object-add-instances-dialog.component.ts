@@ -28,13 +28,16 @@ export interface Lwm2mObjectAddInstancesData {
   objectId?: number;
 }
 
+
+/**
+ * Angular component: lwm2m object add instances dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-lwm2m-object-add-instances`.
+ */
 @Component({
     selector: 'tb-lwm2m-object-add-instances',
     templateUrl: './lwm2m-object-add-instances-dialog.component.html',
-    standalone: false
-/**
- * Angular component: lwm2m object add instances dialog UI.
- */
+standalone: false
 })
 export class Lwm2mObjectAddInstancesDialogComponent extends DialogComponent<Lwm2mObjectAddInstancesDialogComponent, object>
   implements OnInit {
@@ -50,15 +53,30 @@ export class Lwm2mObjectAddInstancesDialogComponent extends DialogComponent<Lwm2
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.instancesFormGroup = this.fb.group({
       instancesIds: [this.data.instancesId]
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add(): void {
     this.dialogRef.close(this.instancesFormGroup.get('instancesIds').value);

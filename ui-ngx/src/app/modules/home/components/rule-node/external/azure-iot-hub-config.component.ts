@@ -24,14 +24,17 @@ import {
 } from '@home/components/rule-node/rule-node-config.models';
 import { MqttVersion } from '@shared/models/mqtt.models';
 
+
+/**
+ * Angular component: azure iot hub config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-azure-iot-hub-config`.
+ */
 @Component({
     selector: 'tb-external-node-azure-iot-hub-config',
     templateUrl: './azure-iot-hub-config.component.html',
     styleUrls: ['./mqtt-config.component.scss'],
-    standalone: false
-/**
- * Angular component: azure iot hub config UI.
- */
+standalone: false
 })
 export class AzureIotHubConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -45,9 +48,21 @@ export class AzureIotHubConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.azureIotHubConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.azureIotHubConfigForm = this.fb.group({
@@ -76,6 +91,13 @@ export class AzureIotHubConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     const credentialsType: AzureIotHubCredentialsType = configuration.credentials.type;
       if (credentialsType === 'sas') {
@@ -89,9 +111,21 @@ export class AzureIotHubConfigComponent extends RuleNodeConfigurationComponent {
     return configuration;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['credentials.type'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const credentialsControl = this.azureIotHubConfigForm.get('credentials');

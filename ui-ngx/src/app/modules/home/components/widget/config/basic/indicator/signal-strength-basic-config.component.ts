@@ -49,14 +49,17 @@ import {
 } from '@home/components/widget/lib/indicator/signal-strength-widget.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: signal strength basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-signal-strength-basic-config`.
+ */
 @Component({
     selector: 'tb-signal-strength-basic-config',
     templateUrl: './signal-strength-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: signal strength basic config UI.
- */
+standalone: false
 })
 export class SignalStrengthBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -64,6 +67,12 @@ export class SignalStrengthBasicConfigComponent extends BasicWidgetConfigCompone
     const datasources = this.signalStrengthWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.signalStrengthWidgetConfigForm.get('datasources').value;
@@ -90,13 +99,32 @@ export class SignalStrengthBasicConfigComponent extends BasicWidgetConfigCompone
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.signalStrengthWidgetConfigForm;
   }
 
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
+
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'rssi', label: 'rssi', type: DataKeyType.timeseries }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: SignalStrengthWidgetSettings = {...signalStrengthDefaultSettings, ...(configData.config.settings || {})};
@@ -152,6 +180,13 @@ export class SignalStrengthBasicConfigComponent extends BasicWidgetConfigCompone
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
     this.widgetConfig.config.datasources = config.datasources;
@@ -204,9 +239,22 @@ export class SignalStrengthBasicConfigComponent extends BasicWidgetConfigCompone
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon', 'showDate', 'showTooltip', 'showTooltipValue', 'showTooltipDate'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.signalStrengthWidgetConfigForm.get('showTitle').value;
@@ -293,6 +341,13 @@ export class SignalStrengthBasicConfigComponent extends BasicWidgetConfigCompone
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -300,6 +355,13 @@ export class SignalStrengthBasicConfigComponent extends BasicWidgetConfigCompone
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

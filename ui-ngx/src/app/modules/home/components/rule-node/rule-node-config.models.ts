@@ -26,11 +26,11 @@ export enum OriginatorSource {
   ENTITY = 'ENTITY'
 }
 
+
 /**
-
- * TypeScript models and enums for originator values descriptions.
-
+ * Originator values descriptions (ThingsBoard web UI).
  */
+
 
 export interface OriginatorValuesDescriptions {
   value: OriginatorSource;

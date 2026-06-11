@@ -25,11 +25,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.msa.ui.base.AbstractBasePage.random;
 import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 /**
- * Open rule chain test.
+ * Black-box test: open rule chain (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Open rule chain")
 public class OpenRuleChainTest extends AbstractRuleChainTest {
+    /**
+     * Open rule chain by right corner btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Open the rule chain by clicking on its name")
@@ -47,6 +54,12 @@ public class OpenRuleChainTest extends AbstractRuleChainTest {
         assertIsDisplayed(openRuleChainPage.inputNode());
         assertThat(openRuleChainPage.getHeadName()).as("Head of opened rule chain page text").isEqualTo(ruleChainName);
     }
+    /**
+     * Open rule chain by view btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Open the rule chain by clicking on the 'Open rule chain' button in the entity view")

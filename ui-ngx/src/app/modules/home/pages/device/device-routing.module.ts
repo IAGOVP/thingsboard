@@ -82,12 +82,15 @@ const routes: Routes = [
 
 
 /**
- * Angular NgModule: device routing feature area.
+ * Angular route configuration for device (home/device pages).
+ *
+ * <p>Routes: `/entities/devices`, `/entities/devices/:entityId` (tenant device list and details).
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     DevicesTableConfigResolver
-  ]})
+  ]
+})
 export class DeviceRoutingModule { }

@@ -36,6 +36,12 @@ export interface ValueSourceProperty {
   value?: number;
 }
 
+
+/**
+ * Angular component: value source (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-source`.
+ */
 @Component({
     selector: 'tb-value-source',
     templateUrl: './value-source.component.html',
@@ -47,10 +53,7 @@ export interface ValueSourceProperty {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: value source UI.
- */
+standalone: false
 })
 export class ValueSourceComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -93,6 +96,11 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.valueSourceFormGroup = this.fb.group({
@@ -138,12 +146,30 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -154,6 +180,12 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ValueSourceProperty)
+   */
+
   writeValue(value: ValueSourceProperty): void {
     this.modelValue = value;
     this.valueSourceFormGroup.patchValue(
@@ -161,6 +193,11 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
     );
     this.updateValidators(false);
   }
+
+  /**
+   * clear entity alias.
+   *
+   */
 
   clearEntityAlias() {
     this.valueSourceFormGroup.get('entityAlias').patchValue(null, {emitEvent: true});
@@ -170,6 +207,11 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
     }, 0);
   }
 
+  /**
+   * clear key.
+   *
+   */
+
   clearKey() {
     this.valueSourceFormGroup.get('attribute').patchValue(null, {emitEvent: true});
     setTimeout(() => {
@@ -177,6 +219,13 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
       this.keyInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * fetch entity aliases.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchEntityAliases(searchText?: string): Observable<Array<string>> {
     this.aliasSearchText = searchText;
@@ -186,6 +235,13 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
     }
     return of(result);
   }
+
+  /**
+   * fetch keys.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchKeys(searchText?: string): Observable<Array<string>> {
     if (this.keySearchText !== searchText || this.latestKeySearchResult === null) {
@@ -198,6 +254,11 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
     }
     return of(this.latestKeySearchResult);
   }
+
+  /**
+   * get keys.
+   *
+   */
 
   private getKeys() {
     if (this.keysFetchObservable$ === null) {
@@ -222,6 +283,14 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
     return this.keysFetchObservable$;
   }
 
+  /**
+   * fetch entity keys.
+   *
+   * @param entityAliasId entity alias id (string)
+   * @param dataKeyTypes data key types (Array<DataKeyType>)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
+
   private fetchEntityKeys(entityAliasId: string, dataKeyTypes: Array<DataKeyType>): Observable<Array<DataKey>> {
     return this.aliasController.getAliasInfo(entityAliasId).pipe(
       mergeMap((aliasInfo) => this.entityService.getEntityKeysByEntityFilter(
@@ -235,16 +304,34 @@ export class ValueSourceComponent extends PageComponent implements OnInit, Contr
     );
   }
 
+  /**
+   * POST/PUT entity — create key filter.
+   *
+   * @param query query (string)
+   * @returns (key: string) => boolean observable or value
+   */
+
   private createKeyFilter(query: string): (key: string) => boolean {
     const lowercaseQuery = query.toLowerCase();
     return key => key.toLowerCase().startsWith(lowercaseQuery);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: ValueSourceProperty = this.valueSourceFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const valueSource: ValueSource = this.valueSourceFormGroup.get('valueSource').value;

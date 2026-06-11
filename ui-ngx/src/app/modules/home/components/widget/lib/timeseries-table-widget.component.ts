@@ -157,14 +157,17 @@ interface TimeseriesTableSource {
   displayName: string;
 }
 
+
+/**
+ * Angular component: timeseries table widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timeseries-table-widget`.
+ */
 @Component({
     selector: 'tb-timeseries-table-widget',
     templateUrl: './timeseries-table-widget.component.html',
     styleUrls: ['./timeseries-table-widget.component.scss', './table-widget.scss'],
-    standalone: false
-/**
- * Angular component: timeseries table widget UI.
- */
+standalone: false
 })
 export class TimeseriesTableWidgetComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -248,6 +251,11 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.timeseriesTableWidget = this;
     this.settings = this.ctx.settings;
@@ -281,6 +289,11 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.widgetTimewindowChanged$) {
       this.widgetTimewindowChanged$.unsubscribe();
@@ -290,6 +303,11 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
       this.widgetResize$.disconnect();
     }
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.textSearch.valueChanges.pipe(
@@ -316,11 +334,21 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     this.initSubscriptionsToSortAndPaginator();
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.updateCurrentSourceData();
     this.clearCache();
     this.ctx.detectChanges();
   }
+
+  /**
+   * Event handler for latest data updated.
+   *
+   */
 
   public onLatestDataUpdated() {
     this.updateCurrentSourceLatestData();
@@ -328,12 +356,22 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     this.ctx.detectChanges();
   }
 
+  /**
+   * Event handler for edit mode changed.
+   *
+   */
+
   public onEditModeChanged() {
     if (this.textSearchMode) {
       this.ctx.hideTitlePanel = !this.ctx.isEdit;
       this.ctx.detectChanges(true);
     }
   }
+
+  /**
+   * initialize.
+   *
+   */
 
   private initialize() {
     this.ctx.widgetActions = [this.searchAction, this.columnDisplayAction];
@@ -398,6 +436,13 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     this.updateDatasources();
   }
 
+  /**
+   * get tab label.
+   *
+   * @param source source (Datasource)
+   * @returns string observable or value
+   */
+
   private getTabLabel(source: Datasource):string {
     const value = this.useEntityLabel
       ? (source.entityLabel || source.entityName)
@@ -405,6 +450,12 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
 
     return this.utils.customTranslation(value);
   }
+
+  /**
+   * sort datasources.
+   *
+   * @param source source (TimeseriesTableSource[])
+   */
 
   private sortDatasources(source: TimeseriesTableSource[]) {
     const property = this.settings?.sortOrder?.property;
@@ -432,6 +483,11 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
       }
     }
   }
+
+  /**
+   * update datasources.
+   *
+   */
 
   private updateDatasources() {
     this.sources = [];
@@ -485,6 +541,11 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     }
     this.updateActiveEntityInfo();
   }
+
+  /**
+   * edit columns to display.
+   *
+   */
 
   private editColumnsToDisplay($event: Event) {
     if ($event) {
@@ -542,6 +603,12 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     }
   }
 
+  /**
+   * prepare displayed column.
+   *
+   * @param index index (number)
+   */
+
   private prepareDisplayedColumn(index: number) {
     if (!this.displayedColumns[index]) {
       this.displayedColumns[index] = this.sources[index].displayedColumns.map(value => {
@@ -563,6 +630,13 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
       });
     }
   }
+
+  /**
+   * prepare header.
+   *
+   * @param datasource datasource (Datasource)
+   * @returns TimeseriesHeader[] observable or value
+   */
 
   private prepareHeader(datasource: Datasource): TimeseriesHeader[] {
     const dataKeys = datasource.dataKeys;
@@ -627,6 +701,11 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     return header;
   }
 
+  /**
+   * update active entity info.
+   *
+   */
+
   private updateActiveEntityInfo() {
     const source = this.sources[this.sourceIndex];
     let activeEntityInfo: SubscriptionEntityInfo = null;
@@ -648,6 +727,11 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     this.ctx.activeEntityInfo = activeEntityInfo;
   }
 
+  /**
+   * init subscriptions to sort and paginator.
+   *
+   */
+
   private initSubscriptionsToSortAndPaginator() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.sorts.forEach((sort, index) => {
@@ -665,11 +749,21 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     });
   }
 
+  /**
+   * Event handler for source index changed.
+   *
+   */
+
   onSourceIndexChanged() {
     this.updateCurrentSourceAllData();
     this.updateActiveEntityInfo();
     this.clearCache();
   }
+
+  /**
+   * enter filter mode.
+   *
+   */
 
   private enterFilterMode() {
     this.textSearchMode = true;
@@ -681,6 +775,11 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
@@ -688,6 +787,13 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     this.ctx.hideTitlePanel = false;
     this.ctx.detectChanges(true);
   }
+
+  /**
+   * update data.
+   *
+   * @param sort sort (MatSort)
+   * @param paginator paginator (MatPaginator)
+   */
 
   private updateData(sort: MatSort, paginator: MatPaginator) {
     const source = this.sources[this.sourceIndex];
@@ -704,27 +810,66 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     this.ctx.detectChanges();
   }
 
+  /**
+   * track by column index.
+   *
+   * @param header header (TimeseriesHeader)
+   */
+
   public trackByColumnIndex(index, header: TimeseriesHeader) {
     return header.index;
   }
+
+  /**
+   * track by row timestamp.
+   *
+   * @param index index (number)
+   */
 
   public trackByRowTimestamp(index: number) {
     return index;
   }
 
+  /**
+   * track by action cell description id.
+   *
+   * @param index index (number)
+   * @param action action (WidgetActionDescriptor)
+   */
+
   public trackByActionCellDescriptionId(index: number, action: WidgetActionDescriptor) {
     return action.id;
   }
 
+  /**
+   * track by sources index.
+   *
+   * @param index index (number)
+   * @param source source (TimeseriesTableSource)
+   */
+
   public trackBySourcesIndex(index: number, source: TimeseriesTableSource) {
     return source.datasource.entityId;
   }
+
+  /**
+   * row style.
+   *
+   * @param source source (TimeseriesTableSource)
+   * @param row row (TimeseriesRow)
+   * @param index index (number)
+   * @returns Observable<any> observable or value
+   */
 
   public rowStyle(source: TimeseriesTableSource, row: TimeseriesRow, index: number): Observable<any> {
     let style$: Observable<any>;
     const res = this.rowStyleCache[index];
     if (!res) {
       style$ = this.rowStylesInfo.pipe(
+        /**
+         * map.
+         *
+         */
         map(styleInfo => {
           if (styleInfo.useRowStyleFunction && styleInfo.rowStyleFunction) {
             const rowData = source.rowDataTemplate;
@@ -761,6 +906,18 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     return style$;
   }
 
+  /**
+   * cell style.
+   *
+   * @param source source (TimeseriesTableSource)
+   * @param header header (TimeseriesHeader)
+   * @param index index (number)
+   * @param row row (TimeseriesRow)
+   * @param value value (any)
+   * @param rowIndex row index (number)
+   * @returns Observable<any> observable or value
+   */
+
   public cellStyle(source: TimeseriesTableSource, header: TimeseriesHeader,
                    index: number, row: TimeseriesRow, value: any, rowIndex: number): Observable<any> {
     let style$: Observable<any>;
@@ -769,6 +926,10 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     if (!res) {
       if (index > 0) {
         style$ = header.styleInfo.pipe(
+          /**
+           * map.
+           *
+           */
           map(styleInfo => {
             if (styleInfo.useCellStyleFunction && styleInfo.cellStyleFunction) {
               const rowData = source.rowDataTemplate;
@@ -807,6 +968,18 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     }
     return style$;
   }
+
+  /**
+   * cell content.
+   *
+   * @param source source (TimeseriesTableSource)
+   * @param header header (TimeseriesHeader)
+   * @param index index (number)
+   * @param row row (TimeseriesRow)
+   * @param value value (any)
+   * @param rowIndex row index (number)
+   * @returns Observable<SafeHtml> observable or value
+   */
 
   public cellContent(source: TimeseriesTableSource, header: TimeseriesHeader,
                      index: number, row: TimeseriesRow, value: any, rowIndex: number): Observable<SafeHtml> {
@@ -857,6 +1030,12 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     return content$;
   }
 
+  /**
+   * Event handler for row click.
+   *
+   * @param row row (TimeseriesRow)
+   */
+
   public onRowClick($event: Event, row: TimeseriesRow) {
     const descriptors = this.ctx.actionsApi.getActionDescriptors('rowClick');
     if (descriptors.length) {
@@ -875,6 +1054,13 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     }
   }
 
+  /**
+   * Event handler for action button click.
+   *
+   * @param row row (TimeseriesRow)
+   * @param actionDescriptor action descriptor (WidgetActionDescriptor)
+   */
+
   public onActionButtonClick($event: Event, row: TimeseriesRow, actionDescriptor: WidgetActionDescriptor) {
     if ($event) {
       $event.stopPropagation();
@@ -890,26 +1076,58 @@ export class TimeseriesTableWidgetComponent extends PageComponent implements OnI
     this.ctx.actionsApi.handleWidgetAction($event, actionDescriptor, entityId, entityName, row, entityLabel);
   }
 
+  /**
+   * is active tab.
+   *
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public isActiveTab(index: number): boolean {
     return index === this.sourceIndex;
   }
+
+  /**
+   * update current source all data.
+   *
+   */
 
   private updateCurrentSourceAllData() {
     this.sources[this.sourceIndex].timeseriesDatasource.allDataUpdated(this.data, this.latestData);
   }
 
+  /**
+   * update current source data.
+   *
+   */
+
   private updateCurrentSourceData() {
     this.sources[this.sourceIndex].timeseriesDatasource.dataUpdated(this.data);
   }
+
+  /**
+   * update current source latest data.
+   *
+   */
 
   private updateCurrentSourceLatestData() {
     this.sources[this.sourceIndex].timeseriesDatasource.latestDataUpdated(this.latestData);
   }
 
+  /**
+   * load current source row.
+   *
+   */
+
   private loadCurrentSourceRow() {
     this.sources[this.sourceIndex].timeseriesDatasource.loadRows();
     this.clearCache();
   }
+
+  /**
+   * clear cache.
+   *
+   */
 
   private clearCache() {
     this.cellContentCache.length = 0;

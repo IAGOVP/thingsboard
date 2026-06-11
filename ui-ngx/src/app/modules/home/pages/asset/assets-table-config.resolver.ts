@@ -64,8 +64,9 @@ import {
   AddEntitiesToEdgeDialogData
 } from '@home/dialogs/add-entities-to-edge-dialog.component';
 /**
- * Route resolver: loads assets table config before activate.
+ * Route resolver: preloads data for assets table config (home/asset pages).
  */
+
 
 @Injectable()
 export class AssetsTableConfigResolver  {
@@ -113,6 +114,13 @@ export class AssetsTableConfigResolver  {
     this.config.headerComponent = AssetTableHeaderComponent;
 
   }
+
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Observable<EntityTableConfig<AssetInfo>> observable or value
+   */
 
   resolve(route: ActivatedRouteSnapshot): Observable<EntityTableConfig<AssetInfo>> {
     const routeParams = route.params;
@@ -164,6 +172,13 @@ export class AssetsTableConfigResolver  {
     );
   }
 
+  /**
+   * configure columns.
+   *
+   * @param assetScope asset scope (string)
+   * @returns Array<EntityTableColumn<AssetInfo>> observable or value
+   */
+
   configureColumns(assetScope: string): Array<EntityTableColumn<AssetInfo>> {
     const columns: Array<EntityTableColumn<AssetInfo>> = [
       new DateEntityTableColumn<AssetInfo>('createdTime', 'common.created-time', this.datePipe, '150px'),
@@ -183,6 +198,12 @@ export class AssetsTableConfigResolver  {
     return columns;
   }
 
+  /**
+   * configure entity functions.
+   *
+   * @param assetScope asset scope (string)
+   */
+
   configureEntityFunctions(assetScope: string): void {
     if (assetScope === 'tenant') {
       this.config.entitiesFetchFunction = pageLink =>
@@ -199,6 +220,13 @@ export class AssetsTableConfigResolver  {
       this.config.deleteEntity = id => this.assetService.unassignAssetFromCustomer(id.id);
     }
   }
+
+  /**
+   * configure cell actions.
+   *
+   * @param assetScope asset scope (string)
+   * @returns Array<CellActionDescriptor<AssetInfo>> observable or value
+   */
 
   configureCellActions(assetScope: string): Array<CellActionDescriptor<AssetInfo>> {
     const actions: Array<CellActionDescriptor<AssetInfo>> = [];
@@ -259,6 +287,13 @@ export class AssetsTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * configure group actions.
+   *
+   * @param assetScope asset scope (string)
+   * @returns Array<GroupActionDescriptor<AssetInfo>> observable or value
+   */
+
   configureGroupActions(assetScope: string): Array<GroupActionDescriptor<AssetInfo>> {
     const actions: Array<GroupActionDescriptor<AssetInfo>> = [];
     if (assetScope === 'tenant') {
@@ -293,6 +328,13 @@ export class AssetsTableConfigResolver  {
     }
     return actions;
   }
+
+  /**
+   * configure add actions.
+   *
+   * @param assetScope asset scope (string)
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
 
   configureAddActions(assetScope: string): Array<HeaderActionDescriptor> {
     const actions: Array<HeaderActionDescriptor> = [];
@@ -335,6 +377,11 @@ export class AssetsTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * import assets.
+   *
+   */
+
   importAssets($event: Event) {
     this.homeDialogs.importEntities(EntityType.ASSET).subscribe((res) => {
       if (res) {
@@ -344,6 +391,13 @@ export class AssetsTableConfigResolver  {
     });
   }
 
+  /**
+   * open asset.
+   *
+   * @param asset asset (Asset)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   private openAsset($event: Event, asset: Asset, config: EntityTableConfig<AssetInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -351,6 +405,11 @@ export class AssetsTableConfigResolver  {
     const url = this.router.createUrlTree([asset.id.id], {relativeTo: config.getActivatedRoute()});
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * POST/PUT entity — add assets to customer.
+   *
+   */
 
   addAssetsToCustomer($event: Event) {
     if ($event) {
@@ -371,6 +430,12 @@ export class AssetsTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * make public.
+   *
+   * @param asset asset (Asset)
+   */
 
   makePublic($event: Event, asset: Asset) {
     if ($event) {
@@ -394,6 +459,12 @@ export class AssetsTableConfigResolver  {
     );
   }
 
+  /**
+   * assign to customer.
+   *
+   * @param assetIds asset ids (Array<AssetId>)
+   */
+
   assignToCustomer($event: Event, assetIds: Array<AssetId>) {
     if ($event) {
       $event.stopPropagation();
@@ -413,6 +484,12 @@ export class AssetsTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * unassign from customer.
+   *
+   * @param asset asset (AssetInfo)
+   */
 
   unassignFromCustomer($event: Event, asset: AssetInfo) {
     if ($event) {
@@ -446,6 +523,12 @@ export class AssetsTableConfigResolver  {
     );
   }
 
+  /**
+   * unassign assets from customer.
+   *
+   * @param assets assets (Array<AssetInfo>)
+   */
+
   unassignAssetsFromCustomer($event: Event, assets: Array<AssetInfo>) {
     if ($event) {
       $event.stopPropagation();
@@ -474,6 +557,14 @@ export class AssetsTableConfigResolver  {
     );
   }
 
+  /**
+   * Event handler for asset action.
+   *
+   * @param action action (EntityAction<AssetInfo>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
+
   onAssetAction(action: EntityAction<AssetInfo>, config: EntityTableConfig<AssetInfo>): boolean {
     switch (action.action) {
       case 'open':
@@ -495,6 +586,11 @@ export class AssetsTableConfigResolver  {
     return false;
   }
 
+  /**
+   * POST/PUT entity — add assets to edge.
+   *
+   */
+
   addAssetsToEdge($event: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -514,6 +610,12 @@ export class AssetsTableConfigResolver  {
         }
       });
   }
+
+  /**
+   * unassign from edge.
+   *
+   * @param asset asset (AssetInfo)
+   */
 
   unassignFromEdge($event: Event, asset: AssetInfo) {
     if ($event) {
@@ -536,6 +638,12 @@ export class AssetsTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * unassign assets from edge.
+   *
+   * @param assets assets (Array<AssetInfo>)
+   */
 
   unassignAssetsFromEdge($event: Event, assets: Array<AssetInfo>) {
     if ($event) {

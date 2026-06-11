@@ -55,6 +55,12 @@ import { FormProperty } from '@shared/models/dynamic-form.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getSourceTbUnitSymbol, TbUnit } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: aggregated data key row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aggregated-data-key-row`.
+ */
 @Component({
     selector: 'tb-aggregated-data-key-row',
     templateUrl: './aggregated-data-key-row.component.html',
@@ -67,10 +73,7 @@ import { getSourceTbUnitSymbol, TbUnit } from '@shared/models/unit.models';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: aggregated data key row UI.
- */
+standalone: false
 })
 export class AggregatedDataKeyRowComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -131,6 +134,11 @@ export class AggregatedDataKeyRowComponent implements ControlValueAccessor, OnIn
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.keyRowFormGroup = this.fb.group({
       position: [null, []],
@@ -163,12 +171,30 @@ export class AggregatedDataKeyRowComponent implements ControlValueAccessor, OnIn
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -178,6 +204,12 @@ export class AggregatedDataKeyRowComponent implements ControlValueAccessor, OnIn
       this.keyRowFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DataKey)
+   */
 
   writeValue(value: DataKey): void {
     this.modelValue = value || {} as DataKey;
@@ -195,9 +227,20 @@ export class AggregatedDataKeyRowComponent implements ControlValueAccessor, OnIn
     this.cd.markForCheck();
   }
 
+  /**
+   * data key has postprocessing.
+   *
+   * @returns boolean observable or value
+   */
+
   dataKeyHasPostprocessing(): boolean {
     return !!this.modelValue?.postFuncBody;
   }
+
+  /**
+   * edit key.
+   *
+   */
 
   editKey() {
     this.dialog.open<DataKeyConfigDialogComponent, DataKeyConfigDialogData, DataKey>(DataKeyConfigDialogComponent,
@@ -237,6 +280,11 @@ export class AggregatedDataKeyRowComponent implements ControlValueAccessor, OnIn
       }
     });
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.keyRowFormGroup.value;

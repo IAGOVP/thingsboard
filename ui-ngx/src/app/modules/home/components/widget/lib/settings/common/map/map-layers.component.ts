@@ -37,6 +37,12 @@ import {
   MapProvider
 } from '@shared/models/widget/maps/map.models';
 
+
+/**
+ * Angular component: map layers (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-layers`.
+ */
 @Component({
     selector: 'tb-map-layers',
     templateUrl: './map-layers.component.html',
@@ -54,10 +60,7 @@ import {
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map layers UI.
- */
+standalone: false
 })
 export class MapLayersComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -76,6 +79,11 @@ export class MapLayersComponent implements ControlValueAccessor, OnInit, Validat
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.layersFormGroup = this.fb.group({
       layers: [this.fb.array([]), []]
@@ -93,12 +101,30 @@ export class MapLayersComponent implements ControlValueAccessor, OnInit, Validat
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -109,10 +135,22 @@ export class MapLayersComponent implements ControlValueAccessor, OnInit, Validat
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MapLayerSettings[] | undefined)
+   */
+
   writeValue(value: MapLayerSettings[] | undefined): void {
     const layers: MapLayerSettings[] = value || [];
     this.layersFormGroup.setControl('layers', this.prepareLayersFormArray(layers), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     const valid = this.layersFormGroup.valid;
@@ -123,6 +161,12 @@ export class MapLayersComponent implements ControlValueAccessor, OnInit, Validat
     };
   }
 
+  /**
+   * layer drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   layerDrop(event: CdkDragDrop<string[]>) {
     const layersArray = this.layersFormGroup.get('layers') as UntypedFormArray;
     const layer = layersArray.at(event.previousIndex);
@@ -130,17 +174,42 @@ export class MapLayersComponent implements ControlValueAccessor, OnInit, Validat
     layersArray.insert(event.currentIndex, layer);
   }
 
+  /**
+   * layers form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   layersFormArray(): UntypedFormArray {
     return this.layersFormGroup.get('layers') as UntypedFormArray;
   }
+
+  /**
+   * track by layer.
+   *
+   * @param index index (number)
+   * @param layerControl layer control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByLayer(index: number, layerControl: AbstractControl): any {
     return layerControl;
   }
 
+  /**
+   * DELETE — remove layer.
+   *
+   * @param index index (number)
+   */
+
   removeLayer(index: number) {
     (this.layersFormGroup.get('layers') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add layer.
+   *
+   */
 
   addLayer() {
     const layer = mergeDeep<MapLayerSettings>({} as MapLayerSettings,
@@ -149,6 +218,13 @@ export class MapLayersComponent implements ControlValueAccessor, OnInit, Validat
     const layerControl = this.fb.control(layer, [mapLayerValidator]);
     layersArray.push(layerControl);
   }
+
+  /**
+   * prepare layers form array.
+   *
+   * @param layers layers (MapLayerSettings[])
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareLayersFormArray(layers: MapLayerSettings[]): UntypedFormArray {
     const layersControls: Array<AbstractControl> = [];

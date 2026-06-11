@@ -20,14 +20,17 @@ import { EntityType } from '@app/shared/models/entity-type.models';
 import { EntitySearchDirection } from '@app/shared/models/relation.models';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 
+
+/**
+ * Angular component: delete relation config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-delete-relation-config`.
+ */
 @Component({
     selector: 'tb-action-node-delete-relation-config',
     templateUrl: './delete-relation-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: delete relation config UI.
- */
+standalone: false
 })
 export class DeleteRelationConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -63,9 +66,21 @@ export class DeleteRelationConfigComponent extends RuleNodeConfigurationComponen
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.deleteRelationConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.deleteRelationConfigForm = this.fb.group({
@@ -77,9 +92,21 @@ export class DeleteRelationConfigComponent extends RuleNodeConfigurationComponen
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['deleteForSingleEntity', 'entityType'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const deleteForSingleEntity: boolean = this.deleteRelationConfigForm.get('deleteForSingleEntity').value;
@@ -97,6 +124,13 @@ export class DeleteRelationConfigComponent extends RuleNodeConfigurationComponen
     this.deleteRelationConfigForm.get('entityType').updateValueAndValidity({emitEvent: false});
     this.deleteRelationConfigForm.get('entityNamePattern').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     configuration.entityNamePattern = configuration.entityNamePattern ? configuration.entityNamePattern.trim() : null;

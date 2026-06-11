@@ -29,14 +29,17 @@ import {
 } from '../rule-node-config.models';
 import { entityFields } from '@shared/models/entity.models';
 
+
+/**
+ * Angular component: related attributes config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-related-attributes-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-related-attributes-config',
     templateUrl: './related-attributes-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: related attributes config UI.
- */
+standalone: false
 })
 export class RelatedAttributesConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -65,9 +68,22 @@ export class RelatedAttributesConfigComponent extends RuleNodeConfigurationCompo
     }
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.relatedAttributesConfigForm;
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (configuration.dataToFetch === DataToFetch.FIELDS) {
@@ -90,6 +106,13 @@ export class RelatedAttributesConfigComponent extends RuleNodeConfigurationCompo
 
     return deepTrim(configuration);
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     let svMap = {
@@ -128,6 +151,13 @@ export class RelatedAttributesConfigComponent extends RuleNodeConfigurationCompo
     };
   }
 
+  /**
+   * select translation.
+   *
+   * @param latestTelemetryTranslation latest telemetry translation (string)
+   * @param attributesTranslation attributes translation (string)
+   */
+
   public selectTranslation(latestTelemetryTranslation: string, attributesTranslation: string) {
     if (this.relatedAttributesConfigForm.get('dataToFetch').value === DataToFetch.LATEST_TELEMETRY) {
       return latestTelemetryTranslation;
@@ -135,6 +165,12 @@ export class RelatedAttributesConfigComponent extends RuleNodeConfigurationCompo
       return attributesTranslation;
     }
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.relatedAttributesConfigForm = this.fb.group({
@@ -146,9 +182,21 @@ export class RelatedAttributesConfigComponent extends RuleNodeConfigurationCompo
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['dataToFetch'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     if (this.relatedAttributesConfigForm.get('dataToFetch').value === DataToFetch.FIELDS) {

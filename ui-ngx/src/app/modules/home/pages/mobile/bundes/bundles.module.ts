@@ -36,6 +36,9 @@ import {
 /**
  * Angular NgModule: mobile bundles feature area.
  */
+/**
+ * Angular NgModule bundling mobile bundles (home/mobile pages).
+ */
 @NgModule({
   declarations: [
     MobileBundleTableHeaderComponent,
@@ -53,5 +56,5 @@ import {
     SharedModule,
     HomeComponentsModule,
     MobileBundleRoutingModule,
-  ]})
+]})
 export class MobileBundlesModule { }

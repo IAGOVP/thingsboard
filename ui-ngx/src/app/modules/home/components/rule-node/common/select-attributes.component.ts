@@ -30,6 +30,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { isDefinedAndNotNull } from '@core/public-api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+
+/**
+ * Angular component: select attributes (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-select-attributes`.
+ */
 @Component({
     selector: 'tb-select-attributes',
     templateUrl: './select-attributes.component.html',
@@ -43,13 +50,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: SelectAttributesComponent,
             multi: true
         }],
-    standalone: false
 
-/**
-
- * Angular component: select attributes UI.
-
- */
+standalone: false
 })
 
 export class SelectAttributesComponent implements OnInit, ControlValueAccessor {
@@ -66,6 +68,11 @@ export class SelectAttributesComponent implements OnInit, ControlValueAccessor {
               private fb: FormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.attributeControlGroup = this.fb.group({
@@ -86,6 +93,12 @@ export class SelectAttributesComponent implements OnInit, ControlValueAccessor {
     });
   }
 
+  /**
+   * prepare propagate value.
+   *
+   * @param propagateValue propagate value ({[key: string]: string[] | boolean | null})
+   */
+
   private preparePropagateValue(propagateValue: {[key: string]: string[] | boolean | null}): {[key: string]: string[] | boolean } {
     const formatValue = {};
     for (const key in propagateValue) {
@@ -99,6 +112,11 @@ export class SelectAttributesComponent implements OnInit, ControlValueAccessor {
     return formatValue;
   };
 
+  /**
+   * validate.
+   *
+   */
+
   validate() {
     if (this.attributeControlGroup.valid) {
       return null;
@@ -106,6 +124,13 @@ export class SelectAttributesComponent implements OnInit, ControlValueAccessor {
       return {atLeastOneRequired: true};
     }
   }
+
+  /**
+   * at least one.
+   *
+   * @param validator validator (ValidatorFn)
+   * @param controls controls (string[])
+   */
 
   private atLeastOne(validator: ValidatorFn, controls: string[] = null) {
     return (group: FormGroup): ValidationErrors | null => {
@@ -118,17 +143,40 @@ export class SelectAttributesComponent implements OnInit, ControlValueAccessor {
     };
   }
 
+  /**
+   * write value.
+   *
+   */
+
   writeValue(value): void {
     this.attributeControlGroup.setValue(value, {emitEvent: false});
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {

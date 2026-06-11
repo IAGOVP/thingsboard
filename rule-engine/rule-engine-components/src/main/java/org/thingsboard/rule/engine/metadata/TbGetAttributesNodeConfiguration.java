@@ -27,8 +27,11 @@ import java.util.List;
  * Created by ashvayka on 19.01.18.
  */
 /**
- * JSON configuration for TbGetAttributes rule node.
+ * JSON configuration POJO for {@link TbGetAttributes} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TbGetAttributesNodeConfiguration extends TbAbstractFetchToNodeConfiguration implements NodeConfiguration<TbGetAttributesNodeConfiguration> {
@@ -41,6 +44,12 @@ public class TbGetAttributesNodeConfiguration extends TbAbstractFetchToNodeConfi
 
     private boolean tellFailureIfAbsent;
     private boolean getLatestValueWithTs;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGetAttributesNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGetAttributesNodeConfiguration defaultConfiguration() {

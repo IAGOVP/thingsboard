@@ -57,8 +57,11 @@ import { UnitService } from '@core/services/unit.service';
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: dynamic widget UI.
+ * Angular component: dynamic widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export class DynamicWidgetComponent extends PageComponent implements IDynamicWidgetComponent, OnInit, OnDestroy {
 
   executingRpcRequest: boolean;
@@ -114,9 +117,19 @@ export class DynamicWidgetComponent extends PageComponent implements IDynamicWid
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
 
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
@@ -125,11 +138,26 @@ export class DynamicWidgetComponent extends PageComponent implements IDynamicWid
     }
   }
 
+  /**
+   * clear rpc error.
+   *
+   */
+
   clearRpcError() {
     if (this.widgetContext.defaultSubscription) {
       this.widgetContext.defaultSubscription.clearRpcError();
     }
   }
+
+  /**
+   * show success toast.
+   *
+   * @param message message (string)
+   * @param duration duration (number)
+   * @param verticalPosition vertical position (NotificationVerticalPosition)
+   * @param horizontalPosition horizontal position (NotificationHorizontalPosition)
+   * @param target target (string)
+   */
 
   showSuccessToast(message: string, duration: number = 1000,
                    verticalPosition: NotificationVerticalPosition = 'bottom',
@@ -138,12 +166,32 @@ export class DynamicWidgetComponent extends PageComponent implements IDynamicWid
     this.ctx.showSuccessToast(message, duration, verticalPosition, horizontalPosition, target);
   }
 
+  /**
+   * show error toast.
+   *
+   * @param message message (string)
+   * @param verticalPosition vertical position (NotificationVerticalPosition)
+   * @param horizontalPosition horizontal position (NotificationHorizontalPosition)
+   * @param target target (string)
+   */
+
   showErrorToast(message: string,
                  verticalPosition: NotificationVerticalPosition = 'bottom',
                  horizontalPosition: NotificationHorizontalPosition = 'left',
                  target?: string) {
     this.ctx.showErrorToast(message, verticalPosition, horizontalPosition, target);
   }
+
+  /**
+   * show toast.
+   *
+   * @param type type (NotificationType)
+   * @param message message (string)
+   * @param duration duration (number)
+   * @param verticalPosition vertical position (NotificationVerticalPosition)
+   * @param horizontalPosition horizontal position (NotificationHorizontalPosition)
+   * @param target target (string)
+   */
 
   showToast(type: NotificationType, message: string, duration: number,
             verticalPosition: NotificationVerticalPosition = 'bottom',

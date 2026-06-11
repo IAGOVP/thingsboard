@@ -24,11 +24,19 @@ const APP_PREFIX = 'TB-';
     providedIn: 'root'
   }
 /**
- * Angular HTTP service: local storage REST wrappers (`@core/http`).
+ * Angular injectable service: local storage (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 )
 export class LocalStorageService {
   constructor() {}
+
+  /**
+   * load initial state.
+   *
+   */
 
   static loadInitialState() {
     return Object.keys(localStorage).reduce((state: any, storageKey) => {
@@ -62,18 +70,41 @@ export class LocalStorageService {
     }, {});
   }
 
+  /**
+   * set item.
+   *
+   * @param key key (string)
+   * @param value value (any)
+   */
+
   setItem(key: string, value: any) {
     localStorage.setItem(`${APP_PREFIX}${key}`, JSON.stringify(value));
   }
+
+  /**
+   * get item.
+   *
+   * @param key key (string)
+   */
 
   getItem(key: string) {
     return JSON.parse(localStorage.getItem(`${APP_PREFIX}${key}`));
   }
 
+  /**
+   * DELETE — remove item.
+   *
+   * @param key key (string)
+   */
+
   removeItem(key: string) {
     localStorage.removeItem(`${APP_PREFIX}${key}`);
   }
-  /** Tests that localStorage exists, can be written to, and read from. */
+    /**
+   * test local storage.
+   *
+   */
+
   testLocalStorage() {
     const testValue = 'testValue';
     const testKey = 'testKey';

@@ -20,14 +20,17 @@ import { WidgetSettings, WidgetSettingsComponent, widgetTitleAutocompleteValues 
 import { AppState } from '@core/core.state';
 import { Store } from '@ngrx/store';
 
+
+/**
+ * Angular component: photo camera input widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-photo-camera-input-widget-settings`.
+ */
 @Component({
     selector: 'tb-photo-camera-input-widget-settings',
     templateUrl: './photo-camera-input-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: photo camera input widget settings UI.
- */
+standalone: false
 })
 export class PhotoCameraInputWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class PhotoCameraInputWidgetSettingsComponent extends WidgetSettingsCompo
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.photoCameraInputWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -56,6 +71,12 @@ export class PhotoCameraInputWidgetSettingsComponent extends WidgetSettingsCompo
       maxHeight: 480
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.photoCameraInputWidgetSettingsForm = this.fb.group({
@@ -74,6 +95,13 @@ export class PhotoCameraInputWidgetSettingsComponent extends WidgetSettingsCompo
     });
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return {
       ...settings,
@@ -82,6 +110,13 @@ export class PhotoCameraInputWidgetSettingsComponent extends WidgetSettingsCompo
       imageQuality: settings.imageQuality * 100
     }
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: WidgetSettings): WidgetSettings {
     return {

@@ -27,14 +27,17 @@ import {
   LatestChartWidgetSettingsComponent
 } from '@home/components/widget/lib/settings/chart/latest-chart-widget-settings.component';
 
+
+/**
+ * Angular component: radar chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-radar-chart-widget-settings`.
+ */
 @Component({
     selector: 'tb-radar-chart-widget-settings',
     templateUrl: './latest-chart-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: radar chart widget settings UI.
- */
+standalone: false
 })
 export class RadarChartWidgetSettingsComponent extends LatestChartWidgetSettingsComponent<RadarChartWidgetSettings> {
 
@@ -46,13 +49,31 @@ export class RadarChartWidgetSettingsComponent extends LatestChartWidgetSettings
     super(store, fb);
   }
 
+  /**
+   * default latest chart settings.
+   *
+   */
+
   protected defaultLatestChartSettings() {
     return radarChartWidgetDefaultSettings;
   }
 
+  /**
+   * latest chart config template.
+   *
+   * @returns TemplateRef<any> observable or value
+   */
+
   public latestChartConfigTemplate(): TemplateRef<any> {
     return this.radarChartConfigTemplate;
   }
+
+  /**
+   * setup latest chart controls.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param settings settings (WidgetSettings)
+   */
 
   protected setupLatestChartControls(latestChartWidgetSettingsForm: UntypedFormGroup, settings: WidgetSettings) {
     latestChartWidgetSettingsForm.addControl('shape', this.fb.control(settings.shape, []));
@@ -77,9 +98,23 @@ export class RadarChartWidgetSettingsComponent extends LatestChartWidgetSettings
     latestChartWidgetSettingsForm.addControl('axisTickLabelColor', this.fb.control(settings.axisTickLabelColor, []));
   }
 
+  /**
+   * latest chart validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected latestChartValidatorTriggers(): string[] {
     return ['showLine', 'showPoints', 'showLabel', 'axisShowLabel', 'axisShowTickLabels'];
   }
+
+  /**
+   * update latest chart validators.
+   *
+   * @param latestChartWidgetSettingsForm latest chart widget settings form (UntypedFormGroup)
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateLatestChartValidators(latestChartWidgetSettingsForm: UntypedFormGroup, emitEvent: boolean, trigger?: string) {
     const showLine: boolean = latestChartWidgetSettingsForm.get('showLine').value;

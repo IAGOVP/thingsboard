@@ -29,16 +29,19 @@ import { AppState } from '@core/core.state';
 import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: auto date format settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-auto-date-format-settings-panel`.
+ */
 @Component({
     selector: 'tb-auto-date-format-settings-panel',
     templateUrl: './auto-date-format-settings-panel.component.html',
     providers: [],
     styleUrls: ['./auto-date-format-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: auto date format settings panel UI.
- */
+standalone: false
 })
 export class AutoDateFormatSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -69,6 +72,11 @@ export class AutoDateFormatSettingsPanelComponent extends PageComponent implemen
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.autoDateFormatFormGroup = this.fb.group({});
     for (const unit of formatTimeUnits) {
@@ -83,9 +91,19 @@ export class AutoDateFormatSettingsPanelComponent extends PageComponent implemen
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply auto date format settings.
+   *
+   */
 
   applyAutoDateFormatSettings() {
     const autoDateFormatSettings: AutoDateFormatSettings = this.autoDateFormatFormGroup.value;

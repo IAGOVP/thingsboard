@@ -30,8 +30,9 @@ import org.thingsboard.monitoring.notification.incident.IncidentManager;
 import java.time.Duration;
 import java.util.Map;
 /**
- * Sends monitoring alerts to Slack via {@link SlackApiClient}.
+ * Sends monitoring alerts to Slack via {@link org.thingsboard.monitoring.notification.channels.impl.SlackApiClient}.
  */
+
 
 @Component
 @ConditionalOnProperty(value = "monitoring.notifications.slack.enabled", havingValue = "true")
@@ -86,6 +87,14 @@ public class SlackNotificationChannel implements NotificationChannel {
             log.info("Slack webhook mode enabled");
         }
     }
+    /**
+     * Dispatches a notification to all configured channels asynchronously.
+     *
+     * @param message Slack or notification message body
+     * @param notification alert payload to deliver to notification channels
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void sendNotification(String message, Notification notification) {

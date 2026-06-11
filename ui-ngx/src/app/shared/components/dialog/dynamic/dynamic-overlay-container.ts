@@ -19,8 +19,9 @@ import { inject, Injectable, InjectionToken } from "@angular/core";
 
 export const PARENT_OVERLAY_CONTAINER = new InjectionToken<OverlayContainer>('PARENT_OVERLAY_CONTAINER');
 /**
- * dynamic overlay container.
+ * Dynamic overlay container (shared UI components).
  */
+
 
 @Injectable()
 export class DynamicOverlayContainer extends OverlayContainer {
@@ -28,9 +29,21 @@ export class DynamicOverlayContainer extends OverlayContainer {
   private _globalContainer = inject(PARENT_OVERLAY_CONTAINER);
   private _customElement: HTMLElement | null = null;
 
+  /**
+   * get container element.
+   *
+   * @returns HTMLElement observable or value
+   */
+
   public override getContainerElement(): HTMLElement {
     return this._customElement || this._globalContainer.getContainerElement();
   }
+
+  /**
+   * set container element.
+   *
+   * @param element element (HTMLElement | null)
+   */
 
   setContainerElement(element: HTMLElement | null): void {
     this._customElement = element;

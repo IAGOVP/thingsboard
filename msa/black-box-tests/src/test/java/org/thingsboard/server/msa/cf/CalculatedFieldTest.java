@@ -82,11 +82,13 @@ import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultAssetP
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultDeviceProfile;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultTenantAdmin;
 
+
 /**
 
- * Calculated field test.
+ * Black-box test for calculated-field evaluation end-to-end through rule engine and telemetry.
 
  */
+
 
 public class CalculatedFieldTest extends AbstractContainerTest {
 
@@ -116,6 +118,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
     private AssetProfileId assetProfileId;
     private Device device;
     private Asset asset;
+    /**
+     * Before class.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void beforeClass() {
@@ -132,6 +140,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         tenantId = testRestClient.postTenant(EntityPrototypes.defaultTenantPrototype("Tenant")).getId();
         tenantAdminId = testRestClient.createUserAndLogin(defaultTenantAdmin(tenantId, "tenantAdmin@thingsboard.org"), "tenant");
     }
+    /**
+     * Before method.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void beforeMethod() {
@@ -143,6 +157,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         assetProfileId = testRestClient.postAssetProfile(defaultAssetProfile("Asset Profile")).getId();
         asset = testRestClient.postAsset(createAsset("Asset", assetProfileId));
     }
+    /**
+     * Tear down.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterMethod
     public void tearDown() {
@@ -154,6 +174,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         testRestClient.deleteAsset(asset.getId());
         testRestClient.deleteAssetProfile(assetProfileId);
     }
+    /**
+     * After class.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterClass
     public void afterClass() {
@@ -161,6 +187,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         testRestClient.login("sysadmin@thingsboard.org", "sysadmin");
         testRestClient.deleteTenant(tenantId);
     }
+    /**
+     * Test perform initial calculation for simple type.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testPerformInitialCalculationForSimpleType() {
@@ -180,6 +212,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
 
         testRestClient.deleteCalculatedFieldIfExists(savedCalculatedField.getId());
     }
+    /**
+     * Test change config argument.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testChangeConfigArgument() {
@@ -215,6 +253,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
 
         testRestClient.deleteCalculatedFieldIfExists(savedCalculatedField.getId());
     }
+    /**
+     * Test change config output.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testChangeConfigOutput() {
@@ -250,6 +294,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
 
         testRestClient.deleteCalculatedFieldIfExists(savedCalculatedField.getId());
     }
+    /**
+     * Test change config expression.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testChangeConfigExpression() {
@@ -283,6 +333,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
 
         testRestClient.deleteCalculatedFieldIfExists(savedCalculatedField.getId());
     }
+    /**
+     * Test telemetry updated.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testTelemetryUpdated() {
@@ -313,6 +369,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
 
         testRestClient.deleteCalculatedFieldIfExists(savedCalculatedField.getId());
     }
+    /**
+     * Test entity id is profile.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testEntityIdIsProfile() {
@@ -332,6 +394,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
 
         testRestClient.deleteCalculatedFieldIfExists(savedCalculatedField.getId());
     }
+    /**
+     * Test entity added and deleted.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testEntityAddedAndDeleted() {
@@ -381,6 +449,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         testRestClient.deleteDeviceIfExists(device2.getId());
         testRestClient.deleteDeviceProfileIfExists(newDeviceProfile);
     }
+    /**
+     * Test entity id is profile and ref entity is common.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testEntityIdIsProfileAndRefEntityIsCommon() {
@@ -415,6 +489,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
 
         testRestClient.deleteCalculatedFieldIfExists(savedCalculatedField.getId());
     }
+    /**
+     * Test perform serials of calculations for geofencing type.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testPerformSerialsOfCalculationsForGeofencingType() {
@@ -501,6 +581,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         testRestClient.deleteAsset(allowed.getId());
         testRestClient.deleteAsset(restricted.getId());
     }
+    /**
+     * Test propagation calculated field with expression.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testPropagationCalculatedField_withExpression() {
@@ -584,6 +670,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         testRestClient.deleteAsset(asset1.getId());
         testRestClient.deleteAsset(asset2.getId());
     }
+    /**
+     * Test propagation calculated field without expression.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testPropagationCalculatedField_withoutExpression() {
@@ -669,6 +761,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         testRestClient.deleteAsset(asset1.getId());
         testRestClient.deleteAsset(asset2.getId());
     }
+    /**
+     * Test related entities aggregation calculated field.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testRelatedEntitiesAggregationCalculatedField() {
@@ -801,6 +899,12 @@ public class CalculatedFieldTest extends AbstractContainerTest {
         testRestClient.deleteDeviceIfExists(device_2_2.getId());
         testRestClient.deleteAsset(asset2.getId());
     }
+    /**
+     * Test debug events.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testDebugEvents() {

@@ -38,14 +38,17 @@ import {
 } from 'src/app/modules/home/components/widget/lib/maps-legacy/map-models';
 import { extractType } from '@core/utils';
 
+
+/**
+ * Angular component: trip animation widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-trip-animation-widget-settings`.
+ */
 @Component({
     selector: 'tb-trip-animation-widget-settings',
     templateUrl: './trip-animation-widget-settings.component.html',
     styleUrls: ['./../../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: trip animation widget settings UI.
- */
+standalone: false
 })
 export class TripAnimationWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -56,13 +59,31 @@ export class TripAnimationWidgetSettingsComponent extends WidgetSettingsComponen
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.tripAnimationWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return defaultTripAnimationSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.tripAnimationWidgetSettingsForm = this.fb.group({
@@ -75,6 +96,13 @@ export class TripAnimationWidgetSettingsComponent extends WidgetSettingsComponen
       circleSettings: [settings.circleSettings, []]
     });
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     const mapProviderSettings = extractType<MapProviderSettings>(settings, Object.keys(defaultMapProviderSettings) as (keyof MapProviderSettings)[]);
@@ -94,6 +122,13 @@ export class TripAnimationWidgetSettingsComponent extends WidgetSettingsComponen
       circleSettings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return {

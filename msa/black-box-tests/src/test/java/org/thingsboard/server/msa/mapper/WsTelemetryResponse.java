@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 /**
- * Ws telemetry response.
+ * Test DTO for deserializing ws telemetry response (black-box test infrastructure).
  */
+
 
 @Data
 public class WsTelemetryResponse implements Serializable {
@@ -33,6 +34,13 @@ public class WsTelemetryResponse implements Serializable {
     private String errorMsg;
     private Map<String, List<List<Object>>> data;
     private Map<String, Object> latestValues;
+    /**
+     * Returns data values by key.
+     *
+     * @param key key ({@link String})
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public List<Object> getDataValuesByKey(String key) {
         return data.entrySet().stream()

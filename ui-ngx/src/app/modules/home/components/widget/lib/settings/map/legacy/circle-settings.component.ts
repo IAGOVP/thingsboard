@@ -38,6 +38,12 @@ import { WidgetService } from '@core/http/widget.service';
 import { Widget } from '@shared/models/widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: circle settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-circle-settings`.
+ */
 @Component({
     selector: 'tb-circle-settings',
     templateUrl: './circle-settings.component.html',
@@ -54,10 +60,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: circle settings UI.
- */
+standalone: false
 })
 export class CircleSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -86,6 +89,11 @@ export class CircleSettingsComponent extends PageComponent implements OnInit, Co
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.circleSettingsFormGroup = this.fb.group({
@@ -155,12 +163,30 @@ export class CircleSettingsComponent extends PageComponent implements OnInit, Co
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -171,6 +197,12 @@ export class CircleSettingsComponent extends PageComponent implements OnInit, Co
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (CircleSettings)
+   */
+
   writeValue(value: CircleSettings): void {
     this.modelValue = value;
     this.circleSettingsFormGroup.patchValue(
@@ -178,6 +210,12 @@ export class CircleSettingsComponent extends PageComponent implements OnInit, Co
     );
     this.updateValidators(false);
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     return this.circleSettingsFormGroup.valid ? null : {
@@ -187,11 +225,22 @@ export class CircleSettingsComponent extends PageComponent implements OnInit, Co
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: CircleSettings = this.circleSettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const showCircle: boolean = this.circleSettingsFormGroup.get('showCircle').value;

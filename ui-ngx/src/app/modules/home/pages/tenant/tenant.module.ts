@@ -26,6 +26,9 @@ import { TenantTabsComponent } from '@home/pages/tenant/tenant-tabs.component';
 /**
  * Angular NgModule: tenant feature area.
  */
+/**
+ * Angular NgModule bundling tenant (home/tenant pages).
+ */
 @NgModule({
   declarations: [
     TenantComponent,
@@ -36,5 +39,5 @@ import { TenantTabsComponent } from '@home/pages/tenant/tenant-tabs.component';
     SharedModule,
     HomeComponentsModule,
     TenantRoutingModule
-  ]})
+]})
 export class TenantModule { }

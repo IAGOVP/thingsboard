@@ -31,6 +31,9 @@ import {
 /**
  * Angular NgModule: simple configuration feature area.
  */
+/**
+ * Angular NgModule bundling simple configuration (ThingsBoard web UI).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -43,5 +46,5 @@ import {
   ],
   exports: [
     SimpleConfigurationComponent
-  ]})
+]})
 export class SimpleConfigurationModule {}

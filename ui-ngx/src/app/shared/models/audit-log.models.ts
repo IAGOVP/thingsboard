@@ -121,11 +121,11 @@ export const actionStatusTranslations = new Map<ActionStatus, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for audit log.
-
+ * TypeScript interfaces, types, and enums for audit log (shared TypeScript models).
  */
+
 
 export interface AuditLog extends BaseData<AuditLogId> {
   tenantId: TenantId;

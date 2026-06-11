@@ -28,7 +28,9 @@ import { HttpClient } from '@angular/common/http';
 import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
 
 /**
- * Angular HTTP service: user settings REST wrappers (`@core/http`).
+ * Angular injectable service: user settings (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -39,7 +41,15 @@ export class UserSettingsService {
     private http: HttpClient
   ) {}
 
-  /** Calls ThingsBoard REST `/api/user/settings, ...`. */
+  
+  /**
+   * Calls ThingsBoard REST `/api/user/settings`.
+   *
+   * REST endpoint(s): `/api/user/settings`
+   *
+   * @returns Observable<UserSettings> observable or value
+   */
+
 
   public loadUserSettings(): Observable<UserSettings> {
     return this.http.get<UserSettings>('/api/user/settings', defaultHttpOptionsFromConfig({ignoreLoading: true, ignoreErrors: true})).pipe(
@@ -47,75 +57,160 @@ export class UserSettingsService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/user/settings, ...`. */
+  
+  /**
+   * POST/PUT entity — save user settings.
+   *
+   * @param userSettings user settings (UserSettings)
+   * @returns Observable<UserSettings> observable or value
+   */
+
 
   public saveUserSettings(userSettings: UserSettings): Observable<UserSettings> {
     return this.http.post<UserSettings>('/api/user/settings', userSettings,
       defaultHttpOptionsFromConfig({ignoreLoading: true, ignoreErrors: true}));
   }
 
-  /** Calls ThingsBoard REST `/api/user/settings, ...`. */
+  
+  /**
+   * put user settings.
+   *
+   * @param userSettingsData user settings data (Partial<UserSettings>)
+   * @returns Observable<void> observable or value
+   */
+
 
   public putUserSettings(userSettingsData: Partial<UserSettings>): Observable<void> {
     return this.http.put<void>('/api/user/settings', userSettingsData,
       defaultHttpOptionsFromConfig({ignoreLoading: true, ignoreErrors: true}));
   }
 
+  /**
+   * DELETE — delete user settings.
+   *
+   * @param paths paths (string[])
+   */
+
   public deleteUserSettings(paths: string[]) {
     return this.http.delete(`/api/user/settings/${paths.join(',')}`,
       defaultHttpOptionsFromConfig({ignoreLoading: true, ignoreErrors: true}));
   }
 
-  /** Calls ThingsBoard REST `/api/user/settings/${UserSettingsType.DOC_LINKS}, ...`. */
+  
+  /**
+   * get documentation links.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DocumentationLinks> observable or value
+   */
+
 
   public getDocumentationLinks(config?: RequestConfig): Observable<DocumentationLinks> {
     return this.http.get<DocumentationLinks>(`/api/user/settings/${UserSettingsType.DOC_LINKS}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/settings/${UserSettingsType.DOC_LINKS}, ...`. */
+  
+  /**
+   * update documentation links.
+   *
+   * @param documentationLinks documentation links (DocumentationLinks)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public updateDocumentationLinks(documentationLinks: DocumentationLinks, config?: RequestConfig): Observable<void> {
     return this.http.put<void>(`/api/user/settings/${UserSettingsType.DOC_LINKS}`, documentationLinks,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/settings/${UserSettingsType.QUICK_LINKS}, ...`. */
+  
+  /**
+   * GET /api/user/settings/* — fetch quick links.
+   *
+   * REST endpoint(s): `/api/user/settings/*`
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<QuickLinks> observable or value
+   */
+
 
   public getQuickLinks(config?: RequestConfig): Observable<QuickLinks> {
     return this.http.get<QuickLinks>(`/api/user/settings/${UserSettingsType.QUICK_LINKS}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/settings/${UserSettingsType.QUICK_LINKS}, ...`. */
+  
+  /**
+   * update quick links.
+   *
+   * @param quickLinks quick links (QuickLinks)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public updateQuickLinks(quickLinks: QuickLinks, config?: RequestConfig): Observable<void> {
     return this.http.put<void>(`/api/user/settings/${UserSettingsType.QUICK_LINKS}`, quickLinks,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/settings/${UserSettingsType.GETTING_STARTED}, ...`. */
+  
+  /**
+   * GET /api/user/settings/* — fetch getting started.
+   *
+   * REST endpoint(s): `/api/user/settings/*`
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<GettingStarted> observable or value
+   */
+
 
   public getGettingStarted(config?: RequestConfig): Observable<GettingStarted> {
     return this.http.get<GettingStarted>(`/api/user/settings/${UserSettingsType.GETTING_STARTED}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/settings/${UserSettingsType.GETTING_STARTED}, ...`. */
+  
+  /**
+   * update getting started.
+   *
+   * @param gettingStarted getting started (GettingStarted)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public updateGettingStarted(gettingStarted: GettingStarted, config?: RequestConfig): Observable<void> {
     return this.http.put<void>(`/api/user/settings/${UserSettingsType.GETTING_STARTED}`, gettingStarted,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/dashboards, ...`. */
+  
+  /**
+   * get user dashboards info.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<UserDashboardsInfo> observable or value
+   */
+
 
   public getUserDashboardsInfo(config?: RequestConfig): Observable<UserDashboardsInfo> {
     return this.http.get<UserDashboardsInfo>('/api/user/dashboards',
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/user/dashboards/${dashboardId}/${action}`. */
+  
+  /**
+   * report user dashboard action.
+   *
+   * @param dashboardId dashboard UUID
+   * @param action action (UserDashboardAction)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<UserDashboardsInfo> observable or value
+   */
+
 
   public reportUserDashboardAction(dashboardId: string, action: UserDashboardAction,
                                    config?: RequestConfig): Observable<UserDashboardsInfo> {

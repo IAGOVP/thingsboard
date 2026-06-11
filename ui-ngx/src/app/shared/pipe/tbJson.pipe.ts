@@ -17,14 +17,25 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { isNumber, isObject } from '@core/utils';
 
-@Pipe({
-    name: 'tbJson',
-    standalone: false
+
 /**
  * Angular pipe: tb json.
  */
+@Pipe({
+    name: 'tbJson',
+/**
+ * Angular pipe: tb json (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class TbJsonPipe implements PipeTransform {
+  /**
+   * transform.
+   *
+   * @param value value (any)
+   * @param maxLength max length (number)
+   * @returns string observable or value
+   */
   transform(value: any, maxLength?: number): string {
     let result: string;
     if (isObject(value)) {

@@ -42,15 +42,18 @@ import { TbTimeSeriesChart } from '@home/components/widget/lib/chart/time-series
 import { DataKey } from '@shared/models/widget.models';
 import { WidgetComponent } from '@home/components/widget/widget.component';
 
+
+/**
+ * Angular component: bar chart with labels widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-bar-chart-with-labels-widget`.
+ */
 @Component({
     selector: 'tb-bar-chart-with-labels-widget',
     templateUrl: './bar-chart-with-labels-widget.component.html',
     styleUrls: ['./bar-chart-with-labels-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: bar chart with labels widget UI.
- */
+standalone: false
 })
 export class BarChartWithLabelsWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -85,6 +88,11 @@ export class BarChartWithLabelsWidgetComponent implements OnInit, OnDestroy, Aft
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.barChartWidget = this;
     this.settings = {...barChartWithLabelsDefaultSettings, ...this.ctx.settings};
@@ -114,10 +122,20 @@ export class BarChartWithLabelsWidgetComponent implements OnInit, OnDestroy, Aft
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     const settings = barChartWithLabelsTimeSeriesSettings(this.settings);
     this.timeSeriesChart = new TbTimeSeriesChart(this.ctx, settings, this.chartShape.nativeElement, this.renderer);
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     if (this.timeSeriesChart) {
@@ -125,11 +143,21 @@ export class BarChartWithLabelsWidgetComponent implements OnInit, OnDestroy, Aft
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     if (this.timeSeriesChart) {
@@ -137,19 +165,42 @@ export class BarChartWithLabelsWidgetComponent implements OnInit, OnDestroy, Aft
     }
   }
 
+  /**
+   * Event handler for latest data updated.
+   *
+   */
+
   public onLatestDataUpdated() {
     if (this.timeSeriesChart) {
       this.timeSeriesChart.latestUpdated();
     }
   }
 
+  /**
+   * Event handler for legend key enter.
+   *
+   * @param key key (DataKey)
+   */
+
   public onLegendKeyEnter(key: DataKey) {
     this.timeSeriesChart.keyEnter(key);
   }
 
+  /**
+   * Event handler for legend key leave.
+   *
+   * @param key key (DataKey)
+   */
+
   public onLegendKeyLeave(key: DataKey) {
     this.timeSeriesChart.keyLeave(key);
   }
+
+  /**
+   * toggle legend key.
+   *
+   * @param key key (DataKey)
+   */
 
   public toggleLegendKey(key: DataKey) {
     this.timeSeriesChart.toggleKey(key);

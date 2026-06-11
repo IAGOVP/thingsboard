@@ -41,6 +41,12 @@ export interface OidMappingConfiguration {
   oid: string;
 }
 
+
+/**
+ * Angular component: snmp device profile transport configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-snmp-device-profile-transport-configuration`.
+ */
 @Component({
     selector: 'tb-snmp-device-profile-transport-configuration',
     templateUrl: './snmp-device-profile-transport-configuration.component.html',
@@ -57,10 +63,7 @@ export interface OidMappingConfiguration {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: snmp device profile transport configuration UI.
- */
+standalone: false
 })
 export class SnmpDeviceProfileTransportConfigurationComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
@@ -77,6 +80,11 @@ export class SnmpDeviceProfileTransportConfigurationComponent implements OnInit,
   constructor(private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.snmpDeviceProfileTransportConfigurationFormGroup = this.fb.group({
       timeoutMs: [500, [Validators.required, Validators.min(0), Validators.pattern('[0-9]*')]],
@@ -90,17 +98,40 @@ export class SnmpDeviceProfileTransportConfigurationComponent implements OnInit,
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -111,17 +142,34 @@ export class SnmpDeviceProfileTransportConfigurationComponent implements OnInit,
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (SnmpDeviceProfileTransportConfiguration | null)
+   */
+
   writeValue(value: SnmpDeviceProfileTransportConfiguration | null): void {
     if (isDefinedAndNotNull(value)) {
       this.snmpDeviceProfileTransportConfigurationFormGroup.patchValue(value, {emitEvent: !value.communicationConfigs});
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const configuration = this.snmpDeviceProfileTransportConfigurationFormGroup.getRawValue();
     configuration.type = DeviceTransportType.SNMP;
     this.propagateChange(configuration);
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.snmpDeviceProfileTransportConfigurationFormGroup.valid ? null : {

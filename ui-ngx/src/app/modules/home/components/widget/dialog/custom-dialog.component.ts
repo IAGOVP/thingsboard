@@ -31,8 +31,11 @@ export interface CustomDialogData {
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: custom dialog UI.
+ * Angular component: custom dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export class CustomDialogComponent extends PageComponent {
 
   [key: string]: any;

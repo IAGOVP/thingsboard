@@ -49,6 +49,12 @@ import { MatFormFieldAppearance, SubscriptSizing } from '@angular/material/form-
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { isArray } from 'lodash';
 
+
+/**
+ * Angular component: entity list (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-list`.
+ */
 @Component({
     selector: 'tb-entity-list',
     templateUrl: './entity-list.component.html',
@@ -65,10 +71,7 @@ import { isArray } from 'lodash';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity list UI.
- */
+standalone: false
 })
 export class EntityListComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -158,22 +161,50 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
     });
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     this.entityListFormGroup.get('entities').setValidators(this.required ? [Validators.required] : []);
     this.entityListFormGroup.get('entities').updateValueAndValidity();
   }
+
+  /**
+   * POST/PUT entity — create new entity.
+   *
+   * @param searchText search text (string)
+   */
 
   createNewEntity($event: Event, searchText?: string) {
     $event.stopPropagation();
     this.createNew.emit(searchText);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.filteredEntities = this.entityListFormGroup.get('entity').valueChanges
@@ -204,6 +235,12 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (isDisabled) {
@@ -212,6 +249,12 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
       this.entityListFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<string> | null)
+   */
 
   writeValue(value: Array<string> | null): void {
     this.searchText = '';
@@ -240,11 +283,22 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return (isArray(this.modelValue) && this.modelValue.length) || !this.required ? null : {
       entities: {valid: false}
     };
   }
+
+  /**
+   * reset.
+   *
+   */
 
   private reset() {
     this.entities = [];
@@ -258,6 +312,12 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
     this.dirty = true;
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   */
+
   private add(entity: BaseData<EntityId>): void {
     if (!this.modelValue || this.modelValue.indexOf(entity.id.id) === -1) {
       if (!this.modelValue) {
@@ -270,6 +330,12 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
     this.propagateChange(this.modelValue);
     this.clear();
   }
+
+  /**
+   * DELETE — remove.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   */
 
   public remove(entity: BaseData<EntityId>) {
     let index = this.entities.indexOf(entity);
@@ -286,9 +352,23 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * display entity fn.
+   *
+   * @param entity entity (BaseData<EntityId>)
+   * @returns string | undefined observable or value
+   */
+
   public displayEntityFn(entity?: BaseData<EntityId>): string | undefined {
     return entity ? (this.useEntityDisplayName ? getEntityDisplayName(entity) : entity.name) : undefined;
   }
+
+  /**
+   * fetch entities.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<BaseData<EntityId>>> observable or value
+   */
 
   private fetchEntities(searchText?: string): Observable<Array<BaseData<EntityId>>> {
     this.searchText = searchText;
@@ -298,12 +378,23 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
       map((data) => data ? data : []));
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   public onFocus() {
     if (this.dirty) {
       this.entityListFormGroup.get('entity').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   private clear(value: string = '') {
     this.entityInput.nativeElement.value = value;
@@ -313,6 +404,13 @@ export class EntityListComponent implements ControlValueAccessor, OnInit, OnChan
       this.entityInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
 
   public textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);

@@ -31,14 +31,17 @@ import { interval, Subscription } from 'rxjs';
 import { isEqual } from '@core/utils';
 import { ActionNotificationShow } from '@core/notification/notification.actions';
 
+
+/**
+ * Angular component: two factor auth login (login pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-two-factor-auth-login`.
+ */
 @Component({
     selector: 'tb-two-factor-auth-login',
     templateUrl: './two-factor-auth-login.component.html',
     styleUrls: ['./two-factor-auth-login.component.scss'],
-    standalone: false
-/**
- * Angular component: two factor auth login UI.
- */
+standalone: false
 })
 export class TwoFactorAuthLoginComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -78,6 +81,11 @@ export class TwoFactorAuthLoginComponent extends PageComponent implements OnInit
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.providersInfo = this.authService.twoFactorAuthProviders;
     Object.values(TwoFactorAuthProviderType).forEach(provider => {
@@ -100,11 +108,21 @@ export class TwoFactorAuthLoginComponent extends PageComponent implements OnInit
     this.timer = interval(1000).subscribe(() => this.updatedTime());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.timer.unsubscribe();
     clearTimeout(this.timerID);
   }
+
+  /**
+   * send verification code.
+   *
+   */
 
   sendVerificationCode() {
     if (this.verificationForm.valid && this.selectedProvider) {
@@ -135,6 +153,12 @@ export class TwoFactorAuthLoginComponent extends PageComponent implements OnInit
       );
     }
   }
+
+  /**
+   * select provider.
+   *
+   * @param type type (TwoFactorAuthProviderType)
+   */
 
   selectProvider(type: TwoFactorAuthProviderType) {
     this.prevProvider = type === null ? this.selectedProvider : null;
@@ -176,6 +200,11 @@ export class TwoFactorAuthLoginComponent extends PageComponent implements OnInit
     }
   }
 
+  /**
+   * send code.
+   *
+   */
+
   sendCode($event?: Event) {
     if ($event) {
       $event.stopPropagation();
@@ -189,6 +218,11 @@ export class TwoFactorAuthLoginComponent extends PageComponent implements OnInit
     });
   }
 
+  /**
+   * cancel login.
+   *
+   */
+
   cancelLogin() {
     if (this.prevProvider) {
       this.selectProvider(this.prevProvider);
@@ -196,6 +230,11 @@ export class TwoFactorAuthLoginComponent extends PageComponent implements OnInit
       this.authService.logout();
     }
   }
+
+  /**
+   * updated time.
+   *
+   */
 
   private updatedTime() {
     if (this.countDownTime > 0) {

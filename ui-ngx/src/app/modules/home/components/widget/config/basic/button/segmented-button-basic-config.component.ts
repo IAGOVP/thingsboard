@@ -37,14 +37,17 @@ import {
   widgetButtonToggleStatesTranslations
 } from '@home/components/widget/lib/button/segmented-button-widget.models';
 
+
+/**
+ * Angular component: segmented button basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-segmented-button-basic-config`.
+ */
 @Component({
     selector: 'tb-segmented-button-basic-config',
     templateUrl: './segmented-button-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: segmented button basic config UI.
- */
+standalone: false
 })
 export class SegmentedButtonBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -74,9 +77,21 @@ export class SegmentedButtonBasicConfigComponent extends BasicWidgetConfigCompon
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.segmentedButtonWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: SegmentedButtonWidgetSettings = {...segmentedButtonDefaultSettings, ...(configData.config.settings || {})};
@@ -134,6 +149,13 @@ export class SegmentedButtonBasicConfigComponent extends BasicWidgetConfigCompon
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.datasources = config.datasources;
     this.widgetConfig.config.settings = this.widgetConfig.config.settings || {};
@@ -147,9 +169,30 @@ export class SegmentedButtonBasicConfigComponent extends BasicWidgetConfigCompon
   }
 
 
+  /**
+
+
+   * validator triggers.
+
+
+   *
+
+
+   * @returns string[] observable or value
+
+
+   */
+
+
   protected validatorTriggers(): string[] {
     return ['appearance.leftAppearance.showLabel', 'appearance.leftAppearance.showIcon', 'appearance.rightAppearance.showLabel', 'appearance.rightAppearance.showIcon',];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showLeftLabel: boolean = this.segmentedButtonWidgetConfigForm.get('appearance.leftAppearance.showLabel').value;

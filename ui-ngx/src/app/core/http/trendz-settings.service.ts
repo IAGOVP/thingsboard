@@ -21,7 +21,9 @@ import { TrendzSettings } from '@shared/models/trendz-settings.models';
 import { defaultHttpOptionsFromConfig, RequestConfig } from '@core/http/http-utils';
 
 /**
- * Angular HTTP service: trendz settings REST wrappers (`@core/http`).
+ * Angular injectable service: trendz settings (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -32,13 +34,28 @@ export class TrendzSettingsService {
     private http: HttpClient
   ) {}
 
-  /** Calls ThingsBoard REST `/api/trendz/settings, ...`. */
+  
+  /**
+   * get trendz settings.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TrendzSettings> observable or value
+   */
+
 
   public getTrendzSettings(config?: RequestConfig): Observable<TrendzSettings> {
     return this.http.get<TrendzSettings>(`/api/trendz/settings`, defaultHttpOptionsFromConfig(config))
   }
 
-  /** Calls ThingsBoard REST `/api/trendz/settings`. */
+  
+  /**
+   * POST/PUT entity — save trendz settings.
+   *
+   * @param trendzSettings trendz settings (TrendzSettings)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<TrendzSettings> observable or value
+   */
+
 
   public saveTrendzSettings(trendzSettings: TrendzSettings, config?: RequestConfig): Observable<TrendzSettings> {
     return this.http.post<TrendzSettings>(`/api/trendz/settings`, trendzSettings, defaultHttpOptionsFromConfig(config))

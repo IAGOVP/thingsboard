@@ -23,11 +23,19 @@ import org.thingsboard.server.msa.ui.utils.DataProviderCredential;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultRuleChainPrototype;
 /**
- * Search rule chain test.
+ * Black-box test: search rule chain (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Search rule chain")
 public class SearchRuleChainTest extends AbstractRuleChainTest {
+    /**
+     * Search first word.
+     *
+     * @param namePath name path ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "ruleChainNameForSearchByFirstAndSecondWord")
     @Description("Search rule chain by first word in the name/Search rule chain by second word in the name")
@@ -38,6 +46,14 @@ public class SearchRuleChainTest extends AbstractRuleChainTest {
         ruleChainsPage.allNames().forEach(rc -> assertThat(rc.getText().contains(namePath))
                 .as("All entity contains search input").isTrue());
     }
+    /**
+     * Search number.
+     *
+     * @param name name ({@link String})
+     * @param namePath name path ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke", dataProviderClass = DataProviderCredential.class, dataProvider = "nameForSearchBySymbolAndNumber")
     @Description("Search rule chain by symbol in the name/Search rule chain by number in the name")

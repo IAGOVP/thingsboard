@@ -26,14 +26,17 @@ import { UsageInfo } from '@shared/models/usage.models';
 import { UsageInfoService } from '@core/http/usage-info.service';
 import { ShortNumberPipe } from '@shared/pipe/short-number.pipe';
 
+
+/**
+ * Angular component: usage info widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-usage-info-widget`.
+ */
 @Component({
     selector: 'tb-usage-info-widget',
     templateUrl: './usage-info-widget.component.html',
     styleUrls: ['./home-page-widget.scss', './usage-info-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: usage info widget UI.
- */
+standalone: false
 })
 export class UsageInfoWidgetComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -56,6 +59,11 @@ export class UsageInfoWidgetComponent extends PageComponent implements OnInit, O
               private usageInfoService: UsageInfoService) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.hasUsageInfoAccess = this.authUser.authority === Authority.TENANT_ADMIN;
@@ -97,9 +105,24 @@ export class UsageInfoWidgetComponent extends PageComponent implements OnInit, O
     }
   }
 
+  /**
+   * max value.
+   *
+   * @param max max (number)
+   * @returns number | string observable or value
+   */
+
   maxValue(max: number): number | string {
     return max ? this.shortNumberPipe.transform(max) : '∞';
   }
+
+  /**
+   * progress value.
+   *
+   * @param value value (number)
+   * @param max max (number)
+   * @returns number observable or value
+   */
 
   progressValue(value: number, max: number): number {
     if (max && value) {
@@ -107,6 +130,14 @@ export class UsageInfoWidgetComponent extends PageComponent implements OnInit, O
     }
     return 0;
   }
+
+  /**
+   * is item critical.
+   *
+   * @param value value (number)
+   * @param max max (number)
+   * @returns boolean observable or value
+   */
 
   private isItemCritical(value: number, max: number): boolean {
     if (max && value) {

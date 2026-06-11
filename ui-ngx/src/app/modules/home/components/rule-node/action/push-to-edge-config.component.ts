@@ -19,14 +19,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 import { AttributeScope, telemetryTypeTranslations } from '@shared/models/telemetry/telemetry.models';
 
+
+/**
+ * Angular component: push to edge config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-push-to-edge-config`.
+ */
 @Component({
     selector: 'tb-action-node-push-to-edge-config',
     templateUrl: './push-to-edge-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: push to edge config UI.
- */
+standalone: false
 })
 export class PushToEdgeConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -39,9 +42,21 @@ export class PushToEdgeConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.pushToEdgeConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.pushToEdgeConfigForm = this.fb.group({

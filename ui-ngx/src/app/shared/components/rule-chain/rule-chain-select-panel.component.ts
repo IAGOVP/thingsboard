@@ -33,14 +33,17 @@ export interface RuleChainSelectPanelData {
   ruleChainType: RuleChainType;
 }
 
+
+/**
+ * Angular component: rule chain select panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rule-chain-select-panel`.
+ */
 @Component({
     selector: 'tb-rule-chain-select-panel',
     templateUrl: './rule-chain-select-panel.component.html',
     styleUrls: ['./rule-chain-select-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: rule chain select panel UI.
- */
+standalone: false
 })
 export class RuleChainSelectPanelComponent implements AfterViewInit {
 
@@ -80,11 +83,22 @@ export class RuleChainSelectPanelComponent implements AfterViewInit {
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     setTimeout(() => {
       this.userInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * selected.
+   *
+   * @param event DOM or Angular event object
+   */
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.clear();
@@ -94,6 +108,13 @@ export class RuleChainSelectPanelComponent implements AfterViewInit {
     }
     this.overlayRef.dispose();
   }
+
+  /**
+   * fetch rule chains.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<RuleChain>> observable or value
+   */
 
   private fetchRuleChains(searchText?: string): Observable<Array<RuleChain>> {
     this.searchText = searchText;
@@ -108,12 +129,22 @@ export class RuleChainSelectPanelComponent implements AfterViewInit {
       );
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus(): void {
     if (!this.dirty) {
       this.selectRuleChainGroup.get('ruleChainInput').updateValueAndValidity({onlySelf: true});
       this.dirty = true;
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectRuleChainGroup.get('ruleChainInput').patchValue('', {emitEvent: true});
@@ -122,6 +153,13 @@ export class RuleChainSelectPanelComponent implements AfterViewInit {
       this.userInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * get rule chains.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<RuleChain>> observable or value
+   */
 
   private getRuleChains(pageLink: PageLink): Observable<PageData<RuleChain>> {
     return this.ruleChainService.getRuleChains(pageLink, this.ruleChainType, {ignoreLoading: true});

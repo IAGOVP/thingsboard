@@ -33,8 +33,9 @@ import { EntityAction } from '@home/models/entity/entity-component.models';
 import { TenantTabsComponent } from '@home/pages/tenant/tenant-tabs.component';
 import { mergeMap } from 'rxjs/operators';
 /**
- * Route resolver: loads tenants table config before activate.
+ * Route resolver: preloads data for tenants table config (home/tenant pages).
  */
+
 
 @Injectable()
 export class TenantsTableConfigResolver  {
@@ -84,11 +85,24 @@ export class TenantsTableConfigResolver  {
     this.config.onEntityAction = action => this.onTenantAction(action, this.config);
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<TenantInfo> observable or value
+   */
+
   resolve(): EntityTableConfig<TenantInfo> {
     this.config.tableTitle = this.translate.instant('tenant.tenants');
 
     return this.config;
   }
+
+  /**
+   * open tenant.
+   *
+   * @param tenant tenant (TenantInfo)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private openTenant($event: Event, tenant: TenantInfo, config: EntityTableConfig<TenantInfo>) {
     if ($event) {
@@ -98,12 +112,26 @@ export class TenantsTableConfigResolver  {
     this.router.navigateByUrl(url);
   }
 
+  /**
+   * manage tenant admins.
+   *
+   * @param tenant tenant (TenantInfo)
+   */
+
   manageTenantAdmins($event: Event, tenant: TenantInfo) {
     if ($event) {
       $event.stopPropagation();
     }
     this.router.navigateByUrl(`tenants/${tenant.id.id}/users`);
   }
+
+  /**
+   * Event handler for tenant action.
+   *
+   * @param action action (EntityAction<TenantInfo>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
 
   onTenantAction(action: EntityAction<TenantInfo>, config: EntityTableConfig<TenantInfo>): boolean {
     switch (action.action) {

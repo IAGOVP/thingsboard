@@ -31,7 +31,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Rule engine enrichment node 'originator fields': Adds message originator fields values into message or message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>originator fields</b>.
+ *
+ * <p>Adds message originator fields values into message or message metadata
+ * <br>Fetches fields values specified in the mapping. If specified field is not part of originator fields it will be ignored. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGetOriginatorFieldsConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/originator-fields/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/originator-fields/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -49,6 +55,13 @@ public class TbGetOriginatorFieldsNode extends TbAbstractGetMappedDataNode<Entit
 
     protected final static String DATA_MAPPING_PROPERTY_NAME = "dataMapping";
     protected static final String OLD_DATA_MAPPING_PROPERTY_NAME = "fieldsMapping";
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbGetOriginatorFieldsConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbGetOriginatorFieldsConfiguration loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
@@ -56,12 +69,29 @@ public class TbGetOriginatorFieldsNode extends TbAbstractGetMappedDataNode<Entit
         checkIfMappingIsNotEmptyOrElseThrow(config.getDataMapping());
         return config;
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
         var msgDataAsJsonNode = TbMsgSource.DATA.equals(fetchTo) ? getMsgDataAsObjectNode(msg) : null;
         processFieldsData(ctx, msg, msg.getOriginator(), msgDataAsJsonNode, config.isIgnoreNullStrings());
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

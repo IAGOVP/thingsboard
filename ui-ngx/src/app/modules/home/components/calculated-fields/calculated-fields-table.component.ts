@@ -38,16 +38,19 @@ import { DatePipe } from '@angular/common';
 import { UtilsService } from "@core/services/utils.service";
 import { ActivatedRoute, Router } from '@angular/router';
 
+
+/**
+ * Angular component: calculated fields table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-fields-table`.
+ */
 @Component({
     selector: 'tb-calculated-fields-table',
     templateUrl: './calculated-fields-table.component.html',
     styleUrls: ['./calculated-fields-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [EntityDebugSettingsService],
-    standalone: false
-/**
- * Angular component: calculated fields table UI.
- */
+standalone: false
 })
 export class CalculatedFieldsTableComponent {
 

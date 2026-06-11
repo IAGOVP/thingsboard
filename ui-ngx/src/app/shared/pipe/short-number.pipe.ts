@@ -21,14 +21,26 @@ export interface ShortNumberArgs {
   roundDown?: boolean;
 }
 
-@Pipe({
-  name: 'shortNumber',
-  standalone: false
+
 /**
  * Angular pipe: short number.
  */
+@Pipe({
+  name: 'shortNumber',
+/**
+ * Angular pipe: short number (ThingsBoard web UI).
+ */
+  standalone: false
 })
 export class ShortNumberPipe implements PipeTransform {
+
+  /**
+   * transform.
+   *
+   * @param number number (number)
+   * @param args args (ShortNumberArgs)
+   * @returns string observable or value
+   */
 
   transform(number: number, args?: ShortNumberArgs): string {
     if (!Number.isFinite(number) || number === 0) {

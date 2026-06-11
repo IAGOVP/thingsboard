@@ -31,6 +31,9 @@ import {
 /**
  * Angular NgModule: propagation configuration feature area.
  */
+/**
+ * Angular NgModule bundling propagation configuration (ThingsBoard web UI).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -43,5 +46,5 @@ import {
   ],
   exports: [
     PropagationConfigurationComponent,
-  ]})
+]})
 export class PropagationConfigurationModule { }

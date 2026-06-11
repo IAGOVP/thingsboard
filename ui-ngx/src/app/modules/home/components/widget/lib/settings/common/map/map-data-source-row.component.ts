@@ -38,6 +38,12 @@ import { DatasourceType, datasourceTypeTranslationMap, widgetType } from '@share
 import { EntityType } from '@shared/models/entity-type.models';
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 
+
+/**
+ * Angular component: map data source row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-data-source-row`.
+ */
 @Component({
     selector: 'tb-map-data-source-row',
     templateUrl: './map-data-source-row.component.html',
@@ -50,10 +56,7 @@ import { MapSettingsContext } from '@home/components/widget/lib/settings/common/
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map data source row UI.
- */
+standalone: false
 })
 export class MapDataSourceRowComponent implements ControlValueAccessor, OnInit {
 
@@ -86,6 +89,11 @@ export class MapDataSourceRowComponent implements ControlValueAccessor, OnInit {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.dataSourceFormGroup = this.fb.group({
       dsType: [null, [Validators.required]],
@@ -105,12 +113,30 @@ export class MapDataSourceRowComponent implements ControlValueAccessor, OnInit {
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -121,6 +147,12 @@ export class MapDataSourceRowComponent implements ControlValueAccessor, OnInit {
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (MapDataSourceSettings)
+   */
 
   writeValue(value: MapDataSourceSettings): void {
     this.modelValue = value;
@@ -137,6 +169,18 @@ export class MapDataSourceRowComponent implements ControlValueAccessor, OnInit {
   }
 
 
+  /**
+
+
+   * update validators.
+
+
+   *
+
+
+   */
+
+
   private updateValidators() {
     const dsType: DatasourceType = this.dataSourceFormGroup.get('dsType').value;
     if (dsType === DatasourceType.device) {
@@ -147,6 +191,11 @@ export class MapDataSourceRowComponent implements ControlValueAccessor, OnInit {
       this.dataSourceFormGroup.get('dsEntityAliasId').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = {...this.modelValue, ...this.dataSourceFormGroup.value};

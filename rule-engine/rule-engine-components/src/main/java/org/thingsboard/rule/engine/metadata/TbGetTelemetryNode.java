@@ -45,7 +45,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * Rule engine enrichment node 'originator telemetry': Adds message originator telemetry for selected time range into message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>originator telemetry</b>.
+ *
+ * <p>Adds message originator telemetry for selected time range into message metadata
+ * <br>Useful when you need to get telemetry data set from the message originator for a specific time range 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGetTelemetryNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/originator-telemetry/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/originator-telemetry/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -68,6 +74,13 @@ public class TbGetTelemetryNode implements TbNode {
     private FetchMode fetchMode;
     private Direction orderBy;
     private Aggregation aggregation;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -104,6 +117,13 @@ public class TbGetTelemetryNode implements TbNode {
                 break;
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -222,6 +242,9 @@ public class TbGetTelemetryNode implements TbNode {
     long getCurrentTimeMillis() {
         return System.currentTimeMillis();
     }
+    /**
+     * Interval (entity metadata and related-data fetch nodes).
+     */
 
     @Data
     @NoArgsConstructor
@@ -229,6 +252,14 @@ public class TbGetTelemetryNode implements TbNode {
         private Long startTs;
         private Long endTs;
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

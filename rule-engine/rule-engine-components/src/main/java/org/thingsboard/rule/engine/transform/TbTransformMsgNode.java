@@ -29,7 +29,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.List;
 
 /**
- * Rule engine transformation node 'script': Change Message payload, Metadata or Message type using JavaScript Implements org.thingsboard.rule.engine.api.TbNode.
+ * Transformation rule node — <b>script</b>.
+ *
+ * <p>Change Message payload, Metadata or Message type using JavaScript
+ * <br>JavaScript function receive 3 input parameters <br/> 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbTransformMsgNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/script/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/script/</a>
  */
 @RuleNode(
         type = ComponentType.TRANSFORMATION,
@@ -50,6 +56,14 @@ import java.util.List;
 public class TbTransformMsgNode extends TbAbstractTransformNode<TbTransformMsgNodeConfiguration> {
 
     private ScriptEngine scriptEngine;
+    /**
+     * Loads node configuration.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbTransformMsgNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbTransformMsgNodeConfiguration loadNodeConfiguration(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -58,16 +72,36 @@ public class TbTransformMsgNode extends TbAbstractTransformNode<TbTransformMsgNo
                 ScriptLanguage.TBEL.equals(config.getScriptLang()) ? config.getTbelScript() : config.getJsScript());
         return config;
     }
+    /**
+     * Transform.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<List<TbMsg>> transform(TbContext ctx, TbMsg msg) {
         return scriptEngine.executeUpdateAsync(msg);
     }
+    /**
+     * Transform failure.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param t t ({@link Throwable})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void transformFailure(TbContext ctx, TbMsg msg, Throwable t) {
         super.transformFailure(ctx, msg, t);
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {

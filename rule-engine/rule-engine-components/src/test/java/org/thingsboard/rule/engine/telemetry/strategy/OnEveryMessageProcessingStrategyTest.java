@@ -24,11 +24,13 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 /**
 
- * Unit test for on every message processing strategy rule node.
+ * Unit test for on every message processing strategy (telemetry and attribute persistence nodes).
 
  */
+
 
 class OnEveryMessageProcessingStrategyTest {
 

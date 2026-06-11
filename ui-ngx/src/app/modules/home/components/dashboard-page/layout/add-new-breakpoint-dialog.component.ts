@@ -34,13 +34,16 @@ export interface AddNewBreakpointDialogResult {
   copyFrom: BreakpointId;
 }
 
+
+/**
+ * Angular component: add new breakpoint dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `add-new-breakpoint-dialog`.
+ */
 @Component({
     selector: 'add-new-breakpoint-dialog',
     templateUrl: './add-new-breakpoint-dialog.component.html',
-    standalone: false
-/**
- * Angular component: add new breakpoint dialog UI.
- */
+standalone: false
 })
 export class AddNewBreakpointDialogComponent extends DialogComponent<AddNewBreakpointDialogComponent, AddNewBreakpointDialogResult> {
 
@@ -67,21 +70,52 @@ export class AddNewBreakpointDialogComponent extends DialogComponent<AddNewBreak
     });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.dialogRef.close(this.addBreakpointFormGroup.getRawValue());
   }
 
+  /**
+   * get name.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
+
   getName(breakpointId: BreakpointId): string {
     return this.dashboardUtils.getBreakpointName(breakpointId);
   }
 
+  /**
+   * get icon.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
+
   getIcon(breakpointId: BreakpointId): string {
     return this.dashboardUtils.getBreakpointIcon(breakpointId);
   }
+
+  /**
+   * get size description.
+   *
+   * @param breakpointId breakpoint id (BreakpointId)
+   * @returns string observable or value
+   */
 
   getSizeDescription(breakpointId: BreakpointId): string {
     return this.dashboardUtils.getBreakpointSizeDescription(breakpointId);

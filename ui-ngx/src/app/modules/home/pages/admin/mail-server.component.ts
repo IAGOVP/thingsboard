@@ -37,14 +37,17 @@ import { takeUntil } from 'rxjs/operators';
 import { DomainSchema, domainSchemaTranslations, } from '@shared/models/oauth2.models';
 import { WINDOW } from '@core/services/window.service';
 
+
+/**
+ * Angular component: mail server (home/admin pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mail-server`.
+ */
 @Component({
     selector: 'tb-mail-server',
     templateUrl: './mail-server.component.html',
     styleUrls: ['./mail-server.component.scss', './settings-card.scss'],
-    standalone: false
-/**
- * Angular component: mail server UI.
- */
+standalone: false
 })
 export class MailServerComponent extends PageComponent implements OnInit, OnDestroy, HasConfirmForm {
   adminSettings: AdminSettings<MailServerSettings>;
@@ -139,6 +142,11 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.mailServerSettingsForm();
     this.domainFormConfiguration();
@@ -176,11 +184,22 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
     super.ngOnDestroy();
   }
+
+  /**
+   * init templates.
+   *
+   * @param templates templates (Array<MailConfigTemplate>)
+   */
 
   private initTemplates(templates: Array<MailConfigTemplate>): void {
     templates.map(provider => {
@@ -190,6 +209,11 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     this.templateProvider.push(...Array.from(this.templates.keys()));
     this.templateProvider.sort();
   }
+
+  /**
+   * mail server settings form.
+   *
+   */
 
   private mailServerSettingsForm(): void {
     this.registerDisableOnLoadFormControl(this.mailSettings.get('smtpProtocol'));
@@ -268,6 +292,11 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     });
   }
 
+  /**
+   * domain form configuration.
+   *
+   */
+
   private domainFormConfiguration(): void {
     this.domainForm.get('name').valueChanges.pipe(
       takeUntil(this.destroy$)
@@ -283,6 +312,12 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
       (value) => this.mailSettings.get('redirectUri').patchValue(this.redirectURI(value), {emitEvent: false})
     );
   }
+
+  /**
+   * enable oauth2.
+   *
+   * @param value value (boolean)
+   */
 
   private enableOauth2(value: boolean): void {
     if (value) {
@@ -307,6 +342,12 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     }
   }
 
+  /**
+   * enable provider tenant id changed.
+   *
+   * @param value value (string)
+   */
+
   private enableProviderTenantIdChanged(value: string): void {
     if (value === this.mailServerOauth2Provider.OFFICE_365 && this.mailSettings.get('enableOauth2').value) {
       this.mailSettings.get('providerTenantId').enable({emitEvent: false});
@@ -314,6 +355,11 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
       this.mailSettings.get('providerTenantId').disable({emitEvent: false});
     }
   }
+
+  /**
+   * enable proxy changed.
+   *
+   */
 
   private enableProxyChanged(): void {
     const enableProxy: boolean = this.mailSettings.get('enableProxy').value;
@@ -330,6 +376,12 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     }
   }
 
+  /**
+   * enable mail password.
+   *
+   * @param enable enable (boolean)
+   */
+
   private enableMailPassword(enable: boolean) {
     if (enable) {
       this.mailSettings.get('password').enable({emitEvent: false});
@@ -337,6 +389,12 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
       this.mailSettings.get('password').disable({emitEvent: false});
     }
   }
+
+  /**
+   * enable tls.
+   *
+   * @param enable enable (boolean)
+   */
 
   private enableTls(enable: boolean): void {
     if (enable) {
@@ -346,6 +404,11 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     }
   }
 
+  /**
+   * send test mail.
+   *
+   */
+
   sendTestMail(): void {
     this.adminSettings.jsonValue = {...this.adminSettings.jsonValue, ...this.mailSettingsFormValue};
     this.adminService.sendTestMail(this.adminSettings).subscribe({
@@ -354,6 +417,11 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
       error: error => this.store.dispatch(new ActionNotificationShow({message: error.error.message, type: 'error'}))
     });
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.adminSettings.jsonValue = {...this.adminSettings.jsonValue, ...this.mailSettingsFormValue};
@@ -368,11 +436,24 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     );
   }
 
+  /**
+   * generate access token.
+   *
+   */
+
   generateAccessToken(): void {
     this.adminService.generateAccessToken().subscribe(
       uri => this.window.location.href = uri
     );
   }
+
+  /**
+   * redirect uri.
+   *
+   * @param schema schema (DomainSchema)
+   * @param name name (string)
+   * @returns string observable or value
+   */
 
   redirectURI(schema?: DomainSchema, name?: string): string {
     const domainInfo = this.domainForm.value;
@@ -383,6 +464,12 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     }
     return '';
   }
+
+  /**
+   * parse url.
+   *
+   * @param value value (string)
+   */
 
   private parseUrl(value: string): void {
     if (value) {
@@ -406,6 +493,12 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     );
   }
 
+  /**
+   * confirm form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   confirmForm(): FormGroup {
     return this.mailSettings;
   }
@@ -418,6 +511,12 @@ export class MailServerComponent extends PageComponent implements OnInit, OnDest
     }
     return formValue;
   }
+
+  /**
+   * toggle edit mode.
+   *
+   * @param path path (string)
+   */
 
   toggleEditMode(path: string): void {
     this.mailSettings.get(path).disabled ? this.mailSettings.get(path).enable() : this.mailSettings.get(path).disable();

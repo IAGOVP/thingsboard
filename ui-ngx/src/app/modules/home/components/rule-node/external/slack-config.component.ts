@@ -19,14 +19,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, SlackChanelType, SlackChanelTypesTranslateMap } from '@app/shared/public-api';
 import { RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: slack config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-slack-config`.
+ */
 @Component({
     selector: 'tb-external-node-slack-config',
     templateUrl: './slack-config.component.html',
     styleUrls: ['./slack-config.component.scss'],
-    standalone: false
-/**
- * Angular component: slack config UI.
- */
+standalone: false
 })
 export class SlackConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -38,9 +41,21 @@ export class SlackConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.slackConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.slackConfigForm = this.fb.group({
@@ -52,9 +67,21 @@ export class SlackConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useSystemSettings'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const useSystemSettings: boolean = this.slackConfigForm.get('useSystemSettings').value;

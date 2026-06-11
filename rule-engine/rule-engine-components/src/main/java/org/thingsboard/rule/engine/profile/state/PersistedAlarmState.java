@@ -20,8 +20,9 @@ import org.thingsboard.server.common.data.alarm.AlarmSeverity;
 
 import java.util.Map;
 /**
- * Rule engine component: persisted alarm state.
+ * Persisted alarm state (device profile state nodes).
  */
+
 
 @Data
 @Deprecated

@@ -21,25 +21,49 @@ import org.thingsboard.common.util.JacksonUtil;
 
 import java.io.InputStream;
 
+
 /**
 
- * Loads classpath resources (LwM2M models, rule chain JSON) for setup.
+ * Loads classpath resources (LwM2M models, rule chain JSON) for monitoring entity setup.
 
  */
 
+
 public class ResourceUtils {
+    /**
+     * Returns resource.
+     *
+     * @param path path ({@link String})
+     * @param type type ({@link Class})
+     * @return {@link T}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public static <T> T getResource(String path, Class<T> type) {
         InputStream resource = getResourceStream(path);
         return JacksonUtil.OBJECT_MAPPER.readValue(resource, type);
     }
+    /**
+     * Returns resource.
+     *
+     * @param path path ({@link String})
+     * @return {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     public static JsonNode getResource(String path) {
         InputStream resource = getResourceStream(path);
         return JacksonUtil.OBJECT_MAPPER.readTree(resource);
     }
+    /**
+     * Returns resource as stream.
+     *
+     * @param path path ({@link String})
+     * @return {@link InputStream}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static InputStream getResourceAsStream(String path) {
         return getResourceStream(path);

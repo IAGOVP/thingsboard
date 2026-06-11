@@ -17,6 +17,12 @@
 import { Component, ElementRef, forwardRef, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+
+/**
+ * Angular component: widgets bundle search (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widgets-bundle-search`.
+ */
 @Component({
     selector: 'tb-widgets-bundle-search',
     templateUrl: './widgets-bundle-search.component.html',
@@ -27,10 +33,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
             multi: true
         }],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widgets bundle search UI.
- */
+standalone: false
 })
 export class WidgetsBundleSearchComponent implements ControlValueAccessor {
 
@@ -46,24 +49,57 @@ export class WidgetsBundleSearchComponent implements ControlValueAccessor {
   constructor() {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.searchText = value;
   }
 
+  /**
+   * update search text.
+   *
+   */
+
   updateSearchText(): void {
     this.updateView();
   }
 
+  /**
+   * update view.
+   *
+   */
+
   private updateView() {
     this.propagateChange(this.searchText);
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear($event: Event): void {
     $event.preventDefault();
@@ -71,6 +107,11 @@ export class WidgetsBundleSearchComponent implements ControlValueAccessor {
     this.searchText = '';
     this.updateView();
   }
+
+  /**
+   * toggle focus.
+   *
+   */
 
   toggleFocus() {
     this.focus = !this.focus;

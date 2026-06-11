@@ -60,6 +60,12 @@ import {
   CalculatedFieldGeofencingZoneGroupsPanelComponent
 } from '@home/components/calculated-fields/components/geofencing-configuration/calculated-field-geofencing-zone-groups-panel.component';
 
+
+/**
+ * Angular component: calculated field geofencing zone groups table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-geofencing-zone-groups-table`.
+ */
 @Component({
     selector: 'tb-calculated-field-geofencing-zone-groups-table',
     templateUrl: './calculated-field-geofencing-zone-groups-table.component.html',
@@ -76,10 +82,7 @@ import {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: calculated field geofencing zone groups table UI.
- */
+standalone: false
 })
 export class CalculatedFieldGeofencingZoneGroupsTableComponent implements ControlValueAccessor, Validator, AfterViewInit {
 
@@ -123,6 +126,11 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
     });
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     this.sort.sortChange.asObservable().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.sortOrder.property = this.sort.active;
@@ -135,16 +143,39 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   */
+
   registerOnTouched(_): void {}
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     this.updateErrorText();
     return this.errorText ? { zonesFormArray: false } : null;
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disable = isDisabled;
   }
+
+  /**
+   * Event handler for delete.
+   *
+   * @param zone zone (CalculatedFieldGeofencingValue)
+   */
 
   onDelete($event: Event, zone: CalculatedFieldGeofencingValue): void {
     $event.stopPropagation();
@@ -152,6 +183,13 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
     this.zoneGroupsFormArray.removeAt(index);
     this.zoneGroupsFormArray.markAsDirty();
   }
+
+  /**
+   * manage zone.
+   *
+   * @param matButton mat button (MatIconButton)
+   * @param readonly readonly (boolean)
+   */
 
   manageZone($event: Event, matButton: MatIconButton, zone = {} as CalculatedFieldGeofencingValue, readonly: boolean = false): void {
     $event?.stopPropagation();
@@ -199,10 +237,21 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
     }
   }
 
+  /**
+   * update data source.
+   *
+   * @param value value (CalculatedFieldGeofencingValue[])
+   */
+
   private updateDataSource(value: CalculatedFieldGeofencingValue[]): void {
     const sortedValue = this.sortData(value);
     this.dataSource.loadData(sortedValue);
   }
+
+  /**
+   * update error text.
+   *
+   */
 
   private updateErrorText(): void {
     if (this.zoneGroupsFormArray.controls.some(control => control.value.refEntityId?.id === NULL_UUID)) {
@@ -212,6 +261,13 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
     }
   }
 
+  /**
+   * get zones object.
+   *
+   * @param value value (CalculatedFieldGeofencingValue[])
+   * @returns Record<string, CalculatedFieldGeofencing> observable or value
+   */
+
   private getZonesObject(value: CalculatedFieldGeofencingValue[]): Record<string, CalculatedFieldGeofencing> {
     return value.reduce((acc, zoneValue) => {
       const { name, ...zone } = zoneValue as CalculatedFieldGeofencingValue;
@@ -220,15 +276,35 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
     }, {} as Record<string, CalculatedFieldGeofencing>);
   }
 
+  /**
+   * write value.
+   *
+   * @param zonesObj zones obj (Record<string, CalculatedFieldGeofencing>)
+   */
+
   writeValue(zonesObj: Record<string, CalculatedFieldGeofencing>): void {
     this.zoneGroupsFormArray.clear({emitEvent: false});
     this.populateZonesFormArray(zonesObj);
     this.updateEntityNameMap(this.zoneGroupsFormArray.value);
   }
 
+  /**
+   * get entity details page url.
+   *
+   * @param id id (string)
+   * @param type type (EntityType)
+   * @returns string observable or value
+   */
+
   getEntityDetailsPageURL(id: string, type: EntityType): string {
     return getEntityDetailsPageURL(id, type);
   }
+
+  /**
+   * populate zones form array.
+   *
+   * @param zonesObj zones obj (Record<string, CalculatedFieldGeofencing>)
+   */
 
   private populateZonesFormArray(zonesObj: Record<string, CalculatedFieldGeofencing>): void {
     Object.keys(zonesObj).forEach(key => {
@@ -240,6 +316,12 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
     });
     this.updateDataSource(this.zoneGroupsFormArray.value);
   }
+
+  /**
+   * update entity name map.
+   *
+   * @param values values (CalculatedFieldGeofencingValue[])
+   */
 
   private updateEntityNameMap(values: CalculatedFieldGeofencingValue[]): void {
     const entitiesByType = values.reduce((acc, { refEntityId = {}}) => {
@@ -258,6 +340,13 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
     }
     this.fetchEntityNames(tasks, values);
   }
+
+  /**
+   * fetch entity names.
+   *
+   * @param tasks tasks (Observable<BaseData<EntityId>[]>[])
+   * @param values values (CalculatedFieldGeofencingValue[])
+   */
 
   private fetchEntityNames(tasks: Observable<BaseData<EntityId>[]>[], values: CalculatedFieldGeofencingValue[]): void {
     forkJoin(tasks as Observable<BaseData<EntityId>[]>[])
@@ -280,6 +369,14 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
       });
   }
 
+  /**
+   * get sort value.
+   *
+   * @param zone zone (CalculatedFieldGeofencingValue)
+   * @param column column (string)
+   * @returns string observable or value
+   */
+
   private getSortValue(zone: CalculatedFieldGeofencingValue, column: string): string {
     switch (column) {
       case 'entityType':
@@ -300,6 +397,13 @@ export class CalculatedFieldGeofencingZoneGroupsTableComponent implements Contro
         return zone.name;
     }
   }
+
+  /**
+   * sort data.
+   *
+   * @param data dialog or route input data
+   * @returns CalculatedFieldGeofencingValue[] observable or value
+   */
 
   private sortData(data: CalculatedFieldGeofencingValue[]): CalculatedFieldGeofencingValue[] {
     return data.sort((a, b) => {

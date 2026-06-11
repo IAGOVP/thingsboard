@@ -38,8 +38,9 @@ import static java.util.Objects.requireNonNullElse;
  * Request DTO for rule engine timeseries save.
  */
 /**
- * Request DTO for rule engine timeseries save.
+ * Async request DTO for rule engine timeseries save (rule engine public API contracts and services).
  */
+
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -56,6 +57,19 @@ public class TimeseriesSaveRequest implements CalculatedFieldSystemAwareRequest 
     private final TbMsgType tbMsgType;
     private final FutureCallback<Void> callback;
 
+    
+    /**
+     * Strategy.
+     *
+     * @param saveTimeseries save timeseries
+     * @param saveLatest save latest
+     * @param sendWsUpdate send ws update
+     * @param processCalculatedFields process calculated fields
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
+
     public record Strategy(boolean saveTimeseries, boolean saveLatest, boolean sendWsUpdate, boolean processCalculatedFields) {
 
         public static final Strategy PROCESS_ALL = new Strategy(true, true, true, true);
@@ -65,10 +79,22 @@ public class TimeseriesSaveRequest implements CalculatedFieldSystemAwareRequest 
         public static final Strategy CF_ONLY = new Strategy(false, false, false, true);
 
     }
+    /**
+     * Builder.
+     *
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Builder builder() {
         return new Builder();
     }
+
+    /**
+
+     * Builder (rule engine public API contracts and services).
+
+     */
 
     public static class Builder {
 

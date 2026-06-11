@@ -22,14 +22,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { WidgetsBundle } from '@shared/models/widgets-bundle.model';
 import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
 
+
+/**
+ * Angular component: widgets bundle (home/widget pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widgets-bundle`.
+ */
 @Component({
     selector: 'tb-widgets-bundle',
     templateUrl: './widgets-bundle.component.html',
     styleUrls: ['./widgets-bundle.component.scss'],
-    standalone: false
-/**
- * Angular component: widgets bundle UI.
- */
+standalone: false
 })
 export class WidgetsBundleComponent extends EntityComponent<WidgetsBundle> {
 
@@ -44,6 +47,11 @@ export class WidgetsBundleComponent extends EntityComponent<WidgetsBundle> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -51,6 +59,13 @@ export class WidgetsBundleComponent extends EntityComponent<WidgetsBundle> {
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (WidgetsBundle)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: WidgetsBundle): UntypedFormGroup {
     return this.fb.group(
@@ -63,6 +78,12 @@ export class WidgetsBundleComponent extends EntityComponent<WidgetsBundle> {
       }
     );
   }
+
+  /**
+   * update form.
+   *
+   * @param entity entity (WidgetsBundle)
+   */
 
   updateForm(entity: WidgetsBundle) {
     this.entityForm.patchValue({

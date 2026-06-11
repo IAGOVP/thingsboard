@@ -84,11 +84,11 @@ export const formPropertyFieldClasses =
 
 export type PropertyConditionFunction = (property: FormProperty, model: any) => boolean;
 
+
 /**
-
- * TypeScript models and enums for form property base.
-
+ * TypeScript interfaces, types, and enums for form property base (shared TypeScript models).
  */
+
 
 export interface FormPropertyBase {
   id: string;

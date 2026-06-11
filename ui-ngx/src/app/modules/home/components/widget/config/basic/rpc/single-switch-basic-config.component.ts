@@ -32,14 +32,17 @@ import {
 } from '@home/components/widget/lib/rpc/single-switch-widget.models';
 import { ValueType } from '@shared/models/constants';
 
+
+/**
+ * Angular component: single switch basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-single-switch-basic-config`.
+ */
 @Component({
     selector: 'tb-single-switch-basic-config',
     templateUrl: './single-switch-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: single switch basic config UI.
- */
+standalone: false
 })
 export class SingleSwitchBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -62,9 +65,21 @@ export class SingleSwitchBasicConfigComponent extends BasicWidgetConfigComponent
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.singleSwitchWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: SingleSwitchWidgetSettings = {...singleSwitchDefaultSettings, ...(configData.config.settings || {})};
@@ -118,6 +133,13 @@ export class SingleSwitchBasicConfigComponent extends BasicWidgetConfigComponent
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.targetDevice = config.targetDevice;
 
@@ -170,9 +192,22 @@ export class SingleSwitchBasicConfigComponent extends BasicWidgetConfigComponent
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showLabel', 'showIcon', 'showOnLabel', 'showOffLabel'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showLabel: boolean = this.singleSwitchWidgetConfigForm.get('showLabel').value;
@@ -224,6 +259,13 @@ export class SingleSwitchBasicConfigComponent extends BasicWidgetConfigComponent
 
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -231,6 +273,13 @@ export class SingleSwitchBasicConfigComponent extends BasicWidgetConfigComponent
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

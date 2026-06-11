@@ -23,6 +23,12 @@ import { FontSettingsPanelComponent } from '@home/components/widget/lib/settings
 import { isDefinedAndNotNull } from '@core/utils';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: font settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-font-settings`.
+ */
 @Component({
     selector: 'tb-font-settings',
     templateUrl: './font-settings.component.html',
@@ -34,10 +40,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: font settings UI.
- */
+standalone: false
 })
 export class FontSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -73,23 +76,58 @@ export class FontSettingsComponent implements OnInit, ControlValueAccessor {
               private renderer: Renderer2,
               private viewContainerRef: ViewContainerRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (Font)
+   */
+
   writeValue(value: Font): void {
     this.modelValue = value;
   }
+
+  /**
+   * open font settings popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openFontSettingsPopup($event: Event, matButton: MatButton) {
     if ($event) {

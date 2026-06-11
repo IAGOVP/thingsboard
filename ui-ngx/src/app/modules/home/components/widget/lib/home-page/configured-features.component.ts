@@ -27,14 +27,17 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { TranslateService } from '@ngx-translate/core';
 import { MediaBreakpoints } from '@shared/models/constants';
 
+
+/**
+ * Angular component: configured features (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-configured-features`.
+ */
 @Component({
     selector: 'tb-configured-features',
     templateUrl: './configured-features.component.html',
     styleUrls: ['./home-page-widget.scss', './configured-features.component.scss'],
-    standalone: false
-/**
- * Angular component: configured features UI.
- */
+standalone: false
 })
 export class ConfiguredFeaturesComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -54,6 +57,11 @@ export class ConfiguredFeaturesComponent extends PageComponent implements OnInit
               private breakpointObserver: BreakpointObserver) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     const isMdLg = this.breakpointObserver.isMatched(MediaBreakpoints['md-lg']);
@@ -91,12 +99,24 @@ export class ConfiguredFeaturesComponent extends PageComponent implements OnInit
     );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.observeBreakpointSubscription) {
       this.observeBreakpointSubscription.unsubscribe();
     }
     super.ngOnDestroy();
   }
+
+  /**
+   * feature tooltip.
+   *
+   * @param configured configured (boolean)
+   * @returns string observable or value
+   */
 
   featureTooltip(configured: boolean): string {
     if (configured) {

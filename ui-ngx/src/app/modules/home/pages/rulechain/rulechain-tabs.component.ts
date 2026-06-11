@@ -20,20 +20,28 @@ import { AppState } from '@core/core.state';
 import { EntityTabsComponent } from '../../components/entity/entity-tabs.component';
 import { RuleChain } from '@shared/models/rule-chain.models';
 
+
+/**
+ * Angular component: rule chain tabs (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rulechain-tabs`.
+ */
 @Component({
     selector: 'tb-rulechain-tabs',
     templateUrl: './rulechain-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: rule chain tabs UI.
- */
+standalone: false
 })
 export class RuleChainTabsComponent extends EntityTabsComponent<RuleChain> {
 
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     super.ngOnInit();

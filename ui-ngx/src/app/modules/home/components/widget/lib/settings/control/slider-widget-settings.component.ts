@@ -30,14 +30,17 @@ import {
 import { formatValue } from '@core/utils';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: slider widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-slider-widget-settings`.
+ */
 @Component({
     selector: 'tb-slider-widget-settings',
     templateUrl: './slider-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: slider widget settings UI.
- */
+standalone: false
 })
 export class SliderWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -67,13 +70,31 @@ export class SliderWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.sliderWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return sliderWidgetDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.sliderWidgetSettingsForm = this.fb.group({
@@ -122,9 +143,21 @@ export class SliderWidgetSettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showValue', 'showTicks', 'showTickMarks', 'layout'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param _emitEvent  emit event (boolean)
+   */
 
   protected updateValidators(_emitEvent: boolean): void {
     const showValue: boolean = this.sliderWidgetSettingsForm.get('showValue').value;

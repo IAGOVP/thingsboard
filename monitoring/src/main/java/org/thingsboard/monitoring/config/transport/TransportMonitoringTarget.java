@@ -25,6 +25,7 @@ import java.util.UUID;
  * Transport monitoring target with queue name and device naming prefix.
  */
 
+
 @Data
 public class TransportMonitoringTarget implements MonitoringTarget {
 
@@ -33,15 +34,33 @@ public class TransportMonitoringTarget implements MonitoringTarget {
     private String queue;
     private boolean checkDomainIps;
     private String namePrefix;
+    /**
+     * Returns device id.
+     *
+     * @return {@link UUID}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public UUID getDeviceId() {
         return device.getId();
     }
+    /**
+     * Returns queue.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getQueue() {
         return StringUtils.defaultIfEmpty(queue, "Main");
     }
+    /**
+     * Returns name prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public String getNamePrefix() {
         return Strings.nullToEmpty(namePrefix);

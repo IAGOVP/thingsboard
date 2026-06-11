@@ -45,8 +45,12 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 /**
- * Inbound Netty handler: decodes MQTT frames (CONNACK, SUBACK, PUBLISH, PUBACK, …) and drives client state.
+ * Inbound Netty channel handler for MQTT wire protocol.
+ *
+ * <p>Decodes CONNACK, SUBACK, UNSUBACK, PUBLISH, PUBACK, PUBREC, PUBREL, PUBCOMP and updates {@link MqttClientImpl} pending-operation state.
  */
+
+
 
 @Slf4j
 final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> {
@@ -59,7 +63,16 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
         this.connectFuture = connectFuture;
     }
 
-    /** Dispatches decoded MQTT messages to type-specific handlers. */
+    
+    /**
+     * Dispatches decoded MQTT frames to type-specific handler methods.
+     *
+     * @param ctx Netty channel handler context
+     * @param msg decoded MQTT wire message
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) {
         if (msg.decoderResult().isSuccess()) {
@@ -98,7 +111,15 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
         }
     }
 
-    /** Sends MQTT CONNECT when the TCP channel becomes active. */
+    
+    /**
+     * Netty hook: initiates MQTT CONNECT when the TCP channel becomes active.
+     *
+     * @param ctx Netty channel handler context
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
@@ -128,6 +149,13 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
         log.debug("{} Sending CONNECT", client.getClientConfig().getOwnerId());
         ctx.channel().writeAndFlush(new MqttConnectMessage(fixedHeader, variableHeader, payload));
     }
+    /**
+     * Netty hook: notifies callbacks and triggers reconnect when the channel closes.
+     *
+     * @param ctx Netty channel handler context
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
@@ -347,6 +375,14 @@ final class MqttChannelHandler extends SimpleChannelInboundHandler<MqttMessage> 
             this.client.getCallback().onDisconnect(message);
         }
     }
+    /**
+     * Netty hook: logs protocol errors and closes the channel on failure.
+     *
+     * @param ctx Netty channel handler context
+     * @param cause failure that closed the connection or caused the error
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {

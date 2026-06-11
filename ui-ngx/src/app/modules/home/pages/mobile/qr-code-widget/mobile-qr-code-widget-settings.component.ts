@@ -26,14 +26,17 @@ import { ActionUpdateMobileQrCodeEnabled } from '@core/auth/auth.actions';
 import { EntityType } from '@shared/models/entity-type.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: mobile qr code widget settings (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-qr-code-widget`.
+ */
 @Component({
     selector: 'tb-mobile-qr-code-widget',
     templateUrl: './mobile-qr-code-widget-settings.component.html',
     styleUrls: ['mobile-qr-code-widget-settings.component.scss', '../../admin/settings-card.scss'],
-    standalone: false
-/**
- * Angular component: mobile qr code widget settings UI.
- */
+standalone: false
 })
 export class MobileQrCodeWidgetSettingsComponent extends PageComponent implements HasConfirmForm {
 
@@ -120,10 +123,21 @@ export class MobileQrCodeWidgetSettingsComponent extends PageComponent implement
     });
   }
 
+  /**
+   * process mobile app settings.
+   *
+   * @param mobileAppSettings mobile app settings (QrCodeSettings)
+   */
+
   private processMobileAppSettings(mobileAppSettings: QrCodeSettings): void {
     this.mobileAppSettings = {...mobileAppSettings};
     this.mobileAppSettingsForm.reset(this.mobileAppSettings);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     const showOnHomePagePreviousValue = this.mobileAppSettings.qrCodeConfig.showOnHomePage;
@@ -137,6 +151,12 @@ export class MobileQrCodeWidgetSettingsComponent extends PageComponent implement
         this.processMobileAppSettings(settings);
       });
   }
+
+  /**
+   * confirm form.
+   *
+   * @returns FormGroup observable or value
+   */
 
   confirmForm(): FormGroup {
     return this.mobileAppSettingsForm;

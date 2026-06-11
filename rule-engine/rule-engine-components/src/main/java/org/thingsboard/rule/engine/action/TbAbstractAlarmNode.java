@@ -34,8 +34,9 @@ import org.thingsboard.server.common.msg.TbMsgMetaData;
 
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 /**
- * Base implementation for alarm node rule nodes.
+ * Abstract base class for alarm node rule nodes (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 
 @Slf4j
@@ -45,6 +46,13 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
 
     protected C config;
     private ScriptEngine scriptEngine;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -52,8 +60,22 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
         scriptEngine = ctx.createScriptEngine(config.getScriptLang(),
                 ScriptLanguage.TBEL.equals(config.getScriptLang()) ? config.getAlarmDetailsBuildTbel() : config.getAlarmDetailsBuildJs());
     }
+    /**
+     * Loads alarm node config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link C}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract C loadAlarmNodeConfig(TbNodeConfiguration configuration) throws TbNodeException;
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -73,8 +95,24 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
                 },
                 t -> ctx.tellFailure(msg, t), ctx.getDbCallbackExecutor());
     }
+    /**
+     * Processes alarm.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link TbAlarmResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract ListenableFuture<TbAlarmResult> processAlarm(TbContext ctx, TbMsg msg);
+    /**
+     * Build alarm details.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @param previousDetails previous details ({@link JsonNode})
+     * @return future completing with {@link JsonNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<JsonNode> buildAlarmDetails(TbMsg msg, JsonNode previousDetails) {
         try {
@@ -91,6 +129,15 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
             return Futures.immediateFailedFuture(e);
         }
     }
+    /**
+     * To alarm msg.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param alarmResult alarm result ({@link TbAlarmResult})
+     * @param originalMsg original msg ({@link TbMsg})
+     * @return {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static TbMsg toAlarmMsg(TbContext ctx, TbAlarmResult alarmResult, TbMsg originalMsg) {
         JsonNode jsonNodes = JacksonUtil.valueToTree(alarmResult.alarm);
@@ -105,6 +152,10 @@ public abstract class TbAbstractAlarmNode<C extends TbAbstractAlarmNodeConfigura
         }
         return ctx.transformMsg(originalMsg, TbMsgType.ALARM, originalMsg.getOriginator(), metaData, data);
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {

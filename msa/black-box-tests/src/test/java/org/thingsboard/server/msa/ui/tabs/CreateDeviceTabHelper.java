@@ -17,20 +17,36 @@ package org.thingsboard.server.msa.ui.tabs;
 
 import org.openqa.selenium.WebDriver;
 
+
 /**
 
- * Create device tab helper.
+ * Page object helper for create device tab UI actions (modal/tab page fragments for UI tests).
 
  */
+
 
 public class CreateDeviceTabHelper extends CreateDeviceTabElements {
     public CreateDeviceTabHelper(WebDriver driver) {
         super(driver);
     }
+    /**
+     * Enter name.
+     *
+     * @param deviceName device name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void enterName(String deviceName) {
         enterText(nameField(), deviceName);
     }
+    /**
+     * Creates new device profile.
+     *
+     * @param deviceProfileTitle device profile title ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void createNewDeviceProfile(String deviceProfileTitle) {
         if (!createNewDeviceProfileRadioBtn().getAttribute("class").contains("checked")) {
@@ -38,6 +54,13 @@ public class CreateDeviceTabHelper extends CreateDeviceTabElements {
         }
         deviceProfileTitleField().sendKeys(deviceProfileTitle);
     }
+    /**
+     * Change device profile.
+     *
+     * @param deviceProfileName device profile name ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void changeDeviceProfile(String deviceProfileName) {
         if (!selectExistingDeviceProfileRadioBtn().getAttribute("class").contains("checked")) {
@@ -46,6 +69,13 @@ public class CreateDeviceTabHelper extends CreateDeviceTabElements {
         clearProfileFieldBtn().click();
         entityFromDropdown(deviceProfileName).click();
     }
+    /**
+     * Assigns on customer.
+     *
+     * @param customerTitle customer title ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void assignOnCustomer(String customerTitle) {
         customerOptionBtn().click();
@@ -53,10 +83,24 @@ public class CreateDeviceTabHelper extends CreateDeviceTabElements {
         customerFromDropDown(customerTitle).click();
         sleep(2); //waiting for the action to count
     }
+    /**
+     * Enter label.
+     *
+     * @param label label ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void enterLabel(String label) {
         enterText(deviceLabelField(), label);
     }
+    /**
+     * Enter description.
+     *
+     * @param description description ({@link String})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void enterDescription(String description) {
         enterText(descriptionField(), description);

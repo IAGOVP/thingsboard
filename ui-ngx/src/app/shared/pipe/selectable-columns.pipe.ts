@@ -17,14 +17,24 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DisplayColumn } from '@home/components/widget/lib/table-widget.models';
 
-@Pipe({
-    name: 'selectableColumns',
-    standalone: false
+
 /**
  * Angular pipe: selectable columns.
  */
+@Pipe({
+    name: 'selectableColumns',
+/**
+ * Angular pipe: selectable columns (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class SelectableColumnsPipe implements PipeTransform {
+  /**
+   * transform.
+   *
+   * @param allColumns all columns (DisplayColumn[])
+   * @returns DisplayColumn[] observable or value
+   */
   transform(allColumns: DisplayColumn[]): DisplayColumn[] {
     return allColumns.filter(column => column.selectable);
   }

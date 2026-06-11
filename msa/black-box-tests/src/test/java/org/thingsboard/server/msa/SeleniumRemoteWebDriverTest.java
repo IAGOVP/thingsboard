@@ -35,8 +35,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 /**
- * Selenium remote web driver test.
+ * Black-box test: selenium remote web driver (black-box test infrastructure).
  */
+
 
 @Slf4j
 public class SeleniumRemoteWebDriverTest {
@@ -45,6 +46,14 @@ public class SeleniumRemoteWebDriverTest {
     static final int HEIGHT = 1050;
     final Dimension dimension = new Dimension(WIDTH, HEIGHT);
     WebDriver driver;
+    /**
+     * Capture screen.
+     *
+     * @param driver Selenium WebDriver instance
+     * @param dirPath dir path ({@link String})
+     * @return the byte[] value
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @SneakyThrows
     @Attachment(value = "Page screenshot", type = "image/png")

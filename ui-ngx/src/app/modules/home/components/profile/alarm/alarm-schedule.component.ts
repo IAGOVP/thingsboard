@@ -42,6 +42,12 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { getDefaultTimezone } from '@shared/models/time/time.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: alarm schedule (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-schedule`.
+ */
 @Component({
     selector: 'tb-alarm-schedule',
     templateUrl: './alarm-schedule.component.html',
@@ -55,10 +61,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => AlarmScheduleComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: alarm schedule UI.
- */
+standalone: false
 })
 export class AlarmScheduleComponent implements ControlValueAccessor, Validator, OnInit {
   @Input()
@@ -89,6 +92,11 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.alarmScheduleForm = this.fb.group({
       type: [AlarmScheduleType.ANY_TIME, Validators.required],
@@ -115,6 +123,13 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
     });
   }
 
+  /**
+   * validate day of weeks.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   validateDayOfWeeks(control: AbstractControl): ValidationErrors | null {
     const dayOfWeeks: boolean[] = control.value;
     if (!dayOfWeeks || !dayOfWeeks.length || !dayOfWeeks.find(v => v === true)) {
@@ -124,6 +139,13 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
     }
     return null;
   }
+
+  /**
+   * validate items.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
 
   validateItems(control: AbstractControl): ValidationErrors | null {
     const items: any[] = control.value;
@@ -135,12 +157,30 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
     return null;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -150,6 +190,12 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
       this.updateValidators(this.alarmScheduleForm.get('type').value);
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (AlarmSchedule)
+   */
 
   writeValue(value: AlarmSchedule): void {
     this.modelValue = value;
@@ -200,6 +246,13 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
     this.updateValidators(this.modelValue.type);
   }
 
+  /**
+   * validate.
+   *
+   * @param control control (UntypedFormGroup)
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(control: UntypedFormGroup): ValidationErrors | null {
     return this.alarmScheduleForm.valid ? null : {
       alarmScheduler: {
@@ -208,9 +261,22 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
     };
   }
 
+  /**
+   * weekly repeat control.
+   *
+   * @param index index (number)
+   * @returns UntypedFormControl observable or value
+   */
+
   weeklyRepeatControl(index: number): UntypedFormControl {
     return (this.alarmScheduleForm.get('daysOfWeek') as UntypedFormArray).at(index) as UntypedFormControl;
   }
+
+  /**
+   * update validators.
+   *
+   * @param type type (AlarmScheduleType)
+   */
 
   private updateValidators(type: AlarmScheduleType, changedType = false){
     switch (type){
@@ -240,6 +306,11 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value = this.alarmScheduleForm.value;
     if (this.modelValue) {
@@ -266,6 +337,21 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
   }
 
 
+  /**
+
+
+   * default items scheduler.
+
+
+   *
+
+
+   * @returns UntypedFormGroup observable or value
+
+
+   */
+
+
   private defaultItemsScheduler(index): UntypedFormGroup {
     return this.fb.group({
       enabled: [true],
@@ -275,10 +361,23 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
     });
   }
 
+  /**
+   * change custom scheduler.
+   *
+   * @param index index (number)
+   */
+
   changeCustomScheduler($event: MatCheckboxChange, index: number) {
     const value = $event.checked;
     this.disabledSelectedTime(value, index, true);
   }
+
+  /**
+   * disabled selected time.
+   *
+   * @param enable enable (boolean)
+   * @param index index (number)
+   */
 
   private disabledSelectedTime(enable: boolean, index: number, emitEvent = false) {
     if (enable) {
@@ -289,6 +388,13 @@ export class AlarmScheduleComponent implements ControlValueAccessor, Validator, 
       this.itemsSchedulerForm.at(index).get('endsOn').disable({emitEvent});
     }
   }
+
+  /**
+   * get scheduler range text.
+   *
+   * @param control control (UntypedFormGroup | AbstractControl)
+   * @returns string observable or value
+   */
 
   getSchedulerRangeText(control: UntypedFormGroup | AbstractControl): string {
     return getAlarmScheduleRangeText(control.get('startsOn').value, control.get('endsOn').value);

@@ -41,7 +41,13 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Rule engine action node 'rpc call request': Sends RPC call to device Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>rpc call request</b>.
+ *
+ * <p>Sends RPC call to device
+ * <br>Expects messages with \
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbSendRpcRequestNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/rpc-call-request/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/rpc-call-request/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -59,11 +65,25 @@ public class TbSendRPCRequestNode implements TbNode {
     private final Random random = new Random();
     private final Gson gson = new Gson();
     private TbSendRpcRequestNodeConfiguration config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         config = TbNodeUtils.convert(configuration, TbSendRpcRequestNodeConfiguration.class);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

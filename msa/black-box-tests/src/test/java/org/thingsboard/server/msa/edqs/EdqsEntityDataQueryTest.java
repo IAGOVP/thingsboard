@@ -55,8 +55,9 @@ import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultCustom
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultDeviceProfile;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultTenantAdmin;
 /**
- * Edqs entity data query test.
+ * Validates Entity Data Query Service responses match SQL entity query API.
  */
+
 
 @DisableUIListeners
 public class EdqsEntityDataQueryTest extends AbstractContainerTest {
@@ -72,6 +73,12 @@ public class EdqsEntityDataQueryTest extends AbstractContainerTest {
     private final List<Device> tenantDevices = new ArrayList<>();
     private final List<Device> tenant2Devices = new ArrayList<>();
     private final String deviceProfile = "LoRa-" + RandomStringUtils.randomAlphabetic(10);
+    /**
+     * Before class.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void beforeClass() throws Exception {
@@ -95,11 +102,23 @@ public class EdqsEntityDataQueryTest extends AbstractContainerTest {
         customer2UserId = testRestClient.postUser(defaultCustomerAdmin(tenantId2, customerId2,  "customer2User@thingsboard.org")).getId();
         assignDevicesToCustomer(customerId2, tenant2Devices, 12);
     }
+    /**
+     * Before method.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void beforeMethod() {
         testRestClient.login("sysadmin@thingsboard.org", "sysadmin");
     }
+    /**
+     * After class.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterClass
     public void afterClass() {
@@ -108,6 +127,12 @@ public class EdqsEntityDataQueryTest extends AbstractContainerTest {
         testRestClient.deleteTenant(tenantId);
         testRestClient.deleteTenant(tenantId2);
     }
+    /**
+     * Test sys admin count entities by query.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testSysAdminCountEntitiesByQuery() {
@@ -130,6 +155,12 @@ public class EdqsEntityDataQueryTest extends AbstractContainerTest {
                 .atMost(30, TimeUnit.SECONDS)
                 .until(() -> testRestClient.postCountDataQuery(query).equals(97L));
     }
+    /**
+     * Test retrieve tenant devices by device type filter.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testRetrieveTenantDevicesByDeviceTypeFilter() {
@@ -207,6 +238,13 @@ public class EdqsEntityDataQueryTest extends AbstractContainerTest {
             testRestClient.assignDeviceToCustomer(customerId, device.getId());
         }
     }
+    /**
+     * Creates device telemetry.
+     *
+     * @param temperature temperature
+     * @return {@link ObjectNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ObjectNode createDeviceTelemetry(int temperature) {
         ObjectNode objectNode = mapper.createObjectNode();

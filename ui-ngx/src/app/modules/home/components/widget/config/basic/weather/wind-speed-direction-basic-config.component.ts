@@ -46,14 +46,17 @@ import {
 } from '@home/components/widget/lib/weather/wind-speed-direction-widget.models';
 import { getSourceTbUnitSymbol, TbUnit } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: wind speed direction basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-wind-speed-direction-basic-config`.
+ */
 @Component({
     selector: 'tb-wind-speed-direction-basic-config',
     templateUrl: './wind-speed-direction-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: wind speed direction basic config UI.
- */
+standalone: false
 })
 export class WindSpeedDirectionBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -70,6 +73,12 @@ export class WindSpeedDirectionBasicConfigComponent extends BasicWidgetConfigCom
     const datasources = this.windSpeedDirectionWidgetConfigForm.get('datasources').value;
     return datasourcesHasAggregation(datasources);
   }
+
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
 
   public onlyHistoryTimewindow(): boolean {
     const datasources = this.windSpeedDirectionWidgetConfigForm.get('datasources').value;
@@ -104,15 +113,34 @@ export class WindSpeedDirectionBasicConfigComponent extends BasicWidgetConfigCom
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.windSpeedDirectionWidgetConfigForm;
   }
+
+  /**
+   * default data keys.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   * @returns DataKey[] observable or value
+   */
 
   protected defaultDataKeys(configData: WidgetConfigComponentData): DataKey[] {
     return [{ name: 'direction', label: 'Wind Direction', type: DataKeyType.timeseries },
       { name: 'speed', label: 'Wind Speed', type: DataKeyType.timeseries,
         units: 'm/s', decimals: 1 }];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: WindSpeedDirectionWidgetSettings = {...windSpeedDirectionDefaultSettings, ...(configData.config.settings || {})};
@@ -160,6 +188,13 @@ export class WindSpeedDirectionBasicConfigComponent extends BasicWidgetConfigCom
       actions: [configData.config.actions || {}, []]
     });
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
 
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     setTimewindowConfig(this.widgetConfig.config, config.timewindowConfig);
@@ -213,9 +248,22 @@ export class WindSpeedDirectionBasicConfigComponent extends BasicWidgetConfigCom
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['layout', 'showTitle', 'showIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const layout: WindSpeedDirectionLayout = this.windSpeedDirectionWidgetConfigForm.get('layout').value;
@@ -265,6 +313,13 @@ export class WindSpeedDirectionBasicConfigComponent extends BasicWidgetConfigCom
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -272,6 +327,13 @@ export class WindSpeedDirectionBasicConfigComponent extends BasicWidgetConfigCom
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

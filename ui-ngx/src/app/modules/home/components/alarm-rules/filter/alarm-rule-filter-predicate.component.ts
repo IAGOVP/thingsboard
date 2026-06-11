@@ -44,6 +44,12 @@ import {
 } from "@home/components/alarm-rules/filter/alarm-rule-complex-filter-predicate-dialog.component";
 import { CalculatedFieldArgument } from "@shared/models/calculated-field.models";
 
+
+/**
+ * Angular component: alarm rule filter predicate (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-filter-predicate`.
+ */
 @Component({
     selector: 'tb-alarm-rule-filter-predicate',
     templateUrl: './alarm-rule-filter-predicate.component.html',
@@ -60,10 +66,7 @@ import { CalculatedFieldArgument } from "@shared/models/calculated-field.models"
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: alarm rule filter predicate UI.
- */
+standalone: false
 })
 export class AlarmRuleFilterPredicateComponent implements ControlValueAccessor, Validator {
 
@@ -135,18 +138,42 @@ export class AlarmRuleFilterPredicateComponent implements ControlValueAccessor, 
     })
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.filterPredicateFormGroup.valid ? null : {
       filterPredicate: {valid: false}
     };
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -164,6 +191,13 @@ export class AlarmRuleFilterPredicateComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * is predicate arguments valid.
+   *
+   * @param predicates predicates (AlarmRuleFilterPredicate[])
+   * @returns boolean observable or value
+   */
+
   private isPredicateArgumentsValid(predicates: AlarmRuleFilterPredicate[]): boolean {
     const validSet = new Set(Object.keys(this.arguments));
     if (Array.isArray(predicates)) {
@@ -173,6 +207,12 @@ export class AlarmRuleFilterPredicateComponent implements ControlValueAccessor, 
     }
     return true;
   }
+
+  /**
+   * write value.
+   *
+   * @param predicate predicate (AlarmRuleFilterPredicate)
+   */
 
   writeValue(predicate: AlarmRuleFilterPredicate): void {
     this.type = predicate.type;
@@ -187,6 +227,11 @@ export class AlarmRuleFilterPredicateComponent implements ControlValueAccessor, 
     }
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const predicate = this.filterPredicateFormGroup.value;
     if (predicate.operation === 'NO_DATA') {
@@ -195,6 +240,11 @@ export class AlarmRuleFilterPredicateComponent implements ControlValueAccessor, 
       this.propagateChange({type: this.type, ...predicate});
     }
   }
+
+  /**
+   * open complex filter dialog.
+   *
+   */
 
   public openComplexFilterDialog() {
     this.dialog.open<AlarmRuleComplexFilterPredicateDialogComponent, AlarmRuleComplexFilterPredicateDialogData,

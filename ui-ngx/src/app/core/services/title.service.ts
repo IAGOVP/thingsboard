@@ -23,7 +23,9 @@ import { filter } from 'rxjs/operators';
 import { environment as env } from '@env/environment';
 
 /**
- * Angular HTTP service: title REST wrappers (`@core/http`).
+ * Angular injectable service: title (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,13 @@ export class TitleService {
     private translate: TranslateService,
     private title: Title
   ) {}
+
+  /**
+   * set title.
+   *
+   * @param snapshot snapshot (ActivatedRouteSnapshot)
+   * @param lazyTranslate lazy translate (TranslateService)
+   */
 
   setTitle(
     snapshot: ActivatedRouteSnapshot,

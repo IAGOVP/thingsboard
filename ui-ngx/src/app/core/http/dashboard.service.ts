@@ -27,7 +27,9 @@ import { filter, map, publishReplay, refCount } from 'rxjs/operators';
 
 // @dynamic
 /**
- * Dashboard CRUD, assign to customers, export/import via `/api/dashboard*`.
+ * Dashboard CRUD, customer assignment, and import/export.
+ *
+ * <p>REST base: `/api/dashboard*`, `/api/customer/{id}/dashboard*`.
  */
 @Injectable({
   providedIn: 'root'
@@ -54,14 +56,31 @@ export class DashboardService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/dashboards${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant dashboards.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DashboardInfo>> observable or value
+   */
+
 
   public getTenantDashboards(pageLink: PageLink, config?: RequestConfig): Observable<PageData<DashboardInfo>> {
     return this.http.get<PageData<DashboardInfo>>(`/api/tenant/dashboards${pageLink.toQuery()}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/${tenantId}/dashboards${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant dashboards by tenant id.
+   *
+   * @param tenantId tenant UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DashboardInfo>> observable or value
+   */
+
 
   public getTenantDashboardsByTenantId(tenantId: string, pageLink: PageLink,
                                        config?: RequestConfig): Observable<PageData<DashboardInfo>> {
@@ -69,20 +88,45 @@ export class DashboardService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}/dashboards${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get customer dashboards.
+   *
+   * @param customerId customer UUID
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DashboardInfo>> observable or value
+   */
+
 
   public getCustomerDashboards(customerId: string, pageLink: PageLink, config?: RequestConfig): Observable<PageData<DashboardInfo>> {
     return this.http.get<PageData<DashboardInfo>>(`/api/customer/${customerId}/dashboards${pageLink.toQuery()}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard/${dashboardId}, ...`. */
+  
+  /**
+   * get dashboard.
+   *
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public getDashboard(dashboardId: string, config?: RequestConfig): Observable<Dashboard> {
     return this.http.get<Dashboard>(`/api/dashboard/${dashboardId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard/${dashboardId}, ...`. */
+  
+  /**
+   * export dashboard.
+   *
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public exportDashboard(dashboardId: string, includeResources = true, config?: RequestConfig): Observable<Dashboard> {
     let url = `/api/dashboard/${dashboardId}`;
@@ -92,30 +136,70 @@ export class DashboardService {
     return this.http.get<Dashboard>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard/info/${dashboardId}, ...`. */
+  
+  /**
+   * get dashboard info.
+   *
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DashboardInfo> observable or value
+   */
+
 
   public getDashboardInfo(dashboardId: string, config?: RequestConfig): Observable<DashboardInfo> {
     return this.http.get<DashboardInfo>(`/api/dashboard/info/${dashboardId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboards?dashboardIds=${dashboardIds.join(, ...`. */
+  
+  /**
+   * get dashboards.
+   *
+   * @param dashboardIds dashboard ids (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<DashboardInfo>> observable or value
+   */
+
 
   public getDashboards(dashboardIds: string[], config?: RequestConfig): Observable<Array<DashboardInfo>> {
     return this.http.get<Array<DashboardInfo>>(`/api/dashboards?dashboardIds=${dashboardIds.join(',')}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard, ...`. */
+  
+  /**
+   * POST/PUT entity — save dashboard.
+   *
+   * @param dashboard dashboard (Dashboard)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public saveDashboard(dashboard: Dashboard, config?: RequestConfig): Observable<Dashboard> {
     return this.http.post<Dashboard>('/api/dashboard', dashboard, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete dashboard.
+   *
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteDashboard(dashboardId: string, config?: RequestConfig) {
     return this.http.delete(`/api/dashboard/${dashboardId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/${customerId}/dashboard/${dashboardId}, ...`. */
+  
+  /**
+   * assign dashboard to customer.
+   *
+   * @param customerId customer UUID
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public assignDashboardToCustomer(customerId: string, dashboardId: string,
                                    config?: RequestConfig): Observable<Dashboard> {
@@ -123,26 +207,59 @@ export class DashboardService {
       null, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * unassign dashboard from customer.
+   *
+   * @param customerId customer UUID
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public unassignDashboardFromCustomer(customerId: string, dashboardId: string,
                                        config?: RequestConfig) {
     return this.http.delete(`/api/customer/${customerId}/dashboard/${dashboardId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/public/dashboard/${dashboardId}, ...`. */
+  
+  /**
+   * make dashboard public.
+   *
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public makeDashboardPublic(dashboardId: string, config?: RequestConfig): Observable<Dashboard> {
     return this.http.post<Dashboard>(`/api/customer/public/dashboard/${dashboardId}`, null,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/customer/public/dashboard/${dashboardId}, ...`. */
+  
+  /**
+   * make dashboard private.
+   *
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public makeDashboardPrivate(dashboardId: string, config?: RequestConfig): Observable<Dashboard> {
     return this.http.delete<Dashboard>(`/api/customer/public/dashboard/${dashboardId}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard/${dashboardId}/customers, ...`. */
+  
+  /**
+   * update dashboard customers.
+   *
+   * @param dashboardId dashboard UUID
+   * @param customerIds customer ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public updateDashboardCustomers(dashboardId: string, customerIds: Array<string>,
                                   config?: RequestConfig): Observable<Dashboard> {
@@ -150,7 +267,16 @@ export class DashboardService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard/${dashboardId}/customers/add, ...`. */
+  
+  /**
+   * POST/PUT entity — add dashboard customers.
+   *
+   * @param dashboardId dashboard UUID
+   * @param customerIds customer ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public addDashboardCustomers(dashboardId: string, customerIds: Array<string>,
                                config?: RequestConfig): Observable<Dashboard> {
@@ -158,7 +284,16 @@ export class DashboardService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard/${dashboardId}/customers/remove, ...`. */
+  
+  /**
+   * DELETE — remove dashboard customers.
+   *
+   * @param dashboardId dashboard UUID
+   * @param customerIds customer ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public removeDashboardCustomers(dashboardId: string, customerIds: Array<string>,
                                   config?: RequestConfig): Observable<Dashboard> {
@@ -166,24 +301,53 @@ export class DashboardService {
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard/home, ...`. */
+  
+  /**
+   * get home dashboard.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<HomeDashboard> observable or value
+   */
+
 
   public getHomeDashboard(config?: RequestConfig): Observable<HomeDashboard> {
     return this.http.get<HomeDashboard>('/api/dashboard/home', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/dashboard/home/info, ...`. */
+  
+  /**
+   * get tenant home dashboard info.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<HomeDashboardInfo> observable or value
+   */
+
 
   public getTenantHomeDashboardInfo(config?: RequestConfig): Observable<HomeDashboardInfo> {
     return this.http.get<HomeDashboardInfo>('/api/tenant/dashboard/home/info', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/tenant/dashboard/home/info, ...`. */
+  
+  /**
+   * set tenant home dashboard info.
+   *
+   * @param homeDashboardInfo home dashboard info (HomeDashboardInfo)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<any> observable or value
+   */
+
 
   public setTenantHomeDashboardInfo(homeDashboardInfo: HomeDashboardInfo, config?: RequestConfig): Observable<any> {
     return this.http.post<any>('/api/tenant/dashboard/home/info', homeDashboardInfo,
       defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * get public dashboard link.
+   *
+   * @param dashboard dashboard (DashboardInfo)
+   * @returns string | null observable or value
+   */
 
   public getPublicDashboardLink(dashboard: DashboardInfo): string | null {
     if (dashboard && dashboard.assignedCustomers && dashboard.assignedCustomers.length > 0) {
@@ -203,7 +367,13 @@ export class DashboardService {
     return null;
   }
 
-  /** Calls ThingsBoard REST `/api/dashboard/serverTime, ...`. */
+  
+  /**
+   * get server time diff.
+   *
+   * @returns Observable<number> observable or value
+   */
+
 
   public getServerTimeDiff(): Observable<number> {
     if (!this.stDiffObservable) {
@@ -222,7 +392,17 @@ export class DashboardService {
     return this.stDiffObservable;
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}/dashboards${pageLink.toQuery()}&type=${type}, ...`. */
+  
+  /**
+   * get edge dashboards.
+   *
+   * @param edgeId edge id (string)
+   * @param pageLink pagination and sort parameters
+   * @param type type (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DashboardInfo>> observable or value
+   */
+
 
   public getEdgeDashboards(edgeId: string, pageLink: PageLink, type: string = '',
                            config?: RequestConfig): Observable<PageData<DashboardInfo>> {
@@ -230,13 +410,30 @@ export class DashboardService {
       defaultHttpOptionsFromConfig(config))
   }
 
-  /** Calls ThingsBoard REST `/api/edge/${edgeId}/dashboard/${dashboardId}, ...`. */
+  
+  /**
+   * assign dashboard to edge.
+   *
+   * @param edgeId edge id (string)
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Dashboard> observable or value
+   */
+
 
   public assignDashboardToEdge(edgeId: string, dashboardId: string,
                                config?: RequestConfig): Observable<Dashboard> {
     return this.http.post<Dashboard>(`/api/edge/${edgeId}/dashboard/${dashboardId}`, null,
       defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * unassign dashboard from edge.
+   *
+   * @param edgeId edge id (string)
+   * @param dashboardId dashboard UUID
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public unassignDashboardFromEdge(edgeId: string, dashboardId: string,
                                    config?: RequestConfig) {

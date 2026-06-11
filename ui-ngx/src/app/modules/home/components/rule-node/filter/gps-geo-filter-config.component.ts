@@ -20,14 +20,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { PerimeterType, perimeterTypeTranslations, RangeUnit, rangeUnitTranslations } from '../rule-node-config.models';
 
+
+/**
+ * Angular component: gps geo filter config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-node-gps-geofencing-config`.
+ */
 @Component({
     selector: 'tb-filter-node-gps-geofencing-config',
     templateUrl: './gps-geo-filter-config.component.html',
     styleUrls: ['./gps-geo-filter-config.component.scss'],
-    standalone: false
-/**
- * Angular component: gps geo filter config UI.
- */
+standalone: false
 })
 export class GpsGeoFilterConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -46,9 +49,22 @@ export class GpsGeoFilterConfigComponent extends RuleNodeConfigurationComponent 
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.geoFilterConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
@@ -66,6 +82,12 @@ export class GpsGeoFilterConfigComponent extends RuleNodeConfigurationComponent 
     };
   }
 
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
+
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.geoFilterConfigForm = this.fb.group({
       latitudeKeyName: [configuration.latitudeKeyName, [Validators.required]],
@@ -81,9 +103,21 @@ export class GpsGeoFilterConfigComponent extends RuleNodeConfigurationComponent 
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['fetchPerimeterInfoFromMessageMetadata', 'perimeterType'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const fetchPerimeterInfoFromMessageMetadata: boolean = this.geoFilterConfigForm.get('fetchPerimeterInfoFromMessageMetadata').value;

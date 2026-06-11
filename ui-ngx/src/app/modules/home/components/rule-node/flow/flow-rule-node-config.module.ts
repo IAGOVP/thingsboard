@@ -24,6 +24,9 @@ import { RuleChainOutputComponent } from './rule-chain-output.component';
 /**
  * Angular NgModule: flow rule node config feature area.
  */
+/**
+ * Angular NgModule bundling flow rule node config (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     RuleChainInputComponent,
@@ -36,6 +39,6 @@ import { RuleChainOutputComponent } from './rule-chain-output.component';
   exports: [
     RuleChainInputComponent,
     RuleChainOutputComponent
-  ]})
+]})
 export class FlowRuleNodeConfigModule {
 }

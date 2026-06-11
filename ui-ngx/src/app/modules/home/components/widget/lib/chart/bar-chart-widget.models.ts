@@ -32,11 +32,11 @@ import {
   chartColorScheme
 } from '@home/components/widget/lib/chart/chart.models';
 
+
 /**
-
- * TypeScript models and enums for bar chart widget settings.
-
+ * Bar chart widget settings (ThingsBoard web UI).
  */
+
 
 export interface BarChartWidgetSettings extends LatestChartWidgetSettings {
   axisMin?: number;

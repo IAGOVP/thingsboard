@@ -41,14 +41,17 @@ import { WidgetConfigComponentData } from '@home/models/widget-component.models'
 import { WidgetService } from '@core/http/widget.service';
 import { TimeSeriesChartTooltipTrigger } from '@home/components/widget/lib/chart/time-series-chart-tooltip.models';
 
+
+/**
+ * Angular component: time series chart widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-widget-settings`.
+ */
 @Component({
     selector: 'tb-time-series-chart-widget-settings',
     templateUrl: './time-series-chart-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: time series chart widget settings UI.
- */
+standalone: false
 })
 export class TimeSeriesChartWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -91,6 +94,12 @@ export class TimeSeriesChartWidgetSettingsComponent extends WidgetSettingsCompon
     super(store);
   }
 
+  /**
+   * y axis removed.
+   *
+   * @param yAxisId y axis id (TimeSeriesChartYAxisId)
+   */
+
   public yAxisRemoved(yAxisId: TimeSeriesChartYAxisId): void {
     if (this.widgetConfig.config.datasources && this.widgetConfig.config.datasources.length > 1) {
       for (let i = 1; i < this.widgetConfig.config.datasources.length; i++) {
@@ -100,9 +109,21 @@ export class TimeSeriesChartWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.timeSeriesChartWidgetSettingsForm;
   }
+
+  /**
+   * Event handler for widget config set.
+   *
+   * @param widgetConfig widget config (WidgetConfigComponentData)
+   */
 
   protected onWidgetConfigSet(widgetConfig: WidgetConfigComponentData) {
     const params = widgetConfig.typeParameters as any;
@@ -122,9 +143,21 @@ export class TimeSeriesChartWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return timeSeriesChartWidgetDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.timeSeriesChartWidgetSettingsForm = this.fb.group({
@@ -183,9 +216,21 @@ export class TimeSeriesChartWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['comparisonEnabled', 'showLegend', 'showTooltip', 'tooltipShowDate', 'stack'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const comparisonEnabled: boolean = this.timeSeriesChartWidgetSettingsForm.get('comparisonEnabled').value;
@@ -267,6 +312,14 @@ export class TimeSeriesChartWidgetSettingsComponent extends WidgetSettingsCompon
       this.timeSeriesChartWidgetSettingsForm.get('tooltipBackgroundBlur').disable();
     }
   }
+
+  /**
+   * DELETE — remove yaxis id.
+   *
+   * @param series series (DataKey[])
+   * @param yAxisId y axis id (TimeSeriesChartYAxisId)
+   * @returns boolean observable or value
+   */
 
   private removeYaxisId(series: DataKey[], yAxisId: TimeSeriesChartYAxisId): boolean {
     let changed = false;

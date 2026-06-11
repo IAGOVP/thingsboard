@@ -70,8 +70,11 @@ export const deviceProfilesRoutes: Routes = [
 /**
  * Angular NgModule: device profile routing feature area.
  */
+/**
+ * Angular NgModule bundling device profile routing (home/device-profile pages).
+ */
 @NgModule({
   providers: [
     DeviceProfilesTableConfigResolver
-  ]})
+]})
 export class DeviceProfileRoutingModule { }

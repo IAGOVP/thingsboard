@@ -49,11 +49,11 @@ export const entityTypesWithoutRelatedData = new Set<EntityType | AliasEntityTyp
   EntityType.AI_MODEL,
 ]);
 
+
 /**
-
- * TypeScript models and enums for version create config.
-
+ * TypeScript interfaces, types, and enums for version create config (shared TypeScript models).
  */
+
 
 export interface VersionCreateConfig {
   saveRelations: boolean;

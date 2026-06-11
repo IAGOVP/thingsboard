@@ -20,11 +20,11 @@ import { EntityType } from '@shared/models/entity-type.models';
 import { TranslateService } from '@ngx-translate/core';
 import { BaseData, HasId } from '@shared/models/base-data';
 
+
 /**
-
- * TypeScript models and enums for entity node datasource.
-
+ * Entity node datasource (ThingsBoard web UI).
  */
+
 
 export interface EntityNodeDatasource extends Datasource {
   nodeId: string;

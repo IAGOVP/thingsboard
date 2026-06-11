@@ -85,11 +85,11 @@ export function isJSON(data: string): boolean {
   }
 }
 
+
 /**
-
- * label settings.
-
+ * Label settings (ThingsBoard web UI).
  */
+
 
 export interface LabelSettings {
   showLabel: boolean;

@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { flotDataKeyDefaultSettings } from '@home/components/widget/lib/settings/chart/flot-key-settings.component';
 
+
+/**
+ * Angular component: flot bar key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flot-bar-key-settings`.
+ */
 @Component({
     selector: 'tb-flot-bar-key-settings',
     templateUrl: './flot-bar-key-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: flot bar key settings UI.
- */
+standalone: false
 })
 export class FlotBarKeySettingsComponent extends WidgetSettingsComponent {
 
@@ -39,13 +42,31 @@ export class FlotBarKeySettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.flotBarKeySettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return flotDataKeyDefaultSettings('bar');
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.flotBarKeySettingsForm = this.fb.group({
@@ -53,11 +74,25 @@ export class FlotBarKeySettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return {
       flotKeySettings: settings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return settings.flotKeySettings;

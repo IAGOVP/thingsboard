@@ -24,14 +24,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { RuleChain } from '@shared/models/rule-chain.models';
 import { EntityTableConfig } from '@home/models/entity/entities-table-config.models';
 
+
+/**
+ * Angular component: rule chain (home/rulechain pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-rulechain`.
+ */
 @Component({
     selector: 'tb-rulechain',
     templateUrl: './rulechain.component.html',
     styleUrls: ['./rulechain.component.scss'],
-    standalone: false
-/**
- * Angular component: rule chain UI.
- */
+standalone: false
 })
 export class RuleChainComponent extends EntityComponent<RuleChain> {
 
@@ -46,10 +49,20 @@ export class RuleChainComponent extends EntityComponent<RuleChain> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.ruleChainScope = this.entitiesTableConfig.componentsData.ruleChainScope;
     super.ngOnInit();
   }
+
+  /**
+   * hide delete.
+   *
+   */
 
   hideDelete() {
     if (this.entitiesTableConfig) {
@@ -58,6 +71,13 @@ export class RuleChainComponent extends EntityComponent<RuleChain> {
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (RuleChain)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: RuleChain): UntypedFormGroup {
     return this.fb.group(
@@ -73,11 +93,29 @@ export class RuleChainComponent extends EntityComponent<RuleChain> {
     );
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (RuleChain)
+   */
+
   updateForm(entity: RuleChain) {
     this.entityForm.patchValue({name: entity.name});
     this.entityForm.patchValue({debugMode: entity.debugMode});
     this.entityForm.patchValue({additionalInfo: {description: entity.additionalInfo ? entity.additionalInfo.description : ''}});
   }
+
+
+  /**
+
+
+   * Event handler for rule chain id copied.
+
+
+   *
+
+
+   */
 
 
   onRuleChainIdCopied($event) {
@@ -91,6 +129,11 @@ export class RuleChainComponent extends EntityComponent<RuleChain> {
       }));
   }
 
+  /**
+   * is edge root rule chain.
+   *
+   */
+
   isEdgeRootRuleChain() {
     if (this.entitiesTableConfig && this.entityValue) {
       return this.entitiesTableConfig.componentsData.edge?.rootRuleChainId?.id == this.entityValue.id.id;
@@ -98,6 +141,11 @@ export class RuleChainComponent extends EntityComponent<RuleChain> {
       return false;
     }
   }
+
+  /**
+   * is auto assign to edge rule chain.
+   *
+   */
 
   isAutoAssignToEdgeRuleChain() {
     if (this.entitiesTableConfig && this.entityValue) {
@@ -107,6 +155,11 @@ export class RuleChainComponent extends EntityComponent<RuleChain> {
       return false;
     }
   }
+
+  /**
+   * is not auto assign to edge rule chain.
+   *
+   */
 
   isNotAutoAssignToEdgeRuleChain() {
     if (this.entitiesTableConfig && this.entityValue) {

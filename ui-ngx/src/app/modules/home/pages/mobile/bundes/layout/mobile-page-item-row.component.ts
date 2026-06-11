@@ -57,6 +57,12 @@ import { DefaultMobilePagePanelComponent } from '@home/pages/mobile/bundes/layou
 import { TranslateService } from '@ngx-translate/core';
 import { DisplayPopoverConfig } from '@shared/components/popover.models';
 
+
+/**
+ * Angular component: mobile page item row (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-menu-item-row`.
+ */
 @Component({
     selector: 'tb-mobile-menu-item-row',
     templateUrl: './mobile-page-item-row.component.html',
@@ -74,10 +80,7 @@ import { DisplayPopoverConfig } from '@shared/components/popover.models';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: mobile page item row UI.
- */
+standalone: false
 })
 export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -129,6 +132,11 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     );
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.updateIconNameBlockWidth();
     if (this.hideItems) {
@@ -144,12 +152,30 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -160,6 +186,12 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     if (!this.mobilePageRowForm.valid) {
       return {
@@ -168,6 +200,12 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     }
     return null;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (DefaultMobilePage | CustomMobilePage)
+   */
 
   writeValue(value: DefaultMobilePage | CustomMobilePage) {
     this.modelValue = value;
@@ -200,6 +238,11 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     this.cd.markForCheck();
   }
 
+  /**
+   * cleanup.
+   *
+   */
+
   cleanup() {
     const visible = !hideDefaultMenuItems.includes((this.modelValue as DefaultMobilePage).id)
     this.mobilePageRowForm.patchValue(
@@ -215,9 +258,20 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     this.updateModel();
   }
 
+  /**
+   * DELETE — delete.
+   *
+   */
+
   delete() {
     this.pageRemoved.emit();
   }
+
+  /**
+   * edit.
+   *
+   * @param matButton mat button (MatIconButton)
+   */
 
   edit($event: Event, matButton: MatIconButton) {
     if ($event) {
@@ -269,6 +323,11 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     return this.isDefaultMenuItem ? this.defaultItemName : '';
   }
 
+  /**
+   * update icon name block width.
+   *
+   */
+
   private updateIconNameBlockWidth() {
     if (this.maxIconNameBlockWidth) {
       this.iconNameBlockWidth = `${this.maxIconNameBlockWidth}px`;
@@ -276,6 +335,11 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
       this.iconNameBlockWidth = '100%';
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue.visible = this.mobilePageRowForm.get('visible').value;
@@ -301,6 +365,11 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     this.propagateChange(this.modelValue);
   }
 
+  /**
+   * update cleanup state.
+   *
+   */
+
   private updateCleanupState() {
     if (this.isDefaultMenuItem) {
       this.isCleanupEnabled =
@@ -310,6 +379,11 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * update item info.
+   *
+   */
+
   private updateItemInfo() {
     if (this.isCustomMenuItem) {
       this.itemInfo = this.translate.instant(mobilePageTypeTranslations.get(this.modelValue.type));
@@ -317,6 +391,12 @@ export class MobilePageItemRowComponent implements ControlValueAccessor, OnInit,
       this.itemInfo = '';
     }
   }
+
+  /**
+   * after page edit.
+   *
+   * @param page page (DefaultMobilePage | CustomMobilePage)
+   */
 
   private afterPageEdit(page: DefaultMobilePage | CustomMobilePage) {
     this.mobilePageRowForm.patchValue({

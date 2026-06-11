@@ -38,15 +38,18 @@ import { CalculatedFieldArgument } from "@shared/models/calculated-field.models"
 import { coerceBoolean } from "@shared/decorators/coercion";
 import { timeUnitTranslationMap } from "@shared/models/time/time.models";
 
+
+/**
+ * Angular component: alarm rule filter text (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rule-filter-text`.
+ */
 @Component({
     selector: 'tb-alarm-rule-filter-text',
     templateUrl: './alarm-rule-filter-text.component.html',
     styleUrls: ['./alarm-rule-filter-text.component.scss'],
     providers: [],
-    standalone: false
-/**
- * Angular component: alarm rule filter text UI.
- */
+standalone: false
 })
 export class AlarmRuleFilterTextComponent {
 
@@ -104,6 +107,12 @@ export class AlarmRuleFilterTextComponent {
               private datePipe: DatePipe) {
   }
 
+  /**
+   * update filter text.
+   *
+   * @param value value (AlarmRuleExpression)
+   */
+
   private updateFilterText(value: AlarmRuleExpression) {
     this.isRequired = false;
     if (value && (value.expression || value.filters?.length)) {
@@ -125,6 +134,16 @@ export class AlarmRuleFilterTextComponent {
     }
   }
 
+  /**
+   * key filters to text.
+   *
+   * @param translate translate (TranslateService)
+   * @param datePipe date pipe (DatePipe)
+   * @param keyFilters key filters (Array<AlarmRuleFilter>)
+   * @param operation operation (ComplexOperation)
+   * @returns string observable or value
+   */
+
   private keyFiltersToText(translate: TranslateService, datePipe: DatePipe, keyFilters: Array<AlarmRuleFilter>, operation: ComplexOperation): string {
     const filtersText = keyFilters.map(keyFilter =>
       this.filterPredicateToText(translate, datePipe, keyFilter, keyFilter.predicates));
@@ -137,6 +156,17 @@ export class AlarmRuleFilterTextComponent {
     }
     return result;
   }
+
+  /**
+   * filter predicate to text.
+   *
+   * @param translate translate (TranslateService)
+   * @param datePipe date pipe (DatePipe)
+   * @param keyFilter key filter (AlarmRuleFilter)
+   * @param keyFilterPredicates key filter predicates (AlarmRuleFilterPredicate[])
+   * @param complexOperation complex operation (ComplexOperation)
+   * @returns string observable or value
+   */
 
   private filterPredicateToText(translate: TranslateService,
                                 datePipe: DatePipe,

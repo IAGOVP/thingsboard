@@ -133,14 +133,17 @@ interface MultipleInputWidgetSource {
   keys: MultipleInputWidgetDataKey[];
 }
 
+
+/**
+ * Angular component: multiple input widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-multiple-input-widget `.
+ */
 @Component({
     selector: 'tb-multiple-input-widget ',
     templateUrl: './multiple-input-widget.component.html',
     styleUrls: ['./multiple-input-widget.component.scss'],
-    standalone: false
-/**
- * Angular component: multiple input widget UI.
- */
+standalone: false
 })
 export class MultipleInputWidgetComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -185,6 +188,11 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.multipleInputWidget = this;
     this.settings = this.ctx.settings;
@@ -203,6 +211,11 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     this.formResize$.observe(this.formContainerRef.nativeElement);
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.formResize$) {
       this.formResize$.disconnect();
@@ -210,6 +223,11 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * initialize config.
+   *
+   */
 
   private initializeConfig() {
 
@@ -250,6 +268,11 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
 
     this.updateColumns();
   }
+
+  /**
+   * update datasources.
+   *
+   */
 
   private updateDatasources() {
     this.datasourceDetected = this.datasources?.length !== 0;
@@ -353,6 +376,11 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * build form.
+   *
+   */
+
   private buildForm() {
     this.multipleInputFormGroup = this.fb.group({});
     this.sources.forEach((source) => {
@@ -413,6 +441,12 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
       }
     });
   }
+
+  /**
+   * update widget data.
+   *
+   * @param data dialog or route input data
+   */
 
   private updateWidgetData(data: Array<DatasourceData>) {
     let dataIndex = 0;
@@ -497,6 +531,13 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     });
   }
 
+  /**
+   * get key value.
+   *
+   * @param data dialog or route input data
+   * @param keySetting key setting (MultipleInputWidgetDataKeySettings)
+   */
+
   private getKeyValue(data: any, keySetting: MultipleInputWidgetDataKeySettings) {
     if (isDefined(keySetting.getValueFunction)) {
       try {
@@ -508,6 +549,11 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     }
     return data;
   }
+
+  /**
+   * update columns.
+   *
+   */
 
   private updateColumns() {
     const changeAlignment = (this.ctx.$container && this.ctx.$container[0].offsetWidth < 620);
@@ -522,20 +568,45 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.updateWidgetData(this.subscription.data);
     this.ctx.detectChanges();
   }
+
+  /**
+   * resize.
+   *
+   */
 
   private resize() {
     this.updateColumns();
     this.ctx.detectChanges();
   }
 
+  /**
+   * get group title.
+   *
+   * @param datasource datasource (Datasource)
+   * @returns string observable or value
+   */
+
   public getGroupTitle(datasource: Datasource): string {
     const groupTitle = createLabelFromDatasource(datasource, this.settings.groupTitle);
     return this.utils.customTranslation(groupTitle, groupTitle);
   }
+
+  /**
+   * get error message text.
+   *
+   * @param keySettings key settings (MultipleInputWidgetDataKeySettings)
+   * @param errorType error type (string)
+   * @returns string observable or value
+   */
 
   public getErrorMessageText(keySettings: MultipleInputWidgetDataKeySettings, errorType: string): string {
     let errorMessage;
@@ -574,11 +645,26 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     return this.getTranslatedErrorText(errorMessage, defaultMessage, messageValues);
   }
 
+  /**
+   * radio button selected color.
+   *
+   * @param radioColor radio color (string)
+   */
+
   public radioButtonSelectedColor(radioColor: string) {
     if (isDefinedAndNotNull(radioColor)) {
       return `--mat-radio-selected-icon-color: ${radioColor}; --mat-radio-selected-focus-icon-color: ${radioColor}; --mat-radio-selected-hover-icon-color: ${radioColor}; --mat-radio-selected-pressed-icon-color: ${radioColor}; --mat-radio-checked-ripple-color: ${radioColor};`
     }
   }
+
+  /**
+   * get translated error text.
+   *
+   * @param errorMessage error message (string)
+   * @param defaultMessage default message (string)
+   * @param messageValues message values (object)
+   * @returns string observable or value
+   */
 
   public getTranslatedErrorText(errorMessage: string, defaultMessage: string, messageValues?: object): string {
     let messageText;
@@ -595,13 +681,33 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     return messageText;
   }
 
+  /**
+   * get custom translation text.
+   *
+   * @returns string observable or value
+   */
+
   public getCustomTranslationText(value): string {
     return this.utils.customTranslation(value, value);
   }
 
+  /**
+   * visible keys.
+   *
+   * @param source source (MultipleInputWidgetSource)
+   * @returns MultipleInputWidgetDataKey[] observable or value
+   */
+
   public visibleKeys(source: MultipleInputWidgetSource): MultipleInputWidgetDataKey[] {
     return source.keys.filter(key => !key.settings.dataKeyHidden);
   }
+
+  /**
+   * date picker type.
+   *
+   * @param keyType key type (MultipleInputWidgetDataKeyValueType)
+   * @returns string observable or value
+   */
 
   public datePickerType(keyType: MultipleInputWidgetDataKeyValueType): string {
     switch (keyType) {
@@ -614,9 +720,21 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * focus input element.
+   *
+   */
+
   public focusInputElement($event: Event) {
     ($event.target as HTMLInputElement).select();
   }
+
+  /**
+   * input changed.
+   *
+   * @param source source (MultipleInputWidgetSource)
+   * @param key key (MultipleInputWidgetDataKey)
+   */
 
   public inputChanged(source: MultipleInputWidgetSource, key: MultipleInputWidgetDataKey) {
     const control = this.multipleInputFormGroup.get(key.formId);
@@ -630,6 +748,14 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * color changed.
+   *
+   * @param source source (MultipleInputWidgetSource)
+   * @param key key (MultipleInputWidgetDataKey)
+   * @param color color (string)
+   */
+
   public colorChanged(source: MultipleInputWidgetSource, key: MultipleInputWidgetDataKey, color: string) {
     this.multipleInputFormGroup.get(key.formId).setValue(color);
     this.multipleInputFormGroup.get(key.formId).markAsDirty();
@@ -637,11 +763,22 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     this.inputChanged(source, key);
   }
 
+  /**
+   * POST/PUT entity — save form.
+   *
+   */
+
   public saveForm() {
     if (this.settings.showActionButtons) {
       this.save();
     }
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   * @param dataToSave data to save (MultipleInputWidgetSource)
+   */
 
   private save(dataToSave?: MultipleInputWidgetSource) {
     if (document?.activeElement && !this.isSavingInProgress) {
@@ -756,6 +893,14 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * set key value.
+   *
+   * @param value value (any)
+   * @param key key (MultipleInputWidgetDataKey)
+   * @param source source (MultipleInputWidgetSource)
+   */
+
   private setKeyValue(value: any, key: MultipleInputWidgetDataKey, source: MultipleInputWidgetSource) {
     if (isDefined(key.settings.setValueFunction)) {
       const currentDatasourceData = this.subscription.data
@@ -771,6 +916,11 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     return value;
   }
 
+  /**
+   * discard all.
+   *
+   */
+
   public discardAll() {
     this.multipleInputFormGroup.reset(undefined, {emitEvent: false});
     this.sources.forEach((source) => {
@@ -780,6 +930,13 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
     });
     this.multipleInputFormGroup.markAsPristine();
   }
+
+  /**
+   * open edit jsondialog.
+   *
+   * @param key key (MultipleInputWidgetDataKey)
+   * @param source source (MultipleInputWidgetSource)
+   */
 
   openEditJSONDialog($event: Event, key: MultipleInputWidgetDataKey, source: MultipleInputWidgetSource) {
     if ($event) {
@@ -808,6 +965,12 @@ export class MultipleInputWidgetComponent extends PageComponent implements OnIni
       }
     );
   }
+
+  /**
+   * invalid.
+   *
+   * @returns boolean observable or value
+   */
 
   invalid(): boolean {
     for (const source of this.sources) {

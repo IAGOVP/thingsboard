@@ -30,8 +30,9 @@ import org.thingsboard.server.msa.ui.utils.EntityPrototypes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 /**
- * Assign from alarm widget test.
+ * Black-box test: assign from alarm widget (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Assign from details tab of entity")
 public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
@@ -39,6 +40,12 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
     private Dashboard dashboard;
     private DashboardPageHelper dashboardPage;
     private AlarmWidgetElements alarmWidget;
+    /**
+     * Creates the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeClass
     public void create() {
@@ -61,17 +68,35 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
         dashboardPage.increaseSizeOfTheWidget();
         dashboardPage.saveBtn().click();
     }
+    /**
+     * Deletes the requested data.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterClass
     public void delete() {
         deleteDashboardById(dashboard.getId());
     }
+    /**
+     * Go to dashboard page.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeMethod
     public void goToDashboardPage() {
         sideBarMenuView.dashboardBtn().click();
         dashboardPage.entity(dashboard.getName()).click();
     }
+    /**
+     * Assigns alarm to yourself.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Can assign alarm to yourself")
     @Test
@@ -80,6 +105,12 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmWidget.assignedUser(Const.TENANT_EMAIL));
     }
+    /**
+     * Reassign alarm.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Can reassign alarm to another user")
     @Test
@@ -88,6 +119,12 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmWidget.assignedUser(userName));
     }
+    /**
+     * Unassigns ed alarm.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Can unassign alarm")
     @Test
@@ -96,6 +133,12 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmWidget.unassigned(assignedAlarmType));
     }
+    /**
+     * Assigns alarm to yourself from details.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Assign alarm to yourself from details of alarm")
     @Test
@@ -106,6 +149,12 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmWidget.assignedUser(Const.TENANT_EMAIL));
     }
+    /**
+     * Reassign alarm from details.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Reassign alarm to another user from details of alarm")
     @Test
@@ -116,6 +165,12 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmWidget.assignedUser(userName));
     }
+    /**
+     * Unassigns ed alarm from details.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Unassign alarm from details of alarm")
     @Test
@@ -126,6 +181,12 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
 
         assertIsDisplayed(alarmWidget.unassigned(assignedAlarmType));
     }
+    /**
+     * Search by email.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Search by email")
     @Test
@@ -136,6 +197,12 @@ public class AssignFromAlarmWidgetTest extends AbstractAssignTest {
         assertThat(alarmWidget.getUsers()).hasSize(1).as("Search result contains search input").contains(Const.TENANT_EMAIL);
         alarmWidget.assignUsers().forEach(this::assertIsDisplayed);
     }
+    /**
+     * Search by name.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Description("Search by name")
     @Test

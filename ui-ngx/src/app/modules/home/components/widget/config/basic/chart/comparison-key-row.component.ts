@@ -31,6 +31,12 @@ import {
 import { deepClone } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: comparison key row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-comparison-key-row`.
+ */
 @Component({
     selector: 'tb-comparison-key-row',
     templateUrl: './comparison-key-row.component.html',
@@ -43,10 +49,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: comparison key row UI.
- */
+standalone: false
 })
 export class ComparisonKeyRowComponent implements ControlValueAccessor, OnInit {
 
@@ -69,6 +72,11 @@ export class ComparisonKeyRowComponent implements ControlValueAccessor, OnInit {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.keyFormControl = this.fb.control(null, []);
     this.keyRowFormGroup = this.fb.group({
@@ -86,12 +94,30 @@ export class ComparisonKeyRowComponent implements ControlValueAccessor, OnInit {
     ).subscribe(() => this.updateValidators());
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -105,6 +131,12 @@ export class ComparisonKeyRowComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DataKey)
+   */
+
   writeValue(value: DataKey): void {
     this.modelValue = value;
     const comparisonSettings = (value?.settings as DataKeySettingsWithComparison)?.comparisonSettings;
@@ -115,6 +147,11 @@ export class ComparisonKeyRowComponent implements ControlValueAccessor, OnInit {
     this.updateValidators();
     this.cd.markForCheck();
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const showValuesForComparison: boolean = this.keyRowFormGroup.get('showValuesForComparison').value;
@@ -128,6 +165,11 @@ export class ComparisonKeyRowComponent implements ControlValueAccessor, OnInit {
       this.keyRowFormGroup.get('color').disable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const comparisonSettings: DataKeyComparisonSettings = this.keyRowFormGroup.value;

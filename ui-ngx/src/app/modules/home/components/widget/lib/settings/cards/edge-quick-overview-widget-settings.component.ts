@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: edge quick overview widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-edge-quick-overview-widget-settings`.
+ */
 @Component({
     selector: 'tb-edge-quick-overview-widget-settings',
     templateUrl: './edge-quick-overview-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: edge quick overview widget settings UI.
- */
+standalone: false
 })
 export class EdgeQuickOverviewWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,15 +41,33 @@ export class EdgeQuickOverviewWidgetSettingsComponent extends WidgetSettingsComp
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.edgeQuickOverviewWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
       enableDefaultTitle: true
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.edgeQuickOverviewWidgetSettingsForm = this.fb.group({

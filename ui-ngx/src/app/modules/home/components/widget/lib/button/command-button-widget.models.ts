@@ -23,11 +23,11 @@ import {
 } from '@shared/models/action-widget-settings.models';
 import { AttributeScope } from '@shared/models/telemetry/telemetry.models';
 
+
 /**
-
- * TypeScript models and enums for command button widget settings.
-
+ * Command button widget settings (ThingsBoard web UI).
  */
+
 
 export interface CommandButtonWidgetSettings {
   appearance: WidgetButtonAppearance;

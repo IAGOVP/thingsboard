@@ -42,6 +42,13 @@ import { ActionNotificationShow } from "@core/notification/notification.actions"
 import { Store } from "@ngrx/store";
 import { AppState } from "@core/core.state";
 
+
+
+/**
+ * Angular component: device credentials lwm2m (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-device-credentials-lwm2m`.
+ */
 @Component({
     selector: 'tb-device-credentials-lwm2m',
     templateUrl: './device-credentials-lwm2m.component.html',
@@ -58,13 +65,8 @@ import { AppState } from "@core/core.state";
             multi: true
         }
     ],
-    standalone: false
 
-/**
-
- * Angular component: device credentials lwm2m UI.
-
- */
+standalone: false
 })
 
 export class DeviceCredentialsLwm2mComponent implements ControlValueAccessor, Validator, OnDestroy {
@@ -87,17 +89,41 @@ export class DeviceCredentialsLwm2mComponent implements ControlValueAccessor, Va
     this.lwm2mConfigFormGroup = this.initLwm2mConfigForm();
   }
 
+  /**
+   * write value.
+   *
+   * @param obj obj (string)
+   */
+
   writeValue(obj: string) {
     if (isDefinedAndNotNull(obj)) {
       this.initClientSecurityConfig(JSON.parse(obj));
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any) {}
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -108,11 +134,22 @@ export class DeviceCredentialsLwm2mComponent implements ControlValueAccessor, Va
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.lwm2mConfigFormGroup.valid ? null : {
       securityConfigLWm2m: false
     };
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -154,10 +191,22 @@ export class DeviceCredentialsLwm2mComponent implements ControlValueAccessor, Va
     });
   }
 
+  /**
+   * init client security config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   private initClientSecurityConfig(config: Lwm2mSecurityConfigModels): void {
     this.lwm2mConfigFormGroup.patchValue(config, {emitEvent: false});
     this.securityConfigClientUpdateValidators(config.client.securityConfigClientMode);
   }
+
+  /**
+   * security config client mode changed.
+   *
+   * @param type type (Lwm2mSecurityType)
+   */
 
   private securityConfigClientModeChanged(type: Lwm2mSecurityType): void {
     const config = getDefaultClientSecurityConfig(type, this.lwm2mConfigFormGroup.get('client.endpoint').value);

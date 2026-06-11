@@ -40,6 +40,13 @@ import {
 } from '@shared/models/lwm2m-security-config.models';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+
+/**
+ * Angular component: lwm2m device config server (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-device-config-server`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-device-config-server',
     templateUrl: './lwm2m-device-config-server.component.html',
@@ -55,13 +62,8 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true
         },
     ],
-    standalone: false
 
-/**
-
- * Angular component: lwm2m device config server UI.
-
- */
+standalone: false
 })
 
 export class Lwm2mDeviceConfigServerComponent implements OnInit, ControlValueAccessor, Validator, OnDestroy {
@@ -99,6 +101,11 @@ export class Lwm2mDeviceConfigServerComponent implements OnInit, ControlValueAcc
   constructor(public fb: UntypedFormBuilder,
               private deviceProfileService: DeviceProfileService) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.serverFormGroup = this.fb.group({
@@ -141,10 +148,21 @@ export class Lwm2mDeviceConfigServerComponent implements OnInit, ControlValueAcc
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * write value.
+   *
+   * @param serverData server data (ServerSecurityConfig)
+   */
 
   writeValue(serverData: ServerSecurityConfig): void {
     if (serverData) {
@@ -170,9 +188,21 @@ export class Lwm2mDeviceConfigServerComponent implements OnInit, ControlValueAcc
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -186,8 +216,20 @@ export class Lwm2mDeviceConfigServerComponent implements OnInit, ControlValueAcc
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * update validate.
+   *
+   * @param securityMode security mode (Lwm2mSecurityType)
+   */
 
   private updateValidate(securityMode: Lwm2mSecurityType): void {
     switch (securityMode) {
@@ -205,9 +247,19 @@ export class Lwm2mDeviceConfigServerComponent implements OnInit, ControlValueAcc
     this.serverFormGroup.get('serverPublicKey').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * clear validators.
+   *
+   */
+
   private clearValidators(): void {
     this.serverFormGroup.get('serverPublicKey').clearValidators();
   }
+
+  /**
+   * set validators.
+   *
+   */
 
   private setValidators(): void {
     this.serverFormGroup.get('serverPublicKey').setValidators([Validators.required]);
@@ -219,6 +271,12 @@ export class Lwm2mDeviceConfigServerComponent implements OnInit, ControlValueAcc
     }
   };
 
+  /**
+   * get lwm2m bootstrap security info.
+   *
+   * @returns Observable<ServerSecurityConfig> observable or value
+   */
+
   private getLwm2mBootstrapSecurityInfo(securityMode = Lwm2mSecurityType.NO_SEC): Observable<ServerSecurityConfig> {
     return this.deviceProfileService.getLwm2mBootstrapSecurityInfoBySecurityType(
       this.serverFormGroup.get('bootstrapServerIs').value, securityMode).pipe(
@@ -226,10 +284,22 @@ export class Lwm2mDeviceConfigServerComponent implements OnInit, ControlValueAcc
     );
   }
 
+  /**
+   * change security host port fields.
+   *
+   * @param serverData server data (ServerSecurityConfig)
+   */
+
   private changeSecurityHostPortFields(serverData: ServerSecurityConfig): void {
     serverData.port = serverData.securityPort;
     serverData.host = serverData.securityHost;
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.serverFormGroup.valid ? null : {

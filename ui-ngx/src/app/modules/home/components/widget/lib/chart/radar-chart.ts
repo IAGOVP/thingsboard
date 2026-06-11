@@ -33,11 +33,11 @@ import { RadarIndicatorOption } from 'echarts/types/src/coord/radar/RadarModel';
 import { DataKey } from '@shared/models/widget.models';
 import { LatestChartDataItem } from '@home/components/widget/lib/chart/latest-chart.models';
 
+
 /**
-
- * tb radar chart.
-
+ * Tb radar chart (ThingsBoard web UI).
  */
+
 
 export class TbRadarChart extends TbLatestChart<RadarChartSettings> {
 
@@ -51,9 +51,20 @@ export class TbRadarChart extends TbLatestChart<RadarChartSettings> {
     super(ctx, inputSettings, chartElement, renderer, translate, autoResize);
   }
 
+  /**
+   * default settings.
+   *
+   * @returns RadarChartSettings observable or value
+   */
+
   protected defaultSettings(): RadarChartSettings {
     return radarChartDefaultSettings;
   }
+
+  /**
+   * prepare latest chart option.
+   *
+   */
 
   protected prepareLatestChartOption() {
 
@@ -141,6 +152,11 @@ export class TbRadarChart extends TbLatestChart<RadarChartSettings> {
     ];
   }
 
+  /**
+   * do update series data.
+   *
+   */
+
   protected doUpdateSeriesData() {
     const indicator: RadarIndicatorOption[] = [];
     const value: number[] = [];
@@ -164,6 +180,13 @@ export class TbRadarChart extends TbLatestChart<RadarChartSettings> {
     this.latestChartOption.series[0].data[0].value = value;
   }
 
+  /**
+   * find max data item.
+   *
+   * @param array array (LatestChartDataItem[])
+   * @returns LatestChartDataItem observable or value
+   */
+
   private findMaxDataItem(array: LatestChartDataItem[]): LatestChartDataItem {
     if (!array || array.length === 0) return null;
     return array.reduce((maxObj, currentObj) => {
@@ -171,13 +194,37 @@ export class TbRadarChart extends TbLatestChart<RadarChartSettings> {
     }, array[0]);
   }
 
+  /**
+   * force redraw on resize.
+   *
+   * @returns boolean observable or value
+   */
+
   protected forceRedrawOnResize(): boolean {
     return true;
   }
 
+  /**
+   * key enter.
+   *
+   * @param dataKey data key (DataKey)
+   */
+
   public keyEnter(dataKey: DataKey): void {}
 
+  /**
+   * key leave.
+   *
+   * @param dataKey data key (DataKey)
+   */
+
   public keyLeave(dataKey: DataKey): void {}
+
+  /**
+   * toggle key.
+   *
+   * @param dataKey data key (DataKey)
+   */
 
   public toggleKey(dataKey: DataKey): void {
     const enable = dataKey.hidden;

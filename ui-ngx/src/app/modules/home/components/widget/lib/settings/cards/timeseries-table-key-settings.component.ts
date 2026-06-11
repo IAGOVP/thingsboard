@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: timeseries table key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timeseries-table-key-settings`.
+ */
 @Component({
     selector: 'tb-timeseries-table-key-settings',
     templateUrl: './timeseries-table-key-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: timeseries table key settings UI.
- */
+standalone: false
 })
 export class TimeseriesTableKeySettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class TimeseriesTableKeySettingsComponent extends WidgetSettingsComponent
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.timeseriesTableKeySettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -54,6 +69,12 @@ export class TimeseriesTableKeySettingsComponent extends WidgetSettingsComponent
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.timeseriesTableKeySettingsForm = this.fb.group({
       useCellStyleFunction: [settings.useCellStyleFunction, []],
@@ -66,9 +87,21 @@ export class TimeseriesTableKeySettingsComponent extends WidgetSettingsComponent
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useCellStyleFunction', 'useCellContentFunction'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const useCellStyleFunction: boolean = this.timeseriesTableKeySettingsForm.get('useCellStyleFunction').value;

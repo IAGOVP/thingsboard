@@ -45,7 +45,13 @@ import static org.thingsboard.server.dao.edge.BaseRelatedEdgesService.RELATED_ED
 
 @Slf4j
 /**
- * Rule engine action node 'push to edge': Push messages from cloud to edge Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>push to edge</b>.
+ *
+ * <p>Push messages from cloud to edge
+ * <br>Push messages from cloud to edge. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgPushToEdgeNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/push-to-edge/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/push-to-edge/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -98,11 +104,24 @@ public class TbMsgPushToEdgeNode extends AbstractTbMsgPushNode<TbMsgPushToEdgeNo
     String getIgnoredMessageSource() {
         return DataConstants.EDGE_MSG_SOURCE;
     }
+    /**
+     * Returns config clazz.
+     *
+     * @return {@link Class}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected Class<TbMsgPushToEdgeNodeConfiguration> getConfigClazz() {
         return TbMsgPushToEdgeNodeConfiguration.class;
     }
+    /**
+     * Processes msg.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected void processMsg(TbContext ctx, TbMsg msg) {

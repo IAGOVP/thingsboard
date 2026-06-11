@@ -97,17 +97,19 @@ interface PersistentTableWidgetActionDescriptor extends TableCellButtonActionDes
   delete?: boolean;
 }
 
+
+
+/**
+ * Angular component: persistent table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-persistent-table-widget`.
+ */
 @Component({
     selector: 'tb-persistent-table-widget',
     templateUrl: './persistent-table.component.html',
     styleUrls: ['./persistent-table.component.scss', '../table-widget.scss'],
-    standalone: false
 
-/**
-
- * Angular component: persistent table UI.
-
- */
+standalone: false
 })
 
 export class PersistentTableComponent extends PageComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -159,6 +161,11 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.ctx.$scope.persistentTableWidget = this;
     this.settings = this.ctx.settings;
@@ -181,11 +188,21 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.widgetResize$) {
       this.widgetResize$.disconnect();
     }
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     if (this.displayPagination) {
@@ -198,6 +215,11 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
       .subscribe();
     this.updateData();
   }
+
+  /**
+   * initialize config.
+   *
+   */
 
   private initializeConfig() {
 
@@ -298,6 +320,11 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
     $(this.elementRef.nativeElement).addClass(namespace);
   }
 
+  /**
+   * update data.
+   *
+   */
+
   private updateData() {
     if (this.displayPagination) {
       this.pageLink.page = this.paginator.pageIndex;
@@ -314,9 +341,19 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
     this.ctx.detectChanges();
   }
 
+  /**
+   * Event handler for data updated.
+   *
+   */
+
   public onDataUpdated() {
     this.ctx.detectChanges();
   }
+
+  /**
+   * reload persistent requests.
+   *
+   */
 
   reloadPersistentRequests() {
     if (this.displayPagination) {
@@ -324,6 +361,12 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
     }
     this.updateData();
   }
+
+  /**
+   * DELETE — delete rpc request.
+   *
+   * @param persistentRpc persistent rpc (PersistentRpc)
+   */
 
   deleteRpcRequest($event: Event, persistentRpc: PersistentRpc) {
     if ($event) {
@@ -344,6 +387,12 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
       });
     }
   }
+
+  /**
+   * open request details.
+   *
+   * @param persistentRpc persistent rpc (PersistentRpc)
+   */
 
   openRequestDetails($event: Event, persistentRpc: PersistentRpc) {
     if ($event) {
@@ -369,6 +418,11 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
     }
   }
 
+  /**
+   * POST/PUT entity — add persistent rpc request.
+   *
+   */
+
   addPersistentRpcRequest($event: Event){
     if ($event) {
       $event.stopPropagation();
@@ -386,6 +440,12 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
       }
     );
   }
+
+  /**
+   * send requests.
+   *
+   * @param requestData request data (RequestData)
+   */
 
   private sendRequests(requestData: RequestData) {
     let commandPromise;
@@ -414,6 +474,13 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
     );
   }
 
+  /**
+   * Event handler for action button click.
+   *
+   * @param persistentRpc persistent rpc (PersistentRpc)
+   * @param actionDescriptor action descriptor (PersistentTableWidgetActionDescriptor)
+   */
+
   public onActionButtonClick($event: Event, persistentRpc: PersistentRpc, actionDescriptor: PersistentTableWidgetActionDescriptor) {
     if (actionDescriptor.details) {
       this.openRequestDetails($event, persistentRpc);
@@ -422,6 +489,11 @@ export class PersistentTableComponent extends PageComponent implements OnInit, O
       this.deleteRpcRequest($event, persistentRpc);
     }
   }
+
+  /**
+   * edit filter.
+   *
+   */
 
   private editFilter($event: Event) {
     if ($event) {

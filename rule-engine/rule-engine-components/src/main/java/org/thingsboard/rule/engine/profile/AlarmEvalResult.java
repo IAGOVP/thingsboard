@@ -15,8 +15,9 @@
  */
 package org.thingsboard.rule.engine.profile;
 /**
- * Rule engine component: alarm eval result.
+ * Enumerates alarm eval result values used by rule engine device profile state nodes.
  */
+
 
 @Deprecated
 public enum AlarmEvalResult {

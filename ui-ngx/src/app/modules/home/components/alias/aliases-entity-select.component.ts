@@ -40,14 +40,17 @@ import {
 import { deepClone } from '@core/utils';
 import { AliasFilterType } from '@shared/models/alias.models';
 
+
+/**
+ * Angular component: aliases entity select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-aliases-entity-select`.
+ */
 @Component({
     selector: 'tb-aliases-entity-select',
     templateUrl: './aliases-entity-select.component.html',
     styleUrls: ['./aliases-entity-select.component.scss'],
-    standalone: false
-/**
- * Angular component: aliases entity select UI.
- */
+standalone: false
 })
 export class AliasesEntitySelectComponent implements OnInit, OnDestroy {
 
@@ -86,6 +89,12 @@ export class AliasesEntitySelectComponent implements OnInit, OnDestroy {
               private viewContainerRef: ViewContainerRef) {
   }
 
+  /**
+   * setup alias controller.
+   *
+   * @param aliasController alias controller (IAliasController)
+   */
+
   private setupAliasController(aliasController: IAliasController) {
     this.rxSubscriptions.forEach((subscription) => {
       subscription.unsubscribe();
@@ -113,8 +122,18 @@ export class AliasesEntitySelectComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     this.rxSubscriptions.forEach((subscription) => {
@@ -122,6 +141,11 @@ export class AliasesEntitySelectComponent implements OnInit, OnDestroy {
     });
     this.rxSubscriptions.length = 0;
   }
+
+  /**
+   * open edit mode.
+   *
+   */
 
   openEditMode() {
     if (this.disabled || !this.hasSelectableAliasEntities) {
@@ -164,6 +188,11 @@ export class AliasesEntitySelectComponent implements OnInit, OnDestroy {
     return Injector.create({parent: this.viewContainerRef.injector, providers});
   }
 
+  /**
+   * update display value.
+   *
+   */
+
   private updateDisplayValue() {
     let displayValue;
     let singleValue = true;
@@ -191,6 +220,11 @@ export class AliasesEntitySelectComponent implements OnInit, OnDestroy {
     }
     this.displayValue = displayValue;
   }
+
+  /**
+   * update entity aliases info.
+   *
+   */
 
   private updateEntityAliasesInfo() {
     const allEntityAliases = this.aliasController.getEntityAliases();

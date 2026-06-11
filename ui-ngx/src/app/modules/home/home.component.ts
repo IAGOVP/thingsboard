@@ -35,14 +35,17 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { isDefined, isDefinedAndNotNull } from '@core/utils';
 
+
+/**
+ * Angular component: home (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-home`.
+ */
 @Component({
     selector: 'tb-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    standalone: false
-/**
- * Angular component: home UI.
- */
+standalone: false
 })
 export class HomeComponent extends PageComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -81,6 +84,11 @@ export class HomeComponent extends PageComponent implements AfterViewInit, OnIni
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
 
     const isGtSm = this.breakpointObserver.isMatched(MediaBreakpoints['gt-sm']);
@@ -102,10 +110,20 @@ export class HomeComponent extends PageComponent implements AfterViewInit, OnIni
       );
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.textSearch.valueChanges.pipe(
@@ -117,11 +135,21 @@ export class HomeComponent extends PageComponent implements AfterViewInit, OnIni
     ).subscribe(value => this.searchTextUpdated(value.trim()));
   }
 
+  /**
+   * sidenav clicked.
+   *
+   */
+
   sidenavClicked() {
     if (this.sidenavMode === 'over') {
       this.sidenav.toggle();
     }
   }
+
+  /**
+   * toggle fullscreen.
+   *
+   */
 
   toggleFullscreen() {
     if (screenfull.isEnabled) {
@@ -129,13 +157,29 @@ export class HomeComponent extends PageComponent implements AfterViewInit, OnIni
     }
   }
 
+  /**
+   * is fullscreen.
+   *
+   */
+
   isFullscreen() {
     return screenfull.isFullscreen;
   }
 
+  /**
+   * go back.
+   *
+   */
+
   goBack() {
     this.window.history.back();
   }
+
+  /**
+   * active component changed.
+   *
+   * @param activeComponent active component (any)
+   */
 
   activeComponentChanged(activeComponent: any) {
     this.activeComponentService.setCurrentActiveComponent(activeComponent);
@@ -147,6 +191,12 @@ export class HomeComponent extends PageComponent implements AfterViewInit, OnIni
       this.updateActiveComponent(activeComponent);
     }
   }
+
+  /**
+   * update active component.
+   *
+   * @param activeComponent active component (any)
+   */
 
   private updateActiveComponent(activeComponent: any) {
     this.showSearch = false;
@@ -171,9 +221,20 @@ export class HomeComponent extends PageComponent implements AfterViewInit, OnIni
     }
   }
 
+  /**
+   * display search mode.
+   *
+   * @returns boolean observable or value
+   */
+
   displaySearchMode(): boolean {
     return this.searchEnabled && this.showSearch;
   }
+
+  /**
+   * open search.
+   *
+   */
 
   openSearch() {
     if (this.searchEnabled) {
@@ -185,6 +246,11 @@ export class HomeComponent extends PageComponent implements AfterViewInit, OnIni
     }
   }
 
+  /**
+   * close search.
+   *
+   */
+
   closeSearch() {
     if (this.searchEnabled) {
       this.showSearch = false;
@@ -193,6 +259,12 @@ export class HomeComponent extends PageComponent implements AfterViewInit, OnIni
       }
     }
   }
+
+  /**
+   * search text updated.
+   *
+   * @param searchText search text (string)
+   */
 
   private searchTextUpdated(searchText: string) {
     if (this.searchableComponent) {

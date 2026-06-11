@@ -22,16 +22,19 @@ import { WidgetActionCallbacks } from '@home/components/widget/action/manage-wid
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: widget action settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-action-settings-panel`.
+ */
 @Component({
     selector: 'tb-widget-action-settings-panel',
     templateUrl: './widget-action-settings-panel.component.html',
     providers: [],
     styleUrls: ['./action-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: widget action settings panel UI.
- */
+standalone: false
 })
 export class WidgetActionSettingsPanelComponent implements OnInit {
 
@@ -70,6 +73,11 @@ export class WidgetActionSettingsPanelComponent implements OnInit {
               private popover: TbPopoverComponent) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.widgetActionFormGroup = this.fb.group(
       {
@@ -78,9 +86,19 @@ export class WidgetActionSettingsPanelComponent implements OnInit {
     );
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply widget action.
+   *
+   */
 
   applyWidgetAction() {
     const widgetAction: WidgetAction = this.widgetActionFormGroup.get('widgetAction').getRawValue();

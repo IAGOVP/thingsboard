@@ -24,7 +24,13 @@ import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine filter node 'message type switch': Route incoming messages by Message Type Implements org.thingsboard.rule.engine.api.TbNode.
+ * Filter rule node — <b>message type switch</b>.
+ *
+ * <p>Route incoming messages by Message Type
+ * <br>Sends messages with message types \
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link EmptyNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/message-type-switch/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/message-type-switch/</a>
  */
 @RuleNode(
         type = ComponentType.FILTER,
@@ -39,9 +45,23 @@ import org.thingsboard.server.common.msg.TbMsg;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/filter/message-type-switch/"
 )
 public class TbMsgTypeSwitchNode implements TbNode {
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) {}
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

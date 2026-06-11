@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { switchRpcDefaultSettings } from '@home/components/widget/lib/settings/control/switch-rpc-settings.component';
 import { deepClone } from '@core/utils';
 
+
+/**
+ * Angular component: round switch widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-round-switch-widget-settings`.
+ */
 @Component({
     selector: 'tb-round-switch-widget-settings',
     templateUrl: './round-switch-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: round switch widget settings UI.
- */
+standalone: false
 })
 export class RoundSwitchWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -44,9 +47,21 @@ export class RoundSwitchWidgetSettingsComponent extends WidgetSettingsComponent 
     return this.widgetConfig?.config?.targetDevice;
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.roundSwitchWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -55,12 +70,25 @@ export class RoundSwitchWidgetSettingsComponent extends WidgetSettingsComponent 
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.roundSwitchWidgetSettingsForm = this.fb.group({
       title: [settings.title, []],
       switchRpcSettings: [settings.switchRpcSettings, []]
     });
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     const switchRpcSettings = deepClone(settings, ['title']);
@@ -69,6 +97,13 @@ export class RoundSwitchWidgetSettingsComponent extends WidgetSettingsComponent 
       switchRpcSettings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return {

@@ -15,11 +15,13 @@
  */
 package org.thingsboard.rule.engine.util;
 
+
 /**
 
- * Rule engine component: gps geofencing events.
+ * Gps geofencing events (shared rule-engine utilities and async loaders).
 
  */
+
 
 public class GpsGeofencingEvents {
     public static final String ENTERED = "Entered";

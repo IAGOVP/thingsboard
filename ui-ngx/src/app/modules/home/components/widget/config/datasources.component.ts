@@ -45,6 +45,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { FormProperty } from '@shared/models/dynamic-form.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: datasources (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-datasources`.
+ */
 @Component({
     selector: 'tb-datasources',
     templateUrl: './datasources.component.html',
@@ -61,10 +67,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: datasources UI.
- */
+standalone: false
 })
 export class DatasourcesComponent implements ControlValueAccessor, OnInit, Validator, OnChanges {
 
@@ -164,6 +167,12 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (this.propagateChangePending) {
@@ -173,8 +182,20 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -184,6 +205,11 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
       this.datasourcesFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.datasourcesFormGroup = this.fb.group({
@@ -208,6 +234,12 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
       }
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param datasources datasources (Datasource[])
+   */
 
   writeValue(datasources?: Datasource[]): void {
     this.datasourcesFormArray.clear({emitEvent: false});
@@ -238,6 +270,12 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
       }, 0);
     }
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   validate(c: UntypedFormControl) {
     this.timeseriesKeyError = false;
@@ -286,6 +324,12 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
     return null;
   }
 
+  /**
+   * datasources mode change.
+   *
+   * @param datasourcesMode datasources mode (DatasourceType)
+   */
+
   datasourcesModeChange(datasourcesMode: DatasourceType) {
     this.datasourcesMode = datasourcesMode;
     if (this.basicMode) {
@@ -299,12 +343,23 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
     }
   }
 
+  /**
+   * config mode changed.
+   *
+   */
+
   private configModeChanged() {
     if (this.basicMode) {
       const datasourcesMode = this.detectDatasourcesMode(this.datasourcesFormGroup.get('datasources').value);
       this.datasourcesModeChange(datasourcesMode);
     }
   }
+
+  /**
+   * detect datasources mode.
+   *
+   * @param datasources datasources (Datasource[])
+   */
 
   private detectDatasourcesMode(datasources?: Datasource[]) {
     let datasourcesMode = DatasourceType.device;
@@ -326,9 +381,23 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
     return this.datasourcesFormArray.controls as FormControl[];
   }
 
+  /**
+   * track by datasource.
+   *
+   * @param index index (number)
+   * @param datasourceControl datasource control (AbstractControl)
+   * @returns any observable or value
+   */
+
   public trackByDatasource(index: number, datasourceControl: AbstractControl): any {
     return datasourceControl;
   }
+
+  /**
+   * datasources updated.
+   *
+   * @param datasources datasources (Datasource[])
+   */
 
   private datasourcesUpdated(datasources: Datasource[]) {
     if (this.datasourcesOptional) {
@@ -342,15 +411,32 @@ export class DatasourcesComponent implements ControlValueAccessor, OnInit, Valid
     }
   }
 
+  /**
+   * Event handler for datasource drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   public onDatasourceDrop(event: CdkDragDrop<string[]>) {
     const datasourceForm = this.datasourcesFormArray.at(event.previousIndex);
     this.datasourcesFormArray.removeAt(event.previousIndex);
     this.datasourcesFormArray.insert(event.currentIndex, datasourceForm);
   }
 
+  /**
+   * DELETE — remove datasource.
+   *
+   * @param index index (number)
+   */
+
   public removeDatasource(index: number) {
     this.datasourcesFormArray.removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add datasource.
+   *
+   */
 
   public addDatasource(emitEvent = true) {
     let newDatasource: Datasource;

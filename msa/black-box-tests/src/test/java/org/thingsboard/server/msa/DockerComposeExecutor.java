@@ -37,8 +37,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.joining;
 /**
- * Docker compose executor.
+ * Docker compose executor (black-box test infrastructure).
  */
+
 
 @Slf4j
 public class DockerComposeExecutor {
@@ -59,16 +60,36 @@ public class DockerComposeExecutor {
         this.composeFiles = composeFiles;
         this.identifier = identifier;
     }
+    /**
+     * With command.
+     *
+     * @param cmd cmd ({@link String})
+     * @return {@link DockerComposeExecutor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DockerComposeExecutor withCommand(String cmd) {
         this.cmd = cmd;
         return this;
     }
+    /**
+     * With env.
+     *
+     * @param env env ({@link Map})
+     * @return {@link DockerComposeExecutor}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public DockerComposeExecutor withEnv(Map<String, String> env) {
         this.env = env;
         return this;
     }
+    /**
+     * Invoke compose.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void invokeCompose() {
         // bail out early
@@ -93,6 +114,12 @@ public class DockerComposeExecutor {
             throw new ContainerLaunchException("Error running local Docker Compose command: " + cmd, e);
         }
     }
+    /**
+     * Invoke docker.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void invokeDocker() {
         // bail out early

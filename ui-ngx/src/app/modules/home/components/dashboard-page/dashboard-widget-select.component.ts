@@ -47,15 +47,18 @@ interface BundleWidgetsFilter extends WidgetsFilter {
   widgetsBundleId: string;
 }
 
+
+/**
+ * Angular component: dashboard widget select (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-widget-select`.
+ */
 @Component({
     selector: 'tb-dashboard-widget-select',
     templateUrl: './dashboard-widget-select.component.html',
     styleUrls: ['./dashboard-widget-select.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: dashboard widget select UI.
- */
+standalone: false
 })
 export class DashboardWidgetSelectComponent implements OnInit {
 
@@ -235,16 +238,40 @@ export class DashboardWidgetSelectComponent implements OnInit {
     );
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * Event handler for widget clicked.
+   *
+   * @param widget widget (WidgetTypeInfo)
+   */
 
   onWidgetClicked($event: Event, widget: WidgetTypeInfo): void {
     this.widgetSelected.emit(this.toWidgetInfo(widget));
   }
 
+  /**
+   * is system.
+   *
+   * @param item item (WidgetsBundle)
+   * @returns boolean observable or value
+   */
+
   isSystem(item: WidgetsBundle): boolean {
     return item && item.tenantId.id === NULL_UUID;
   }
+
+  /**
+   * select bundle.
+   *
+   * @param bundle bundle (WidgetsBundle)
+   */
 
   selectBundle($event: Event, bundle: WidgetsBundle) {
     $event.preventDefault();
@@ -255,9 +282,23 @@ export class DashboardWidgetSelectComponent implements OnInit {
     }
   }
 
+  /**
+   * is object.
+   *
+   * @param value value (any)
+   * @returns boolean observable or value
+   */
+
   isObject(value: any): boolean {
     return isObject(value);
   }
+
+  /**
+   * to widget info.
+   *
+   * @param widgetTypeInfo widget type info (WidgetTypeInfo)
+   * @returns WidgetInfo observable or value
+   */
 
   private toWidgetInfo(widgetTypeInfo: WidgetTypeInfo): WidgetInfo {
     return {

@@ -33,7 +33,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import static org.thingsboard.common.util.DonAsynchron.withCallback;
 
 /**
- * Rule engine action node 'create relation': Finds target entity specified in the configuration and creates a relation with the  Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>create relation</b>.
+ *
+ * <p>Finds target entity specified in the configuration and creates a relation with the 
+ * <br>Useful when you need to create relations between entities dynamically depending on 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbCreateRelationNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/create-relation/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/create-relation/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -68,6 +74,13 @@ import static org.thingsboard.common.util.DonAsynchron.withCallback;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/create-relation/"
 )
 public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateRelationNodeConfiguration> {
+    /**
+     * Loads entity node action config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbCreateRelationNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbCreateRelationNodeConfiguration loadEntityNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException {
@@ -75,11 +88,24 @@ public class TbCreateRelationNode extends TbAbstractRelationActionNode<TbCreateR
         checkIfConfigEntityTypeIsSupported(createRelationNodeConfiguration.getEntityType());
         return createRelationNodeConfiguration;
     }
+    /**
+     * Creates entity if not exists.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected boolean createEntityIfNotExists() {
         return config.isCreateEntityIfNotExists();
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

@@ -22,8 +22,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
- * Alert text when a monitored service exceeds failure threshold.
+ * Alert text when a monitored service exceeds the configured failure threshold.
  */
+
 
 @Getter
 public class ServiceFailureNotification implements Notification {
@@ -37,6 +38,12 @@ public class ServiceFailureNotification implements Notification {
         this.error = error;
         this.failuresCount = failuresCount;
     }
+    /**
+     * Returns text.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public String getText() {
@@ -98,6 +105,12 @@ public class ServiceFailureNotification implements Notification {
         }
         return msg;
     }
+    /**
+     * Returns affected services.
+     *
+     * @return {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public List<AffectedService> getAffectedServices() {

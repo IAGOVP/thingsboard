@@ -20,20 +20,28 @@ import { AppState } from '@core/core.state';
 import { EntityTabsComponent } from '../../components/entity/entity-tabs.component';
 import { Customer } from '@shared/models/customer.model';
 
+
+/**
+ * Angular component: customer tabs (home/customer pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-customer-tabs`.
+ */
 @Component({
     selector: 'tb-customer-tabs',
     templateUrl: './customer-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: customer tabs UI.
- */
+standalone: false
 })
 export class CustomerTabsComponent extends EntityTabsComponent<Customer> {
 
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     super.ngOnInit();

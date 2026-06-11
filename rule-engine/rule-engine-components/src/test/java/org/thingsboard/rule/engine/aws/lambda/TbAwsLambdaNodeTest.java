@@ -59,8 +59,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.thingsboard.rule.engine.aws.lambda.TbAwsLambdaNodeConfiguration.DEFAULT_QUALIFIER;
 /**
- * Unit test for tb aws lambda node rule node.
+ * Unit test for tb aws lambda node (AWS integration nodes (SQS, SNS, Lambda)).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbAwsLambdaNodeTest {
@@ -74,6 +75,11 @@ public class TbAwsLambdaNodeTest {
     private TbContext ctx;
     @Mock
     private AWSLambdaAsync clientMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -83,6 +89,11 @@ public class TbAwsLambdaNodeTest {
         config.setSecretKey("secretKey");
         config.setFunctionName("new-function");
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -96,6 +107,12 @@ public class TbAwsLambdaNodeTest {
         assertThat(config.getRequestTimeout()).isEqualTo(5);
         assertThat(config.isTellFailureIfFuncThrowsExc()).isFalse();
     }
+    /**
+     * Given invalid function name when init then throws exception.
+     *
+     * @param funcName func name ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -104,6 +121,12 @@ public class TbAwsLambdaNodeTest {
         config.setFunctionName(funcName);
         verifyValidationExceptionOnInit();
     }
+    /**
+     * Given invalid access key when init then throws exception.
+     *
+     * @param accessKey access key ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -112,6 +135,12 @@ public class TbAwsLambdaNodeTest {
         config.setAccessKey(accessKey);
         verifyValidationExceptionOnInit();
     }
+    /**
+     * Given invalid secret access key when init then throws exception.
+     *
+     * @param secretAccessKey secret access key ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -120,6 +149,12 @@ public class TbAwsLambdaNodeTest {
         config.setSecretKey(secretAccessKey);
         verifyValidationExceptionOnInit();
     }
+    /**
+     * Given invalid region when init then throws exception.
+     *
+     * @param region region ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -128,18 +163,38 @@ public class TbAwsLambdaNodeTest {
         config.setRegion(region);
         verifyValidationExceptionOnInit();
     }
+    /**
+     * Given invalid connection timeout when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenInvalidConnectionTimeout_whenInit_thenThrowsException() {
         config.setConnectionTimeout(-100);
         verifyValidationExceptionOnInit();
     }
+    /**
+     * Given invalid request timeout when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenInvalidRequestTimeout_whenInit_thenThrowsException() {
         config.setRequestTimeout(-100);
         verifyValidationExceptionOnInit();
     }
+    /**
+     * Given request when on msg then tell success.
+     *
+     * @param data data ({@link String})
+     * @param metadata metadata ({@link TbMsgMetaData})
+     * @param functionName function name ({@link String})
+     * @param qualifier qualifier ({@link String})
+     * @param expectedQualifier expected qualifier ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -202,6 +257,11 @@ public class TbAwsLambdaNodeTest {
                         ), "${funcNameMdPattern}", "${qualifierMdPattern}", "qualifierC")
         );
     }
+    /**
+     * Given exception was thrown inside function and tell failure if func throws exc is true when on msg then tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenExceptionWasThrownInsideFunctionAndTellFailureIfFuncThrowsExcIsTrue_whenOnMsg_thenTellFailure() {
@@ -246,6 +306,11 @@ public class TbAwsLambdaNodeTest {
                 .isEqualTo(resultedMsg);
         assertThat(throwableCaptor.getValue()).isInstanceOf(RuntimeException.class).hasMessage(errorMsg);
     }
+    /**
+     * Given exception was thrown inside function and tell failure if func throws exc is false when on msg then tell success.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenExceptionWasThrownInsideFunctionAndTellFailureIfFuncThrowsExcIsFalse_whenOnMsg_thenTellSuccess() {
@@ -287,6 +352,11 @@ public class TbAwsLambdaNodeTest {
                 .ignoringFields("ctx")
                 .isEqualTo(resultedMsg);
     }
+    /**
+     * Given payload from result is null when on msg then tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenPayloadFromResultIsNull_whenOnMsg_thenTellFailure() {
@@ -329,6 +399,11 @@ public class TbAwsLambdaNodeTest {
                 .isEqualTo(resultedMsg);
         assertThat(throwableCaptor.getValue()).isInstanceOf(RuntimeException.class).hasMessage(errorMsg);
     }
+    /**
+     * Given exception was thrown on aws when on msg then tell failure.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenExceptionWasThrownOnAWS_whenOnMsg_thenTellFailure() {

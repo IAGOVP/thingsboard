@@ -42,6 +42,12 @@ import { ImagePipe } from '@shared/pipe/image.pipe';
 import { DomSanitizer } from '@angular/platform-browser';
 import { tap } from 'rxjs/operators';
 
+
+/**
+ * Angular component: background settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-background-settings`.
+ */
 @Component({
     selector: 'tb-background-settings',
     templateUrl: './background-settings.component.html',
@@ -54,10 +60,7 @@ import { tap } from 'rxjs/operators';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: background settings UI.
- */
+standalone: false
 })
 export class BackgroundSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -81,15 +84,38 @@ export class BackgroundSettingsComponent implements OnInit, ControlValueAccessor
               private viewContainerRef: ViewContainerRef,
               private cd: ChangeDetectorRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (this.disabled !== isDisabled) {
@@ -98,10 +124,22 @@ export class BackgroundSettingsComponent implements OnInit, ControlValueAccessor
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (BackgroundSettings)
+   */
+
   writeValue(value: BackgroundSettings): void {
     this.modelValue = validateAndUpdateBackgroundSettings(value);
     this.updateBackgroundStyle();
   }
+
+  /**
+   * open background settings popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openBackgroundSettingsPopup($event: Event, matButton: MatButton) {
     if ($event) {
@@ -131,6 +169,11 @@ export class BackgroundSettingsComponent implements OnInit, ControlValueAccessor
       });
     }
   }
+
+  /**
+   * update background style.
+   *
+   */
 
   private updateBackgroundStyle() {
     if (!this.disabled) {

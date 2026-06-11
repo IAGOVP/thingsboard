@@ -51,11 +51,11 @@ export const getValueActionTranslations = new Map<GetValueAction, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for rpc settings.
-
+ * TypeScript interfaces, types, and enums for rpc settings (shared TypeScript models).
  */
+
 
 export interface RpcSettings {
   method: string;

@@ -41,7 +41,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.NoSuchElementException;
 
 /**
- * Rule engine enrichment node 'customer details': Adds message originator customer details into message or message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>customer details</b>.
+ *
+ * <p>Adds message originator customer details into message or message metadata
+ * <br>Useful in multi-customer solutions where we need dynamically use customer contact information 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGetCustomerDetailsNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/customer-details/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/customer-details/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -58,6 +64,13 @@ import java.util.NoSuchElementException;
 public class TbGetCustomerDetailsNode extends TbAbstractGetEntityDetailsNode<TbGetCustomerDetailsNodeConfiguration, CustomerId> {
 
     private static final String CUSTOMER_PREFIX = "customer_";
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbGetCustomerDetailsNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbGetCustomerDetailsNodeConfiguration loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
@@ -65,11 +78,25 @@ public class TbGetCustomerDetailsNode extends TbAbstractGetEntityDetailsNode<TbG
         checkIfDetailsListIsNotEmptyOrElseThrow(config.getDetailsList());
         return config;
     }
+    /**
+     * Returns prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getPrefix() {
         return CUSTOMER_PREFIX;
     }
+    /**
+     * Returns contact based future.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link Customer}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<Customer> getContactBasedFuture(TbContext ctx, TbMsg msg) {
@@ -109,6 +136,14 @@ public class TbGetCustomerDetailsNode extends TbAbstractGetEntityDetailsNode<TbG
             }
         }
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

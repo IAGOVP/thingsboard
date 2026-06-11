@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { switchRpcDefaultSettings } from '@home/components/widget/lib/settings/control/switch-rpc-settings.component';
 import { deepClone } from '@core/utils';
 
+
+/**
+ * Angular component: slide toggle widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-slide-toggle-widget-settings`.
+ */
 @Component({
     selector: 'tb-slide-toggle-widget-settings',
     templateUrl: './slide-toggle-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: slide toggle widget settings UI.
- */
+standalone: false
 })
 export class SlideToggleWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -46,9 +49,21 @@ export class SlideToggleWidgetSettingsComponent extends WidgetSettingsComponent 
     return this.widgetConfig?.config?.targetDevice;
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.slideToggleWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -59,6 +74,12 @@ export class SlideToggleWidgetSettingsComponent extends WidgetSettingsComponent 
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.slideToggleWidgetSettingsForm = this.fb.group({
       title: [settings.title, []],
@@ -67,6 +88,13 @@ export class SlideToggleWidgetSettingsComponent extends WidgetSettingsComponent 
       switchRpcSettings: [settings.switchRpcSettings, []]
     });
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     const switchRpcSettings = deepClone(settings, ['title', 'labelPosition', 'sliderColor']);
@@ -77,6 +105,13 @@ export class SlideToggleWidgetSettingsComponent extends WidgetSettingsComponent 
       switchRpcSettings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return {

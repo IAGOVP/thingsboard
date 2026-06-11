@@ -34,8 +34,9 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.stream.Collectors;
 /**
- * Rule engine component: cert pem credentials.
+ * Cert pem credentials (credentials helper types).
  */
+
 
 @Data
 @Slf4j
@@ -51,11 +52,23 @@ public class CertPemCredentials implements ClientCredentials {
     private String cert;
     private String privateKey;
     private String password;
+    /**
+     * Returns type.
+     *
+     * @return {@link CredentialsType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public CredentialsType getType() {
         return CredentialsType.CERT_PEM;
     }
+    /**
+     * Init ssl context.
+     *
+     * @return {@link SslContext}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public SslContext initSslContext() {
@@ -73,6 +86,12 @@ public class CertPemCredentials implements ClientCredentials {
             throw new RuntimeException("Creating TLS factory failed!", e);
         }
     }
+    /**
+     * Creates and init trust manager factory.
+     *
+     * @return {@link TrustManagerFactory}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected TrustManagerFactory createAndInitTrustManagerFactory() throws Exception {
         List<X509Certificate> caCerts = SslUtil.readCertFile(caCert);
@@ -93,6 +112,12 @@ public class CertPemCredentials implements ClientCredentials {
         kmf.init(loadKeyStore(), SslUtil.getPassword(password));
         return kmf;
     }
+    /**
+     * Loads key store.
+     *
+     * @return {@link KeyStore}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected KeyStore loadKeyStore() throws Exception {
         List<X509Certificate> certificates = SslUtil.readCertFile(this.cert);

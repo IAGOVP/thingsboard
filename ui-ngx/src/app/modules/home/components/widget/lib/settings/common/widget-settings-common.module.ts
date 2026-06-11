@@ -276,6 +276,9 @@ import { AxisScaleRowComponent } from './axis-scale-row.component';
 /**
  * Angular NgModule: widget settings common feature area.
  */
+/**
+ * Angular NgModule bundling widget settings common (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     ImageCardsSelectOptionDirective,
@@ -470,6 +473,6 @@ import { AxisScaleRowComponent } from './axis-scale-row.component';
   providers: [
     ColorSettingsComponentService,
     ColorRangeSettingsComponentService
-  ]})
+]})
 export class WidgetSettingsCommonModule {
 }

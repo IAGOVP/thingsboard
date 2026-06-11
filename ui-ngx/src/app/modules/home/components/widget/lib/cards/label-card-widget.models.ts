@@ -16,11 +16,11 @@
 
 import { BackgroundSettings, BackgroundType, cssUnit, Font } from '@shared/models/widget-settings.models';
 
+
 /**
-
- * TypeScript models and enums for label card widget settings.
-
+ * Label card widget settings (ThingsBoard web UI).
  */
+
 
 export interface LabelCardWidgetSettings {
   autoScale: boolean;

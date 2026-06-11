@@ -35,6 +35,12 @@ import { getTimezoneInfo, TimezoneInfo } from '@shared/models/time/time.models';
 import { TimeService } from '@core/services/time.service';
 
 // @dynamic
+
+/**
+ * Angular component: timezone (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timezone`.
+ */
 @Component({
     selector: 'tb-timezone',
     templateUrl: './timezone.component.html',
@@ -46,10 +52,7 @@ import { TimeService } from '@core/services/time.service';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: timezone UI.
- */
+standalone: false
 })
 export class TimezoneComponent implements ControlValueAccessor, OnInit {
 
@@ -145,8 +148,18 @@ export class TimezoneComponent implements ControlValueAccessor, OnInit {
               private timeService: TimeService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * toggle timezone.
+   *
+   */
 
   toggleTimezone($event: Event) {
     if ($event) {
@@ -189,17 +202,41 @@ export class TimezoneComponent implements ControlValueAccessor, OnInit {
     this.cd.detectChanges();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     this.timezoneDisabled = this.isTimezoneDisabled();
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.modelValue = value;
@@ -208,25 +245,58 @@ export class TimezoneComponent implements ControlValueAccessor, OnInit {
     this.updateDisplayValue();
   }
 
+  /**
+   * notify changed.
+   *
+   */
+
   notifyChanged() {
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * display value.
+   *
+   * @returns string observable or value
+   */
 
   displayValue(): string {
     return this.displayTimezoneValue && this.timezoneInfo ? this.timezoneInfo.offset : this.translate.instant('timezone.timezone');
   }
 
+  /**
+   * tooltip value.
+   *
+   * @returns string observable or value
+   */
+
   tooltipValue(): string {
     return this.timezoneInfo ? `${this.timezoneInfo.name} (${this.timezoneInfo.offset})` : undefined;
   }
+
+  /**
+   * update display value.
+   *
+   */
 
   updateDisplayValue() {
     this.cd.detectChanges();
   }
 
+  /**
+   * is timezone disabled.
+   *
+   * @returns boolean observable or value
+   */
+
   private isTimezoneDisabled(): boolean {
     return this.disabled;
   }
+
+  /**
+   * set timezone info.
+   *
+   */
 
   private setTimezoneInfo() {
     const foundTimezone = getTimezoneInfo(this.modelValue, this.defaultTimezoneId, this.userTimezoneByDefaultValue);

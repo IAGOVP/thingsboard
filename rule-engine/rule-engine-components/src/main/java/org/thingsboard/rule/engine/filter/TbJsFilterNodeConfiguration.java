@@ -19,8 +19,11 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.script.ScriptLanguage;
 /**
- * JSON configuration for TbJsFilter rule node.
+ * JSON configuration POJO for {@link TbJsFilter} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbJsFilterNodeConfiguration implements NodeConfiguration<TbJsFilterNodeConfiguration> {
@@ -28,6 +31,12 @@ public class TbJsFilterNodeConfiguration implements NodeConfiguration<TbJsFilter
     private ScriptLanguage scriptLang;
     private String jsScript;
     private String tbelScript;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbJsFilterNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbJsFilterNodeConfiguration defaultConfiguration() {

@@ -31,7 +31,9 @@ import { EntityTestScriptResult } from '@shared/models/entity.models';
 import { CalculatedFieldEventBody } from '@shared/models/event.models';
 
 /**
- * Angular HTTP service: alarm rules REST wrappers (`@core/http`).
+ * Angular injectable service: alarm rules (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -42,49 +44,114 @@ export class AlarmRulesService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/alarm/rule/${alarmRuleId}, ...`. */
+  
+  /**
+   * get alarm rule by id.
+   *
+   * @param alarmRuleId alarm rule id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<CalculatedFieldAlarmRule> observable or value
+   */
+
 
   public getAlarmRuleById(alarmRuleId: string, config?: RequestConfig): Observable<CalculatedFieldAlarmRule> {
     return this.http.get<CalculatedFieldAlarmRule>(`/api/alarm/rule/${alarmRuleId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/rule, ...`. */
+  
+  /**
+   * POST/PUT entity — save alarm rule.
+   *
+   * @param alarmRule alarm rule (CalculatedFieldAlarmRule)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<CalculatedFieldAlarmRule> observable or value
+   */
+
 
   public saveAlarmRule(alarmRule: CalculatedFieldAlarmRule, config?: RequestConfig): Observable<CalculatedFieldAlarmRule> {
     return this.http.post<CalculatedFieldAlarmRule>('/api/alarm/rule', alarmRule, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/rule/${alarmRuleId}, ...`. */
+  
+  /**
+   * DELETE — delete alarm rule.
+   *
+   * @param alarmRuleId alarm rule id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<boolean> observable or value
+   */
+
 
   public deleteAlarmRule(alarmRuleId: string, config?: RequestConfig): Observable<boolean> {
     return this.http.delete<boolean>(`/api/alarm/rule/${alarmRuleId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/rules${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get alarm rules.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param query query (CalculatedFieldsQuery)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<CalculatedFieldAlarmRuleInfo>> observable or value
+   */
+
 
   public getAlarmRules(pageLink: PageLink, query: CalculatedFieldsQuery, config?: RequestConfig): Observable<PageData<CalculatedFieldAlarmRuleInfo>> {
     return this.http.get<PageData<CalculatedFieldAlarmRuleInfo>>(`/api/alarm/rules${pageLink.toQuery()}`, defaultHttpOptionsFromParams(query, config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/rules/${entityType}/${id}${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get alarm rules by entity id.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<CalculatedFieldAlarmRule>> observable or value
+   */
+
 
   public getAlarmRulesByEntityId({ entityType, id }: EntityId, pageLink: PageLink, config?: RequestConfig): Observable<PageData<CalculatedFieldAlarmRule>> {
     return this.http.get<PageData<CalculatedFieldAlarmRule>>(`/api/alarm/rules/${entityType}/${id}${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/rule/testScript, ...`. */
+  
+  /**
+   * test script.
+   *
+   * @param inputParams input params (CalculatedFieldTestScriptInputParams)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<EntityTestScriptResult> observable or value
+   */
+
 
   public testScript(inputParams: CalculatedFieldTestScriptInputParams, config?: RequestConfig): Observable<EntityTestScriptResult> {
     return this.http.post<EntityTestScriptResult>('/api/alarm/rule/testScript', inputParams, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/rule/${id}/debug, ...`. */
+  
+  /**
+   * get latest alarm rule debug event.
+   *
+   * @param id id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<CalculatedFieldEventBody> observable or value
+   */
+
 
   public getLatestAlarmRuleDebugEvent(id: string, config?: RequestConfig): Observable<CalculatedFieldEventBody> {
     return this.http.get<CalculatedFieldEventBody>(`/api/alarm/rule/${id}/debug`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/alarm/rules/names${pageLink.toQuery()}`. */
+  
+  /**
+   * get alarm rule names.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<string>> observable or value
+   */
+
 
   public getAlarmRuleNames(pageLink: PageLink, config?: RequestConfig): Observable<PageData<string>> {
     return this.http.get<PageData<string>>(`/api/alarm/rules/names${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));

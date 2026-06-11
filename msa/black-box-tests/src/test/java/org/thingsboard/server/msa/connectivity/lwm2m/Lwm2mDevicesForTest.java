@@ -22,8 +22,9 @@ import org.thingsboard.server.common.data.Device;
 import org.thingsboard.server.common.data.DeviceProfile;
 import org.thingsboard.server.msa.connectivity.lwm2m.client.LwM2MTestClient;
 /**
- * Lwm2m devices for test.
+ * Registry of LwM2M device profiles and endpoints used by connectivity tests.
  */
+
 
 @Slf4j
 @Data

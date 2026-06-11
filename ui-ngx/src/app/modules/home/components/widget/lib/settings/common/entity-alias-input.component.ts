@@ -38,6 +38,12 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: entity alias input (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-alias-input`.
+ */
 @Component({
     selector: 'tb-entity-alias-input',
     templateUrl: './entity-alias-input.component.html',
@@ -50,10 +56,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: entity alias input UI.
- */
+standalone: false
 })
 export class EntityAliasInputComponent implements ControlValueAccessor, OnInit {
 
@@ -86,6 +89,11 @@ export class EntityAliasInputComponent implements ControlValueAccessor, OnInit {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.entityAliasFormControl = this.fb.control(null, this.required ? [Validators.required] : []);
     this.entityAliasFormControl.valueChanges.pipe(
@@ -108,12 +116,30 @@ export class EntityAliasInputComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -124,10 +150,21 @@ export class EntityAliasInputComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
+
   writeValue(value: string): void {
     this.entityAliasFormControl.patchValue(value, {emitEvent: false});
     this.entityAliasDirty = true;
   }
+
+  /**
+   * Event handler for entity alias focus.
+   *
+   */
 
   onEntityAliasFocus() {
     if (this.entityAliasDirty) {
@@ -135,6 +172,11 @@ export class EntityAliasInputComponent implements ControlValueAccessor, OnInit {
       this.entityAliasDirty = false;
     }
   }
+
+  /**
+   * clear entity alias.
+   *
+   */
 
   clearEntityAlias() {
     this.entityAliasFormControl.patchValue(null, {emitEvent: true});
@@ -144,6 +186,13 @@ export class EntityAliasInputComponent implements ControlValueAccessor, OnInit {
     }, 0);
   }
 
+  /**
+   * fetch entity aliases.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   private fetchEntityAliases(searchText?: string): Observable<Array<string>> {
     this.aliasSearchText = searchText;
     let result = this.entityAliasList;
@@ -152,6 +201,11 @@ export class EntityAliasInputComponent implements ControlValueAccessor, OnInit {
     }
     return of(result);
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value = this.entityAliasFormControl.value;

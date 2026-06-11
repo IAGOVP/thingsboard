@@ -21,13 +21,25 @@ import org.testng.annotations.ITestAnnotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+
 /**
 
- * Retry test listener.
+ * Retry test listener (TestNG listeners and retry helpers).
 
  */
 
+
 public class RetryTestListener implements IAnnotationTransformer {
+    /**
+     * Transform.
+     *
+     * @param annotation annotation ({@link ITestAnnotation})
+     * @param testClass test class ({@link Class})
+     * @param testConstructor test constructor ({@link Constructor})
+     * @param testMethod test method ({@link Method})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void transform(ITestAnnotation annotation,

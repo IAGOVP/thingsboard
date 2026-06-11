@@ -23,6 +23,7 @@ import java.util.List;
  * WebSocket command to read latest telemetry for entity keys.
  */
 
+
 @Data
 public class LatestValueCmd {
 

@@ -17,11 +17,11 @@
 import { EntityId } from '@shared/models/id/entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for tb resource id.
-
+ * TypeScript interfaces, types, and enums for tb resource id (shared TypeScript models).
  */
+
 
 export class TbResourceId implements EntityId {
   entityType = EntityType.TB_RESOURCE;

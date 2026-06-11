@@ -27,8 +27,9 @@ import { UtilsService } from '@core/services/utils.service';
 import { Widget } from '@app/shared/models/widget.models';
 import { ConfirmOnExitGuard } from '@core/guards/confirm-on-exit.guard';
 /**
- * Route resolver: loads widget editor dashboard before activate.
+ * Route resolver: preloads data for widget editor dashboard (dashboard module).
  */
+
 
 @Injectable()
 export class WidgetEditorDashboardResolver  {
@@ -37,6 +38,13 @@ export class WidgetEditorDashboardResolver  {
               private dashboardUtils: DashboardUtilsService,
               private utils: UtilsService) {
   }
+
+  /**
+   * resolve.
+   *
+   * @param route route (ActivatedRouteSnapshot)
+   * @returns Dashboard observable or value
+   */
 
   resolve(route: ActivatedRouteSnapshot): Dashboard {
     const editWidgetInfo = this.utils.editWidgetInfo;

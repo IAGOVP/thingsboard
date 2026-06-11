@@ -32,8 +32,11 @@ import {
   WIDGET_COMPONENTS_MODULE_TOKEN
 } from '@home/components/tokens';
 /**
- * Angular HTTP service: custom dialog REST wrappers (`@core/http`).
+ * Angular injectable service: custom dialog (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
+
 
 @Injectable()
 export class CustomDialogService {
@@ -49,6 +52,12 @@ export class CustomDialogService {
     public dialog: MatDialog
   ) {
   }
+
+  /**
+   * set additional imports.
+   *
+   * @param imports imports (Array<Type<any>>)
+   */
 
   setAdditionalImports(imports: Array<Type<any>>) {
     this.customImports = imports;

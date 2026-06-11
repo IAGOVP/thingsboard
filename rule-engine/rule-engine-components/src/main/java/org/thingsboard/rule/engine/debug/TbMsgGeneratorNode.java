@@ -54,7 +54,13 @@ import static org.thingsboard.server.common.data.DataConstants.QUEUE_NAME;
 
 @Slf4j
 /**
- * Rule engine action node 'generator': Periodically generates messages Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>generator</b>.
+ *
+ * <p>Periodically generates messages
+ * <br>Generates messages with configurable period. Javascript function used for message generation.
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbMsgGeneratorNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/generator/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/action/generator/</a>
  */
 @RuleNode(
         type = ComponentType.ACTION,
@@ -84,6 +90,13 @@ public class TbMsgGeneratorNode implements TbNode {
     private TbMsg prevMsg;
     private final AtomicBoolean initialized = new AtomicBoolean(false);
     private String queueName;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -98,6 +111,12 @@ public class TbMsgGeneratorNode implements TbNode {
         log.debug("[{}] Initializing generator with config {}", originatorId, configuration);
         updateGeneratorState(ctx);
     }
+    /**
+     * Cluster hook invoked on Kafka partition reassignment for this tenant/queue.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     */
 
     @Override
     public void onPartitionChangeMsg(TbContext ctx, PartitionChangeMsg msg) {
@@ -117,6 +136,13 @@ public class TbMsgGeneratorNode implements TbNode {
             destroy();
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -191,6 +217,10 @@ public class TbMsgGeneratorNode implements TbNode {
         ctx.checkTenantEntity(entityId);
         return entityId;
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {
@@ -204,6 +234,14 @@ public class TbMsgGeneratorNode implements TbNode {
             scriptEngine = null;
         }
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

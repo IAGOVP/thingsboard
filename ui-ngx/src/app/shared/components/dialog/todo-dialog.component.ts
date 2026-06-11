@@ -17,14 +17,17 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
+
+/**
+ * Angular component: todo dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-todo-dialog`.
+ */
 @Component({
     selector: 'tb-todo-dialog',
     templateUrl: './todo-dialog.component.html',
     styleUrls: ['./todo-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: todo dialog UI.
- */
+standalone: false
 })
 export class TodoDialogComponent {
   constructor(public dialogRef: MatDialogRef<TodoDialogComponent>) {

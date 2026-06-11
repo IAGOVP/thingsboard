@@ -37,7 +37,7 @@ export interface HasDirtyFlag {
 }
 
 /**
- * Route guard: confirm on exit.
+ * Route guard: confirm on exit (route guards).
  */
 @Injectable({
   providedIn: 'root'
@@ -47,6 +47,14 @@ export class ConfirmOnExitGuard  {
   constructor(private store: Store<AppState>,
               private dialogService: DialogService,
               private translate: TranslateService) { }
+
+  /**
+   * can deactivate.
+   *
+   * @param component component (HasConfirmForm & HasDirtyFlag)
+   * @param route route (ActivatedRouteSnapshot)
+   * @param state state (RouterStateSnapshot)
+   */
 
   canDeactivate(component: HasConfirmForm & HasDirtyFlag,
                 route: ActivatedRouteSnapshot,
@@ -91,6 +99,13 @@ export class ConfirmOnExitGuard  {
     }
     return true;
   }
+
+  /**
+   * get message.
+   *
+   * @param component component (HasConfirmForm & HasDirtyFlag)
+   * @returns string observable or value
+   */
 
   private getMessage(component: HasConfirmForm & HasDirtyFlag): string {
     return component.confirmOnExitMessage

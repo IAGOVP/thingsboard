@@ -43,8 +43,9 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 /**
- * Base implementation for relation action node rule nodes.
+ * Abstract base class for relation action node rule nodes (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @Slf4j
 public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationActionNodeConfiguration> implements TbNode {
@@ -55,19 +56,55 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
     private static final String supportedEntityTypesStr = supportedEntityTypes.stream().map(Enum::name).collect(Collectors.joining(" ,"));
 
     protected C config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         this.config = loadEntityNodeActionConfig(configuration);
     }
+    /**
+     * Creates entity if not exists.
+     *
+     * @return the boolean result
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract boolean createEntityIfNotExists();
+    /**
+     * Loads entity node action config.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link C}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract C loadEntityNodeActionConfig(TbNodeConfiguration configuration) throws TbNodeException;
+    /**
+     * Processes pattern.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @param pattern pattern ({@link String})
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected String processPattern(TbMsg msg, String pattern) {
         return TbNodeUtils.processPattern(pattern, msg);
     }
+    /**
+     * Returns target entity id.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<EntityId> getTargetEntityId(TbContext ctx, TbMsg msg) {
         var entityType = config.getEntityType();
@@ -221,11 +258,30 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
             default -> throw new IllegalArgumentException(unsupportedEntityTypeErrorMessage(entityType));
         }
     }
+    /**
+     * Deletes relations by type and direction.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param executor executor ({@link Executor})
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<Boolean> deleteRelationsByTypeAndDirection(TbContext ctx, TbMsg msg, Executor executor) {
         var relationType = processPattern(msg, config.getRelationType());
         return deleteRelationsByTypeAndDirection(ctx, msg, relationType, executor);
     }
+    /**
+     * Deletes relations by type and direction.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param relationType output connection name (Success, Failure, True, False, etc.)
+     * @param executor executor ({@link Executor})
+     * @return future completing with {@link Boolean}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<Boolean> deleteRelationsByTypeAndDirection(TbContext ctx, TbMsg msg, String relationType, Executor executor) {
         var tenantId = ctx.getTenantId();
@@ -245,6 +301,12 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
                     deleteResults.stream().allMatch(Boolean::booleanValue), executor);
         }, executor);
     }
+    /**
+     * Checks if config entity type is supported.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected void checkIfConfigEntityTypeIsSupported(EntityType entityType) throws TbNodeException {
         if (!supportedEntityTypes.contains(entityType)) {
@@ -256,6 +318,14 @@ public abstract class TbAbstractRelationActionNode<C extends TbAbstractRelationA
         return "Unsupported entity type '" + entityType +
                 "'! Only " + supportedEntityTypesStr + " types are allowed.";
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

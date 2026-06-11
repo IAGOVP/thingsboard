@@ -58,6 +58,12 @@ enum TimeCategory {
   DAYS = 'DAYS'
 }
 
+
+/**
+ * Angular component: entity aggregation (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-aggregation-component`.
+ */
 @Component({
     selector: 'tb-entity-aggregation-component',
     templateUrl: './entity-aggregation-component.component.html',
@@ -73,10 +79,7 @@ enum TimeCategory {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity aggregation UI.
- */
+standalone: false
 })
 export class EntityAggregationComponentComponent implements ControlValueAccessor, Validator {
 
@@ -177,9 +180,21 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     });
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.entityAggregationConfiguration.valid || this.entityAggregationConfiguration.disabled ? null : {invalidPropagateConfig: false};
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (CalculatedFieldEntityAggregationConfiguration)
+   */
 
   writeValue(value: CalculatedFieldEntityAggregationConfiguration): void {
     const data: CalculatedFieldEntityAggregationConfigurationValue = {
@@ -204,7 +219,19 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _   (any)
+   */
+
   registerOnTouched(_: any): void { }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -238,6 +265,12 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * updated model.
+   *
+   * @param value value (CalculatedFieldEntityAggregationConfigurationValue)
+   */
+
   private updatedModel(value: CalculatedFieldEntityAggregationConfigurationValue): void {
     value.type = CalculatedFieldType.ENTITY_AGGREGATION;
     if (!value.interval.allowOffsetSec) {
@@ -251,6 +284,12 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     this.propagateChange(value);
   }
 
+  /**
+   * check agg interval type.
+   *
+   * @param type type (AggIntervalType)
+   */
+
   private checkAggIntervalType(type: AggIntervalType) {
     if (type === AggIntervalType.CUSTOM) {
       this.entityAggregationConfiguration.get('interval.durationSec').enable({emitEvent: false});
@@ -258,6 +297,12 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
       this.entityAggregationConfiguration.get('interval.durationSec').disable({emitEvent: false});
     }
   }
+
+  /**
+   * check interval duration.
+   *
+   * @param allow allow (boolean)
+   */
 
   private checkIntervalDuration(allow: boolean) {
     if (allow) {
@@ -268,6 +313,12 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * check watermark.
+   *
+   * @param allow allow (boolean)
+   */
+
   private checkWatermark(allow: boolean) {
     if (allow) {
       this.entityAggregationConfiguration.get('watermark').enable({emitEvent: false});
@@ -275,6 +326,11 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
       this.entityAggregationConfiguration.get('watermark').disable({emitEvent: false});
     }
   }
+
+  /**
+   * check produce intermediate.
+   *
+   */
 
   private checkProduceIntermediate() {
     const intervalType = this.entityAggregationConfiguration.get('interval.type').value as AggIntervalType;
@@ -309,6 +365,11 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
       this.entityAggregationConfiguration.get('produceIntermediateResult').disable({emitEvent: false});
     }
   }
+
+  /**
+   * updated offset hint.
+   *
+   */
 
   private updatedOffsetHint(): void {
     const offset = this.entityAggregationConfiguration.get('interval.offsetSec').value;
@@ -351,6 +412,13 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * get time category.
+   *
+   * @param seconds seconds (number)
+   * @returns TimeCategory observable or value
+   */
+
   private getTimeCategory(seconds: number): TimeCategory {
     if (seconds % (DAY / SECOND) === 0) {
       return TimeCategory.DAYS;
@@ -363,6 +431,14 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     }
     return TimeCategory.SECONDS;
   }
+
+  /**
+   * get custom format string.
+   *
+   * @param offsetCat offset cat (TimeCategory)
+   * @param durationCat duration cat (TimeCategory)
+   * @returns string observable or value
+   */
 
   private getCustomFormatString(offsetCat: TimeCategory, durationCat: TimeCategory): string {
     if (durationCat === TimeCategory.DAYS) {
@@ -381,6 +457,18 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * format additive interval.
+   *
+   * @param now now (_moment.Moment)
+   * @param addUnit add unit ('hour' | 'day' | 'month' | 'quarter')
+   * @param offsetCat offset cat (TimeCategory)
+   * @param formats formats ({ [key in TimeCategory]?: { s1: string)
+   * @param s2 s2 (string)
+   * @param s3 s3 (string } })
+   * @returns string observable or value
+   */
+
   private formatAdditiveInterval(now: _moment.Moment, addUnit: 'hour' | 'day' | 'month' | 'quarter', offsetCat: TimeCategory,
                                  formats: { [key in TimeCategory]?: { s1: string, s2: string, s3: string } }): string {
     const formatTs = formats[offsetCat] || formats[TimeCategory.SECONDS];
@@ -396,6 +484,17 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     return `${s1} - ${s2}; ${s2} - ${s3}…`;
   }
 
+  /**
+   * format next interval.
+   *
+   * @param now now (_moment.Moment)
+   * @param offsetCat offset cat (TimeCategory)
+   * @param secFmt sec fmt (string)
+   * @param minHourFmt min hour fmt (string)
+   * @param dayFmt day fmt (string)
+   * @returns string observable or value
+   */
+
   private formatNextInterval(now: _moment.Moment, offsetCat: TimeCategory, secFmt: string, minHourFmt: string, dayFmt: string): string {
     let s1: string;
     if (offsetCat === TimeCategory.SECONDS) {
@@ -410,6 +509,16 @@ export class EntityAggregationComponentComponent implements ControlValueAccessor
     const s3 = `Following ${s1}`;
     return `${s1} - ${s2}; ${s2} - ${s3}… `;
   }
+
+  /**
+   * build standard interval string.
+   *
+   * @param now now (_moment.Moment)
+   * @param type type (AggIntervalType)
+   * @param offset offset (number)
+   * @param offsetCat offset cat (TimeCategory)
+   * @returns string observable or value
+   */
 
   private buildStandardIntervalString(now: _moment.Moment, type: AggIntervalType, offset: number, offsetCat: TimeCategory): string {
     switch (type) {

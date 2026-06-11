@@ -46,6 +46,12 @@ import {
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 
+
+/**
+ * Angular component: string pattern autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-string-pattern-autocomplete`.
+ */
 @Component({
     selector: 'tb-string-pattern-autocomplete',
     templateUrl: './string-pattern-autocomplete.component.html',
@@ -57,10 +63,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: string pattern autocomplete UI.
- */
+standalone: false
 })
 export class StringPatternAutocompleteComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -137,6 +140,11 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.selectionFormControl = this.fb.control('', this.required ? [Validators.required] : []);
     merge(
@@ -174,6 +182,12 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param option option (string)
+   */
+
   writeValue(option?: string): void {
     this.searchText = '';
     this.modelValue = option ?? null;
@@ -181,16 +195,39 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
     this.selectionFormControl.patchValue(this.modelValue, {emitEvent: false});
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     this.onSelectionChange();
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -202,6 +239,12 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * Event handler for input scroll.
+   *
+   * @param event DOM or Angular event object
+   */
+
   onInputScroll(event: Event) {
     const scrollLeft = (event.target as HTMLInputElement).scrollLeft;
     const scrollTop = (event.target as HTMLInputElement).scrollTop;
@@ -210,6 +253,12 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
       this.highlightTextRef.nativeElement.scrollTop = scrollTop;
     }
   }
+
+  /**
+   * option selected.
+   *
+   * @param value value (string)
+   */
 
   optionSelected(value: string) {
     const position = this.inputRef.nativeElement.selectionStart;
@@ -239,6 +288,11 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
     this.closeAutocomplete();
   }
 
+  /**
+   * open values.
+   *
+   */
+
   openValues($event: MouseEvent) {
     $event.stopPropagation();
     const selectionStart = this.inputRef.nativeElement.selectionStart;
@@ -247,6 +301,12 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
     this.openAutocomplete(selectionStart);
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (string)
+   */
+
   private updateView(value: string) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -254,6 +314,11 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * Event handler for selection change.
+   *
+   */
 
   private onSelectionChange() {
     const selectionStart = this.inputRef.nativeElement.selectionStart;
@@ -271,6 +336,13 @@ export class StringPatternAutocompleteComponent implements ControlValueAccessor,
       this.closeAutocomplete()
     }
   }
+
+  /**
+   * get highlight html.
+   *
+   * @param text text (string)
+   * @returns string observable or value
+   */
 
   private getHighlightHtml(text: string): string {
     if (!text) {

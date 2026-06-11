@@ -18,33 +18,62 @@ import { DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+
 /**
-
- * tb table datasource.
-
+ * Tb table datasource (shared UI components).
  */
+
 
 export abstract class TbTableDatasource<T> implements DataSource<T> {
 
   protected dataSubject = new BehaviorSubject<Array<T>>([]);
 
+  /**
+   * connect.
+   *
+   * @returns Observable<Array<T>> observable or value
+   */
+
   connect(): Observable<Array<T>> {
     return this.dataSubject.asObservable();
   }
+
+  /**
+   * disconnect.
+   *
+   */
 
   disconnect(): void {
     this.dataSubject.complete();
   }
 
+  /**
+   * load data.
+   *
+   * @param data dialog or route input data
+   */
+
   loadData(data: Array<T>): void {
     this.dataSubject.next(data);
   }
+
+  /**
+   * is empty.
+   *
+   * @returns Observable<boolean> observable or value
+   */
 
   isEmpty(): Observable<boolean> {
     return this.dataSubject.pipe(
       map((data: T[]) => !data.length)
     );
   }
+
+  /**
+   * total.
+   *
+   * @returns Observable<number> observable or value
+   */
 
   total(): Observable<number> {
     return this.dataSubject.pipe(

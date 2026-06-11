@@ -22,7 +22,8 @@ package org.thingsboard.rule.engine.api;
  * Persisted per-node state in rule engine.
  */
 /**
- * Persisted per-node state in rule engine.
+ * Tb node state (rule engine public API contracts and services).
  */
+
 public final class TbNodeState {
 }

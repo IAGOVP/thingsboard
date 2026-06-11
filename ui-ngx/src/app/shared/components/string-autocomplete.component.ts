@@ -33,6 +33,12 @@ export interface ErrorMessageConfig {
   [errorKey: string]: string;
 }
 
+
+/**
+ * Angular component: string autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-string-autocomplete`.
+ */
 @Component({
     selector: 'tb-string-autocomplete',
     templateUrl: './string-autocomplete.component.html',
@@ -44,10 +50,7 @@ export interface ErrorMessageConfig {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: string autocomplete UI.
- */
+standalone: false
 })
 export class StringAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -113,6 +116,11 @@ export class StringAutocompleteComponent implements ControlValueAccessor, OnInit
               private translate: TranslateService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     const validators = [Validators.pattern(/.*\S.*/)];
     if (this.controlValidators?.length) {
@@ -133,6 +141,12 @@ export class StringAutocompleteComponent implements ControlValueAccessor, OnInit
       );
   }
 
+  /**
+   * write value.
+   *
+   * @param option option (string)
+   */
+
   writeValue(option?: string): void {
     this.searchText = '';
     this.modelValue = option ? option : null;
@@ -140,6 +154,10 @@ export class StringAutocompleteComponent implements ControlValueAccessor, OnInit
     if (this.fetchOptionsFn) {
       this.fetchOptionsFn(option)
         .pipe(
+          /**
+           * map.
+           *
+           */
           map(options => {
             if (options) {
               const foundOption = options.find(opt => opt === option);
@@ -160,12 +178,23 @@ export class StringAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.selectionFormControl.updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * update view.
+   *
+   * @param value value (string)
+   */
 
   updateView(value: string) {
     this.searchText = value ? value : '';
@@ -175,12 +204,30 @@ export class StringAutocompleteComponent implements ControlValueAccessor, OnInit
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -190,6 +237,11 @@ export class StringAutocompleteComponent implements ControlValueAccessor, OnInit
       this.selectionFormControl.enable({emitEvent: false});
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.selectionFormControl.patchValue(null, {emitEvent: true});

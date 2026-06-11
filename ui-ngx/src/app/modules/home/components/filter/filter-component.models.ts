@@ -16,11 +16,11 @@
 
 import { ComplexFilterPredicateInfo, EntityKeyValueType } from '@shared/models/query/query.models';
 
+
 /**
-
- * TypeScript models and enums for complex filter predicate dialog data.
-
+ * Complex filter predicate dialog data (ThingsBoard web UI).
  */
+
 
 export interface ComplexFilterPredicateDialogData {
   complexPredicate: ComplexFilterPredicateInfo;

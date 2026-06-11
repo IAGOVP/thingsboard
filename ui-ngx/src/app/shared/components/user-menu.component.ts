@@ -24,15 +24,18 @@ import { map } from 'rxjs/operators';
 import { AuthService } from '@core/auth/auth.service';
 import { Router } from '@angular/router';
 
+
+/**
+ * Angular component: user menu (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-user-menu`.
+ */
 @Component({
     selector: 'tb-user-menu',
     templateUrl: './user-menu.component.html',
     styleUrls: ['./user-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: user menu UI.
- */
+standalone: false
 })
 export class UserMenuComponent implements OnInit, OnDestroy {
 
@@ -60,11 +63,28 @@ export class UserMenuComponent implements OnInit, OnDestroy {
               private authService: AuthService) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
   }
+
+  /**
+   * get authority name.
+   *
+   * @param user user (User)
+   * @returns string observable or value
+   */
 
   getAuthorityName(user: User): string {
     let name = null;
@@ -84,6 +104,13 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     }
     return name;
   }
+
+  /**
+   * get user display name.
+   *
+   * @param user user (User)
+   * @returns string observable or value
+   */
 
   getUserDisplayName(user: User): string {
     let name = '';
@@ -106,9 +133,19 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     return name;
   }
 
+  /**
+   * open account.
+   *
+   */
+
   openAccount(): void {
     this.router.navigate(['account']);
   }
+
+  /**
+   * logout.
+   *
+   */
 
   logout(): void {
     this.authService.logout();

@@ -30,11 +30,11 @@ import { DataKeyType } from '@shared/models/telemetry/telemetry.models';
 import { isDefinedAndNotNull } from '@core/utils';
 import { TbUnit } from '@shared/models/unit.models';
 
+
 /**
-
- * TypeScript models and enums for attribute source property.
-
+ * Attribute source property (ThingsBoard web UI).
  */
+
 
 export interface AttributeSourceProperty {
   valueSource: string;

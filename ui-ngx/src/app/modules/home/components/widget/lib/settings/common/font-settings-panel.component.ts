@@ -45,16 +45,19 @@ import { map, startWith, tap } from 'rxjs/operators';
 import { coerceBoolean } from '@shared/decorators/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: font settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-font-settings-panel`.
+ */
 @Component({
     selector: 'tb-font-settings-panel',
     templateUrl: './font-settings-panel.component.html',
     providers: [],
     styleUrls: ['./font-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: font settings panel UI.
- */
+standalone: false
 })
 export class FontSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -112,6 +115,11 @@ export class FontSettingsPanelComponent extends PageComponent implements OnInit 
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.fontFormGroup = this.fb.group(
       {
@@ -141,6 +149,11 @@ export class FontSettingsPanelComponent extends PageComponent implements OnInit 
       );
   }
 
+  /**
+   * clear family.
+   *
+   */
+
   clearFamily() {
     this.fontFormGroup.get('family').patchValue(null, {emitEvent: true});
     setTimeout(() => {
@@ -149,23 +162,50 @@ export class FontSettingsPanelComponent extends PageComponent implements OnInit 
     }, 0);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply font.
+   *
+   */
 
   applyFont() {
     const font = this.fontFormGroup.value;
     this.fontApplied.emit(font);
   }
 
+  /**
+   * clear disabled.
+   *
+   * @returns boolean observable or value
+   */
+
   clearDisabled(): boolean {
     return !isFontPartiallySet(this.fontFormGroup.value);
   }
+
+  /**
+   * clear font.
+   *
+   */
 
   clearFont() {
     this.fontFormGroup.reset({sizeUnit: this.forceSizeUnit || 'px'});
     this.fontFormGroup.markAsDirty();
   }
+
+  /**
+   * update preview style.
+   *
+   * @param font font (Font)
+   */
 
   private updatePreviewStyle(font: Font) {
     if (!!this.forceSizeUnit) {

@@ -37,6 +37,12 @@ import {
 import { isDefinedAndNotNull } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: here map provider settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-here-map-provider-settings`.
+ */
 @Component({
     selector: 'tb-here-map-provider-settings',
     templateUrl: './here-map-provider-settings.component.html',
@@ -53,10 +59,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: here map provider settings UI.
- */
+standalone: false
 })
 export class HereMapProviderSettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -79,6 +82,11 @@ export class HereMapProviderSettingsComponent extends PageComponent implements O
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.providerSettingsFormGroup = this.fb.group({
@@ -110,12 +118,30 @@ export class HereMapProviderSettingsComponent extends PageComponent implements O
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -126,6 +152,12 @@ export class HereMapProviderSettingsComponent extends PageComponent implements O
       this.providerSettingsFormGroup.get('credentials.useV3').updateValueAndValidity({onlySelf: true});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (HereMapProviderSettings)
+   */
 
   writeValue(value: HereMapProviderSettings): void {
     if (!isDefinedAndNotNull(value.credentials.useV3)) {
@@ -140,6 +172,12 @@ export class HereMapProviderSettingsComponent extends PageComponent implements O
     this.providerSettingsFormGroup.get('credentials.useV3').updateValueAndValidity({onlySelf: true});
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (FormControl)
+   */
+
   public validate(c: FormControl) {
     return this.providerSettingsFormGroup.valid ? null : {
       hereMapProviderSettings: {
@@ -147,6 +185,11 @@ export class HereMapProviderSettingsComponent extends PageComponent implements O
       },
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: HereMapProviderSettings = this.providerSettingsFormGroup.value;

@@ -15,11 +15,11 @@
 ///
 
 
+
 /**
-
- * TypeScript models and enums for sort order.
-
+ * TypeScript interfaces, types, and enums for sort order (shared TypeScript models).
  */
+
 
 export interface SortOrder {
   property: string;

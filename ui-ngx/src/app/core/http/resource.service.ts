@@ -26,7 +26,9 @@ import { isNotEmptyStr } from '@core/utils';
 import { ResourcesService } from '@core/services/resources.service';
 
 /**
- * Angular HTTP service: resource REST wrappers (`@core/http`).
+ * Angular injectable service: resource (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -39,7 +41,17 @@ export class ResourceService {
 
   }
 
-  /** Calls ThingsBoard REST `/api/resource${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get resources.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param resourceType resource type (ResourceType)
+   * @param resourceSubType resource sub type (ResourceSubType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<ResourceInfo>> observable or value
+   */
+
 
   public getResources(pageLink: PageLink, resourceType?: ResourceType, resourceSubType?: ResourceSubType, config?: RequestConfig): Observable<PageData<ResourceInfo>> {
     let url = `/api/resource${pageLink.toQuery()}`;
@@ -52,37 +64,88 @@ export class ResourceService {
     return this.http.get<PageData<ResourceInfo>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/resource/tenant${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant resources.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<ResourceInfo>> observable or value
+   */
+
 
   public getTenantResources(pageLink: PageLink, config?: RequestConfig): Observable<PageData<ResourceInfo>> {
     return this.http.get<PageData<ResourceInfo>>(`/api/resource/tenant${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config))
   }
 
-  /** Calls ThingsBoard REST `/api/resource/${resourceId}, ...`. */
+  
+  /**
+   * get resource.
+   *
+   * @param resourceId resource id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Resource> observable or value
+   */
+
 
   public getResource(resourceId: string, config?: RequestConfig): Observable<Resource> {
     return this.http.get<Resource>(`/api/resource/${resourceId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/resource/info/${resourceId}, ...`. */
+  
+  /**
+   * get resource info by id.
+   *
+   * @param resourceId resource id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ResourceInfo> observable or value
+   */
+
 
   public getResourceInfoById(resourceId: string, config?: RequestConfig): Observable<ResourceInfo> {
     return this.http.get<Resource>(`/api/resource/info/${resourceId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/resource/${type}/${scope}/${key}/info, ...`. */
+  
+  /**
+   * get resource info.
+   *
+   * @param type type (ResourceType)
+   * @param scope scope (TBResourceScope)
+   * @param key key (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ResourceInfo> observable or value
+   */
+
 
   public getResourceInfo(type: ResourceType, scope: TBResourceScope, key: string, config?: RequestConfig): Observable<ResourceInfo> {
     return this.http.get<Resource>(`/api/resource/${type}/${scope}/${key}/info`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/resource/${resourceId}/download, ...`. */
+  
+  /**
+   * Calls ThingsBoard REST `/api/resource/*`.
+   *
+   * REST endpoint(s): `/api/resource/*`
+   *
+   * @param resourceId resource id (string)
+   * @returns Observable<any> observable or value
+   */
+
 
   public downloadResource(resourceId: string): Observable<any> {
     return this.resourcesService.downloadResource(`/api/resource/${resourceId}/download`);
   }
 
-  /** Calls ThingsBoard REST `/api/resource, ...`. */
+  
+  /**
+   * POST/PUT entity — save resources.
+   *
+   * @param resources resources (Resource[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Resource[]> observable or value
+   */
+
 
   public saveResources(resources: Resource[], config?: RequestConfig): Observable<Resource[]> {
     let partSize = 100;
@@ -103,13 +166,29 @@ export class ResourceService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/resource, ...`. */
+  
+  /**
+   * POST/PUT entity — save resource.
+   *
+   * @param resource resource (Resource)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Resource> observable or value
+   */
+
 
   public saveResource(resource: Resource, config?: RequestConfig): Observable<Resource> {
     return this.http.post<Resource>('/api/resource', resource, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/resource/upload, ...`. */
+  
+  /**
+   * upload resources.
+   *
+   * @param resources resources (Resource[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Resource[]> observable or value
+   */
+
 
   public uploadResources(resources: Resource[], config?: RequestConfig): Observable<Resource[]> {
     let partSize = 100;
@@ -130,7 +209,15 @@ export class ResourceService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/resource/upload, ...`. */
+  
+  /**
+   * upload resource.
+   *
+   * @param resource resource (Resource)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Resource> observable or value
+   */
+
 
   public uploadResource(resource: Resource, config?: RequestConfig): Observable<Resource> {
     if (!config) {
@@ -147,13 +234,31 @@ export class ResourceService {
       defaultHttpUploadOptions(config.ignoreLoading, config.ignoreErrors, config.resendRequest));
   }
 
-  /** Calls ThingsBoard REST `/api/resource/${resourceId}/info, ...`. */
+  
+  /**
+   * updated resource info.
+   *
+   * @param resourceId resource id (string)
+   * @param updatedResources updated resources (Partial<Omit<Resource, 'data'>>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Resource> observable or value
+   */
+
 
   public updatedResourceInfo(resourceId: string, updatedResources: Partial<Omit<Resource, 'data'>>, config?: RequestConfig): Observable<Resource> {
     return this.http.put<Resource>(`/api/resource/${resourceId}/info`, updatedResources, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/resource/${resourceId}/data, ...`. */
+  
+  /**
+   * updated resource data.
+   *
+   * @param resourceId resource id (string)
+   * @param data dialog or route input data
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Resource> observable or value
+   */
+
 
   public updatedResourceData(resourceId: string, data: File, config?: RequestConfig): Observable<Resource> {
     if (!config) {
@@ -165,11 +270,26 @@ export class ResourceService {
       defaultHttpUploadOptions(config.ignoreLoading, config.ignoreErrors, config.resendRequest));
   }
 
+  /**
+   * DELETE — delete resource.
+   *
+   * @param resourceId resource id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteResource(resourceId: string, force = false, config?: RequestConfig) {
     return this.http.delete(`/api/resource/${resourceId}?force=${force}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/resource?resourceIds=${ids.join(`. */
+  
+  /**
+   * get resources by ids.
+   *
+   * @param ids ids (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<ResourceInfo>> observable or value
+   */
+
 
   public getResourcesByIds(ids: string[], config?: RequestConfig): Observable<Array<ResourceInfo>> {
     return this.http.get<Array<ResourceInfo>>(`/api/resource?resourceIds=${ids.join(',')}`,

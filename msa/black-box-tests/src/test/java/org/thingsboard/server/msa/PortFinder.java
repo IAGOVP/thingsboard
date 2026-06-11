@@ -21,11 +21,18 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 /**
- * Port finder.
+ * Finds free TCP ports for testcontainers service binding.
  */
+
 
 @Slf4j
 public class PortFinder {
+    /**
+     * Finds available udp port.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
     public static int findAvailableUdpPort() {
         try (DatagramSocket socket = new DatagramSocket(0)) {
             return socket.getLocalPort();
@@ -33,6 +40,13 @@ public class PortFinder {
             throw new IllegalStateException("No available UDP ports found", e);
         }
     }
+    /**
+     * Is udpport available.
+     *
+     * @param port port
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static boolean isUDPPortAvailable(int port) {
         try (DatagramSocket socket = new DatagramSocket(port)) {

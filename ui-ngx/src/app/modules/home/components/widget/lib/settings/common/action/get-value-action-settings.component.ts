@@ -37,6 +37,12 @@ import {
 import { IAliasController } from '@core/api/widget-api.models';
 import { TargetDevice, widgetType } from '@shared/models/widget.models';
 
+
+/**
+ * Angular component: get value action settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-get-value-action-settings`.
+ */
 @Component({
     selector: 'tb-get-value-action-settings',
     templateUrl: './action-settings-button.component.html',
@@ -49,10 +55,7 @@ import { TargetDevice, widgetType } from '@shared/models/widget.models';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: get value action settings UI.
- */
+standalone: false
 })
 export class GetValueActionSettingsComponent implements OnInit, ControlValueAccessor {
 
@@ -98,6 +101,11 @@ export class GetValueActionSettingsComponent implements OnInit, ControlValueAcce
               private viewContainerRef: ViewContainerRef,
               private cd: ChangeDetectorRef) {}
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (!this.trueLabel) {
       this.trueLabel = this.translate.instant('value.true');
@@ -107,12 +115,30 @@ export class GetValueActionSettingsComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (this.disabled !== isDisabled) {
@@ -120,10 +146,22 @@ export class GetValueActionSettingsComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (GetValueSettings<any>)
+   */
+
   writeValue(value: GetValueSettings<any>): void {
     this.modelValue = value;
     this.updateDisplayValue();
   }
+
+  /**
+   * open action settings popup.
+   *
+   * @param matButton mat button (MatButton)
+   */
 
   openActionSettingsPopup($event: Event, matButton: MatButton) {
     if ($event) {
@@ -161,6 +199,11 @@ export class GetValueActionSettingsComponent implements OnInit, ControlValueAcce
       });
     }
   }
+
+  /**
+   * update display value.
+   *
+   */
 
   private updateDisplayValue() {
     switch (this.modelValue.action) {

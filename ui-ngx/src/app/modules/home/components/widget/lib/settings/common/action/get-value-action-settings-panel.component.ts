@@ -37,16 +37,19 @@ import { AlarmSeverity, alarmSeverityTranslations } from '@shared/models/alarm.m
 import { EntityType } from '@shared/models/entity-type.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: get value action settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-get-value-action-settings-panel`.
+ */
 @Component({
     selector: 'tb-get-value-action-settings-panel',
     templateUrl: './get-value-action-settings-panel.component.html',
     providers: [],
     styleUrls: ['./action-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: get value action settings panel UI.
- */
+standalone: false
 })
 export class GetValueActionSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -115,6 +118,11 @@ export class GetValueActionSettingsPanelComponent extends PageComponent implemen
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.getValueActions = getValueActionsByWidgetType(this.widgetType);
     this.getValueSettingsFormGroup = this.fb.group(
@@ -162,14 +170,30 @@ export class GetValueActionSettingsPanelComponent extends PageComponent implemen
     this.updateValidators();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply get value settings.
+   *
+   */
 
   applyGetValueSettings() {
     const getValueSettings: GetValueSettings<any> = this.getValueSettingsFormGroup.getRawValue();
     this.getValueSettingsApplied.emit(getValueSettings);
   }
+
+  /**
+   * get parse value function help id.
+   *
+   * @returns string observable or value
+   */
 
   getParseValueFunctionHelpId(): string {
     const action: GetValueAction = this.getValueSettingsFormGroup.get('action').value;
@@ -180,6 +204,11 @@ export class GetValueActionSettingsPanelComponent extends PageComponent implemen
     }
     return 'widget/lib/rpc/parse_value_fn';
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const action: GetValueAction = this.getValueSettingsFormGroup.get('action').value;

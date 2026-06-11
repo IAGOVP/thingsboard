@@ -23,14 +23,17 @@ import type {
 } from '@home/components/alarm-rules/alarm-rules-table-config';
 import { debugCfActionEnabled } from '@shared/models/calculated-field.models';
 
+
+/**
+ * Angular component: alarm rules tabs (home/alarm pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-rules-tabs`.
+ */
 @Component({
     selector: 'tb-alarm-rules-tabs',
     templateUrl: './alarm-rules-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: alarm rules tabs UI.
- */
+standalone: false
 })
 export class AlarmRulesTabsComponent extends EntityTabsComponent<AlarmRuleTableEntity> {
 
@@ -44,6 +47,12 @@ export class AlarmRulesTabsComponent extends EntityTabsComponent<AlarmRuleTableE
   get debugActionDisabled(): boolean {
     return !debugCfActionEnabled(this.entity);
   };
+
+  /**
+   * Event handler for debug event selected.
+   *
+   * @param event DOM or Angular event object
+   */
 
   onDebugEventSelected(event: CalculatedFieldEventBody) {
     (this.entitiesTableConfig as AlarmRulesTableConfig).getTestScriptDialog(this.entity, JSON.parse(event.arguments))

@@ -30,6 +30,12 @@ import {
 import { deepClone, isDefinedAndNotNull } from '@core/utils';
 import { TranslateService } from '@ngx-translate/core';
 
+
+/**
+ * Angular component: alarm schedule info (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-schedule-info`.
+ */
 @Component({
     selector: 'tb-alarm-schedule-info',
     templateUrl: './alarm-schedule-info.component.html',
@@ -39,10 +45,7 @@ import { TranslateService } from '@ngx-translate/core';
             useExisting: forwardRef(() => AlarmScheduleInfoComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: alarm schedule info UI.
- */
+standalone: false
 })
 export class AlarmScheduleInfoComponent implements ControlValueAccessor, OnInit {
 
@@ -60,24 +63,58 @@ export class AlarmScheduleInfoComponent implements ControlValueAccessor, OnInit 
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (AlarmSchedule)
+   */
+
   writeValue(value: AlarmSchedule): void {
     this.modelValue = value;
     this.updateScheduleText();
   }
+
+  /**
+   * update schedule text.
+   *
+   */
 
   private updateScheduleText() {
     let schedule = this.modelValue;
@@ -115,6 +152,11 @@ export class AlarmScheduleInfoComponent implements ControlValueAccessor, OnInit 
         break;
     }
   }
+
+  /**
+   * open schedule dialog.
+   *
+   */
 
   public openScheduleDialog($event: Event) {
     if ($event) {

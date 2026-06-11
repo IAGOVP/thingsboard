@@ -21,14 +21,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { FetchTo } from '@home/components/rule-node/rule-node-config.models';
 
+
+/**
+ * Angular component: device attributes config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-enrichment-node-device-attributes-config`.
+ */
 @Component({
     selector: 'tb-enrichment-node-device-attributes-config',
     templateUrl: './device-attributes-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: device attributes config UI.
- */
+standalone: false
 })
 export class DeviceAttributesConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -39,9 +42,21 @@ export class DeviceAttributesConfigComponent extends RuleNodeConfigurationCompon
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected configForm(): FormGroup {
     return this.deviceAttributesConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.deviceAttributesConfigForm = this.fb.group({
@@ -51,6 +66,13 @@ export class DeviceAttributesConfigComponent extends RuleNodeConfigurationCompon
       attributesControl: [configuration.attributesControl, []]
     });
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (isObject(configuration)) {
@@ -70,6 +92,13 @@ export class DeviceAttributesConfigComponent extends RuleNodeConfigurationCompon
       attributesControl: configuration ? configuration.attributesControl : null
     };
   }
+
+  /**
+   * prepare output config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareOutputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     for (const key of Object.keys(configuration.attributesControl)) {

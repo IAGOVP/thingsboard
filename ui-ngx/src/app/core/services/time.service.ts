@@ -40,7 +40,9 @@ const MIN_LIMIT = 1;
 const MAX_DATAPOINTS_LIMIT = 500;
 
 /**
- * Angular HTTP service: time REST wrappers (`@core/http`).
+ * Angular injectable service: time (ThingsBoard web UI).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -56,6 +58,12 @@ export class TimeService {
     private translate: TranslateService
   ) {}
 
+  /**
+   * set max datapoints limit.
+   *
+   * @param limit limit (number)
+   */
+
   public setMaxDatapointsLimit(limit: number) {
     this.maxDatapointsLimit = limit;
     if (!this.maxDatapointsLimit || this.maxDatapointsLimit <= MIN_LIMIT) {
@@ -63,10 +71,27 @@ export class TimeService {
     }
   }
 
+  /**
+   * matches existing interval.
+   *
+   * @param min min (number)
+   * @param max max (number)
+   * @param interval interval (Interval)
+   * @returns boolean observable or value
+   */
+
   public matchesExistingInterval(min: number, max: number, interval: Interval, useCalendarIntervals = false): boolean {
     const intervals = this.getIntervals(min, max, useCalendarIntervals);
     return intervals.findIndex(timeInterval => timeInterval.value === interval) > -1;
   }
+
+  /**
+   * get intervals.
+   *
+   * @param min min (number)
+   * @param max max (number)
+   * @returns Array<TimeInterval> observable or value
+   */
 
   public getIntervals(min: number, max: number, useCalendarIntervals = false): Array<TimeInterval> {
     min = this.boundMinInterval(min);
@@ -75,6 +100,13 @@ export class TimeService {
       IntervalMath.numberValue(interval.value) >= min && IntervalMath.numberValue(interval.value) <= max);
   }
 
+  /**
+   * bound min interval.
+   *
+   * @param min min (number)
+   * @returns number observable or value
+   */
+
   public boundMinInterval(min: number): number {
     if (isDefined(min)) {
       min = Math.ceil(min / 1000) * 1000;
@@ -82,12 +114,28 @@ export class TimeService {
     return this.toBound(min, MIN_INTERVAL, MAX_INTERVAL, MIN_INTERVAL);
   }
 
+  /**
+   * bound max interval.
+   *
+   * @param max max (number)
+   * @returns number observable or value
+   */
+
   public boundMaxInterval(max: number): number {
     if (isDefined(max)) {
       max = Math.floor(max / 1000) * 1000;
     }
     return this.toBound(max, MIN_INTERVAL, MAX_INTERVAL, MAX_INTERVAL);
   }
+
+  /**
+   * bound to predefined interval.
+   *
+   * @param min min (number)
+   * @param max max (number)
+   * @param interval interval (Interval)
+   * @returns Interval observable or value
+   */
 
   public boundToPredefinedInterval(min: number, max: number, interval: Interval, useCalendarIntervals = false): Interval {
     const intervals = this.getIntervals(min, max, useCalendarIntervals);
@@ -112,6 +160,15 @@ export class TimeService {
     }
   }
 
+  /**
+   * bound interval to timewindow.
+   *
+   * @param timewindow timewindow (number)
+   * @param interval interval (Interval)
+   * @param aggType agg type (AggregationType)
+   * @returns Interval observable or value
+   */
+
   public boundIntervalToTimewindow(timewindow: number, interval: Interval, aggType: AggregationType): Interval {
     if (aggType === AggregationType.NONE) {
       return SECOND;
@@ -126,32 +183,81 @@ export class TimeService {
     }
   }
 
+  /**
+   * get max datapoints limit.
+   *
+   * @returns number observable or value
+   */
+
   public getMaxDatapointsLimit(): number {
     return this.maxDatapointsLimit;
   }
 
+  /**
+   * get min datapoints limit.
+   *
+   * @returns number observable or value
+   */
+
   public getMinDatapointsLimit(): number {
     return MIN_LIMIT;
   }
+
+  /**
+   * avg interval.
+   *
+   * @param timewindow timewindow (number)
+   * @returns number observable or value
+   */
 
   public avgInterval(timewindow: number): number {
     const avg = timewindow / 200;
     return this.boundMinInterval(avg);
   }
 
+  /**
+   * min interval limit.
+   *
+   * @param timewindowMs timewindow ms (number)
+   * @returns number observable or value
+   */
+
   public minIntervalLimit(timewindowMs: number): number {
     const min = timewindowMs / 500;
     return this.boundMinInterval(min);
   }
+
+  /**
+   * max interval limit.
+   *
+   * @param timewindowMs timewindow ms (number)
+   * @returns number observable or value
+   */
 
   public maxIntervalLimit(timewindowMs: number): number {
     const max = timewindowMs / MIN_LIMIT;
     return this.boundMaxInterval(max);
   }
 
+  /**
+   * default timewindow.
+   *
+   * @returns Timewindow observable or value
+   */
+
   public defaultTimewindow(isDashboard = false): Timewindow {
     return defaultTimewindow(this, isDashboard);
   }
+
+  /**
+   * to bound.
+   *
+   * @param value value (number)
+   * @param min min (number)
+   * @param max max (number)
+   * @param defValue def value (number)
+   * @returns number observable or value
+   */
 
   private toBound(value: number, min: number, max: number, defValue: number): number {
     if (isDefined(value)) {
@@ -163,6 +269,16 @@ export class TimeService {
     }
   }
 
+  /**
+   * to interval bound.
+   *
+   * @param value value (Interval)
+   * @param min min (number)
+   * @param max max (number)
+   * @param defValue def value (Interval)
+   * @returns Interval observable or value
+   */
+
   private toIntervalBound(value: Interval, min: number, max: number, defValue: Interval): Interval {
     if (isDefined(value)) {
       value = IntervalMath.max(value, min);
@@ -172,6 +288,12 @@ export class TimeService {
       return defValue;
     }
   }
+
+  /**
+   * get local browser timezone info placeholder.
+   *
+   * @returns TimezoneInfo observable or value
+   */
 
   public getLocalBrowserTimezoneInfoPlaceholder(): TimezoneInfo {
     if (!this.localBrowserTimezoneInfoPlaceholder) {

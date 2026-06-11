@@ -35,14 +35,17 @@ import {
 import { cssSizeToStrSize, resolveCssSize } from '@shared/models/widget-settings.models';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: slider basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-slider-basic-config`.
+ */
 @Component({
     selector: 'tb-slider-basic-config',
     templateUrl: './slider-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: slider basic config UI.
- */
+standalone: false
 })
 export class SliderBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -71,9 +74,21 @@ export class SliderBasicConfigComponent extends BasicWidgetConfigComponent {
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.sliderWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: SliderWidgetSettings = {...sliderWidgetDefaultSettings, ...(configData.config.settings || {})};
@@ -142,6 +157,13 @@ export class SliderBasicConfigComponent extends BasicWidgetConfigComponent {
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.targetDevice = config.targetDevice;
 
@@ -207,9 +229,22 @@ export class SliderBasicConfigComponent extends BasicWidgetConfigComponent {
     return this.widgetConfig;
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showTitle', 'showIcon', 'showValue', 'showTicks', 'showTickMarks', 'layout'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showTitle: boolean = this.sliderWidgetConfigForm.get('showTitle').value;
@@ -298,6 +333,13 @@ export class SliderBasicConfigComponent extends BasicWidgetConfigComponent {
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -305,6 +347,13 @@ export class SliderBasicConfigComponent extends BasicWidgetConfigComponent {
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

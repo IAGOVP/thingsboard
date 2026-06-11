@@ -14,6 +14,9 @@
 /// limitations under the License.
 ///
 
+/**
+ * TypeScript interfaces, types, and enums for limited api (shared TypeScript models).
+ */
 export enum LimitedApi {
   ENTITY_EXPORT = 'ENTITY_EXPORT',
   ENTITY_IMPORT = 'ENTITY_IMPORT',

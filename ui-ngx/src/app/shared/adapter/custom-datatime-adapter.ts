@@ -17,11 +17,19 @@
 import { Injectable } from '@angular/core';
 import { NativeDatetimeAdapter } from '@mat-datetimepicker/core';
 /**
- * custom date adapter.
+ * Custom date adapter (ThingsBoard web UI).
  */
+
 
 @Injectable()
 export class CustomDateAdapter extends NativeDatetimeAdapter {
+
+  /**
+   * parse.
+   *
+   * @param value value (string | number)
+   * @returns Date observable or value
+   */
 
   parse(value: string | number): Date {
     if (typeof value === 'number') {

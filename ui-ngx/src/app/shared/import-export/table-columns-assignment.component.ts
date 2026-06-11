@@ -27,6 +27,12 @@ import {
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 
+
+/**
+ * Angular component: table columns assignment (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-table-columns-assignment`.
+ */
 @Component({
     selector: 'tb-table-columns-assignment',
     templateUrl: './table-columns-assignment.component.html',
@@ -43,10 +49,7 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: table columns assignment UI.
- */
+standalone: false
 })
 export class TableColumnsAssignmentComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -76,6 +79,11 @@ export class TableColumnsAssignmentComponent implements OnInit, ControlValueAcce
   constructor(public elementRef: ElementRef,
               protected store: Store<AppState>) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.columnTypes.push(
@@ -132,6 +140,12 @@ export class TableColumnsAssignmentComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
     if (this.propagateChangePending) {
@@ -140,12 +154,29 @@ export class TableColumnsAssignmentComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * columns updated.
+   *
+   */
 
   columnsUpdated() {
     const isSelectName = this.columns.findIndex((column) => column.type === ImportEntityColumnType.name) > -1;
@@ -191,12 +222,26 @@ export class TableColumnsAssignmentComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * is column type differs.
+   *
+   * @param columnType column type (ImportEntityColumnType)
+   * @returns boolean observable or value
+   */
+
   public isColumnTypeDiffers(columnType: ImportEntityColumnType): boolean {
     return columnType === ImportEntityColumnType.clientAttribute ||
       columnType === ImportEntityColumnType.sharedAttribute ||
       columnType === ImportEntityColumnType.serverAttribute ||
       columnType === ImportEntityColumnType.timeseries;
   }
+
+  /**
+   * column valid.
+   *
+   * @param column column (CsvColumnParam)
+   * @returns boolean observable or value
+   */
 
   private columnValid(column: CsvColumnParam): boolean {
     if (this.isColumnTypeDiffers(column.type)) {
@@ -206,11 +251,23 @@ export class TableColumnsAssignmentComponent implements OnInit, ControlValueAcce
     }
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     return (this.valid) ? null : {
       columnsInvalid: true
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (CsvColumnParam[])
+   */
 
   writeValue(value: CsvColumnParam[]): void {
     this.columns = value;

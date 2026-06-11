@@ -16,15 +16,18 @@
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 
+
+/**
+ * Angular component: dashboard toolbar (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-toolbar`.
+ */
 @Component({
     selector: 'tb-dashboard-toolbar',
     templateUrl: './dashboard-toolbar.component.html',
     styleUrls: ['./dashboard-toolbar.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: dashboard toolbar UI.
- */
+standalone: false
 })
 export class DashboardToolbarComponent implements OnInit {
 
@@ -40,8 +43,18 @@ export class DashboardToolbarComponent implements OnInit {
   constructor() {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
   }
+
+  /**
+   * Event handler for trigger click.
+   *
+   */
 
   onTriggerClick() {
     this.triggerClick.emit();

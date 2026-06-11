@@ -27,14 +27,17 @@ import { isUndefined } from '@core/utils';
 import { UtilsService } from '@core/services/utils.service';
 import { countDefaultSettings, CountWidgetSettings } from '@home/components/widget/lib/count/count-widget.models';
 
+
+/**
+ * Angular component: entity count basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-count-basic-config`.
+ */
 @Component({
     selector: 'tb-entity-count-basic-config',
     templateUrl: './entity-count-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: entity count basic config UI.
- */
+standalone: false
 })
 export class EntityCountBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -49,9 +52,21 @@ export class EntityCountBasicConfigComponent extends BasicWidgetConfigComponent 
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.entityCountWidgetConfigForm;
   }
+
+  /**
+   * setup defaults.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected setupDefaults(configData: WidgetConfigComponentData) {
     let datasources = configData.config.datasources;
@@ -62,6 +77,12 @@ export class EntityCountBasicConfigComponent extends BasicWidgetConfigComponent 
     datasources[0].type = DatasourceType.entityCount;
     datasources[0].dataKeys = [this.utils.createKey({name: 'count'}, DataKeyType.count)];
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: CountWidgetSettings = {...countDefaultSettings(false), ...(configData.config.settings || {})};
@@ -77,6 +98,13 @@ export class EntityCountBasicConfigComponent extends BasicWidgetConfigComponent 
     });
   }
 
+  /**
+   * prepare output config.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns WidgetConfigComponentData observable or value
+   */
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.datasources = config.datasources;
 
@@ -90,6 +118,13 @@ export class EntityCountBasicConfigComponent extends BasicWidgetConfigComponent 
     return this.widgetConfig;
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -97,6 +132,13 @@ export class EntityCountBasicConfigComponent extends BasicWidgetConfigComponent 
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

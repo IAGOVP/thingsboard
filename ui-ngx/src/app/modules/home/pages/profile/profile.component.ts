@@ -33,14 +33,17 @@ import { AuthService } from '@core/auth/auth.service';
 import { UnitSystem, UnitSystems } from '@shared/models/unit.models';
 import { UnitService } from '@core/services/unit.service';
 
+
+/**
+ * Angular component: profile (home/profile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile`.
+ */
 @Component({
     selector: 'tb-profile',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss'],
-    standalone: false
-/**
- * Angular component: profile UI.
- */
+standalone: false
 })
 export class ProfileComponent extends PageComponent implements OnInit, HasConfirmForm {
 
@@ -61,10 +64,20 @@ export class ProfileComponent extends PageComponent implements OnInit, HasConfir
     this.authUser = getCurrentAuthUser(this.store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.buildProfileForm();
     this.userLoaded(this.route.snapshot.data.user);
   }
+
+  /**
+   * build profile form.
+   *
+   */
 
   private buildProfileForm() {
     this.profile = this.fb.group({
@@ -78,6 +91,11 @@ export class ProfileComponent extends PageComponent implements OnInit, HasConfir
       homeDashboardHideToolbar: [true]
     });
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.user = {...this.user, ...this.profile.value};
@@ -118,6 +136,12 @@ export class ProfileComponent extends PageComponent implements OnInit, HasConfir
     );
   }
 
+  /**
+   * user loaded.
+   *
+   * @param user user (User)
+   */
+
   private userLoaded(user: User) {
     this.user = user;
     this.profile.reset(user);
@@ -143,9 +167,21 @@ export class ProfileComponent extends PageComponent implements OnInit, HasConfir
     this.profile.get('homeDashboardHideToolbar').setValue(homeDashboardHideToolbar);
   }
 
+  /**
+   * confirm form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   confirmForm(): UntypedFormGroup {
     return this.profile;
   }
+
+  /**
+   * is sys admin.
+   *
+   * @returns boolean observable or value
+   */
 
   isSysAdmin(): boolean {
     return this.authUser.authority === Authority.SYS_ADMIN;

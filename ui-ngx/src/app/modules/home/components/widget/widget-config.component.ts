@@ -92,6 +92,12 @@ import { initModelFromDefaultTimewindow } from '@shared/models/time/time.models'
 import { findWidgetModelDefinition } from '@shared/models/widget/widget-model.definition';
 import Timeout = NodeJS.Timeout;
 
+
+/**
+ * Angular component: widget config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-widget-config`.
+ */
 @Component({
     selector: 'tb-widget-config',
     templateUrl: './widget-config.component.html',
@@ -108,10 +114,7 @@ import Timeout = NodeJS.Timeout;
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: widget config UI.
- */
+standalone: false
 })
 export class WidgetConfigComponent extends PageComponent implements OnInit, OnDestroy, ControlValueAccessor, AsyncValidator {
 
@@ -222,6 +225,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.dataSettings = this.fb.group({});
     this.targetDeviceSettings = this.fb.group({});
@@ -280,10 +288,20 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.destroyBasicModeComponent();
     this.removeChangeSubscriptions();
   }
+
+  /**
+   * DELETE — remove change subscriptions.
+   *
+   */
 
   private removeChangeSubscriptions() {
     if (this.dataSettingsChangesSubscription) {
@@ -312,6 +330,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * POST/PUT entity — create change subscriptions.
+   *
+   */
+
   private createChangeSubscriptions() {
     this.dataSettingsChangesSubscription = this.dataSettings.valueChanges.subscribe(
       () => this.updateDataSettings()
@@ -332,6 +355,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       () => this.updateActionSettings()
     );
   }
+
+  /**
+   * build header.
+   *
+   */
 
   private buildHeader() {
     this.headerOptions.length = 0;
@@ -374,6 +402,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * build forms.
+   *
+   */
+
   private buildForms() {
     this.dataSettings = this.fb.group({});
     this.targetDeviceSettings = this.fb.group({});
@@ -405,16 +438,40 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       this.fb.control(null, []));
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (WidgetConfigComponentData)
+   */
 
   writeValue(value: WidgetConfigComponentData): void {
     this.modelValue = value;
@@ -423,6 +480,12 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       (this.modelValue?.config?.configMode || WidgetConfigMode.advanced) : WidgetConfigMode.advanced;
     this.setupConfig(this.isAdd);
   }
+
+  /**
+   * set widget config mode.
+   *
+   * @param widgetConfigMode widget config mode (WidgetConfigMode)
+   */
 
   setWidgetConfigMode(widgetConfigMode: WidgetConfigMode) {
     if (this.modelValue?.hasBasicMode && this.widgetConfigMode !== widgetConfigMode) {
@@ -435,6 +498,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * setup config.
+   *
+   */
+
   private setupConfig(isAdd = false) {
     if (this.modelValue) {
       this.destroyBasicModeComponent();
@@ -446,6 +514,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       }
     }
   }
+
+  /**
+   * setup basic mode config.
+   *
+   */
 
   private setupBasicModeConfig(isAdd = false) {
     const componentType = this.widgetService.getBasicWidgetSettingsComponentBySelector(this.modelValue.basicModeDirective);
@@ -474,6 +547,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * destroy basic mode component.
+   *
+   */
+
   private destroyBasicModeComponent() {
     this.basicModeDirectiveError = null;
     if (this.basicModeComponentChangeSubscription) {
@@ -493,6 +571,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       this.basicModeContainer.clear();
     }
   }
+
+  /**
+   * setup default config.
+   *
+   */
 
   private setupDefaultConfig() {
     if (this.defaultConfigFormsType !== this.widgetType) {
@@ -608,6 +691,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     this.createChangeSubscriptions();
   }
 
+  /**
+   * update widget settings enabled state.
+   *
+   */
+
   private updateWidgetSettingsEnabledState() {
     const showTitle: boolean = this.widgetSettings.get('showTitle').value;
     const showTitleIcon: boolean = this.widgetSettings.get('showTitleIcon').value;
@@ -637,6 +725,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * update layout enabled state.
+   *
+   */
+
   private updateLayoutEnabledState() {
     const resizable: boolean = this.layoutSettings.get('resizable').value;
     if (resizable) {
@@ -645,6 +738,12 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       this.layoutSettings.get('preserveAspectRatio').disable({emitEvent: false});
     }
   }
+
+  /**
+   * update advanced form.
+   *
+   * @param settings settings (any)
+   */
 
   private updateAdvancedForm(settings?: any) {
     const dynamicFormData: DynamicFormData = {};
@@ -657,6 +756,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     dynamicFormData.settingsDirective = this.modelValue.settingsDirective;
     this.advancedSettings.patchValue({ settings: dynamicFormData }, {emitEvent: false});
   }
+
+  /**
+   * update data settings.
+   *
+   */
 
   private updateDataSettings() {
     if (this.modelValue) {
@@ -673,6 +777,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * update target device settings.
+   *
+   */
+
   private updateTargetDeviceSettings() {
     if (this.modelValue) {
       if (this.modelValue.config) {
@@ -681,6 +790,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * update widget settings.
+   *
+   */
 
   private updateWidgetSettings() {
     if (this.modelValue) {
@@ -691,6 +805,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * update layout settings.
+   *
+   */
+
   private updateLayoutSettings() {
     if (this.modelValue) {
       if (this.modelValue.layout) {
@@ -700,6 +819,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * update advanced settings.
+   *
+   */
+
   private updateAdvancedSettings() {
     if (this.modelValue) {
       if (this.modelValue.config) {
@@ -708,6 +832,11 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * update action settings.
+   *
+   */
 
   private updateActionSettings() {
     if (this.modelValue) {
@@ -770,6 +899,12 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     return this.widgetType !== widgetType.static && !this.modelValue?.typeParameters?.processNoDataByWidget;
   }
 
+  /**
+   * only history timewindow.
+   *
+   * @returns boolean observable or value
+   */
+
   public onlyHistoryTimewindow(): boolean {
     if (this.widgetType === widgetType.latest) {
       const widgetDefinition = findWidgetModelDefinition(this.widget);
@@ -783,6 +918,17 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       return false;
     }
   }
+
+  /**
+   * generate data key.
+   *
+   * @param chip chip (any)
+   * @param type type (DataKeyType)
+   * @param dataKeySettingsForm data key settings form (FormProperty[])
+   * @param isLatestDataKey is latest data key (boolean)
+   * @param dataKeySettingsFunction data key settings function (DataKeySettingsFunction)
+   * @returns DataKey observable or value
+   */
 
   public generateDataKey(chip: any, type: DataKeyType, dataKeySettingsForm: FormProperty[],
                          isLatestDataKey: boolean, dataKeySettingsFunction: DataKeySettingsFunction): DataKey {
@@ -826,6 +972,12 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * gen next color.
+   *
+   * @returns string observable or value
+   */
+
   private genNextColor(): string {
     let i = 0;
     const datasources = this.widgetType === widgetType.alarm ? [this.modelValue.config.alarmSource] : this.modelValue.config.datasources;
@@ -839,6 +991,14 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
     return this.utils.getMaterialColor(i);
   }
+
+  /**
+   * POST/PUT entity — create entity alias.
+   *
+   * @param alias alias (string)
+   * @param allowedEntityTypes allowed entity types (Array<EntityType>)
+   * @returns Observable<EntityAlias> observable or value
+   */
 
   private createEntityAlias(alias: string, allowedEntityTypes: Array<EntityType>): Observable<EntityAlias> {
     const singleEntityAlias: EntityAlias = {id: null, alias, filter: {resolveMultiple: false}};
@@ -862,6 +1022,14 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * edit entity alias.
+   *
+   * @param alias alias (EntityAlias)
+   * @param allowedEntityTypes allowed entity types (Array<EntityType>)
+   * @returns Observable<EntityAlias> observable or value
+   */
+
   private editEntityAlias(alias: EntityAlias, allowedEntityTypes: Array<EntityType>): Observable<EntityAlias> {
     return this.dialog.open<EntityAliasDialogComponent, EntityAliasDialogData,
       EntityAlias>(EntityAliasDialogComponent, {
@@ -882,6 +1050,13 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       })
     );
   }
+
+  /**
+   * POST/PUT entity — create filter.
+   *
+   * @param filter filter (string)
+   * @returns Observable<Filter> observable or value
+   */
 
   private createFilter(filter: string): Observable<Filter> {
     const singleFilter: Filter = {id: null, filter, keyFilters: [], editable: true};
@@ -904,6 +1079,14 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * fetch entity keys for device.
+   *
+   * @param deviceId device UUID
+   * @param dataKeyTypes data key types (Array<DataKeyType>)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
+
   private fetchEntityKeysForDevice(deviceId: string, dataKeyTypes: Array<DataKeyType>): Observable<Array<DataKey>> {
       const entityFilter = singleEntityFilterFromDeviceId(deviceId);
       return this.entityService.getEntityKeysByEntityFilter(
@@ -914,6 +1097,14 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
         catchError(() => of([]))
       );
   }
+
+  /**
+   * fetch entity keys.
+   *
+   * @param entityAliasId entity alias id (string)
+   * @param dataKeyTypes data key types (Array<DataKeyType>)
+   * @returns Observable<Array<DataKey>> observable or value
+   */
 
   private fetchEntityKeys(entityAliasId: string, dataKeyTypes: Array<DataKeyType>): Observable<Array<DataKey>> {
     return this.aliasController.getAliasInfo(entityAliasId).pipe(
@@ -928,6 +1119,13 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * fetch dashboard states.
+   *
+   * @param query query (string)
+   * @returns Array<string> observable or value
+   */
+
   private fetchDashboardStates(query: string): Array<string> {
     const stateIds = Object.keys(this.dashboard.configuration.states);
     const result = query ? stateIds.filter(this.createFilterForDashboardState(query)) : stateIds;
@@ -937,6 +1135,12 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       return [query];
     }
   }
+
+  /**
+   * fetch cell click columns.
+   *
+   * @returns Array<CellClickColumnInfo> observable or value
+   */
 
   private fetchCellClickColumns(): Array<CellClickColumnInfo> {
     if (this.modelValue) {
@@ -970,6 +1174,13 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * keys to cell click columns.
+   *
+   * @param dataKeys data keys (Array<DataKey>)
+   * @returns Array<CellClickColumnInfo> observable or value
+   */
+
   private keysToCellClickColumns(dataKeys: Array<DataKey>): Array<CellClickColumnInfo> {
     const result: Array<CellClickColumnInfo> = [];
     for (const dataKey of dataKeys) {
@@ -981,10 +1192,24 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
     return result;
   }
 
+  /**
+   * POST/PUT entity — create filter for dashboard state.
+   *
+   * @param query query (string)
+   * @returns (stateId: string) => boolean observable or value
+   */
+
   private createFilterForDashboardState(query: string): (stateId: string) => boolean {
     const lowercaseQuery = query.toLowerCase();
     return stateId => stateId.toLowerCase().indexOf(lowercaseQuery) === 0;
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   * @returns Observable<ValidationErrors | null> observable or value
+   */
 
   public validate(c: UntypedFormControl): Observable<ValidationErrors | null> {
     const basicComponentMode = this.hasBasicModeDirective && this.widgetConfigMode === WidgetConfigMode.basic;
@@ -1007,6 +1232,14 @@ export class WidgetConfigComponent extends PageComponent implements OnInit, OnDe
       map((comp) => this.doValidate(basicComponentMode, comp))
     );
   }
+
+  /**
+   * do validate.
+   *
+   * @param basicComponentMode basic component mode (boolean)
+   * @param basicModeComponent basic mode component (IBasicWidgetConfigComponent)
+   * @returns ValidationErrors | null observable or value
+   */
 
   private doValidate(basicComponentMode: boolean, basicModeComponent?: IBasicWidgetConfigComponent): ValidationErrors | null {
     if (basicComponentMode) {

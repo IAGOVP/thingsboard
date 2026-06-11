@@ -59,11 +59,11 @@ import {
 } from '@home/components/widget/lib/chart/time-series-chart-tooltip.models';
 import { TbUnit } from '@shared/models/unit.models';
 
+
 /**
-
- * TypeScript models and enums for range item.
-
+ * Range item (ThingsBoard web UI).
  */
+
 
 export interface RangeItem {
   index: number;

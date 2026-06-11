@@ -40,8 +40,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
- * Aggregates latencies and failure counts; emits notifications and saves latency telemetry to a monitoring asset.
+ * Aggregates latencies and failure counts for monitored services.
+ *
+ * <p>Emits {@link org.thingsboard.monitoring.data.notification.Notification} alerts and saves latency telemetry to the monitoring asset on the target tenant.
  */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -66,7 +69,14 @@ public class MonitoringReporter {
     @Value("${monitoring.latency.reporting_asset_id}")
     private String reportingAssetId;
 
-    /** Notifies on high latency and posts accumulated metrics as asset telemetry. */
+    
+    /**
+     * Report latencies.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     public void reportLatencies() {
         if (latencies.isEmpty()) {
             return;
@@ -101,7 +111,16 @@ public class MonitoringReporter {
         }
     }
 
-    /** Records one step latency (nanos converted to ms) for end-of-cycle reporting. */
+    
+    /**
+     * Persists latency samples as telemetry on the monitoring asset.
+     *
+     * @param key monitored service step identifier
+     * @param latencyInNanos latency in nanos
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     public void reportLatency(String key, long latencyInNanos) {
         String latencyKey = key + "Latency";
         double latencyInMs = (double) latencyInNanos / 1000_000;
@@ -109,7 +128,16 @@ public class MonitoringReporter {
         latencies.put(latencyKey, Latency.of(latencyKey, latencyInMs));
     }
 
-    /** Increments failure counter and may send {@link ServiceFailureNotification} when threshold is reached. */
+    
+   /**
+    * Service failure.
+    *
+    * @param serviceKey which monitored step failed or recovered
+    * @param error error ({@link Throwable})
+    * @return nothing
+    * @throws Exception if an unexpected error occurs during processing
+    */
+
     public void serviceFailure(Object serviceKey, Throwable error) {
         if (log.isDebugEnabled()) {
             log.error("[{}] Error occurred", serviceKey, error);
@@ -122,7 +150,15 @@ public class MonitoringReporter {
         }
     }
 
-    /** Resets failure counter and sends {@link ServiceRecoveryNotification} after a prior failure streak. */
+    
+    /**
+     * Service is ok.
+     *
+     * @param serviceKey which monitored step failed or recovered
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
     public void serviceIsOk(Object serviceKey) {
         ServiceRecoveryNotification notification = new ServiceRecoveryNotification(serviceKey);
         log.info(notification.getText());

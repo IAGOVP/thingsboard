@@ -66,14 +66,17 @@ export interface TimewindowConfigDialogData {
   timewindow: Timewindow;
 }
 
+
+/**
+ * Angular component: timewindow config dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timewindow-config-dialog`.
+ */
 @Component({
     selector: 'tb-timewindow-config-dialog',
     templateUrl: './timewindow-config-dialog.component.html',
     styleUrls: ['./timewindow-config-dialog.component.scss', './timewindow-form.scss'],
-    standalone: false
-/**
- * Angular component: timewindow config dialog UI.
- */
+standalone: false
 })
 export class TimewindowConfigDialogComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -159,6 +162,11 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
 
     this.realtimeTypeSelectionAvailable = this.realtimeTimewindowOptions.length > 1;
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     const realtime = this.timewindow.realtime;
@@ -404,10 +412,22 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * update disable advanced option state.
+   *
+   * @param controlName control name (string)
+   * @param intervalHidden interval hidden (boolean)
+   */
 
   private updateDisableAdvancedOptionState(controlName: string, intervalHidden: boolean) {
     if (intervalHidden) {
@@ -418,6 +438,12 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
     }
   }
 
+  /**
+   * update validators.
+   *
+   * @param aggType agg type (AggregationType)
+   */
+
   private updateValidators(aggType: AggregationType) {
     if (aggType !== AggregationType.NONE) {
       this.timewindowForm.get('aggregation.limit').clearValidators();
@@ -426,6 +452,12 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
     }
     this.timewindowForm.get('aggregation.limit').updateValueAndValidity({emitEvent: false});
   }
+
+  /**
+   * Event handler for timewindow type change.
+   *
+   * @param selectedTab selected tab (TimewindowType)
+   */
 
   private onTimewindowTypeChange(selectedTab: TimewindowType) {
     const timewindowFormValue = this.timewindowForm.getRawValue();
@@ -436,6 +468,11 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
       timewindowFormValue.realtime.advancedParams, timewindowFormValue.history.advancedParams,
       this.realtimeTimewindowOptions, this.historyTimewindowOptions);
   }
+
+  /**
+   * update.
+   *
+   */
 
   update() {
     const timewindowFormValue = this.timewindowForm.getRawValue();
@@ -496,6 +533,11 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
     this.dialogRef.close(deepClean(this.timewindow));
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.dialogRef.close();
   }
@@ -508,6 +550,12 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
     return this.timeService.maxIntervalLimit(this.currentRealtimeTimewindow());
   }
 
+  /**
+   * current realtime timewindow.
+   *
+   * @returns number observable or value
+   */
+
   private currentRealtimeTimewindow(): number {
     return currentRealtimeTimewindow(this.timewindowForm.getRawValue());
   }
@@ -519,6 +567,12 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
   get maxHistoryAggInterval() {
     return this.timeService.maxIntervalLimit(this.currentHistoryTimewindow());
   }
+
+  /**
+   * current history timewindow.
+   *
+   * @returns number observable or value
+   */
 
   private currentHistoryTimewindow(): number {
     return currentHistoryTimewindow(this.timewindowForm.getRawValue());
@@ -533,6 +587,11 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
     const timewindowFormValue = this.timewindowForm.getRawValue();
     return historyAllowedAggIntervals(timewindowFormValue, timewindowFormValue.history.advancedParams);
   }
+
+  /**
+   * open aggregation options config.
+   *
+   */
 
   openAggregationOptionsConfig($event: Event) {
     if ($event) {
@@ -567,11 +626,21 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
     this.cd.detectChanges();
   }
 
+  /**
+   * configure realtime last interval options.
+   *
+   */
+
   configureRealtimeLastIntervalOptions($event: Event) {
     this.openIntervalOptionsConfig($event,
       'realtime.advancedParams.allowedLastIntervals', 'realtime.advancedParams.lastAggIntervalsConfig',
       RealtimeWindowType.LAST_INTERVAL);
   }
+
+  /**
+   * configure realtime quick interval options.
+   *
+   */
 
   configureRealtimeQuickIntervalOptions($event: Event) {
     this.openIntervalOptionsConfig($event,
@@ -579,17 +648,36 @@ export class TimewindowConfigDialogComponent extends PageComponent implements On
       RealtimeWindowType.INTERVAL, TimewindowType.REALTIME);
   }
 
+  /**
+   * configure history last interval options.
+   *
+   */
+
   configureHistoryLastIntervalOptions($event: Event) {
     this.openIntervalOptionsConfig($event,
       'history.advancedParams.allowedLastIntervals', 'history.advancedParams.lastAggIntervalsConfig',
       HistoryWindowType.LAST_INTERVAL);
   }
 
+  /**
+   * configure history quick interval options.
+   *
+   */
+
   configureHistoryQuickIntervalOptions($event: Event) {
     this.openIntervalOptionsConfig($event,
       'history.advancedParams.allowedQuickIntervals', 'history.advancedParams.quickAggIntervalsConfig',
       HistoryWindowType.INTERVAL, TimewindowType.HISTORY);
   }
+
+  /**
+   * open interval options config.
+   *
+   * @param allowedIntervalsControlName allowed intervals control name (string)
+   * @param aggIntervalsConfigControlName agg intervals config control name (string)
+   * @param intervalType interval type (RealtimeWindowType | HistoryWindowType)
+   * @param timewindowType timewindow type (TimewindowType)
+   */
 
   private openIntervalOptionsConfig($event: Event,
                                     allowedIntervalsControlName: string,

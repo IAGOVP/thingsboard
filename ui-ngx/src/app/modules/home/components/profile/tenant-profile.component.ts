@@ -26,14 +26,17 @@ import { EntityComponent } from '../entity/entity.component';
 import { guid } from '@core/utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: tenant profile (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tenant-profile`.
+ */
 @Component({
     selector: 'tb-tenant-profile',
     templateUrl: './tenant-profile.component.html',
     styleUrls: ['./tenant-profile.component.scss'],
-    standalone: false
-/**
- * Angular component: tenant profile UI.
- */
+standalone: false
 })
 export class TenantProfileComponent extends EntityComponent<TenantProfile> {
 
@@ -50,6 +53,11 @@ export class TenantProfileComponent extends EntityComponent<TenantProfile> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -57,6 +65,13 @@ export class TenantProfileComponent extends EntityComponent<TenantProfile> {
       return false;
     }
   }
+
+  /**
+   * build form.
+   *
+   * @param entity entity (TenantProfile)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildForm(entity: TenantProfile): UntypedFormGroup {
     const mainQueue = [
@@ -164,6 +179,12 @@ export class TenantProfileComponent extends EntityComponent<TenantProfile> {
     return formGroup;
   }
 
+  /**
+   * update form.
+   *
+   * @param entity entity (TenantProfile)
+   */
+
   updateForm(entity: TenantProfile) {
     this.entityForm.patchValue({name: entity.name}, {emitEvent: false});
     this.entityForm.patchValue({isolatedTbRuleEngine: entity.isolatedTbRuleEngine}, {emitEvent: false});
@@ -174,6 +195,11 @@ export class TenantProfileComponent extends EntityComponent<TenantProfile> {
     this.entityForm.patchValue({description: entity.description}, {emitEvent: false});
   }
 
+  /**
+   * update form state.
+   *
+   */
+
   updateFormState() {
     if (this.entityForm) {
       if (this.isEditValue) {
@@ -183,6 +209,11 @@ export class TenantProfileComponent extends EntityComponent<TenantProfile> {
       }
     }
   }
+
+  /**
+   * Event handler for tenant profile id copied.
+   *
+   */
 
   onTenantProfileIdCopied(event) {
     this.store.dispatch(new ActionNotificationShow(

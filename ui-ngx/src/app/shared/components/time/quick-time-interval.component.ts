@@ -22,6 +22,12 @@ import { coerceBoolean } from '@shared/decorators/coercion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isEqual } from '@core/utils';
 
+
+/**
+ * Angular component: quick time interval (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-quick-time-interval`.
+ */
 @Component({
     selector: 'tb-quick-time-interval',
     templateUrl: './quick-time-interval.component.html',
@@ -33,10 +39,7 @@ import { isEqual } from '@core/utils';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: quick time interval UI.
- */
+standalone: false
 })
 export class QuickTimeIntervalComponent implements OnInit, ControlValueAccessor, OnChanges {
 
@@ -89,6 +92,11 @@ export class QuickTimeIntervalComponent implements OnInit, ControlValueAccessor,
     });
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.allAvailableIntervals = this.getAllAvailableIntervals();
     this.intervals = this.allowedIntervals?.length ? this.allowedIntervals : this.allAvailableIntervals;
@@ -104,12 +112,30 @@ export class QuickTimeIntervalComponent implements OnInit, ControlValueAccessor,
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -119,6 +145,12 @@ export class QuickTimeIntervalComponent implements OnInit, ControlValueAccessor,
       this.quickIntervalFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (QuickTimeInterval)
+   */
 
   writeValue(value: QuickTimeInterval): void {
     let interval: QuickTimeInterval;
@@ -131,12 +163,23 @@ export class QuickTimeIntervalComponent implements OnInit, ControlValueAccessor,
     this.quickIntervalFormGroup.get('interval').patchValue(interval, {emitEvent: false});
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (QuickTimeInterval | null)
+   */
+
   updateView(value: QuickTimeInterval | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
       this.propagateChange(this.modelValue);
     }
   }
+
+  /**
+   * get all available intervals.
+   *
+   */
 
   private getAllAvailableIntervals() {
     if (this.onlyCurrentInterval) {

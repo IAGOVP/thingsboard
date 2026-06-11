@@ -22,14 +22,17 @@ import { UrlTree } from '@angular/router';
 import { getCurrentAuthState } from '@core/auth/auth.selectors';
 import { UrlHolder } from '@shared/pipe/image.pipe';
 
+
+/**
+ * Angular component: logo (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-logo`.
+ */
 @Component({
     selector: 'tb-logo',
     templateUrl: './logo.component.html',
     styleUrls: ['./logo.component.scss'],
-    standalone: false
-/**
- * Angular component: logo UI.
- */
+standalone: false
 })
 export class LogoComponent implements OnInit {
 
@@ -47,6 +50,11 @@ export class LogoComponent implements OnInit {
   constructor(private authService: AuthService,
               private store: Store<AppState>) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     if (!this.link) {

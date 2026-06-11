@@ -22,14 +22,17 @@ import { Store } from "@ngrx/store";
 import { badgePositionTranslationsMap } from '@shared/models/mobile-app.models';
 import { mobileAppQrCodeWidgetDefaultSettings } from '@home/components/widget/lib/cards/mobile-app-qr-code-widget.models';
 
+
+/**
+ * Angular component: mobile app qr code widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-mobile-app-qr-code-widget-settings`.
+ */
 @Component({
     selector: 'tb-mobile-app-qr-code-widget-settings',
     templateUrl: './mobile-app-qr-code-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: mobile app qr code widget settings UI.
- */
+standalone: false
 })
 export class MobileAppQrCodeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -42,13 +45,31 @@ export class MobileAppQrCodeWidgetSettingsComponent extends WidgetSettingsCompon
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.mobileAppQRCodeWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return mobileAppQrCodeWidgetDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.mobileAppQRCodeWidgetSettingsForm = this.fb.group({
@@ -64,9 +85,21 @@ export class MobileAppQrCodeWidgetSettingsComponent extends WidgetSettingsCompon
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useSystemSettings', 'qrCodeConfig.badgeEnabled', 'qrCodeConfig.qrCodeLabelEnabled'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const useSystemSettings = this.mobileAppQRCodeWidgetSettingsForm.get('useSystemSettings').value;

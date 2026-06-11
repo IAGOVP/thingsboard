@@ -35,11 +35,11 @@ export enum AuthActionTypes {
   UPDATE_TRENDZ_SETTINGS = '[Auth] Update Trendz Settings',
 }
 
+
 /**
-
- * action auth authenticated.
-
+ * Action auth authenticated (authentication).
  */
+
 
 export class ActionAuthAuthenticated implements Action {
   readonly type = AuthActionTypes.AUTHENTICATED;

@@ -53,15 +53,18 @@ export interface UploadImageDialogResult {
   scadaSymbolContent?: string;
 }
 
+
+/**
+ * Angular component: upload image dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-upload-image-dialog`.
+ */
 @Component({
     selector: 'tb-upload-image-dialog',
     templateUrl: './upload-image-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: UploadImageDialogComponent }],
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: upload image dialog UI.
- */
+standalone: false
 })
 export class UploadImageDialogComponent extends
   DialogComponent<UploadImageDialogComponent, UploadImageDialogResult> implements OnInit, ErrorStateMatcher {
@@ -92,6 +95,11 @@ export class UploadImageDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.uploadImage = !this.data?.image;
     this.uploadImageFormGroup = this.fb.group({
@@ -118,6 +126,12 @@ export class UploadImageDialogComponent extends
     }
   }
 
+  /**
+   * image file name changed.
+   *
+   * @param fileName file name (string)
+   */
+
   imageFileNameChanged(fileName: string) {
     if (this.uploadImage) {
       const titleControl = this.uploadImageFormGroup.get('title');
@@ -127,15 +141,33 @@ export class UploadImageDialogComponent extends
     }
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * upload.
+   *
+   */
 
   upload(): void {
     this.submitted = true;

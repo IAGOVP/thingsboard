@@ -35,16 +35,19 @@ import { WidgetService } from '@core/http/widget.service';
 import { ValueType } from '@shared/models/constants';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: set value action settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-set-value-action-settings-panel`.
+ */
 @Component({
     selector: 'tb-set-value-action-settings-panel',
     templateUrl: './set-value-action-settings-panel.component.html',
     providers: [],
     styleUrls: ['./action-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: set value action settings panel UI.
- */
+standalone: false
 })
 export class SetValueActionSettingsPanelComponent extends PageComponent implements OnInit {
 
@@ -99,6 +102,11 @@ export class SetValueActionSettingsPanelComponent extends PageComponent implemen
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.setValueActions = setValueActionsByWidgetType(this.widgetType);
     this.setValueSettingsFormGroup = this.fb.group(
@@ -137,14 +145,29 @@ export class SetValueActionSettingsPanelComponent extends PageComponent implemen
     this.updateValidators();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply set value settings.
+   *
+   */
 
   applySetValueSettings() {
     const setValueSettings: SetValueSettings = this.setValueSettingsFormGroup.getRawValue();
     this.setValueSettingsApplied.emit(setValueSettings);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const action: SetValueAction = this.setValueSettingsFormGroup.get('action').value;

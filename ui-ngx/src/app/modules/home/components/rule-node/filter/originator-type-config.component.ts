@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@app/shared/models/rule-node.models';
 import { EntityType } from '@app/shared/models/entity-type.models';
 
+
+/**
+ * Angular component: originator type config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-node-originator-type-config`.
+ */
 @Component({
     selector: 'tb-filter-node-originator-type-config',
     templateUrl: './originator-type-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: originator type config UI.
- */
+standalone: false
 })
 export class OriginatorTypeConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -50,15 +53,34 @@ export class OriginatorTypeConfigComponent extends RuleNodeConfigurationComponen
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.originatorTypeConfigForm;
   }
+
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
 
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     return {
       originatorTypes: isDefinedAndNotNull(configuration?.originatorTypes) ? configuration.originatorTypes : null
     };
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.originatorTypeConfigForm = this.fb.group({

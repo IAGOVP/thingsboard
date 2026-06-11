@@ -27,6 +27,9 @@ import { CalculatedFieldsTabsComponent } from '@home/pages/calculated-fields/cal
 /**
  * Angular NgModule: calculated field page feature area.
  */
+/**
+ * Angular NgModule bundling calculated field page (home/calculated-fields pages).
+ */
 @NgModule({
   declarations: [
     CalculatedFieldsTabsComponent
@@ -37,5 +40,5 @@ import { CalculatedFieldsTabsComponent } from '@home/pages/calculated-fields/cal
     HomeComponentsModule,
     HomeDialogsModule,
     CalculatedFieldsRoutingModule,
-  ]})
+]})
 export class CalculatedFieldPageModule { }

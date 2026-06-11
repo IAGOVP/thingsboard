@@ -18,11 +18,11 @@ import { BadgePosition, QRCodeConfig } from '@shared/models/mobile-app.models';
 import { BackgroundType } from '@shared/models/widget-settings.models';
 import { WidgetConfig } from '@shared/models/widget.models';
 
+
 /**
-
- * TypeScript models and enums for mobile app qr code widget settings.
-
+ * Mobile app qr code widget settings (ThingsBoard web UI).
  */
+
 
 export interface MobileAppQrCodeWidgetSettings extends WidgetConfig {
   useSystemSettings: boolean;

@@ -56,6 +56,12 @@ import {
 } from '@home/components/widget/lib/settings/common/map/map-data-layer-dialog.component';
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 
+
+/**
+ * Angular component: map data layer row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-data-layer-row`.
+ */
 @Component({
     selector: 'tb-map-data-layer-row',
     templateUrl: './map-data-layer-row.component.html',
@@ -68,10 +74,7 @@ import { MapSettingsContext } from '@home/components/widget/lib/settings/common/
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map data layer row UI.
- */
+standalone: false
 })
 export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
 
@@ -118,6 +121,11 @@ export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
               private cd: ChangeDetectorRef,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     if (this.context.functionsOnly) {
@@ -172,12 +180,30 @@ export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -188,6 +214,12 @@ export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (MapDataLayerSettings)
+   */
 
   writeValue(value: MapDataLayerSettings): void {
     this.modelValue = value;
@@ -247,6 +279,12 @@ export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
     this.cd.markForCheck();
   }
 
+  /**
+   * edit key.
+   *
+   * @param keyType key type ('xKey' | 'yKey' | 'polygonKey' | 'circleKey' | 'polylineKey')
+   */
+
   editKey(keyType: 'xKey' | 'yKey' | 'polygonKey' | 'circleKey' | 'polylineKey') {
     const targetDataKey: DataKey = this.dataLayerFormGroup.get(keyType).value;
     this.context.editKey(targetDataKey,
@@ -259,6 +297,12 @@ export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
       }
     );
   }
+
+  /**
+   * edit data layer.
+   *
+   * @param matButton mat button (MatIconButton)
+   */
 
   editDataLayer($event: Event, matButton: MatIconButton) {
     if ($event) {
@@ -282,6 +326,12 @@ export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
       }
     });
   }
+
+  /**
+   * Event handler for ds type changed.
+   *
+   * @param newDsType new ds type (DatasourceType)
+   */
 
   private onDsTypeChanged(newDsType: DatasourceType) {
     let updateModel = false;
@@ -327,6 +377,11 @@ export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     const dsType: DatasourceType = this.dataLayerFormGroup.get('dsType').value;
     if (dsType === DatasourceType.function) {
@@ -343,6 +398,11 @@ export class MapDataLayerRowComponent implements ControlValueAccessor, OnInit {
       this.dataLayerFormGroup.get('dsEntityAliasId').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = {...this.modelValue, ...this.dataLayerFormGroup.value};

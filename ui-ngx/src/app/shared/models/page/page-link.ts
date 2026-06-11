@@ -109,11 +109,11 @@ export function sortItems(item1: any, item2: any, property: string, asc: boolean
   return asc ? result : result * -1;
 }
 
+
 /**
-
- * TypeScript models and enums for page link.
-
+ * TypeScript interfaces, types, and enums for page link (shared TypeScript models).
  */
+
 
 export class PageLink {
 
@@ -129,9 +129,21 @@ export class PageLink {
     this.sortOrder = sortOrder;
   }
 
+  /**
+   * next page link.
+   *
+   * @returns PageLink observable or value
+   */
+
   public nextPageLink(): PageLink {
     return new PageLink(this.pageSize, this.page + 1, this.textSearch, this.sortOrder);
   }
+
+  /**
+   * to query.
+   *
+   * @returns string observable or value
+   */
 
   public toQuery(): string {
     let query = `?pageSize=${this.pageSize}&page=${this.page}`;
@@ -145,6 +157,14 @@ export class PageLink {
     }
     return query;
   }
+
+  /**
+   * sort.
+   *
+   * @param item1 item1 (any)
+   * @param item2 item2 (any)
+   * @returns number observable or value
+   */
 
   public sort(item1: any, item2: any): number {
     if (this.sortOrder) {
@@ -176,6 +196,12 @@ export class PageLink {
     }
     return pageData;
   }
+
+  /**
+   * sort direction.
+   *
+   * @returns SortDirection observable or value
+   */
 
   public sortDirection(): SortDirection {
     if (this.sortOrder) {

@@ -29,18 +29,31 @@ export interface UrlHolder {
   url?: string;
 }
 
-@Pipe({
-    name: 'image',
-    standalone: false
+
 /**
  * Angular pipe: image.
  */
+@Pipe({
+    name: 'image',
+/**
+ * Angular pipe: image (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class ImagePipe implements PipeTransform {
 
   constructor(private imageService: ImageService,
               private sanitizer: DomSanitizer,
               private zone: NgZone) { }
+
+  /**
+   * transform.
+   *
+   * @param urlData url data (string | UrlHolder)
+   * @param args args (any)
+   * @param triggerUpdate trigger update (number)
+   * @returns Observable<SafeUrl | string> observable or value
+   */
 
   transform(urlData: string | UrlHolder, args?: any, triggerUpdate?: number): Observable<SafeUrl | string> {
     const ignoreLoadingImage = !!args?.ignoreLoadingImage;

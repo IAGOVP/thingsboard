@@ -31,8 +31,9 @@ import static org.thingsboard.rule.engine.telemetry.settings.TimeseriesProcessin
         include = JsonTypeInfo.As.PROPERTY,
         property = "type"
 /**
- * Rule engine timeseries processing settings API.
+ * timeseries processing settings contract (telemetry and attribute persistence nodes).
  */
+
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = OnEveryMessage.class, name = "ON_EVERY_MESSAGE"),
@@ -41,6 +42,19 @@ import static org.thingsboard.rule.engine.telemetry.settings.TimeseriesProcessin
         @JsonSubTypes.Type(value = Advanced.class, name = "ADVANCED")
 })
 public sealed interface TimeseriesProcessingSettings extends ProcessingSettings permits OnEveryMessage, Deduplicate, WebSocketsOnly, Advanced {
+
+    
+    /**
+     * Advanced.
+     *
+     * @param timeseries timeseries ({@link ProcessingStrategy})
+     * @param latest latest ({@link ProcessingStrategy})
+     * @param webSockets web sockets ({@link ProcessingStrategy})
+     * @param calculatedFields calculated fields ({@link ProcessingStrategy})
+     * @return the record value
+     * @throws Exception if an unexpected error occurs during processing
+     */
+
 
     record Advanced(ProcessingStrategy timeseries, ProcessingStrategy latest, ProcessingStrategy webSockets, ProcessingStrategy calculatedFields) implements TimeseriesProcessingSettings {
 

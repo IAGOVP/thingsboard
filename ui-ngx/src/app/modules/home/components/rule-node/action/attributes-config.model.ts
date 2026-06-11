@@ -17,11 +17,11 @@
 import { AttributeScope } from '@shared/models/telemetry/telemetry.models';
 import { BasicProcessingSettings, ProcessingType } from '@home/components/rule-node/action/timeseries-config.models';
 
+
 /**
-
- * attribute node configuration.
-
+ * Attribute node configuration (ThingsBoard web UI).
  */
+
 
 export interface AttributeNodeConfiguration {
   processingSettings: AttributeProcessingSettings;

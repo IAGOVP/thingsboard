@@ -44,8 +44,9 @@ import {
 import { ImportExportService } from '@shared/import-export/import-export.service';
 import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 /**
- * Route resolver: loads device profiles table config before activate.
+ * Route resolver: preloads data for device profiles table config (home/device-profile pages).
  */
+
 
 @Injectable()
 export class DeviceProfilesTableConfigResolver  {
@@ -120,11 +121,23 @@ export class DeviceProfilesTableConfigResolver  {
     this.config.addActionDescriptors = this.configureAddActions();
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<DeviceProfile> observable or value
+   */
+
   resolve(): EntityTableConfig<DeviceProfile> {
     this.config.tableTitle = this.translate.instant('device-profile.device-profiles');
 
     return this.config;
   }
+
+  /**
+   * configure add actions.
+   *
+   * @returns Array<HeaderActionDescriptor> observable or value
+   */
 
   configureAddActions(): Array<HeaderActionDescriptor> {
     const actions: Array<HeaderActionDescriptor> = [];
@@ -145,6 +158,11 @@ export class DeviceProfilesTableConfigResolver  {
     return actions;
   }
 
+  /**
+   * POST/PUT entity — add device profile.
+   *
+   */
+
   addDeviceProfile() {
     this.dialog.open<AddDeviceProfileDialogComponent, AddDeviceProfileDialogData,
       DeviceProfile>(AddDeviceProfileDialogComponent, {
@@ -162,6 +180,12 @@ export class DeviceProfilesTableConfigResolver  {
       }
     );
   }
+
+  /**
+   * set default device profile.
+   *
+   * @param deviceProfile device profile (DeviceProfile)
+   */
 
   setDefaultDeviceProfile($event: Event, deviceProfile: DeviceProfile) {
     if ($event) {
@@ -185,6 +209,12 @@ export class DeviceProfilesTableConfigResolver  {
     );
   }
 
+  /**
+   * open device profile.
+   *
+   * @param deviceProfile device profile (DeviceProfile)
+   */
+
   private openDeviceProfile($event: Event, deviceProfile: DeviceProfile) {
     if ($event) {
       $event.stopPropagation();
@@ -192,6 +222,11 @@ export class DeviceProfilesTableConfigResolver  {
     const url = this.router.createUrlTree(['profiles', 'deviceProfiles', deviceProfile.id.id]);
     this.router.navigateByUrl(url);
   }
+
+  /**
+   * import device profile.
+   *
+   */
 
   importDeviceProfile($event: Event) {
     this.importExport.importDeviceProfile().subscribe(
@@ -203,12 +238,25 @@ export class DeviceProfilesTableConfigResolver  {
     );
   }
 
+  /**
+   * export device profile.
+   *
+   * @param deviceProfile device profile (DeviceProfile)
+   */
+
   exportDeviceProfile($event: Event, deviceProfile: DeviceProfile) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExport.exportDeviceProfile(deviceProfile.id.id);
   }
+
+  /**
+   * Event handler for device profile action.
+   *
+   * @param action action (EntityAction<DeviceProfile>)
+   * @returns boolean observable or value
+   */
 
   onDeviceProfileAction(action: EntityAction<DeviceProfile>): boolean {
     switch (action.action) {

@@ -30,11 +30,11 @@ interface CSSObject {
   comments?: string;
 }
 
+
 /**
-
- * cssparser.
-
+ * Cssparser (ThingsBoard web UI).
  */
+
 
 export default class CSSParser {
   cssPreviewNamespace: string = '';

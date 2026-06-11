@@ -78,8 +78,9 @@ import static org.thingsboard.rule.engine.telemetry.settings.TimeseriesProcessin
 import static org.thingsboard.rule.engine.telemetry.settings.TimeseriesProcessingSettings.OnEveryMessage;
 import static org.thingsboard.rule.engine.telemetry.settings.TimeseriesProcessingSettings.WebSocketsOnly;
 /**
- * Unit test for tb msg timeseries node rule node.
+ * Unit test for tb msg timeseries node (telemetry and attribute persistence nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -96,6 +97,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
     private TbContext ctxMock;
     @Mock
     private RuleEngineTelemetryService telemetryServiceMock;
+    /**
+     * Set up.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @BeforeEach
     public void setUp() throws TbNodeException {
@@ -113,6 +119,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
         node = spy(new TbMsgTimeseriesNode());
         config = new TbMsgTimeseriesNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -120,6 +131,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(config.getProcessingSettings()).isInstanceOf(OnEveryMessage.class);
         assertThat(config.isUseServerTs()).isFalse();
     }
+    /**
+     * When init then should add tenant profile listener.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void whenInit_thenShouldAddTenantProfileListener() throws Exception {
@@ -129,6 +145,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
         // THEN
         then(ctxMock).should().addTenantProfileListener(any());
     }
+    /**
+     * Given processing settings are null when validating constraints then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenProcessingSettingsAreNull_whenValidatingConstraints_thenThrowsException() {
@@ -140,6 +161,12 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
                 .isInstanceOf(DataValidationException.class)
                 .hasMessage("Validation error: processingSettings must not be null");
     }
+    /**
+     * Given msg type and empty msg data when on msg then verify failure msg.
+     *
+     * @param msgType msg type ({@link TbMsgType})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @EnumSource(TbMsgType.class)
@@ -172,6 +199,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(throwableCaptor.getValue()).isInstanceOf(IllegalArgumentException.class).hasMessage("Unsupported msg type: " + msgType);
         verifyNoMoreInteractions(ctxMock);
     }
+    /**
+     * Given ttl from config is zero and use server ts is true when on msg then save timeseries using tenant profile default ttl.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenTtlFromConfigIsZeroAndUseServerTsIsTrue_whenOnMsg_thenSaveTimeseriesUsingTenantProfileDefaultTtl() throws TbNodeException {
@@ -221,6 +253,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock).tellSuccess(msg);
         verifyNoMoreInteractions(ctxMock, telemetryServiceMock);
     }
+    /**
+     * Given skip latest processing settings and ttl from config when on msg then save timeseries using ttl from config.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenSkipLatestProcessingSettingsAndTtlFromConfig_whenOnMsg_thenSaveTimeseriesUsingTtlFromConfig() throws TbNodeException {
@@ -279,6 +316,14 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
         verify(ctxMock).tellSuccess(msg);
         verifyNoMoreInteractions(ctxMock, telemetryServiceMock);
     }
+    /**
+     * Given ttl from config and ttl from md when on msg then verify ttl.
+     *
+     * @param ttlFromMd ttl from md ({@link String})
+     * @param ttlFromConfig ttl from config
+     * @param expectedTtl expected ttl
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -339,6 +384,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
         }
         return expectedList;
     }
+    /**
+     * Given on every message processing settings and same message two times when on msg then persist same message two times.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenOnEveryMessageProcessingSettingsAndSameMessageTwoTimes_whenOnMsg_thenPersistSameMessageTwoTimes() throws TbNodeException {
@@ -377,6 +427,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
                 actualSaveRequest -> assertThat(actualSaveRequest).usingRecursiveComparison().ignoringFields("callback").isEqualTo(expectedSaveRequest)
         ));
     }
+    /**
+     * Given deduplicate processing settings and same message two times when on msg then persist this message only first time.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenDeduplicateProcessingSettingsAndSameMessageTwoTimes_whenOnMsg_thenPersistThisMessageOnlyFirstTime() throws TbNodeException {
@@ -415,6 +470,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
         node.onMsg(ctxMock, msg);
         then(telemetryServiceMock).should(never()).saveTimeseries(any());
     }
+    /**
+     * Given web sockets only processing settings and same message two times when on msg then sends only ws update two times.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenWebSocketsOnlyProcessingSettingsAndSameMessageTwoTimes_whenOnMsg_thenSendsOnlyWsUpdateTwoTimes() throws TbNodeException {
@@ -453,6 +513,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
                 actualSaveRequest -> assertThat(actualSaveRequest).usingRecursiveComparison().ignoringFields("callback").isEqualTo(expectedSaveRequest)
         ));
     }
+    /**
+     * Given advanced processing settings with on every message strategies for all actions and same message two times when on msg then persist same message two times.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenAdvancedProcessingSettingsWithOnEveryMessageStrategiesForAllActionsAndSameMessageTwoTimes_whenOnMsg_thenPersistSameMessageTwoTimes() throws TbNodeException {
@@ -496,6 +561,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
                 actualSaveRequest -> assertThat(actualSaveRequest).usingRecursiveComparison().ignoringFields("callback").isEqualTo(expectedSaveRequest)
         ));
     }
+    /**
+     * Given advanced processing settings with different deduplicate strategy for each action when on msg then evaluates strategies for each actions independently.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenAdvancedProcessingSettingsWithDifferentDeduplicateStrategyForEachAction_whenOnMsg_thenEvaluatesStrategiesForEachActionsIndependently() throws TbNodeException {
@@ -582,6 +652,11 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
                 )
         ));
     }
+    /**
+     * Given advanced processing settings with skip strategies for all actions and same message two times when on msg then skips same message two times.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenAdvancedProcessingSettingsWithSkipStrategiesForAllActionsAndSameMessageTwoTimes_whenOnMsg_thenSkipsSameMessageTwoTimes() throws TbNodeException {
@@ -615,6 +690,12 @@ public class TbMsgTimeseriesNodeTest extends AbstractRuleNodeUpgradeTest {
     private static long extractTtlAsSeconds(TenantProfile tenantProfile) {
         return TimeUnit.DAYS.toSeconds(tenantProfile.getDefaultProfileConfiguration().getDefaultStorageTtlDays());
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

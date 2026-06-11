@@ -19,14 +19,17 @@ import { isNotEmptyStr } from '@core/public-api';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 
+
+/**
+ * Angular component: mqtt config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-external-node-mqtt-config`.
+ */
 @Component({
     selector: 'tb-external-node-mqtt-config',
     templateUrl: './mqtt-config.component.html',
     styleUrls: ['./mqtt-config.component.scss'],
-    standalone: false
-/**
- * Angular component: mqtt config UI.
- */
+standalone: false
 })
 export class MqttConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -36,9 +39,21 @@ export class MqttConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.mqttConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.mqttConfigForm = this.fb.group({
@@ -61,6 +76,12 @@ export class MqttConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
+
   protected updateValidators(emitEvent: boolean) {
     if (isNotEmptyStr(this.mqttConfigForm.get('clientId').value)) {
       this.mqttConfigForm.get('appendClientIdSuffix').enable({emitEvent: false});
@@ -69,6 +90,12 @@ export class MqttConfigComponent extends RuleNodeConfigurationComponent {
     }
     this.mqttConfigForm.get('appendClientIdSuffix').updateValueAndValidity({emitEvent});
   }
+
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
 
   protected validatorTriggers(): string[] {
     return ['clientId'];

@@ -28,8 +28,11 @@ import java.util.concurrent.TimeUnit;
  * Created by mshvayka on 04.09.18.
  */
 /**
- * JSON configuration for TbGetTelemetry rule node.
+ * JSON configuration POJO for {@link TbGetTelemetry} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 @Data
 public class TbGetTelemetryNodeConfiguration implements NodeConfiguration<TbGetTelemetryNodeConfiguration> {
 
@@ -51,6 +54,12 @@ public class TbGetTelemetryNodeConfiguration implements NodeConfiguration<TbGetT
     private int limit;
 
     private List<String> latestTsKeyNames;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbGetTelemetryNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbGetTelemetryNodeConfiguration defaultConfiguration() {

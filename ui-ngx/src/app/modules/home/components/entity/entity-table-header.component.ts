@@ -23,8 +23,11 @@ import { PageLink } from '@shared/models/page/page-link';
 @Directive()
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 /**
- * Angular component: entity table header UI.
+ * Angular component: entity table header (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application.
  */
+
 export abstract class EntityTableHeaderComponent<T extends BaseData<HasId>,
   P extends PageLink = PageLink,
   L extends BaseData<HasId> = T,
@@ -46,8 +49,19 @@ export abstract class EntityTableHeaderComponent<T extends BaseData<HasId>,
     super();
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
   }
+
+  /**
+   * set entities table config.
+   *
+   * @param entitiesTableConfig entities table config (C)
+   */
 
   protected setEntitiesTableConfig(entitiesTableConfig: C) {
     this.entitiesTableConfigValue = entitiesTableConfig;

@@ -21,8 +21,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 /**
- * Configuration for mqtt transport monitoring.
+ * Configuration for mqtt transport monitoring (monitoring targets and transport configuration beans).
  */
+
 
 @Component
 @ConditionalOnProperty(name = "monitoring.transports.mqtt.enabled", havingValue = "true")
@@ -32,6 +33,12 @@ import org.springframework.stereotype.Component;
 public class MqttTransportMonitoringConfig extends TransportMonitoringConfig {
 
     private Integer qos;
+    /**
+     * Returns transport type.
+     *
+     * @return {@link TransportType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TransportType getTransportType() {

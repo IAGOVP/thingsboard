@@ -17,11 +17,11 @@
 import { EntityId } from './entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for api key id.
-
+ * TypeScript interfaces, types, and enums for api key id (shared TypeScript models).
  */
+
 
 export class ApiKeyId implements EntityId {
   entityType = EntityType.API_KEY;

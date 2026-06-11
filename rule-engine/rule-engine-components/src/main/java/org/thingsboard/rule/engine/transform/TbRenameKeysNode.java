@@ -35,7 +35,13 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 /**
- * Rule engine transformation node 'rename keys': Renames message or message metadata keys. Implements org.thingsboard.rule.engine.api.TbNode.
+ * Transformation rule node — <b>rename keys</b>.
+ *
+ * <p>Renames message or message metadata keys.
+ * <br>Renames keys in the message or message metadata according to the provided mapping. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbRenameKeysNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/rename-keys/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/rename-keys/</a>
  */
 @RuleNode(
         type = ComponentType.TRANSFORMATION,
@@ -54,6 +60,13 @@ public class TbRenameKeysNode extends TbAbstractTransformNodeWithTbMsgSource {
 
     private Map<String, String> renameKeysMapping;
     private TbMsgSource renameIn;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -67,6 +80,15 @@ public class TbRenameKeysNode extends TbAbstractTransformNodeWithTbMsgSource {
             throw new TbNodeException("At least one mapping entry should be specified!");
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {
@@ -113,11 +135,23 @@ public class TbRenameKeysNode extends TbAbstractTransformNodeWithTbMsgSource {
                 .data(data)
                 .build() : msg);
     }
+    /**
+     * Returns new key for upgrade from version zero.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getNewKeyForUpgradeFromVersionZero() {
         return "renameIn";
     }
+    /**
+     * Returns key to upgrade from version one.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getKeyToUpgradeFromVersionOne() {

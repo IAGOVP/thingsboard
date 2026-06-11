@@ -20,20 +20,29 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { Notification } from '@shared/models/notification.models';
 
+
+/**
+ * Angular component: inbox table header (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-inbox-table-header`.
+ */
 @Component({
     selector: 'tb-inbox-table-header',
     templateUrl: './inbox-table-header.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: inbox table header UI.
- */
+standalone: false
 })
 export class InboxTableHeaderComponent extends EntityTableHeaderComponent<Notification> {
 
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * change unread only.
+   *
+   * @param unreadOnly unread only (boolean)
+   */
 
   changeUnreadOnly(unreadOnly: boolean) {
     this.entitiesTableConfig.componentsData.unreadOnly = unreadOnly;

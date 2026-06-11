@@ -30,8 +30,9 @@ import { ClientTableHeaderComponent } from '@home/pages/admin/oauth2/clients/cli
 import { Direction } from '@shared/models/page/sort-order';
 import { PageLink } from '@shared/models/page/page-link';
 /**
- * Route resolver: loads clients table config before activate.
+ * Route resolver: preloads data for clients table config (home/admin pages).
  */
+
 
 @Injectable()
 export class ClientsTableConfigResolver  {
@@ -68,6 +69,12 @@ export class ClientsTableConfigResolver  {
     this.config.saveEntity = client => this.oauth2Service.saveOAuth2Client(client);
     this.config.deleteEntity = id => this.oauth2Service.deleteOauth2Client(id.id);
   }
+
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<OAuth2Client, PageLink, OAuth2ClientInfo> observable or value
+   */
 
   resolve(): EntityTableConfig<OAuth2Client, PageLink, OAuth2ClientInfo> {
     return this.config;

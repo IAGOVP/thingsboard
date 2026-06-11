@@ -31,6 +31,9 @@ import { CommonRuleNodeConfigModule } from '../common/common-rule-node-config.mo
 /**
  * Angular NgModule: filter rule node config feature area.
  */
+/**
+ * Angular NgModule bundling filter rule node config (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     CheckMessageConfigComponent,
@@ -56,6 +59,6 @@ import { CommonRuleNodeConfigModule } from '../common/common-rule-node-config.mo
     ScriptConfigComponent,
     SwitchConfigComponent,
     CheckAlarmStatusComponent
-  ]})
+]})
 export class FilterRuleNodeConfigModule {
 }

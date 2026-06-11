@@ -43,7 +43,7 @@ import java.math.RoundingMode;
 import java.util.Map;
 
 /**
- * Rule engine component: calculate delta node.
+ * Calculate delta node (entity metadata and related-data fetch nodes).
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -64,6 +64,13 @@ public class CalculateDeltaNode implements TbNode {
     private Map<EntityId, SemaphoreWithTbMsgQueue> locks;
 
     private CalculateDeltaNodeConfiguration config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -82,6 +89,13 @@ public class CalculateDeltaNode implements TbNode {
             cache = new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.SOFT);
         }
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -97,6 +111,10 @@ public class CalculateDeltaNode implements TbNode {
         locks.computeIfAbsent(msg.getOriginator(), SemaphoreWithTbMsgQueue::new)
                 .addToQueueAndTryProcess(msg, ctx, this::processMsgAsync);
     }
+    /**
+     * Releases resources held by the node (script engines, clients, thread pools).
+     *
+     */
 
     @Override
     public void destroy() {
@@ -105,6 +123,14 @@ public class CalculateDeltaNode implements TbNode {
             cache.clear();
         }
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {
@@ -150,6 +176,14 @@ public class CalculateDeltaNode implements TbNode {
         }
         return new ValueWithTs(ts, result);
     }
+    /**
+     * Processes msg async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link TbMsg}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected ListenableFuture<TbMsg> processMsgAsync(TbContext ctx, TbMsg msg) {
         ListenableFuture<ValueWithTs> latestValueFuture = getLatestFromCacheOrFetchFromDb(ctx, msg);
@@ -192,6 +226,12 @@ public class CalculateDeltaNode implements TbNode {
         }
         return fetchLatestValueAsync(ctx, originator);
     }
+
+    /**
+
+     * Immutable record for value with ts (entity metadata and related-data fetch nodes).
+
+     */
 
     private record ValueWithTs(long ts, double value) {}
 

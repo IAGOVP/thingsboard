@@ -33,6 +33,13 @@ interface MessageType {
   value: string;
 }
 
+
+
+/**
+ * Angular component: output message type autocomplete (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-output-message-type-autocomplete`.
+ */
 @Component({
     selector: 'tb-output-message-type-autocomplete',
     templateUrl: './output-message-type-autocomplete.component.html',
@@ -49,13 +56,8 @@ interface MessageType {
             multi: true
         }
     ],
-    standalone: false
 
-/**
-
- * Angular component: output message type autocomplete UI.
-
- */
+standalone: false
 })
 
 export class OutputMessageTypeAutocompleteComponent implements ControlValueAccessor, Validator {
@@ -117,12 +119,30 @@ export class OutputMessageTypeAutocompleteComponent implements ControlValueAcces
       .subscribe(() => this.updateView());
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.modelValue = value;
@@ -134,6 +154,11 @@ export class OutputMessageTypeAutocompleteComponent implements ControlValueAcces
     this.messageTypeFormGroup.get('messageType').patchValue(value, {emitEvent: false});
   }
 
+  /**
+   * validate.
+   *
+   */
+
   validate() {
     if (!this.messageTypeFormGroup.valid) {
       return {
@@ -142,6 +167,12 @@ export class OutputMessageTypeAutocompleteComponent implements ControlValueAcces
     }
     return null;
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -155,6 +186,11 @@ export class OutputMessageTypeAutocompleteComponent implements ControlValueAcces
     }
   }
 
+  /**
+   * update view.
+   *
+   */
+
   private updateView() {
     const value = this.messageTypeFormGroup.getRawValue().messageType;
     if (this.modelValue !== value) {
@@ -163,12 +199,23 @@ export class OutputMessageTypeAutocompleteComponent implements ControlValueAcces
     }
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   private updateValidators() {
     this.messageTypeFormGroup.get('messageType').setValidators(
         this.required ? [Validators.required, Validators.maxLength(255)] : [Validators.maxLength(255)]
     );
     this.messageTypeFormGroup.get('messageType').updateValueAndValidity({emitEvent: false});
   }
+
+  /**
+   * update message type value.
+   *
+   * @param choseMessageType chose message type (MessageType)
+   */
 
   private updateMessageTypeValue(choseMessageType: MessageType) {
     if (choseMessageType?.name !== 'Custom') {

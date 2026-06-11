@@ -25,15 +25,18 @@ import {
   CommandButtonWidgetSettings
 } from '@home/components/widget/lib/button/command-button-widget.models';
 
+
+/**
+ * Angular component: command button widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-command-button-widget`.
+ */
 @Component({
     selector: 'tb-command-button-widget',
     templateUrl: './command-button-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './command-button-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: command button widget UI.
- */
+standalone: false
 })
 export class CommandButtonWidgetComponent extends
   BasicActionWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -53,6 +56,11 @@ export class CommandButtonWidgetComponent extends
     super(cd);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     super.ngOnInit();
     this.settings = {...commandButtonDefaultSettings, ...this.ctx.settings};
@@ -70,13 +78,28 @@ export class CommandButtonWidgetComponent extends
     this.clickValueSetter = this.createValueSetter(onClickStateSettings);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     super.ngAfterViewInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     super.onInit();
@@ -84,11 +107,22 @@ export class CommandButtonWidgetComponent extends
     this.cd.detectChanges();
   }
 
+  /**
+   * Event handler for click.
+   *
+   */
+
   public onClick(_$event: MouseEvent) {
     if (!this.ctx.isEdit && !this.ctx.isPreview) {
       this.updateValue(this.clickValueSetter, null);
     }
   }
+
+  /**
+   * Event handler for disabled.
+   *
+   * @param value value (boolean)
+   */
 
   private onDisabled(value: boolean): void {
     this.disabled = !!value;

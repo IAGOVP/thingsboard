@@ -23,14 +23,17 @@ import { labelValueCardWidgetDefaultSettings } from '@home/components/widget/lib
 import { formatValue } from '@core/utils';
 import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: label value card widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-label-value-card-widget-settings`.
+ */
 @Component({
     selector: 'tb-label-value-card-widget-settings',
     templateUrl: './label-value-card-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: label value card widget settings UI.
- */
+standalone: false
 })
 export class LabelValueCardWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -45,13 +48,31 @@ export class LabelValueCardWidgetSettingsComponent extends WidgetSettingsCompone
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.labelValueCardWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return labelValueCardWidgetDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.labelValueCardWidgetSettingsForm = this.fb.group({
@@ -76,9 +97,21 @@ export class LabelValueCardWidgetSettingsComponent extends WidgetSettingsCompone
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showLabel', 'showIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showLabel: boolean = this.labelValueCardWidgetSettingsForm.get('showLabel').value;

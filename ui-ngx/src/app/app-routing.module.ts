@@ -34,5 +34,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
+/**
+ * Angular NgModule bundling app routing (Angular routing).
+ */
 })
 export class AppRoutingModule { }

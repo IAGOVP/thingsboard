@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: flot latest key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flot-latest-key-settings`.
+ */
 @Component({
     selector: 'tb-flot-latest-key-settings',
     templateUrl: './flot-latest-key-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: flot latest key settings UI.
- */
+standalone: false
 })
 export class FlotLatestKeySettingsComponent extends WidgetSettingsComponent {
 
@@ -38,9 +41,21 @@ export class FlotLatestKeySettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.flotLatestKeySettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -50,6 +65,12 @@ export class FlotLatestKeySettingsComponent extends WidgetSettingsComponent {
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.flotLatestKeySettingsForm = this.fb.group({
       useAsThreshold: [settings.useAsThreshold, []],
@@ -58,9 +79,21 @@ export class FlotLatestKeySettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['useAsThreshold'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const useAsThreshold: boolean = this.flotLatestKeySettingsForm.get('useAsThreshold').value;

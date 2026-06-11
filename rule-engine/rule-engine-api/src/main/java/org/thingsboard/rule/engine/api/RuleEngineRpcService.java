@@ -27,15 +27,48 @@ import java.util.function.Consumer;
  * Created by ashvayka on 02.04.18.
  */
 /**
- * Device RPC from rule nodes.
+ * Facade for sending two-way device RPC from rule nodes.
  */
+
 public interface RuleEngineRpcService {
+    /**
+     * Send rpc reply to device.
+     *
+     * @param serviceId service id ({@link String})
+     * @param sessionId session id ({@link UUID})
+     * @param requestId request id
+     * @param body body ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendRpcReplyToDevice(String serviceId, UUID sessionId, int requestId, String body);
+    /**
+     * Send rpc request to device.
+     *
+     * @param request async service request DTO
+     * @param consumer consumer ({@link Consumer})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendRpcRequestToDevice(RuleEngineDeviceRpcRequest request, Consumer<RuleEngineDeviceRpcResponse> consumer);
+    /**
+     * Send rest api call reply.
+     *
+     * @param serviceId service id ({@link String})
+     * @param requestId request id ({@link UUID})
+     * @param msg incoming or outgoing rule engine message
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     void sendRestApiCallReply(String serviceId, UUID requestId, TbMsg msg);
+    /**
+     * Finds rpc by id.
+     *
+     * @param tenantId tenant UUID
+     * @param id id ({@link RpcId})
+     * @return {@link Rpc}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     Rpc findRpcById(TenantId tenantId, RpcId id);
 }

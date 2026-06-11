@@ -22,14 +22,17 @@ import { AppState } from '@core/core.state';
 import { ValueType } from '@shared/models/constants';
 import { commandButtonDefaultSettings } from '@home/components/widget/lib/button/command-button-widget.models';
 
+
+/**
+ * Angular component: command button widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-command-button-widget-settings`.
+ */
 @Component({
     selector: 'tb-command-button-widget-settings',
     templateUrl: './command-button-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: command button widget settings UI.
- */
+standalone: false
 })
 export class CommandButtonWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -53,13 +56,31 @@ export class CommandButtonWidgetSettingsComponent extends WidgetSettingsComponen
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.commandButtonWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return commandButtonDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.commandButtonWidgetSettingsForm = this.fb.group({

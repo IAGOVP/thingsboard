@@ -21,8 +21,9 @@ import org.thingsboard.server.common.data.relation.RelationEntityTypeFilter;
 
 import java.util.List;
 /**
- * Rule engine component: relations query.
+ * Relations query (rule node configuration DTOs and query objects).
  */
+
 
 @Data
 public class RelationsQuery {

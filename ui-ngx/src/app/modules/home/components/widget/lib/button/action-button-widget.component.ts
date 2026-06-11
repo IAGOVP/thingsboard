@@ -25,15 +25,18 @@ import {
 } from '@home/components/widget/lib/button/action-button-widget.models';
 import { WidgetButtonAppearance } from '@shared/components/button/widget-button.models';
 
+
+/**
+ * Angular component: action button widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-button-widget`.
+ */
 @Component({
     selector: 'tb-action-button-widget',
     templateUrl: './action-button-widget.component.html',
     styleUrls: ['../action/action-widget.scss', './action-button-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: action button widget UI.
- */
+standalone: false
 })
 export class ActionButtonWidgetComponent extends
   BasicActionWidgetComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -51,6 +54,11 @@ export class ActionButtonWidgetComponent extends
               protected cd: ChangeDetectorRef) {
     super(cd);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     super.ngOnInit();
@@ -71,13 +79,28 @@ export class ActionButtonWidgetComponent extends
     });
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     super.ngAfterViewInit();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }
+
+  /**
+   * Event handler for init.
+   *
+   */
 
   public onInit() {
     super.onInit();
@@ -85,16 +108,33 @@ export class ActionButtonWidgetComponent extends
     this.cd.detectChanges();
   }
 
+  /**
+   * Event handler for click.
+   *
+   */
+
   public onClick($event: MouseEvent) {
     if (!this.ctx.isEdit && !this.ctx.isPreview) {
       this.ctx.actionsApi.click($event);
     }
   }
 
+  /**
+   * Event handler for activated.
+   *
+   * @param value value (boolean)
+   */
+
   private onActivated(value: boolean): void {
     this.activated = !!value;
     this.cd.markForCheck();
   }
+
+  /**
+   * Event handler for disabled.
+   *
+   * @param value value (boolean)
+   */
 
   private onDisabled(value: boolean): void {
     this.disabled = !!value;

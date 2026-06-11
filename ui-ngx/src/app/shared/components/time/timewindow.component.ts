@@ -70,6 +70,12 @@ import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // @dynamic
+
+/**
+ * Angular component: timewindow (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-timewindow`.
+ */
 @Component({
     selector: 'tb-timewindow',
     templateUrl: './timewindow.component.html',
@@ -81,10 +87,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: timewindow UI.
- */
+standalone: false
 })
 export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChanges {
 
@@ -223,6 +226,11 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.updateTimewindowStyle();
   }
@@ -238,6 +246,11 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
       }
     }
   }
+
+  /**
+   * toggle timewindow.
+   *
+   */
 
   toggleTimewindow($event: Event) {
     if ($event) {
@@ -300,6 +313,11 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
     this.cd.detectChanges();
   }
 
+  /**
+   * update timewindow style.
+   *
+   */
+
   private updateTimewindowStyle() {
     if (!this.asButton) {
       this.computedTimewindowStyle = {...defaultTimewindowStyle, ...(this.timewindowStyle || {})};
@@ -311,6 +329,12 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * Event handler for history only changed.
+   *
+   * @returns boolean observable or value
+   */
+
   private onHistoryOnlyChanged(): boolean {
     if (this.historyOnlyValue && this.innerValue && this.innerValue.selectedTab !== TimewindowType.HISTORY) {
       this.innerValue = initModelFromDefaultTimewindow(this.innerValue, this.quickIntervalOnly, this.historyOnly,
@@ -321,17 +345,41 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
     return false;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     this.timewindowDisabled = this.isTimewindowDisabled();
   }
+
+  /**
+   * write value.
+   *
+   * @param obj obj (Timewindow)
+   */
 
   writeValue(obj: Timewindow): void {
     this.innerValue = initModelFromDefaultTimewindow(obj, this.quickIntervalOnly, this.historyOnly, this.timeService,
@@ -349,6 +397,11 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * notify changed.
+   *
+   */
+
   notifyChanged(notifySaveAsDefault = false) {
     this.propagateChange(cloneSelectedTimewindow(this.innerValue));
     if (notifySaveAsDefault) {
@@ -356,9 +409,20 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
     }
   }
 
+  /**
+   * display value.
+   *
+   * @returns string observable or value
+   */
+
   displayValue(): string {
     return this.displayTimewindowValue ? this.innerValue?.displayValue : this.translate.instant('timewindow.timewindow');
   }
+
+  /**
+   * update display value.
+   *
+   */
 
   updateDisplayValue() {
     if (!this.panelMode) {
@@ -397,6 +461,12 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
     this.cd.detectChanges();
   }
 
+  /**
+   * is timewindow disabled.
+   *
+   * @returns boolean observable or value
+   */
+
   private isTimewindowDisabled(): boolean {
     return this.disabled ||
       (!this.isEdit && (!this.innerValue || (
@@ -408,6 +478,11 @@ export class TimewindowComponent implements ControlValueAccessor, OnInit, OnChan
         (!this.timezone || this.innerValue.hideTimezone)
       )));
   }
+
+  /**
+   * POST/PUT entity — create panel.
+   *
+   */
 
   private createPanel() {
     this.panelContainer.clear();

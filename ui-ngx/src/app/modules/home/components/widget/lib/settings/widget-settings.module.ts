@@ -389,6 +389,9 @@ import {
 /**
  * Angular NgModule: widget settings feature area.
  */
+/**
+ * Angular NgModule bundling widget settings (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     QrCodeWidgetSettingsComponent,
@@ -666,7 +669,7 @@ import {
     MapWidgetSettingsComponent,
     HtmlContainerWidgetSettingsComponent,
     ApiUsageWidgetSettingsComponent
-  ]})
+]})
 export class WidgetSettingsModule {
   constructor(private widgetService: WidgetService) {
     this.widgetService.registerWidgetSettingsComponents(this.constructor)

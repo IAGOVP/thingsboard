@@ -33,7 +33,13 @@ import org.thingsboard.server.common.msg.queue.TbMsgCallback;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Rule engine transformation node 'split array msg': Split array message into several messages Implements org.thingsboard.rule.engine.api.TbNode.
+ * Transformation rule node — <b>split array msg</b>.
+ *
+ * <p>Split array message into several messages
+ * <br>Splits an array message into individual elements, with each element sent as a separate message. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link EmptyNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/split-array-msg/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/split-array-msg/</a>
  */
 @RuleNode(
         type = ComponentType.TRANSFORMATION,
@@ -48,9 +54,27 @@ import java.util.concurrent.ExecutionException;
         docUrl = "https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/transformation/split-array-msg/"
 )
 public class TbSplitArrayMsgNode implements TbNode {
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) {}
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) throws ExecutionException, InterruptedException, TbNodeException {

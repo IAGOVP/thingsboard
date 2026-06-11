@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { labelCardWidgetDefaultSettings } from '@home/components/widget/lib/cards/label-card-widget.models';
 
+
+/**
+ * Angular component: label card widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-label-card-widget-settings`.
+ */
 @Component({
     selector: 'tb-label-card-widget-settings',
     templateUrl: './label-card-widget-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: label card widget settings UI.
- */
+standalone: false
 })
 export class LabelCardWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -39,13 +42,31 @@ export class LabelCardWidgetSettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.labelCardWidgetSettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return labelCardWidgetDefaultSettings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.labelCardWidgetSettingsForm = this.fb.group({
@@ -66,9 +87,21 @@ export class LabelCardWidgetSettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showIcon'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showIcon: boolean = this.labelCardWidgetSettingsForm.get('showIcon').value;

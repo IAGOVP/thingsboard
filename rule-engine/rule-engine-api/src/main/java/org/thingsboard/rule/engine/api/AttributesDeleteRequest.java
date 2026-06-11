@@ -36,8 +36,9 @@ import static java.util.Objects.requireNonNullElse;
  * Request DTO for rule engine attributes delete.
  */
 /**
- * Request DTO for rule engine attributes delete.
+ * Async request DTO for rule engine attributes delete (rule engine public API contracts and services).
  */
+
 
 @Getter
 @ToString
@@ -53,10 +54,22 @@ public class AttributesDeleteRequest implements CalculatedFieldSystemAwareReques
     private final UUID tbMsgId;
     private final TbMsgType tbMsgType;
     private final FutureCallback<Void> callback;
+    /**
+     * Builder.
+     *
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static Builder builder() {
         return new Builder();
     }
+
+    /**
+
+     * Builder (rule engine public API contracts and services).
+
+     */
 
     public static class Builder {
 
@@ -81,11 +94,25 @@ public class AttributesDeleteRequest implements CalculatedFieldSystemAwareReques
             this.entityId = entityId;
             return this;
         }
+    /**
+     * Scope.
+     *
+     * @param scope scope ({@link AttributeScope})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder scope(AttributeScope scope) {
             this.scope = scope;
             return this;
         }
+    /**
+     * Scope.
+     *
+     * @param scope scope ({@link String})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         @Deprecated
         public Builder scope(String scope) {
@@ -96,26 +123,61 @@ public class AttributesDeleteRequest implements CalculatedFieldSystemAwareReques
             }
             return this;
         }
+    /**
+     * Keys.
+     *
+     * @param keys keys ({@link List})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder keys(List<String> keys) {
             this.keys = keys;
             return this;
         }
+    /**
+     * Notify device.
+     *
+     * @param notifyDevice notify device
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder notifyDevice(boolean notifyDevice) {
             this.notifyDevice = notifyDevice;
             return this;
         }
+    /**
+     * Previous calculated field ids.
+     *
+     * @param previousCalculatedFieldIds previous calculated field ids ({@link List})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder previousCalculatedFieldIds(List<CalculatedFieldId> previousCalculatedFieldIds) {
             this.previousCalculatedFieldIds = previousCalculatedFieldIds;
             return this;
         }
+    /**
+     * Tb msg id.
+     *
+     * @param tbMsgId tb msg id ({@link UUID})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder tbMsgId(UUID tbMsgId) {
             this.tbMsgId = tbMsgId;
             return this;
         }
+    /**
+     * Tb msg type.
+     *
+     * @param tbMsgType tb msg type ({@link TbMsgType})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder tbMsgType(TbMsgType tbMsgType) {
             this.tbMsgType = tbMsgType;
@@ -126,6 +188,13 @@ public class AttributesDeleteRequest implements CalculatedFieldSystemAwareReques
             this.callback = callback;
             return this;
         }
+    /**
+     * Future.
+     *
+     * @param future future ({@link SettableFuture})
+     * @return {@link Builder}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public Builder future(SettableFuture<Void> future) {
             return callback(new FutureCallback<>() {
@@ -140,6 +209,12 @@ public class AttributesDeleteRequest implements CalculatedFieldSystemAwareReques
                 }
             });
         }
+    /**
+     * Build.
+     *
+     * @return {@link AttributesDeleteRequest}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
         public AttributesDeleteRequest build() {
             return new AttributesDeleteRequest(

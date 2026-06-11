@@ -53,8 +53,9 @@ import java.util.function.Function;
 import static org.thingsboard.server.common.data.StringUtils.equalsAny;
 import static org.thingsboard.server.common.data.StringUtils.splitByCommaWithoutQuotes;
 /**
- * Rule engine component: alarm rule state.
+ * Alarm rule state (device profile state nodes).
  */
+
 
 @Data
 @Slf4j
@@ -80,6 +81,13 @@ class AlarmRuleState {
         this.spec = getSpec(alarmRule);
         this.dynamicPredicateValueCtx = dynamicPredicateValueCtx;
     }
+    /**
+     * Validates ts update.
+     *
+     * @param changedKeys changed keys ({@link Set})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean validateTsUpdate(Set<AlarmConditionFilterKey> changedKeys) {
         for (AlarmConditionFilterKey key : changedKeys) {
@@ -89,6 +97,13 @@ class AlarmRuleState {
         }
         return false;
     }
+    /**
+     * Validates attr update.
+     *
+     * @param changedKeys changed keys ({@link Set})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean validateAttrUpdate(Set<AlarmConditionFilterKey> changedKeys) {
         for (AlarmConditionFilterKey key : changedKeys) {
@@ -98,6 +113,13 @@ class AlarmRuleState {
         }
         return false;
     }
+    /**
+     * Returns spec.
+     *
+     * @param alarmRule alarm rule ({@link AlarmRule})
+     * @return {@link AlarmConditionSpec}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public AlarmConditionSpec getSpec(AlarmRule alarmRule) {
         AlarmConditionSpec spec = alarmRule.getCondition().getSpec();
@@ -106,6 +128,12 @@ class AlarmRuleState {
         }
         return spec;
     }
+    /**
+     * Checks update.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean checkUpdate() {
         if (updateFlag) {
@@ -115,6 +143,13 @@ class AlarmRuleState {
             return false;
         }
     }
+    /**
+     * Eval.
+     *
+     * @param data data ({@link DataSnapshot})
+     * @return {@link AlarmEvalResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public AlarmEvalResult eval(DataSnapshot data) {
         boolean active = isActive(data, data.getTs());
@@ -207,6 +242,11 @@ class AlarmRuleState {
             return startsOn < msFromStartOfDay || (0 < msFromStartOfDay && msFromStartOfDay < endsOn);
         }
     }
+    /**
+     * Clear.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void clear() {
         if (state.getEventCount() > 0 || state.getLastEventTs() > 0 || state.getDuration() > 0) {
@@ -292,6 +332,14 @@ class AlarmRuleState {
         }
         return longValue;
     }
+    /**
+     * Eval.
+     *
+     * @param ts ts
+     * @param dataSnapshot data snapshot ({@link DataSnapshot})
+     * @return {@link AlarmEvalResult}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public AlarmEvalResult eval(long ts, DataSnapshot dataSnapshot) {
         switch (spec.getType()) {

@@ -51,6 +51,12 @@ import { emptyPageData, PageData } from '@shared/models/page/page-data';
 import { deepClone } from '@core/utils';
 import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
 
+
+/**
+ * Angular component: quick link (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-quick-link`.
+ */
 @Component({
     selector: 'tb-quick-link',
     templateUrl: './quick-link.component.html',
@@ -63,10 +69,7 @@ import { CustomTranslatePipe } from '@shared/pipe/custom-translate.pipe';
         },
         { provide: ErrorStateMatcher, useExisting: QuickLinkComponent }
     ],
-    standalone: false
-/**
- * Angular component: quick link UI.
- */
+standalone: false
 })
 export class QuickLinkComponent extends PageComponent implements OnInit, ControlValueAccessor, ErrorStateMatcher {
 
@@ -124,6 +127,11 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.addMode = this.addOnly;
     this.editQuickLinkFormGroup = this.fb.group({
@@ -131,6 +139,10 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     });
     this.filteredLinks = this.editQuickLinkFormGroup.get('link').valueChanges
       .pipe(
+        /**
+         * tap.
+         *
+         */
         tap(value => {
           let modelValue;
           if (typeof value === 'string' || !value) {
@@ -149,6 +161,13 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
       );
   }
 
+  /**
+   * required link validator.
+   *
+   * @param control control (AbstractControl)
+   * @returns ValidationErrors | null observable or value
+   */
+
   requiredLinkValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value || typeof value === 'string') {
@@ -157,18 +176,44 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     return null;
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (UntypedFormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -178,6 +223,12 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
       this.editQuickLinkFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
 
   writeValue(value: string): void {
     if (value) {
@@ -202,6 +253,12 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     this.dirty = true;
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (MenuSection | null)
+   */
+
   updateView(value: MenuSection | null) {
     if (this.quickLink !== value) {
       this.quickLink = value;
@@ -211,6 +268,13 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
   displayLinkFn = (link?: MenuSection): string | undefined =>
     link ? ((link as any).translated ? link.name : link.customTranslate ? this.customTranslate.transform(link.fullName || link.name)
       : this.translate.instant(link.fullName || link.name)) : undefined;
+
+  /**
+   * fetch links.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<MenuSection>> observable or value
+   */
 
   fetchLinks(searchText?: string): Observable<Array<MenuSection>> {
     this.searchText = searchText;
@@ -224,11 +288,24 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     );
   }
 
+  /**
+   * get links.
+   *
+   * @param pageLink pagination and sort parameters
+   * @returns Observable<PageData<MenuSection>> observable or value
+   */
+
   getLinks(pageLink: PageLink): Observable<PageData<MenuSection>> {
     return this.allLinks().pipe(
       map((links) => pageLink.filterData(links))
     );
   }
+
+  /**
+   * all links.
+   *
+   * @returns Observable<Array<MenuSection>> observable or value
+   */
 
   allLinks(): Observable<Array<MenuSection>> {
     if (this.allLinksObservable$ === null) {
@@ -249,12 +326,22 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     return this.allLinksObservable$;
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.editQuickLinkFormGroup.get('link').updateValueAndValidity({onlySelf: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.editQuickLinkFormGroup.get('link').patchValue('');
@@ -263,6 +350,11 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
       this.linkInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * switch to edit mode.
+   *
+   */
 
   switchToEditMode() {
     if (!this.disableEdit && !this.editMode) {
@@ -275,6 +367,11 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     }
   }
 
+  /**
+   * apply.
+   *
+   */
+
   apply() {
     this.submitted = true;
     this.updateModel();
@@ -285,11 +382,21 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     }
   }
 
+  /**
+   * cancel edit.
+   *
+   */
+
   cancelEdit() {
     this.submitted = false;
     this.editMode = false;
     this.editModeChanged.emit(false);
   }
+
+  /**
+   * POST/PUT entity — add.
+   *
+   */
 
   add() {
     this.submitted = true;
@@ -303,18 +410,38 @@ export class QuickLinkComponent extends PageComponent implements OnInit, Control
     }
   }
 
+  /**
+   * cancel add.
+   *
+   */
+
   cancelAdd() {
     this.editModeChanged.emit(false);
     this.quickLinkAddCanceled.emit();
   }
 
+  /**
+   * DELETE — delete.
+   *
+   */
+
   delete() {
     this.quickLinkDeleted.emit();
   }
 
+  /**
+   * is editing.
+   *
+   */
+
   isEditing() {
     return this.editMode || this.addMode;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     if (this.quickLink) {

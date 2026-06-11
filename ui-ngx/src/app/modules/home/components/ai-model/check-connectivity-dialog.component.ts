@@ -27,14 +27,17 @@ export interface AIModelDialogData {
   AIModel?: AiModel;
 }
 
+
+/**
+ * Angular component: check connectivity dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-check-connectivity-dialog`.
+ */
 @Component({
     selector: 'tb-check-connectivity-dialog',
     templateUrl: './check-connectivity-dialog.component.html',
     styleUrls: ['./check-connectivity-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: check connectivity dialog UI.
- */
+standalone: false
 })
 export class CheckConnectivityDialogComponent extends DialogComponent<CheckConnectivityDialogComponent> {
 
@@ -84,6 +87,11 @@ export class CheckConnectivityDialogComponent extends DialogComponent<CheckConne
       });
     }
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel(): void {
     this.dialogRef.close(null);

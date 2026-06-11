@@ -21,14 +21,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 import { flotDataKeyDefaultSettings } from '@home/components/widget/lib/settings/chart/flot-key-settings.component';
 
+
+/**
+ * Angular component: flot line key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flot-line-key-settings`.
+ */
 @Component({
     selector: 'tb-flot-line-key-settings',
     templateUrl: './flot-line-key-settings.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: flot line key settings UI.
- */
+standalone: false
 })
 export class FlotLineKeySettingsComponent extends WidgetSettingsComponent {
 
@@ -39,13 +42,31 @@ export class FlotLineKeySettingsComponent extends WidgetSettingsComponent {
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.flotLineKeySettingsForm;
   }
 
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
+
   protected defaultSettings(): WidgetSettings {
     return flotDataKeyDefaultSettings('graph');
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.flotLineKeySettingsForm = this.fb.group({
@@ -53,11 +74,25 @@ export class FlotLineKeySettingsComponent extends WidgetSettingsComponent {
     });
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     return {
       flotKeySettings: settings
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return settings.flotKeySettings;

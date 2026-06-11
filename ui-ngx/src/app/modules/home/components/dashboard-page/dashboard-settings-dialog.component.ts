@@ -46,15 +46,18 @@ export interface DashboardSettingsDialogData {
   breakpointId?: BreakpointId;
 }
 
+
+/**
+ * Angular component: dashboard settings dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-settings-dialog`.
+ */
 @Component({
     selector: 'tb-dashboard-settings-dialog',
     templateUrl: './dashboard-settings-dialog.component.html',
     providers: [{ provide: ErrorStateMatcher, useExisting: DashboardSettingsDialogComponent }],
     styleUrls: ['./dashboard-settings-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: dashboard settings dialog UI.
- */
+standalone: false
 })
 export class DashboardSettingsDialogComponent extends DialogComponent<DashboardSettingsDialogComponent, DashboardSettingsDialogData>
   implements OnDestroy, ErrorStateMatcher {
@@ -267,10 +270,20 @@ export class DashboardSettingsDialogComponent extends DialogComponent<DashboardS
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * is scada.
+   *
+   */
 
   isScada() {
     return this.layoutType === LayoutType.scada;
@@ -284,15 +297,33 @@ export class DashboardSettingsDialogComponent extends DialogComponent<DashboardS
     return this.breakpointId === 'default';
   }
 
+  /**
+   * is error state.
+   *
+   * @param control control (FormControl | null)
+   * @param form Angular reactive form group
+   * @returns boolean observable or value
+   */
+
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const originalErrorState = this.errorStateMatcher.isErrorState(control, form);
     const customErrorState = !!(control && control.invalid && this.submitted);
     return originalErrorState || customErrorState;
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(null);
   }
+
+  /**
+   * POST/PUT entity — save.
+   *
+   */
 
   save(): void {
     this.submitted = true;
@@ -307,12 +338,24 @@ export class DashboardSettingsDialogComponent extends DialogComponent<DashboardS
     this.dialogRef.close({settings, gridSettings});
   }
 
+  /**
+   * get states controller translation.
+   *
+   * @param stateControllerId state controller id (string)
+   * @returns string observable or value
+   */
+
   getStatesControllerTranslation(stateControllerId: string): string {
     if (this.stateControllerTranslationMap.has(stateControllerId)) {
       return this.translate.instant(this.stateControllerTranslationMap.get(stateControllerId));
     }
     return stateControllerId;
   }
+
+  /**
+   * update grid settings form state.
+   *
+   */
 
   private updateGridSettingsFormState() {
     if (this.breakpointId === 'default') {

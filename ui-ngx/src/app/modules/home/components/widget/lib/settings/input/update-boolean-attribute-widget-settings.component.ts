@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: update boolean attribute widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-boolean-attribute-widget-settings`.
+ */
 @Component({
     selector: 'tb-update-boolean-attribute-widget-settings',
     templateUrl: './update-boolean-attribute-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update boolean attribute widget settings UI.
- */
+standalone: false
 })
 export class UpdateBooleanAttributeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class UpdateBooleanAttributeWidgetSettingsComponent extends WidgetSetting
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateBooleanAttributeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -52,6 +67,12 @@ export class UpdateBooleanAttributeWidgetSettingsComponent extends WidgetSetting
       falseValue: ''
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateBooleanAttributeWidgetSettingsForm = this.fb.group({

@@ -20,14 +20,17 @@ import { EntityId } from '@shared/models/id/entity-id';
 import { baseDetailsPageByEntityType, EntityType } from '@app/shared/public-api';
 import { isEqual, isNotEmptyStr, isObject } from '@core/utils';
 
+
+/**
+ * Angular component: entity chips (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-chips`.
+ */
 @Component({
     selector: 'tb-entity-chips',
     templateUrl: './entity-chips.component.html',
     styleUrls: ['./entity-chips.component.scss'],
-    standalone: false
-/**
- * Angular component: entity chips UI.
- */
+standalone: false
 })
 export class EntityChipsComponent implements OnChanges {
 
@@ -52,6 +55,11 @@ export class EntityChipsComponent implements OnChanges {
       }
     }
   }
+
+  /**
+   * update.
+   *
+   */
 
   private update(): void {
     if (this.entity && this.entity.id && this.key) {

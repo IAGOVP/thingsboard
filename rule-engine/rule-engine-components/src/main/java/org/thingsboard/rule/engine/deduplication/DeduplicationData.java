@@ -21,8 +21,9 @@ import org.thingsboard.server.common.msg.TbMsg;
 import java.util.LinkedList;
 import java.util.List;
 /**
- * Rule engine component: deduplication data.
+ * Deduplication data (message deduplication nodes).
  */
+
 
 @Data
 public class DeduplicationData {
@@ -33,14 +34,32 @@ public class DeduplicationData {
     public DeduplicationData() {
         msgList = new LinkedList<>();
     }
+    /**
+     * Size.
+     *
+     * @return the int result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public int size() {
         return msgList.size();
     }
+    /**
+     * Add.
+     *
+     * @param msg incoming or outgoing rule engine message
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void add(TbMsg msg) {
         msgList.add(msg);
     }
+    /**
+     * Is empty.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean isEmpty() {
         return msgList.isEmpty();

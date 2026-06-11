@@ -17,8 +17,9 @@ package org.thingsboard.monitoring.data;
 
 import lombok.Getter;
 /**
- * Thrown when a monitored step fails; carries {@link MonitoredServiceKey}.
+ * Raised when a monitored step fails; carries the {@link MonitoredServiceKey} that failed.
  */
+
 
 @Getter
 public class ServiceFailureException extends RuntimeException {

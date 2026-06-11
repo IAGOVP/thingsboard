@@ -31,6 +31,12 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { isUndefined } from '@core/utils';
 
+
+/**
+ * Angular component: multiple image input (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-multiple-image-input`.
+ */
 @Component({
     selector: 'tb-multiple-image-input',
     templateUrl: './multiple-image-input.component.html',
@@ -42,10 +48,7 @@ import { isUndefined } from '@core/utils';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: multiple image input UI.
- */
+standalone: false
 })
 export class MultipleImageInputComponent extends PageComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
 
@@ -102,6 +105,11 @@ export class MultipleImageInputComponent extends PageComponent implements AfterV
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     this.autoUploadSubscription = this.flow.events$.subscribe(event => {
       if (event.type === 'filesAdded') {
@@ -127,6 +135,13 @@ export class MultipleImageInputComponent extends PageComponent implements AfterV
     this.viewInited = true;
   }
 
+  /**
+   * read image url.
+   *
+   * @param file file (flowjs.FlowFile)
+   * @returns Promise<any> observable or value
+   */
+
   private readImageUrl(file: flowjs.FlowFile): Promise<any> {
     return new Promise((resolve) => {
       if (this.maxSizeByte && this.maxSizeByte < file.size) {
@@ -151,16 +166,39 @@ export class MultipleImageInputComponent extends PageComponent implements AfterV
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.autoUploadSubscription.unsubscribe();
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -173,21 +211,44 @@ export class MultipleImageInputComponent extends PageComponent implements AfterV
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string[])
+   */
+
   writeValue(value: string[]): void {
     this.imageUrls = value || [];
     this.safeImageUrls = this.imageUrls.map(imageUrl => this.sanitizer.bypassSecurityTrustUrl(imageUrl));
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.cd.markForCheck();
     this.propagateChange(this.imageUrls);
   }
 
+  /**
+   * clear image.
+   *
+   * @param index index (number)
+   */
+
   clearImage(index: number) {
     this.imageUrls.splice(index, 1);
     this.safeImageUrls.splice(index, 1);
     this.updateModel();
   }
+
+  /**
+   * image drag start.
+   *
+   * @param index index (number)
+   */
 
   imageDragStart(index: number) {
     setTimeout(() => {
@@ -196,10 +257,21 @@ export class MultipleImageInputComponent extends PageComponent implements AfterV
     });
   }
 
+  /**
+   * image drag end.
+   *
+   */
+
   imageDragEnd() {
     this.dragIndex = -1;
     this.cd.markForCheck();
   }
+
+  /**
+   * image drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   imageDrop(event: DndDropEvent) {
     let index = event.index;

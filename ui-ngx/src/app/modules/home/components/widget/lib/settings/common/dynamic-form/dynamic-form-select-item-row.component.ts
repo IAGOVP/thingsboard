@@ -45,6 +45,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const selectItemValid = (item: FormSelectItem): boolean => isDefinedAndNotNull(item.value) && !!item.label;
 
+
+/**
+ * Angular component: dynamic form select item row (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dynamic-form-select-item-row`.
+ */
 @Component({
     selector: 'tb-dynamic-form-select-item-row',
     templateUrl: './dynamic-form-select-item-row.component.html',
@@ -62,10 +68,7 @@ export const selectItemValid = (item: FormSelectItem): boolean => isDefinedAndNo
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: dynamic form select item row UI.
- */
+standalone: false
 })
 export class DynamicFormSelectItemRowComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -92,6 +95,11 @@ export class DynamicFormSelectItemRowComponent implements ControlValueAccessor, 
               private selectItemsComponent: DynamicFormSelectItemsComponent) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.selectItemRowFormGroup = this.fb.group({
       value: [null, [this.selectItemValueValidator()]],
@@ -104,12 +112,30 @@ export class DynamicFormSelectItemRowComponent implements ControlValueAccessor, 
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -119,6 +145,12 @@ export class DynamicFormSelectItemRowComponent implements ControlValueAccessor, 
       this.selectItemRowFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (FormSelectItem)
+   */
 
   writeValue(value: FormSelectItem): void {
     this.modelValue = value;
@@ -130,6 +162,12 @@ export class DynamicFormSelectItemRowComponent implements ControlValueAccessor, 
     );
     this.cd.markForCheck();
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   public validate(_c: UntypedFormControl) {
     const valueControl = this.selectItemRowFormGroup.get('value');
@@ -151,6 +189,12 @@ export class DynamicFormSelectItemRowComponent implements ControlValueAccessor, 
     return null;
   }
 
+  /**
+   * select item value validator.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private selectItemValueValidator(): ValidatorFn {
     return control => {
       if (!control.value) {
@@ -166,6 +210,11 @@ export class DynamicFormSelectItemRowComponent implements ControlValueAccessor, 
       return null;
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: FormSelectItem = this.selectItemRowFormGroup.value;

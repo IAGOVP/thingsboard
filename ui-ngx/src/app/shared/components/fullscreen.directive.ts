@@ -31,13 +31,17 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { TbAnchorComponent } from '@shared/components/tb-anchor.component';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
-@Directive({
-    // eslint-disable-next-line @angular-eslint/directive-selector
-    selector: '[tb-fullscreen]',
-    standalone: false
+
 /**
  * Angular directive: fullscreen.
  */
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: '[tb-fullscreen]',
+/**
+ * Angular directive: fullscreen (shared UI components).
+ */
+    standalone: false
 })
 export class FullscreenDirective implements OnChanges, OnDestroy {
 
@@ -86,11 +90,21 @@ export class FullscreenDirective implements OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     if (this.fullscreen) {
       this.exitFullscreen();
     }
   }
+
+  /**
+   * enter fullscreen.
+   *
+   */
 
   enterFullscreen() {
     const targetElement: HTMLElement = this.fullscreenElement || this.elementRef.nativeElement;
@@ -121,6 +135,14 @@ export class FullscreenDirective implements OnChanges, OnDestroy {
     this.fullscreenChanged.emit(true);
   }
 
+  /**
+   * set style.
+   *
+   * @param _el  el (any)
+   * @param nameAndUnit name and unit (string)
+   * @param value value (any)
+   */
+
   private setStyle(_el: any, nameAndUnit: string, value: any): void {
     const [name, unit] = nameAndUnit.split('.');
     let renderValue: string | null =
@@ -135,6 +157,11 @@ export class FullscreenDirective implements OnChanges, OnDestroy {
       this.renderer.removeStyle(this.overlayRef.overlayElement, name);
     }
   }
+
+  /**
+   * exit fullscreen.
+   *
+   */
 
   exitFullscreen() {
     const targetElement: HTMLElement = this.fullscreenElement || this.elementRef.nativeElement;

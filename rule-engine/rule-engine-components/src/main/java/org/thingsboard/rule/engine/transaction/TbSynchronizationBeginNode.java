@@ -35,15 +35,35 @@ import org.thingsboard.server.common.msg.TbMsg;
                 "Subsequent messages will not be processed until the previous message processing is completed or timeout event occurs.\n" +
                 "Size of the queue per originator and timeout values are configurable on a system level",
 /**
- * Rule engine action node 'synchronization start': This Node is now deprecated. Use \ Implements org.thingsboard.rule.engine.api.TbNode.
+ * Action rule node — <b>synchronization start</b>.
+ *
+ * <p>This Node is now deprecated. Use \
+ * <br>This node should be used together with \
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link EmptyNodeConfiguration}.
  */
+
         configDirective = "tbNodeEmptyConfig")
 @Deprecated
 public class TbSynchronizationBeginNode implements TbNode {
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {

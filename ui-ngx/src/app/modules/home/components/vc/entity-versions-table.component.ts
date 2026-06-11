@@ -56,14 +56,17 @@ import { TbPopoverComponent } from '@shared/components/popover.component';
 import { AdminService } from '@core/http/admin.service';
 import { FormBuilder } from '@angular/forms';
 
+
+/**
+ * Angular component: entity versions table (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-versions-table`.
+ */
 @Component({
     selector: 'tb-entity-versions-table',
     templateUrl: './entity-versions-table.component.html',
     styleUrls: ['./entity-versions-table.component.scss'],
-    standalone: false
-/**
- * Angular component: entity versions table UI.
- */
+standalone: false
 })
 export class EntityVersionsTableComponent extends PageComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -154,6 +157,11 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     this.dataSource = new EntityVersionsDatasource(this.entitiesVersionControlService);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.componentResize$ = new ResizeObserver(() => {
       this.zone.run(() => {
@@ -168,6 +176,11 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     this.isReadOnly = this.adminService.getRepositorySettingsInfo().pipe(map(settings => settings.readOnly));
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.componentResize$) {
       this.componentResize$.disconnect();
@@ -175,6 +188,12 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  /**
+   * branch changed.
+   *
+   * @param newBranch new branch (string)
+   */
 
   branchChanged(newBranch: string) {
     if (isNotEmptyStr(newBranch) && this.branch !== newBranch) {
@@ -185,6 +204,11 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
       }
     }
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit() {
     this.textSearch.valueChanges.pipe(
@@ -206,6 +230,12 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
       this.initFromDefaultBranch();
     }
   }
+
+  /**
+   * toggle create version.
+   *
+   * @param createVersionButton create version button (MatButton)
+   */
 
   toggleCreateVersion($event: Event, createVersionButton: MatButton) {
     if ($event) {
@@ -246,6 +276,12 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * toggle complex create version.
+   *
+   * @param complexCreateVersionButton complex create version button (MatButton)
+   */
+
   toggleComplexCreateVersion($event: Event, complexCreateVersionButton: MatButton) {
     if ($event) {
       $event.stopPropagation();
@@ -281,6 +317,13 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * toggle show version diff.
+   *
+   * @param diffVersionButton diff version button (MatIconButton)
+   * @param entityVersion entity version (EntityVersion)
+   */
+
   toggleShowVersionDiff($event: Event, diffVersionButton: MatIconButton, entityVersion: EntityVersion) {
     if ($event) {
       $event.stopPropagation();
@@ -310,6 +353,13 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
       });
     }
   }
+
+  /**
+   * toggle restore entity version.
+   *
+   * @param restoreVersionButton restore version button (MatIconButton)
+   * @param entityVersion entity version (EntityVersion)
+   */
 
   toggleRestoreEntityVersion($event: Event, restoreVersionButton: MatIconButton, entityVersion: EntityVersion) {
     if ($event) {
@@ -345,6 +395,13 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * toggle restore entities version.
+   *
+   * @param restoreEntitiesVersionButton restore entities version button (MatIconButton)
+   * @param entityVersion entity version (EntityVersion)
+   */
+
   toggleRestoreEntitiesVersion($event: Event, restoreEntitiesVersionButton: MatIconButton, entityVersion: EntityVersion) {
     if ($event) {
       $event.stopPropagation();
@@ -374,6 +431,13 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * version id content.
+   *
+   * @param entityVersion entity version (EntityVersion)
+   * @returns string observable or value
+   */
+
   versionIdContent(entityVersion: EntityVersion): string {
     let versionId = entityVersion.id;
     if (versionId.length > 7) {
@@ -381,6 +445,11 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     }
     return versionId;
   }
+
+  /**
+   * enter filter mode.
+   *
+   */
 
   enterFilterMode() {
     this.textSearchMode = true;
@@ -390,10 +459,20 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     }, 10);
   }
 
+  /**
+   * exit filter mode.
+   *
+   */
+
   exitFilterMode() {
     this.textSearchMode = false;
     this.textSearch.reset();
   }
+
+  /**
+   * init from default branch.
+   *
+   */
 
   private initFromDefaultBranch() {
     if (this.branchAutocompleteComponent.isDefaultBranchSelected()) {
@@ -406,6 +485,11 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     }
   }
 
+  /**
+   * update data.
+   *
+   */
+
   updateData() {
     this.pageLink.page = this.paginator.pageIndex;
     this.pageLink.pageSize = this.paginator.pageSize;
@@ -413,6 +497,12 @@ export class EntityVersionsTableComponent extends PageComponent implements OnIni
     this.pageLink.sortOrder.direction = Direction[this.sort.direction.toUpperCase()];
     this.dataSource.loadEntityVersions(this.singleEntityMode, this.branch, this.externalEntityIdValue, this.pageLink);
   }
+
+  /**
+   * reset sort and filter.
+   *
+   * @param update update (boolean)
+   */
 
   private resetSortAndFilter(update: boolean) {
     this.textSearchMode = false;

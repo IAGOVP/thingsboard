@@ -40,6 +40,12 @@ import { AppState } from '@core/core.state';
 import { PageComponent } from '@shared/components/page.component';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: lwm2m attributes key list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-lwm2m-attributes-key-list`.
+ */
 @Component({
     selector: 'tb-lwm2m-attributes-key-list',
     templateUrl: './lwm2m-attributes-key-list.component.html',
@@ -56,10 +62,7 @@ import { takeUntil } from 'rxjs/operators';
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: lwm2m attributes key list UI.
- */
+standalone: false
 })
 export class Lwm2mAttributesKeyListComponent extends PageComponent implements ControlValueAccessor, OnDestroy, OnDestroy, Validator {
 
@@ -88,6 +91,11 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     if (this.isResource) {
       this.attributeNames = Object.values(AttributeName);
@@ -97,17 +105,40 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -117,6 +148,12 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
       this.attributesValueFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param keyValMap key val map (AttributesNameValueMap)
+   */
 
   writeValue(keyValMap: AttributesNameValueMap): void {
     const attributesValueControls: Array<AbstractControl> = [];
@@ -134,13 +171,30 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
     this.updateUsedAttributesName();
   }
 
+  /**
+   * attributes value form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   attributesValueFormArray(): UntypedFormArray {
     return this.attributesValueFormGroup.get('attributesValue') as UntypedFormArray;
   }
 
+  /**
+   * DELETE — remove key val.
+   *
+   * @param index index (number)
+   */
+
   public removeKeyVal(index: number) {
     this.attributesValueFormArray().removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add key val.
+   *
+   */
 
   public addKeyVal() {
     this.attributesValueFormArray().push(this.createdFormGroup());
@@ -149,6 +203,13 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
       this.updateModel();
     }
   }
+
+  /**
+   * POST/PUT entity — created form group.
+   *
+   * @param value value (AttributesNameValue)
+   * @returns UntypedFormGroup observable or value
+   */
 
   private createdFormGroup(value?: AttributesNameValue): UntypedFormGroup {
     if (isUndefinedOrNull(value)) {
@@ -170,6 +231,11 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
     return form;
   }
 
+  /**
+   * validate.
+   *
+   */
+
   public validate() {
     return this.attributesValueFormGroup.valid ? null : {
       attributesValue: {
@@ -177,6 +243,11 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
       }
     };
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: AttributesNameValue[] = this.attributesValueFormGroup.get('attributesValue').value;
@@ -188,10 +259,24 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
     this.propagateChange(attributesNameValueMap);
   }
 
+  /**
+   * is disabled attribute name.
+   *
+   * @param type type (AttributeName)
+   * @param index index (number)
+   * @returns boolean observable or value
+   */
+
   public isDisabledAttributeName(type: AttributeName, index: number): boolean {
     const usedIndex = this.usedAttributesName.indexOf(type);
     return usedIndex > -1 && usedIndex !== index;
   }
+
+  /**
+   * get first unused attributes name.
+   *
+   * @returns AttributeName observable or value
+   */
 
   private getFirstUnusedAttributesName(): AttributeName {
     for (const attributeName of this.attributeNames) {
@@ -201,6 +286,11 @@ export class Lwm2mAttributesKeyListComponent extends PageComponent implements Co
     }
     return null;
   }
+
+  /**
+   * update used attributes name.
+   *
+   */
 
   private updateUsedAttributesName() {
     this.usedAttributesName = [];

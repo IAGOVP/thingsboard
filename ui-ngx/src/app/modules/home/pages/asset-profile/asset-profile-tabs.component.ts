@@ -20,20 +20,28 @@ import { AppState } from '@core/core.state';
 import { EntityTabsComponent } from '../../components/entity/entity-tabs.component';
 import { AssetProfile } from '@shared/models/asset.models';
 
+
+/**
+ * Angular component: asset profile tabs (home/asset-profile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-asset-profile-tabs`.
+ */
 @Component({
     selector: 'tb-asset-profile-tabs',
     templateUrl: './asset-profile-tabs.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: asset profile tabs UI.
- */
+standalone: false
 })
 export class AssetProfileTabsComponent extends EntityTabsComponent<AssetProfile> {
 
   constructor(protected store: Store<AppState>) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     super.ngOnInit();

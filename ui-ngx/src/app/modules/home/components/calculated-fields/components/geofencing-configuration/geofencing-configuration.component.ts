@@ -42,6 +42,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EntityFilter } from '@shared/models/query/query.models';
 import { EntityId } from '@shared/models/id/entity-id';
 
+
+/**
+ * Angular component: geofencing configuration (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-geofencing-configuration`.
+ */
 @Component({
     selector: 'tb-geofencing-configuration',
     templateUrl: './geofencing-configuration.component.html',
@@ -57,10 +63,7 @@ import { EntityId } from '@shared/models/id/entity-id';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: geofencing configuration UI.
- */
+standalone: false
 })
 export class GeofencingConfigurationComponent implements ControlValueAccessor, Validator, OnChanges {
 
@@ -129,9 +132,21 @@ export class GeofencingConfigurationComponent implements ControlValueAccessor, V
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.geofencingConfiguration.valid || this.geofencingConfiguration.disabled ? null : { geofencingConfigError: false };
   }
+
+  /**
+   * write value.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   writeValue(config: CalculatedFieldGeofencingConfiguration): void {
     this.geofencingConfiguration.patchValue(config, {emitEvent: false});
@@ -145,7 +160,19 @@ export class GeofencingConfigurationComponent implements ControlValueAccessor, V
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _   (any)
+   */
+
   registerOnTouched(_: any): void { }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -156,10 +183,22 @@ export class GeofencingConfigurationComponent implements ControlValueAccessor, V
     }
   }
 
+  /**
+   * updated model.
+   *
+   * @param value value (CalculatedFieldGeofencingConfiguration)
+   */
+
   private updatedModel(value: CalculatedFieldGeofencingConfiguration) {
     value.type = CalculatedFieldType.GEOFENCING;
     this.propagateChange(value)
   }
+
+  /**
+   * check scheduled update enabled.
+   *
+   * @param value value (boolean)
+   */
 
   private checkScheduledUpdateEnabled(value: boolean) {
     if (value) {
@@ -168,6 +207,12 @@ export class GeofencingConfigurationComponent implements ControlValueAccessor, V
       this.geofencingConfiguration.get('scheduledUpdateInterval').disable({emitEvent: false});
     }
   }
+
+  /**
+   * check related entity.
+   *
+   * @param zoneGroups zone groups (Record<string, CalculatedFieldGeofencing>)
+   */
 
   private checkRelatedEntity(zoneGroups: Record<string, CalculatedFieldGeofencing>) {
     this.isRelatedEntity = Object.values(zoneGroups).some(zone => zone.refDynamicSourceConfiguration?.type === ArgumentEntityType.RelationQuery);

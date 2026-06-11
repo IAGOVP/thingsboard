@@ -72,8 +72,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
- * Unit test for tb get customer details node rule node.
+ * Unit test for tb get customer details node (entity metadata and related-data fetch nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbGetCustomerDetailsNodeTest {
@@ -100,6 +101,11 @@ public class TbGetCustomerDetailsNodeTest {
     private TbNodeConfiguration nodeConfiguration;
     private TbMsg msg;
     private Customer customer;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -119,6 +125,11 @@ public class TbGetCustomerDetailsNodeTest {
         customer.setEmail("email@tenant.com");
         customer.setAdditionalInfo(JacksonUtil.toJsonNode("{\"someProperty\":\"someValue\",\"description\":\"Customer description\"}"));
     }
+    /**
+     * Given config with null fetch to when init then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenConfigWithNullFetchTo_whenInit_thenException() {
@@ -134,12 +145,22 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(exception.getMessage()).isEqualTo("FetchTo option can't be null! Allowed values: " + Arrays.toString(TbMsgSource.values()));
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given default config when init then ok.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDefaultConfig_whenInit_thenOK() {
         assertThat(config.getDetailsList()).isEqualTo(Collections.emptyList());
         assertThat(config.getFetchTo()).isEqualTo(TbMsgSource.DATA);
     }
+    /**
+     * Given custom config when init then ok.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenCustomConfig_whenInit_thenOK() throws TbNodeException {
@@ -157,6 +178,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(config.getFetchTo()).isEqualTo(TbMsgSource.METADATA);
         assertThat(node.fetchTo).isEqualTo(TbMsgSource.METADATA);
     }
+    /**
+     * Given msg data is not an json object and fetch to data when on msg then exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenMsgDataIsNotAnJsonObjectAndFetchToData_whenOnMsg_thenException() {
@@ -176,6 +202,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(exception.getMessage()).isEqualTo("Message body is not an object!");
         verify(ctxMock, never()).tellSuccess(any());
     }
+    /**
+     * Given all entity details and fetch to data when on msg then should tell success and fetch all to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenAllEntityDetailsAndFetchToData_whenOnMsg_thenShouldTellSuccessAndFetchAllToData() {
@@ -218,6 +249,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(expectedMsgData);
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given some entity details and fetch to metadata when on msg then should tell success and fetch some to meta data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenSomeEntityDetailsAndFetchToMetadata_whenOnMsg_thenShouldTellSuccessAndFetchSomeToMetaData() {
@@ -252,6 +288,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(expectedMsgMetaData);
     }
+    /**
+     * Given not present entity details and fetch to data when on msg then should tell success and fetch nothing to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenNotPresentEntityDetailsAndFetchToData_whenOnMsg_thenShouldTellSuccessAndFetchNothingToData() {
@@ -285,6 +326,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given did not find customer when on msg then should tell success and fetch nothing to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDidNotFindCustomer_whenOnMsg_thenShouldTellSuccessAndFetchNothingToData() {
@@ -317,6 +363,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given did not find originator when on msg then should tell success and fetch nothing to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenDidNotFindOriginator_whenOnMsg_thenShouldTellSuccessAndFetchNothingToData() {
@@ -346,6 +397,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given originator not assigned to customer when on msg then should tell failure and fetch nothing to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenOriginatorNotAssignedToCustomer_whenOnMsg_thenShouldTellFailureAndFetchNothingToData() {
@@ -382,6 +438,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(actualException).isInstanceOf(RuntimeException.class);
         assertThat(actualException.getMessage()).isEqualTo("Device with name 'Thermostat' is not assigned to Customer!");
     }
+    /**
+     * Given null description and add info entity details when on msg then should tell success and fetch nothing to data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenNullDescriptionAndAddInfoEntityDetails_whenOnMsg_thenShouldTellSuccessAndFetchNothingToData() {
@@ -413,6 +474,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(actualMessageCaptor.getValue().getData()).isEqualTo(msg.getData());
         assertThat(actualMessageCaptor.getValue().getMetaData()).isEqualTo(msg.getMetaData());
     }
+    /**
+     * Given unsupported entity type when on msg then should tell failure and fetch nothing to meta data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenUnsupportedEntityType_whenOnMsg_thenShouldTellFailureAndFetchNothingToMetaData() {
@@ -441,6 +507,11 @@ public class TbGetCustomerDetailsNodeTest {
         assertThat(actualException).isInstanceOf(NoSuchElementException.class);
         assertThat(actualException.getMessage()).isEqualTo("Entity with entityType 'DASHBOARD' is not supported.");
     }
+    /**
+     * Given old config when upgrade then should return true result with new config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenOldConfig_whenUpgrade_thenShouldReturnTrueResultWithNewConfig() throws Exception {

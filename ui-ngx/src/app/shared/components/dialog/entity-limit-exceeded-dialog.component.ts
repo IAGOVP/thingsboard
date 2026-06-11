@@ -33,15 +33,18 @@ export interface EntityLimitExceededDialogData {
 }
 
 // @dynamic
+
+/**
+ * Angular component: entity limit exceeded dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-limit-exceeded-dialog`.
+ */
 @Component({
     selector: 'tb-entity-limit-exceeded-dialog',
     templateUrl: './entity-limit-exceeded-dialog.component.html',
     styleUrls: ['./entity-limit-exceeded-dialog.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: entity limit exceeded dialog UI.
- */
+standalone: false
 })
 export class EntityLimitExceededDialogComponent extends DialogComponent<EntityLimitExceededDialogComponent> {
 
@@ -66,9 +69,19 @@ export class EntityLimitExceededDialogComponent extends DialogComponent<EntityLi
     this.limitReachedText = this.translate.instant('entity.limit-reached-text', { entities: entitiesText, entity: (this.translate.instant(entityTypeTranslations.get(data.entityType).type) as string).toLowerCase() });
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close();
   }
+
+  /**
+   * request limit increase.
+   *
+   */
 
   requestLimitIncrease($event: Event) {
     if ($event) {
@@ -85,6 +98,11 @@ export class EntityLimitExceededDialogComponent extends DialogComponent<EntityLi
       }
     );
   }
+
+  /**
+   * login as sys admin.
+   *
+   */
 
   loginAsSysAdmin($event: Event) {
     if ($event) {

@@ -22,6 +22,12 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { TenantProfileData } from '@shared/models/tenant.model';
 import { Subscription } from 'rxjs';
 
+
+/**
+ * Angular component: tenant profile data (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tenant-profile-data`.
+ */
 @Component({
     selector: 'tb-tenant-profile-data',
     templateUrl: './tenant-profile-data.component.html',
@@ -31,10 +37,7 @@ import { Subscription } from 'rxjs';
             useExisting: forwardRef(() => TenantProfileDataComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: tenant profile data UI.
- */
+standalone: false
 })
 export class TenantProfileDataComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
@@ -59,12 +62,29 @@ export class TenantProfileDataComponent implements ControlValueAccessor, OnInit,
               private fb: UntypedFormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.tenantProfileDataFormGroup = this.fb.group({
@@ -75,11 +95,22 @@ export class TenantProfileDataComponent implements ControlValueAccessor, OnInit,
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.valueChange$) {
       this.valueChange$.unsubscribe();
     }
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -90,9 +121,20 @@ export class TenantProfileDataComponent implements ControlValueAccessor, OnInit,
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (TenantProfileData | null)
+   */
+
   writeValue(value: TenantProfileData | null): void {
     this.tenantProfileDataFormGroup.patchValue({configuration: value}, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     let tenantProfileData: TenantProfileData = null;

@@ -37,16 +37,19 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getSourceTbUnitSymbol, isNotEmptyTbUnits, TbUnit } from '@shared/models/unit.models';
 
+
+/**
+ * Angular component: time series chart threshold settings panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-time-series-chart-threshold-settings-panel`.
+ */
 @Component({
     selector: 'tb-time-series-chart-threshold-settings-panel',
     templateUrl: './time-series-chart-threshold-settings-panel.component.html',
     providers: [],
     styleUrls: ['./time-series-chart-threshold-settings-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: time series chart threshold settings panel UI.
- */
+standalone: false
 })
 export class TimeSeriesChartThresholdSettingsPanelComponent implements OnInit {
 
@@ -92,6 +95,11 @@ export class TimeSeriesChartThresholdSettingsPanelComponent implements OnInit {
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.thresholdSettingsFormGroup = this.fb.group(
       {
@@ -125,14 +133,29 @@ export class TimeSeriesChartThresholdSettingsPanelComponent implements OnInit {
     this.updateValidators();
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply threshold settings.
+   *
+   */
 
   applyThresholdSettings() {
     const thresholdSettings = this.thresholdSettingsFormGroup.getRawValue();
     this.thresholdSettingsApplied.emit(thresholdSettings);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const showLabel: boolean = this.thresholdSettingsFormGroup.get('showLabel').value;

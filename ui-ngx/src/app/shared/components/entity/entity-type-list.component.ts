@@ -33,6 +33,12 @@ interface EntityTypeInfo {
   value: EntityType;
 }
 
+
+/**
+ * Angular component: entity type list (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-type-list`.
+ */
 @Component({
     selector: 'tb-entity-type-list',
     templateUrl: './entity-type-list.component.html',
@@ -44,10 +50,7 @@ interface EntityTypeInfo {
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: entity type list UI.
- */
+standalone: false
 })
 export class EntityTypeListComponent implements ControlValueAccessor, OnInit, AfterViewInit {
 
@@ -128,17 +131,39 @@ export class EntityTypeListComponent implements ControlValueAccessor, OnInit, Af
     });
   }
 
+  /**
+   * update validators.
+   *
+   */
+
   updateValidators() {
     this.entityTypeListFormGroup.get('entityTypeList').setValidators(this.required ? [Validators.required] : []);
     this.entityTypeListFormGroup.get('entityTypeList').updateValueAndValidity();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     if (this.emptyInputPlaceholder) {
@@ -187,8 +212,19 @@ export class EntityTypeListComponent implements ControlValueAccessor, OnInit, Af
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -198,6 +234,12 @@ export class EntityTypeListComponent implements ControlValueAccessor, OnInit, Af
       this.entityTypeListFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (Array<EntityType> | null)
+   */
 
   writeValue(value: Array<EntityType> | null): void {
     this.searchText = '';
@@ -219,6 +261,12 @@ export class EntityTypeListComponent implements ControlValueAccessor, OnInit, Af
     this.dirty = true;
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param entityType entity type (EntityTypeInfo)
+   */
+
   add(entityType: EntityTypeInfo): void {
     if (!this.modelValue || this.modelValue.indexOf(entityType.value) === -1) {
       if (!this.modelValue) {
@@ -231,6 +279,12 @@ export class EntityTypeListComponent implements ControlValueAccessor, OnInit, Af
     this.propagateChange(this.modelValue);
     this.clear();
   }
+
+  /**
+   * DELETE — remove.
+   *
+   * @param entityType entity type (EntityTypeInfo)
+   */
 
   remove(entityType: EntityTypeInfo) {
     const index = this.entityTypeList.indexOf(entityType);
@@ -246,9 +300,23 @@ export class EntityTypeListComponent implements ControlValueAccessor, OnInit, Af
     }
   }
 
+  /**
+   * display entity type fn.
+   *
+   * @param entityType entity type (EntityTypeInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayEntityTypeFn(entityType?: EntityTypeInfo): string | undefined {
     return entityType ? entityType.name : undefined;
   }
+
+  /**
+   * fetch entity types.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<EntityTypeInfo>> observable or value
+   */
 
   fetchEntityTypes(searchText?: string): Observable<Array<EntityTypeInfo>> {
     this.searchText = searchText;
@@ -259,12 +327,23 @@ export class EntityTypeListComponent implements ControlValueAccessor, OnInit, Af
     return of(result);
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.entityTypeListFormGroup.get('entityType').updateValueAndValidity({onlySelf: true, emitEvent: true});
       this.dirty = false;
     }
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   clear(value: string = '') {
     this.entityTypeInput.nativeElement.value = value;

@@ -17,11 +17,11 @@
 import { Observable } from 'rxjs';
 import { Filter } from '@shared/models/query/query.models';
 
+
 /**
-
- * TypeScript models and enums for filter select callbacks.
-
+ * Filter select callbacks (ThingsBoard web UI).
  */
+
 
 export interface FilterSelectCallbacks {
   createFilter: (filter: string) => Observable<Filter>;

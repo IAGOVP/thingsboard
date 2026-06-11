@@ -24,7 +24,9 @@ import { MobileApp, MobileAppBundle, MobileAppBundleInfo } from '@shared/models/
 import { PlatformType } from '@shared/models/oauth2.models';
 
 /**
- * Angular HTTP service: mobile app REST wrappers (`@core/http`).
+ * Angular injectable service: mobile app (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -36,13 +38,30 @@ export class MobileAppService {
   ) {
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/app, ...`. */
+  
+  /**
+   * POST/PUT entity — save mobile app.
+   *
+   * @param mobileApp mobile app (MobileApp)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<MobileApp> observable or value
+   */
+
 
   public saveMobileApp(mobileApp: MobileApp, config?: RequestConfig): Observable<MobileApp> {
     return this.http.post<MobileApp>(`/api/mobile/app`, mobileApp, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/app${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant mobile app infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param platformType platform type (PlatformType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<MobileApp>> observable or value
+   */
+
 
   public getTenantMobileAppInfos(pageLink: PageLink, platformType?: PlatformType, config?: RequestConfig): Observable<PageData<MobileApp>> {
     let url = `/api/mobile/app${pageLink.toQuery()}`;
@@ -52,17 +71,41 @@ export class MobileAppService {
     return this.http.get<PageData<MobileApp>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/app/${id}, ...`. */
+  
+  /**
+   * get mobile app info by id.
+   *
+   * @param id id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<MobileApp> observable or value
+   */
+
 
   public getMobileAppInfoById(id: string, config?: RequestConfig): Observable<MobileApp> {
     return this.http.get<MobileApp>(`/api/mobile/app/${id}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/app/${id}, ...`. */
+  
+  /**
+   * DELETE — delete mobile app.
+   *
+   * @param id id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public deleteMobileApp(id: string, config?: RequestConfig): Observable<void> {
     return this.http.delete<void>(`/api/mobile/app/${id}`, defaultHttpOptionsFromConfig(config));
   }
+
+  /**
+   * POST/PUT entity — save mobile app bundle.
+   *
+   * @param mobileAppBundle mobile app bundle (MobileAppBundle)
+   * @param oauth2ClientIds oauth2client ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   public saveMobileAppBundle(mobileAppBundle: MobileAppBundle, oauth2ClientIds?: Array<string>, config?: RequestConfig) {
     let url = '/api/mobile/bundle';
@@ -72,23 +115,55 @@ export class MobileAppService {
     return this.http.post<MobileAppBundle>(url, mobileAppBundle, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * update oauth2clients.
+   *
+   * @param id id (string)
+   * @param oauth2ClientIds oauth2client ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public updateOauth2Clients(id: string, oauth2ClientIds: Array<string>, config?: RequestConfig) {
     return this.http.put(`/api/mobile/bundle/${id}/oauth2Clients`, oauth2ClientIds ?? [], defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/bundle/infos${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get tenant mobile app bundle infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<MobileAppBundleInfo>> observable or value
+   */
+
 
   public getTenantMobileAppBundleInfos(pageLink: PageLink, config?: RequestConfig): Observable<PageData<MobileAppBundleInfo>> {
     return this.http.get<PageData<MobileAppBundleInfo>>(`/api/mobile/bundle/infos${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/bundle/info/${id}, ...`. */
+  
+  /**
+   * get mobile app bundle info by id.
+   *
+   * @param id id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<MobileAppBundleInfo> observable or value
+   */
+
 
   public getMobileAppBundleInfoById(id: string, config?: RequestConfig): Observable<MobileAppBundleInfo> {
     return this.http.get<MobileAppBundleInfo>(`/api/mobile/bundle/info/${id}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/mobile/bundle/${id}`. */
+  
+  /**
+   * DELETE — delete mobile app bundle.
+   *
+   * @param id id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<void> observable or value
+   */
+
 
   public deleteMobileAppBundle(id: string, config?: RequestConfig): Observable<void> {
     return this.http.delete<void>(`/api/mobile/bundle/${id}`, defaultHttpOptionsFromConfig(config));

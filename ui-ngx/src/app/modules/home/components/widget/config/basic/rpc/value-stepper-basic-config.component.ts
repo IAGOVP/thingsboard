@@ -35,14 +35,17 @@ import { getSourceTbUnitSymbol } from '@shared/models/unit.models';
 
 type ButtonAppearanceType = 'left' | 'right';
 
+
+/**
+ * Angular component: value stepper basic config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-value-stepper-basic-config`.
+ */
 @Component({
     selector: 'tb-value-stepper-basic-config',
     templateUrl: './value-stepper-basic-config.component.html',
     styleUrls: ['../basic-config.scss'],
-    standalone: false
-/**
- * Angular component: value stepper basic config UI.
- */
+standalone: false
 })
 export class ValueStepperBasicConfigComponent extends BasicWidgetConfigComponent {
 
@@ -68,9 +71,21 @@ export class ValueStepperBasicConfigComponent extends BasicWidgetConfigComponent
     super(store, widgetConfigComponent);
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.valueStepperWidgetConfigForm;
   }
+
+  /**
+   * Event handler for config set.
+   *
+   * @param configData config data (WidgetConfigComponentData)
+   */
 
   protected onConfigSet(configData: WidgetConfigComponentData) {
     const settings: ValueStepperWidgetSettings = {...valueStepperDefaultSettings, ...(configData.config.settings || {})};
@@ -132,6 +147,24 @@ export class ValueStepperBasicConfigComponent extends BasicWidgetConfigComponent
   }
 
 
+  /**
+
+
+   * prepare output config.
+
+
+   *
+
+
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+
+
+   * @returns WidgetConfigComponentData observable or value
+
+
+   */
+
+
   protected prepareOutputConfig(config: any): WidgetConfigComponentData {
     this.widgetConfig.config.targetDevice = config.targetDevice;
     this.widgetConfig.config.settings = this.widgetConfig.config.settings || {};
@@ -152,10 +185,32 @@ export class ValueStepperBasicConfigComponent extends BasicWidgetConfigComponent
   }
 
 
+  /**
+
+
+   * validator triggers.
+
+
+   *
+
+
+   * @returns string[] observable or value
+
+
+   */
+
+
   protected validatorTriggers(): string[] {
     return ['appearance.showValueBox', 'appearance.showBorder',
       'buttonAppearance.leftButton.showButton', 'buttonAppearance.rightButton.showButton'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger?: string) {
     const showValueBox: boolean = this.valueStepperWidgetConfigForm.get('appearance').get('showValueBox').value;
@@ -190,6 +245,13 @@ export class ValueStepperBasicConfigComponent extends BasicWidgetConfigComponent
     this.buttonValidators(showRightButton, 'rightButton');
   }
 
+  /**
+   * button validators.
+   *
+   * @param showButtonValue show button value (boolean)
+   * @param button button (string)
+   */
+
   private buttonValidators(showButtonValue: boolean, button: string) {
     if (showButtonValue) {
       this.valueStepperWidgetConfigForm.get('buttonAppearance').get(button).get('icon').enable()
@@ -210,6 +272,13 @@ export class ValueStepperBasicConfigComponent extends BasicWidgetConfigComponent
     }
   }
 
+  /**
+   * get card buttons.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns string[] observable or value
+   */
+
   private getCardButtons(config: WidgetConfig): string[] {
     const buttons: string[] = [];
     if (isUndefined(config.enableFullscreen) || config.enableFullscreen) {
@@ -217,6 +286,13 @@ export class ValueStepperBasicConfigComponent extends BasicWidgetConfigComponent
     }
     return buttons;
   }
+
+  /**
+   * set card buttons.
+   *
+   * @param buttons buttons (string[])
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private setCardButtons(buttons: string[], config: WidgetConfig) {
     config.enableFullscreen = buttons.includes('fullscreen');

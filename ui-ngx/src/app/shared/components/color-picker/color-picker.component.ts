@@ -34,6 +34,12 @@ const colorPresetsHex =
   ['#435B63', '#F44336', '#E89623', '#F5DD00', '#8BC34A', '#4CAF50', '#009688', '#048AD3', '#673AB7', '#9C27B0', '#E91E63', '#6F113A',
    '#A1ADB1', '#F9A19B', '#FFD190', '#FFF59D', '#C5E1A4', '#A5D7A7', '#80CBC3', '#81C4E9', '#B39CDB', '#CD93D7', '#F48FB1', '#BC91A4'];
 
+
+/**
+ * Angular component: color picker (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application.
+ */
 @Component({
     selector: `tb-color-picker`,
     templateUrl: `./color-picker.component.html`,
@@ -45,10 +51,7 @@ const colorPresetsHex =
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: color picker UI.
- */
+standalone: false
 })
 export class ColorPickerComponent implements ControlValueAccessor, OnDestroy {
 
@@ -84,12 +87,30 @@ export class ColorPickerComponent implements ControlValueAccessor, OnDestroy {
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string)
+   */
 
   writeValue(value: string): void {
     const valid = this.isValidColorValue(value);
@@ -107,9 +128,21 @@ export class ColorPickerComponent implements ControlValueAccessor, OnDestroy {
     this.presentationControl.patchValue(this.presentations.indexOf(this.control.initType), {emitEvent: false});
   }
 
+  /**
+   * is valid color value.
+   *
+   * @param value value (string)
+   * @returns boolean observable or value
+   */
+
   private isValidColorValue(value: string): boolean {
     return value && isString(value) && value.trim().length > 0;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const color: string = this.getValueByType(this.control.value, this.presentations[this.presentationControl.value]);
@@ -119,10 +152,23 @@ export class ColorPickerComponent implements ControlValueAccessor, OnDestroy {
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   public ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     this.subscriptions.length = 0;
   }
+
+  /**
+   * get value by type.
+   *
+   * @param color color (Color)
+   * @param type type (ColorType)
+   * @returns string observable or value
+   */
 
   getValueByType(color: Color, type: ColorType): string {
     switch (type) {

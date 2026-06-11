@@ -84,11 +84,11 @@ L.SVG.include({
     }
   }
 
+
 /**
-
- * sidebar control.
-
+ * Sidebar control (ThingsBoard web UI).
  */
+
 })
 
 class SidebarControl extends L.Control<TB.SidebarControlOptions> implements L.TB.SidebarControl {
@@ -114,11 +114,26 @@ class SidebarControl extends L.Control<TB.SidebarControlOptions> implements L.TB
     }
   }
 
+  /**
+   * POST/PUT entity — add pane.
+   *
+   * @param pane pane (JQuery<HTMLElement>)
+   * @param button button (JQuery<HTMLElement>)
+   * @returns this observable or value
+   */
+
   addPane(pane: JQuery<HTMLElement>, button: JQuery<HTMLElement>): this {
     pane.hide().appendTo(this.sidebar);
     button.appendTo(this.buttonContainer);
     return this;
   }
+
+  /**
+   * toggle pane.
+   *
+   * @param pane pane (JQuery<HTMLElement>)
+   * @param button button (JQuery<HTMLElement>)
+   */
 
   togglePane(pane: JQuery<HTMLElement>, button: JQuery<HTMLElement>) {
     const paneWidth = this.options?.paneWidth || 220;
@@ -147,11 +162,25 @@ class SidebarControl extends L.Control<TB.SidebarControlOptions> implements L.TB
     this.map.invalidateSize({ pan: false, animate: false });
   }
 
+  /**
+   * Event handler for add.
+   *
+   * @param map map (L.Map)
+   * @returns HTMLElement observable or value
+   */
+
   onAdd(map: L.Map): HTMLElement {
     this.buttonContainer = $("<div>")
     .attr('class', 'leaflet-bar');
     return this.buttonContainer[0];
   }
+
+  /**
+   * POST/PUT entity — add to.
+   *
+   * @param map map (L.Map)
+   * @returns this observable or value
+   */
 
   addTo(map: L.Map): this {
     this.map = map;

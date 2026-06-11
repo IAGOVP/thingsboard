@@ -17,11 +17,11 @@
 import { EntityId } from '@shared/models/id/entity-id';
 import { EntityType } from '@shared/models/entity-type.models';
 
+
 /**
-
- * TypeScript models and enums for notification rule id.
-
+ * TypeScript interfaces, types, and enums for notification rule id (shared TypeScript models).
  */
+
 
 export class NotificationRuleId implements EntityId {
   entityType = EntityType.NOTIFICATION_RULE;

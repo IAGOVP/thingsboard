@@ -28,14 +28,17 @@ import { getCurrentAuthState } from '@core/auth/auth.selectors';
 import { AuthState } from '@core/auth/auth.models';
 import { CountryData } from '@shared/models/country.models';
 
+
+/**
+ * Angular component: customer (home/customer pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-customer`.
+ */
 @Component({
     selector: 'tb-customer',
     templateUrl: './customer.component.html',
     styleUrls: ['./customer.component.scss'],
-    standalone: false
-/**
- * Angular component: customer UI.
- */
+standalone: false
 })
 export class CustomerComponent extends ContactBasedComponent<Customer> {
 
@@ -53,6 +56,11 @@ export class CustomerComponent extends ContactBasedComponent<Customer> {
     super(store, fb, entityValue, entitiesTableConfigValue, cd, countryData);
   }
 
+  /**
+   * hide delete.
+   *
+   */
+
   hideDelete() {
     if (this.entitiesTableConfig) {
       return !this.entitiesTableConfig.deleteEnabled(this.entity);
@@ -60,6 +68,13 @@ export class CustomerComponent extends ContactBasedComponent<Customer> {
       return false;
     }
   }
+
+  /**
+   * build entity form.
+   *
+   * @param entity entity (Customer)
+   * @returns UntypedFormGroup observable or value
+   */
 
   buildEntityForm(entity: Customer): UntypedFormGroup {
     return this.fb.group(
@@ -77,6 +92,12 @@ export class CustomerComponent extends ContactBasedComponent<Customer> {
     );
   }
 
+  /**
+   * update entity form.
+   *
+   * @param entity entity (Customer)
+   */
+
   updateEntityForm(entity: Customer) {
     this.isPublic = entity.additionalInfo && entity.additionalInfo.isPublic;
     this.entityForm.patchValue({title: entity.title});
@@ -88,6 +109,11 @@ export class CustomerComponent extends ContactBasedComponent<Customer> {
           isDefinedAndNotNull(entity.additionalInfo.homeDashboardHideToolbar) ? entity.additionalInfo.homeDashboardHideToolbar : true}});
   }
 
+  /**
+   * Event handler for customer id copied.
+   *
+   */
+
   onCustomerIdCopied(event) {
     this.store.dispatch(new ActionNotificationShow(
       {
@@ -98,6 +124,11 @@ export class CustomerComponent extends ContactBasedComponent<Customer> {
         horizontalPosition: 'right'
       }));
   }
+
+  /**
+   * edges support enabled.
+   *
+   */
 
   edgesSupportEnabled() {
     return this.authState.edgesSupportEnabled;

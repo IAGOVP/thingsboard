@@ -45,8 +45,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.spy;
 import static org.mockito.BDDMockito.willReturn;
 /**
- * Unit test for tb azure iot hub node rule node.
+ * Unit test for tb azure iot hub node (MQTT publish/subscribe nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbAzureIotHubNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -58,12 +59,22 @@ public class TbAzureIotHubNodeTest extends AbstractRuleNodeUpgradeTest {
     protected TbContext ctxMock;
     @Mock
     protected MqttClient mqttClientMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
         azureIotHubNode = spy(new TbAzureIotHubNode());
         azureIotHubNodeConfig = new TbAzureIotHubNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -80,6 +91,11 @@ public class TbAzureIotHubNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(azureIotHubNodeConfig.getProtocolVersion()).isEqualTo(MqttVersion.MQTT_3_1_1);
         assertThat(azureIotHubNodeConfig.getCredentials()).isInstanceOf(AzureIotHubSasCredentials.class);
     }
+    /**
+     * Verify prepare mqtt client config method with azure iot hub sas credentials.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyPrepareMqttClientConfigMethodWithAzureIotHubSasCredentials() throws Exception {
@@ -100,6 +116,11 @@ public class TbAzureIotHubNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(mqttClientConfig.getUsername()).isEqualTo(AzureIotHubUtil.buildUsername(azureIotHubNodeConfig.getHost(), mqttClientConfig.getClientId()));
         assertThat(mqttClientConfig.getPassword()).isEqualTo(AzureIotHubUtil.buildSasToken(azureIotHubNodeConfig.getHost(), credentials.getSasKey(), fixedClock));
     }
+    /**
+     * Given pem credentials and successful connect result when init then ok.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenPemCredentialsAndSuccessfulConnectResult_whenInit_thenOk() throws Exception {

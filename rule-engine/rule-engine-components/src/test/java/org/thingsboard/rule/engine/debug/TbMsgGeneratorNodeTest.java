@@ -69,8 +69,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 /**
- * Unit test for tb msg generator node rule node.
+ * Unit test for tb msg generator node (debug and test message generator nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -89,6 +90,11 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
     private TbContext ctxMock;
     @Mock
     private ScriptEngine scriptEngineMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
@@ -96,6 +102,11 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
         config = new TbMsgGeneratorNodeConfiguration().defaultConfiguration();
         executorService = ThingsBoardExecutors.newSingleThreadScheduledExecutor("msg-generator-node-test");
     }
+    /**
+     * Tear down.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterEach
     public void tearDown() {
@@ -104,6 +115,11 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
         }
         node.destroy();
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -115,6 +131,12 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
         assertThat(config.getJsScript()).isEqualTo(TbMsgGeneratorNodeConfiguration.DEFAULT_SCRIPT);
         assertThat(config.getTbelScript()).isEqualTo(TbMsgGeneratorNodeConfiguration.DEFAULT_SCRIPT);
     }
+    /**
+     * Given entity type when init then verify exception.
+     *
+     * @param entityType entity type ({@link EntityType})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @EnumSource(EntityType.class)
@@ -136,6 +158,11 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
                     .isEqualTo(true);
         }
     }
+    /**
+     * Given originator entity type is rule node when init then verify originator id.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenOriginatorEntityTypeIsRuleNode_whenInit_thenVerifyOriginatorId() throws TbNodeException {
@@ -150,6 +177,11 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
         // THEN
         then(ctxMock).should().isLocalEntity(RULE_NODE_ID);
     }
+    /**
+     * Given originator entity type is tenant when init then verify originator id.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenOriginatorEntityTypeIsTenant_whenInit_thenVerifyOriginatorId() throws TbNodeException {
@@ -164,6 +196,12 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
         // THEN
         then(ctxMock).should().isLocalEntity(TENANT_ID);
     }
+    /**
+     * Given originator entity type when init then verify originator id.
+     *
+     * @param entityTypeStr entity type str ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @ValueSource(strings = {"ASSET", "DEVICE", "ENTITY_VIEW", "CUSTOMER", "USER", "DASHBOARD", "EDGE"})
@@ -181,6 +219,12 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
         // THEN
         then(ctxMock).should().isLocalEntity(entityId);
     }
+    /**
+     * Given msg count and delay when init then verify invocation of on msg method.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     @Test
     public void givenMsgCountAndDelay_whenInit_thenVerifyInvocationOfOnMsgMethod() throws TbNodeException, InterruptedException {
@@ -258,6 +302,11 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
         then(ctxMock).should(times(5)).enqueueForTellNext(actualGeneratedMsg.capture(), eq(TbNodeConnectionType.SUCCESS));
         assertThat(actualGeneratedMsg.getValue()).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(prevMsg);
     }
+    /**
+     * Given originator is not local entity when on partition change msg then destroy.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenOriginatorIsNotLocalEntity_whenOnPartitionChangeMsg_thenDestroy() {
@@ -312,6 +361,12 @@ public class TbMsgGeneratorNodeTest extends AbstractRuleNodeUpgradeTest {
 
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

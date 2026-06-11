@@ -56,14 +56,17 @@ import { EntityAutocompleteComponent } from '@shared/components/entity/entity-au
 import { NULL_UUID } from '@shared/models/id/has-uuid';
 import { TenantId } from '@shared/models/id/tenant-id';
 
+
+/**
+ * Angular component: calculated field argument panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-calculated-field-argument-panel`.
+ */
 @Component({
     selector: 'tb-calculated-field-argument-panel',
     templateUrl: './calculated-field-argument-panel.component.html',
     styleUrls: ['../common/calculated-field-panel.scss', './calculated-field-argument-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: calculated field argument panel UI.
- */
+standalone: false
 })
 export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewInit {
 
@@ -160,6 +163,11 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
         && (this.entityId.entityType === EntityType.DEVICE || this.entityId.entityType === EntityType.DEVICE_PROFILE))
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.updatedFormValidators();
     this.updatedArgumentType();
@@ -188,11 +196,21 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
     }
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
     if (this.argument.refEntityId?.id === NULL_UUID) {
       this.entityAutocomplete.selectEntityFormGroup.get('entity').markAsTouched();
     }
   }
+
+  /**
+   * POST/PUT entity — save argument.
+   *
+   */
 
   saveArgument(): void {
     const value = this.argumentFormGroup.value as CalculatedFieldArgumentValue;
@@ -211,15 +229,30 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
     this.argumentsDataApplied.emit(value);
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.popover.hide();
   }
+
+  /**
+   * updated form validators.
+   *
+   */
 
   private updatedFormValidators(): void {
     this.argumentFormGroup.get('argumentName').addValidators(
       [uniqueNameValidator(this.usedArgumentNames), forbiddenNamesValidator(this.forbiddenNames)]);
     this.argumentFormGroup.get('argumentName').updateValueAndValidity({emitEvent: false});
   }
+
+  /**
+   * updated argument type.
+   *
+   */
 
   private updatedArgumentType(): void {
     let argumentType = ArgumentEntityType.Current;
@@ -232,6 +265,12 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
     this.argumentType.setValue(argumentType, {emitEvent: false});
   }
 
+  /**
+   * toggle by entity key type.
+   *
+   * @param type type (ArgumentType)
+   */
+
   private toggleByEntityKeyType(type: ArgumentType): void {
     const isAttribute = type === ArgumentType.Attribute;
     const isRolling = type === ArgumentType.Rolling;
@@ -240,6 +279,12 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
     this.argumentFormGroup.get('timeWindow')[isRolling? 'enable' : 'disable']({ emitEvent: false });
     this.argumentFormGroup.get('defaultValue')[isRolling? 'disable' : 'enable']({ emitEvent: false });
   }
+
+  /**
+   * update entity filter.
+   *
+   * @param entityType entity type (ArgumentEntityType)
+   */
 
   private updateEntityFilter(entityType: ArgumentEntityType = ArgumentEntityType.Current, onInit = false): void {
     let entityFilter: EntityFilter;
@@ -281,6 +326,11 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
     this.cd.markForCheck();
   }
 
+  /**
+   * observe entity filter changes.
+   *
+   */
+
   private observeEntityFilterChanges(): void {
     merge(
       this.argumentType.valueChanges,
@@ -291,6 +341,11 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
       .pipe(debounceTime(50), takeUntilDestroyed())
       .subscribe(() => this.updateEntityFilter(this.entityType));
   }
+
+  /**
+   * observe argument type changes.
+   *
+   */
 
   private observeArgumentTypeChanges(): void {
     this.argumentType.valueChanges
@@ -305,11 +360,21 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
       });
   }
 
+  /**
+   * observe entity key changes.
+   *
+   */
+
   private observeEntityKeyChanges(): void {
     this.argumentFormGroup.get('refEntityKey').get('type').valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe(type => this.toggleByEntityKeyType(type));
   }
+
+  /**
+   * set initial entity key type.
+   *
+   */
 
   private setInitialEntityKeyType(): void {
     if (!this.isScript && this.argument.refEntityKey?.type === ArgumentType.Rolling) {
@@ -319,12 +384,22 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
     }
   }
 
+  /**
+   * set initial entity type.
+   *
+   */
+
   private setInitialEntityType() {
     if (!this.argumentEntityTypes.includes(this.entityType)) {
       this.argumentType.setValue(null);
       this.argumentType.markAsTouched();
     }
   }
+
+  /**
+   * set watch key change.
+   *
+   */
 
   private setWatchKeyChange(): void {
     this.refEntityKeyFormGroup.get('key').valueChanges.pipe(
@@ -336,6 +411,12 @@ export class CalculatedFieldArgumentPanelComponent implements OnInit, AfterViewI
       }
     });
   }
+
+  /**
+   * updated ref entity id state.
+   *
+   * @param type type (ArgumentEntityType)
+   */
 
   private updatedRefEntityIdState(type: ArgumentEntityType, emitEvent = true): void {
     const isEntityWithId = !!type && ![ArgumentEntityType.Tenant, ArgumentEntityType.Current, ArgumentEntityType.Owner].includes(type);

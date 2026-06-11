@@ -20,15 +20,18 @@ import { TbPopoverComponent } from '@shared/components/popover.component';
 import { FormBuilder, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: default mobile page panel (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-default-mobile-page-panel`.
+ */
 @Component({
     selector: 'tb-default-mobile-page-panel',
     templateUrl: './default-mobile-page-panel.component.html',
     styleUrls: ['./default-mobile-page-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: default mobile page panel UI.
- */
+standalone: false
 })
 export class DefaultMobilePagePanelComponent implements OnInit {
 
@@ -59,6 +62,11 @@ export class DefaultMobilePagePanelComponent implements OnInit {
   constructor(private fb: FormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.defaultMobilePages = defaultMobilePageMap.get(this.pageItem.id);
     this.defaultItemName = this.defaultMobilePages.label;
@@ -81,13 +89,28 @@ export class DefaultMobilePagePanelComponent implements OnInit {
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
 
+  /**
+   * apply.
+   *
+   */
+
   apply() {
     this.defaultMobilePageApplied.emit(this.pageItem);
   }
+
+  /**
+   * cleanup.
+   *
+   */
 
   cleanup() {
     this.mobilePageFormGroup.patchValue({
@@ -99,11 +122,21 @@ export class DefaultMobilePagePanelComponent implements OnInit {
     this.updateModel();
   }
 
+  /**
+   * update cleanup state.
+   *
+   */
+
   private updateCleanupState() {
     this.isCleanupEnabled = (hideDefaultMenuItems.includes(this.pageItem.id) ? this.pageItem.visible : !this.pageItem.visible) ||
       !!this.pageItem.label ||
       !!this.pageItem.icon;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.pageItem.visible = this.mobilePageFormGroup.get('visible').value;

@@ -22,11 +22,11 @@ import { FcRuleNote, RuleNode, RuleNodeComponentDescriptor, RuleNodeType } from 
 import { ComponentClusteringMode, ComponentType } from '@shared/models/component-descriptor.models';
 import { HasTenantId, HasVersion } from '@shared/models/entity.models';
 
+
 /**
-
- * TypeScript models and enums for rule chain.
-
+ * TypeScript interfaces, types, and enums for rule chain (shared TypeScript models).
  */
+
 
 export interface RuleChain extends BaseData<RuleChainId>, HasTenantId, HasVersion, ExportableEntity<RuleChainId> {
   tenantId: TenantId;

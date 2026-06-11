@@ -58,15 +58,18 @@ export type NodeSearchCallback = (searchText: string, node: NavTreeNode) => bool
 export type NodeSelectedCallback = (node: NavTreeNode, event: Event) => void;
 export type NodesInsertedCallback = (nodes: string[], parent: string) => void;
 
+
+/**
+ * Angular component: nav tree (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-nav-tree`.
+ */
 @Component({
     selector: 'tb-nav-tree',
     templateUrl: './nav-tree.component.html',
     styleUrls: ['./nav-tree.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: nav tree UI.
- */
+standalone: false
 })
 export class NavTreeComponent implements OnInit {
 
@@ -100,9 +103,19 @@ export class NavTreeComponent implements OnInit {
               private ngZone: NgZone) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.initTree();
   }
+
+  /**
+   * init tree.
+   *
+   */
 
   private initTree() {
 

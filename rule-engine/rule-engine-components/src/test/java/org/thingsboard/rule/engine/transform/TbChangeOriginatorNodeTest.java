@@ -81,8 +81,9 @@ import static org.thingsboard.rule.engine.transform.OriginatorSource.ENTITY;
 import static org.thingsboard.rule.engine.transform.OriginatorSource.RELATED;
 import static org.thingsboard.rule.engine.transform.OriginatorSource.TENANT;
 /**
- * Unit test for tb change originator node rule node.
+ * Unit test for tb change originator node (message transformation and originator change nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbChangeOriginatorNodeTest {
@@ -107,6 +108,11 @@ public class TbChangeOriginatorNodeTest {
     private RuleEngineAlarmService alarmServiceMock;
     @Mock
     private EntityService entityServiceMock;
+    /**
+     * Setup.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setup() {
@@ -120,6 +126,11 @@ public class TbChangeOriginatorNodeTest {
         lenient().when(ctxMock.getAlarmService()).thenReturn(alarmServiceMock);
         lenient().when(ctxMock.getEntityService()).thenReturn(entityServiceMock);
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -134,6 +145,11 @@ public class TbChangeOriginatorNodeTest {
         assertThat(config.getEntityType()).isNull();
         assertThat(config.getEntityNamePattern()).isNull();
     }
+    /**
+     * Given related source is null when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRelatedSourceIsNull_whenInit_thenThrowsException() {
@@ -143,6 +159,11 @@ public class TbChangeOriginatorNodeTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Originator source should be specified.");
     }
+    /**
+     * Given related source and related query is null when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenRelatedSourceAndRelatedQueryIsNull_whenInit_thenThrowsException() {
@@ -153,6 +174,11 @@ public class TbChangeOriginatorNodeTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Relations query should be specified if 'Related entity' source is selected.");
     }
+    /**
+     * Given entity source and entity type is null when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenEntitySourceAndEntityTypeIsNull_whenInit_thenThrowsException() {
@@ -163,6 +189,12 @@ public class TbChangeOriginatorNodeTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Entity type should be specified if 'Entity by name pattern' source is selected.");
     }
+    /**
+     * Given entity source and entity name pattern is empty when init then throws exception.
+     *
+     * @param entityName entity name ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @ParameterizedTest
     @NullAndEmptySource
@@ -175,6 +207,11 @@ public class TbChangeOriginatorNodeTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Name pattern should be specified if 'Entity by name pattern' source is selected.");
     }
+    /**
+     * Given entity source and unexpected entity type when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenEntitySourceAndUnexpectedEntityType_whenInit_thenThrowsException() {
@@ -192,6 +229,11 @@ public class TbChangeOriginatorNodeTest {
             Given a device assigned to a customer and node configured to change originator to customer,
             when processing the message,
             then should change message originator from device to customer""")
+    /**
+     * Given device assigned to customer when processing message then changes originator to customer.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
     public void givenDeviceAssignedToCustomer_whenProcessingMessage_thenChangesOriginatorToCustomer() throws TbNodeException {
         // GIVEN
         var device = new Device(DEVICE_ID);
@@ -230,6 +272,11 @@ public class TbChangeOriginatorNodeTest {
             Given a customer as message originator and node configured to change originator to customer,
             when processing the message,
             then should keep the customer as originator""")
+    /**
+     * Given customer as originator when processing message then keeps customer as originator.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
     public void givenCustomerAsOriginator_whenProcessingMessage_thenKeepsCustomerAsOriginator() throws TbNodeException {
         // GIVEN
         var customer = new Customer(CUSTOMER_ID);
@@ -258,6 +305,11 @@ public class TbChangeOriginatorNodeTest {
         then(ctxMock).should().tellSuccess(actualMsg.capture());
         assertThat(actualMsg.getValue()).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(expectedMsg);
     }
+    /**
+     * Given originator source is tenant when on msg then tell success.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenOriginatorSourceIsTenant_whenOnMsg_thenTellSuccess() throws TbNodeException {
@@ -283,6 +335,11 @@ public class TbChangeOriginatorNodeTest {
         then(ctxMock).should().tellSuccess(actualMsg.capture());
         assertThat(actualMsg.getValue()).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(expectedMsg);
     }
+    /**
+     * Given originator source is related and new originator is null when on msg then tell failure.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenOriginatorSourceIsRelatedAndNewOriginatorIsNull_whenOnMsg_thenTellFailure() throws TbNodeException {
@@ -315,6 +372,11 @@ public class TbChangeOriginatorNodeTest {
         then(ctxMock).should().tellFailure(eq(msg), throwable.capture());
         assertThat(throwable.getValue()).isInstanceOf(NoSuchElementException.class).hasMessage("Failed to find new originator!");
     }
+    /**
+     * Given originator source is alarm originator when on msg then tell success.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenOriginatorSourceIsAlarmOriginator_whenOnMsg_thenTellSuccess() throws TbNodeException {
@@ -346,6 +408,14 @@ public class TbChangeOriginatorNodeTest {
         then(ctxMock).should().tellSuccess(actualMsg.capture());
         assertThat(actualMsg.getValue()).usingRecursiveComparison().ignoringFields("ctx").isEqualTo(expectedMsg);
     }
+    /**
+     * Given originator source is entity when on msg then tell success.
+     *
+     * @param entityNamePattern entity name pattern ({@link String})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @param data data ({@link String})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -385,6 +455,11 @@ public class TbChangeOriginatorNodeTest {
                 Arguments.of("${msg-name-pattern}", TbMsgMetaData.EMPTY, "{\"msg-name-pattern\":\"msg-test-asset\"}")
         );
     }
+    /**
+     * Given originator source is entity and entity could not found when on msg then tell failure.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenOriginatorSourceIsEntityAndEntityCouldNotFound_whenOnMsg_thenTellFailure() throws TbNodeException {

@@ -62,5 +62,8 @@ const routes: Routes = [
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling gateways routing (home/gateways pages).
+ */
   exports: [RouterModule]})
 export class GatewaysRoutingModule { }

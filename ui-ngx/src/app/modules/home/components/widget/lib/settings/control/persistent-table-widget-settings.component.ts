@@ -34,14 +34,17 @@ interface DisplayColumn {
   value: string;
 }
 
+
+/**
+ * Angular component: persistent table widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-persistent-table-widget-settings`.
+ */
 @Component({
     selector: 'tb-persistent-table-widget-settings',
     templateUrl: './persistent-table-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: persistent table widget settings UI.
- */
+standalone: false
 })
 export class PersistentTableWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -84,9 +87,21 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
       );
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.persistentTableWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -109,11 +124,24 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
     };
   }
 
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
+
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     settings.pageStepIncrement = settings.pageStepIncrement ?? settings.defaultPageSize;
     this.pageStepSizeValues = buildPageStepSizeValues(settings.pageStepCount, settings.pageStepIncrement);
     return settings;
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.persistentTableWidgetSettingsForm = this.fb.group({
@@ -133,15 +161,34 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
     });
   }
 
+  /**
+   * validate settings.
+   *
+   * @returns boolean observable or value
+   */
+
   public validateSettings(): boolean {
     const displayColumns: string[] = this.persistentTableWidgetSettingsForm.get('displayColumns').value;
     this.columnsChipList.errorState = !displayColumns?.length;
     return super.validateSettings();
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['displayPagination', 'pageStepCount', 'pageStepIncrement'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   * @param trigger trigger (string)
+   */
 
   protected updateValidators(emitEvent: boolean, trigger: string) {
     if (trigger === 'pageStepCount' || trigger === 'pageStepIncrement') {
@@ -162,6 +209,13 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * fetch columns.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<DisplayColumn>> observable or value
+   */
+
   private fetchColumns(searchText?: string): Observable<Array<DisplayColumn>> {
     this.columnSearchText = searchText;
     if (this.columnSearchText && this.columnSearchText.length) {
@@ -171,6 +225,13 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
       return of(this.displayColumns);
     }
   }
+
+  /**
+   * POST/PUT entity — add column.
+   *
+   * @param existingColumn existing column (DisplayColumn)
+   * @returns boolean observable or value
+   */
 
   private addColumn(existingColumn: DisplayColumn): boolean {
     if (existingColumn) {
@@ -187,17 +248,44 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
     return false;
   }
 
+  /**
+   * display column from value.
+   *
+   * @param columnValue column value (string)
+   * @returns DisplayColumn | undefined observable or value
+   */
+
   displayColumnFromValue(columnValue: string): DisplayColumn | undefined {
     return this.displayColumns.find((column) => column.value === columnValue);
   }
+
+  /**
+   * display column fn.
+   *
+   * @param column column (DisplayColumn)
+   * @returns string | undefined observable or value
+   */
 
   displayColumnFn(column?: DisplayColumn): string | undefined {
     return column ? column.name : undefined;
   }
 
+  /**
+   * text is not empty.
+   *
+   * @param text text (string)
+   * @returns boolean observable or value
+   */
+
   textIsNotEmpty(text: string): boolean {
     return (text && text.length > 0);
   }
+
+  /**
+   * column drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   columnDrop(event: CdkDragDrop<string[]>): void {
     const displayColumns: string[] = this.persistentTableWidgetSettingsForm.get('displayColumns').value;
@@ -205,6 +293,12 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
     this.persistentTableWidgetSettingsForm.get('displayColumns').setValue(displayColumns);
     this.persistentTableWidgetSettingsForm.get('displayColumns').markAsDirty();
   }
+
+  /**
+   * Event handler for column removed.
+   *
+   * @param column column (string)
+   */
 
   onColumnRemoved(column: string): void {
     const displayColumns: string[] = this.persistentTableWidgetSettingsForm.get('displayColumns').value;
@@ -217,9 +311,20 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * Event handler for column input focus.
+   *
+   */
+
   onColumnInputFocus() {
     this.columnInputChange.next(this.columnInput.nativeElement.value);
   }
+
+  /**
+   * POST/PUT entity — add column from chip input.
+   *
+   * @param event DOM or Angular event object
+   */
 
   addColumnFromChipInput(event: MatChipInputEvent): void {
     const value = event.value;
@@ -232,10 +337,22 @@ export class PersistentTableWidgetSettingsComponent extends WidgetSettingsCompon
     }
   }
 
+  /**
+   * column selected.
+   *
+   * @param event DOM or Angular event object
+   */
+
   columnSelected(event: MatAutocompleteSelectedEvent): void {
     this.addColumn(event.option.value);
     this.clearColumnInput('');
   }
+
+  /**
+   * clear column input.
+   *
+   * @param value value (string)
+   */
 
   clearColumnInput(value: string = '') {
     this.columnInput.nativeElement.value = value;

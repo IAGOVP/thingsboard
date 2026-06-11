@@ -35,20 +35,24 @@ import java.util.List;
  * Converts a Jackson {@link ObjectNode} JSON Schema into a Langchain4j {@link JsonSchema} model.
  */
 /**
- * Rule engine component: langchain4j json schema adapter.
+ * Langchain4j json schema adapter (AI/LLM integration nodes).
  */
+
 final class Langchain4jJsonSchemaAdapter {
 
     private Langchain4jJsonSchemaAdapter() {
         throw new AssertionError("Can't instantiate utility class");
     }
 
+    
     /**
-     * Creates a Langchain4j {@link JsonSchema} from the given root JSON Schema node.
+     * From object node.
      *
-     * @param rootSchemaNode a valid JSON Schema as a Jackson {@link ObjectNode}
-     * @return the corresponding Langchain4j {@link JsonSchema}
+     * @param rootSchemaNode root schema node ({@link ObjectNode})
+     * @return {@link JsonSchema}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     public static JsonSchema fromObjectNode(ObjectNode rootSchemaNode) {
         return JsonSchema.builder()
                 .name(rootSchemaNode.get("title").textValue())

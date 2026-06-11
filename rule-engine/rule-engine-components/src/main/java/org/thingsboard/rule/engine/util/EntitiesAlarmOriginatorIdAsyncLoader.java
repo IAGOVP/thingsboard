@@ -23,13 +23,23 @@ import org.thingsboard.server.common.data.alarm.Alarm;
 import org.thingsboard.server.common.data.id.AlarmId;
 import org.thingsboard.server.common.data.id.EntityId;
 
+
 /**
 
- * Rule engine component: entities alarm originator id async loader.
+ * Entities alarm originator id async loader (shared rule-engine utilities and async loaders).
 
  */
 
+
 public class EntitiesAlarmOriginatorIdAsyncLoader {
+    /**
+     * Finds entity id async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param originator message originator entity id
+     * @return future completing with {@link EntityId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static ListenableFuture<EntityId> findEntityIdAsync(TbContext ctx, EntityId originator) {
         switch (originator.getEntityType()) {

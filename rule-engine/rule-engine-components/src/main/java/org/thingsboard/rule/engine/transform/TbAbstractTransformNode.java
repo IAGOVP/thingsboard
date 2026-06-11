@@ -35,17 +35,32 @@ import static org.thingsboard.common.util.DonAsynchron.withCallback;
  * Created by ashvayka on 19.01.18.
  */
 /**
- * Base implementation for transform node rule nodes.
+ * Abstract base class for transform node rule nodes (message transformation and originator change nodes).
  */
+
 @Slf4j
 public abstract class TbAbstractTransformNode<C> implements TbNode {
 
     protected C config;
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
         config = loadNodeConfiguration(ctx, configuration);
     }
+    /**
+     * Processes one incoming {@link org.thingsboard.server.common.msg.TbMsg} and routes the result via {@link TbContext}.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @throws TbNodeException if configuration or processing fails
+     */
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
@@ -54,12 +69,36 @@ public abstract class TbAbstractTransformNode<C> implements TbNode {
                 t -> transformFailure(ctx, msg, t),
                 MoreExecutors.directExecutor());
     }
+    /**
+     * Loads node configuration.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link C}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     protected abstract C loadNodeConfiguration(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException;
+    /**
+     * Transform failure.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param t t ({@link Throwable})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void transformFailure(TbContext ctx, TbMsg msg, Throwable t) {
         ctx.tellFailure(msg, t);
     }
+    /**
+     * Transform success.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param msgs msgs ({@link List})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void transformSuccess(TbContext ctx, TbMsg msg, List<TbMsg> msgs) {
         if (msgs == null || msgs.isEmpty()) {
@@ -81,6 +120,14 @@ public abstract class TbAbstractTransformNode<C> implements TbNode {
             msgs.forEach(newMsg -> ctx.enqueueForTellNext(newMsg, TbNodeConnectionType.SUCCESS, wrapper::onSuccess, wrapper::onFailure));
         }
     }
+    /**
+     * Transform.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link List}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected abstract ListenableFuture<List<TbMsg>> transform(TbContext ctx, TbMsg msg);
 

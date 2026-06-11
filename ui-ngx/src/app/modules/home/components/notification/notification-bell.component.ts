@@ -34,14 +34,17 @@ import { select, Store } from '@ngrx/store';
 import { selectIsAuthenticated } from '@core/auth/auth.selectors';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: notification bell (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-notification-bell`.
+ */
 @Component({
     selector: 'tb-notification-bell',
     templateUrl: './notification-bell.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
-/**
- * Angular component: notification bell UI.
- */
+standalone: false
 })
 export class NotificationBellComponent implements OnDestroy {
 
@@ -73,9 +76,20 @@ export class NotificationBellComponent implements OnDestroy {
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.unsubscribeSubscription();
   }
+
+  /**
+   * show notification.
+   *
+   * @param createVersionButton create version button (MatIconButton)
+   */
 
   showNotification($event: Event, createVersionButton: MatIconButton) {
     if ($event) {
@@ -102,6 +116,11 @@ export class NotificationBellComponent implements OnDestroy {
     }
   }
 
+  /**
+   * init subscription.
+   *
+   */
+
   private initSubscription() {
     this.notificationSubscriber = NotificationSubscriber.createNotificationCountSubscription(this.notificationWsService, this.zone);
     this.notificationCountSubscriber = this.notificationSubscriber.notificationCount$.pipe(
@@ -110,6 +129,11 @@ export class NotificationBellComponent implements OnDestroy {
 
     this.notificationSubscriber.subscribe();
   }
+
+  /**
+   * unsubscribe subscription.
+   *
+   */
 
   private unsubscribeSubscription() {
     this.notificationCountSubscriber.unsubscribe();

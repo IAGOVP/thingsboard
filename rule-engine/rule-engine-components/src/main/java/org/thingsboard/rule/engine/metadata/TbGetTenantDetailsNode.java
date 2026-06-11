@@ -30,7 +30,13 @@ import org.thingsboard.server.common.data.util.TbPair;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine enrichment node 'tenant details': Adds message originator tenant details into message or message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>tenant details</b>.
+ *
+ * <p>Adds message originator tenant details into message or message metadata
+ * <br>Useful when we need to retrieve contact information from your tenant 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGetTenantDetailsNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/tenant-details/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/tenant-details/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -47,6 +53,13 @@ import org.thingsboard.server.common.msg.TbMsg;
 public class TbGetTenantDetailsNode extends TbAbstractGetEntityDetailsNode<TbGetTenantDetailsNodeConfiguration, TenantId> {
 
     private static final String TENANT_PREFIX = "tenant_";
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbGetTenantDetailsNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbGetTenantDetailsNodeConfiguration loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
@@ -54,16 +67,38 @@ public class TbGetTenantDetailsNode extends TbAbstractGetEntityDetailsNode<TbGet
         checkIfDetailsListIsNotEmptyOrElseThrow(config.getDetailsList());
         return config;
     }
+    /**
+     * Returns prefix.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected String getPrefix() {
         return TENANT_PREFIX;
     }
+    /**
+     * Returns contact based future.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link Tenant}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<Tenant> getContactBasedFuture(TbContext ctx, TbMsg msg) {
         return ctx.getTenantService().findTenantByIdAsync(ctx.getTenantId(), ctx.getTenantId());
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

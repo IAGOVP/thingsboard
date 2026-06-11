@@ -349,11 +349,11 @@ import { Observable, of } from 'rxjs';
 import { isJSResourceUrl } from '@shared/public-api';
 import { ɵɵinterpolate, ɵɵinterpolate2 } from '@angular/core';
 
+
 /**
-
- * modules map.
-
+ * Modules map (ThingsBoard web UI).
  */
+
 
 class ModulesMap implements IModulesMap {
 
@@ -694,6 +694,12 @@ class ModulesMap implements IModulesMap {
     '@home/components/ai-model/ai-model-dialog.component': AIModelDialogComponent,
   };
 
+  /**
+   * init.
+   *
+   * @returns Observable<any> observable or value
+   */
+
   init(): Observable<any> {
     if (!this.initialized) {
       System.constructor.prototype.resolve = (id: string) => {
@@ -721,6 +727,13 @@ class ModulesMap implements IModulesMap {
     }
     return of(null);
   }
+
+  /**
+   * angular core module20to18patch.
+   *
+   * @param module module (typeof AngularCore)
+   * @returns typeof AngularCore observable or value
+   */
 
   private angularCoreModule20to18Patch(module: typeof AngularCore): typeof AngularCore {
     const result = {...module};
@@ -758,6 +771,13 @@ class ModulesMap implements IModulesMap {
     };
     return result;
   }
+
+  /**
+   * translate module20to18patch.
+   *
+   * @param module module (typeof TranslateCore)
+   * @returns typeof TranslateCore observable or value
+   */
 
   private translateModule20to18Patch(module: typeof TranslateCore): typeof TranslateCore {
     const translateServiceCls = module.TranslateService;

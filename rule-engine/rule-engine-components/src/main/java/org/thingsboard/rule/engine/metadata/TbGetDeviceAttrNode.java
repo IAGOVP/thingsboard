@@ -31,7 +31,13 @@ import org.thingsboard.server.common.data.util.TbPair;
 import org.thingsboard.server.common.msg.TbMsg;
 
 /**
- * Rule engine enrichment node 'related device attributes': Add originators related device attributes and/or latest telemetry values into message or message metadata Implements org.thingsboard.rule.engine.api.TbNode.
+ * Enrichment rule node — <b>related device attributes</b>.
+ *
+ * <p>Add originators related device attributes and/or latest telemetry values into message or message metadata
+ * <br>Related device lookup based on the configured relation query. 
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbGetDeviceAttrNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/related-device-attributes/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/enrichment/related-device-attributes/</a>
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
@@ -50,11 +56,26 @@ import org.thingsboard.server.common.msg.TbMsg;
 public class TbGetDeviceAttrNode extends TbAbstractGetAttributesNode<TbGetDeviceAttrNodeConfiguration, DeviceId> {
 
     private static final String RELATED_DEVICE_NOT_FOUND_MESSAGE = "Failed to find related device to message originator using relation query specified in the configuration!";
+    /**
+     * Loads node configuration.
+     *
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @return {@link TbGetDeviceAttrNodeConfiguration}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     protected TbGetDeviceAttrNodeConfiguration loadNodeConfiguration(TbNodeConfiguration configuration) throws TbNodeException {
         return TbNodeUtils.convert(configuration, TbGetDeviceAttrNodeConfiguration.class);
     }
+    /**
+     * Finds entity id async.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @return future completing with {@link DeviceId}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected ListenableFuture<DeviceId> findEntityIdAsync(TbContext ctx, TbMsg msg) {
@@ -63,6 +84,14 @@ public class TbGetDeviceAttrNode extends TbAbstractGetAttributesNode<TbGetDevice
                 checkIfEntityIsPresentOrThrow(RELATED_DEVICE_NOT_FOUND_MESSAGE),
                 ctx.getDbCallbackExecutor());
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

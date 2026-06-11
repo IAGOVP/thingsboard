@@ -24,6 +24,9 @@ import { TimeUnitSelectComponent } from '@home/components/profile/device/common/
 /**
  * Angular NgModule: device profile common feature area.
  */
+/**
+ * Angular NgModule bundling device profile common (ThingsBoard web UI).
+ */
 @NgModule({
   declarations: [
     PowerModeSettingComponent,
@@ -35,5 +38,5 @@ import { TimeUnitSelectComponent } from '@home/components/profile/device/common/
   ],
   exports: [
     PowerModeSettingComponent
-  ]})
+]})
 export class DeviceProfileCommonModule { }

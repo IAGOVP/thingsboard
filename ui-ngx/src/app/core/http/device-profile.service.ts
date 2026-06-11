@@ -34,7 +34,9 @@ import { Lwm2mSecurityType } from '@shared/models/lwm2m-security-config.models';
 import { EntityInfoData } from '@shared/models/entity.models';
 
 /**
- * Angular HTTP service: device profile REST wrappers (`@core/http`).
+ * Angular injectable service: device profile (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -49,32 +51,74 @@ export class DeviceProfileService {
   ) {
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfiles${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get device profiles.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DeviceProfile>> observable or value
+   */
+
 
   public getDeviceProfiles(pageLink: PageLink, config?: RequestConfig): Observable<PageData<DeviceProfile>> {
     return this.http.get<PageData<DeviceProfile>>(`/api/deviceProfiles${pageLink.toQuery()}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfileInfos?deviceProfileIds=${deviceProfileIds.join(, ...`. */
+  
+  /**
+   * get device profiles by ids.
+   *
+   * @param deviceProfileIds device profile ids (Array<string>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<DeviceProfileInfo>> observable or value
+   */
+
 
   public getDeviceProfilesByIds(deviceProfileIds: Array<string>, config?: RequestConfig): Observable<Array<DeviceProfileInfo>> {
     return this.http.get<Array<DeviceProfileInfo>>(`/api/deviceProfileInfos?deviceProfileIds=${deviceProfileIds.join(',')}`,
       defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfile/${deviceProfileId}, ...`. */
+  
+  /**
+   * get device profile.
+   *
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceProfile> observable or value
+   */
+
 
   public getDeviceProfile(deviceProfileId: string, config?: RequestConfig): Observable<DeviceProfile> {
     return this.http.get<DeviceProfile>(`/api/deviceProfile/${deviceProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfile/${deviceProfileId}?inlineImages=true, ...`. */
+  
+  /**
+   * export device profile.
+   *
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceProfile> observable or value
+   */
+
 
   public exportDeviceProfile(deviceProfileId: string, config?: RequestConfig): Observable<DeviceProfile> {
     return this.http.get<DeviceProfile>(`/api/deviceProfile/${deviceProfileId}?inlineImages=true`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/resource/lwm2m?sortProperty=${sortOrder.property}&sortOrder=${sortOrder.direction}, ...`. */
+  
+  /**
+   * get lwm2m objects.
+   *
+   * @param sortOrder sort order (SortOrder)
+   * @param objectIds object ids (string[])
+   * @param searchText search text (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<ObjectLwM2M>> observable or value
+   */
+
 
   public getLwm2mObjects(sortOrder: SortOrder, objectIds?: string[], searchText?: string, config?: RequestConfig):
     Observable<Array<ObjectLwM2M>> {
@@ -88,7 +132,15 @@ export class DeviceProfileService {
     return this.http.get<Array<ObjectLwM2M>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/lwm2m/deviceProfile/bootstrap/${isBootstrapServer}, ...`. */
+  
+  /**
+   * get lwm2m bootstrap security info.
+   *
+   * @param isBootstrapServer is bootstrap server (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ServerSecurityConfigInfo> observable or value
+   */
+
 
   public getLwm2mBootstrapSecurityInfo(isBootstrapServer: boolean, config?: RequestConfig): Observable<ServerSecurityConfigInfo> {
     const securityConfig = this.lwm2mBootstrapSecurityInfoInMemoryCache.get(isBootstrapServer);
@@ -104,7 +156,15 @@ export class DeviceProfileService {
     }
   }
 
-  /** Calls ThingsBoard REST `/api/resource/lwm2m/page${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get lwm2m bootstrap security info by security type.
+   *
+   * @param isBootstrapServer is bootstrap server (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<ServerSecurityConfig> observable or value
+   */
+
 
   public getLwm2mBootstrapSecurityInfoBySecurityType(isBootstrapServer: boolean, securityMode = Lwm2mSecurityType.NO_SEC,
                                                      config?: RequestConfig): Observable<ServerSecurityConfig> {
@@ -133,7 +193,15 @@ export class DeviceProfileService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/resource/lwm2m/page${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get lwm2m objects page.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<ObjectLwM2M>> observable or value
+   */
+
 
   public getLwm2mObjectsPage(pageLink: PageLink, config?: RequestConfig): Observable<Array<ObjectLwM2M>> {
     return this.http.get<Array<ObjectLwM2M>>(
@@ -142,7 +210,16 @@ export class DeviceProfileService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfile, ...`. */
+  
+  /**
+   * POST/PUT entity — save device profile and confirm ota change.
+   *
+   * @param originDeviceProfile origin device profile (DeviceProfile)
+   * @param deviceProfile device profile (DeviceProfile)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceProfile> observable or value
+   */
+
 
   public saveDeviceProfileAndConfirmOtaChange(originDeviceProfile: DeviceProfile, deviceProfile: DeviceProfile,
                                               config?: RequestConfig): Observable<DeviceProfile> {
@@ -151,35 +228,82 @@ export class DeviceProfileService {
     );
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfile, ...`. */
+  
+  /**
+   * POST/PUT entity — save device profile.
+   *
+   * @param deviceProfile device profile (DeviceProfile)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceProfile> observable or value
+   */
+
 
   public saveDeviceProfile(deviceProfile: DeviceProfile, config?: RequestConfig): Observable<DeviceProfile> {
     return this.http.post<DeviceProfile>('/api/deviceProfile', deviceProfile, defaultHttpOptionsFromConfig(config));
   }
 
+  /**
+   * DELETE — delete device profile.
+   *
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
+
   public deleteDeviceProfile(deviceProfileId: string, config?: RequestConfig) {
     return this.http.delete(`/api/deviceProfile/${deviceProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfile/${deviceProfileId}/default, ...`. */
+  
+  /**
+   * set default device profile.
+   *
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceProfile> observable or value
+   */
+
 
   public setDefaultDeviceProfile(deviceProfileId: string, config?: RequestConfig): Observable<DeviceProfile> {
     return this.http.post<DeviceProfile>(`/api/deviceProfile/${deviceProfileId}/default`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfileInfo/default, ...`. */
+  
+  /**
+   * get default device profile info.
+   *
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceProfileInfo> observable or value
+   */
+
 
   public getDefaultDeviceProfileInfo(config?: RequestConfig): Observable<DeviceProfileInfo> {
     return this.http.get<DeviceProfileInfo>('/api/deviceProfileInfo/default', defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfileInfo/${deviceProfileId}, ...`. */
+  
+  /**
+   * get device profile info.
+   *
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<DeviceProfileInfo> observable or value
+   */
+
 
   public getDeviceProfileInfo(deviceProfileId: string, config?: RequestConfig): Observable<DeviceProfileInfo> {
     return this.http.get<DeviceProfileInfo>(`/api/deviceProfileInfo/${deviceProfileId}`, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfileInfos${pageLink.toQuery()}, ...`. */
+  
+  /**
+   * get device profile infos.
+   *
+   * @param pageLink pagination and sort parameters
+   * @param transportType transport type (DeviceTransportType)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<PageData<DeviceProfileInfo>> observable or value
+   */
+
 
   public getDeviceProfileInfos(pageLink: PageLink, transportType?: DeviceTransportType,
                                config?: RequestConfig): Observable<PageData<DeviceProfileInfo>> {
@@ -190,7 +314,15 @@ export class DeviceProfileService {
     return this.http.get<PageData<DeviceProfileInfo>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfile/devices/keys/attributes, ...`. */
+  
+  /**
+   * get device profile devices attributes keys.
+   *
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<string>> observable or value
+   */
+
 
   public getDeviceProfileDevicesAttributesKeys(deviceProfileId?: string, config?: RequestConfig): Observable<Array<string>> {
     let url = `/api/deviceProfile/devices/keys/attributes`;
@@ -200,7 +332,15 @@ export class DeviceProfileService {
     return this.http.get<Array<string>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfile/devices/keys/timeseries, ...`. */
+  
+  /**
+   * get device profile devices timeseries keys.
+   *
+   * @param deviceProfileId device profile id (string)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<string>> observable or value
+   */
+
 
   public getDeviceProfileDevicesTimeseriesKeys(deviceProfileId?: string, config?: RequestConfig): Observable<Array<string>> {
     let url = `/api/deviceProfile/devices/keys/timeseries`;
@@ -210,7 +350,15 @@ export class DeviceProfileService {
     return this.http.get<Array<string>>(url, defaultHttpOptionsFromConfig(config));
   }
 
-  /** Calls ThingsBoard REST `/api/deviceProfile/names`. */
+  
+  /**
+   * get device profile names.
+   *
+   * @param activeOnly active only (boolean)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns Observable<Array<EntityInfoData>> observable or value
+   */
+
 
   public getDeviceProfileNames(activeOnly: boolean = false, config?: RequestConfig): Observable<Array<EntityInfoData>> {
     let url = '/api/deviceProfile/names';

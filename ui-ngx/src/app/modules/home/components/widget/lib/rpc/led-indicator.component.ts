@@ -45,14 +45,17 @@ interface LedIndicatorSettings {
   persistentPollingInterval: number;
 }
 
+
+/**
+ * Angular component: led indicator (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-led-indicator`.
+ */
 @Component({
     selector: 'tb-led-indicator',
     templateUrl: './led-indicator.component.html',
     styleUrls: ['./led-indicator.component.scss'],
-    standalone: false
-/**
- * Angular component: led indicator UI.
- */
+standalone: false
 })
 export class LedIndicatorComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -119,6 +122,11 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.led = $(this.ledRef.nativeElement);
     this.ledContainer = $(this.ledContainerRef.nativeElement);
@@ -135,6 +143,11 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
     this.init();
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy(): void {
     this.destroyed = true;
     if (this.checkStatusTimeoutHandle) {
@@ -148,6 +161,11 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
     }
     this.ctx.controlApi.completedCommand();
   }
+
+  /**
+   * init.
+   *
+   */
 
   private init() {
     const settings: LedIndicatorSettings = this.ctx.settings;
@@ -214,6 +232,11 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
     }
   }
 
+  /**
+   * resize.
+   *
+   */
+
   private resize() {
     const width = this.ledContainer.width();
     const height = this.ledContainer.height();
@@ -227,6 +250,15 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
     this.setFontSize(this.ledError, this.error, this.ledErrorContainer.height(), this.ledErrorContainer.width());
   }
 
+  /**
+   * set font size.
+   *
+   * @param element element (JQuery<HTMLElement>)
+   * @param text text (string)
+   * @param fontSize font size (number)
+   * @param maxWidth max width (number)
+   */
+
   private setFontSize(element: JQuery<HTMLElement>, text: string, fontSize: number, maxWidth: number) {
     let textWidth = this.measureTextWidth(text, fontSize);
     while (textWidth > maxWidth) {
@@ -236,11 +268,25 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
     element.css({fontSize: fontSize + 'px', lineHeight: fontSize + 'px'});
   }
 
+  /**
+   * measure text width.
+   *
+   * @param text text (string)
+   * @param fontSize font size (number)
+   * @returns number observable or value
+   */
+
   private measureTextWidth(text: string, fontSize: number): number {
     this.textMeasure.css({fontSize: fontSize + 'px', lineHeight: fontSize + 'px'});
     this.textMeasure.text(text);
     return this.textMeasure.width();
   }
+
+  /**
+   * Event handler for error.
+   *
+   * @param error error (string)
+   */
 
   private onError(error: string) {
     this.error = error;
@@ -248,12 +294,24 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
     this.ctx.detectChanges();
   }
 
+  /**
+   * set value.
+   *
+   * @param value value (boolean)
+   * @param forceUpdate force update (boolean)
+   */
+
   private setValue(value: boolean, forceUpdate?: boolean) {
     if (this.value !== value || forceUpdate) {
       this.value = value;
       this.updateColor();
     }
   }
+
+  /**
+   * update color.
+   *
+   */
 
   private updateColor() {
     const color = this.value ? this.ledColor : this.disabledColor;
@@ -267,6 +325,11 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
       this.led.addClass( 'disabled' );
     }
   }
+
+  /**
+   * rpc check status.
+   *
+   */
 
   private rpcCheckStatus() {
     if (this.destroyed) {
@@ -303,6 +366,11 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
     );
   }
 
+  /**
+   * subscribe for value.
+   *
+   */
+
   private subscribeForValue() {
     const subscriptionsInfo: SubscriptionInfo[] = [{
       type: DatasourceType.entity,
@@ -327,6 +395,13 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
       }
     );
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   * @param detectChanges detect changes (boolean)
+   */
 
   private onDataUpdated(subscription: IWidgetSubscription, detectChanges: boolean) {
     let value = false;
@@ -354,6 +429,13 @@ export class LedIndicatorComponent extends PageComponent implements OnInit, OnDe
       this.ctx.detectChanges();
     }
   }
+
+  /**
+   * Event handler for data update error.
+   *
+   * @param subscription subscription (IWidgetSubscription)
+   * @param e e (any)
+   */
 
   private onDataUpdateError(subscription: IWidgetSubscription, e: any) {
     const exceptionData = this.utils.parseException(e);

@@ -46,8 +46,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 /**
- * Rule engine component: alarm state.
+ * Alarm state (device profile state nodes).
  */
+
 
 @Data
 @Slf4j
@@ -73,6 +74,17 @@ class AlarmState {
         this.dynamicPredicateValueCtx = dynamicPredicateValueCtx;
         this.updateState(alarmDefinition, alarmState);
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param data data ({@link DataSnapshot})
+     * @param update update ({@link SnapshotUpdate})
+     * @return the boolean result
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     public boolean process(TbContext ctx, TbMsg msg, DataSnapshot data, SnapshotUpdate update) throws ExecutionException, InterruptedException {
         initCurrentAlarm(ctx);
@@ -85,6 +97,15 @@ class AlarmState {
             throw new RuntimeException(String.format(ERROR_MSG, originator.getId().toString(), e.getMessage()));
         }
     }
+    /**
+     * Processes the requested data.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param ts ts
+     * @return the boolean result
+     * @throws ExecutionException if execution exception is thrown during processing
+     * @throws InterruptedException if interrupted exception is thrown during processing
+     */
 
     public boolean process(TbContext ctx, long ts) throws ExecutionException, InterruptedException {
         initCurrentAlarm(ctx);
@@ -94,6 +115,17 @@ class AlarmState {
             throw new RuntimeException(String.format(ERROR_MSG, originator.getId().toString(), e.getMessage()));
         }
     }
+    /**
+     * Creates or clear alarms.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param data data ({@link T})
+     * @param update update ({@link SnapshotUpdate})
+     * @param evalFunction eval function ({@link BiFunction})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public <T> boolean createOrClearAlarms(TbContext ctx, TbMsg msg, T data, SnapshotUpdate update, BiFunction<AlarmRuleState, T, AlarmEvalResult> evalFunction) {
         boolean stateUpdate = false;
@@ -143,6 +175,14 @@ class AlarmState {
         }
         return stateUpdate;
     }
+    /**
+     * Clear alarm state.
+     *
+     * @param stateUpdate state update
+     * @param state state ({@link AlarmRuleState})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean clearAlarmState(boolean stateUpdate, AlarmRuleState state) {
         if (state != null) {
@@ -151,6 +191,14 @@ class AlarmState {
         }
         return stateUpdate;
     }
+    /**
+     * Validates update.
+     *
+     * @param update update ({@link SnapshotUpdate})
+     * @param state state ({@link AlarmRuleState})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean validateUpdate(SnapshotUpdate update, AlarmRuleState state) {
         if (update != null) {
@@ -163,6 +211,12 @@ class AlarmState {
         }
         return true;
     }
+    /**
+     * Init current alarm.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void initCurrentAlarm(TbContext ctx) {
         if (!initialFetchDone) {
@@ -173,6 +227,15 @@ class AlarmState {
             initialFetchDone = true;
         }
     }
+    /**
+     * Pushes msg.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param msg incoming or outgoing rule engine message
+     * @param alarmResult alarm result ({@link TbAlarmResult})
+     * @param ruleState rule state ({@link AlarmRuleState})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void pushMsg(TbContext ctx, TbMsg msg, TbAlarmResult alarmResult, AlarmRuleState ruleState) {
         JsonNode jsonNodes = JacksonUtil.valueToTree(alarmResult.getAlarm());
@@ -198,6 +261,13 @@ class AlarmState {
                 originator, msg != null ? msg.getCustomerId() : null, metaData, data);
         ctx.enqueueForTellNext(newMsg, relationType);
     }
+    /**
+     * Set alarm condition metadata.
+     *
+     * @param ruleState rule state ({@link AlarmRuleState})
+     * @param metaData meta data ({@link TbMsgMetaData})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void setAlarmConditionMetadata(AlarmRuleState ruleState, TbMsgMetaData metaData) {
         if (ruleState.getSpec().getType() == AlarmConditionSpecType.REPEATING) {
@@ -207,6 +277,13 @@ class AlarmState {
             metaData.putValue(DataConstants.ALARM_CONDITION_DURATION, String.valueOf(ruleState.getState().getDuration()));
         }
     }
+    /**
+     * Updates state.
+     *
+     * @param alarm alarm ({@link DeviceProfileAlarm})
+     * @param alarmState alarm state ({@link PersistedAlarmState})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void updateState(DeviceProfileAlarm alarm, PersistedAlarmState alarmState) {
         this.alarmDefinition = alarm;
@@ -325,6 +402,14 @@ class AlarmState {
         }
         return String.valueOf(result);
     }
+    /**
+     * Processes alarm clear.
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param alarmNf alarm nf ({@link Alarm})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public boolean processAlarmClear(TbContext ctx, Alarm alarmNf) {
         boolean updated = false;
@@ -336,6 +421,12 @@ class AlarmState {
         }
         return updated;
     }
+    /**
+     * Processes ack alarm.
+     *
+     * @param alarm alarm ({@link Alarm})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void processAckAlarm(Alarm alarm) {
         if (currentAlarm != null && currentAlarm.getId().equals(alarm.getId())) {

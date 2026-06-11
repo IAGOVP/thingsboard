@@ -21,7 +21,9 @@ import { Observable } from 'rxjs';
 import { publishReplay, refCount } from 'rxjs/operators';
 
 /**
- * Angular HTTP service: ui settings REST wrappers (`@core/http`).
+ * Angular injectable service: ui settings (HTTP service layer).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,13 @@ export class UiSettingsService {
     private http: HttpClient
   ) { }
 
-  /** Calls ThingsBoard REST `/api/uiSettings/helpBaseUrl`. */
+  
+  /**
+   * get help base url.
+   *
+   * @returns Observable<string> observable or value
+   */
+
 
   public getHelpBaseUrl(): Observable<string> {
     if (!this.helpBaseUrlObservable) {

@@ -46,11 +46,11 @@ export const signalStrengthLayoutImages = new Map<SignalStrengthLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for signal strength widget settings.
-
+ * Signal strength widget settings (ThingsBoard web UI).
  */
+
 
 export interface SignalStrengthWidgetSettings {
   layout: SignalStrengthLayout;

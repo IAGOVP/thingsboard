@@ -30,14 +30,17 @@ export interface NotificationRequestErrorDialogData {
   notificationRequest: NotificationRequest;
 }
 
+
+/**
+ * Angular component: sent error dialog (home/notification pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-notification-send-error-dialog`.
+ */
 @Component({
     selector: 'tb-notification-send-error-dialog',
     templateUrl: './sent-error-dialog.component.html',
     styleUrls: ['sent-error-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: sent error dialog UI.
- */
+standalone: false
 })
 export class SentErrorDialogComponent extends DialogComponent<SentErrorDialogComponent, void> {
 
@@ -55,6 +58,11 @@ export class SentErrorDialogComponent extends DialogComponent<SentErrorDialogCom
     this.errorStats = data.notificationRequest.stats.errors;
     this.errorStatEntries = (Object.entries(this.errorStats) as Array<[NotificationDeliveryMethod, { [k: string]: string }]>).map(([key, value]) => ({ key, value }));
   }
+
+  /**
+   * cancel.
+   *
+   */
 
   cancel(): void {
     this.dialogRef.close(null);

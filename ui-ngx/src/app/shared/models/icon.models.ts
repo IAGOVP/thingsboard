@@ -107,11 +107,11 @@ export const isSvgIcon = (icon: string): boolean => {
   return svgIconNamespaces.includes(namespace) || svgIconNames.includes(iconName);
 };
 
+
 /**
-
- * TypeScript models and enums for material icon.
-
+ * TypeScript interfaces, types, and enums for material icon (shared TypeScript models).
  */
+
 
 export interface MaterialIcon {
   name: string;

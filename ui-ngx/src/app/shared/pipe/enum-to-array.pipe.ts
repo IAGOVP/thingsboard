@@ -16,14 +16,24 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-    name: 'enumToArray',
-    standalone: false
+
 /**
  * Angular pipe: enum to array.
  */
+@Pipe({
+    name: 'enumToArray',
+/**
+ * Angular pipe: enum to array (ThingsBoard web UI).
+ */
+    standalone: false
 })
 export class EnumToArrayPipe implements PipeTransform {
+  /**
+   * transform.
+   *
+   * @param data dialog or route input data
+   * @returns string[] observable or value
+   */
   transform(data: object): string[] {
     const keys = Object.keys(data);
     return keys.slice(keys.length / 2);

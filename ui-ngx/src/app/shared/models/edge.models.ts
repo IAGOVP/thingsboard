@@ -24,11 +24,11 @@ import { BaseEventBody } from '@shared/models/event.models';
 import { EventId } from '@shared/models/id/event-id';
 import { HasTenantId, HasVersion } from '@shared/models/entity.models';
 
+
 /**
-
- * TypeScript models and enums for edge.
-
+ * TypeScript interfaces, types, and enums for edge (shared TypeScript models).
  */
+
 
 export interface Edge extends BaseData<EdgeId>, HasTenantId, HasVersion {
   tenantId?: TenantId;

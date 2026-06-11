@@ -99,11 +99,11 @@ const markerIconContainerMap = new Map<MarkerIconContainer, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for marker icon container definition.
-
+ * TypeScript interfaces, types, and enums for marker icon container definition (shared TypeScript models).
  */
+
 
 interface MarkerIconContainerDefinition {
   iconSize: number;

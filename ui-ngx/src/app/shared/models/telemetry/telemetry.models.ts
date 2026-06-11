@@ -169,11 +169,11 @@ export interface TelemetryPluginCmd extends WebsocketCmd {
   keys: string;
 }
 
+
 /**
-
- * TypeScript models and enums for subscription cmd.
-
+ * TypeScript interfaces, types, and enums for subscription cmd (shared TypeScript models).
  */
+
 
 export abstract class SubscriptionCmd implements TelemetryPluginCmd {
   cmdId: number;

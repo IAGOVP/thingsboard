@@ -33,6 +33,12 @@ import { DataType, DataTypeTranslationMap } from '@shared/models/constants';
 import { isUndefinedOrNull } from '@core/utils';
 import { takeUntil } from 'rxjs/operators';
 
+
+/**
+ * Angular component: snmp device profile mapping (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-snmp-device-profile-mapping`.
+ */
 @Component({
     selector: 'tb-snmp-device-profile-mapping',
     templateUrl: './snmp-device-profile-mapping.component.html',
@@ -49,10 +55,7 @@ import { takeUntil } from 'rxjs/operators';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: snmp device profile mapping UI.
- */
+standalone: false
 })
 export class SnmpDeviceProfileMappingComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
@@ -71,6 +74,11 @@ export class SnmpDeviceProfileMappingComponent implements OnInit, OnDestroy, Con
 
   constructor(private fb: UntypedFormBuilder) { }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.mappingsConfigForm = this.fb.group({
       mappings: this.fb.array([])
@@ -80,17 +88,40 @@ export class SnmpDeviceProfileMappingComponent implements OnInit, OnDestroy, Con
     ).subscribe(() => this.updateModel());
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any) {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any) {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
@@ -101,11 +132,23 @@ export class SnmpDeviceProfileMappingComponent implements OnInit, OnDestroy, Con
     }
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.mappingsConfigForm.valid && this.mappingsConfigForm.value.mappings.length ? null : {
       mapping: false
     };
   }
+
+  /**
+   * write value.
+   *
+   * @param mappings mappings (SnmpMapping[])
+   */
 
   writeValue(mappings: SnmpMapping[]) {
     if (mappings?.length === this.mappingsConfigFormArray.length) {
@@ -136,6 +179,11 @@ export class SnmpDeviceProfileMappingComponent implements OnInit, OnDestroy, Con
     return this.mappingsConfigForm.get('mappings') as UntypedFormArray;
   }
 
+  /**
+   * POST/PUT entity — add mapping config.
+   *
+   */
+
   public addMappingConfig() {
     this.mappingsConfigFormArray.push(this.createdFormGroup());
     this.mappingsConfigForm.updateValueAndValidity();
@@ -144,9 +192,22 @@ export class SnmpDeviceProfileMappingComponent implements OnInit, OnDestroy, Con
     }
   }
 
+  /**
+   * DELETE — remove mapping config.
+   *
+   * @param index index (number)
+   */
+
   public removeMappingConfig(index: number) {
     this.mappingsConfigFormArray.removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — created form group.
+   *
+   * @param value value (SnmpMapping)
+   * @returns UntypedFormGroup observable or value
+   */
 
   private createdFormGroup(value?: SnmpMapping): UntypedFormGroup {
     if (isUndefinedOrNull(value)) {
@@ -162,6 +223,11 @@ export class SnmpDeviceProfileMappingComponent implements OnInit, OnDestroy, Con
       oid: [value.oid, [Validators.required, Validators.pattern(this.oidPattern)]]
     });
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: SnmpMapping[] = this.mappingsConfigForm.get('mappings').value;

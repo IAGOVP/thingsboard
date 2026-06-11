@@ -20,14 +20,17 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: gateway service rpcsettings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-gateway-service-rpc-settings`.
+ */
 @Component({
     selector: 'tb-gateway-service-rpc-settings',
     templateUrl: './gateway-service-rpc-settings.component.html',
     styleUrls: ['../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: gateway service rpcsettings UI.
- */
+standalone: false
 })
 export class GatewayServiceRPCSettingsComponent extends WidgetSettingsComponent {
 
@@ -38,15 +41,33 @@ export class GatewayServiceRPCSettingsComponent extends WidgetSettingsComponent 
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns FormGroup observable or value
+   */
+
   protected settingsForm(): FormGroup {
     return this.gatewayServiceRPCSettingForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
       isConnector: false,
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.gatewayServiceRPCSettingForm = this.fb.group({

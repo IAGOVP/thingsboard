@@ -30,8 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
 /**
- * Netty handler sending MQTT PINGREQ on idle and handling PINGRESP.
+ * Netty handler that sends MQTT PINGREQ on channel idle and processes PINGRESP.
  */
+
 
 @Slf4j
 final class MqttPingHandler extends ChannelInboundHandlerAdapter {
@@ -43,6 +44,14 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
     MqttPingHandler(int keepaliveSeconds) {
         this.keepaliveSeconds = keepaliveSeconds;
     }
+    /**
+     * Channel read.
+     *
+     * @param ctx Netty channel handler context
+     * @param msg decoded MQTT wire message
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -58,6 +67,14 @@ final class MqttPingHandler extends ChannelInboundHandlerAdapter {
             ctx.fireChannelRead(ReferenceCountUtil.retain(msg));
         }
     }
+    /**
+     * User event triggered.
+     *
+     * @param ctx Netty channel handler context
+     * @param evt evt ({@link Object})
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {

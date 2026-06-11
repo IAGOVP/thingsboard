@@ -63,11 +63,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Netty-based MQTT 3.x client with automatic reconnect, pending QoS1/2 flows,
- * and topic subscription routing to {@link MqttHandler} callbacks.
+ * Netty-based MQTT 3.x client implementation.
  *
- * <p>Pipeline: {@code MqttDecoder} → {@link MqttChannelHandler} → {@link MqttPingHandler} → {@code MqttEncoder}.
+ * <p>Supports automatic reconnect, pending QoS 1/2 flows, subscription routing to {@link MqttHandler}, and retransmission via {@link RetransmissionHandler}. Pipeline: {@code MqttDecoder} → {@link MqttChannelHandler} → {@link MqttPingHandler} → {@code MqttEncoder}.
  */
+
 @SuppressWarnings({"WeakerAccess", "unused"})
 @Slf4j
 final class MqttClientImpl implements MqttClient {
@@ -226,11 +226,23 @@ final class MqttClientImpl implements MqttClient {
             eventLoop.schedule((Runnable) () -> connect(host, port, reconnect), nextReconnectDelay, TimeUnit.SECONDS);
         }
     }
+    /**
+     * Returns true when the Netty channel is active and CONNACK succeeded.
+     *
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean isConnected() {
         return !disconnected && channel != null && channel.isActive();
     }
+    /**
+     * Reconnects to the last host/port used by {@link #connect(String, int)}.
+     *
+     * @return Netty future completing with {@link Promise}
+     * @throws IllegalStateException when no previous {@link #connect(String, int)} was attempted
+     */
 
     @Override
     public Promise<MqttConnectResult> reconnect() {
@@ -241,23 +253,28 @@ final class MqttClientImpl implements MqttClient {
         return connect(host, port);
     }
 
+    
     /**
-     * Retrieve the netty {@link EventLoopGroup} we are using
+     * Returns the Netty {@link io.netty.channel.EventLoopGroup} used for I/O.
      *
-     * @return The netty {@link EventLoopGroup} we use for the connection
+     * @return {@link EventLoopGroup}
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Override
     public EventLoopGroup getEventLoop() {
         return eventLoop;
     }
 
+    
     /**
-     * By default we use the netty {@link NioEventLoopGroup}.
-     * If you change the EventLoopGroup to another type, make sure to change the {@link Channel} class using {@link MqttClientConfig#setChannelClass(Class)}
-     * If you want to force the MqttClient to use another {@link EventLoopGroup}, call this function before calling {@link #connect(String, int)}
+     * Overrides the default {@link io.netty.channel.nio.NioEventLoopGroup}.
      *
-     * @param eventLoop The new eventloop to use
+     * @param eventLoop Netty event loop group for client I/O
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
      */
+
     @Override
     public void setEventLoop(EventLoopGroup eventLoop) {
         this.eventLoop = eventLoop;
@@ -463,6 +480,12 @@ final class MqttClientImpl implements MqttClient {
         }
         return future;
     }
+    /**
+     * Sends MQTT DISCONNECT and closes the Netty channel.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public void disconnect() {
@@ -489,6 +512,12 @@ final class MqttClientImpl implements MqttClient {
 
 
     ///////////////////////////////////////////// PRIVATE API /////////////////////////////////////////////
+    /**
+     * Called after a successful automatic reconnect.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public void onSuccessfulReconnect() {
         if (callback != null) {
@@ -610,6 +639,12 @@ final class MqttClientImpl implements MqttClient {
             promise.setSuccess(null);
         }
     }
+
+    /**
+
+     * Mqtt channel initializer (netty-mqtt client library).
+
+     */
 
     private class MqttChannelInitializer extends ChannelInitializer<SocketChannel> {
 

@@ -36,6 +36,12 @@ import {
 } from '@shared/models/widget/maps/map.models';
 import { MapSettingsContext } from '@home/components/widget/lib/settings/common/map/map-settings.component.models';
 
+
+/**
+ * Angular component: map data sources (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-map-data-sources`.
+ */
 @Component({
     selector: 'tb-map-data-sources',
     templateUrl: './map-data-sources.component.html',
@@ -53,10 +59,7 @@ import { MapSettingsContext } from '@home/components/widget/lib/settings/common/
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: map data sources UI.
- */
+standalone: false
 })
 export class MapDataSourcesComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -73,6 +76,11 @@ export class MapDataSourcesComponent implements ControlValueAccessor, OnInit, Va
   constructor(private fb: UntypedFormBuilder,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     this.dataSourcesFormGroup = this.fb.group({
@@ -91,12 +99,30 @@ export class MapDataSourcesComponent implements ControlValueAccessor, OnInit, Va
     );
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -107,10 +133,22 @@ export class MapDataSourcesComponent implements ControlValueAccessor, OnInit, Va
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (MapDataSourceSettings[] | undefined)
+   */
+
   writeValue(value: MapDataSourceSettings[] | undefined): void {
     const dataSources: MapDataSourceSettings[] = value || [];
     this.dataSourcesFormGroup.setControl('dataSources', this.prepareDataSourcesFormArray(dataSources), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     const valid = this.dataSourcesFormGroup.valid;
@@ -121,17 +159,42 @@ export class MapDataSourcesComponent implements ControlValueAccessor, OnInit, Va
     };
   }
 
+  /**
+   * data sources form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   dataSourcesFormArray(): UntypedFormArray {
     return this.dataSourcesFormGroup.get('dataSources') as UntypedFormArray;
   }
+
+  /**
+   * track by data source.
+   *
+   * @param index index (number)
+   * @param dataSourceControl data source control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByDataSource(index: number, dataSourceControl: AbstractControl): any {
     return dataSourceControl;
   }
 
+  /**
+   * DELETE — remove data source.
+   *
+   * @param index index (number)
+   */
+
   removeDataSource(index: number) {
     (this.dataSourcesFormGroup.get('dataSources') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add data source.
+   *
+   */
 
   addDataSource() {
     const dataSource = mergeDeep<MapDataSourceSettings>({} as MapDataSourceSettings,
@@ -140,6 +203,13 @@ export class MapDataSourcesComponent implements ControlValueAccessor, OnInit, Va
     const dataSourceControl = this.fb.control(dataSource, [mapDataSourceValidator]);
     dataSourcesArray.push(dataSourceControl);
   }
+
+  /**
+   * prepare data sources form array.
+   *
+   * @param dataSources data sources (MapDataSourceSettings[])
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareDataSourcesFormArray(dataSources: MapDataSourceSettings[]): UntypedFormArray {
     const dataSourcesControls: Array<AbstractControl> = [];

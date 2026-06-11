@@ -31,14 +31,17 @@ export interface NotificationTypeFilterPanelData {
   notificationTypesUpdated: (notificationTypes: Array<NotificationType>) => void;
 }
 
+
+/**
+ * Angular component: notification type filter panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-notification-type-filter-panel`.
+ */
 @Component({
     selector: 'tb-notification-type-filter-panel',
     templateUrl: './notification-type-filter-panel.component.html',
     styleUrls: ['notification-type-filter-panel.component.scss'],
-    standalone: false
-/**
- * Angular component: notification type filter panel UI.
- */
+standalone: false
 })
 export class NotificationTypeFilterPanelComponent implements OnInit{
 
@@ -66,6 +69,11 @@ export class NotificationTypeFilterPanelComponent implements OnInit{
     this.dirty = true;
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.filteredNotificationTypesList = this.searchControlName.valueChanges.pipe(
       debounceTime(150),
@@ -77,6 +85,11 @@ export class NotificationTypeFilterPanelComponent implements OnInit{
     );
   }
 
+  /**
+   * update.
+   *
+   */
+
   public update() {
     this.data.notificationTypesUpdated(this.selectedNotificationTypes);
     if (this.overlayRef) {
@@ -84,16 +97,32 @@ export class NotificationTypeFilterPanelComponent implements OnInit{
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     if (this.overlayRef) {
       this.overlayRef.dispose();
     }
   }
 
+  /**
+   * reset.
+   *
+   */
+
   public reset() {
     this.selectedNotificationTypes.length = 0;
     this.searchControlName.updateValueAndValidity({emitEvent: true});
   }
+
+  /**
+   * DELETE — remove.
+   *
+   * @param type type (NotificationType)
+   */
 
   remove(type: NotificationType) {
     const index = this.selectedNotificationTypes.indexOf(type);
@@ -103,6 +132,11 @@ export class NotificationTypeFilterPanelComponent implements OnInit{
     }
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     if (this.dirty) {
       this.searchControlName.updateValueAndValidity({emitEvent: true});
@@ -110,9 +144,21 @@ export class NotificationTypeFilterPanelComponent implements OnInit{
     }
   }
 
+  /**
+   * POST/PUT entity — add.
+   *
+   * @param type type (NotificationType)
+   */
+
   private add(type: NotificationType): void {
     this.selectedNotificationTypes.push(type);
   }
+
+  /**
+   * chip add.
+   *
+   * @param event DOM or Angular event object
+   */
 
   chipAdd(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
@@ -122,12 +168,24 @@ export class NotificationTypeFilterPanelComponent implements OnInit{
     }
   }
 
+  /**
+   * selected.
+   *
+   * @param event DOM or Angular event object
+   */
+
   selected(event: MatAutocompleteSelectedEvent): void {
     if (this.notificationType[event.option.value]) {
       this.add(this.notificationType[event.option.value]);
     }
     this.clear('');
   }
+
+  /**
+   * clear.
+   *
+   * @param value value (string)
+   */
 
   clear(value: string = '') {
     this.notificationTypeInput.nativeElement.value = value;
@@ -137,6 +195,13 @@ export class NotificationTypeFilterPanelComponent implements OnInit{
       this.notificationTypeInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * display type fn.
+   *
+   * @param type type (string)
+   * @returns string | undefined observable or value
+   */
 
   displayTypeFn(type?: string): string | undefined {
     return type ? type : undefined;

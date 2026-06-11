@@ -31,6 +31,12 @@ import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/k
 import { Datasource } from '@shared/models/widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: advanced range (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-advanced-range`.
+ */
 @Component({
     selector: 'tb-advanced-range',
     templateUrl: './advanced-range.component.html',
@@ -42,10 +48,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: advanced range UI.
- */
+standalone: false
 })
 export class AdvancedRangeComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -76,6 +79,11 @@ export class AdvancedRangeComponent extends PageComponent implements OnInit, Con
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.advancedRangeLevelFormGroup = this.fb.group({
       from: [null, []],
@@ -89,12 +97,30 @@ export class AdvancedRangeComponent extends PageComponent implements OnInit, Con
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -105,10 +131,21 @@ export class AdvancedRangeComponent extends PageComponent implements OnInit, Con
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (AdvancedColorRange)
+   */
+
   writeValue(value: AdvancedColorRange): void {
     this.modelValue = value;
     this.advancedRangeLevelFormGroup.patchValue(value, {emitEvent: false});
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.advancedRangeLevelFormGroup.value;

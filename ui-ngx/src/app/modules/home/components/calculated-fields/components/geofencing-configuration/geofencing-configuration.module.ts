@@ -34,6 +34,9 @@ import {
 /**
  * Angular NgModule: geofencing configuration feature area.
  */
+/**
+ * Angular NgModule bundling geofencing configuration (ThingsBoard web UI).
+ */
 @NgModule({
   imports: [
     CommonModule,
@@ -49,7 +52,7 @@ import {
     CalculatedFieldGeofencingZoneGroupsTableComponent,
     CalculatedFieldGeofencingZoneGroupsPanelComponent,
     GeofencingConfigurationComponent
-  ]})
+]})
 export class GeofencingConfigurationModule {
 
 }

@@ -90,6 +90,12 @@ export function flotDataKeyDefaultSettings(chartType: ChartType): TbFlotKeySetti
   return settings;
 }
 
+
+/**
+ * Angular component: flot key settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-flot-key-settings`.
+ */
 @Component({
     selector: 'tb-flot-key-settings',
     templateUrl: './flot-key-settings.component.html',
@@ -106,10 +112,7 @@ export function flotDataKeyDefaultSettings(chartType: ChartType): TbFlotKeySetti
             multi: true,
         }
     ],
-    standalone: false
-/**
- * Angular component: flot key settings UI.
- */
+standalone: false
 })
 export class FlotKeySettingsComponent extends PageComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -137,6 +140,11 @@ export class FlotKeySettingsComponent extends PageComponent implements OnInit, C
               private destroyRef: DestroyRef) {
     super(store);
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.flotKeySettingsFormGroup = this.fb.group({
@@ -228,12 +236,30 @@ export class FlotKeySettingsComponent extends PageComponent implements OnInit, C
     this.updateValidators(false);
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -244,6 +270,12 @@ export class FlotKeySettingsComponent extends PageComponent implements OnInit, C
       this.updateValidators(false);
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (TbFlotKeySettings)
+   */
 
   writeValue(value: TbFlotKeySettings): void {
     const thresholds = value?.thresholds;
@@ -261,6 +293,12 @@ export class FlotKeySettingsComponent extends PageComponent implements OnInit, C
     this.updateValidators(false);
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   validate(c: UntypedFormControl) {
     return (this.flotKeySettingsFormGroup.valid) ? null : {
       flotKeySettings: {
@@ -269,11 +307,22 @@ export class FlotKeySettingsComponent extends PageComponent implements OnInit, C
     };
   }
 
+  /**
+   * update model.
+   *
+   */
+
   private updateModel() {
     const value: TbFlotKeySettings = this.flotKeySettingsFormGroup.value;
     this.modelValue = value;
     this.propagateChange(this.modelValue);
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   private updateValidators(emitEvent?: boolean): void {
     const showLines: boolean = this.flotKeySettingsFormGroup.get('showLines').value;
@@ -326,17 +375,42 @@ export class FlotKeySettingsComponent extends PageComponent implements OnInit, C
     this.flotKeySettingsFormGroup.get('comparisonSettings.color').updateValueAndValidity({emitEvent: false});
   }
 
+  /**
+   * thresholds form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   thresholdsFormArray(): UntypedFormArray {
     return this.flotKeySettingsFormGroup.get('thresholds') as UntypedFormArray;
   }
+
+  /**
+   * track by threshold.
+   *
+   * @param index index (number)
+   * @param thresholdControl threshold control (AbstractControl)
+   * @returns any observable or value
+   */
 
   public trackByThreshold(index: number, thresholdControl: AbstractControl): any {
     return thresholdControl;
   }
 
+  /**
+   * DELETE — remove threshold.
+   *
+   * @param index index (number)
+   */
+
   public removeThreshold(index: number) {
     (this.flotKeySettingsFormGroup.get('thresholds') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add threshold.
+   *
+   */
 
   public addThreshold() {
     const threshold: TbFlotKeyThreshold = {
@@ -353,6 +427,12 @@ export class FlotKeySettingsComponent extends PageComponent implements OnInit, C
     thresholdsArray.push(thresholdControl);
     this.flotKeySettingsFormGroup.updateValueAndValidity();
   }
+
+  /**
+   * threshold drop.
+   *
+   * @param event DOM or Angular event object
+   */
 
   thresholdDrop(event: CdkDragDrop<string[]>) {
     const thresholdsArray = this.flotKeySettingsFormGroup.get('thresholds') as UntypedFormArray;

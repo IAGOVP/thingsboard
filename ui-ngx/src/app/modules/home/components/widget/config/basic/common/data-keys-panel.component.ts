@@ -49,6 +49,12 @@ import { TimeSeriesChartYAxisId } from '@home/components/widget/lib/chart/time-s
 import { FormProperty } from '@shared/models/dynamic-form.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: data keys panel (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-data-keys-panel`.
+ */
 @Component({
     selector: 'tb-data-keys-panel',
     templateUrl: './data-keys-panel.component.html',
@@ -66,10 +72,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: data keys panel UI.
- */
+standalone: false
 })
 export class DataKeysPanelComponent implements ControlValueAccessor, OnInit, OnChanges, Validator {
 
@@ -191,6 +194,11 @@ export class DataKeysPanelComponent implements ControlValueAccessor, OnInit, OnC
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.keysListFormGroup = this.fb.group({
       keys: [this.fb.array([]), []]
@@ -220,6 +228,11 @@ export class DataKeysPanelComponent implements ControlValueAccessor, OnInit, OnC
     }
   }
 
+  /**
+   * update params.
+   *
+   */
+
   private updateParams() {
     if (this.datasourceType === DatasourceType.function) {
       this.dataKeyType = DataKeyType.function;
@@ -232,12 +245,30 @@ export class DataKeysPanelComponent implements ControlValueAccessor, OnInit, OnC
     }
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -248,9 +279,21 @@ export class DataKeysPanelComponent implements ControlValueAccessor, OnInit, OnC
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (DataKey[] | undefined)
+   */
+
   writeValue(value: DataKey[] | undefined): void {
     this.keysListFormGroup.setControl('keys', this.prepareKeysFormArray(value), {emitEvent: false});
   }
+
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
 
   public validate(c: UntypedFormControl) {
     this.errorText = '';
@@ -266,6 +309,12 @@ export class DataKeysPanelComponent implements ControlValueAccessor, OnInit, OnC
     };
   }
 
+  /**
+   * key drop.
+   *
+   * @param event DOM or Angular event object
+   */
+
   keyDrop(event: CdkDragDrop<string[]>) {
     const keysArray = this.keysListFormGroup.get('keys') as UntypedFormArray;
     const key = keysArray.at(event.previousIndex);
@@ -273,17 +322,42 @@ export class DataKeysPanelComponent implements ControlValueAccessor, OnInit, OnC
     keysArray.insert(event.currentIndex, key);
   }
 
+  /**
+   * keys form array.
+   *
+   * @returns UntypedFormArray observable or value
+   */
+
   keysFormArray(): UntypedFormArray {
     return this.keysListFormGroup.get('keys') as UntypedFormArray;
   }
+
+  /**
+   * track by key.
+   *
+   * @param index index (number)
+   * @param keyControl key control (AbstractControl)
+   * @returns any observable or value
+   */
 
   trackByKey(index: number, keyControl: AbstractControl): any {
     return keyControl;
   }
 
+  /**
+   * DELETE — remove key.
+   *
+   * @param index index (number)
+   */
+
   removeKey(index: number) {
     (this.keysListFormGroup.get('keys') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add key.
+   *
+   */
 
   addKey() {
     const dataKey = this.callbacks.generateDataKey('', null, this.dataKeySettingsForm,
@@ -297,6 +371,13 @@ export class DataKeysPanelComponent implements ControlValueAccessor, OnInit, OnC
     const keyControl = this.fb.control(dataKey, [dataKeyRowValidator]);
     keysArray.push(keyControl);
   }
+
+  /**
+   * prepare keys form array.
+   *
+   * @param keys keys (DataKey[] | undefined)
+   * @returns UntypedFormArray observable or value
+   */
 
   private prepareKeysFormArray(keys: DataKey[] | undefined): UntypedFormArray {
     const keysControls: Array<AbstractControl> = [];

@@ -41,11 +41,11 @@ export const statusWidgetLayoutImages = new Map<StatusWidgetLayout, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for status widget state settings.
-
+ * Status widget state settings (ThingsBoard web UI).
  */
+
 
 export interface StatusWidgetStateSettings {
   showLabel: boolean;

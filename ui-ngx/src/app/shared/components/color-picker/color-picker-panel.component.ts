@@ -22,16 +22,19 @@ import { UntypedFormControl } from '@angular/forms';
 import { TbPopoverComponent } from '@shared/components/popover.component';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: color picker panel (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-color-picker-panel`.
+ */
 @Component({
     selector: 'tb-color-picker-panel',
     templateUrl: './color-picker-panel.component.html',
     providers: [],
     styleUrls: ['./color-picker-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: color picker panel UI.
- */
+standalone: false
 })
 export class ColorPickerPanelComponent extends PageComponent implements OnInit {
 
@@ -61,17 +64,37 @@ export class ColorPickerPanelComponent extends PageComponent implements OnInit {
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.colorPickerControl = new UntypedFormControl(this.color);
   }
+
+  /**
+   * select color.
+   *
+   */
 
   selectColor() {
     this.colorSelected.emit(this.colorPickerControl.value);
   }
 
+  /**
+   * clear color.
+   *
+   */
+
   clearColor() {
     this.colorSelected.emit(null);
   }
+
+  /**
+   * cancel color.
+   *
+   */
 
   cancelColor() {
     if (this.popover) {

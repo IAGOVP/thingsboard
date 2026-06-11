@@ -34,9 +34,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+
+
 /**
- * Converts REST JSON telemetry/attribute payloads into {@link KvEntry} domain objects.
+
+
+ * Utility that converts REST JSON telemetry and attribute payloads into {@link org.thingsboard.server.common.data.kv.KvEntry} domain objects.
+
+
+ *
+
+
+ * <p>Used by {@link org.thingsboard.rest.client.RestClient} when parsing device telemetry and attribute responses from tb-node.
+
+
  */
+
+
+
 public class RestJsonConverter {
     private static final String KEY = "key";
     private static final String VALUE = "value";
@@ -45,9 +61,13 @@ public class RestJsonConverter {
 
     private static final String CAN_T_PARSE_VALUE = "Can't parse value: ";
 
+    
     /**
- * Maps REST attribute JSON array to List of AttributeKvEntry.
- */
+     * Maps a REST attribute JSON array to a list of AttributeKvEntry instances.
+     * @param attributes REST JSON attribute nodes from tb-node response
+     * @return {@link List}
+     */
+
 
     public static List<AttributeKvEntry> toAttributes(List<JsonNode> attributes) {
         if (!CollectionUtils.isEmpty(attributes)) {
@@ -55,15 +75,16 @@ public class RestJsonConverter {
                         KvEntry entry = parseValue(attr.get(KEY).asText(), attr.get(VALUE));
                         return new BaseAttributeKvEntry(entry, attr.get(LAST_UPDATE_TS).asLong());
                     }
-            ).collect(Collectors.to
-    /**
- * Maps REST timeseries JSON map to List of TsKvEntry.
- */
-List());
+            ).collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
     }
+    /**
+     * Maps a REST timeseries JSON map (key → value nodes) to TsKvEntry instances.
+     * @param timeseries REST JSON timeseries map from tb-node response
+     * @return {@link List}
+     */
 
     public static List<TsKvEntry> toTimeseries(Map<String, List<JsonNode>> timeseries) {
         if (!CollectionUtils.isEmpty(timeseries)) {
@@ -81,6 +102,22 @@ List());
         }
     }
 
+    /**
+
+     * Parses a JSON value node into the appropriate KvEntry data type (boolean, number, string, or JSON object).
+
+     *
+
+     * @param key attribute or telemetry key name
+
+     * @param value JSON value node to parse
+
+     * @return {@link KvEntry} instance
+
+     * @throws RuntimeException if the JSON value type cannot be parsed
+
+     */
+
     private static KvEntry parseValue(String key, JsonNode value) {
         if (!value.isContainerNode()) {
             if (value.isBoolean()) {
@@ -96,6 +133,22 @@ List());
             return new JsonDataEntry(key, value.toString());
         }
     }
+
+    /**
+
+     * Parses a numeric JSON node as long or double KvEntry.
+
+     *
+
+     * @param key telemetry key name
+
+     * @param value numeric JSON node
+
+     * @return {@link KvEntry} instance
+
+     * @throws IllegalArgumentException if the value is a big integer not representable as long
+
+     */
 
     private static KvEntry parseNumericValue(String key, JsonNode value) {
         if (value.isFloatingPointNumber()) {

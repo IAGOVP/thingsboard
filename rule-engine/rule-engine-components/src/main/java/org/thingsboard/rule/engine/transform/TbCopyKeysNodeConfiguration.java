@@ -22,14 +22,23 @@ import org.thingsboard.rule.engine.util.TbMsgSource;
 import java.util.Collections;
 import java.util.Set;
 /**
- * JSON configuration for TbCopyKeys rule node.
+ * JSON configuration POJO for {@link TbCopyKeys} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbCopyKeysNodeConfiguration implements NodeConfiguration<TbCopyKeysNodeConfiguration> {
 
     private TbMsgSource copyFrom;
     private Set<String> keys;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbCopyKeysNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbCopyKeysNodeConfiguration defaultConfiguration() {

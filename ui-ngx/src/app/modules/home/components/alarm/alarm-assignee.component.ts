@@ -27,14 +27,17 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { TranslateService } from '@ngx-translate/core';
 import { isNotEmptyStr } from '@core/utils';
 
+
+/**
+ * Angular component: alarm assignee (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-assignee`.
+ */
 @Component({
     selector: 'tb-alarm-assignee',
     templateUrl: './alarm-assignee.component.html',
     styleUrls: ['./alarm-assignee.component.scss'],
-    standalone: false
-/**
- * Angular component: alarm assignee UI.
- */
+standalone: false
 })
 export class AlarmAssigneeComponent {
   @Input()
@@ -54,6 +57,11 @@ export class AlarmAssigneeComponent {
               private translateService: TranslateService) {
   }
 
+  /**
+   * get assignee.
+   *
+   */
+
   getAssignee() {
     if (this.alarm) {
       this.userAssigned = this.alarm.assigneeId && ((isNotEmptyStr(this.alarm.assignee?.firstName) ||
@@ -66,13 +74,32 @@ export class AlarmAssigneeComponent {
     }
   }
 
+  /**
+   * get user initials.
+   *
+   * @param alarmAssignee alarm assignee (AlarmAssignee)
+   * @returns string observable or value
+   */
+
   getUserInitials(alarmAssignee: AlarmAssignee): string {
     return getUserInitials(alarmAssignee);
   }
 
+  /**
+   * get avatar bg color.
+   *
+   * @param entity entity (AlarmAssignee)
+   */
+
   getAvatarBgColor(entity: AlarmAssignee) {
     return this.utilsService.stringToHslColor(getUserDisplayName(entity), 40, 60);
   }
+
+  /**
+   * open alarm assignee panel.
+   *
+   * @param alarm alarm (AlarmInfo)
+   */
 
   openAlarmAssigneePanel($event: Event, alarm: AlarmInfo) {
     if ($event) {

@@ -32,6 +32,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { coerceBoolean } from '@shared/decorators/coercion';
 
+
+/**
+ * Angular component: relation filters (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-relation-filters`.
+ */
 @Component({
     selector: 'tb-relation-filters',
     templateUrl: './relation-filters.component.html',
@@ -43,10 +49,7 @@ import { coerceBoolean } from '@shared/decorators/coercion';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: relation filters UI.
- */
+standalone: false
 })
 export class RelationFiltersComponent extends PageComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
@@ -68,6 +71,11 @@ export class RelationFiltersComponent extends PageComponent implements ControlVa
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.relationFiltersFormGroup = this.fb.group({
       relationFilters: this.fb.array([])
@@ -80,6 +88,11 @@ export class RelationFiltersComponent extends PageComponent implements ControlVa
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -89,9 +102,21 @@ export class RelationFiltersComponent extends PageComponent implements ControlVa
       return this.relationFiltersFormGroup.get('relationFilters') as UntypedFormArray;
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
+
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnTouched(fn: any): void {
   }
@@ -99,6 +124,12 @@ export class RelationFiltersComponent extends PageComponent implements ControlVa
   setDisabledState?(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+
+  /**
+   * write value.
+   *
+   * @param filters filters (Array<RelationEntityTypeFilter>)
+   */
 
   writeValue(filters: Array<RelationEntityTypeFilter>): void {
     if (filters?.length === this.relationFiltersFormArray.length) {
@@ -114,9 +145,20 @@ export class RelationFiltersComponent extends PageComponent implements ControlVa
     }
   }
 
+  /**
+   * DELETE — remove filter.
+   *
+   * @param index index (number)
+   */
+
   public removeFilter(index: number) {
     (this.relationFiltersFormGroup.get('relationFilters') as UntypedFormArray).removeAt(index);
   }
+
+  /**
+   * POST/PUT entity — add filter.
+   *
+   */
 
   public addFilter() {
     const filter: RelationEntityTypeFilter = {
@@ -125,6 +167,13 @@ export class RelationFiltersComponent extends PageComponent implements ControlVa
     };
     this.relationFiltersFormArray.push(this.createRelationFilterFormGroup(filter));
   }
+
+  /**
+   * POST/PUT entity — create relation filter form group.
+   *
+   * @param filter filter (RelationEntityTypeFilter)
+   * @returns AbstractControl observable or value
+   */
 
   private createRelationFilterFormGroup(filter: RelationEntityTypeFilter): AbstractControl {
     const formGroup = this.fb.group({
@@ -145,6 +194,11 @@ export class RelationFiltersComponent extends PageComponent implements ControlVa
     }
     return formGroup;
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const filters: Array<RelationEntityTypeFilter> = this.relationFiltersFormGroup.get('relationFilters').value;

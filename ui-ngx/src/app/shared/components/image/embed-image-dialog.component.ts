@@ -30,14 +30,17 @@ export interface EmbedImageDialogData {
   image: ImageResourceInfo;
 }
 
+
+/**
+ * Angular component: embed image dialog (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-embed-image-dialog`.
+ */
 @Component({
     selector: 'tb-embed-image-dialog',
     templateUrl: './embed-image-dialog.component.html',
     styleUrls: ['./embed-image-dialog.component.scss'],
-    standalone: false
-/**
- * Angular component: embed image dialog UI.
- */
+standalone: false
 })
 export class EmbedImageDialogComponent extends
   DialogComponent<EmbedImageDialogComponent, ImageResourceInfo> implements OnInit {
@@ -60,6 +63,11 @@ export class EmbedImageDialogComponent extends
     super(store, router, dialogRef);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     if (!this.readonly) {
       this.publicStatusControl.valueChanges.pipe(
@@ -72,9 +80,20 @@ export class EmbedImageDialogComponent extends
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     this.dialogRef.close(this.imageChanged ? this.image : null);
   }
+
+  /**
+   * embed to html code.
+   *
+   * @returns string observable or value
+   */
 
   embedToHtmlCode(): string {
     return '```html\n' +
@@ -83,12 +102,24 @@ export class EmbedImageDialogComponent extends
       '```';
   }
 
+  /**
+   * embed to angular template code.
+   *
+   * @returns string observable or value
+   */
+
   embedToAngularTemplateCode(): string {
     return '```html\n' +
       '<img [src]="\''+this.image.link+'\' | image | async" />' +
       '{:copy-code}\n' +
       '```';
   }
+
+  /**
+   * update image public status.
+   *
+   * @param isPublic is public (boolean)
+   */
 
   private updateImagePublicStatus(isPublic: boolean): void {
     this.imageService.updateImagePublicStatus(this.image, isPublic).subscribe(

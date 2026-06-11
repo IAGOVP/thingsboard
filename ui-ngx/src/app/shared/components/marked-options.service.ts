@@ -29,7 +29,9 @@ const targetBlankBlock = '{:target="_blank"}';
 
 // @dynamic
 /**
- * Angular HTTP service: marked options REST wrappers (`@core/http`).
+ * Angular injectable service: marked options (shared UI components).
+ *
+ * <p>HTTP wrappers in `@core/http` calling ThingsBoard REST API.
  */
 @Injectable({
   providedIn: 'root'
@@ -57,6 +59,12 @@ export class MarkedOptionsService implements MarkedOptions {
               @Inject(DOCUMENT) private readonly document: Document) {
     // @ts-ignore
     const tokenizer: TokenizerObject = {
+      /**
+       * autolink.
+       *
+       * @param src src (string)
+       * @returns Tokens.Link observable or value
+       */
       autolink(src: string): Tokens.Link {
         if (src.endsWith(copyCodeBlock)) {
           return undefined;
@@ -65,6 +73,12 @@ export class MarkedOptionsService implements MarkedOptions {
           return false;
         }
       },
+      /**
+       * url.
+       *
+       * @param src src (string)
+       * @returns Tokens.Link observable or value
+       */
       url(src: string): Tokens.Link {
         if (src.endsWith(copyCodeBlock)) {
           return undefined;
@@ -141,9 +155,25 @@ export class MarkedOptionsService implements MarkedOptions {
     (this.window as any).markdownCopyCode = this.markdownCopyCode.bind(this);
   }
 
+  /**
+   * wrap div.
+   *
+   * @param content content (string)
+   * @returns string observable or value
+   */
+
   private wrapDiv(content: string): string {
     return `<div>${content}</div>`;
   }
+
+  /**
+   * wrap copy code.
+   *
+   * @param id id (number)
+   * @param content content (string)
+   * @param context context (CodeContext)
+   * @returns string observable or value
+   */
 
   private wrapCopyCode(id: number, content: string, context: CodeContext): string {
     let copyCodeButtonClass = 'clipboard-btn';
@@ -161,6 +191,11 @@ export class MarkedOptionsService implements MarkedOptions {
       `</div>`;
   }
 
+  /**
+   * Event handler for selection change.
+   *
+   */
+
   private onSelectionChange() {
     const codeWrappers = $('.code-wrapper');
     codeWrappers.removeClass('noChars');
@@ -169,6 +204,12 @@ export class MarkedOptionsService implements MarkedOptions {
       codeWrappers.addClass('noChars');
     }
   }
+
+  /**
+   * get selected text.
+   *
+   * @returns string observable or value
+   */
 
   private getSelectedText(): string {
     let text;
@@ -181,6 +222,12 @@ export class MarkedOptionsService implements MarkedOptions {
     }
     return text;
   }
+
+  /**
+   * markdown copy code.
+   *
+   * @param id id (number)
+   */
 
   private markdownCopyCode(id: number) {
     const copyWrapper = $('#codeWrapper' + id);

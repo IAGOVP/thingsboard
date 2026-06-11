@@ -36,14 +36,17 @@ import { Observable, Subscription } from 'rxjs';
 import { share } from 'rxjs/operators';
 import { parseHttpErrorMessage } from '@core/utils';
 
+
+/**
+ * Angular component: complex version create (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-complex-version-create`.
+ */
 @Component({
     selector: 'tb-complex-version-create',
     templateUrl: './complex-version-create.component.html',
     styleUrls: ['./version-control.scss'],
-    standalone: false
-/**
- * Angular component: complex version create UI.
- */
+standalone: false
 })
 export class ComplexVersionCreateComponent extends PageComponent implements OnInit, OnDestroy {
 
@@ -85,6 +88,11 @@ export class ComplexVersionCreateComponent extends PageComponent implements OnIn
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.createVersionFormGroup = this.fb.group({
       branch: [this.branch, [Validators.required]],
@@ -94,6 +102,11 @@ export class ComplexVersionCreateComponent extends PageComponent implements OnIn
     });
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     super.ngOnDestroy();
     if (this.versionCreateResultSubscription) {
@@ -101,11 +114,21 @@ export class ComplexVersionCreateComponent extends PageComponent implements OnIn
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel(): void {
     if (this.onClose) {
       this.onClose(this.versionCreateResult, this.versionCreateBranch);
     }
   }
+
+  /**
+   * export.
+   *
+   */
 
   export(): void {
     const request: ComplexVersionCreateRequest = {

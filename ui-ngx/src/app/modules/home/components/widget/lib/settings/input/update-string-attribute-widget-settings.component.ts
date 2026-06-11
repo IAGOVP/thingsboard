@@ -24,14 +24,17 @@ import {
   updateAttributeGeneralDefaultSettings
 } from '@home/components/widget/lib/settings/input/update-attribute-general-settings.component';
 
+
+/**
+ * Angular component: update string attribute widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-string-attribute-widget-settings`.
+ */
 @Component({
     selector: 'tb-update-string-attribute-widget-settings',
     templateUrl: './update-string-attribute-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update string attribute widget settings UI.
- */
+standalone: false
 })
 export class UpdateStringAttributeWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -42,9 +45,21 @@ export class UpdateStringAttributeWidgetSettingsComponent extends WidgetSettings
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateStringAttributeWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -54,6 +69,12 @@ export class UpdateStringAttributeWidgetSettingsComponent extends WidgetSettings
     };
   }
 
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
+
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateStringAttributeWidgetSettingsForm = this.fb.group({
       updateAttributeGeneralSettings: [settings.updateAttributeGeneralSettings, []],
@@ -61,6 +82,13 @@ export class UpdateStringAttributeWidgetSettingsComponent extends WidgetSettings
       maxLength: [settings.maxLength, [Validators.min(1)]]
     });
   }
+
+  /**
+   * prepare input settings.
+   *
+   * @param settings settings (WidgetSettings)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareInputSettings(settings: WidgetSettings): WidgetSettings {
     const updateAttributeGeneralSettings = deepClone(settings, ['minLength', 'maxLength']);
@@ -70,6 +98,13 @@ export class UpdateStringAttributeWidgetSettingsComponent extends WidgetSettings
       maxLength: settings.maxLength
     };
   }
+
+  /**
+   * prepare output settings.
+   *
+   * @param settings settings (any)
+   * @returns WidgetSettings observable or value
+   */
 
   protected prepareOutputSettings(settings: any): WidgetSettings {
     return {

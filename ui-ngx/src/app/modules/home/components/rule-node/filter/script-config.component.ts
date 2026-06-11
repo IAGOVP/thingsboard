@@ -23,14 +23,17 @@ import { RuleNodeConfiguration, RuleNodeConfigurationComponent, ScriptLanguage }
 import type { JsFuncComponent } from '@app/shared/components/js-func.component';
 import { DebugRuleNodeEventBody } from '@app/shared/models/event.models';
 
+
+/**
+ * Angular component: script config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-filter-node-script-config`.
+ */
 @Component({
     selector: 'tb-filter-node-script-config',
     templateUrl: './script-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: script config UI.
- */
+standalone: false
 })
 export class ScriptConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -56,9 +59,21 @@ export class ScriptConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.scriptConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.scriptConfigForm = this.fb.group({
@@ -68,9 +83,21 @@ export class ScriptConfigComponent extends RuleNodeConfigurationComponent {
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['scriptLang'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     let scriptLang: ScriptLanguage = this.scriptConfigForm.get('scriptLang').value;
@@ -87,6 +114,13 @@ export class ScriptConfigComponent extends RuleNodeConfigurationComponent {
     this.scriptConfigForm.get('tbelScript').updateValueAndValidity({emitEvent});
   }
 
+  /**
+   * prepare input config.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   * @returns RuleNodeConfiguration observable or value
+   */
+
   protected prepareInputConfig(configuration: RuleNodeConfiguration): RuleNodeConfiguration {
     if (configuration) {
       if (!configuration.scriptLang) {
@@ -99,6 +133,12 @@ export class ScriptConfigComponent extends RuleNodeConfigurationComponent {
       tbelScript: isDefinedAndNotNull(configuration?.tbelScript) ? configuration.tbelScript : null
     };
   }
+
+  /**
+   * test script.
+   *
+   * @param debugEventBody debug event body (DebugRuleNodeEventBody)
+   */
 
   testScript(debugEventBody?: DebugRuleNodeEventBody) {
     const scriptLang: ScriptLanguage = this.scriptConfigForm.get('scriptLang').value;
@@ -122,6 +162,11 @@ export class ScriptConfigComponent extends RuleNodeConfigurationComponent {
       }
     });
   }
+
+  /**
+   * Event handler for validate.
+   *
+   */
 
   protected onValidate() {
     const scriptLang: ScriptLanguage = this.scriptConfigForm.get('scriptLang').value;

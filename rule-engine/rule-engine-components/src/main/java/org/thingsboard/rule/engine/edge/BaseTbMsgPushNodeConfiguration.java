@@ -19,13 +19,22 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 import org.thingsboard.server.common.data.AttributeScope;
 /**
- * JSON configuration for BaseTbMsgPush rule node.
+ * JSON configuration POJO for {@link BaseTbMsgPush} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class BaseTbMsgPushNodeConfiguration implements NodeConfiguration<BaseTbMsgPushNodeConfiguration> {
 
     private String scope;
+    /**
+     * Default configuration.
+     *
+     * @return {@link BaseTbMsgPushNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public BaseTbMsgPushNodeConfiguration defaultConfiguration() {

@@ -19,8 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 /**
- * JSON configuration for TbDeviceProfile rule node.
+ * JSON configuration POJO for {@link TbDeviceProfile} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,6 +32,12 @@ public class TbDeviceProfileNodeConfiguration implements NodeConfiguration<TbDev
 
     private boolean persistAlarmRulesState;
     private boolean fetchAlarmRulesStateOnStart;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbDeviceProfileNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbDeviceProfileNodeConfiguration defaultConfiguration() {

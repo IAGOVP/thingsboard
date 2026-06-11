@@ -39,7 +39,13 @@ import org.thingsboard.server.common.data.util.TbPair;
 import java.time.Clock;
 
 /**
- * Rule engine external node 'azure iot hub': Publish messages to the Azure IoT Hub Implements org.thingsboard.rule.engine.api.TbNode.
+ * External rule node — <b>azure iot hub</b>.
+ *
+ * <p>Publish messages to the Azure IoT Hub
+ * <br>Will publish message payload to the Azure IoT Hub with QoS AT_LEAST_ONCE.
+ *
+ * <p>Implements {@link org.thingsboard.rule.engine.api.TbNode}. Configuration: {@link TbAzureIotHubNodeConfiguration}.
+ * <br>Documentation: <a href="https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/azure-iot-hub/">https://thingsboard.io/docs/user-guide/rule-engine-2-0/nodes/external/azure-iot-hub/</a>
  */
 @RuleNode(
         type = ComponentType.EXTERNAL,
@@ -55,6 +61,13 @@ import java.time.Clock;
 public class TbAzureIotHubNode extends TbMqttNode {
 
     private Clock clock = Clock.systemUTC();
+    /**
+     * Initializes the rule node: parses configuration and prepares resources (script engine, HTTP client, etc.).
+     *
+     * @param ctx rule engine execution context (routing, DAO, cluster APIs)
+     * @param configuration node configuration wrapper ({@link TbNodeConfiguration})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -75,6 +88,12 @@ public class TbAzureIotHubNode extends TbMqttNode {
             throw new TbNodeException(e);
         }
     }
+    /**
+     * Prepare mqtt client config.
+     *
+     * @param config deserialized node configuration POJO
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     protected void prepareMqttClientConfig(MqttClientConfig config) {
         config.setUsername(AzureIotHubUtil.buildUsername(mqttNodeConfiguration.getHost(), config.getClientId()));
@@ -92,6 +111,14 @@ public class TbAzureIotHubNode extends TbMqttNode {
     void setClock(Clock clock) {
         this.clock = clock;
     }
+    /**
+     * Upgrades persisted node configuration from an older {@link RuleNode#version()} to the current schema.
+     *
+     * @param fromVersion configuration schema version stored in the database
+     * @param oldConfiguration previous JSON configuration to upgrade
+     * @return {@link TbPair}
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Override
     public TbPair<Boolean, JsonNode> upgrade(int fromVersion, JsonNode oldConfiguration) throws TbNodeException {

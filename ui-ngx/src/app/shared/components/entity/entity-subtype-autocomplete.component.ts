@@ -35,6 +35,12 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { EntityService } from '@core/http/entity.service';
 
+
+/**
+ * Angular component: entity sub type autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-entity-subtype-autocomplete`.
+ */
 @Component({
     selector: 'tb-entity-subtype-autocomplete',
     templateUrl: './entity-subtype-autocomplete.component.html',
@@ -44,10 +50,7 @@ import { EntityService } from '@core/http/entity.service';
             useExisting: forwardRef(() => EntitySubTypeAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: entity sub type autocomplete UI.
- */
+standalone: false
 })
 export class EntitySubTypeAutocompleteComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
 
@@ -107,12 +110,29 @@ export class EntitySubTypeAutocompleteComponent implements ControlValueAccessor,
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
 
@@ -168,14 +188,30 @@ export class EntitySubTypeAutocompleteComponent implements ControlValueAccessor,
       );
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit(): void {
   }
+
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
 
   ngOnDestroy(): void {
     if (this.broadcastSubscription) {
       this.broadcastSubscription.unsubscribe();
     }
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -186,12 +222,23 @@ export class EntitySubTypeAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
+
   writeValue(value: string | null): void {
     this.searchText = '';
     this.modelValue = value;
     this.subTypeFormGroup.get('subType').patchValue(value, {emitEvent: false});
     this.dirty = true;
   }
+
+  /**
+   * Event handler for focus.
+   *
+   */
 
   onFocus() {
     if (this.dirty) {
@@ -200,6 +247,12 @@ export class EntitySubTypeAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (string | null)
+   */
+
   updateView(value: string | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -207,13 +260,32 @@ export class EntitySubTypeAutocompleteComponent implements ControlValueAccessor,
     }
   }
 
+  /**
+   * display sub type fn.
+   *
+   * @param subType sub type (string)
+   * @returns string | undefined observable or value
+   */
+
   displaySubTypeFn(subType?: string): string | undefined {
     return subType ? subType : undefined;
   }
 
+  /**
+   * fetch sub types.
+   *
+   * @param searchText search text (string)
+   * @param strictMatch strict match (boolean)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   fetchSubTypes(searchText?: string, strictMatch: boolean = false): Observable<Array<string>> {
     this.searchText = searchText;
     return this.getSubTypes().pipe(
+      /**
+       * map.
+       *
+       */
       map(subTypes => subTypes.filter(subType => {
         if (strictMatch) {
           return searchText ? subType === searchText : false;
@@ -223,6 +295,12 @@ export class EntitySubTypeAutocompleteComponent implements ControlValueAccessor,
       }))
     );
   }
+
+  /**
+   * get sub types.
+   *
+   * @returns Observable<Array<string>> observable or value
+   */
 
   getSubTypes(): Observable<Array<string>> {
     if (!this.subTypes) {
@@ -249,6 +327,11 @@ export class EntitySubTypeAutocompleteComponent implements ControlValueAccessor,
     }
     return this.subTypes;
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear() {
     this.subTypeFormGroup.get('subType').patchValue(null, {emitEvent: true});

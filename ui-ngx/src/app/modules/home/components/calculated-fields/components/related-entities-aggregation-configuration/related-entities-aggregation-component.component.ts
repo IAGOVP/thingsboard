@@ -45,6 +45,12 @@ import { getCurrentAuthState } from '@core/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: related entities aggregation (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-related-entities-aggregation-component`.
+ */
 @Component({
     selector: 'tb-related-entities-aggregation-component',
     templateUrl: './related-entities-aggregation-component.component.html',
@@ -61,10 +67,7 @@ import { AppState } from '@core/core.state';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: related entities aggregation UI.
- */
+standalone: false
 })
 export class RelatedEntitiesAggregationComponentComponent implements ControlValueAccessor, Validator {
 
@@ -132,9 +135,21 @@ export class RelatedEntitiesAggregationComponentComponent implements ControlValu
     });
   }
 
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
+
   validate(): ValidationErrors | null {
     return this.relatedAggregationConfiguration.valid || this.relatedAggregationConfiguration.disabled ? null : {invalidPropagateConfig: false};
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (CalculatedFieldRelatedAggregationConfiguration)
+   */
 
   writeValue(value: CalculatedFieldRelatedAggregationConfiguration): void {
     this.relatedAggregationConfiguration.patchValue(value, {emitEvent: false});
@@ -147,7 +162,19 @@ export class RelatedEntitiesAggregationComponentComponent implements ControlValu
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _   (any)
+   */
+
   registerOnTouched(_: any): void { }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
@@ -157,16 +184,34 @@ export class RelatedEntitiesAggregationComponentComponent implements ControlValu
     }
   }
 
+  /**
+   * fetch options.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
+
   fetchOptions(searchText: string): Observable<Array<string>> {
     const search = searchText ? searchText?.toLowerCase() : '';
     return of(['Contains', 'Manages']).pipe(map(name => name?.filter(option => option.toLowerCase().includes(search))));
   }
+
+  /**
+   * updated model.
+   *
+   * @param value value (CalculatedFieldRelatedAggregationConfiguration)
+   */
 
   private updatedModel(value: CalculatedFieldRelatedAggregationConfiguration): void {
     value.type = CalculatedFieldType.RELATED_ENTITIES_AGGREGATION;
     value.scheduledUpdateInterval = this.minAllowedScheduledUpdateIntervalInSecForCF;
     this.propagateChange(value);
   }
+
+  /**
+   * toggle scope by output type.
+   *
+   */
 
   private toggleScopeByOutputType(): void {
     if (this.relatedAggregationConfiguration.get('output').value.type === OutputType.Attribute) {

@@ -70,10 +70,13 @@ const routes: Routes = [
 /**
  * Angular NgModule: tenant profile routing feature area.
  */
+/**
+ * Angular NgModule bundling tenant profile routing (home/tenant-profile pages).
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
     TenantProfilesTableConfigResolver
-  ]})
+]})
 export class TenantProfileRoutingModule { }

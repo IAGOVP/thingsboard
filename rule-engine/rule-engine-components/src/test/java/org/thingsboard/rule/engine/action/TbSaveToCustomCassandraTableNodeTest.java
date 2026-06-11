@@ -82,8 +82,9 @@ import static org.mockito.BDDMockito.spy;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willAnswer;
 /**
- * Unit test for tb save to custom cassandra table node rule node.
+ * Unit test for tb save to custom cassandra table node (entity lifecycle, alarm, and side-effect rule nodes).
  */
+
 
 @ExtendWith(MockitoExtension.class)
 public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgradeTest {
@@ -122,17 +123,32 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
     private KeyspaceMetadata keyspaceMetadataMock;
     @Mock
     private TableMetadata tableMetadataMock;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() {
         node = spy(new TbSaveToCustomCassandraTableNode());
         config = new TbSaveToCustomCassandraTableNodeConfiguration().defaultConfiguration();
     }
+    /**
+     * Tear down.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterEach
     public void tearDown() {
         node.destroy();
     }
+    /**
+     * Verify default config.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void verifyDefaultConfig() {
@@ -140,6 +156,11 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
         assertThat(config.getFieldsMapping()).isEqualTo(Map.of("", ""));
         assertThat(config.getDefaultTtl()).isEqualTo(0);
     }
+    /**
+     * Given cassandra cluster is missing when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenCassandraClusterIsMissing_whenInit_thenThrowsException() {
@@ -150,6 +171,11 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(true);
     }
+    /**
+     * Given table does not exist when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenTableDoesNotExist_whenInit_thenThrowsException() {
@@ -165,6 +191,11 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
                 .extracting(e -> ((TbNodeException) e).isUnrecoverable())
                 .isEqualTo(false);
     }
+    /**
+     * Given fields map is empty when init then throws exception.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenFieldsMapIsEmpty_whenInit_thenThrowsException() {
@@ -178,6 +209,11 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
                 .isInstanceOf(TbNodeException.class)
                 .hasMessage("Fields(key,value) map is empty!");
     }
+    /**
+     * Given invalid message structure when on msg then throws exception.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenInvalidMessageStructure_whenOnMsg_thenThrowsException() throws TbNodeException {
@@ -198,6 +234,11 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Invalid message structure, it is not a JSON Object: " + null);
     }
+    /**
+     * Given data key is missing in msg when on msg then throws exception.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenDataKeyIsMissingInMsg_whenOnMsg_thenThrowsException() throws TbNodeException {
@@ -224,6 +265,11 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Message data doesn't contain key: 'temp'!");
     }
+    /**
+     * Given unsupported data when on msg then throws exception.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenUnsupportedData_whenOnMsg_thenThrowsException() throws TbNodeException {
@@ -250,6 +296,14 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("Message data key: 'temp' with value: '[\"value\"]' is not a JSON Object or JSON Primitive!");
     }
+    /**
+     * Given ttl when on msg then verify statement.
+     *
+     * @param ttlFromConfig ttl from config
+     * @param expectedQuery expected query ({@link String})
+     * @param verifyBuilder verify builder ({@link Consumer})
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @ParameterizedTest
     @MethodSource
@@ -291,6 +345,11 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
                         })
         );
     }
+    /**
+     * Given valid msg structure when on msg then verify match of values insertion order into statement and save to custom cassandra table.
+     *
+     * @throws TbNodeException if tb node exception is thrown during processing
+     */
 
     @Test
     public void givenValidMsgStructure_whenOnMsg_thenVerifyMatchOfValuesInsertionOrderIntoStatementAndSaveToCustomCassandraTable() throws TbNodeException {
@@ -341,6 +400,12 @@ public class TbSaveToCustomCassandraTableNodeTest extends AbstractRuleNodeUpgrad
                 () -> then(ctxMock).should().tellSuccess(msg)
         );
     }
+    /**
+     * Returns test node.
+     *
+     * @return {@link TbNode}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     protected TbNode getTestNode() {

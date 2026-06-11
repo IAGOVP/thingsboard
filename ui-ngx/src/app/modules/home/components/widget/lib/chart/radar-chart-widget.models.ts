@@ -36,11 +36,11 @@ import {
 } from '@home/components/widget/lib/chart/radar-chart.models';
 import { DeepPartial } from '@shared/models/common';
 
+
 /**
-
- * TypeScript models and enums for radar chart widget settings.
-
+ * Radar chart widget settings (ThingsBoard web UI).
  */
+
 
 export interface RadarChartWidgetSettings extends LatestChartWidgetSettings {
   shape: RadarChartShape;

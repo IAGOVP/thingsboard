@@ -51,15 +51,18 @@ const simplifiedLayoutHeight = 75;
 const defaultAspect = defaultLayoutHeight / 150;
 const simplifiedAspect = simplifiedLayoutHeight / 150;
 
+
+/**
+ * Angular component: progress bar widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-progress-bar-widget`.
+ */
 @Component({
     selector: 'tb-progress-bar-widget',
     templateUrl: './progress-bar-widget.component.html',
     styleUrls: ['./progress-bar-widget.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: progress bar widget UI.
- */
+standalone: false
 })
 export class ProgressBarWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -113,6 +116,11 @@ export class ProgressBarWidgetComponent implements OnInit, OnDestroy, AfterViewI
               private cd: ChangeDetectorRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.progressBarWidget = this;
     this.settings = {...progressBarDefaultSettings, ...this.ctx.settings};
@@ -157,6 +165,11 @@ export class ProgressBarWidgetComponent implements OnInit, OnDestroy, AfterViewI
     this.padding = this.settings.background.overlay.enabled ? undefined : this.settings.padding;
   }
 
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
+
   ngAfterViewInit() {
     if (this.settings.autoScale) {
       this.renderer.setStyle(this.progressBarContainer.nativeElement, 'overflow', 'visible');
@@ -169,17 +182,32 @@ export class ProgressBarWidgetComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
+  /**
+   * Angular lifecycle hook: unsubscribe and release resources.
+   *
+   */
+
   ngOnDestroy() {
     if (this.progressBarPanelResize$) {
       this.progressBarPanelResize$.disconnect();
     }
   }
 
+  /**
+   * Event handler for init.
+   *
+   */
+
   public onInit() {
     const borderRadius = this.ctx.$widgetElement.css('borderRadius');
     this.overlayStyle = {...this.overlayStyle, ...{borderRadius}};
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     const tsValue = getSingleTsValue(this.ctx.data);
@@ -198,6 +226,11 @@ export class ProgressBarWidgetComponent implements OnInit, OnDestroy, AfterViewI
     this.barWidth = `${barWidthValue}%`;
     this.cd.detectChanges();
   }
+
+  /**
+   * Event handler for resize.
+   *
+   */
 
   private onResize() {
     const paddingLeft = getComputedStyle(this.progressBarPanel.nativeElement).paddingLeft;

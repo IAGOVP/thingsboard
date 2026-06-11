@@ -27,14 +27,17 @@ export interface AlarmCommentDialogData {
   alarm?: AlarmInfo;
 }
 
+
+/**
+ * Angular component: alarm comment dialog (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-alarm-comment-dialog`.
+ */
 @Component({
     selector: 'tb-alarm-comment-dialog',
     templateUrl: './alarm-comment-dialog.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: alarm comment dialog UI.
- */
+standalone: false
 })
 export class AlarmCommentDialogComponent extends DialogComponent<AlarmCommentDialogComponent, void> {
 
@@ -47,6 +50,11 @@ export class AlarmCommentDialogComponent extends DialogComponent<AlarmCommentDia
     super(store, router, dialogRef);
     this.alarmId = this.data.alarmId;
   }
+
+  /**
+   * close.
+   *
+   */
 
   close(): void {
     this.dialogRef.close();

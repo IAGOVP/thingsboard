@@ -20,14 +20,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Store } from '@ngrx/store';
 import { AppState } from '@core/core.state';
 
+
+/**
+ * Angular component: update multiple attributes widget settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-update-multiple-attributes-widget-settings`.
+ */
 @Component({
     selector: 'tb-update-multiple-attributes-widget-settings',
     templateUrl: './update-multiple-attributes-widget-settings.component.html',
     styleUrls: ['./../widget-settings.scss'],
-    standalone: false
-/**
- * Angular component: update multiple attributes widget settings UI.
- */
+standalone: false
 })
 export class UpdateMultipleAttributesWidgetSettingsComponent extends WidgetSettingsComponent {
 
@@ -40,9 +43,21 @@ export class UpdateMultipleAttributesWidgetSettingsComponent extends WidgetSetti
     super(store);
   }
 
+  /**
+   * settings form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected settingsForm(): UntypedFormGroup {
     return this.updateMultipleAttributesWidgetSettingsForm;
   }
+
+  /**
+   * default settings.
+   *
+   * @returns WidgetSettings observable or value
+   */
 
   protected defaultSettings(): WidgetSettings {
     return {
@@ -60,6 +75,12 @@ export class UpdateMultipleAttributesWidgetSettingsComponent extends WidgetSetti
       columnGap: 10
     };
   }
+
+  /**
+   * Event handler for settings set.
+   *
+   * @param settings settings (WidgetSettings)
+   */
 
   protected onSettingsSet(settings: WidgetSettings) {
     this.updateMultipleAttributesWidgetSettingsForm = this.fb.group({
@@ -93,9 +114,21 @@ export class UpdateMultipleAttributesWidgetSettingsComponent extends WidgetSetti
     });
   }
 
+  /**
+   * validator triggers.
+   *
+   * @returns string[] observable or value
+   */
+
   protected validatorTriggers(): string[] {
     return ['showActionButtons', 'showGroupTitle', 'fieldsAlignment'];
   }
+
+  /**
+   * update validators.
+   *
+   * @param emitEvent emit event (boolean)
+   */
 
   protected updateValidators(emitEvent: boolean) {
     const showActionButtons: boolean = this.updateMultipleAttributesWidgetSettingsForm.get('showActionButtons').value;

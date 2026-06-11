@@ -17,8 +17,9 @@ package org.thingsboard.server.msa;
 
 import lombok.extern.slf4j.Slf4j;
 /**
- * Test properties.
+ * Loads black-box test configuration (base URL, credentials, timeouts) from system properties.
  */
+
 
 @Slf4j
 public class TestProperties {
@@ -28,6 +29,12 @@ public class TestProperties {
     private static final String WSS_URL = "wss://localhost";
 
     private static final ContainerTestSuite instance = ContainerTestSuite.getInstance();
+    /**
+     * Returns ThingsBoard REST API base URL for the running stack.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getBaseUrl() {
         if (instance.isActive()) {
@@ -35,6 +42,12 @@ public class TestProperties {
         }
         return System.getProperty("tb.baseUrl", "http://localhost:8080");
     }
+    /**
+     * Returns base ui url.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getBaseUiUrl() {
         if (instance.isActive()) {
@@ -44,6 +57,12 @@ public class TestProperties {
         }
         return System.getProperty("tb.baseUiUrl", "http://localhost:8080");
     }
+    /**
+     * Returns web socket url.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getWebSocketUrl() {
         if (instance.isActive()) {
@@ -51,6 +70,12 @@ public class TestProperties {
         }
         return System.getProperty("tb.wsUrl", "ws://localhost:8080");
     }
+    /**
+     * Returns mqtt broker url.
+     *
+     * @return {@link String}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public static String getMqttBrokerUrl() {
         if (instance.isActive()) {

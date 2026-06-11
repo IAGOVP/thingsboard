@@ -26,6 +26,12 @@ import { DataKeysCallbacks } from '@home/components/widget/lib/settings/common/k
 import { Datasource } from '@shared/models/widget.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component: tick value (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-tick-value`.
+ */
 @Component({
     selector: 'tb-tick-value',
     templateUrl: './tick-value.component.html',
@@ -37,10 +43,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: tick value UI.
- */
+standalone: false
 })
 export class TickValueComponent extends PageComponent implements OnInit, ControlValueAccessor {
 
@@ -72,6 +75,11 @@ export class TickValueComponent extends PageComponent implements OnInit, Control
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.tickValueFormGroup = this.fb.group({
       tickValue: [null, []]
@@ -83,12 +91,30 @@ export class TickValueComponent extends PageComponent implements OnInit, Control
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -99,12 +125,23 @@ export class TickValueComponent extends PageComponent implements OnInit, Control
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (ValueSourceProperty)
+   */
+
   writeValue(value: ValueSourceProperty): void {
     this.modelValue = value;
     this.tickValueFormGroup.patchValue(
       {tickValue: value}, {emitEvent: false}
     );
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: ValueSourceProperty = this.tickValueFormGroup.get('tickValue').value;

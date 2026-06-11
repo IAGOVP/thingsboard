@@ -19,22 +19,38 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.UUID;
 
+
 /**
 
- * Rule engine component: skip processing strategy.
+ * Skip processing strategy (telemetry and attribute persistence nodes).
 
  */
+
 
 final class SkipProcessingStrategy implements ProcessingStrategy {
 
     private static final SkipProcessingStrategy INSTANCE = new SkipProcessingStrategy();
 
     private SkipProcessingStrategy() {}
+    /**
+     * Returns instance.
+     *
+     * @return {@link SkipProcessingStrategy}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @JsonCreator
     public static SkipProcessingStrategy getInstance() {
         return INSTANCE;
     }
+    /**
+     * Should process.
+     *
+     * @param ts ts
+     * @param originatorUuid originator uuid ({@link UUID})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean shouldProcess(long ts, UUID originatorUuid) {

@@ -18,11 +18,11 @@ import _moment from 'moment';
 
 export type DateRangeInterval = 'hour' | 'day' | 'week' | 'twoWeeks' | 'month' | 'threeMonths' | 'sixMonths';
 
+
 /**
-
- * TypeScript models and enums for date range navigator settings.
-
+ * Date range navigator settings (ThingsBoard web UI).
  */
+
 
 export interface DateRangeNavigatorSettings {
   hidePicker: boolean;

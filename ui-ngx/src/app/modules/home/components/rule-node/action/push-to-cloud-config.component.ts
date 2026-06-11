@@ -19,14 +19,17 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { RuleNodeConfiguration, RuleNodeConfigurationComponent } from '@shared/models/rule-node.models';
 import { AttributeScope, telemetryTypeTranslations } from '@shared/models/telemetry/telemetry.models';
 
+
+/**
+ * Angular component: push to cloud config (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-action-node-push-to-cloud-config`.
+ */
 @Component({
     selector: 'tb-action-node-push-to-cloud-config',
     templateUrl: './push-to-cloud-config.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: push to cloud config UI.
- */
+standalone: false
 })
 export class PushToCloudConfigComponent extends RuleNodeConfigurationComponent {
 
@@ -39,9 +42,21 @@ export class PushToCloudConfigComponent extends RuleNodeConfigurationComponent {
     super();
   }
 
+  /**
+   * config form.
+   *
+   * @returns UntypedFormGroup observable or value
+   */
+
   protected configForm(): UntypedFormGroup {
     return this.pushToCloudConfigForm;
   }
+
+  /**
+   * Event handler for configuration set.
+   *
+   * @param configuration configuration (RuleNodeConfiguration)
+   */
 
   protected onConfigurationSet(configuration: RuleNodeConfiguration) {
     this.pushToCloudConfigForm = this.fb.group({

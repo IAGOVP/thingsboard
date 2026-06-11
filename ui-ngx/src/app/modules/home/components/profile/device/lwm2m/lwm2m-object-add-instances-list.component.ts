@@ -28,6 +28,12 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 
+
+/**
+ * Angular component: lwm2m object add instances list (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-profile-lwm2m-object-add-instances-list`.
+ */
 @Component({
     selector: 'tb-profile-lwm2m-object-add-instances-list',
     templateUrl: './lwm2m-object-add-instances-list.component.html',
@@ -43,10 +49,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: lwm2m object add instances list UI.
- */
+standalone: false
 })
 export class Lwm2mObjectAddInstancesListComponent implements ControlValueAccessor, Validator {
 
@@ -92,12 +95,30 @@ export class Lwm2mObjectAddInstancesListComponent implements ControlValueAccesso
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -108,12 +129,24 @@ export class Lwm2mObjectAddInstancesListComponent implements ControlValueAccesso
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (Set<number>)
+   */
+
   writeValue(value: Set<number>): void {
     if (value && value.size) {
       this.instancesId = value;
       this.instancesListFormGroup.patchValue({instanceList: Array.from(this.instancesId)}, {emitEvent: false});
     }
   }
+
+  /**
+   * validate.
+   *
+   * @returns ValidationErrors | null observable or value
+   */
 
   validate(): ValidationErrors | null {
     return this.instancesListFormGroup.valid ? null : {
@@ -137,12 +170,22 @@ export class Lwm2mObjectAddInstancesListComponent implements ControlValueAccesso
     this.propagateChange(this.instancesId);
   }
 
+  /**
+   * Event handler for focus.
+   *
+   */
+
   onFocus() {
     setTimeout(() => {
       this.instanceId.nativeElement.blur();
       this.instanceId.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     this.instancesListFormGroup.get('instanceList').setValidators(this.required ? [Validators.required] : []);

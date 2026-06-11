@@ -27,11 +27,18 @@ import static org.thingsboard.server.msa.ui.utils.Const.ENTITY_NAME;
 import static org.thingsboard.server.msa.ui.utils.Const.ROOT_RULE_CHAIN_NAME;
 import static org.thingsboard.server.msa.ui.utils.EntityPrototypes.defaultRuleChainPrototype;
 /**
- * Delete rule chain test.
+ * Black-box test: delete rule chain (TestNG smoke and regression test cases — UI smoke/regression tests).
  */
+
 
 @Feature("Delete rule chain")
 public class DeleteRuleChainTest extends AbstractRuleChainTest {
+    /**
+     * Removes rule chain by right side btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 10, groups = "smoke")
     @Description("Remove the rule chain by clicking on the trash icon in the right side of rule chain")
@@ -45,6 +52,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
 
         ruleChainsPage.assertEntityIsNotPresent(deletedRuleChain);
     }
+    /**
+     * Removes selected rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Remove rule chain by mark in the checkbox and then click on the trash can icon in the menu that appears at the top")
@@ -58,6 +71,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
 
         ruleChainsPage.assertEntityIsNotPresent(deletedRuleChain);
     }
+    /**
+     * Removes from rule chain view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Remove the rule chain by clicking on the 'Delete rule chain' btn in the entity view")
@@ -72,6 +91,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
 
         ruleChainsPage.assertEntityIsNotPresent(deletedRuleChain);
     }
+    /**
+     * Removes root rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Remove the root rule chain by clicking on the trash icon in the right side of rule chain")
@@ -80,6 +105,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
 
         assertIsDisable(ruleChainsPage.deleteBtn(ROOT_RULE_CHAIN_NAME));
     }
+    /**
+     * Removes selected root rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Remove root rule chain by mark in the checkbox and then click on the trash can icon in the menu that appears at the top")
@@ -88,6 +119,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
 
         ruleChainsPage.assertCheckBoxIsNotDisplayed(ROOT_RULE_CHAIN_NAME);
     }
+    /**
+     * Removes from root rule chain view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Rule chains smoke tests")
     @Feature("Delete rule chain")
@@ -100,6 +137,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
         assertThat(ruleChainsPage.deleteBtnInRootRuleChainIsNotDisplayed())
                 .as("Delete btn isn't displayed in details tab").isTrue();
     }
+    /**
+     * Removes profile rule chain by right side btn.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Rule chains smoke tests")
     @Feature("Delete rule chain")
@@ -118,6 +161,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
         assertThat(ruleChainsPage.warningMessage().getText())
                 .as("Text of warning message").isEqualTo(DELETE_RULE_CHAIN_WITH_PROFILE_MESSAGE);
     }
+    /**
+     * Removes selected profile rule chain.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test(priority = 20, groups = "smoke")
     @Description("Remove the rule chain with device profile by mark in the checkbox and then click on the trash can icon in the menu that appears at the top")
@@ -131,6 +180,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
         assertThat(ruleChainsPage.warningMessage().getText())
                 .as("Text of warning message").isEqualTo(DELETE_RULE_CHAIN_WITH_PROFILE_MESSAGE);
     }
+    /**
+     * Removes from profile rule chain view.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Rule chains smoke tests")
     @Feature("Delete rule chain")
@@ -149,6 +204,12 @@ public class DeleteRuleChainTest extends AbstractRuleChainTest {
         assertThat(ruleChainsPage.warningMessage().getText())
                 .as("Text of warning message").isEqualTo(DELETE_RULE_CHAIN_WITH_PROFILE_MESSAGE);
     }
+    /**
+     * Removes rule chain by right side btn without refresh.
+     *
+     * @return nothing
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Epic("Rule chains smoke tests")
     @Feature("Delete rule chain")

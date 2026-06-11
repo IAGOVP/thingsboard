@@ -40,8 +40,9 @@ import { ImportExportService } from '@shared/import-export/import-export.service
 import { Direction } from '@shared/models/page/sort-order';
 import { WidgetsBundleTabsComponent } from '@home/pages/widget/widgets-bundle-tabs.component';
 /**
- * Route resolver: loads widgets bundles table config before activate.
+ * Route resolver: preloads data for widgets bundles table config (home/widget pages).
  */
+
 
 @Injectable()
 export class WidgetsBundlesTableConfigResolver  {
@@ -133,6 +134,12 @@ export class WidgetsBundlesTableConfigResolver  {
     };
   }
 
+  /**
+   * resolve.
+   *
+   * @returns EntityTableConfig<WidgetsBundle> observable or value
+   */
+
   resolve(): EntityTableConfig<WidgetsBundle> {
     this.config.tableTitle = this.translate.instant('widgets-bundle.widgets-bundles');
     const authUser = getCurrentAuthUser(this.store);
@@ -144,6 +151,14 @@ export class WidgetsBundlesTableConfigResolver  {
     return this.config;
   }
 
+  /**
+   * is widgets bundle editable.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   * @param authority authority (Authority)
+   * @returns boolean observable or value
+   */
+
   isWidgetsBundleEditable(widgetsBundle: WidgetsBundle, authority: Authority): boolean {
     if (authority === Authority.TENANT_ADMIN) {
       return widgetsBundle && widgetsBundle.tenantId && widgetsBundle.tenantId.id !== NULL_UUID;
@@ -151,6 +166,11 @@ export class WidgetsBundlesTableConfigResolver  {
       return authority === Authority.SYS_ADMIN;
     }
   }
+
+  /**
+   * import widgets bundle.
+   *
+   */
 
   importWidgetsBundle($event: Event) {
     this.importExport.importWidgetsBundle().subscribe(
@@ -162,12 +182,25 @@ export class WidgetsBundlesTableConfigResolver  {
     );
   }
 
+  /**
+   * open widgets bundle.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   */
+
   openWidgetsBundle($event: Event, widgetsBundle: WidgetsBundle) {
     if ($event) {
       $event.stopPropagation();
     }
     this.router.navigateByUrl(`resources/widgets-bundles/${widgetsBundle.id.id}/widgetTypes`);
   }
+
+  /**
+   * open widgets bundle details.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   */
 
   private openWidgetsBundleDetails($event: Event, widgetsBundle: WidgetsBundle, config: EntityTableConfig<WidgetsBundle>) {
     if ($event) {
@@ -177,12 +210,26 @@ export class WidgetsBundlesTableConfigResolver  {
     this.router.navigateByUrl(url);
   }
 
+  /**
+   * export widgets bundle.
+   *
+   * @param widgetsBundle widgets bundle (WidgetsBundle)
+   */
+
   exportWidgetsBundle($event: Event, widgetsBundle: WidgetsBundle) {
     if ($event) {
       $event.stopPropagation();
     }
     this.importExport.exportWidgetsBundle(widgetsBundle.id.id);
   }
+
+  /**
+   * Event handler for widgets bundle action.
+   *
+   * @param action action (EntityAction<WidgetsBundle>)
+   * @param config optional HTTP request config (ignoreLoading, ignoreErrors, etc.)
+   * @returns boolean observable or value
+   */
 
   onWidgetsBundleAction(action: EntityAction<WidgetsBundle>, config: EntityTableConfig<WidgetsBundle>): boolean {
     switch (action.action) {

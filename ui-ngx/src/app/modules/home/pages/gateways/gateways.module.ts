@@ -24,11 +24,14 @@ import { GatewaysRoutingModule } from '@home/pages/gateways/gateways-routing.mod
 /**
  * Angular NgModule: gateways feature area.
  */
+/**
+ * Angular NgModule bundling gateways (home/gateways pages).
+ */
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
     HomeComponentsModule,
     GatewaysRoutingModule
-  ]})
+]})
 export class GatewaysModule { }

@@ -43,14 +43,17 @@ interface QrCodeWidgetSettings {
 
 type QrCodeTextFunction = (data: FormattedData[]) => string;
 
+
+/**
+ * Angular component: qr code widget (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-qrcode-widget`.
+ */
 @Component({
     selector: 'tb-qrcode-widget',
     templateUrl: './qrcode-widget.component.html',
     styleUrls: [],
-    standalone: false
-/**
- * Angular component: qr code widget UI.
- */
+standalone: false
 })
 export class QrCodeWidgetComponent extends PageComponent implements OnInit, AfterViewInit {
 
@@ -73,11 +76,21 @@ export class QrCodeWidgetComponent extends PageComponent implements OnInit, Afte
     super(store);
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit(): void {
     this.ctx.$scope.qrCodeWidget = this;
     this.settings = this.ctx.settings;
     this.qrCodeTextFunction = this.settings.useQrCodeTextFunction ? parseTbFunction(this.ctx.http, this.settings.qrCodeTextFunction, ['data']) : null;
   }
+
+  /**
+   * Angular lifecycle hook: run after the component view is initialized.
+   *
+   */
 
   ngAfterViewInit(): void {
     this.viewInited = true;
@@ -86,6 +99,11 @@ export class QrCodeWidgetComponent extends PageComponent implements OnInit, Afte
       this.updateCanvas();
     }
   }
+
+  /**
+   * Event handler for data updated.
+   *
+   */
 
   public onDataUpdated() {
     let initialData: DatasourceData[];
@@ -117,6 +135,13 @@ export class QrCodeWidgetComponent extends PageComponent implements OnInit, Afte
     }
   }
 
+  /**
+   * update qr code text.
+   *
+   * @param pattern pattern (string)
+   * @param data dialog or route input data
+   */
+
   private updateQrCodeText(pattern: string, data: FormattedData[]): void {
     const allData: FormattedData = flatDataWithoutOverride(data);
     const newQrCodeText = createLabelFromPattern(pattern, allData);
@@ -133,6 +158,11 @@ export class QrCodeWidgetComponent extends PageComponent implements OnInit, Afte
       this.cd.detectChanges();
     }
   }
+
+  /**
+   * update canvas.
+   *
+   */
 
   private updateCanvas() {
     if (this.viewInited) {

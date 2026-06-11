@@ -136,11 +136,11 @@ export const ObjectIDVerTranslationMap = new Map<ObjectIDVer, string>(
   ]
 );
 
+
 /**
-
- * TypeScript models and enums for observe strategy data.
-
+ * Observe strategy data (ThingsBoard web UI).
  */
+
 
 export interface ObserveStrategyData {
   name: string;

@@ -21,8 +21,11 @@ import org.thingsboard.rule.engine.api.NodeConfiguration;
 import java.util.Collections;
 import java.util.Map;
 /**
- * JSON configuration for TbKafka rule node.
+ * JSON configuration POJO for {@link TbKafka} rule node.
+ *
+ * <p>Deserialized from {@link TbNodeConfiguration} in {@link TbNode#init(TbContext, TbNodeConfiguration)}.
  */
+
 
 @Data
 public class TbKafkaNodeConfiguration implements NodeConfiguration<TbKafkaNodeConfiguration> {
@@ -39,6 +42,12 @@ public class TbKafkaNodeConfiguration implements NodeConfiguration<TbKafkaNodeCo
 
     private boolean addMetadataKeyValuesAsKafkaHeaders;
     private String kafkaHeadersCharset;
+    /**
+     * Default configuration.
+     *
+     * @return {@link TbKafkaNodeConfiguration}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public TbKafkaNodeConfiguration defaultConfiguration() {

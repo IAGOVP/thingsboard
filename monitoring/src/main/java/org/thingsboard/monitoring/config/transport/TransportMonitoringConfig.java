@@ -23,11 +23,18 @@ import java.util.List;
  * Transport-type-specific monitoring configuration (targets, timeouts, QoS).
  */
 
+
 @Data
 public abstract class TransportMonitoringConfig implements MonitoringConfig<TransportMonitoringTarget> {
 
     private List<TransportMonitoringTarget> targets;
     private int requestTimeoutMs;
+    /**
+     * Returns transport type.
+     *
+     * @return {@link TransportType}
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     public abstract TransportType getTransportType();
 

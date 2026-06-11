@@ -20,6 +20,13 @@ import { FetchTo, FetchToTranslation } from '../rule-node-config.models';
 import { TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+
+
+/**
+ * Angular component: msg metadata chip (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-msg-metadata-chip`.
+ */
 @Component({
     selector: 'tb-msg-metadata-chip',
     templateUrl: './msg-metadata-chip.component.html',
@@ -28,13 +35,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             useExisting: forwardRef(() => MsgMetadataChipComponent),
             multi: true
         }],
-    standalone: false
 
-/**
-
- * Angular component: msg metadata chip UI.
-
- */
+standalone: false
 })
 
 export class MsgMetadataChipComponent implements OnInit, ControlValueAccessor {
@@ -50,6 +52,11 @@ export class MsgMetadataChipComponent implements OnInit, ControlValueAccessor {
   constructor(private fb: FormBuilder,
               private translate: TranslateService,
               private destroyRef: DestroyRef) {}
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
     this.initOptions();
@@ -67,6 +74,11 @@ export class MsgMetadataChipComponent implements OnInit, ControlValueAccessor {
     );
   }
 
+  /**
+   * init options.
+   *
+   */
+
   initOptions() {
     for (const key of this.translation.keys()) {
       this.selectOptions.push({
@@ -76,16 +88,40 @@ export class MsgMetadataChipComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
+
   writeValue(value: string | null): void {
     this.chipControlGroup.get('chipControl').patchValue(value, {emitEvent: false});
   }
+
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
 
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {

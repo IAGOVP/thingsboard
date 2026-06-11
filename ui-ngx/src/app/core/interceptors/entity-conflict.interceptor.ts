@@ -28,8 +28,9 @@ import { isDefined } from '@core/utils';
 import { InterceptorConfig } from '@core/interceptors/interceptor-config';
 import { RuleChainMetaData } from '@shared/models/rule-chain.models';
 /**
- * HTTP interceptor: entity conflict interceptor.
+ * HTTP interceptor (HTTP interceptors).
  */
+
 
 @Injectable()
 export class EntityConflictInterceptor implements HttpInterceptor {
@@ -37,6 +38,14 @@ export class EntityConflictInterceptor implements HttpInterceptor {
   constructor(
     private dialog: MatDialog,
   ) {}
+
+  /**
+   * intercept.
+   *
+   * @param request request (HttpRequest<VersionedEntity>)
+   * @param next next (HttpHandler)
+   * @returns Observable<HttpEvent<unknown>> observable or value
+   */
 
   intercept(request: HttpRequest<VersionedEntity>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (!request.url.startsWith('/api/')) {
@@ -53,6 +62,15 @@ export class EntityConflictInterceptor implements HttpInterceptor {
       })
     );
   }
+
+  /**
+   * handle conflict error.
+   *
+   * @param request request (HttpRequest<VersionedEntity>)
+   * @param next next (HttpHandler)
+   * @param error error (HttpErrorResponse)
+   * @returns Observable<HttpEvent<unknown>> observable or value
+   */
 
   private handleConflictError(
     request: HttpRequest<VersionedEntity>,
@@ -77,14 +95,36 @@ export class EntityConflictInterceptor implements HttpInterceptor {
     );
   }
 
+  /**
+   * update request version.
+   *
+   * @param request request (HttpRequest<VersionedEntity>)
+   * @returns HttpRequest<VersionedEntity> observable or value
+   */
+
   private updateRequestVersion(request: HttpRequest<VersionedEntity>): HttpRequest<VersionedEntity> {
     const body = { ...request.body, version: null };
     return request.clone({ body });
   }
 
+  /**
+   * is versioned entity.
+   *
+   * @param entity entity (VersionedEntity)
+   * @returns boolean observable or value
+   */
+
   private isVersionedEntity(entity: VersionedEntity): boolean {
     return !!((entity as EntityInfoData)?.id ?? (entity as RuleChainMetaData)?.ruleChainId)
   }
+
+  /**
+   * open conflict dialog.
+   *
+   * @param entity entity (VersionedEntity)
+   * @param message message (string)
+   * @returns Observable<boolean> observable or value
+   */
 
   private openConflictDialog(entity: VersionedEntity, message: string): Observable<boolean> {
     const dialogRef = this.dialog.open(EntityConflictDialogComponent, {

@@ -90,6 +90,12 @@ export const behaviorValid = (behavior: ScadaSymbolBehavior): boolean => {
   return true;
 };
 
+
+/**
+ * Angular component: scada symbol behavior row (home/scada-symbol pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-scada-symbol-metadata-behavior-row`.
+ */
 @Component({
     selector: 'tb-scada-symbol-metadata-behavior-row',
     templateUrl: './scada-symbol-behavior-row.component.html',
@@ -107,10 +113,7 @@ export const behaviorValid = (behavior: ScadaSymbolBehavior): boolean => {
         }
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: scada symbol behavior row UI.
- */
+standalone: false
 })
 export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, OnInit, Validator {
 
@@ -153,6 +156,11 @@ export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, On
               private destroyRef: DestroyRef) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.behaviorRowFormGroup = this.fb.group({
       id: [null, [this.behaviorIdValidator()]],
@@ -171,12 +179,30 @@ export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, On
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -186,6 +212,12 @@ export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, On
       this.behaviorRowFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (ScadaSymbolBehavior)
+   */
 
   writeValue(value: ScadaSymbolBehavior): void {
     this.modelValue = value;
@@ -243,6 +275,11 @@ export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, On
     }
   }
 
+  /**
+   * focus.
+   *
+   */
+
   focus() {
     this.idInput.nativeElement.scrollIntoView();
     this.idInput.nativeElement.focus();
@@ -252,6 +289,12 @@ export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, On
     this.idInput.nativeElement.scrollIntoView();
     this.editBehavior(null, this.editButton, true, onCanceled);
   }
+
+  /**
+   * validate.
+   *
+   * @param _c  c (UntypedFormControl)
+   */
 
   public validate(_c: UntypedFormControl) {
     const idControl = this.behaviorRowFormGroup.get('id');
@@ -273,6 +316,12 @@ export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, On
     return null;
   }
 
+  /**
+   * behavior id validator.
+   *
+   * @returns ValidatorFn observable or value
+   */
+
   private behaviorIdValidator(): ValidatorFn {
     return control => {
       if (!control.value) {
@@ -289,6 +338,12 @@ export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, On
     };
   }
 
+  /**
+   * Event handler for type changed.
+   *
+   * @param newType new type (ScadaSymbolBehaviorType)
+   */
+
   private onTypeChanged(newType: ScadaSymbolBehaviorType) {
     const prevModel = deepClone(this.modelValue);
     this.modelValue = {...this.modelValue, ...{type: newType}};
@@ -304,6 +359,11 @@ export class ScadaSymbolBehaviorRowComponent implements ControlValueAccessor, On
       });
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     const value: ScadaSymbolBehavior = this.behaviorRowFormGroup.value;

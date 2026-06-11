@@ -54,5 +54,8 @@ const routes: Routes = [
  */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
+/**
+ * Angular NgModule bundling entities routing (home/entities pages).
+ */
   exports: [RouterModule]})
 export class EntitiesRoutingModule { }

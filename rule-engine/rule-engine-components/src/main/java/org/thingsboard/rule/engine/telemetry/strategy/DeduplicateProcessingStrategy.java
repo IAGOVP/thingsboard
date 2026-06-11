@@ -26,11 +26,13 @@ import java.time.Duration;
 import java.util.Set;
 import java.util.UUID;
 
+
 /**
 
- * Rule engine component: deduplicate processing strategy.
+ * Deduplicate processing strategy (telemetry and attribute persistence nodes).
 
  */
+
 
 final class DeduplicateProcessingStrategy implements ProcessingStrategy {
 
@@ -80,11 +82,25 @@ final class DeduplicateProcessingStrategy implements ProcessingStrategy {
         int numberOfDeduplicationIntervals = MAX_TOTAL_INTERVALS_DURATION_SECS / deduplicationIntervalSecs;
         return Math.min(numberOfDeduplicationIntervals, MAX_NUMBER_OF_INTERVALS);
     }
+    /**
+     * Returns deduplication interval secs.
+     *
+     * @return the long result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @JsonProperty("deduplicationIntervalSecs")
     public long getDeduplicationIntervalSecs() {
         return Duration.ofMillis(deduplicationIntervalMillis).toSeconds();
     }
+    /**
+     * Should process.
+     *
+     * @param ts ts
+     * @param originatorUuid originator uuid ({@link UUID})
+     * @return the boolean result
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Override
     public boolean shouldProcess(long ts, UUID originatorUuid) {

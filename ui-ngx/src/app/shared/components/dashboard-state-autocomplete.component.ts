@@ -27,6 +27,12 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
 
+
+/**
+ * Angular component: dashboard state autocomplete (shared UI components).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-dashboard-state-autocomplete`.
+ */
 @Component({
     selector: 'tb-dashboard-state-autocomplete',
     templateUrl: './dashboard-state-autocomplete.component.html',
@@ -36,10 +42,7 @@ import { DashboardUtilsService } from '@core/services/dashboard-utils.service';
             useExisting: forwardRef(() => DashboardStateAutocompleteComponent),
             multi: true
         }],
-    standalone: false
-/**
- * Angular component: dashboard state autocomplete UI.
- */
+standalone: false
 })
 export class DashboardStateAutocompleteComponent implements ControlValueAccessor, OnInit {
 
@@ -105,12 +108,29 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
               private fb: FormBuilder) {
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnTouched(fn: any): void {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit() {
     if (this.required) {
@@ -135,6 +155,12 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
       );
   }
 
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
     if (this.disabled) {
@@ -143,6 +169,12 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
       this.selectDashboardStateFormGroup.enable({emitEvent: false});
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (string | null)
+   */
 
   writeValue(value: string | null): void {
     this.searchText = '';
@@ -156,6 +188,12 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
     this.dirty = true;
   }
 
+  /**
+   * update view.
+   *
+   * @param value value (string | null)
+   */
+
   private updateView(value: string | null) {
     if (this.modelValue !== value) {
       this.modelValue = value;
@@ -163,9 +201,21 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
     }
   }
 
+  /**
+   * display dashboard fn.
+   *
+   * @param dashboard dashboard (DashboardInfo)
+   * @returns string | undefined observable or value
+   */
+
   displayDashboardFn(dashboard?: DashboardInfo): string | undefined {
     return dashboard ? dashboard.title : undefined;
   }
+
+  /**
+   * Event handler for focus.
+   *
+   */
 
   onFocus() {
     if (this.dirty) {
@@ -173,6 +223,11 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
       this.dirty = false;
     }
   }
+
+  /**
+   * clear.
+   *
+   */
 
   clear(value = '') {
     this.dashboardStateInput.nativeElement.value = value;
@@ -182,6 +237,13 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
       this.dashboardStateInput.nativeElement.focus();
     }, 0);
   }
+
+  /**
+   * fetch dashboard states.
+   *
+   * @param searchText search text (string)
+   * @returns Observable<Array<string>> observable or value
+   */
 
   private fetchDashboardStates(searchText?: string): Observable<Array<string>> {
     if (this.searchText !== searchText || this.latestDashboardStates === null) {
@@ -194,6 +256,11 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
     }
     return of(this.latestDashboardStates);
   }
+
+  /**
+   * get dashboard states by id.
+   *
+   */
 
   private getDashboardStatesById() {
     if (this.dashboardStatesFetchObservable$ === null) {
@@ -225,10 +292,22 @@ export class DashboardStateAutocompleteComponent implements ControlValueAccessor
     return this.dashboardStatesFetchObservable$;
   }
 
+  /**
+   * POST/PUT entity — create filter for dashboard state.
+   *
+   * @param query query (string)
+   * @returns (stateId: string) => boolean observable or value
+   */
+
   private createFilterForDashboardState(query: string): (stateId: string) => boolean {
     const lowercaseQuery = query.toLowerCase();
     return stateId => stateId.toLowerCase().indexOf(lowercaseQuery) === 0;
   }
+
+  /**
+   * clear dashboard state cache.
+   *
+   */
 
   private clearDashboardStateCache(): void {
     this.latestDashboardStates = null;

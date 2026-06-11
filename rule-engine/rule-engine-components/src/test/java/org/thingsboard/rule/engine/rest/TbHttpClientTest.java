@@ -64,20 +64,31 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 /**
- * Unit test for tb http client rule node.
+ * Unit test for tb http client (outbound REST API call nodes).
  */
+
 
 @ResourceLock("SsrfProtectionValidator") // to avoid race conditions when modifying SsrfProtectionValidator's static configuration
 public class TbHttpClientTest {
 
     EventLoopGroup eventLoop;
     TbHttpClient client;
+    /**
+     * Set up.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @BeforeEach
     public void setUp() throws Exception {
         client = mock(TbHttpClient.class);
         when(client.getSharedOrCreateEventLoopGroup(any())).thenCallRealMethod();
     }
+    /**
+     * Tear down.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @AfterEach
     public void tearDown() throws Exception {
@@ -85,18 +96,33 @@ public class TbHttpClientTest {
             eventLoop.shutdownGracefully();
         }
     }
+    /**
+     * Given shared event loop when get event loop then return shared.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenSharedEventLoop_whenGetEventLoop_ThenReturnShared() {
         eventLoop = mock(EventLoopGroup.class);
         assertThat(client.getSharedOrCreateEventLoopGroup(eventLoop), is(eventLoop));
     }
+    /**
+     * Given null when get event loop then return shared.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void givenNull_whenGetEventLoop_ThenReturnShared() {
         eventLoop = client.getSharedOrCreateEventLoopGroup(null);
         assertThat(eventLoop, instanceOf(NioEventLoopGroup.class));
     }
+    /**
+     * Test build simple uri.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testBuildSimpleUri() {
@@ -105,6 +131,11 @@ public class TbHttpClientTest {
         URI uri = client.buildEncodedUri(url, null);
         Assertions.assertEquals(url, uri.toString());
     }
+    /**
+     * Test build uri without protocol.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testBuildUriWithoutProtocol() {
@@ -112,6 +143,11 @@ public class TbHttpClientTest {
         String url = "localhost:8080/";
         assertThatThrownBy(() -> client.buildEncodedUri(url, null));
     }
+    /**
+     * Test build invalid uri.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testBuildInvalidUri() {
@@ -119,6 +155,11 @@ public class TbHttpClientTest {
         String url = "aaa";
         assertThatThrownBy(() -> client.buildEncodedUri(url, null));
     }
+    /**
+     * Test build uri with special symbols.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testBuildUriWithSpecialSymbols() {
@@ -128,6 +169,11 @@ public class TbHttpClientTest {
         URI uri = client.buildEncodedUri(url, null);
         Assertions.assertEquals(expected, uri.toString());
     }
+    /**
+     * Test process message with query params pattern processing.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testProcessMessageWithQueryParamsPatternProcessing() throws Exception {
@@ -177,6 +223,11 @@ public class TbHttpClientTest {
             processMessageAndWait(config, msg);
         }
     }
+    /**
+     * Test process message with json in url variable.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testProcessMessageWithJsonInUrlVariable() throws Exception {
@@ -237,6 +288,14 @@ public class TbHttpClientTest {
         verify(ctx).tellSuccess(any());
         verify(ctx, never()).tellFailure(any(), any());
     }
+    /**
+     * Test query params encoding.
+     *
+     * @param endpointUrl endpoint url ({@link String})
+     * @param queryParams query params ({@link List})
+     * @param expectedEncodedUrl expected encoded url ({@link String})
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
 
     @ParameterizedTest(name = "{0}")
@@ -558,6 +617,11 @@ public class TbHttpClientTest {
                 )
         );
     }
+    /**
+     * Test headers to meta data.
+     *
+     * @throws Exception if an unexpected error occurs during processing
+     */
 
     @Test
     public void testHeadersToMetaData() {

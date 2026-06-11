@@ -20,8 +20,9 @@ import lombok.Data;
 
 import java.util.Map;
 /**
- * Rule engine component: tb email.
+ * Tb email (rule engine public API contracts and services).
  */
+
 
 @Data
 @Builder

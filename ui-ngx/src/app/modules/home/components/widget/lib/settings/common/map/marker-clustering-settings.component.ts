@@ -30,6 +30,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MarkerClusteringSettings } from '@shared/models/widget/maps/map.models';
 import { merge } from 'rxjs';
 
+
+/**
+ * Angular component: marker clustering settings (ThingsBoard web UI).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-marker-clustering-settings`.
+ */
 @Component({
     selector: 'tb-marker-clustering-settings',
     templateUrl: './marker-clustering-settings.component.html',
@@ -46,10 +52,7 @@ import { merge } from 'rxjs';
             multi: true
         }
     ],
-    standalone: false
-/**
- * Angular component: marker clustering settings UI.
- */
+standalone: false
 })
 export class MarkerClusteringSettingsComponent implements OnInit, ControlValueAccessor, Validator {
 
@@ -70,6 +73,11 @@ export class MarkerClusteringSettingsComponent implements OnInit, ControlValueAc
               private widgetService: WidgetService,
               private destroyRef: DestroyRef) {
   }
+
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
 
   ngOnInit(): void {
 
@@ -99,12 +107,30 @@ export class MarkerClusteringSettingsComponent implements OnInit, ControlValueAc
     });
   }
 
+  /**
+   * register on change.
+   *
+   * @param fn fn (any)
+   */
+
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * register on touched.
+   *
+   * @param _fn  fn (any)
+   */
+
   registerOnTouched(_fn: any): void {
   }
+
+  /**
+   * set disabled state.
+   *
+   * @param isDisabled is disabled (boolean)
+   */
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -115,6 +141,12 @@ export class MarkerClusteringSettingsComponent implements OnInit, ControlValueAc
       this.updateValidators();
     }
   }
+
+  /**
+   * write value.
+   *
+   * @param value value (MarkerClusteringSettings)
+   */
 
   writeValue(value: MarkerClusteringSettings): void {
     this.modelValue = value;
@@ -130,6 +162,12 @@ export class MarkerClusteringSettingsComponent implements OnInit, ControlValueAc
     });
   }
 
+  /**
+   * validate.
+   *
+   * @param c c (UntypedFormControl)
+   */
+
   public validate(c: UntypedFormControl) {
     const valid = this.clusteringSettingsFormGroup.valid;
     return valid ? null : {
@@ -138,6 +176,11 @@ export class MarkerClusteringSettingsComponent implements OnInit, ControlValueAc
       },
     };
   }
+
+  /**
+   * update validators.
+   *
+   */
 
   private updateValidators() {
     const enable: boolean = this.clusteringSettingsFormGroup.get('enable').value;
@@ -152,6 +195,11 @@ export class MarkerClusteringSettingsComponent implements OnInit, ControlValueAc
       this.clusteringSettingsFormGroup.get('enable').enable({emitEvent: false});
     }
   }
+
+  /**
+   * update model.
+   *
+   */
 
   private updateModel() {
     this.modelValue = this.clusteringSettingsFormGroup.getRawValue();

@@ -19,15 +19,18 @@ import { FormBuilder } from '@angular/forms';
 import { CustomMobilePage } from '@shared/models/mobile-app.models';
 import { TbPopoverComponent } from '@shared/components/popover.component';
 
+
+/**
+ * Angular component: custom mobile page panel (home/mobile pages).
+ *
+ * <p>Template UI for the ThingsBoard web application. Selector: `tb-custom-menu-item-panel`.
+ */
 @Component({
     selector: 'tb-custom-menu-item-panel',
     templateUrl: './custom-mobile-page-panel.component.html',
     styleUrls: ['./custom-mobile-page-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
-/**
- * Angular component: custom mobile page panel UI.
- */
+standalone: false
 })
 export class CustomMobilePagePanelComponent implements OnInit {
 
@@ -48,6 +51,11 @@ export class CustomMobilePagePanelComponent implements OnInit {
   constructor(private fb: FormBuilder) {
   }
 
+  /**
+   * Angular lifecycle hook: initialize component state and subscriptions.
+   *
+   */
+
   ngOnInit() {
     this.mobilePageControl.setValue(this.pageItem, {emitEvent: false});
     if (this.disabled) {
@@ -55,9 +63,19 @@ export class CustomMobilePagePanelComponent implements OnInit {
     }
   }
 
+  /**
+   * cancel.
+   *
+   */
+
   cancel() {
     this.popover?.hide();
   }
+
+  /**
+   * apply.
+   *
+   */
 
   apply() {
     if (this.mobilePageControl.valid) {
